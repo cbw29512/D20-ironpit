@@ -8,7 +8,7 @@ from pydantic import TypeAdapter
 
 from app.content.monster_catalog_2014_absorption import damage_absorptions_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
-from app.content.monster_catalog_2014_arena_policy import usable_movement_speed_2014
+from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, usable_movement_speed_2014
 from app.content.monster_catalog_2014_auras import start_turn_auras_2014
 from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
@@ -74,7 +74,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in unresolved_reactions_2014(source, supported_reactions))
-        blockers.extend(f"legendary:{name}" for name in source.unsupported_legendary_action_names)
+        blockers.extend(f"legendary:{name}" for name in source.unsupported_legendary_action_names if not is_arena_disabled_action_2014(name))
         if source.source_legendary_actions and source.legendary_action_uses <= 0: blockers.append("legendary:unparsed-resource-pool")
         if source.legendary_action_uses and not source.legendary_actions: blockers.append("legendary:no-parsed-options")
         return blockers
