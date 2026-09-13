@@ -24,6 +24,12 @@ class OnHitSaveResolution:
     applied_conditions: list[str] = field(default_factory=list)
 
 
+def _eligible(defender: CombatantState, effect) -> bool:
+    creature_type = (defender.template.creature_type or "").lower()
+    subtypes = {item.lower() for item in defender.template.creature_subtypes}
+    return creature_type not in effect.excluded_creature_types and not subtypes.intersection(effect.excluded_creature_subtypes)
+
+
 def _save_damage(defender, attack, dice, succeeded, affected_states):
     effect = attack.on_hit_save_effect
     if effect is None or effect.damage_dice_count == 0 or effect.damage_type is None: return [], 0
@@ -59,7 +65,7 @@ def resolve_on_hit_save(
     round_number: int | None = None, affected_states: list[CombatantState] | None = None,
 ) -> OnHitSaveResolution:
     effect = attack.on_hit_save_effect
-    if effect is None or defender.is_dead or not defender.is_alive: return OnHitSaveResolution()
+    if effect is None or defender.is_dead or not defender.is_alive or not _eligible(defender, effect): return OnHitSaveResolution()
     if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size): return OnHitSaveResolution()
     roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice)
     damage_components, damage_total = _save_damage(defender, attack, dice, succeeded, affected_states)
