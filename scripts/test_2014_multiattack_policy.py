@@ -1,8 +1,8 @@
 from import_2014_multiattack import parse_multiattack
 
 
-def attack(attack_id: str, name: str, kind: str = "melee") -> dict:
-    return {"id": attack_id, "name": name, "kind": kind}
+def attack(attack_id: str, name: str, kind: str = "melee", average: int = 0) -> dict:
+    return {"id": attack_id, "name": name, "kind": kind, "damage": {"average": average}}
 
 
 def main() -> int:
@@ -58,11 +58,14 @@ def main() -> int:
         "It can use its Life Drain in place of one longsword attack.</p>"
     )
     parsed = parse_multiattack(wight, [
-        attack("longsword", "Longsword"), attack("longbow", "Longbow", "ranged"), attack("life-drain", "Life Drain"),
+        attack("life-drain", "Life Drain", average=5),
+        attack("longsword", "Longsword", average=6),
+        attack("longsword-two-handed", "Longsword", average=7),
+        attack("longbow", "Longbow", "ranged", average=6),
     ])
     assert parsed == {
         "id": "multiattack", "name": "Multiattack",
-        "slots": [["life-drain", "longbow"], ["longsword", "longbow"]],
+        "slots": [["life-drain", "longbow"], ["longsword-two-handed", "longbow"]],
     }
 
     veteran = (
