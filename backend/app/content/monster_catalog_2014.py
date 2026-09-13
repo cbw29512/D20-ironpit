@@ -58,7 +58,10 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
         blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
-        blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
+        unresolved_traits = unresolved_traits_2014(source.trait_names)
+        if source.death_trigger_actions:
+            unresolved_traits = [name for name in unresolved_traits if name != "Death Burst"]
+        blockers.extend(f"trait:{name}" for name in unresolved_traits)
         blockers.extend(f"spell:{name}" for name in unresolved_spells_2014(source))
         relentless = [name for name in source.trait_names if name.startswith("Relentless (Recharges after")]
         if relentless and source.zero_hp_prevention is None: blockers.extend(f"trait:{name}" for name in relentless)
@@ -93,8 +96,8 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
-            saving_throw_actions=source.saving_throw_actions, healing_actions=source.healing_actions,
-            spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
+            saving_throw_actions=source.saving_throw_actions, death_trigger_actions=source.death_trigger_actions,
+            healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
             automatic_damage_spell_actions=automatic_spells,
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
