@@ -43,15 +43,17 @@ function member(definition, attacks) {
 const targetA = { combatant_id: "hero-a", side: "heroes", state: { is_alive: true, is_dead: false, current_hp: 20, template: { name: "A" } } };
 const targetB = { combatant_id: "hero-b", side: "heroes", state: { is_alive: true, is_dead: false, current_hp: 20, template: { name: "B" } } };
 const setup = { heroes: [targetA, targetB], monsters: [] };
+let meleeAvailable = true;
 
 window.IRON_PIT_BROWSER_FORMATION = {
   targetOrder: () => [targetA, targetB], isBackline: () => false,
   alliedFrontlineActive: () => false, hasFrontlineTarget: () => true, hasBacklineTarget: () => false,
   flexibleSlotHasBoth: () => false,
   chooseAttack: (actor, _setup, ids, kind, _prefer, requiredTargetId) => {
+    if (kind === "melee" && !meleeAvailable) return null;
     const attack = actor.state.template.attacks.find((item) => ids.includes(item.id) && (!kind || item.kind === kind));
     const target = requiredTargetId ? [targetA, targetB].find((item) => item.combatant_id === requiredTargetId) : targetA;
-    return attack && target ? { target, attack, distance: 5 } : null;
+    return attack && target ? { target, attack, distance: kind === "ranged" ? 30 : 5 } : null;
   },
 };
 
@@ -104,27 +106,21 @@ const longbow = { id: "longbow", name: "Longbow", kind: "ranged" };
 const lifeDrain = { id: "life-drain", name: "Life Drain", kind: "melee" };
 const wightDefinition = {
   id: "wight", slots: [
-    { attackIds: ["longsword", "longbow", "life-drain"] },
-    { attackIds: ["longsword", "longbow", "life-drain"] },
+    { attackIds: ["life-drain", "longbow"] },
+    { attackIds: ["longsword", "longbow"] },
   ],
-  policy: {
-    atMostOnceAttackIds: ["life-drain"],
-    exclusiveAttackGroups: [["longsword", "life-drain"], ["longbow"]],
-  },
 };
 setupRuntime([], [true, true]);
 actor = member(wightDefinition, [lifeDrain, longsword, longbow]); setup.monsters = [actor];
 result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
 assert.deepEqual(result.events.map((event) => event.attack_name), ["Life Drain", "Longsword"]);
 
-window.IRON_PIT_BROWSER_FORMATION.isBackline = () => true;
-window.IRON_PIT_BROWSER_FORMATION.alliedFrontlineActive = () => true;
+meleeAvailable = false;
 setupRuntime([], [true, true]);
-actor = member(wightDefinition, [longsword, longbow, lifeDrain]); setup.monsters = [actor];
+actor = member(wightDefinition, [lifeDrain, longsword, longbow]); setup.monsters = [actor];
 result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
 assert.deepEqual(result.events.map((event) => event.attack_name), ["Longbow", "Longbow"]);
-window.IRON_PIT_BROWSER_FORMATION.isBackline = () => false;
-window.IRON_PIT_BROWSER_FORMATION.alliedFrontlineActive = () => false;
+meleeAvailable = true;
 
 const claw = { id: "claw", name: "Claw", kind: "melee" };
 const greataxe = { id: "greataxe", name: "Greataxe", kind: "melee" };
