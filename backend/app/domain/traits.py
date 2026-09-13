@@ -14,5 +14,6 @@ class CombatTrait(StrEnum):
     MAGIC_WEAPONS = "magic-weapons"
     SURE_FOOTED = "sure-footed"
     DARK_DEVOTION = "dark-devotion"
+    TWO_HEADED = "two-headed"
     RAMPAGE = "rampage"
     LIFE_DOMAIN = "life-domain"
