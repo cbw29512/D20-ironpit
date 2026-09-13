@@ -152,8 +152,8 @@ def _attach_monster_actions(row, template) -> None:
     if template.attack_action and template.attack_action.policy: row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)
     if template.zero_hp_prevention: row["zeroHpPrevention"] = {"resourceId": template.zero_hp_prevention.resource_id, "maxTriggerDamage": template.zero_hp_prevention.max_trigger_damage, "resultingHp": template.zero_hp_prevention.resulting_hp}
     if template.regeneration: row["regeneration"] = {"amount": template.regeneration.amount, "requiresPositiveHp": template.regeneration.requires_positive_hp, "suppressedByDamageTypes": [item.value for item in template.regeneration.suppressed_by_damage_types], "survivesZeroUntilTurn": template.regeneration.survives_zero_until_turn}
-    if template.swallow_action:
-        action = template.swallow_action
+    if template.swallow_actions:
+        action = template.swallow_actions[0]
         row["swallowAction"] = {
             "id": action.id, "name": action.name, "attackId": action.attack_id,
             "maxTargetSize": action.max_target_size.value, "damageDiceCount": action.damage_dice_count,
