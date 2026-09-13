@@ -81,6 +81,30 @@
     return { events, sequence };
   }
 
+  function resolveAuraStart(sequence, round, target, setup) {
+    const events = [];
+    for (const source of [...setup.heroes, ...setup.monsters]) {
+      if (source.combatant_id === target.combatant_id || source.state.is_dead || source.state.current_hp <= 0) continue;
+      for (const aura of source.state.template.startTurnAuras || []) {
+        if (S().distance(target, source) > aura.rangeFt || I().immune(target.state, source.combatant_id, aura.id)) continue;
+        const save = V().resolveSavingThrow(target.state, aura.saveAbility, aura.saveDc, { magicalEffect: Boolean(aura.magicalEffect), againstCondition: aura.failureConditionId });
+        let applied = null;
+        if (save.succeeded && aura.successGrantsSourceImmunity) I().grant(target.state, source.combatant_id, aura.id);
+        else if (!save.succeeded) applied = T().apply(target.state, aura.failureConditionId, source.combatant_id, {
+          sourceEffectId: aura.id, appliedRound: round, expiresRound: round + aura.failureDurationRounds,
+          expiryTiming: aura.failureExpiryTiming,
+        });
+        let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${aura.saveDc} ${aura.saveAbility} save against ${source.state.template.name}'s ${aura.name}.`;
+        if (applied) description += ` ${target.state.template.name} is ${applied}.`;
+        events.push({ sequence: sequence++, round_number: round, event_type: "saving_throw", actor_id: source.combatant_id,
+          actor_name: source.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
+          saving_throw_roll: save.roll, save_ability: aura.saveAbility, save_dc: aura.saveDc, save_succeeded: save.succeeded,
+          applied_condition_ids: applied ? [applied] : [], feature_id: aura.id, animation: "condition-save", description });
+      }
+    }
+    return { events, sequence };
+  }
+
   const gazeOpponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
   function gazeFailure(target, source, gaze, round, roll) {
     const immediate = gaze.immediateFailureMargin && gaze.immediateFailureConditionId && roll && roll.total <= gaze.saveDc - gaze.immediateFailureMargin;
@@ -92,7 +116,7 @@
     });
   }
   function resolveGazeStart(sequence, round, target, setup) {
-    const events = [];
+    const aura = resolveAuraStart(sequence, round, target, setup), events = aura.events; sequence = aura.sequence;
     for (const source of gazeOpponents(target, setup)) {
       const gaze = source.state.template.startTurnGaze;
       if (!gaze || Q().incapacitated(source.state) || Q().incapacitated(target.state)) continue;
