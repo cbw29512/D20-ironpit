@@ -46,13 +46,6 @@ def required_attack_id(
     return previous_attack_id
 
 
-def _group_allowed_ids(policy, used_attack_ids: set[str]) -> set[str] | None:
-    for group in policy.exclusive_attack_groups:
-        if used_attack_ids.intersection(group):
-            return set(group)
-    return None
-
-
 def filtered_slot(
     definition: AttackActionDefinition,
     slot: AttackActionSlot,
@@ -66,12 +59,12 @@ def filtered_slot(
         })
     if policy is None:
         return slot
-    allowed = _group_allowed_ids(policy, used_attack_ids)
     blocked = set()
     if policy.distinct_attack_ids:
         blocked.update(used_attack_ids)
     blocked.update(attack_id for attack_id in policy.at_most_once_attack_ids if attack_id in used_attack_ids)
-    filtered = [attack_id for attack_id in slot.attack_ids if attack_id not in blocked]
-    if allowed is not None:
-        filtered = [attack_id for attack_id in filtered if attack_id in allowed]
-    return slot if filtered == slot.attack_ids else slot.model_copy(update={"attack_ids": filtered})
+    if not blocked:
+        return slot
+    return slot.model_copy(update={
+        "attack_ids": [attack_id for attack_id in slot.attack_ids if attack_id not in blocked],
+    })
