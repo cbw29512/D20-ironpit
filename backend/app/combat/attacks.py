@@ -15,7 +15,7 @@ from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.hit_points import effective_max_hp
 from app.combat.invisibility import end_attack_invisibility
-from app.combat.max_hp_drain import resolve_max_hp_drain
+from app.combat.max_hp_drain import apply_damage_with_max_hp_drain
 from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
 from app.combat.on_hit_saves import resolve_on_hit_save
 from app.combat.parry import resolve_parry_hit
@@ -28,7 +28,6 @@ from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
-from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.modifiers import ModifierKind
 
@@ -94,8 +93,7 @@ def resolve_attack(
             )
             applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components, attack=attack); damage_roll.total = applied_total
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
-            damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
-            drain_reduction, drain_healing = resolve_max_hp_drain(attacker, actual_defender, attack, damage_components)
+            damage_outcome, drain_reduction, drain_healing = apply_damage_with_max_hp_drain(attacker, actual_defender, attack, applied_total, critical, applied_types, dice, affected_states, damage_components)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
             save_rider = resolve_on_hit_save(
                 actual_defender, attack, dice, source_id=attacker_event_id,
