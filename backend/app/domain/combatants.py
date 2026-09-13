@@ -15,6 +15,7 @@ from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.regeneration import RegenerationProfile
+from app.domain.save_auras import SaveAdvantageAura
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.swallow import SwallowAction
@@ -82,6 +83,7 @@ class CombatantTemplate(BaseModel):
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     start_turn_gaze: StartTurnGaze | None = None
     start_turn_auras: list[StartTurnAura] = Field(default_factory=list)
+    save_advantage_auras: list[SaveAdvantageAura] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
     source_bonus_action_names: list[str] = Field(default_factory=list)
