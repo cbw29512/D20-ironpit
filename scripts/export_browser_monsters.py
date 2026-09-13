@@ -81,10 +81,8 @@ def _timed_control_row(effect):
 
 
 def _serializable_template(template):
-    """Keep the shared serializer strict while allowing certified zero-damage control attacks."""
     copy = template.model_copy(deep=True)
-    attacks = [copy.weapon_attack, *copy.alternate_weapon_attacks]
-    for attack in attacks:
+    for attack in [copy.weapon_attack, *copy.alternate_weapon_attacks]:
         if attack.weapon.damage_type is None and attack.weapon.dice_count == 0:
             attack.weapon = attack.weapon.model_copy(update={"damage_type": DamageType.BLUDGEONING})
     return copy
@@ -110,10 +108,10 @@ def _attach_source_fingerprint(row, template) -> None:
 
 
 def _attach_monster_actions(row, template) -> None:
-    row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
+    if template.ability_scores is not None:
+        row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
     for definition in row.get("resource_definitions", []):
-        if definition.get("recharge"):
-            definition["recharge"].update(trigger="start_of_turn", dieSize=6)
+        if definition.get("recharge"): definition["recharge"].update(trigger="start_of_turn", dieSize=6)
     save_by_id = {action.id: action for action in template.saving_throw_actions}
     for action_row in row.get("saving_throw_actions", []):
         action = save_by_id.get(action_row["id"])
