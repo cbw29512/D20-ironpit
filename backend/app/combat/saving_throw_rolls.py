@@ -28,10 +28,12 @@ def saving_throw_mode(
     magical_effect: bool = False,
     against_prone: bool = False,
     against_condition: str | None = None,
+    advantage_sources: int = 0,
 ) -> RollMode:
     try:
         advantage = (
-            int(ability == "strength" and rage_active(state))
+            advantage_sources
+            + int(ability == "strength" and rage_active(state))
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
             + int(magical_effect and CombatTrait.MAGIC_RESISTANCE in state.template.combat_traits)
@@ -84,6 +86,7 @@ def resolve_saving_throw(
     magical_effect: bool = False,
     against_prone: bool = False,
     against_condition: str | None = None,
+    advantage_sources: int = 0,
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
@@ -99,11 +102,8 @@ def resolve_saving_throw(
                 dice,
                 state.template.saving_throw_bonuses[ability],
                 saving_throw_mode(
-                    state,
-                    ability,
-                    magical_effect=magical_effect,
-                    against_prone=against_prone,
-                    against_condition=against_condition,
+                    state, ability, magical_effect=magical_effect, against_prone=against_prone,
+                    against_condition=against_condition, advantage_sources=advantage_sources,
                 ),
             ),
             dice,
