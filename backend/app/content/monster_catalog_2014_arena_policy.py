@@ -12,6 +12,11 @@ _ARENA_DISABLED_ACTION_PATTERNS = (
     re.compile(r"\b(?:teleport|plane shift|dimension door|misty step|ethereal(?:ness)?)\b", re.I),
     re.compile(r"\b(?:banish|banishment)\b", re.I),
     re.compile(r"\billusory appearance\b", re.I),
+    re.compile(
+        r"^(?:Enslave|Possession|Nightmare Haunting|Phantasms|Read Thoughts|Heart Sight|"
+        r"Children of the Night|Create Specter|Create Food and Water|Ink Cloud)(?:\s*\(|$)",
+        re.I,
+    ),
 )
 _ARENA_DISABLED_EQUIPMENT_ACTIONS = frozenset({"Antennae"})
 _EQUIPMENT_REFERENCE = re.compile(
@@ -29,18 +34,39 @@ _CREATURE_EFFECT = re.compile(
 # These traits are preserved as source truth but cannot alter an Iron Pit result
 # under the universal pocket-dimension rules. They therefore never block a card.
 ARENA_OUT_OF_SCOPE_TRAITS_2014 = frozenset({
+    "Adhesive (Object Form Only)",
+    "Confer Fire Resistance",
     "Corrode Metal",
+    "Detect Life",
+    "Divine Awareness",
     "Earth Glide",
+    "Elemental Demise",
     "Ethereal Jaunt",
     "False Appearance",
+    "False Appearance (Object Form Only)",
+    "Faultless Tracker",
     "Hellish Rejuvenation",
     "Hellish Restoration",
     "Incorporeal Movement",
+    "Inscrutable",
     "Iron Scent",
+    "Limited Telepathy",
     "Mimicry",
+    "Misty Escape",
+    "Mucous Cloud",
+    "Probing Telepathy",
     "Rejuvenation",
     "Rust Metal",
+    "Sense Magic",
+    "Shielded Mind",
     "Siege Monster",
+    "Speak with Beasts and Plants",
+    "Sunlight Weakness",
+    "Telepathic Bond",
+    "Treasure Sense",
+    "Tree Stride",
+    "Tunneler",
+    "Underwater Camouflage",
     "Web Sense",
     "Web Walker",
 })
