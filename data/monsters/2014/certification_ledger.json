@@ -1,8 +1,8 @@
 {
-  "blocked_count": 108,
+  "blocked_count": 106,
   "blocker_families": {
     "action": 61,
-    "attack-detail": 53,
+    "attack-detail": 50,
     "defense": 2,
     "legendary": 37,
     "reaction": 4,
@@ -71,7 +71,6 @@
     "attack-detail:Hand Crossbow": 1,
     "attack-detail:Harpoon": 1,
     "attack-detail:Javelin": 1,
-    "attack-detail:Life Drain": 3,
     "attack-detail:Longbow": 1,
     "attack-detail:Longsword": 1,
     "attack-detail:Pincer": 1,
@@ -2391,11 +2390,9 @@
     {
       "id": "specter",
       "name": "Specter",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Life Drain"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "spider",
@@ -2752,10 +2749,9 @@
     {
       "id": "wight",
       "name": "Wight",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "action:Multiattack",
-        "attack-detail:Life Drain"
+        "action:Multiattack"
       ],
       "status": "blocked"
     },
@@ -2794,11 +2790,9 @@
     {
       "id": "wraith",
       "name": "Wraith",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Life Drain"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "wyvern",
@@ -2903,7 +2897,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 219,
+  "ready_count": 221,
   "ruleset": "2014",
   "schema_version": 1
 }
