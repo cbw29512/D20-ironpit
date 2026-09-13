@@ -53,3 +53,4 @@ class OffensiveMovementIntent(BaseModel):
     target_id: str = Field(min_length=1)
     desired_distance_ft: int = Field(ge=0)
     family: Literal["melee", "ranged", "spell", "ability"]
+    uses_bonus_action_movement: bool = False
