@@ -27,12 +27,10 @@ MODELED_TRAITS = {
 
 DATA_BOUND_TRAITS = frozenset({
     "Angelic Weapons", "Barbed Hide", "Blood Frenzy", "Echolocation", "Fire Absorption", "Innate Spellcasting",
-    "Petrifying Gaze", "Poor Depth Perception", "Reckless", "Regeneration", "Spellcasting", "Stench",
+    "Invisibility", "Petrifying Gaze", "Poor Depth Perception", "Reckless", "Regeneration", "Spellcasting", "Stench",
     "Turning Defiance",
 })
 
-# Preserved in source provenance, but nonblocking when the current Iron Pit ruleset
-# supplies no combat circumstance in which the trait can change the arena outcome.
 ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amorphous", "Amphibious", "Antimagic Susceptibility", "Beast of Burden", "Blind Senses",
     "Devil's Sight", "Flyby", "Hold Breath", "Ice Walk", "Illumination", "Immutable Form", "Jumper",
