@@ -22,7 +22,6 @@ from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
-
 _ATTACK = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)\.\s+(?P<kind>Melee|Ranged|Melee or Ranged) Attack Roll:\s*"
     r"(?P<bonus>[+-]?\d+)(?P<header_advantage>\s*\(\s*with\s+Advantage\s+if\s+the\s+target\s+is\s+Grappled\s+by\s+the\s+[^)]+\))?,\s*"
@@ -44,15 +43,12 @@ _MULTI_COUNT = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|thre
 _MULTI_GENERIC = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+attacks?,\s+using\s+([^.]+?)\s+in any combination\.", re.I)
 _WORD_COUNT = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
 
-
 def _slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
-
 
 def _bonus(match: re.Match[str]) -> int:
     value = int(match.group("mod") or 0)
     return -value if match.group("sign") == "-" else value
-
 
 def _ranges(text: str) -> tuple[int, int | None, int | None]:
     reach = re.search(r"reach\s+(\d+)", text, re.I)
