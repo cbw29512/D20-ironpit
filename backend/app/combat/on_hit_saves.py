@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
+from app.combat.max_hp import reduce_max_hp
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
@@ -22,6 +23,7 @@ class OnHitSaveResolution:
     damage_components: list[DamageRollComponent] = field(default_factory=list)
     damage_total: int = 0
     applied_conditions: list[str] = field(default_factory=list)
+    max_hp_reduction: int = 0
 
 
 def _eligible(defender: CombatantState, effect) -> bool:
@@ -63,6 +65,7 @@ def _apply_stable_zero_hp(defender, attack, source_id, round_number, affected_st
 def resolve_on_hit_save(
     defender: CombatantState, attack: WeaponAttack, dice: DiceProvider, *, source_id: str | None = None,
     round_number: int | None = None, affected_states: list[CombatantState] | None = None,
+    triggering_damage_total: int = 0,
 ) -> OnHitSaveResolution:
     effect = attack.on_hit_save_effect
     if effect is None or defender.is_dead or not defender.is_alive or not _eligible(defender, effect): return OnHitSaveResolution()
@@ -70,6 +73,9 @@ def resolve_on_hit_save(
     roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice, against_condition=effect.condition_id)
     damage_components, damage_total = _save_damage(defender, attack, dice, succeeded, affected_states)
     zero_hp_conditions = _apply_stable_zero_hp(defender, attack, source_id, round_number, affected_states) if damage_total else []
+    max_hp_reduction = 0
+    if effect.max_hp_reduction_equals_damage_taken and not succeeded and defender.is_alive and not defender.is_dead:
+        max_hp_reduction = reduce_max_hp(defender, triggering_damage_total, kill_at_zero=effect.zero_max_hp_kills)
     applied = None
     if effect.condition_id is not None and not succeeded and defender.is_alive and not defender.is_dead and not condition_is_immune(defender, effect.condition_id):
         timed = effect.duration_rounds is not None or effect.repeat_save_timing is not None or effect.ends_on_damage
@@ -88,4 +94,8 @@ def resolve_on_hit_save(
             if effect.condition_id not in defender.active_effect_ids: defender.active_effect_ids.append(effect.condition_id)
             applied = effect.condition_id
     all_conditions = [*zero_hp_conditions, *([applied] if applied else [])]
-    return OnHitSaveResolution(roll, effect.save_ability, effect.dc, succeeded, applied, damage_components, damage_total, list(dict.fromkeys(all_conditions)))
+    return OnHitSaveResolution(
+        save_roll=roll, save_ability=effect.save_ability, save_dc=effect.dc, save_succeeded=succeeded,
+        applied_condition=applied, damage_components=damage_components, damage_total=damage_total,
+        applied_conditions=list(dict.fromkeys(all_conditions)), max_hp_reduction=max_hp_reduction,
+    )
