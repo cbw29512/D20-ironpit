@@ -12,6 +12,7 @@ from app.domain.on_hit_saves import OnHitSaveEffect
 from app.domain.regeneration import RegenerationProfile
 from app.domain.restraints import BreakableRestraint
 from app.domain.size import CreatureSize
+from app.domain.swallow import SwallowAction
 from app.domain.weapons import ConditionalDamage, DamageType
 from app.domain.zero_hp_prevention import ZeroHpPrevention
 
@@ -117,6 +118,7 @@ class CatalogMonster2014(BaseModel):
     challenge_rating: str | None = None
     challenge_text: str | None = None
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
+    swallow_actions: list[SwallowAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     limited_action_uses: dict[str, int] = Field(default_factory=dict)
