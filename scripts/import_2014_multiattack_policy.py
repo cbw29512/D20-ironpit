@@ -8,6 +8,14 @@ _SUBJECT = r"(?:the [a-z][a-z -]*? )?"
 _COUNTS = {"two": 2, "three": 3, "four": 4}
 
 
+def _best_attack_id(attack_ids: list[str], attacks: list[dict]) -> str | None:
+    """Choose the strongest source variant without introducing monster-name logic."""
+    candidates = [attack for attack in attacks if attack.get("id") in set(attack_ids)]
+    if not candidates:
+        return None
+    return max(candidates, key=lambda attack: (attack.get("damage", {}).get("average", 0), -attacks.index(attack)))["id"]
+
+
 def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: AttackIds) -> dict | None:
     range_choice_substitution = re.fullmatch(
         _SUBJECT + r"makes two ([a-z][a-z -]*?) attacks? or two ([a-z][a-z -]*?) attacks?\. "
@@ -21,10 +29,11 @@ def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: Atta
         if first and second and len(substitute) == 1 and frozenset(replaced) in {frozenset(first), frozenset(second)}:
             melee = first if set(replaced) == set(first) else second
             ranged = second if set(replaced) == set(first) else first
-            if len(melee) == 1 and len(ranged) == 1:
+            melee_id = _best_attack_id(melee, attacks); ranged_id = _best_attack_id(ranged, attacks)
+            if melee_id and ranged_id:
                 return {
                     "id": "multiattack", "name": "Multiattack",
-                    "slots": [[substitute[0], ranged[0]], [melee[0], ranged[0]]],
+                    "slots": [[substitute[0], ranged_id], [melee_id, ranged_id]],
                 }
 
     capped = re.fullmatch(
