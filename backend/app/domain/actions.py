@@ -1,9 +1,7 @@
 from __future__ import annotations
-
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
-
 from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
