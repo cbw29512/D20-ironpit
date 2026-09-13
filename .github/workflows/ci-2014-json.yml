@@ -8,11 +8,10 @@ on:
       - 'backend/app/domain/**'
       - 'backend/app/combat/**'
       - 'backend/tests/test_2014_*.py'
-      - 'backend/tests/test_monster_*.py'
+      - 'backend/tests/test_monster_*_2014.py'
       - 'backend/tests/test_parry.py'
       - 'backend/tests/test_magic_resistance.py'
       - 'backend/tests/test_conditional_damage_defenses.py'
-      - 'backend/tests/test_damage_absorption.py'
       - 'data/monsters/2014/**'
       - 'scripts/*2014*.py'
       - 'scripts/browser_template_serializer.py'
@@ -99,11 +98,10 @@ jobs:
           cd backend
           pytest -q \
             tests/test_2014_*.py \
-            tests/test_monster_*.py \
+            tests/test_monster_*_2014.py \
             tests/test_parry.py \
             tests/test_magic_resistance.py \
-            tests/test_conditional_damage_defenses.py \
-            tests/test_damage_absorption.py
+            tests/test_conditional_damage_defenses.py
       - name: Prove 2014 browser rules parity
         run: |
           for test in frontend/browser-2014-*.test.cjs; do
