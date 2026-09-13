@@ -41248,7 +41248,16 @@
         "reach_ft": 5
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "unarmed-strike-vampire-form-only",
+        "bite-bat-or-vampire-form-only"
+      ],
+      [
+        "unarmed-strike-vampire-form-only",
+        "bite-bat-or-vampire-form-only"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -41288,6 +41297,11 @@
         "radiant"
       ],
       "survives_zero_until_turn": false
+    },
+    "multiattack_policy": {
+      "at_most_once_attack_ids": [
+        "bite-bat-or-vampire-form-only"
+      ]
     },
     "legendary_action_uses": 3,
     "legendary_actions": [],
@@ -42795,7 +42809,18 @@
         "attack_ability": "dexterity"
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "bite-rat-or-hybrid-form-only",
+        "shortsword-humanoid-or-hybrid-form-only",
+        "hand-crossbow-humanoid-or-hybrid-form-only"
+      ],
+      [
+        "bite-rat-or-hybrid-form-only",
+        "shortsword-humanoid-or-hybrid-form-only",
+        "hand-crossbow-humanoid-or-hybrid-form-only"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -42820,6 +42845,11 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": {
+      "at_most_once_attack_ids": [
+        "bite-rat-or-hybrid-form-only"
+      ]
+    },
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],

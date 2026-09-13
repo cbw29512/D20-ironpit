@@ -81,6 +81,35 @@ def main() -> int:
         "policy": {"same_attack_as_previous_slots": [1]},
     }
 
+    wererat = (
+        "<p><strong>Multiattack (Humanoid or Hybrid Form Only).</strong> "
+        "The wererat makes two attacks, only one of which can be a bite.</p>"
+    )
+    parsed = parse_multiattack(wererat, [
+        attack("bite-rat-or-hybrid-form-only", "Bite (Rat or Hybrid Form Only)"),
+        attack("shortsword-humanoid-or-hybrid-form-only", "Shortsword (Humanoid or Hybrid Form Only)"),
+        attack("hand-crossbow-humanoid-or-hybrid-form-only", "Hand Crossbow (Humanoid or Hybrid Form Only)", "ranged"),
+    ])
+    assert parsed["policy"] == {"at_most_once_attack_ids": ["bite-rat-or-hybrid-form-only"]}
+    assert len(parsed["slots"]) == 2
+
+    werewolf = (
+        "<p><strong>Multiattack. (Humanoid or Hybrid Form Only).</strong> "
+        "The werewolf makes two attacks: one with its bite and one with its claws or spear.</p>"
+    )
+    parsed = parse_multiattack(werewolf, [
+        attack("bite-wolf-or-hybrid-form-only", "Bite (Wolf or Hybrid Form Only)"),
+        attack("claws-hybrid-form-only", "Claws. (Hybrid Form Only)"),
+        attack("spear-humanoid-form-only", "Spear (Humanoid Form Only)"),
+    ])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [
+            ["bite-wolf-or-hybrid-form-only"],
+            ["claws-hybrid-form-only", "spear-humanoid-form-only"],
+        ],
+    }
+
     print("2014 Multiattack policy regressions passed.")
     return 0
 

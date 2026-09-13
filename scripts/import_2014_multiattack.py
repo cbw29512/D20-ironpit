@@ -115,11 +115,16 @@ def _sequence(text: str, attacks: list[dict]) -> list[list[str]] | None:
     return _listed(text, attacks) or _typed_with(text, attacks) or _repeated_with(text, attacks) or _repeated_named(text, attacks) or _use_repeated(text, attacks) or _generic_count(text, attacks)
 
 
+def _multiattack_text(paragraph: str) -> str:
+    text = _plain(paragraph)
+    return re.sub(r"^Multiattack(?:\.\s*)?\s*(?:\([^)]*form only\)\.?)?\s*", "", text, flags=re.I)
+
+
 def parse_multiattack(source_actions: str | None, attacks: list[dict]) -> dict | None:
     for paragraph in re.findall(r"<p>(.*?)</p>", source_actions or "", re.I | re.S):
         if not re.search(r"<strong>\s*Multiattack", paragraph, re.I):
             continue
-        text = re.sub(r"^Multiattack\.\s*", "", _plain(paragraph), flags=re.I)
+        text = _multiattack_text(paragraph)
         policy = parse_policy_multiattack(text, attacks, _ids_for_label)
         if policy is not None:
             return policy
