@@ -109,3 +109,9 @@ class CombatantState(BaseModel):
     wielded_attack_id: str | None = None
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
+
+
+class BattlefieldState(BaseModel):
+    map_definition: BattleMapDefinition | None = None
+    starting_distance_ft: int = Field(default=5, ge=0)
+    distance_ft: int = Field(default=5, ge=0)
