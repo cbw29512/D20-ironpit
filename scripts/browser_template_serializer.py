@@ -162,6 +162,11 @@ def _removal(action: Any) -> dict[str, Any]:
     return row
 
 
+def _invisibility(action: Any) -> dict[str, Any]:
+    return {"id": action.id, "name": action.name, "actionCost": action.action_cost, "concentration": action.concentration,
+            "endsOnAttack": action.ends_on_attack, "endsOnSpell": action.ends_on_spell, "endsOnActionIds": list(action.ends_on_action_ids)}
+
+
 def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
     features = template.progression_features; row = {}
     if features.critical_hit_minimum != 20: row["critical_hit_minimum"] = features.critical_hit_minimum
@@ -198,6 +203,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.defensive_spell_actions: row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions: row["healing_actions"] = [_healing(item) for item in template.healing_actions]
         if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+        if template.starts_invisible: row["startsInvisible"] = True
+        if template.invisibility_action: row["invisibilityAction"] = _invisibility(template.invisibility_action)
         return row
     except Exception:
         logger.exception("Failed to serialize template %s.", template.id); raise
