@@ -79,8 +79,7 @@ def test_fighter_levels_eighteen_and_nineteen_are_public_with_survivor_and_comba
         "survivor-defy-death",
         "survivor-heroic-rally",
     }
-    level_nineteen_expected = {*level_eighteen_required, "boon-combat-prowess"}
-    level_nineteen_runtime = {*level_eighteen_required, "peerless-aim"}
+    level_nineteen_required = {*level_eighteen_required, "boon-combat-prowess"}
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
     assert manifest["summary"]["public_ready"] == counted_ready == 33
@@ -101,8 +100,8 @@ def test_fighter_levels_eighteen_and_nineteen_are_public_with_survivor_and_comba
     assert "karnok-stoneward-l18" in browser
 
     assert level_nineteen["runtime_template_id"] == "karnok-stoneward-l19"
-    assert level_nineteen_expected <= set(level_nineteen["expected_combat_features"])
-    assert level_nineteen_runtime <= set(level_nineteen["supported_mechanics"])
+    assert level_nineteen_required <= set(level_nineteen["expected_combat_features"])
+    assert level_nineteen_required <= set(level_nineteen["supported_mechanics"])
     assert level_nineteen["unsupported_mechanics"] == []
     assert level_nineteen["blockers"] == []
     assert level_nineteen["public_ready_status"] == "ready"
