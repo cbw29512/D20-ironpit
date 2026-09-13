@@ -44,6 +44,10 @@ class TimedEffect(BaseModel):
     action_bonus_exclusive: bool = False
     max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
     disadvantage_strength_d20_tests: bool = False
+    disadvantage_attack_rolls: bool = False
+    disadvantage_ability_checks: bool = False
+    expires_after_next_target_turn: bool = False
+    target_turn_started_since_applied: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
