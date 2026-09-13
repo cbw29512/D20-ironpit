@@ -8,10 +8,9 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-control.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-action-economy.js", "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-timed-conditions.js", "browser-zero-hp.js", "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -20,6 +19,9 @@ const member = (id, side, template, position) => ({ combatant_id: id, side, posi
 const heroTemplate = () => window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const monsterTemplate = (id) => window.IRON_PIT_BROWSER_MONSTERS[id];
 const dice = (roll20 = 2) => { window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? roll20 : 1, rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? roll20 : 1) }; };
+
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "reaction-movement regressions must use the canonical generated roster");
+for (const id of ["srd-commoner", "srd-crocodile"]) assert.ok(monsterTemplate(id), `${id} must be generated and certified`);
 
 function threeWay(reactorId = "srd-commoner") {
   const mover = member("hero-1", "heroes", heroTemplate(), 5);
@@ -55,4 +57,4 @@ function threeWay(reactorId = "srd-commoner") {
   const result = W.moveToward(1, 1, mover, target, fight, 5, "forced");
   assert.equal(result.events.length, 0); assert.ok(result.movement); assert.equal(reactor.state.reaction_available, true);
 }
-console.log("Browser reaction-aware movement regressions passed.");
+console.log("Canonical generated reaction-aware movement regressions passed.");

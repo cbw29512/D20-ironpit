@@ -14,6 +14,20 @@ from app.domain.traits import CombatTrait
 NATIVE = {
     "srd-swarm-of-insects": "Swarm of Insects",
     "srd-swarm-of-venomous-snakes": "Swarm of Venomous Snakes",
+    "srd-ape": "Ape",
+    "srd-lion": "Lion",
+    "srd-hill-giant": "Hill Giant",
+    "srd-sahuagin-warrior": "Sahuagin Warrior",
+    "srd-xorn": "Xorn",
+}
+
+# Native capability definitions can exist before their complete source semantics are
+# certified. Keep this list limited to definitions whose full SRD audit is currently
+# clean; unresolved source choices must fail closed instead of being silently guessed.
+SOURCE_AUDIT_CLEAN = {
+    template_id: source_name
+    for template_id, source_name in NATIVE.items()
+    if template_id != "srd-swarm-of-insects"
 }
 
 
@@ -22,11 +36,11 @@ def test_native_monsters_are_not_legacy_builder_outputs() -> None:
     assert set(NATIVE).isdisjoint(legacy_ids)
 
 
-def test_native_definitions_extend_production_roster_without_replacing_legacy_ids() -> None:
-    legacy = build_legacy_monster_templates()
+def test_native_definitions_are_present_once_in_production_roster() -> None:
     production = build_arena_roster().monsters
-    assert len(production) == len(legacy) + len(NATIVE)
-    assert [monster.id for monster in production[-len(NATIVE):]] == list(NATIVE)
+    production_ids = [monster.id for monster in production]
+    assert len(production_ids) == len(set(production_ids))
+    assert set(NATIVE) <= set(production_ids)
 
 
 def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
@@ -35,12 +49,20 @@ def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
         merge_capability_definitions({definition.id: definition}, {definition.id: definition})
 
 
-def test_native_swarms_compile_and_pass_full_srd_source_audit() -> None:
+def test_source_audit_clean_native_monsters_pass_full_srd_source_audit() -> None:
     rows = {str(row["name"]): row for row in load_monster_rows()}
     runtime = {monster.id: monster for monster in build_arena_roster().monsters}
-    for template_id, source_name in NATIVE.items():
+    for template_id, source_name in SOURCE_AUDIT_CLEAN.items():
         assert get_capability_definition(template_id).kind == "monster"
         assert audit_monster_source(runtime[template_id], rows[source_name]) == []
+
+
+def test_swarm_of_insects_fails_closed_on_unresolved_gm_movement_choice() -> None:
+    rows = {str(row["name"]): row for row in load_monster_rows()}
+    runtime = {monster.id: monster for monster in build_arena_roster().monsters}
+    issues = audit_monster_source(runtime["srd-swarm-of-insects"], rows["Swarm of Insects"])
+    assert "movement-choice-source-unmodeled" in issues
+    assert "movement-fly-mismatch" in issues
 
 
 def test_swarm_of_insects_uses_existing_swarm_and_bloodied_capabilities() -> None:

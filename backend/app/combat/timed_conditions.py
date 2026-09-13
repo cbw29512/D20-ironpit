@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
-from app.domain.actions import AbilityName, ConditionTiming
-from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
+from app.domain.actions import AbilityName, ConditionName, ConditionTiming
+from app.domain.models import CombatantState, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
+from app.domain.save_effects import PeriodicDamageEffectDefinition
 
 POISONED_EFFECT_ID = "poisoned"
-ARENA_POISON_RECOVERY_DC = 10
 
 
 def apply_timed_condition(
@@ -18,12 +18,20 @@ def apply_timed_condition(
     source_effect_id: str | None = None,
     applied_round: int | None = None,
     expires_round: int | None = None,
-    expires_at_start_of_source_turn: bool = True,
+    expires_at_start_of_source_turn: bool = False,
     expiry_timing: ConditionTiming | None = None,
     repeat_save_ability: AbilityName | None = None,
     repeat_save_dc: int | None = None,
     repeat_save_timing: ConditionTiming | None = None,
+    repeat_save_delay_rounds: int = 0,
+    repeat_save_failure_condition: ConditionName | None = None,
+    repeat_save_failure_continues: bool = True,
+    repeat_save_failure_duration_rounds: int | None = None,
+    repeat_save_failure_ends_on_damage: bool = False,
+    repeat_save_failure_allowed_removal_action_ids: list[str] | None = None,
+    automatic_success_after_rounds: int | None = None,
     allowed_removal_action_ids: list[str] | None = None,
+    periodic_damage: PeriodicDamageEffectDefinition | None = None,
     affected_states: list[CombatantState] | None = None,
     turn_behavior: TimedTurnBehavior = "normal",
     ends_on_damage: bool = False,
@@ -32,14 +40,18 @@ def apply_timed_condition(
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
-    if effect_id == POISONED_EFFECT_ID:
-        if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
-            return POISONED_EFFECT_ID
-        expires_at_start_of_source_turn = False
-        expiry_timing = None
-        repeat_save_ability = repeat_save_ability or "constitution"
-        repeat_save_dc = repeat_save_dc or ARENA_POISON_RECOVERY_DC
-        repeat_save_timing = "target_turn_start"
+    if repeat_save_delay_rounds < 0:
+        raise ValueError("Repeat-save delay cannot be negative.")
+    if repeat_save_delay_rounds and applied_round is None:
+        raise ValueError("Delayed repeat saves require the application round.")
+    if automatic_success_after_rounds is not None and automatic_success_after_rounds < 1:
+        raise ValueError("Automatic-success delay must be positive.")
+    if automatic_success_after_rounds is not None and applied_round is None:
+        raise ValueError("Automatic repeat-save success requires the application round.")
+    if effect_id == POISONED_EFFECT_ID and any(
+        effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects
+    ):
+        return POISONED_EFFECT_ID
     state.timed_effects = [
         effect for effect in state.timed_effects
         if not (
@@ -48,6 +60,14 @@ def apply_timed_condition(
             and effect.source_effect_id == source_effect_id
         )
     ]
+    repeat_rule = all(item is not None for item in (repeat_save_ability, repeat_save_dc, repeat_save_timing))
+    repeat_eligible = applied_round + repeat_save_delay_rounds if repeat_rule and applied_round is not None else None
+    automatic_success_round = (
+        applied_round + automatic_success_after_rounds
+        if automatic_success_after_rounds is not None and applied_round is not None
+        else None
+    )
+    periodic = periodic_damage
     state.timed_effects.append(TimedEffect(
         effect_id=effect_id,
         source_id=source_id,
@@ -59,7 +79,19 @@ def apply_timed_condition(
         repeat_save_ability=repeat_save_ability,
         repeat_save_dc=repeat_save_dc,
         repeat_save_timing=repeat_save_timing,
+        repeat_save_eligible_round=repeat_eligible,
+        repeat_save_failure_condition=repeat_save_failure_condition,
+        repeat_save_failure_continues=repeat_save_failure_continues,
+        repeat_save_failure_duration_rounds=repeat_save_failure_duration_rounds,
+        repeat_save_failure_ends_on_damage=repeat_save_failure_ends_on_damage,
+        repeat_save_failure_allowed_removal_action_ids=repeat_save_failure_allowed_removal_action_ids or [],
+        automatic_success_round=automatic_success_round,
         allowed_removal_action_ids=allowed_removal_action_ids or [],
+        periodic_damage_timing=periodic.timing if periodic else None,
+        periodic_damage_dice_count=periodic.dice_count if periodic else 0,
+        periodic_damage_dice_size=periodic.dice_size if periodic else 6,
+        periodic_damage_bonus=periodic.damage_bonus if periodic else 0,
+        periodic_damage_type=periodic.damage_type if periodic else None,
         turn_behavior=turn_behavior,
         ends_on_damage=ends_on_damage,
         ends_if_source_incapacitated=ends_if_source_incapacitated,
@@ -94,39 +126,4 @@ def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]
     return removed
 
 
-def _source_start_expired(effect: TimedEffect, round_number: int) -> bool:
-    source_start = effect.expiry_timing == "source_turn_start" or effect.expires_at_start_of_source_turn
-    return source_start and (effect.expires_round is None or round_number >= effect.expires_round)
-
-
-def expire_start_of_turn_conditions(
-    sequence: int,
-    round_number: int,
-    source: EncounterCombatant,
-    setup: EncounterSetup,
-) -> tuple[list[BattleEvent], int]:
-    events: list[BattleEvent] = []
-    for target in [*setup.heroes, *setup.monsters]:
-        expiring = [
-            effect for effect in target.state.timed_effects
-            if effect.source_id == source.combatant_id and _source_start_expired(effect, round_number)
-        ]
-        for effect in expiring:
-            removed = remove_effect_group(target.state, effect)
-            if not removed:
-                continue
-            events.append(BattleEvent(
-                sequence=sequence,
-                round_number=round_number,
-                event_type="feature",
-                actor_id=source.combatant_id,
-                actor_name=source.state.template.name,
-                target_id=target.combatant_id,
-                target_name=target.state.template.name,
-                removed_condition_ids=removed,
-                feature_id=effect.source_effect_id or "condition-ended",
-                animation="condition-ended",
-                description=f"{target.state.template.name} is no longer affected by {effect.source_effect_id or effect.effect_id}.",
-            ))
-            sequence += 1
-    return events, sequence
+from app.combat.source_condition_expiry import expire_start_of_turn_conditions  # noqa: E402,F401

@@ -5,48 +5,48 @@ from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
 from app.combat.dice import DiceProvider
+from app.combat.grapple_conditions import (
+    GRAPPLED_EFFECT_ID,
+    RESTRAINED_EFFECT_ID,
+    drop_orphaned_linked_conditions,
+    sync_grapple_effect_ids,
+)
+from app.combat.modifier_stack import apply_d20_bonus_dice
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
+from app.domain.modifiers import ModifierKind
 
-FRIGHTENED_EFFECT_ID = "frightened"
-GRAPPLED_EFFECT_ID = "grappled"
 POISONED_EFFECT_ID = "poisoned"
-RESTRAINED_EFFECT_ID = "restrained"
-
-
-def _sync_effect_ids(state: CombatantState) -> None:
-    if state.grapple_sources:
-        if GRAPPLED_EFFECT_ID not in state.active_effect_ids:
-            state.active_effect_ids.append(GRAPPLED_EFFECT_ID)
-        if "dodge" in state.active_effect_ids:
-            state.active_effect_ids.remove("dodge")
-    elif GRAPPLED_EFFECT_ID in state.active_effect_ids:
-        state.active_effect_ids.remove(GRAPPLED_EFFECT_ID)
-    restrained = any(source.restrains for source in state.grapple_sources)
-    if restrained and RESTRAINED_EFFECT_ID not in state.active_effect_ids:
-        state.active_effect_ids.append(RESTRAINED_EFFECT_ID)
-    elif not restrained and RESTRAINED_EFFECT_ID in state.active_effect_ids:
-        state.active_effect_ids.remove(RESTRAINED_EFFECT_ID)
 
 
 def apply_grapple(
-    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *, restrains: bool = False,
+    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *,
+    restrains: bool = False, linked_conditions: list[str] | None = None,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
+    replaced = [source for source in state.grapple_sources if source.source_id == source_id]
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
+    linked = [condition for condition in (linked_conditions or []) if not condition_is_immune(state, condition)]
     state.grapple_sources.append(GrappleSource(
-        source_id=source_id, escape_dc=escape_dc, range_ft=range_ft, restrains=restrains,
+        source_id=source_id, escape_dc=escape_dc, range_ft=range_ft,
+        restrains=restrains, linked_conditions=linked,
     ))
-    _sync_effect_ids(state)
-    return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
+    drop_orphaned_linked_conditions(state, {item for source in replaced for item in source.linked_conditions})
+    sync_grapple_effect_ids(state)
+    applied = [GRAPPLED_EFFECT_ID]
+    if restrains:
+        applied.append(RESTRAINED_EFFECT_ID)
+    return [*applied, *linked]
 
 
 def release_grapple(state: CombatantState, source_id: str) -> None:
+    removed_sources = [source for source in state.grapple_sources if source.source_id == source_id]
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
-    _sync_effect_ids(state)
+    drop_orphaned_linked_conditions(state, {item for source in removed_sources for item in source.linked_conditions})
+    sync_grapple_effect_ids(state)
 
 
 def speed_is_zero(state: CombatantState) -> bool:
@@ -63,49 +63,54 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
     members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
     for target in members.values():
         retained: list[GrappleSource] = []
+        removed: set[str] = set()
         for source in target.state.grapple_sources:
             grappler = members.get(source.source_id)
-            if grappler is None or grappler.state.is_dead or grappler.state.is_unconscious:
-                continue
-            if abs(grappler.position_ft - target.position_ft) > source.range_ft:
-                continue
-            retained.append(source)
+            valid = grappler is not None and not grappler.state.is_dead and not grappler.state.is_unconscious
+            valid = valid and abs(grappler.position_ft - target.position_ft) <= source.range_ft
+            if valid:
+                retained.append(source)
+            else:
+                removed.update(source.linked_conditions)
         target.state.grapple_sources = retained
-        _sync_effect_ids(target.state)
+        drop_orphaned_linked_conditions(target.state, removed)
+        sync_grapple_effect_ids(target.state)
 
 
 def should_escape_grapple(state: CombatantState) -> bool:
     return is_available(state, "action") and any(source.restrains for source in state.grapple_sources)
 
 
-def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
+def _check_mode(state: CombatantState, strength_check: bool, other_disadvantage_sources: int = 0) -> RollMode:
     advantage = strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
     )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
+    disadvantage = has_condition(state, POISONED_EFFECT_ID) or other_disadvantage_sources > 0
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
 
 
-def _escape_choice(state: CombatantState) -> tuple[str, int, RollMode]:
+def _escape_choice(state: CombatantState, other_disadvantage_sources: int = 0) -> tuple[str, int, RollMode]:
     athletics = state.template.skill_bonuses.get("athletics")
     acrobatics = state.template.skill_bonuses.get("acrobatics")
     if athletics is None and acrobatics is None:
         raise ValueError(f"{state.template.name} lacks certified Athletics/Acrobatics bonuses.")
     if athletics is not None and (acrobatics is None or athletics >= acrobatics):
-        return "strength (athletics)", athletics, _check_mode(state, True)
-    return "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False)
+        return "strength (athletics)", athletics, _check_mode(state, True, other_disadvantage_sources)
+    return "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False, other_disadvantage_sources)
 
 
 def resolve_escape_grapple(
     sequence: int, round_number: int, actor_id: str, state: CombatantState, dice: DiceProvider,
+    *, other_disadvantage_sources: int = 0,
 ) -> BattleEvent:
     if not is_available(state, "action"):
         raise ValueError("Action is not available to escape a grapple.")
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
-    check_name, bonus, mode = _escape_choice(state)
+    check_name, bonus, mode = _escape_choice(state, other_disadvantage_sources)
     check = roll_d20(dice, bonus, mode)
+    check = apply_d20_bonus_dice(state, ModifierKind.ABILITY_CHECK_BONUS_DIE, check, dice)
     success = check.total >= source.escape_dc
     tactical_used = False
     if not success:

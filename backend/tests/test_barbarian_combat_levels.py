@@ -50,7 +50,7 @@ def test_barbarian_features_accumulate_while_noncombat_and_slow_are_ignored() ->
 
 
 def test_existing_barbarian_runtime_levels_are_compiled_from_the_table() -> None:
-    for level in range(1, 7):
+    for level in range(1, 9):
         row = BARBARIAN_COMBAT_LEVELS[level]
         template = build_rokhan_stonefury_level(level)
         strength_mod = _modifier(row.strength)
@@ -72,8 +72,9 @@ def test_existing_barbarian_runtime_levels_are_compiled_from_the_table() -> None
 
 
 def test_complete_barbarian_table_blocks_only_on_missing_combat_engine_feature() -> None:
-    assert unsupported_barbarian_engine_features(6) == ()
-    assert unsupported_barbarian_engine_features(7) == ("instinctive-pounce",)
-    assert BARBARIAN_COMBAT_LEVELS[7].max_hp == 75
-    with pytest.raises(ValueError, match="instinctive-pounce"):
-        build_rokhan_stonefury_level(7)
+    assert unsupported_barbarian_engine_features(7) == ()
+    assert unsupported_barbarian_engine_features(8) == ()
+    assert unsupported_barbarian_engine_features(9) == ("brutal-strike",)
+    assert BARBARIAN_COMBAT_LEVELS[8].max_hp == 85
+    with pytest.raises(ValueError, match="brutal-strike"):
+        build_rokhan_stonefury_level(9)

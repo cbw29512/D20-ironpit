@@ -5,6 +5,7 @@ from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.spells import SpellSaveAction
 
 
@@ -21,20 +22,26 @@ def _caster(spells, slots):
     base = build_karnok_stoneward()
     resources = [ResourceDefinition(id=f"spell-slot-{level}", name=f"Level {level} Slot", max_uses=count) for level, count in slots.items()]
     template = base.model_copy(update={"spell_save_actions": spells, "resources": resources})
-    return EncounterCombatant(combatant_id="caster", side="heroes", position_ft=0, state=build_combatant_state(template))
+    state = build_combatant_state(template)
+    state.position = GridPosition(x=0, y=0)
+    return EncounterCombatant(combatant_id="caster", side="heroes", position_ft=0, state=state)
 
 
 def _monster(index: int, position: int):
+    state = build_combatant_state(build_karnok_stoneward())
+    state.position = GridPosition(x=position // 5, y=0)
     return EncounterCombatant(
         combatant_id=f"monster-{index}", side="monsters", position_ft=position,
-        state=build_combatant_state(build_karnok_stoneward()),
+        state=state,
     )
 
 
 def _ally(index: int, position: int):
+    state = build_combatant_state(build_karnok_stoneward())
+    state.position = GridPosition(x=position // 5, y=0)
     return EncounterCombatant(
         combatant_id=f"ally-{index}", side="heroes", position_ft=position,
-        state=build_combatant_state(build_karnok_stoneward()),
+        state=state,
     )
 
 
@@ -43,6 +50,7 @@ def _setup(caster, monsters, allies=()):
     return EncounterSetup(
         heroes=heroes, monsters=list(monsters), hero_total_levels=len(heroes),
         monster_total_cr="1",
+        map_definition=BattleMapDefinition(id="spell-policy-test", width_squares=24, height_squares=16),
     )
 
 
@@ -56,25 +64,26 @@ def test_highest_level_safe_spell_is_chosen_first() -> None:
     assert len(choice.target_ids) == 4
 
 
-def test_point_aoe_edge_places_past_enemy_line_to_spare_adjacent_ally() -> None:
+def test_point_aoe_targets_enemies_under_ally_safe_pit_policy() -> None:
     caster = _caster([_spell("fireball", 3, 10), _spell("lower-bolt", 2)], {3: 1, 2: 1})
     setup = _setup(caster, [_monster(0, 5), _monster(1, 5)], [_ally(1, 0)])
     choice = choose_spell(caster, setup, "1:caster")
     assert choice is not None
     assert choice.action.id == "fireball"
     assert choice.placement is not None
-    assert choice.placement.friendly_ids == ()
+    assert set(choice.target_ids) == {"monster-0", "monster-1"}
 
 
-def test_short_range_aoe_falls_through_when_safe_edge_placement_is_impossible() -> None:
+def test_short_range_aoe_remains_legal_under_ally_safe_pit_policy() -> None:
     caster = _caster([_spell("burst", 3, 10, range_ft=5), _spell("lower-bolt", 2)], {3: 1, 2: 1})
     setup = _setup(caster, [_monster(0, 5), _monster(1, 5)], [_ally(1, 0)])
     choice = choose_spell(caster, setup, "1:caster")
     assert choice is not None
-    assert choice.action.id == "lower-bolt"
+    assert choice.action.id == "burst"
+    assert set(choice.target_ids) == {"monster-0", "monster-1"}
 
 
-def test_resolving_aoe_spends_one_slot_and_uses_safe_enemy_only_placement() -> None:
+def test_resolving_aoe_spends_one_slot_and_uses_enemy_only_pit_targets() -> None:
     caster = _caster([_spell("fireball", 3, 20)], {3: 1})
     setup = _setup(caster, [_monster(i, 5) for i in range(3)])
     choice = choose_spell(caster, setup, "1:caster")
@@ -86,7 +95,7 @@ def test_resolving_aoe_spends_one_slot_and_uses_safe_enemy_only_placement() -> N
     assert sequence == 5
     assert len(events) == 4
     assert events[0].feature_id == "fireball"
-    assert "3 enemies and 0 unprotected allies" in events[0].description
+    assert "Area covers 3 enemies." in events[0].description
     assert {event.target_id for event in events[1:]} == {"monster-0", "monster-1", "monster-2"}
     slot = next(item for item in caster.state.resources if item.id == "spell-slot-3")
     assert slot.current_uses == 0

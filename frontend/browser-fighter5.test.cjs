@@ -119,4 +119,3 @@ const targetTemplate = {
 }
 
 console.log("Generated browser Fighter 5 regressions passed.");
-require("./browser-fighter6.test.cjs");

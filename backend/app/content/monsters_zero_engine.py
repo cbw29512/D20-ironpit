@@ -5,6 +5,7 @@ import re
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
+from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.size import CreatureSize
@@ -119,7 +120,7 @@ def _template(name: str) -> CombatantTemplate:
         speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),
         initiative_bonus=int(initiative.group(1)), challenge_rating=str(row["challenge"]).split()[0],
         weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(name, attacks),
-        combat_traits=_TRAITS.get(name, []),
+        combat_traits=_TRAITS.get(name, []), unarmed_opportunity_attack=monster_unarmed_profile(row),
         damage_vulnerabilities=[DamageType(item) for item in sorted(defenses["damage_vulnerabilities"])],
         damage_resistances=[DamageType(item) for item in sorted(defenses["damage_resistances"])],
         damage_immunities=[DamageType(item) for item in sorted(defenses["damage_immunities"])],

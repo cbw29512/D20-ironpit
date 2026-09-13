@@ -8,9 +8,8 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-dice.js", "browser-monsters.js", "browser-monsters-expansion.js",
-  "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
-  "browser-timed-conditions.js", "browser-state.js", "browser-rage.js",
+  "browser-dice.js", "browser-monsters-generated.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-formation.js", "browser-multiattack.js",
 ]) load(file);
 
@@ -30,6 +29,11 @@ const targetTemplate = {
   id: "target", name: "Target", kind: "character", size: "medium", armor_class: 10,
   max_hp: 100, speed_ft: 30, initiative_bonus: 0, attacks: [], resources: {}, traits: [],
 };
+
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "expansion regressions must use the canonical generated roster");
+for (const id of ["srd-goblin-minion", "srd-kobold-warrior", "srd-hobgoblin-warrior", "srd-hippogriff"]) {
+  assert.ok(monsters[id], `${id} must exist in the generated certified roster`);
+}
 
 {
   const goblin = monsters["srd-goblin-minion"];
@@ -71,4 +75,4 @@ const targetTemplate = {
   assert.deepEqual(result.events.map((event) => event.weapon_id), ["hippogriff-rend", "hippogriff-rend"]);
 }
 
-console.log("Browser expansion monster regressions passed.");
+console.log("Canonical generated expansion monster regressions passed.");

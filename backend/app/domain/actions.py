@@ -1,26 +1,16 @@
 from __future__ import annotations
-
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_validator
-
+from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming
+from app.domain.save_effects import SaveFailureEffectDefinition
 from app.domain.size import CreatureSize
+from app.domain.targeting import AreaTargeting
 
-AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 ActionCost = Literal["action", "bonus_action", "reaction"]
 HealingTargetMode = Literal["self", "ally", "self_or_ally", "other"]
 ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
-ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
-DamageTypeName = Literal[
-    "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
-    "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
-]
-ConditionName = Literal[
-    "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
-    "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
-    "restrained", "stunned", "unconscious",
-]
+DamageTypeName = Literal["acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic", "piercing", "poison", "psychic", "radiant", "slashing", "thunder"]
 
 
 class GrappleSource(BaseModel):
@@ -28,18 +18,21 @@ class GrappleSource(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
+    linked_conditions: list[ConditionName] = Field(default_factory=list)
 
 
 class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    conditions_while_grappled: list[ConditionName] = Field(default_factory=list)
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_delay_rounds: int = Field(default=0, ge=0, le=20)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
@@ -47,14 +40,17 @@ class HitControlEffect(BaseModel):
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")
+        if self.repeat_save_delay_rounds and not all(item is not None for item in repeat_fields):
+            raise ValueError("Repeat-save delay requires a complete repeat-save rule.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
+        if self.conditions_while_grappled and self.grapple_escape_dc is None:
+            raise ValueError("Grapple-linked conditions require a grapple escape DC.")
         return self
 
 
 class HealingAction(BaseModel):
     """A printed healing option with its actual action cost and target restrictions."""
-
     id: str
     name: str
     action_cost: ActionCost
@@ -62,15 +58,14 @@ class HealingAction(BaseModel):
     target_mode: HealingTargetMode = "self_or_ally"
     dice_count: int = Field(default=0, ge=0, le=40)
     dice_size: int = Field(default=6, ge=2, le=100)
-    healing_bonus: int = Field(default=0, ge=0)
+    healing_bonus: int = 0
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "healing"
 
 
 class ConditionRemovalAction(BaseModel):
-    """A 2024 spell/feature that can legally end one or more named conditions."""
-
+    """A 2024 spell/feature or source-permitted basic action that ends conditions."""
     id: str
     name: str
     action_cost: ActionCost
@@ -82,6 +77,7 @@ class ConditionRemovalAction(BaseModel):
     resource_costs_per_condition: dict[str, int] = Field(default_factory=dict)
     reaction_trigger: ConditionReactionTrigger | None = None
     expends_spell_slot: bool = False
+    requires_source_permission: bool = False
     animation: str = "condition-removal"
 
     @model_validator(mode="after")
@@ -103,39 +99,39 @@ class ConditionRemovalAction(BaseModel):
 class SavingThrowAction(BaseModel):
     id: str
     name: str
+    action_cost: ActionCost = "action"
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
+    required_target_condition: ConditionName | None = None
+    required_target_grappled_by_self: bool = False
+    area: AreaTargeting | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
+    failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+    forbid_target_affected_by_action: bool = False
+    push_target_away_ft: int = Field(default=0, ge=0, le=200)
+    push_target_max_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
+    magical_effect: bool = False
     animation: str = "save-effect"
 
 
 class AttackActionSlot(BaseModel):
-    """One ordered weapon/save step inside an Attack action or Multiattack."""
-
-    attack_ids: list[str] = Field(default_factory=list, max_length=16)
-    save_action_ids: list[str] = Field(default_factory=list, max_length=16)
-
-    @model_validator(mode="after")
-    def require_choice(self) -> "AttackActionSlot":
-        if not self.attack_ids and not self.save_action_ids:
-            raise ValueError("Attack-action slot must contain a weapon attack or saving-throw action.")
-        return self
+    attack_ids: list[str] = Field(default_factory=list)
+    save_action_ids: list[str] = Field(default_factory=list)
+    forced_movement_action_ids: list[str] = Field(default_factory=list)
 
 
 class AttackActionDefinition(BaseModel):
-    """One or more ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
-
     id: str
     name: str
-    slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
     is_attack_action: bool = False
+    slots: list[AttackActionSlot] = Field(default_factory=list)

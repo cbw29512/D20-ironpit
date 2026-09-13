@@ -12,6 +12,7 @@ const saveRolls = [1, 20];
 let damageRollCalls = 0;
 window.IRON_PIT_BROWSER_ROLLS = {
   modeFromSources: () => "normal",
+  bloodiedSaveAdvantage: () => 0,
   d20: (bonus) => {
     const natural = saveRolls.shift();
     return { natural, total: natural + bonus, mode: "normal", rolls: [natural], modifier: bonus };
@@ -41,6 +42,7 @@ window.IRON_PIT_DICE = {
 };
 
 load("browser-saves.js");
+load("browser-save-targets.js");
 load("browser-spell-resolution.js");
 
 const member = (id, side, position) => ({
@@ -49,6 +51,7 @@ const member = (id, side, position) => ({
   position_ft: position,
   state: {
     current_hp: 20,
+    temporary_hp: 0,
     is_alive: true,
     is_dead: false,
     is_unconscious: false,
@@ -65,6 +68,7 @@ const member = (id, side, position) => ({
 });
 const caster = member("caster", "heroes", 0);
 const targets = [member("target-1", "monsters", 30), member("target-2", "monsters", 30)];
+const targetIds = targets.map((target) => target.combatant_id);
 const choice = {
   action: {
     id: "shared-flame", name: "Shared Flame", level: 0, actionCost: "action",
@@ -73,8 +77,8 @@ const choice = {
     damageType: "fire", successDamage: "half", upcastDicePerLevel: 0,
   },
   slotLevel: 0,
-  targetIds: targets.map((target) => target.combatant_id),
-  placement: { enemyIds: targets.map((target) => target.combatant_id), friendlyIds: [] },
+  targetIds,
+  placement: { targetIds, origin: [30, 0], direction: null },
 };
 const result = window.IRON_PIT_BROWSER_SPELL_RESOLUTION.resolve(
   1, 1, caster, { heroes: [caster], monsters: targets }, choice, "caster:round-1",

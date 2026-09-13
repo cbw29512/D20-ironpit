@@ -1,0 +1,66 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-young-bronze-dragon",
+    "name": "Young Bronze Dragon",
+    "archetype": "source-certified metallic dragon",
+    "challenge_rating": "8",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 17,
+    "max_hp": 142,
+    "speed_ft": 80,
+    "movement_modes": {"walk_ft": 40, "fly_ft": 80, "climb_ft": 0, "swim_ft": 40, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 3,
+    "attacks": [
+      {"id": "srd-young-bronze-dragon-rend", "name": "Rend", "weapon_id": "srd-young-bronze-dragon-rend-weapon", "attack_kind": "melee", "attack_bonus": 8, "damage": {"count": 2, "size": 10, "bonus": 5}, "damage_type": "slashing", "animation": "claw", "reach_ft": 10}
+    ],
+    "primary_attack_id": "srd-young-bronze-dragon-rend",
+    "unarmed_opportunity_attack": {"attack_bonus": 8, "damage": 6},
+    "save_actions": [
+      {"id": "srd-young-bronze-dragon-lightning-breath", "name": "Lightning Breath", "save_ability": "dexterity", "dc": 15, "range_ft": 0, "area": {"shape": "line", "origin": "self", "length_ft": 60, "width_ft": 5}, "damage": {"count": 9, "size": 10, "bonus": 0}, "damage_type": "lightning", "success_damage": "half", "resource_id": "srd-young-bronze-dragon-lightning-breath", "resource_cost": 1, "animation": "lightning-breath"},
+      {"id": "srd-young-bronze-dragon-repulsion-breath", "name": "Repulsion Breath", "save_ability": "strength", "dc": 15, "range_ft": 0, "area": {"shape": "cone", "origin": "self", "length_ft": 30}, "failure_effects": [{"kind": "prone"}], "push_target_away_ft": 40, "animation": "repulsion-breath"}
+    ],
+    "attack_action": {"id": "srd-young-bronze-dragon-multiattack", "name": "Multiattack", "is_attack_action": false, "slots": [{"attack_ids": ["srd-young-bronze-dragon-rend"], "save_action_ids": ["srd-young-bronze-dragon-repulsion-breath"]}, {"attack_ids": ["srd-young-bronze-dragon-rend"]}, {"attack_ids": ["srd-young-bronze-dragon-rend"]}]},
+    "saving_throw_bonuses": {"strength": 5, "dexterity": 3, "constitution": 4, "intelligence": 2, "wisdom": 4, "charisma": 3},
+    "skill_bonuses": {"insight": 4, "perception": 7, "stealth": 3},
+    "damage_immunities": ["lightning"],
+    "source_trait_names": ["Amphibious"],
+    "source_limited_use_names": ["actions:Lightning Breath (Recharge 5-6)"],
+    "resources": [{"id": "srd-young-bronze-dragon-lightning-breath", "name": "Lightning Breath", "max_uses": 1, "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 5}}],
+    "visual": {"armor": "natural", "main_hand": "claw", "body_style": "dragon"},
+    "source": "SRD 5.2.1 Young Bronze Dragon"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-bronze-dragon-wyrmling",
+    "name": "Bronze Dragon Wyrmling",
+    "archetype": "source-certified metallic dragon",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 15,
+    "max_hp": 39,
+    "speed_ft": 60,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 60, "climb_ft": 0, "swim_ft": 30, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 2,
+    "attacks": [
+      {"id": "srd-bronze-dragon-wyrmling-rend", "name": "Rend", "weapon_id": "srd-bronze-dragon-wyrmling-rend-weapon", "attack_kind": "melee", "attack_bonus": 5, "damage": {"count": 1, "size": 10, "bonus": 3}, "damage_type": "slashing", "animation": "claw", "reach_ft": 5}
+    ],
+    "primary_attack_id": "srd-bronze-dragon-wyrmling-rend",
+    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
+    "save_actions": [
+      {"id": "srd-bronze-dragon-wyrmling-lightning-breath", "name": "Lightning Breath", "save_ability": "dexterity", "dc": 12, "range_ft": 0, "area": {"shape": "line", "origin": "self", "length_ft": 40, "width_ft": 5}, "damage": {"count": 3, "size": 10, "bonus": 0}, "damage_type": "lightning", "success_damage": "half", "resource_id": "srd-bronze-dragon-wyrmling-lightning-breath", "resource_cost": 1, "animation": "lightning-breath"},
+      {"id": "srd-bronze-dragon-wyrmling-repulsion-breath", "name": "Repulsion Breath", "save_ability": "strength", "dc": 12, "range_ft": 0, "area": {"shape": "cone", "origin": "self", "length_ft": 30}, "failure_effects": [{"kind": "prone"}], "push_target_away_ft": 30, "animation": "repulsion-breath"}
+    ],
+    "attack_action": {"id": "srd-bronze-dragon-wyrmling-multiattack", "name": "Multiattack", "is_attack_action": false, "slots": [{"attack_ids": ["srd-bronze-dragon-wyrmling-rend"]}, {"attack_ids": ["srd-bronze-dragon-wyrmling-rend"]}]},
+    "saving_throw_bonuses": {"strength": 3, "dexterity": 2, "constitution": 2, "intelligence": 1, "wisdom": 2, "charisma": 2},
+    "skill_bonuses": {"perception": 4, "stealth": 2},
+    "damage_immunities": ["lightning"],
+    "source_trait_names": ["Amphibious"],
+    "source_limited_use_names": ["actions:Lightning Breath (Recharge 5-6)"],
+    "resources": [{"id": "srd-bronze-dragon-wyrmling-lightning-breath", "name": "Lightning Breath", "max_uses": 1, "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 5}}],
+    "visual": {"armor": "natural", "main_hand": "claw", "body_style": "dragon"},
+    "source": "SRD 5.2.1 Bronze Dragon Wyrmling"
+  }
+]

@@ -1,10 +1,13 @@
 from __future__ import annotations
-
 import re
 from typing import Any
-
+from app.content.monster_ability_reduction_source_audit import ability_reduction_issues
+from app.content.monster_attachment_source_audit import attachment_issues
 from app.content.monster_attack_advantage_source_audit import conditional_attack_advantage_issues
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
+from app.content.monster_forced_movement_source_audit import forced_movement_issues
+from app.content.monster_grapple_source_audit import grapple_issues
+from app.content.monster_save_action_source_audit import save_action_issues
 from app.domain.models import WeaponAttack
 
 
@@ -47,6 +50,12 @@ def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
     return re.compile(rf"\breach\s+{reach_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
 
 
+def _ranged_pattern(normal_ft: int, long_ft: int) -> re.Pattern[str]:
+    if normal_ft == long_ft:
+        return re.compile(rf"\brange\s+{normal_ft}(?:\s*/\s*{long_ft})?\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+    return re.compile(rf"\brange\s+{normal_ft}\s*/\s*{long_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+
+
 def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
     size_name = getattr(size, "value", size)
     return bool(
@@ -70,36 +79,44 @@ def _condition_timing_present(actions: str, control: Any) -> bool:
     }.get(timing)
     if target:
         return bool(re.search(target, actions, re.IGNORECASE))
-    source = {
-        "source_turn_start": "start",
-        "source_turn_end": "end",
-    }.get(timing)
+    source = {"source_turn_start": "start", "source_turn_end": "end"}.get(timing)
     if source:
         pattern = rf"until\s+the\s+{source}\s+of\s+the\s+[^.]+?[’']s\s+next\s+turn"
         return bool(re.search(pattern, actions, re.IGNORECASE))
     return True
 
 
-def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
+def _max_hp_reduction_present(actions: str, rider: Any) -> bool:
+    damage = r"damage"
+    if rider.damage_type is not None:
+        damage = rf"{re.escape(rider.damage_type.value)}\s+damage"
+    pattern = rf"hit\s+point\s+maximum\s+decreases\s+by\s+an\s+amount\s+equal\s+to\s+the\s+{damage}\s+taken"
+    return bool(re.search(pattern, actions, re.IGNORECASE))
+
+
+def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[str]:
     issues: list[str] = []
     weapon = attack.weapon
     if weapon.name.lower() not in actions:
         issues.append(f"attack-name-missing:{attack.id}")
     if not re.search(rf"Attack Roll:\s*\+?{attack.attack_bonus}\b", actions, re.IGNORECASE):
         issues.append(f"attack-bonus-mismatch:{attack.id}")
+    deals_damage = attack.fixed_damage is not None or weapon.dice_count > 0
     if attack.fixed_damage is not None:
         if not re.search(rf"Hit:\s*{attack.fixed_damage}\b", actions, re.IGNORECASE):
             issues.append(f"fixed-damage-mismatch:{attack.id}")
-    elif not _dice_pattern(weapon.dice_count, weapon.dice_size, attack.damage_bonus).search(actions):
+    elif weapon.dice_count > 0 and not _dice_pattern(weapon.dice_count, weapon.dice_size, attack.damage_bonus).search(actions):
         issues.append(f"damage-dice-mismatch:{attack.id}")
-    if weapon.damage_type.value.lower() not in actions:
+    if deals_damage and weapon.damage_type.value.lower() not in actions:
         issues.append(f"damage-type-missing:{attack.id}")
-    if weapon.attack_kind.value == "melee" and not _melee_reach_pattern(weapon.reach_ft).search(actions):
+    kind = weapon.attack_kind.value
+    if kind in {"melee", "melee_or_ranged"} and not _melee_reach_pattern(weapon.reach_ft).search(actions):
         issues.append(f"melee-reach-mismatch:{attack.id}")
-    if weapon.attack_kind.value == "ranged" and weapon.normal_range_ft is not None:
-        ranged = rf"range\s+{weapon.normal_range_ft}\s*/\s*{weapon.long_range_ft}\s*(?:ft\.?|feet)\b"
-        if not re.search(ranged, actions, re.IGNORECASE):
+    if kind in {"ranged", "melee_or_ranged"} and weapon.normal_range_ft is not None:
+        if not _ranged_pattern(weapon.normal_range_ft, weapon.long_range_ft).search(actions):
             issues.append(f"ranged-range-mismatch:{attack.id}")
+    if kind == "melee_or_ranged" and not re.search(r"Melee\s+or\s+Ranged\s+Attack\s+Roll", actions, re.IGNORECASE):
+        issues.append(f"hybrid-attack-kind-mismatch:{attack.id}")
     for extra in attack.on_hit_damage:
         if extra.dice_count == 0:
             fixed = rf"\bplus\s+{extra.damage_bonus}\s+{extra.damage_type.value}\s+damage\b"
@@ -112,8 +129,14 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     for conditional in attack.conditional_damage:
         if not _conditional_clause_pattern(conditional).search(actions):
             issues.append(f"conditional-damage-mismatch:{attack.id}:{conditional.trigger}")
+    if attack.max_hp_reduction_on_hit is not None and not _max_hp_reduction_present(actions, attack.max_hp_reduction_on_hit):
+        issues.append(f"max-hp-reduction-rider-mismatch:{attack.id}")
+    issues.extend(ability_reduction_issues(attack, actions))
+    issues.extend(attachment_issues(attack, actions))
     issues.extend(hit_modifier_issues(attack, actions))
-    issues.extend(conditional_attack_advantage_issues(attack, actions))
+    issues.extend(conditional_attack_advantage_issues(attack, actions, traits))
+    issues.extend(forced_movement_issues(attack, actions))
+    issues.extend(grapple_issues(attack, actions))
     if attack.knocks_prone_max_size is not None and not _max_size_rider_present(actions, attack.knocks_prone_max_size, "prone"):
         issues.append(f"prone-rider-mismatch:{attack.id}")
     if attack.forbid_target_grappled_by_self:
@@ -121,28 +144,6 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
         if not untargetable or weapon.name.lower() not in actions:
             issues.append(f"grappled-target-restriction-mismatch:{attack.id}")
     control = attack.control_effect
-    if control and control.grapple_escape_dc is not None:
-        if "grappled" not in actions or f"escape dc {control.grapple_escape_dc}" not in actions:
-            issues.append(f"grapple-rider-mismatch:{attack.id}")
-        if control.max_target_size is not None and not _max_size_rider_present(actions, control.max_target_size, "grappled"):
-            issues.append(f"grapple-size-mismatch:{attack.id}")
-        if control.restrains_while_grappled and "restrained" not in actions:
-            issues.append(f"restrained-rider-mismatch:{attack.id}")
     if control and control.condition_id is not None and not _condition_timing_present(actions, control):
         issues.append(f"condition-rider-mismatch:{attack.id}:{control.condition_id}")
-    return issues
-
-
-def save_action_issues(action: Any, actions: str) -> list[str]:
-    issues: list[str] = []
-    if action.name.lower() not in actions:
-        issues.append(f"save-action-name-missing:{action.id}")
-    save = rf"{action.save_ability}\s+Saving Throw:\s*DC\s*{action.dc}\b"
-    if not re.search(save, actions, re.IGNORECASE):
-        issues.append(f"save-dc-mismatch:{action.id}")
-    if action.damage_dice_count and not _dice_pattern(action.damage_dice_count, action.damage_dice_size, action.damage_bonus).search(actions):
-        issues.append(f"save-damage-mismatch:{action.id}")
-    if action.grapple_escape_dc is not None:
-        if "grappled" not in actions or f"escape dc {action.grapple_escape_dc}" not in actions:
-            issues.append(f"save-grapple-rider-mismatch:{action.id}")
     return issues

@@ -1,6 +1,12 @@
 "use strict";
 
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
+
+global.window = globalThis;
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-heroes.js"), "utf8"), { filename: "browser-heroes.js" });
 
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l6"];
 assert.ok(fighter, "generated Fighter 6 card must exist");
@@ -40,4 +46,3 @@ assert.deepEqual(fighter.attack_action.slots, [
 ]);
 
 console.log("Generated browser Fighter 6 ASI regression passed.");
-require("./browser-fighter7.test.cjs");

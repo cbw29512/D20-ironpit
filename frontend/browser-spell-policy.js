@@ -1,17 +1,14 @@
 (() => {
   "use strict";
 
-  const A = () => window.IRON_PIT_BROWSER_SPELL_AREA;
+  const T = () => window.IRON_PIT_BROWSER_AREA_TARGETING;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const O = () => window.IRON_PIT_BROWSER_OFFENSE_VALUE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
 
   function slotLevel(caster, action, turnKey) {
-    if (action.level === 0) return 0;
-    if (!C().slotSpellAvailable(caster.state, turnKey)) return null;
-    const resourceId = `spell-slot-${action.level}`;
-    return (caster.state.resources?.[resourceId] || 0) > 0 ? action.level : null;
+    return C().actionResourceAvailable(caster.state, action, turnKey) ? action.level : null;
   }
 
   function legalSingleTargets(caster, setup, action) {
@@ -20,19 +17,28 @@
       && target.state.current_hp > 0 && S().distance(caster, target) <= action.range);
   }
 
+  function normalizedArea(action) {
+    if (action.area) return action.area;
+    return action.areaRadius ? { shape: "radius", origin: "point", radiusFt: action.areaRadius } : null;
+  }
+
   function choose(caster, setup, turnKey, protectedAllyIds = []) {
+    void protectedAllyIds;
     const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
       if (action.actionCost === "reaction" || action.concentration || !E().available(caster.state, action.actionCost)) continue;
       const castLevel = slotLevel(caster, action, turnKey);
       if (castLevel == null) continue;
-      if (action.areaRadius) {
-        const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
-        if (!placement) continue;
-        const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), action), 0)
-          - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), action), 0);
-        candidates.push({ action, index, score, slotLevel: castLevel,
-          targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement });
+      const area = normalizedArea(action);
+      if (area) {
+        const placements = T().legalPlacements(caster, setup, area, action.range);
+        if (!placements.length) continue;
+        const scored = placements.map((placement) => ({ placement,
+          score: placement.targetIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), action), 0) }));
+        scored.sort((a, b) => b.score - a.score || b.placement.targetIds.length - a.placement.targetIds.length
+          || a.placement.targetIds.join("|").localeCompare(b.placement.targetIds.join("|")));
+        candidates.push({ action, index, score: scored[0].score, slotLevel: castLevel,
+          targetIds: [...scored[0].placement.targetIds], placement: scored[0].placement });
         continue;
       }
       for (const target of legalSingleTargets(caster, setup, action)) {
@@ -48,5 +54,5 @@
       placement: best.placement, expectedDamage: best.score };
   }
 
-  window.IRON_PIT_BROWSER_SPELL_POLICY = { choose, slotLevel };
+  window.IRON_PIT_BROWSER_SPELL_POLICY = { choose, normalizedArea, slotLevel };
 })();

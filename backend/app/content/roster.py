@@ -13,9 +13,10 @@ logger = logging.getLogger(__name__)
 def build_arena_roster() -> ArenaRoster:
     try:
         characters = complete_unarmed_opportunity_profiles(build_certified_hero_templates())
+        monsters = build_monster_templates_from_capabilities()
         return ArenaRoster(
             characters=characters,
-            monsters=build_monster_templates_from_capabilities(),
+            monsters=monsters,
         )
     except Exception as exc:
         logger.exception("Failed to build Iron Pit arena roster.")

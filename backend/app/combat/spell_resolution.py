@@ -1,29 +1,36 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
-from app.combat.saving_throws import resolve_save_action
+from app.combat.resources import action_resource_available, resolved_resource_id, spend_action_resource
+from app.combat.save_targets import resolve_save_targets
 from app.combat.spell_policy import SpellChoice
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 
-def _resource(state, level: int):
-    resource_id = f"spell-slot-{level}"
-    return next((item for item in state.resources if item.id == resource_id), None)
+def _fallback_slot_id(level: int) -> str | None:
+    return f"spell-slot-{level}" if level > 0 else None
 
 
 def _save_action(choice: SpellChoice) -> SavingThrowAction:
     spell = choice.action
     if choice.slot_level != spell.level:
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
-    target_range = spell.range_ft + (spell.area_radius_ft or 0)
     return SavingThrowAction(
-        id=spell.id, name=spell.name, save_ability=spell.save_ability, dc=spell.dc,
-        range_ft=target_range, damage_dice_count=spell.damage_dice_count,
-        damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
-        damage_type=spell.damage_type, success_damage=spell.success_damage,
+        id=spell.id,
+        name=spell.name,
+        save_ability=spell.save_ability,
+        dc=spell.dc,
+        range_ft=spell.range_ft,
+        area=spell.area,
+        damage_dice_count=spell.damage_dice_count,
+        damage_dice_size=spell.damage_dice_size,
+        damage_bonus=spell.damage_bonus,
+        damage_type=spell.damage_type,
+        success_damage=spell.success_damage,
+        magical_effect=True,
         animation=spell.animation,
     )
 
@@ -45,46 +52,48 @@ def resolve_spell(
     if not is_available(caster.state, spell.action_cost):
         raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
 
-    remaining = None
-    if choice.slot_level > 0:
-        resource = _resource(caster.state, choice.slot_level)
-        if resource is None or resource.current_uses < 1:
-            raise ValueError(f"No level {choice.slot_level} spell slot remains.")
+    fallback_id = _fallback_slot_id(choice.slot_level)
+    resource_id = resolved_resource_id(spell.resource_id, fallback_id)
+    uses_spell_slot = bool(resource_id and resource_id.startswith("spell-slot-"))
+    if uses_spell_slot and not slot_spell_available(caster.state, turn_key):
+        raise ValueError(f"A leveled spell was already cast this turn before {spell.name}.")
+    if not action_resource_available(
+        caster.state, spell.resource_id, spell.resource_cost, fallback_resource_id=fallback_id,
+    ):
+        raise ValueError(f"Resource {resource_id!r} is unavailable for {spell.name}.")
+
+    remaining = spend_action_resource(
+        caster.state, spell.resource_id, spell.resource_cost, fallback_resource_id=fallback_id,
+    )
+    if uses_spell_slot:
         mark_slot_spell_cast(caster.state, turn_key)
-        resource.current_uses -= 1
-        remaining = resource.current_uses
     spend(caster.state, spell.action_cost)
 
     placement = choice.placement
-    detail = ""
-    if placement is not None:
-        detail = (
-            f" Area covers {len(placement.enemy_ids)} enemies and "
-            f"{len(placement.friendly_ids)} unprotected allies."
-        )
-    slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
+    detail = f" Area covers {len(placement.target_ids)} enemies." if placement is not None else ""
+    resource_text = "cantrip" if resource_id is None else resource_id
     events = [BattleEvent(
-        sequence=sequence, round_number=round_number, event_type="feature",
-        actor_id=caster.combatant_id, actor_name=caster.state.template.name,
-        feature_id=spell.id, resource_remaining=remaining, animation=spell.animation,
-        description=f"{caster.state.template.name} casts {spell.name} using a {slot_text}.{detail}",
+        sequence=sequence,
+        round_number=round_number,
+        event_type="feature",
+        actor_id=caster.combatant_id,
+        actor_name=caster.state.template.name,
+        feature_id=spell.id,
+        resource_remaining=remaining,
+        animation=spell.animation,
+        description=f"{caster.state.template.name} casts {spell.name} using {resource_text}.{detail}",
     )]
     sequence += 1
 
-    members = [*setup.heroes, *setup.monsters]
-    by_id = {member.combatant_id: member for member in members}
-    affected_states = [member.state for member in members]
-    save_action = _save_action(choice)
-    shared_damage_rolls: list[int] | None = None
-    for target_id in choice.target_ids:
-        target = by_id[target_id]
-        event = resolve_save_action(
-            sequence, round_number, caster, target, save_action,
-            abs(caster.position_ft - target.position_ft), dice, spend_action=False,
-            shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
-        )
-        events.append(event)
-        if shared_damage_rolls is None and event.damage_components:
-            shared_damage_rolls = list(event.damage_components[0].rolls)
-        sequence += 1
+    save_events, sequence = resolve_save_targets(
+        sequence,
+        round_number,
+        caster,
+        setup,
+        _save_action(choice),
+        choice.target_ids,
+        dice,
+        skip_range_check=placement is not None,
+    )
+    events.extend(save_events)
     return events, sequence

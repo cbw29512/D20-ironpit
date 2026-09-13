@@ -4,6 +4,7 @@ import re
 
 from app.content.monster_catalog import load_monster_rows
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
+from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.size import CreatureSize
@@ -54,6 +55,7 @@ def build_merfolk_skirmisher() -> CombatantTemplate:
         initiative_bonus=int(initiative.group(1)), challenge_rating=str(row["challenge"]).split()[0],
         weapon_attack=_ocean_spear("merfolk-skirmisher-ocean-spear-ranged", WeaponAttackKind.RANGED),
         alternate_weapon_attacks=[_ocean_spear("merfolk-skirmisher-ocean-spear-melee", WeaponAttackKind.MELEE)],
+        unarmed_opportunity_attack=monster_unarmed_profile(row),
         visual=VisualLoadout(armor="natural", main_hand="spear", body_style="merfolk-skirmisher"),
         source=str(row["sourceReference"]),
     )

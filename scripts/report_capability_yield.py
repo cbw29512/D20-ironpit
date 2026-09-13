@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from app.content.blocker_yield import build_blocker_signatures, single_family_yields
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
@@ -93,15 +93,23 @@ def _control_signatures(
     }
 
 
+def _authoritative_blocker_report(cards: list[object]) -> None:
+    blocked = {card.name: list(card.blockers) for card in cards if card.coverage_status is CoverageStatus.BLOCKED}
+    counts = Counter(blocker for blockers in blocked.values() for blocker in set(blockers))
+    signatures = build_blocker_signatures(blocked)
+    print(f"CAPABILITY_AUTHORITATIVE_BASELINE\tblocked={len(blocked)}\tblockers={len(counts)}")
+    for blocker, count in counts.most_common():
+        print(f"CAPABILITY_AUTHORITATIVE_BLOCKER\t{blocker}\t{count}")
+    for blocker, names in sorted(single_family_yields(signatures).items(), key=lambda item: (-len(item[1]), item[0])):
+        print(f"CAPABILITY_AUTHORITATIVE_SINGLE\t{blocker}\t{len(names)}\t" + " | ".join(names))
+
+
 def main() -> None:
     rows = load_monster_rows()
     rows_by_name = {str(row["name"]): row for row in rows}
     monster_names = set(rows_by_name)
-    ready_names = {
-        card.name
-        for card in build_monster_catalog()
-        if card.coverage_status is CoverageStatus.RAW_READY
-    }
+    cards = build_monster_catalog()
+    ready_names = {card.name for card in cards if card.coverage_status is CoverageStatus.RAW_READY}
     blockers_by_name: dict[str, list[str]] = {}
     for row in rows:
         name = str(row["name"])
@@ -118,6 +126,7 @@ def main() -> None:
         "CAPABILITY_YIELD_BASELINE"
         f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
     )
+    _authoritative_blocker_report(cards)
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
     for signature, names in _control_signatures(rows_by_name, control_only).items():

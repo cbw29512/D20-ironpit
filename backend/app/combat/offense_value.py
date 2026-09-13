@@ -3,9 +3,11 @@ from __future__ import annotations
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save, close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
+from app.combat.frightened import frightened_d20_disadvantage
 from app.combat.modifier_stack import attacks_against_advantage_sources, effective_armor_class
 from app.combat.rolls import resolve_roll_mode
 from app.combat.saving_throw_rolls import saving_throw_mode
+from app.domain.actions import SavingThrowAction
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import RollMode
@@ -73,6 +75,7 @@ def spell_attack_expected_damage(
     distance = combatant_distance(caster, target)
     advantage, disadvantage = attack_roll_condition_sources(caster.state, target.state, distance, target.combatant_id)
     advantage += attacks_against_advantage_sources(target.state)
+    disadvantage += frightened_d20_disadvantage(caster.state, setup)
     disadvantage += int(close_ranged_threat_exists(caster, setup))
     mode = resolve_roll_mode(advantage, disadvantage)
     hit, critical = _attack_probabilities(caster.state, spell.attack_bonus, effective_armor_class(target.state), mode)
@@ -84,7 +87,13 @@ def spell_attack_expected_damage(
     return max(0.0, (hit - critical) * normal + critical * crit)
 
 
-def _save_success_probability(target, action: SpellSaveAction) -> float:
+def automatic_spell_expected_damage(target: EncounterCombatant, action) -> float:
+    factor = _damage_factor(target.state, DamageType(action.damage_type) if action.damage_type else None)
+    per_application = _mean_damage(action.damage_dice_count, action.damage_dice_size, action.damage_bonus) * factor
+    return max(0.0, per_application * action.applications)
+
+
+def _save_success_probability(target, action: SpellSaveAction | SavingThrowAction) -> float:
     if action.save_ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(target.state):
         return 0.0
     bonus = target.state.template.saving_throw_bonuses[action.save_ability]
@@ -98,7 +107,7 @@ def _save_success_probability(target, action: SpellSaveAction) -> float:
     return success
 
 
-def save_spell_expected_damage(target: EncounterCombatant, action: SpellSaveAction) -> float:
+def save_action_expected_damage(target: EncounterCombatant, action: SpellSaveAction | SavingThrowAction) -> float:
     if not action.damage_dice_count or not action.damage_type:
         return 0.0
     success = _save_success_probability(target, action)
@@ -106,3 +115,7 @@ def save_spell_expected_damage(target: EncounterCombatant, action: SpellSaveActi
     full = _mean_damage(action.damage_dice_count, action.damage_dice_size, action.damage_bonus) * factor
     on_success = full * 0.5 if action.success_damage == "half" else 0.0
     return max(0.0, (1 - success) * full + success * on_success)
+
+
+def save_spell_expected_damage(target: EncounterCombatant, action: SpellSaveAction) -> float:
+    return save_action_expected_damage(target, action)

@@ -31,8 +31,8 @@ def resolve_defensive_spell(
 ) -> BattleEvent:
     if slot_level != spell.level:
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
-    if resource.current_uses < 1:
-        raise ValueError(f"No level {slot_level} spell slot remains for {spell.name}.")
+    if resource.current_uses < spell.resource_cost:
+        raise ValueError(f"Resource {resource.id!r} is unavailable for {spell.name}.")
     if not targets:
         raise ValueError(f"{spell.name} has no legal precombat targets.")
     if member.state.opening_buff_spell_id is not None:
@@ -46,7 +46,7 @@ def resolve_defensive_spell(
     ):
         raise ValueError(f"{spell.name} is already active on a selected target.")
     member.state.opening_buff_spell_id = spell.id
-    resource.current_uses -= 1
+    resource.current_uses -= spell.resource_cost
     temp_hp_details: list[str] = []
     for target in targets:
         before = target.state.temporary_hp
@@ -89,7 +89,7 @@ def resolve_defensive_spell(
         concentration_started_effect_id=spell.id if spell.concentration else None,
         animation=spell.animation,
         description=(
-            f"Precombat preparation: {member.state.template.name} casts {spell.name} with a level {slot_level} slot "
+            f"Precombat preparation: {member.state.template.name} casts {spell.name} using {resource.id} "
             f"on {names} ({'; '.join(details)})."
         ),
     )

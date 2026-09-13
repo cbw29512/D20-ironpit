@@ -2,12 +2,20 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ConditionName, ConditionTiming
+from app.domain.ability_reduction import AbilityScoreReductionEffectDefinition
+from app.domain.actions import AbilityName
+from app.domain.attachments import AttachmentEffectDefinition
 from app.domain.combatants import DamageType
-from app.domain.hit_modifiers import HitModifierEffect
-from app.domain.size import CreatureSize
+from app.domain.hit_modifiers import CombatModifierEffect, HitModifierEffect
+from app.domain.save_effects import (
+    ConditionEffectDefinition,
+    GrappleEffectDefinition,
+    ProneEffectDefinition,
+    SaveFailureEffectDefinition,
+)
+from app.domain.target_filters import TargetFilter
 
 
 class DiceSpec(BaseModel):
@@ -25,31 +33,57 @@ class DamageEffectDefinition(BaseModel):
     mode: Literal["add", "replace_weapon"] = "add"
 
 
-class ProneEffectDefinition(BaseModel):
-    kind: Literal["prone"] = "prone"
-    max_target_size: CreatureSize | None = None
+class MaxHpReductionEffectDefinition(BaseModel):
+    """Reduce max HP by applied attack damage, optionally limited to one damage type."""
+
+    kind: Literal["max-hp-reduction"] = "max-hp-reduction"
+    damage_type: DamageType | None = None
 
 
-class GrappleEffectDefinition(BaseModel):
-    kind: Literal["grapple"] = "grapple"
-    escape_dc: int = Field(ge=1, le=40)
-    max_target_size: CreatureSize | None = None
-    restrains: bool = False
+class HitSavingThrowEffectDefinition(BaseModel):
+    """Saving throw caused by a successful attack hit before applying generic failure effects."""
 
+    kind: Literal["saving-throw"] = "saving-throw"
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    magical_effect: bool = False
+    target_filter: TargetFilter = Field(default_factory=TargetFilter)
+    failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+    severe_failure_margin: int | None = Field(default=None, ge=1, le=20)
+    severe_failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
 
-class ConditionEffectDefinition(BaseModel):
-    kind: Literal["condition"] = "condition"
-    condition: ConditionName
-    max_target_size: CreatureSize | None = None
-    expires_at_start_of_source_turn: bool = False
-    expiry_timing: ConditionTiming | None = None
-    repeat_save_ability: AbilityName | None = None
-    repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
-    repeat_save_timing: ConditionTiming | None = None
-    allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    @model_validator(mode="after")
+    def validate_severe_failure(self) -> "HitSavingThrowEffectDefinition":
+        if (self.severe_failure_margin is None) != (not self.severe_failure_effects):
+            raise ValueError("Severe failed-save margin and effects must be configured together.")
+        return self
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    DamageEffectDefinition
+    | ProneEffectDefinition
+    | GrappleEffectDefinition
+    | ConditionEffectDefinition
+    | CombatModifierEffect
+    | MaxHpReductionEffectDefinition
+    | AttachmentEffectDefinition
+    | AbilityScoreReductionEffectDefinition
+    | HitSavingThrowEffectDefinition,
     Field(discriminator="kind"),
+]
+
+__all__ = [
+    "AbilityScoreReductionEffectDefinition",
+    "AttachmentEffectDefinition",
+    "AttackEffectDefinition",
+    "CombatModifierEffect",
+    "ConditionEffectDefinition",
+    "DamageEffectDefinition",
+    "DiceSpec",
+    "GrappleEffectDefinition",
+    "HitModifierEffect",
+    "HitSavingThrowEffectDefinition",
+    "MaxHpReductionEffectDefinition",
+    "ProneEffectDefinition",
+    "SaveFailureEffectDefinition",
 ]

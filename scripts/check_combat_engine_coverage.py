@@ -11,6 +11,7 @@ BACKEND = ROOT / "backend"
 MATRIX = ROOT / "data" / "combat_engine_coverage_v1.json"
 CI_WORKFLOW = ROOT / ".github" / "workflows" / "ci.yml"
 VALID_STATUSES = {"supported", "blocked", "partial", "unsupported", "arena_out_of_scope"}
+_ALL_BROWSER_TESTS_GLOB = "for test_file in frontend/*.test.cjs"
 
 sys.path.insert(0, str(BACKEND))
 from app.content.combat_engine_coverage import audit_current_build_capabilities  # noqa: E402
@@ -27,7 +28,8 @@ def _require_file(path: str, capability_id: str) -> None:
 def _require_permanent_browser_test(path: str, capability_id: str, ci_text: str) -> None:
     if not path.startswith("frontend/") or not path.endswith(".test.cjs"):
         return
-    if f"node {path}" not in ci_text:
+    runs_all_browser_tests = _ALL_BROWSER_TESTS_GLOB in ci_text and 'node "$test_file"' in ci_text
+    if not runs_all_browser_tests and f"node {path}" not in ci_text:
         raise ValueError(
             f"Supported capability {capability_id!r} cites browser test {path!r} "
             "that permanent CI does not execute."

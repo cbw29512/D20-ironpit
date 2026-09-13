@@ -36,10 +36,13 @@ _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
     rf"(?:{_DAMAGE_TYPES})\s+damage\s+if\s+the\s+[a-z][a-z -]*\s+is\s+Bloodied\b",
     re.I,
 )
+# Keep this list limited to source riders that are not represented by the
+# production attack-rider parser. Flat ``plus N <type> damage`` riders are
+# intentionally absent: monster_source_attack_riders.py models them as an
+# immutable DamageEffectDefinition and the source audit verifies them.
 _HIDDEN_RIDER = re.compile(
-    r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
-    r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
-    rf"|\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b",
+    r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:|Hit Point maximum decreases)\b"
+    r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b",
     re.I,
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)

@@ -8,9 +8,8 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-attack.js",
   "browser-reactions.js", "browser-saves.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
   "browser-standard-attack-action.js", "browser-multiattack.js", "browser-action-surge.js", "browser-formation.js",
@@ -26,6 +25,8 @@ function queuedDice(values, fallback = 10) {
   return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
 }
 
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "initiative regressions must use the canonical generated monster roster");
+
 function member(template, side, id, position) {
   return { combatant_id: id, side, position_ft: position, state: window.IRON_PIT_BROWSER_STATE.buildState(structuredClone(template)) };
 }
@@ -33,6 +34,7 @@ function member(template, side, id, position) {
 function basicSetup(monsterId = "srd-commoner", heroId = "karnok-stoneward-l1") {
   const hero = member(window.IRON_PIT_BROWSER_HEROES[heroId], "heroes", `hero-1:${heroId}`, 5);
   const monster = member(window.IRON_PIT_BROWSER_MONSTERS[monsterId], "monsters", `monster-1:${monsterId}`, 10);
+  assert.ok(monster.state.template, `${monsterId} must exist in the generated certified roster`);
   return { heroes: [hero], monsters: [monster], hero, monster };
 }
 
@@ -136,4 +138,4 @@ function neutralizeInitiative(setup) {
   assert.equal(window.IRON_PIT_BROWSER_ACTION_SURGE.available(fighter.state, "1:hero-1:karnok-stoneward-l2"), false);
 }
 
-console.log("Iron Pit initiative/natural-1 browser regressions passed.");
+console.log("Canonical generated Iron Pit initiative/natural-1 browser regressions passed.");

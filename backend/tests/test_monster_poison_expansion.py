@@ -2,7 +2,7 @@ from app.combat.condition_lifecycle import resolve_target_condition_timing
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.state import build_combatant_state
-from app.combat.timed_conditions import ARENA_POISON_RECOVERY_DC
+from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_source_audit import audit_monster_source
@@ -28,13 +28,8 @@ def _member(template, combatant_id: str, side: str, position: int):
     )
 
 
-def _assert_arena_poison(target) -> None:
-    poison = next(effect for effect in target.state.timed_effects if effect.effect_id == "poisoned")
-    assert poison.expiry_timing is None
-    assert poison.expires_at_start_of_source_turn is False
-    assert (poison.repeat_save_ability, poison.repeat_save_dc, poison.repeat_save_timing) == (
-        "constitution", ARENA_POISON_RECOVERY_DC, "target_turn_start",
-    )
+def _poison(target):
+    return next(effect for effect in target.state.timed_effects if effect.effect_id == "poisoned")
 
 
 def test_poison_expansion_reconciles_exact_srd_riders() -> None:
@@ -48,7 +43,7 @@ def test_source_audit_rejects_wrong_poison_turn_timing() -> None:
     assert "condition-rider-mismatch:giant-vulture-gouge:poisoned" in audit_monster_source(vulture, _row("Giant Vulture"))
 
 
-def test_giant_vulture_source_profile_is_exact_but_runtime_uses_arena_poison() -> None:
+def test_giant_vulture_poison_ends_at_target_next_turn_end_without_recovery_save() -> None:
     vulture = build_giant_vulture()
     assert (vulture.armor_class, vulture.max_hp, vulture.speed_ft, vulture.initiative_bonus) == (10, 25, 60, 0)
     assert CombatTrait.PACK_TACTICS in vulture.combat_traits
@@ -63,12 +58,20 @@ def test_giant_vulture_source_profile_is_exact_but_runtime_uses_arena_poison() -
     setup = EncounterSetup(heroes=[target], monsters=[source], hero_total_levels=1, monster_total_cr="1")
     event = resolve_encounter_attack(1, 1, source, target, attack, 5, FixedDiceProvider([15, 4, 4]), setup)
     assert event.hit is True and "poisoned" in event.applied_condition_ids
-    _assert_arena_poison(target)
-    ended, _ = resolve_target_condition_timing(2, 2, target, "target_turn_start", FixedDiceProvider([20]))
-    assert len(ended) == 1 and ended[0].removed_condition_ids == ["poisoned"]
+    poison = _poison(target)
+    assert poison.expiry_timing == "target_turn_end"
+    assert poison.repeat_save_ability is None and poison.repeat_save_dc is None
+
+    start, sequence = resolve_target_condition_timing(2, 1, target, "target_turn_start", FixedDiceProvider([20]))
+    assert start == [] and sequence == 2
+    ended, sequence = resolve_target_condition_timing(sequence, 1, target, "target_turn_end", FixedDiceProvider([20]))
+    assert sequence == 3
+    assert ended[0].event_type == "feature"
+    assert ended[0].saving_throw_roll is None
+    assert ended[0].removed_condition_ids == ["poisoned"]
 
 
-def test_wyvern_source_profile_is_exact_but_runtime_uses_arena_poison() -> None:
+def test_wyvern_poison_ends_at_source_next_turn_start_without_recovery_save() -> None:
     wyvern = build_wyvern()
     assert (wyvern.armor_class, wyvern.max_hp, wyvern.speed_ft, wyvern.initiative_bonus) == (14, 127, 80, 0)
     bite, sting = wyvern.weapon_attack, wyvern.alternate_weapon_attacks[0]
@@ -86,9 +89,15 @@ def test_wyvern_source_profile_is_exact_but_runtime_uses_arena_poison() -> None:
         FixedDiceProvider([15, 2, 2, 1, 1, 1, 1, 1, 1, 1]), setup,
     )
     assert event.hit is True and "poisoned" in event.applied_condition_ids
-    _assert_arena_poison(target)
-    ended, _ = resolve_target_condition_timing(2, 2, target, "target_turn_start", FixedDiceProvider([20]))
-    assert len(ended) == 1 and ended[0].removed_condition_ids == ["poisoned"]
+    poison = _poison(target)
+    assert poison.expiry_timing == "source_turn_start"
+    assert poison.repeat_save_ability is None and poison.repeat_save_dc is None
+
+    ended, sequence = expire_start_of_turn_conditions(2, 2, source, setup)
+    assert sequence == 3
+    assert ended[0].event_type == "feature"
+    assert ended[0].saving_throw_roll is None
+    assert ended[0].removed_condition_ids == ["poisoned"]
 
 
 def test_poison_expansion_is_raw_ready() -> None:

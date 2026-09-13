@@ -5,12 +5,16 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
+from app.domain.auras import EndTurnDamageAura, RollAdvantageAura, StartTurnSaveConditionAura
 from app.domain.character_builds import AbilityScores
+from app.domain.forced_movement_actions import ForcedMovementAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.regeneration import RegenerationRule
 from app.domain.size import CreatureSize
-from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.spells import AutomaticSpellAction, DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.swallow import SwallowAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import (
@@ -31,10 +35,17 @@ class VisualLoadout(BaseModel):
     body_style: str = "humanoid"
 
 
+class RechargeRule(BaseModel):
+    trigger: Literal["start_of_turn"] = "start_of_turn"
+    die_size: Literal[6] = 6
+    minimum_roll: int = Field(ge=1, le=6)
+
+
 class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
+    recharge: RechargeRule | None = None
 
 
 class CombatantTemplate(BaseModel):
@@ -45,6 +56,7 @@ class CombatantTemplate(BaseModel):
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
     creature_type: str | None = None
+    creature_tags: list[str] = Field(default_factory=list)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
@@ -58,14 +70,22 @@ class CombatantTemplate(BaseModel):
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    forced_movement_actions: list[ForcedMovementAction] = Field(default_factory=list)
+    swallow_actions: list[SwallowAction] = Field(default_factory=list)
+    end_turn_damage_auras: list[EndTurnDamageAura] = Field(default_factory=list)
+    start_turn_save_condition_auras: list[StartTurnSaveConditionAura] = Field(default_factory=list)
+    roll_advantage_auras: list[RollAdvantageAura] = Field(default_factory=list)
+    regeneration: RegenerationRule | None = None
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
+    automatic_spell_actions: list[AutomaticSpellAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
+    magic_resistance: bool = False
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
     source_bonus_action_names: list[str] = Field(default_factory=list)

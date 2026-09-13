@@ -4,12 +4,15 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, use_ranged_split
+from app.combat.attack_action_choices import attack_choice, forced_movement_choice, save_choice, slot_has_legal_choice, use_ranged_split
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.encounter_targeting import close_ranged_threat_exists
+from app.combat.forced_movement_actions import resolve_action as resolve_forced_movement_action
 from app.combat.light_attack_resolution import resolve_light_extra_attack
+from app.combat.mixed_slot_policy import prefer_save_replacement
 from app.combat.opening_burst import opening_feature_id
 from app.combat.pit_policy import flexible_slot_has_both
 from app.combat.saving_throws import resolve_save_action
@@ -44,6 +47,13 @@ def resolve_attack_action(
         for index, slot in enumerate(definition.slots):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
+            movement_action = forced_movement_choice(attacker, setup, slot)
+            if movement_action is not None:
+                moved_events, sequence = resolve_forced_movement_action(
+                    sequence, round_number, attacker, setup, movement_action,
+                )
+                events.extend(moved_events)
+                continue
             split_this_slot = (
                 index > 0
                 and ranged_split
@@ -51,6 +61,18 @@ def resolve_attack_action(
                 and flexible_slot_has_both(attacker, slot.attack_ids)
             )
             chosen_attack = attack_choice(attacker, setup, slot, ranged_backline=split_this_slot)
+            chosen_save = save_choice(attacker, setup, slot)
+            if chosen_save is not None and (
+                chosen_attack is None
+                or prefer_save_replacement(attacker, chosen_save[0], chosen_save[1])
+            ):
+                target, save_action, distance = chosen_save
+                events.append(resolve_save_action(
+                    sequence, round_number, attacker, target, save_action,
+                    distance, dice, spend_action=False, affected_states=affected_states, setup=setup,
+                ))
+                sequence += 1
+                continue
             if chosen_attack is not None:
                 target, attack, distance = chosen_attack
                 if split_this_slot and attack.weapon.attack_kind is WeaponAttackKind.RANGED:
@@ -61,7 +83,7 @@ def resolve_attack_action(
                     sequence, round_number, attacker, target, attack, distance, dice, setup,
                     spend_action=False, advantage_sources=1 if pack else 0,
                     feature_id=feature_id, turn_key=turn_key, allow_reckless=True,
-                    close_enemy_active=False,
+                    close_enemy_active=close_ranged_threat_exists(attacker, setup),
                 )
                 events.append(event)
                 sequence += 1
@@ -74,16 +96,6 @@ def resolve_attack_action(
                 if definition.is_attack_action and light_trigger is None and attack.weapon.light:
                     light_trigger = attack
                 opening_feature = None
-                continue
-
-            chosen_save = save_choice(attacker, setup, slot)
-            if chosen_save is not None:
-                target, save_action, distance = chosen_save
-                events.append(resolve_save_action(
-                    sequence, round_number, attacker, target, save_action,
-                    distance, dice, spend_action=False, affected_states=affected_states,
-                ))
-                sequence += 1
 
         if definition.is_attack_action and light_trigger is not None and not attacker.state.turn_terminated:
             more, sequence = resolve_light_extra_attack(

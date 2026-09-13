@@ -3,28 +3,31 @@ from __future__ import annotations
 import logging
 import re
 
+from app.content.monster_attack_save_source_audit import on_hit_save_issues
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
 from app.content.monster_bonus_action_source_audit import bonus_action_issues
 from app.content.monster_charge_source_audit import charge_replacement_issues
 from app.content.monster_defense_source_audit import defense_issues
+from app.content.monster_forced_movement_action_source_audit import forced_movement_action_issues
+from app.content.monster_general_action_fallback import is_general_rule_attack_id
 from app.content.monster_legendary_source_audit import legendary_action_issues
 from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
+from app.content.monster_save_action_source_section import save_action_source
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
+from app.content.monster_source_save_count import source_action_save_count
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
+from app.content.monster_swallow_source_audit import swallow_action_issues
 from app.content.monster_trait_source_audit import trait_issues
 from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
-from app.domain.models import CombatantTemplate
+from app.domain.models import CombatantTemplate, WeaponAttackKind
+from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 _SIZE_NAMES = ("tiny", "small", "medium", "large", "huge", "gargantuan")
 _MELEE_ATTACK_ROLL = re.compile(r"\bMelee\s+Attack Roll:", re.IGNORECASE)
 _RANGED_ATTACK_ROLL = re.compile(r"\bRanged\s+Attack Roll:", re.IGNORECASE)
 _COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.IGNORECASE)
-_SAVING_THROW = re.compile(
-    r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:",
-    re.IGNORECASE,
-)
 
 
 def _first_int(value: object) -> int:
@@ -53,19 +56,40 @@ def _size_matches(runtime_size: str, source_size: object) -> bool:
     return runtime_size.lower() in allowed
 
 
+def _unarmed_opportunity_matches(template: CombatantTemplate, row: dict[str, object]) -> bool:
+    from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
+
+    return template.unarmed_opportunity_attack == monster_unarmed_profile(row)
+
+
+def _charge_contract_issues(template: CombatantTemplate) -> list[str]:
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    has_profile = any(attack.charge_profile is not None for attack in attacks)
+    has_trait = CombatTrait.CHARGE in template.combat_traits
+    return [] if has_profile == has_trait else ["charge-trait-profile-mismatch"]
+
+
 def _source_attack_mode_count(actions: str) -> int:
-    """Count legal attack modes; one combined melee/ranged action exposes two runtime modes."""
     combined = len(_COMBINED_ATTACK_ROLL.findall(actions))
     standalone = _COMBINED_ATTACK_ROLL.sub("", actions)
-    return (
-        len(_MELEE_ATTACK_ROLL.findall(standalone))
-        + len(_RANGED_ATTACK_ROLL.findall(standalone))
-        + 2 * combined
+    return len(_MELEE_ATTACK_ROLL.findall(standalone)) + len(_RANGED_ATTACK_ROLL.findall(standalone)) + 2 * combined
+
+
+def _source_bound_attacks(template: CombatantTemplate) -> list[object]:
+    return [
+        attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks]
+        if not is_general_rule_attack_id(attack.id)
+    ]
+
+
+def _runtime_attack_mode_count(template: CombatantTemplate) -> int:
+    return sum(
+        2 if attack.weapon.attack_kind is WeaponAttackKind.MELEE_OR_RANGED else 1
+        for attack in _source_bound_attacks(template)
     )
 
 
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Reconcile combat semantics against the vendored SRD 5.2.1 record before source metadata enrichment."""
     try:
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
@@ -76,8 +100,10 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
             (template.initiative_bonus == _initiative(row), "initiative-mismatch"),
             (template.saving_throw_bonuses == parse_saving_throw_bonuses(row), "saving-throws-mismatch"),
+            (_unarmed_opportunity_matches(template, row), "unarmed-opportunity-mismatch"),
         )
         issues = [label for passed, label in checks if not passed]
+        issues.extend(_charge_contract_issues(template))
         issues.extend(movement_mode_issues(template, row))
         issues.extend(defense_issues(template, row))
         issues.extend(trait_issues(template, row))
@@ -87,16 +113,25 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(legendary_action_issues(template, row))
         issues.extend(spellcasting_issues(template, row))
         actions = normalized(row.get("actions", ""))
-        runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
-        if _source_attack_mode_count(actions) != len(runtime_attacks):
+        traits = normalized(row.get("traits", ""))
+        runtime_attacks = _source_bound_attacks(template)
+        if _source_attack_mode_count(actions) != _runtime_attack_mode_count(template):
             issues.append("source-attack-count-mismatch")
-        if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
+        runtime_action_save_count = sum(
+            action.action_cost == "action" for action in template.saving_throw_actions
+        ) + sum(attack.on_hit_saving_throw is not None for attack in runtime_attacks)
+        if source_action_save_count(actions) != runtime_action_save_count:
             issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks:
-            issues.extend(attack_issues(attack, actions))
+            issues.extend(attack_issues(attack, actions, traits))
+            issues.extend(on_hit_save_issues(attack, actions))
         issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions:
-            issues.extend(save_action_issues(action, actions))
+            issues.extend(save_action_issues(action, save_action_source(row, action.action_cost)))
+        for action in template.forced_movement_actions:
+            issues.extend(forced_movement_action_issues(action, actions))
+        for action in template.swallow_actions:
+            issues.extend(swallow_action_issues(action, save_action_source(row, action.action_cost)))
         if template.attack_action is not None and "multiattack" not in actions:
             issues.append("multiattack-source-missing")
         return issues

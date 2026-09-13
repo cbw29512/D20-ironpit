@@ -2,13 +2,18 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import is_available
+from app.combat.attachments import resolve_detach_action
+from app.combat.auras import resolve_end_turn_damage_auras
+from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.pit_policy import save_distance, target_order
-from app.combat.saving_throws import legal_save_action
-from app.combat.barbarian import finalize_rage_turn
+from app.combat.resources import resource_available
+from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.swallow import resolve_swallow_turn_end
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -17,11 +22,28 @@ logger = logging.getLogger(__name__)
 
 def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     try:
+        bonus_choice = save_choice(attacker, setup, "bonus_action")
+        if bonus_choice is not None and is_available(attacker.state, "bonus_action"):
+            target, action, distance = bonus_choice
+            affected = [member.state for member in [*setup.heroes, *setup.monsters]]
+            events.append(resolve_save_action(
+                sequence, round_number, attacker, target, action, distance, dice,
+                affected_states=affected, setup=setup,
+            ))
+            sequence += 1
         if allow_surge:
             surge_events, sequence = resolve_action_surge_attack(
                 sequence, round_number, attacker, setup, dice, turn_key,
             )
             events.extend(surge_events)
+        swallow_events, sequence = resolve_swallow_turn_end(
+            sequence, round_number, attacker, setup, dice,
+        )
+        events.extend(swallow_events)
+        aura_events, sequence = resolve_end_turn_damage_auras(
+            sequence, round_number, attacker, setup, dice,
+        )
+        events.extend(aura_events)
         rage_event, sequence = finalize_rage_turn(
             sequence, round_number, attacker.state, attacker.combatant_id,
         )
@@ -36,6 +58,9 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
 def resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     try:
         events: list[BattleEvent] = []
+        detach_event = resolve_detach_action(sequence, round_number, member, setup)
+        if detach_event is not None:
+            return [detach_event], sequence + 1
         healing_choice = choose_healing_action(member, setup, turn_key)
         if healing_choice is not None and healing_choice[1].state.current_hp == 0:
             action, target = healing_choice
@@ -59,12 +84,18 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         raise
 
 
-def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
+def save_choice(attacker: EncounterCombatant, setup: EncounterSetup, action_cost: str = "action"):
     try:
+        if not is_available(attacker.state, action_cost):
+            return None
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
+                if action.action_cost != action_cost:
+                    continue
+                if not resource_available(attacker.state, action.resource_id, action.resource_cost):
+                    continue
                 distance = save_distance(attacker, target, action.range_ft)
-                if legal_save_action(action, target, distance):
+                if legal_save_action(action, target, distance, attacker):
                     return target, action, distance
         return None
     except Exception:

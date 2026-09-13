@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
-  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
-  const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
+  const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "ability-check-bonus-die", "bonus-damage"]);
+  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-advantage", "next-attack-against-advantage", "next-attack-disadvantage", "speed"]);
+  const EFFECT_KINDS = new Set(["attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage", "speed"]);
   const D = () => window.IRON_PIT_DICE;
 
   function validate(item) {
@@ -11,7 +11,7 @@
     const count = item.dice_count || 0, sides = item.dice_size || 0;
     if (DIE_KINDS.has(item.kind) ? count < 1 || sides < 2 : count || sides) throw new Error(`Invalid dice for ${item.kind}.`);
     if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
-    if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
+    if (new Set(["attacks-against-advantage", "next-attack-advantage", "next-attack-against-advantage", "next-attack-disadvantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack roll-mode modifiers do not accept a flat bonus.");
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
@@ -67,26 +67,35 @@
     return before - state.active_modifiers.length;
   }
 
+  function applyEffect(state, sourceId, sourceEffectId, effect, index, trigger) {
+    if (!EFFECT_KINDS.has(effect.kind)) throw new Error(`Unsupported combat modifier effect kind: ${effect.kind}.`);
+    add(state, {
+      id: `${sourceId}:${sourceEffectId}:${trigger}-modifier:${index}`, source_id: sourceId, source_effect_id: sourceEffectId,
+      kind: effect.kind, flat_bonus: effect.flatBonus || 0,
+      consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
+      expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
+      expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
+    });
+  }
+
   function applyHitEffects(state, sourceId, attack) {
     for (const [index, effect] of (attack.onHitModifiers || []).entries()) {
-      if (!HIT_KINDS.has(effect.kind)) throw new Error(`Unsupported on-hit modifier kind: ${effect.kind}.`);
-      add(state, {
-        id: `${sourceId}:${attack.id}:hit-modifier:${index}`, source_id: sourceId, source_effect_id: attack.id,
-        kind: effect.kind, flat_bonus: effect.flatBonus || 0,
-        consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
-        expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
-        expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
-      });
+      applyEffect(state, sourceId, attack.id, effect, index, "hit");
     }
   }
 
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
-  const effectiveSpeed = (state) => Math.max(0, state.template.speed_ft + flat(state, "speed"));
+  const speedMultiplier = (state) => Math.min(1, ...(state.timed_effects || []).filter((effect) =>
+    effect.speed_multiplier !== 1 && (!effect.requires_active_effect_id || state.active_effect_ids.includes(effect.requires_active_effect_id)))
+    .map((effect) => effect.speed_multiplier));
+  const effectiveSpeed = (state) => Math.max(0, Math.trunc((state.template.speed_ft + flat(state, "speed")) * speedMultiplier(state)));
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
+  const nextAttackAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "next-attack-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
+  const nextAttackDisadvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "next-attack-disadvantage").length;
 
   function consumeAttacksAgainstAdvantage(state) {
     const before = state.active_modifiers.length;
@@ -99,9 +108,11 @@
     state.active_modifiers = state.active_modifiers.filter((item) => !(item.kind === "next-attack-against-advantage" && item.target_id === targetId));
     return before - state.active_modifiers.length;
   }
+  function consumeNextAttackAdvantage(state) { const before = state.active_modifiers.length; state.active_modifiers = state.active_modifiers.filter((item) => item.kind !== "next-attack-advantage"); return before - state.active_modifiers.length; }
+  function consumeNextAttackDisadvantage(state) { const before = state.active_modifiers.length; state.active_modifiers = state.active_modifiers.filter((item) => item.kind !== "next-attack-disadvantage"); return before - state.active_modifiers.length; }
 
   function applyD20Bonus(state, kind, roll) {
-    if (!new Set(["attack-roll-bonus-die", "saving-throw-bonus-die"]).has(kind)) throw new Error(`${kind} is not a D20 bonus modifier.`);
+    if (!new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "ability-check-bonus-die"]).has(kind)) throw new Error(`${kind} is not a D20 bonus modifier.`);
     const modifiers = (state.active_modifiers || []).filter((item) => item.kind === kind);
     if (!modifiers.length) return roll;
     const bonusDice = modifiers.map((item) => {
@@ -120,8 +131,8 @@
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
-    add, applyD20Bonus, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
-    consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
-    expireTargetTurn, nextAttackAgainstAdvantage, removeSource, validate,
+    add, applyD20Bonus, applyEffect, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
+    consumeNextAttackAdvantage, consumeNextAttackAgainstAdvantage, consumeNextAttackDisadvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
+    expireTargetTurn, nextAttackAdvantage, nextAttackAgainstAdvantage, nextAttackDisadvantage, removeSource, validate,
   };
 })();

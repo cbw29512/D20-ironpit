@@ -72,10 +72,18 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
     assert barbarian_20.runnable_template_id is None
     assert barbarian_20.blockers
 
+    aboleth = next(monster for monster in catalog.monsters if monster.name == "Aboleth")
+    assert aboleth.coverage_status is CoverageStatus.BLOCKED
+    assert aboleth.runnable_template_id is None
+    assert aboleth.blockers
+
+
+def test_newly_certified_berserker_is_raw_ready() -> None:
+    catalog = build_full_content_catalog()
     berserker = next(monster for monster in catalog.monsters if monster.name == "Berserker")
-    assert berserker.coverage_status is CoverageStatus.BLOCKED
-    assert berserker.runnable_template_id is None
-    assert berserker.blockers == ["monster-combat-mechanics-not-certified"]
+    assert berserker.coverage_status is CoverageStatus.RAW_READY
+    assert berserker.runnable_template_id == "srd-berserker"
+    assert berserker.blockers == []
 
 
 def test_current_audited_heroes_are_raw_ready() -> None:

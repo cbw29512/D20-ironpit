@@ -2,7 +2,10 @@
   "use strict";
 
   const dice = () => window.IRON_PIT_DICE;
-  const bloodied = (state) => state.current_hp * 2 <= state.template.max_hp;
+  const effectiveMaxHp = (state) => window.IRON_PIT_BROWSER_MAX_HP_REDUCTION?.effectiveMaxHp(state) ?? Math.max(0, state.template.max_hp + (state.max_hp_bonus || 0) - (state.max_hp_reduction || 0));
+  const bloodied = (state) => state.current_hp * 2 <= effectiveMaxHp(state);
+  const bloodiedAttackAdvantage = (state, attack) => !bloodied(state) ? 0 : state.template.traits?.includes("bloodied-frenzy") ? 1 : state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" ? 1 : 0;
+  const bloodiedSaveAdvantage = (state) => state.template.traits?.includes("bloodied-frenzy") && bloodied(state) ? 1 : 0;
 
   function modeFromSources(advantage = 0, disadvantage = 0) {
     if ((advantage > 0) === (disadvantage > 0)) return "normal";
@@ -16,8 +19,10 @@
   }
 
   function attackMode(attack, distance, advantage = 0, disadvantage = 0, closeCombatThreat = distance <= 5) {
-    if (attack.kind === "melee") {
-      if (distance > (attack.reach || 5)) throw new Error(`${attack.name} is out of melee reach.`);
+    const reach = attack.reach || 5;
+    const usesMeleeMode = attack.kind === "melee" || (attack.kind === "melee_or_ranged" && distance <= reach);
+    if (usesMeleeMode) {
+      if (distance > reach) throw new Error(`${attack.name} is out of melee reach.`);
     } else {
       if (!attack.normal || !attack.long || distance > attack.long) throw new Error(`${attack.name} is out of range.`);
       if (distance > attack.normal) disadvantage += 1;
@@ -124,6 +129,7 @@
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
+    window.IRON_PIT_BROWSER_TIMED?.applyDamageRollPenalty(attacker, components);
     const total = components.reduce((sum, item) => sum + item.total, 0);
     return {
       roll: {
@@ -136,5 +142,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_ROLLS = { attackMode, d20, modeFromSources, weaponDamage };
+  window.IRON_PIT_BROWSER_ROLLS = { attackMode, bloodiedAttackAdvantage, bloodiedSaveAdvantage, d20, modeFromSources, weaponDamage };
 })();

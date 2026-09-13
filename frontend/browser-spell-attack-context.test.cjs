@@ -12,7 +12,7 @@ for (const file of [
   "browser-grapple.js", "browser-timed-conditions.js", "browser-weapon-mastery.js", "browser-tactical-master.js",
   "browser-barbarian2.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-heroic-inspiration.js", "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-attack.js",
-  "browser-spellcasting.js", "browser-spell-modifiers.js", "browser-spell-attack.js",
+  "browser-resources.js", "browser-spellcasting.js", "browser-spell-modifiers.js", "browser-spell-attack.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;

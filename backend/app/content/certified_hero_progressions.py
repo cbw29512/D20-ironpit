@@ -17,6 +17,10 @@ from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.audited_rogue import build_mara_quickstep_level
 from app.content.audited_rogue_profile import build_mara_quickstep_profile
 from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level6_profile
+from app.content.barbarian_high_level_profiles import (
+    build_rokhan_stonefury_level7_profile,
+    build_rokhan_stonefury_level8_profile,
+)
 from app.content.barbarian_progression import build_rokhan_stonefury_level
 from app.content.barbarian_progression_profile import (
     build_rokhan_stonefury_level2_profile,
@@ -30,6 +34,14 @@ from app.content.fighter_asi_progression_profile import (
     build_karnok_stoneward_level12_profile,
 )
 from app.content.fighter_champion_progression_profile import build_karnok_stoneward_level7_profile
+from app.content.fighter_high_level_profiles import (
+    build_karnok_stoneward_level13_profile,
+    build_karnok_stoneward_level14_profile,
+    build_karnok_stoneward_level15_profile,
+    build_karnok_stoneward_level16_profile,
+    build_karnok_stoneward_level17_profile,
+    build_karnok_stoneward_level18_profile,
+)
 from app.content.fighter_level10_profile import build_karnok_stoneward_level10_profile
 from app.content.fighter_level11_profile import build_karnok_stoneward_level11_profile
 from app.content.fighter_level9_profile import build_karnok_stoneward_level9_profile
@@ -40,6 +52,7 @@ from app.content.fighter_progression_profile import (
     build_karnok_stoneward_level4_profile,
     build_karnok_stoneward_level5_profile,
 )
+from app.content.rogue_progression_profile import build_mara_quickstep_level2_profile
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
@@ -80,6 +93,12 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_karnok_stoneward_level10_profile,
             build_karnok_stoneward_level11_profile,
             build_karnok_stoneward_level12_profile,
+            build_karnok_stoneward_level13_profile,
+            build_karnok_stoneward_level14_profile,
+            build_karnok_stoneward_level15_profile,
+            build_karnok_stoneward_level16_profile,
+            build_karnok_stoneward_level17_profile,
+            build_karnok_stoneward_level18_profile,
         ),
     ),
     CertifiedHeroProgression(
@@ -92,6 +111,8 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_rokhan_stonefury_level4_profile,
             build_rokhan_stonefury_level5_profile,
             build_rokhan_stonefury_level6_profile,
+            build_rokhan_stonefury_level7_profile,
+            build_rokhan_stonefury_level8_profile,
         ),
     ),
     CertifiedHeroProgression(
@@ -107,7 +128,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="rogue",
         template_builder=build_mara_quickstep_level,
-        profile_builders=(build_mara_quickstep_profile,),
+        profile_builders=(
+            build_mara_quickstep_profile,
+            build_mara_quickstep_level2_profile,
+        ),
     ),
 )
 

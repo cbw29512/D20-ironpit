@@ -1,6 +1,7 @@
 import pytest
 
 from app.content.capability_compiler import UnsupportedCapabilityError, compile_combatant
+from app.content.capability_from_template import definition_from_template
 from app.domain.capabilities import CombatantDefinition
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
@@ -83,6 +84,45 @@ def test_compiler_preserves_weapon_property_mastery_and_ability_facts() -> None:
     assert template.weapon_masteries == ["scimitar"]
     assert template.attack_action is not None
     assert template.attack_action.is_attack_action is True
+
+
+def test_capability_round_trip_preserves_resources_and_area_geometry() -> None:
+    definition = _definition(
+        attacks=[{
+            "id": "recharge-rock", "name": "Rock", "attack_kind": "ranged", "attack_bonus": 5,
+            "damage": {"count": 2, "size": 6, "bonus": 3}, "damage_type": "bludgeoning",
+            "animation": "throw", "normal_range_ft": 25, "long_range_ft": 50,
+            "resource_id": "rock-recharge", "resource_cost": 1,
+        }],
+        primary_attack_id="recharge-rock",
+        save_actions=[{
+            "id": "breath", "name": "Breath", "save_ability": "dexterity", "dc": 13,
+            "range_ft": 0, "area": {"shape": "cone", "origin": "self", "length_ft": 15},
+            "damage": {"count": 3, "size": 6}, "damage_type": "fire", "success_damage": "half",
+            "resource_id": "breath-recharge", "resource_cost": 1,
+        }],
+        resources=[
+            {"id": "rock-recharge", "name": "Rock", "max_uses": 1,
+             "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 6}},
+            {"id": "breath-recharge", "name": "Breath", "max_uses": 1,
+             "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 5}},
+        ],
+    )
+    runtime = compile_combatant(definition)
+    rebuilt_definition = definition_from_template(runtime)
+    rebuilt = compile_combatant(rebuilt_definition)
+
+    assert rebuilt.weapon_attack.resource_id == "rock-recharge"
+    assert rebuilt.weapon_attack.resource_cost == 1
+    save = rebuilt.saving_throw_actions[0]
+    assert save.resource_id == "breath-recharge"
+    assert save.resource_cost == 1
+    assert save.area is not None
+    assert save.area.shape == "cone"
+    assert save.area.origin == "self"
+    assert save.area.length_ft == 15
+    thresholds = {resource.id: resource.recharge.minimum_roll for resource in rebuilt.resources}
+    assert thresholds == {"rock-recharge": 6, "breath-recharge": 5}
 
 
 def test_attack_ability_modifier_requires_declared_ability() -> None:

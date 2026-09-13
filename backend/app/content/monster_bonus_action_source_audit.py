@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 # These actions only Hide/Disengage or alter pre-contact movement under the
 # documented flat, no-Hide, no-kiting, initiative-opener arena abstraction.
 _ARENA_NEUTRAL_BONUS_ACTIONS = frozenset({
-    "Aquatic Charge", "Charge", "Leap", "Nimble Escape", "Shadow Stealth",
+    "Aquatic Charge", "Charge", "Cunning Action", "Leap", "Nimble Escape", "Shadow Stealth",
 })
 
 
@@ -25,7 +25,27 @@ def _slug(name: str) -> str:
 
 
 def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
-    return parse_trait_names(source_bonus_actions)
+    """Preserve printed limited-use markers while reusing the proven heading parser."""
+    text = str(source_bonus_actions or "").strip()
+    if not text:
+        return []
+    base_names = parse_trait_names(text)
+    names: list[str] = []
+    cursor = 0
+    for base_name in base_names:
+        pattern = re.compile(rf"{re.escape(base_name)}(?P<marker>\s*\([^)]*\))?\.")
+        match = pattern.search(text, cursor)
+        if match is None:
+            raise ValueError(f"SRD bonus-action heading {base_name!r} could not be recovered from: {text!r}")
+        marker = match.group("marker") or ""
+        names.append(f"{base_name}{marker}")
+        cursor = match.end()
+    return names
+
+
+def _runtime_bonus_save(template: CombatantTemplate, name: str) -> bool:
+    base = _base_name(name)
+    return any(action.name == base and action.action_cost == "bonus_action" for action in template.saving_throw_actions)
 
 
 def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
@@ -35,8 +55,9 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
     if template.source_bonus_action_names != expected:
         issues.append("source-bonus-action-fingerprint-mismatch")
     for name in expected:
-        if _base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS:
-            issues.append(f"uncertified-bonus-action:{_slug(name)}")
+        if _base_name(name) in _ARENA_NEUTRAL_BONUS_ACTIONS or _runtime_bonus_save(template, name):
+            continue
+        issues.append(f"uncertified-bonus-action:{_slug(name)}")
     return issues
 
 

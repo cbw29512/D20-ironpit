@@ -3,245 +3,119 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from app.combat.charge import charge_profile_for_attack_id
-from app.domain.models import CombatantTemplate, WeaponAttack
-from app.domain.traits import CombatTrait
+from app.domain.models import CombatantTemplate
+from browser_action_serializer import (
+    defense_row,
+    healing_row,
+    removal_row,
+    save_row,
+    spell_attack_row,
+    spell_save_row,
+)
+from browser_attack_serializer import attack_row
 
 logger = logging.getLogger(__name__)
 
 
-def _value(item: Any) -> Any:
-    return getattr(item, "value", item)
-
-
-def _control(effect: Any) -> dict[str, Any] | None:
-    if effect is None:
-        return None
-    row: dict[str, Any] = {}
-    if effect.max_target_size:
-        row["maxTargetSize"] = _value(effect.max_target_size)
-    if effect.grapple_escape_dc is not None:
-        row["grappleEscapeDc"] = effect.grapple_escape_dc
-    if effect.restrains_while_grappled:
-        row["restrainsWhileGrappled"] = True
-    if effect.condition_id:
-        row["conditionId"] = effect.condition_id
-        if effect.expires_at_start_of_source_turn:
-            row["expiresAtStartOfSourceTurn"] = True
-        if effect.expiry_timing:
-            row["expiryTiming"] = effect.expiry_timing
-        if effect.repeat_save_ability:
-            row["repeatSaveAbility"] = effect.repeat_save_ability
-            row["repeatSaveDc"] = effect.repeat_save_dc
-            row["repeatSaveTiming"] = effect.repeat_save_timing
-        if effect.allowed_removal_action_ids:
-            row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
-    return row or None
-
-
-def _hit_modifier(effect: Any) -> dict[str, Any]:
-    row: dict[str, Any] = {"kind": effect.kind}
-    if effect.flat_bonus:
-        row["flatBonus"] = effect.flat_bonus
-    if effect.consume_on_attack_against:
-        row["consumeOnAttackAgainst"] = True
-    if effect.expires_at_start_of_source_turn:
-        row["expiresAtStartOfSourceTurn"] = True
-    if effect.expires_at_end_of_target_turn:
-        row["expiresAtEndOfTargetTurn"] = True
-    return row
-
-
-def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
+def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
     try:
-        weapon = attack.weapon
-        row: dict[str, Any] = {
-            "id": attack.id, "name": weapon.name, "kind": weapon.attack_kind.value,
-            "bonus": attack.attack_bonus, "diceCount": weapon.dice_count, "diceSize": weapon.dice_size,
-            "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
-            "reach": weapon.reach_ft, "animation": weapon.animation,
-        }
-        if weapon.normal_range_ft is not None:
-            row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
-        if attack.fixed_damage is not None:
-            row["fixedDamage"] = attack.fixed_damage
-        if attack.rage_eligible:
-            row["rageEligible"] = True
-        if attack.knocks_prone_max_size is not None:
-            row["proneMaxSize"] = attack.knocks_prone_max_size.value
-        if attack.forbid_target_grappled_by_self:
-            row["forbidSelfGrappledTarget"] = True
-        if attack.conditional_attack_advantage:
-            row["conditionalAttackAdvantage"] = [
-                {"trigger": spec.trigger} for spec in attack.conditional_attack_advantage
-            ]
-        if attack.on_hit_damage:
-            row["onHitDamage"] = [
-                {"source": part.source, "diceCount": part.dice_count, "diceSize": part.dice_size,
-                 "damageBonus": part.damage_bonus, "damageType": part.damage_type.value}
-                for part in attack.on_hit_damage
-            ]
-        if attack.on_hit_modifier_effects:
-            row["onHitModifiers"] = [_hit_modifier(effect) for effect in attack.on_hit_modifier_effects]
-        if attack.conditional_damage:
-            if len(attack.conditional_damage) != 1:
-                raise ValueError(f"Browser supports one conditional damage rider on {attack.id}.")
-            conditional = attack.conditional_damage[0]
-            legacy = (
-                conditional.trigger == "attack_advantage" and conditional.mode == "add"
-                and conditional.damage_bonus == 0 and conditional.damage_type == weapon.damage_type
-            )
-            if legacy:
-                row["conditionalAdvantage"] = [conditional.dice_count, conditional.dice_size]
-            else:
-                row["conditionalDamage"] = {
-                    "trigger": conditional.trigger, "mode": conditional.mode,
-                    "diceCount": conditional.dice_count, "diceSize": conditional.dice_size,
-                    "damageBonus": conditional.damage_bonus, "damageType": conditional.damage_type.value,
-                }
-        control = _control(attack.control_effect)
-        if control:
-            row["controlEffect"] = control
-        if CombatTrait.CHARGE.value in traits:
-            profile = charge_profile_for_attack_id(attack.id)
-            if profile:
-                charge: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
-                if profile.prone_max_target_size is not None:
-                    charge["proneMaxSize"] = profile.prone_max_target_size.value
-                if profile.max_target_size is not None and profile.max_target_size != profile.prone_max_target_size:
-                    charge["targetMaxSize"] = profile.max_target_size.value
-                if profile.bonus_damage is not None:
-                    charge.update(
-                        diceCount=profile.bonus_damage.dice_count,
-                        diceSize=profile.bonus_damage.dice_size,
-                        damageType=profile.bonus_damage.damage_type.value,
-                    )
-                if profile.replacement_damage is not None:
-                    replacement = profile.replacement_damage
-                    charge["replacementDamage"] = {
-                        "diceCount": replacement.dice_count, "diceSize": replacement.dice_size,
-                        "damageBonus": replacement.damage_bonus, "damageType": replacement.damage_type.value,
-                    }
-                if profile.follow_up_attack_id:
-                    charge["followUpAttackId"] = profile.follow_up_attack_id
-                row["charge"] = charge
+        features = template.progression_features
+        row: dict[str, Any] = {}
+        if features.critical_hit_minimum != 20:
+            row["critical_hit_minimum"] = features.critical_hit_minimum
+        if features.initiative_advantage:
+            row["initiative_advantage"] = True
+        if features.athletics_advantage:
+            row["athletics_advantage"] = True
+        if features.critical_move_fraction:
+            row["critical_move_fraction"] = features.critical_move_fraction
         return row
     except Exception:
-        logger.exception("Failed to serialize attack %s for browser runtime.", attack.id)
+        logger.exception("Failed to serialize progression features for %s.", template.id)
         raise
 
 
-def _save(action: Any) -> dict[str, Any]:
-    row: dict[str, Any] = {
-        "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
-        "range": action.range_ft, "damageDiceCount": action.damage_dice_count,
-        "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
-        "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
-    }
-    if action.target_max_size:
-        row["targetMaxSize"] = _value(action.target_max_size)
-    if action.grapple_escape_dc is not None:
-        row["grappleEscapeDc"] = action.grapple_escape_dc
-    if action.restrains_while_grappled:
-        row["restrainsWhileGrappled"] = True
-    return row
+def _resource_definitions(template: CombatantTemplate) -> dict[str, Any]:
+    try:
+        rows: dict[str, Any] = {}
+        for resource in template.resources:
+            row: dict[str, Any] = {"name": resource.name, "maxUses": resource.max_uses}
+            if resource.recharge is not None:
+                row["recharge"] = {
+                    "trigger": resource.recharge.trigger,
+                    "dieSize": resource.recharge.die_size,
+                    "minimumRoll": resource.recharge.minimum_roll,
+                }
+            rows[resource.id] = row
+        return rows
+    except Exception:
+        logger.exception("Failed to serialize resource definitions for %s.", template.id)
+        raise
 
 
-def _spell(action: Any) -> dict[str, Any]:
+def _automatic_spell_row(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
-        "range": action.range_ft, "saveAbility": action.save_ability, "dc": action.dc,
+        "range": action.range_ft, "applications": action.applications,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
-        "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
-        "concentration": action.concentration, "animation": action.animation,
+        "allowSplitTargets": action.allow_split_targets, "animation": action.animation,
     }
-    if action.area_radius_ft is not None:
-        row["areaRadius"] = action.area_radius_ft
-    return row
-
-
-def _modifier_effect(effect: Any) -> dict[str, Any]:
-    row = {
-        "kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
-        "diceSize": effect.dice_size, "damageType": effect.damage_type,
-    }
-    if effect.consume_on_attack_against:
-        row["consumeOnAttackAgainst"] = True
-    if effect.expires_after_source_turns is not None:
-        row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
-    return row
-
-
-def _spell_attack(action: Any) -> dict[str, Any]:
-    row = {
-        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
-        "range": action.range_ft, "attackBonus": action.attack_bonus,
-        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
-        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
-        "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
-        "animation": action.animation,
-    }
+    if action.applications_per_slot_above:
+        row["applicationsPerSlotAbove"] = action.applications_per_slot_above
+    if action.resource_id is not None:
+        row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
     if action.source:
         row["source"] = action.source
     return row
 
 
-def _healing(action: Any) -> dict[str, Any]:
+def _swallow_row(action: Any) -> dict[str, Any]:
     return {
-        "id": action.id, "name": action.name, "actionCost": action.action_cost,
-        "range": action.range_ft, "targetMode": action.target_mode,
-        "diceCount": action.dice_count, "diceSize": action.dice_size,
-        "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
-        "resourceCost": action.resource_cost, "animation": action.animation,
+        "id": action.id, "name": action.name, "maxTargetSize": action.max_target_size.value,
+        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type.value,
+        "firstTickDelayRounds": action.first_tick_delay_rounds, "tickTiming": action.tick_timing,
+        "disgorgeAfterFirstTick": action.disgorge_after_first_tick, "appliesBlinded": action.applies_blinded,
+        "appliesRestrained": action.applies_restrained, "totalCoverFromOutside": action.total_cover_from_outside,
+        "forbiddenAttackIdsWhileActive": list(action.forbidden_attack_ids_while_active),
     }
 
 
-def defense_row(action: Any) -> dict[str, Any]:
-    row = {
-        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
-        "range": action.range_ft, "durationMinutes": action.duration_minutes,
-        "targetPolicy": action.target_policy, "targetCount": action.target_count,
-        "temporaryHp": action.temporary_hp,
-        "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
-        "damageResistances": list(action.damage_resistances),
-        "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
-        "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
+def _aura_row(aura: Any) -> dict[str, Any]:
+    return {
+        "id": aura.id, "name": aura.name, "radius_ft": aura.radius_ft,
+        "damage_dice_count": aura.damage_dice_count, "damage_dice_size": aura.damage_dice_size,
+        "damage_bonus": aura.damage_bonus, "damage_type": aura.damage_type.value,
+        "disabled_while_incapacitated": aura.disabled_while_incapacitated,
     }
-    if action.max_hp_increase:
-        row["maxHpIncrease"] = action.max_hp_increase
-    if action.current_hp_increase:
-        row["currentHpIncrease"] = action.current_hp_increase
-    if action.source:
-        row["source"] = action.source
-    return row
 
 
-def _removal(action: Any) -> dict[str, Any]:
-    row = {
-        "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
-        "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
-        "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
-        "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
-        "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+def _start_turn_aura_row(aura: Any) -> dict[str, Any]:
+    return {
+        "id": aura.id, "name": aura.name, "radius_ft": aura.radius_ft,
+        "save_ability": aura.save_ability, "dc": aura.dc, "condition": aura.condition,
+        "expiry_timing": aura.expiry_timing, "magical_effect": aura.magical_effect,
+        "disabled_while_incapacitated": aura.disabled_while_incapacitated,
+        "success_grants_source_immunity": aura.success_grants_source_immunity,
     }
-    if action.reaction_trigger:
-        row["reactionTrigger"] = action.reaction_trigger
-    return row
 
 
-def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
-    features = template.progression_features
-    row: dict[str, Any] = {}
-    if features.critical_hit_minimum != 20:
-        row["critical_hit_minimum"] = features.critical_hit_minimum
-    if features.initiative_advantage:
-        row["initiative_advantage"] = True
-    if features.athletics_advantage:
-        row["athletics_advantage"] = True
-    if features.critical_move_fraction:
-        row["critical_move_fraction"] = features.critical_move_fraction
-    return row
+def _roll_advantage_aura_row(aura: Any) -> dict[str, Any]:
+    return {
+        "id": aura.id, "name": aura.name, "radius_ft": aura.radius_ft, "target_scope": aura.target_scope,
+        "attack_roll_advantage": aura.attack_roll_advantage,
+        "saving_throw_advantage": aura.saving_throw_advantage,
+        "disabled_while_incapacitated": aura.disabled_while_incapacitated,
+    }
+
+
+def _regeneration_row(rule: Any) -> dict[str, Any]:
+    return {
+        "hitPoints": rule.hit_points,
+        "suppressedByDamageTypes": [item.value for item in rule.suppressed_by_damage_types],
+        "diesAtStartTurnIfZeroAndSuppressed": rule.dies_at_start_turn_if_zero_and_suppressed,
+    }
 
 
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
@@ -251,13 +125,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         row: dict[str, Any] = {
             "id": template.id, "name": template.name, "archetype": template.archetype,
             "level": template.level, "challenge_rating": template.challenge_rating, "kind": template.kind,
+            "creature_type": template.creature_type, "creature_tags": list(template.creature_tags),
             "size": template.size.value, "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
             "initiative_bonus": template.initiative_bonus,
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
-            "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
+            "saving_throw_actions": [save_row(item) for item in template.saving_throw_actions],
             "traits": sorted(traits), "resources": {item.id: item.max_uses for item in template.resources},
+            "resourceDefinitions": _resource_definitions(template), "magic_resistance": template.magic_resistance,
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
@@ -266,6 +142,22 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.regeneration:
+            row["regeneration"] = _regeneration_row(template.regeneration)
+        if template.forced_movement_actions:
+            row["forced_movement_actions"] = [
+                {"id": action.id, "name": action.name, "direction": action.direction,
+                 "distanceFt": action.distance_ft, "targetMode": action.target_mode, "animation": action.animation}
+                for action in template.forced_movement_actions
+            ]
+        if template.swallow_actions:
+            row["swallow_actions"] = [_swallow_row(action) for action in template.swallow_actions]
+        if template.end_turn_damage_auras:
+            row["end_turn_damage_auras"] = [_aura_row(aura) for aura in template.end_turn_damage_auras]
+        if template.start_turn_save_condition_auras:
+            row["start_turn_save_condition_auras"] = [_start_turn_aura_row(aura) for aura in template.start_turn_save_condition_auras]
+        if template.roll_advantage_auras:
+            row["roll_advantage_auras"] = [_roll_advantage_aura_row(aura) for aura in template.roll_advantage_auras]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
@@ -281,20 +173,24 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "ally_max_size": template.redirect_attack_reaction.ally_max_size.value,
             }
         if template.spell_save_actions:
-            row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
+            row["spell_save_actions"] = [spell_save_row(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
-            row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+            row["spell_attack_actions"] = [spell_attack_row(item) for item in template.spell_attack_actions]
+        if template.automatic_spell_actions:
+            row["automatic_spell_actions"] = [_automatic_spell_row(item) for item in template.automatic_spell_actions]
         if template.defensive_spell_actions:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions:
-            row["healingActions"] = [_healing(item) for item in template.healing_actions]
+            row["healingActions"] = [healing_row(item) for item in template.healing_actions]
         if template.condition_removal_actions:
-            row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+            row["condition_removal_actions"] = [removal_row(item) for item in template.condition_removal_actions]
         if template.attack_action:
-            row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
-                {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
-                for slot in template.attack_action.slots
-            ]}
+            row["attack_action"] = {
+                "id": template.attack_action.id, "name": template.attack_action.name,
+                "slots": [{"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids,
+                           "forcedMovementActionIds": slot.forced_movement_action_ids}
+                          for slot in template.attack_action.slots],
+            }
         return row
     except Exception:
         logger.exception("Failed to serialize combatant template %s.", template.id)
