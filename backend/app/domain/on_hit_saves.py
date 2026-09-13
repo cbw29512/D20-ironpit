@@ -13,6 +13,8 @@ class OnHitSaveEffect(BaseModel):
     dc: int = Field(ge=1, le=40)
     condition_id: ConditionName | None = None
     max_target_size: CreatureSize | None = None
+    excluded_creature_types: list[str] = Field(default_factory=list)
+    excluded_creature_subtypes: list[str] = Field(default_factory=list)
     duration_rounds: int | None = Field(default=None, ge=1)
     repeat_save_timing: ConditionTiming | None = None
     ends_on_damage: bool = False
@@ -39,4 +41,6 @@ class OnHitSaveEffect(BaseModel):
                 raise ValueError("Stable zero-HP rider requires save damage, conditions, and duration.")
         elif self.zero_hp_condition_ids or self.zero_hp_duration_rounds is not None:
             raise ValueError("Zero-HP rider details require zero_hp_stable.")
+        self.excluded_creature_types = [item.lower() for item in self.excluded_creature_types]
+        self.excluded_creature_subtypes = [item.lower() for item in self.excluded_creature_subtypes]
         return self

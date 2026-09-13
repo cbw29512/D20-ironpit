@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from app.domain.actions import AbilityName, ConditionName, HitControlEffect, SavingThrowAction
+from app.domain.actions import AbilityName, ConditionName, HealingAction, HitControlEffect, SavingThrowAction
 from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.legendary_actions import LegendaryActionOption
@@ -118,6 +118,8 @@ class CatalogMonster2014(BaseModel):
     challenge_text: str | None = None
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    healing_actions: list[HealingAction] = Field(default_factory=list)
+    limited_action_uses: dict[str, int] = Field(default_factory=dict)
     innate_spellcasting: CatalogInnateSpellcasting2014 | None = None
     spellcasting: CatalogSpellcasting2014 | None = None
     multiattack_slots: list[list[str]] = Field(default_factory=list)

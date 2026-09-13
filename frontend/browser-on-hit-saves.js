@@ -9,6 +9,11 @@
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
 
+  function eligible(state, effect) {
+    const type = String(state.template.creature_type || "").toLowerCase();
+    const subtypes = new Set((state.template.creature_subtypes || []).map((item) => String(item).toLowerCase()));
+    return !(effect.excludedCreatureTypes || []).includes(type) && !(effect.excludedCreatureSubtypes || []).some((item) => subtypes.has(item));
+  }
   function adjustedDamage(state, amount, type) {
     if (!type || state.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
@@ -55,7 +60,7 @@
 
   function resolve(target, attack, sourceId = null, round = null, setup = null) {
     const effect = attack.onHitSaveEffect;
-    if (!effect || !target.state.is_alive || target.state.is_dead) return null;
+    if (!effect || !target.state.is_alive || target.state.is_dead || !eligible(target.state, effect)) return null;
     if (effect.maxTargetSize && !ST().sizeAtMost(target, effect.maxTargetSize)) return null;
     if (!S()) throw new Error("Browser saving-throw runtime is not loaded.");
     const save = S().resolveSavingThrow(target.state, effect.saveAbility, effect.dc);

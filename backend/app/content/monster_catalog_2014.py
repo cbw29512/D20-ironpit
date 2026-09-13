@@ -98,12 +98,13 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         dex = source.abilities["dex"]
         return CombatantTemplate(
             id=f"2014-{source.id}", name=source.name, archetype=source.name, challenge_rating=source.challenge_rating,
-            kind="monster", ruleset="2014", creature_type=source.creature_type, size=source.size,
-            ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
+            kind="monster", ruleset="2014", creature_type=source.creature_type, creature_subtypes=source.creature_subtypes,
+            size=source.size, ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
             attack_action=compile_multiattack_2014(source, attacks), saving_throw_actions=source.saving_throw_actions,
+            healing_actions=source.healing_actions,
             spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
             automatic_damage_spell_actions=automatic_spells,
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
