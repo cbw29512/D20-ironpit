@@ -13,6 +13,7 @@ MODELED_TRAITS = {
     "Sure-Footed": CombatTrait.SURE_FOOTED,
     "Dark Devotion": CombatTrait.DARK_DEVOTION,
     "Two-Headed": CombatTrait.TWO_HEADED,
+    "Aggressive": CombatTrait.AGGRESSIVE,
     "Charge": CombatTrait.CHARGE,
     "Pounce": CombatTrait.CHARGE,
     "Trampling Charge": CombatTrait.CHARGE,
