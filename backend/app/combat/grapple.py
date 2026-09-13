@@ -9,6 +9,7 @@ from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
+from app.combat.timed_roll_effects import ability_check_disadvantage
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
 FRIGHTENED_EFFECT_ID = "frightened"
@@ -88,6 +89,7 @@ def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     disadvantage = (
         has_condition(state, POISONED_EFFECT_ID)
         or has_condition(state, FRIGHTENED_EFFECT_ID)
+        or bool(ability_check_disadvantage(state))
         or (strength_check and bool(strength_d20_disadvantage(state)))
     )
     if advantage == disadvantage:
