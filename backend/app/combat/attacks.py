@@ -13,6 +13,7 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.hit_points import effective_max_hp
 from app.combat.invisibility import end_attack_invisibility
 from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
 from app.combat.on_hit_saves import resolve_on_hit_save
@@ -80,7 +81,7 @@ def resolve_attack(
         hit, parry_used = resolve_parry_hit(actual_defender, attacker, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
-        hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
+        hp_before = actual_defender.current_hp; max_hp_before = effective_max_hp(actual_defender); temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
         damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None; save_rider = None
@@ -97,7 +98,7 @@ def resolve_attack(
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
             save_rider = resolve_on_hit_save(
                 actual_defender, attack, dice, source_id=attacker_event_id,
-                round_number=round_number, affected_states=affected_states,
+                round_number=round_number, affected_states=affected_states, triggering_damage_total=applied_total,
             )
             if save_rider.damage_components: damage_components.extend(save_rider.damage_components); damage_roll.total += save_rider.damage_total
             if save_rider.applied_condition and save_rider.applied_condition not in applied_conditions: applied_conditions.append(save_rider.applied_condition)
@@ -124,7 +125,7 @@ def resolve_attack(
         if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
         if tactical_sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
         if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
-        if save_rider and save_rider.save_dc is not None: description += f" {save_rider.save_ability.title()} save DC {save_rider.save_dc}: {actual_defender.template.name} {'succeeds' if save_rider.save_succeeded else 'fails'}."
+        if save_rider and save_rider.save_dc is not None: description += f" {save_rider.save_ability.title()} save DC {save_rider.save_dc}: {actual_defender.template.name} {'succeeds' if save_rider.save_succeeded else 'fails'}."; description += f" Max HP reduced by {save_rider.max_hp_reduction}." if save_rider.max_hp_reduction else ""
         if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
@@ -138,7 +139,7 @@ def resolve_attack(
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
             attack_roll=attack_roll, saving_throw_roll=save.save_roll if save else None, save_ability=save.save_ability if save_rider and save is save_rider else ("constitution" if save else None), save_dc=save.save_dc if save else None, save_succeeded=save.save_succeeded if save else None,
             damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions, removed_condition_ids=["invisible"] if invisibility_ended else [], hit=hit, critical=critical, turn_terminated=natural_1_ends_turn,
-            turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None, hp_before=hp_before, hp_after=actual_defender.current_hp,
+            turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None, hp_before=hp_before, hp_after=actual_defender.current_hp, max_hp_before=max_hp_before, max_hp_after=effective_max_hp(actual_defender),
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp, death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures, is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead,
             weapon_id=weapon.id, projectile=weapon.projectile, feature_id=feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
