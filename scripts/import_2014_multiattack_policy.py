@@ -18,7 +18,7 @@ def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: Atta
         count_word, first_label, second_label, substitute_label, replaced_label = exclusive_substitution.groups()
         first = ids_for_label(first_label, attacks); second = ids_for_label(second_label, attacks)
         substitute = ids_for_label(substitute_label, attacks); replaced = ids_for_label(replaced_label, attacks)
-        if first and second and len(substitute) == 1 and set(replaced) in {frozenset(first), frozenset(second)}:
+        if first and second and len(substitute) == 1 and frozenset(replaced) in {frozenset(first), frozenset(second)}:
             replaced_group, other_group = (first, second) if set(replaced) == set(first) else (second, first)
             choices = list(dict.fromkeys([*first, *second, *substitute]))
             return {
