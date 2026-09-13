@@ -35,10 +35,11 @@
     const policy = definition.policy;
     if (requiredAttackId) return { ...data, attackIds: data.attackIds.filter((id) => id === requiredAttackId) };
     if (!policy) return data;
+    const group = (policy.exclusiveAttackGroups || []).find((ids) => ids.some((id) => used.has(id))), allowed = group ? new Set(group) : null;
     const blocked = new Set();
     if (policy.distinctAttackIds) for (const id of used) blocked.add(id);
     for (const id of policy.atMostOnceAttackIds || []) if (used.has(id)) blocked.add(id);
-    return blocked.size ? { ...data, attackIds: data.attackIds.filter((id) => !blocked.has(id)) } : data;
+    return blocked.size || allowed ? { ...data, attackIds: data.attackIds.filter((id) => !blocked.has(id) && (!allowed || allowed.has(id))) } : data;
   }
 
   function areaChoice(member, setup, data) { return AS()?.choice(member, setup, false, data.saveActionIds) || null; }
