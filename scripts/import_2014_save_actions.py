@@ -56,7 +56,7 @@ def _save(text: str) -> tuple[str, int] | None:
 
 
 def _damage(text: str) -> tuple[int, int, int, str] | None:
-    match = re.search(r"(?:taking|takes)\s+\d+\s*\((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)\s+([A-Za-z]+) damage", text, re.I)
+    match = re.search(r"(?:take|takes|taking)\s+\d+\s*\((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)\s+([A-Za-z]+) damage", text, re.I)
     if match is None:
         return None
     count, size, sign, bonus, damage_type = match.groups()
