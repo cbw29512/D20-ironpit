@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
+from app.domain.actions import AbilityName, ConditionName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
@@ -32,6 +32,7 @@ class TimedEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
     ends_on_damage: bool = False
@@ -49,6 +50,8 @@ class TimedEffect(BaseModel):
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
+        if self.repeat_save_failure_condition_id is not None and not all(item is not None for item in repeat_fields):
+            raise ValueError("Timed effect escalation requires a complete repeat-save lifecycle.")
         if self.expires_round is not None and self.applied_round is not None and self.expires_round <= self.applied_round:
             raise ValueError("Timed effect expiry round must follow its applied round.")
         if self.expiry_timing is not None:
