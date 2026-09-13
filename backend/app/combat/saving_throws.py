@@ -49,7 +49,8 @@ def resolve_save_action(
     if check_resource and not action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
     if target_is_source_effect_immune(actor, target, action): raise ValueError(f"{target.state.template.name} is immune to {action.name} from this source.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
-    save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice, magical_effect=action.magical_effect)
+    condition = action.failure_control_effect.condition_id if action.failure_control_effect else None
+    save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice, magical_effect=action.magical_effect, against_condition=condition)
     resource_remaining = spend_action_resource(actor.state, action) if spend_resource else None
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
