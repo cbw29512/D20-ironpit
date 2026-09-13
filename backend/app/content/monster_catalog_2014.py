@@ -10,6 +10,7 @@ from app.content.monster_catalog_2014_action_support import unresolved_actions_2
 from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, is_arena_disabled_attack_detail_2014, usable_movement_speed_2014
 from app.content.monster_catalog_2014_auras import start_turn_auras_2014
 from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, resources_2014, saving_throw_bonuses_2014
+from app.content.monster_catalog_2014_damage_triggers import damage_triggered_roll_penalties_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_gaze import petrifying_gaze_2014
 from app.content.monster_catalog_2014_invisibility import invisibility_action_2014, starts_invisible_2014
@@ -71,6 +72,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         if relentless and source.zero_hp_prevention is None: blockers.extend(f"trait:{name}" for name in relentless)
         if "Regeneration" in source.trait_names and source.regeneration is None: blockers.append("trait:Regeneration")
         if "Fire Absorption" in source.trait_names and not damage_absorptions_2014(source.source_traits): blockers.append("trait:Fire Absorption")
+        if "Fear of Fire" in source.trait_names and not damage_triggered_roll_penalties_2014(source.source_traits): blockers.append("trait:Fear of Fire")
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in unresolved_reactions_2014(source, supported_reactions))
@@ -116,6 +118,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_absorptions=damage_absorptions_2014(source.source_traits),
+            damage_triggered_roll_penalties=damage_triggered_roll_penalties_2014(source.source_traits),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
