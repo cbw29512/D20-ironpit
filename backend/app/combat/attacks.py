@@ -13,10 +13,8 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
-from app.combat.modifier_stack import (
-    apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage,
-    consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
-)
+from app.combat.invisibility import end_attack_invisibility
+from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
 from app.combat.on_hit_saves import resolve_on_hit_save
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
@@ -66,6 +64,7 @@ def resolve_attack(
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
+        invisibility_ended = end_attack_invisibility(attacker, affected_states)
         consume_next_attack_against_advantage(attacker, defender_event_id); consume_sap(attacker)
         consume_attacks_against_advantage(defender); extend_rage_from_attack(attacker, round_number)
         if spend_action: spend(attacker, "action")
@@ -114,6 +113,7 @@ def resolve_attack(
                 damage_roll, damage_components, damage_outcome = graze; end_rage_if_incapacitated(actual_defender)
             studied_applied = apply_studied_attack_miss(attacker, attacker_event_id, defender_event_id, round_number)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS"); description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if invisibility_ended: description += f" {attacker.template.name}'s Invisibility ends after the attack."
         if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
@@ -137,7 +137,7 @@ def resolve_attack(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
             attack_roll=attack_roll, saving_throw_roll=save.save_roll if save else None, save_ability=save.save_ability if save_rider and save is save_rider else ("constitution" if save else None), save_dc=save.save_dc if save else None, save_succeeded=save.save_succeeded if save else None,
-            damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions, hit=hit, critical=critical, turn_terminated=natural_1_ends_turn,
+            damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions, removed_condition_ids=["invisible"] if invisibility_ended else [], hit=hit, critical=critical, turn_terminated=natural_1_ends_turn,
             turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None, hp_before=hp_before, hp_after=actual_defender.current_hp,
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp, death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures, is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead,
