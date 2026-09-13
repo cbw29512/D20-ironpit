@@ -7,6 +7,7 @@
   const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const R = () => window.IRON_PIT_BROWSER_REGENERATION;
+  const D = () => window.IRON_PIT_BROWSER_DAMAGE_TRIGGERED_EFFECTS;
   const DODGE = "dodge";
   const PRONE = "prone";
 
@@ -63,6 +64,7 @@
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
+    D()?.apply(state, incoming, damageTypes);
     const absorbed = Math.min(state.temporary_hp, amount); state.temporary_hp -= absorbed; amount -= absorbed;
     if (amount > 0) R()?.noteSuppression(state, damageTypes);
     if (state.current_hp === 0) {
