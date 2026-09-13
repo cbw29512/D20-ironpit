@@ -8,7 +8,7 @@ def test_certified_level_by_class_includes_all_canonical_classes() -> None:
     levels = certified_level_by_class()
 
     assert len(levels) == 12
-    assert levels["fighter"] == 18
+    assert levels["fighter"] == 19
     assert levels["barbarian"] == 8
     assert levels["cleric"] == 4
     assert levels["rogue"] == 2
@@ -41,7 +41,7 @@ def test_known_certified_frontiers_fail_closed_on_real_features() -> None:
     assert "sear-undead" in frontier["cleric"].unsupported_features
     assert "canonical-spell-package-incomplete" in frontier["cleric"].content_blockers
 
-    assert frontier["fighter"].next_level == 19
+    assert frontier["fighter"].next_level == 20
     assert frontier["fighter"].unsupported_features == ()
     assert frontier["fighter"].content_blockers == ()
     assert frontier["fighter"].ready
