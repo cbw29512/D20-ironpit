@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: 2014-monster-ledger-${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -34,5 +34,19 @@ jobs:
           name: 2014-monster-certification-ledger-${{ github.sha }}
           path: data/monsters/2014/certification_ledger.json
           retention-days: 7
-      - name: Enforce committed ledger parity
-        run: git diff --exit-code -- data/monsters/2014/certification_ledger.json
+      - name: Persist refreshed ledger on branch pushes
+        if: github.event_name == 'push'
+        run: |
+          if ! git diff --quiet -- data/monsters/2014/certification_ledger.json || \
+             test -n "$(git status --porcelain --untracked-files=all -- data/monsters/2014/certification_ledger.json)"; then
+            git config user.name "iron-pit-certification-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/monsters/2014/certification_ledger.json
+            git commit -m "certification: refresh 2014 monster ledger"
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
+      - name: Enforce committed ledger parity on pull requests
+        if: github.event_name == 'pull_request'
+        run: |
+          git diff --exit-code -- data/monsters/2014/certification_ledger.json
+          test -z "$(git status --porcelain --untracked-files=all -- data/monsters/2014/certification_ledger.json)"
