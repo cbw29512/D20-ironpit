@@ -34,8 +34,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -207,8 +212,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -351,8 +361,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -510,8 +525,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -657,8 +677,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -859,8 +884,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1002,8 +1032,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1116,8 +1151,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1258,8 +1298,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1374,8 +1419,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1486,8 +1536,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1615,8 +1670,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1727,8 +1787,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1842,8 +1907,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -1981,8 +2051,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -2119,8 +2194,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -2252,8 +2332,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -2417,8 +2502,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -2533,8 +2623,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -2645,8 +2740,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -2759,8 +2859,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -2871,8 +2976,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -2985,8 +3095,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -3097,8 +3212,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -3225,8 +3345,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -3350,8 +3475,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -3478,8 +3608,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -3637,8 +3772,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -3783,8 +3923,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -3909,8 +4054,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -4058,8 +4208,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -4178,8 +4333,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -4362,8 +4522,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -4497,8 +4662,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -4609,8 +4779,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -4719,8 +4894,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -4827,8 +5007,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -4937,8 +5122,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5047,8 +5237,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5158,8 +5353,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5266,8 +5466,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5376,8 +5581,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5486,8 +5696,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5596,8 +5811,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5706,8 +5926,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5814,8 +6039,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -5926,8 +6156,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6040,8 +6275,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6154,8 +6394,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6289,8 +6534,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6401,8 +6651,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6515,8 +6770,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6627,8 +6887,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6746,8 +7011,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6862,8 +7132,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -6974,8 +7249,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -7099,8 +7379,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -7217,8 +7502,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -7333,8 +7623,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -7445,8 +7740,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -7562,8 +7862,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -7676,8 +7981,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -7801,8 +8111,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -7926,8 +8241,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -8094,8 +8414,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -8227,8 +8552,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -8364,8 +8694,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -8528,8 +8863,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -8673,8 +9013,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -8798,8 +9143,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -8923,8 +9273,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -9068,8 +9423,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -9259,8 +9619,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -9431,8 +9796,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -9576,8 +9946,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -9705,8 +10080,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -9839,8 +10219,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -10027,8 +10412,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -10156,8 +10546,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -10286,8 +10681,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -10418,8 +10818,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -10553,8 +10958,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -10691,8 +11101,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -10840,8 +11255,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -10981,8 +11401,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -11159,8 +11584,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -11343,8 +11773,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -11518,8 +11953,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -11662,8 +12102,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -11785,8 +12230,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -11902,8 +12352,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -12027,8 +12482,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -12150,8 +12610,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -12291,8 +12756,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -12416,8 +12886,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -12609,8 +13084,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -12744,8 +13224,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -12858,8 +13343,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -12981,8 +13471,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -13153,8 +13648,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -13274,8 +13774,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -13399,8 +13904,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -13520,8 +14030,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -13668,8 +14183,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -13792,8 +14312,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -13937,8 +14462,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -14062,8 +14592,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -14200,8 +14735,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -14321,8 +14861,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -14460,8 +15005,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -14578,8 +15128,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -14692,8 +15247,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -14809,8 +15369,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -14956,8 +15521,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -15078,8 +15648,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -15220,8 +15795,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -15362,8 +15942,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -15514,8 +16099,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -15684,8 +16274,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -15882,8 +16477,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
@@ -15999,8 +16599,13 @@
       "athletics_advantage": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "peerless_aim": false,
       "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "tactical_shift_fraction": 0.0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "bloodied_start_turn_healing_base": 0,
+      "bloodied_start_turn_healing_add_constitution": false
     },
     "attacks": [
       {
