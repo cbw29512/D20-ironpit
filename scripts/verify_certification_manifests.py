@@ -69,12 +69,18 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("heroic-warrior")
     if features.studied_attacks:
         mechanics.add("studied-attacks")
+    if features.peerless_aim:
+        mechanics.add("boon-combat-prowess")
     if features.sneak_attack_d6:
         mechanics.add("sneak-attack")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
         mechanics.add("tactical-shift")
+    if features.death_save_advantage or features.death_save_recovery_minimum < 20:
+        mechanics.add("survivor-defy-death")
+    if features.bloodied_start_turn_healing_base or features.bloodied_start_turn_healing_add_constitution:
+        mechanics.add("survivor-heroic-rally")
     return sorted(mechanics)
 
 
