@@ -9,6 +9,7 @@ from pydantic import TypeAdapter
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
 from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
+from app.content.monster_catalog_2014_gaze import petrifying_gaze_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
@@ -91,7 +92,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             size=source.size, ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
-            weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
+            weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], start_turn_gaze=petrifying_gaze_2014(source.source_traits),
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
             saving_throw_actions=source.saving_throw_actions, death_trigger_actions=source.death_trigger_actions,
             healing_actions=source.healing_actions,
