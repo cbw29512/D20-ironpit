@@ -8,7 +8,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, R = () => window.IRON_PIT_BROWSER_REGENERATION;
   const RP = () => window.IRON_PIT_BROWSER_RAMPAGE, W = () => window.IRON_PIT_BROWSER_SWALLOW;
-  const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
+  const DG = () => window.IRON_PIT_BROWSER_DODGE, INV = () => window.IRON_PIT_BROWSER_INVISIBILITY, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const GZ = () => window.IRON_PIT_BROWSER_GAZE, D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
@@ -139,7 +139,7 @@
         advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null),
       });
       events.push(...standard.events); sequence = standard.sequence;
-    } else if (E().available(member.state, "action")) events.push(DG().take(sequence++, round, member));
+    } else if (E().available(member.state, "action")) events.push(INV()?.canUse(member.state) ? INV().take(sequence++, round, member, setup) : DG().take(sequence++, round, member));
     return finalize(events, sequence, round, member, setup, turnKey);
   }
 
