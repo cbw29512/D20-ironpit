@@ -13,6 +13,7 @@ from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMo
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
+from app.content.monster_catalog_2014_unarmed import attacks_with_unarmed_fallback_2014
 from app.content.monster_spell_actions_2014 import damage_spell_actions_2014
 from app.domain.models import CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.movement import MovementModes
@@ -69,7 +70,6 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers.extend(f"legendary:{name}" for name in source.unsupported_legendary_action_names)
         if source.source_legendary_actions and source.legendary_action_uses <= 0: blockers.append("legendary:unparsed-resource-pool")
         if source.legendary_action_uses and not source.legendary_actions: blockers.append("legendary:no-parsed-options")
-        if not source.attacks: blockers.append("attack:no-structured-attack")
         return blockers
     except Exception as exc:
         logger.exception("Failed to inventory 2014 mechanics for %s.", source.id)
@@ -81,7 +81,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         blockers = unsupported_mechanics_2014(source)
         if blockers: raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
         traits = combat_traits_2014(source.trait_names); magical = CombatTrait.MAGIC_WEAPONS in traits
-        attacks = bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks])
+        attacks = attacks_with_unarmed_fallback_2014(source, bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks]))
         spell_attacks, spell_saves, automatic_spells = damage_spell_actions_2014(source)
         movement = MovementModes(walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0), climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0))
         dex = source.abilities["dex"]
