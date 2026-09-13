@@ -53,6 +53,22 @@ def main() -> int:
         "policy": {"at_most_once_attack_ids": ["bite"]},
     }
 
+    wight = (
+        "<p><strong>Multiattack.</strong> The wight makes two longsword attacks or two longbow attacks. "
+        "It can use its Life Drain in place of one longsword attack.</p>"
+    )
+    parsed = parse_multiattack(wight, [
+        attack("longsword", "Longsword"), attack("longbow", "Longbow", "ranged"), attack("life-drain", "Life Drain"),
+    ])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [["longsword", "longbow", "life-drain"], ["longsword", "longbow", "life-drain"]],
+        "policy": {
+            "at_most_once_attack_ids": ["life-drain"],
+            "exclusive_attack_groups": [["longsword", "life-drain"], ["longbow"]],
+        },
+    }
+
     veteran = (
         "<p><strong>Multiattack.</strong> The veteran makes two longsword attacks. "
         "If it has a shortsword drawn, it can also make a shortsword attack.</p>"
