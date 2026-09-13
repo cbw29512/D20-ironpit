@@ -60,7 +60,7 @@ def resolve_attack(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack) + attacks_against_advantage_sources(defender)
                                + attacks_against_reckless_advantage(defender) + reckless_attack_advantage(attacker, attack) + next_attack_advantage_sources(attacker)
-                               + conditional_attack_advantage_sources(attack, defender) + next_attack_against_advantage_sources(attacker, defender_event_id)),
+                               + conditional_attack_advantage_sources(attack, defender, attacker_event_id) + next_attack_against_advantage_sources(attacker, defender_event_id)),
             other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) + strength_penalty + next_attack_disadvantage_sources(attacker)),
             close_enemy_active=close_enemy_active,
         )
