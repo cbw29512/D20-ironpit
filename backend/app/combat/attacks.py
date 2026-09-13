@@ -54,7 +54,7 @@ def resolve_attack(
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
                                + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
                                + reckless_attack_advantage(attacker, attack)
-                               + conditional_attack_advantage_sources(attack, defender)
+                               + conditional_attack_advantage_sources(attack, defender, attacker_event_id)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
             other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
                                         + int("Poor Depth Perception" in attacker.template.source_trait_names and distance_ft > 30)
