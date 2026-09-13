@@ -53,6 +53,30 @@ def _resource_definitions(template: CombatantTemplate) -> dict[str, Any]:
         raise
 
 
+def _legendary_action_row(template: CombatantTemplate) -> dict[str, Any] | None:
+    try:
+        pool = template.legendary_actions
+        if pool is None:
+            return None
+        return {
+            "max_uses": pool.max_uses,
+            "options": [
+                {
+                    "id": option.id,
+                    "name": option.name,
+                    "kind": option.kind,
+                    "action_id": option.action_id,
+                    "cost": option.cost,
+                    "once_until_owner_turn": option.once_until_owner_turn,
+                }
+                for option in pool.options
+            ],
+        }
+    except Exception:
+        logger.exception("Failed to serialize legendary actions for %s.", template.id)
+        raise
+
+
 def _automatic_spell_row(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
@@ -142,6 +166,9 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        legendary_actions = _legendary_action_row(template)
+        if legendary_actions is not None:
+            row["legendary_actions"] = legendary_actions
         if template.regeneration:
             row["regeneration"] = _regeneration_row(template.regeneration)
         if template.forced_movement_actions:
