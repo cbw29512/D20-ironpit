@@ -8,6 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, HealingAction, HitCon
 from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.legendary_actions import LegendaryActionOption
+from app.domain.max_hp_drain import MaxHpDrainEffect
 from app.domain.on_hit_saves import OnHitSaveEffect
 from app.domain.regeneration import RegenerationProfile
 from app.domain.restraints import BreakableRestraint
@@ -34,6 +35,7 @@ class CatalogAttack2014(BaseModel):
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
     on_hit_save_effect: OnHitSaveEffect | None = None
+    max_hp_drain: MaxHpDrainEffect | None = None
     control_effect: HitControlEffect | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
