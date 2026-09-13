@@ -11,11 +11,13 @@ on:
       - 'backend/app/content/monster_catalog_2014_compile_support.py'
       - 'backend/app/content/monster_catalog_2014_action_support.py'
       - 'backend/app/content/monster_catalog_2014_multiattack.py'
+      - 'backend/app/content/monster_catalog_2014_damage_triggers.py'
       - 'backend/app/domain/attack_action_policy.py'
       - 'backend/app/domain/zero_hp_prevention.py'
       - 'backend/app/domain/regeneration.py'
       - 'backend/app/domain/charge_profiles.py'
       - 'backend/app/domain/on_hit_saves.py'
+      - 'backend/app/domain/damage_triggers.py'
       - 'backend/app/domain/weapons.py'
       - 'backend/app/domain/targeting.py'
       - 'backend/app/domain/combatants.py'
@@ -26,6 +28,8 @@ on:
       - 'backend/app/combat/zero_hp.py'
       - 'backend/app/combat/zero_hp_prevention.py'
       - 'backend/app/combat/regeneration.py'
+      - 'backend/app/combat/damage_triggered_effects.py'
+      - 'backend/app/combat/timed_roll_effects.py'
       - 'backend/app/combat/parry.py'
       - 'backend/app/combat/grapple.py'
       - 'backend/app/combat/resources.py'
@@ -82,6 +86,7 @@ on:
       - 'frontend/browser-spell-resolution.js'
       - 'frontend/browser-grapple.js'
       - 'frontend/browser-timed-conditions.js'
+      - 'frontend/browser-damage-triggered-effects.js'
       - 'frontend/browser-condition-lifecycle.js'
       - 'frontend/browser-2014-grapple.test.cjs'
       - 'frontend/browser-2014-poison.test.cjs'
@@ -95,6 +100,7 @@ on:
       - 'frontend/browser-2014-sleep-breath.test.cjs'
       - 'frontend/browser-2014-slowing-breath.test.cjs'
       - 'frontend/browser-2014-regeneration.test.cjs'
+      - 'frontend/browser-2014-fear-of-fire.test.cjs'
       - 'backend/tests/test_parry.py'
       - 'backend/tests/test_2014_json_catalog.py'
       - 'backend/tests/test_2014_poison_timing.py'
@@ -110,6 +116,7 @@ on:
       - 'backend/tests/test_2014_sleep_breath.py'
       - 'backend/tests/test_2014_slowing_breath.py'
       - 'backend/tests/test_2014_regeneration.py'
+      - 'backend/tests/test_2014_fear_of_fire.py'
       - 'backend/tests/test_magic_resistance.py'
       - 'backend/tests/test_conditional_damage_defenses.py'
       - 'data/monsters/2014/**'
@@ -226,6 +233,7 @@ jobs:
           tests/test_2014_sleep_breath.py
           tests/test_2014_slowing_breath.py
           tests/test_2014_regeneration.py
+          tests/test_2014_fear_of_fire.py
           tests/test_magic_resistance.py
           tests/test_conditional_damage_defenses.py
       - name: Prove 2014 browser rules parity
@@ -242,3 +250,4 @@ jobs:
           node frontend/browser-2014-sleep-breath.test.cjs
           node frontend/browser-2014-slowing-breath.test.cjs
           node frontend/browser-2014-regeneration.test.cjs
+          node frontend/browser-2014-fear-of-fire.test.cjs
