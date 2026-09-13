@@ -7,20 +7,33 @@ import re
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
-_MAX_HP_REDUCTION = re.compile(
-    r"(?:The target|It) must succeed on a DC (\d+) "
-    r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or "
-    r"(?:its|the target's) hit point maximum is reduced by an amount equal to the damage taken\.\s*"
-    r"This reduction lasts until (?:the target|the creature|it) finishes a long rest\.\s*"
-    r"(?:The target|It) dies if (?:this effect|the reduction) reduces (?:its|the target's) hit point maximum to 0\.?",
-    re.I,
+_ABILITY = r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)"
+_MAX_HP_REDUCTION_PATTERNS = (
+    re.compile(
+        rf"(?:The target|It) must succeed on a DC (\d+) {_ABILITY} saving throw or "
+        r"(?:its|the target's) hit point maximum is reduced by an amount equal to the damage taken\.\s*"
+        r"This reduction lasts until (?:the target|the creature|it) finishes a long rest\.\s*"
+        r"(?:The target|It) dies if (?:this effect|the reduction) reduces (?:its|the target's) hit point maximum to 0\.?",
+        re.I,
+    ),
+    re.compile(
+        rf"If the target is a creature, it must succeed on a DC (\d+) {_ABILITY} saving throw or "
+        r"have its hit point maximum reduced by an amount equal to the damage taken\.\s*"
+        r"The target dies if this attack reduces its hit point maximum to 0\.\s*"
+        r"The reduction lasts until removed by the greater restoration spell or other magic\. ?",
+        re.I,
+    ),
 )
+
+
+def _match_reduction(text: str):
+    return next((match for pattern in _MAX_HP_REDUCTION_PATTERNS if (match := pattern.search(text))), None)
 
 
 def enrich_attack(attack: dict) -> bool:
     try:
         residual = attack.get("unsupported_text") or ""
-        match = _MAX_HP_REDUCTION.search(residual)
+        match = _match_reduction(residual)
         if match is None:
             return False
         if attack.get("on_hit_save_effect") is not None:
