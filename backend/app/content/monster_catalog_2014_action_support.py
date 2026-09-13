@@ -5,7 +5,7 @@ import unicodedata
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 
-NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape"})
+NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape", "weird-insight"})
 
 
 def action_key_2014(value: str) -> str:
