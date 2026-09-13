@@ -37,6 +37,7 @@ def _policy_row(policy):
     return {
         "distinctAttackIds": policy.distinct_attack_ids,
         "atMostOnceAttackIds": list(policy.at_most_once_attack_ids),
+        "exclusiveAttackGroups": [list(group) for group in policy.exclusive_attack_groups],
         "repeatSlotIndex": policy.repeat_slot_index,
         "repeatDiceCount": policy.repeat_dice_count,
         "repeatDiceSize": policy.repeat_dice_size,
