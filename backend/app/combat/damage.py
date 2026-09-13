@@ -7,7 +7,7 @@ from app.combat.conditional_damage import active_replacement_damage, conditional
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
-from app.combat.sneak_attack import sneak_attack_bonus_damage
+from app.combat.sneak_attack import martial_advantage_bonus_damage, sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -107,6 +107,13 @@ def resolve_weapon_damage(
         sneak_damage = sneak_attack_bonus_damage(attacker, attack, attack_mode, turn_key, sneak_attack_ally_available)
         if sneak_damage is not None:
             source, dice_count, dice_size, damage_type = sneak_damage
+            components.append(roll_damage_component(
+                dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
+                modifier=0, damage_type=damage_type, critical=critical,
+            ))
+        martial_damage = martial_advantage_bonus_damage(attacker, attack, turn_key, sneak_attack_ally_available)
+        if martial_damage is not None:
+            source, dice_count, dice_size, damage_type = martial_damage
             components.append(roll_damage_component(
                 dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
                 modifier=0, damage_type=damage_type, critical=critical,
