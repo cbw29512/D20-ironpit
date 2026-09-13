@@ -6,6 +6,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.conditions import DODGE_EFFECT_ID, stand_from_prone
 from app.combat.grapple import speed_is_zero
 from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
+from app.combat.legendary_actions import refresh_legendary_actions
 from app.combat.modifier_stack import effective_speed
 from app.combat.peerless_aim import refresh_peerless_aim
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 def build_combatant_state(template: CombatantTemplate) -> CombatantState:
     try:
+        legendary_uses = template.legendary_actions.max_uses if template.legendary_actions is not None else 0
         return CombatantState(
             template=template,
             current_hp=template.max_hp,
@@ -23,6 +25,7 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
                 ResourceState(id=r.id, name=r.name, current_uses=r.max_uses, max_uses=r.max_uses)
                 for r in template.resources
             ],
+            legendary_action_uses_remaining=legendary_uses,
         )
     except Exception as exc:
         logger.exception("Failed to build runtime state for %s.", template.name)
@@ -36,6 +39,7 @@ def refresh_reaction(state: CombatantState) -> None:
 
 def refresh_start_of_turn(state: CombatantState) -> None:
     refresh_reaction(state)
+    refresh_legendary_actions(state)
     refresh_peerless_aim(state)
     grant_heroic_warrior_inspiration(state)
 
