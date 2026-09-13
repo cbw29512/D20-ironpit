@@ -9,7 +9,7 @@
   };
   const G = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
-  const TD = () => window.IRON_PIT_BROWSER_TIMED || { strengthD20Disadvantage: () => 0 };
+  const TD = () => window.IRON_PIT_BROWSER_TIMED || { abilityCheckDisadvantage: () => 0, strengthD20Disadvantage: () => 0 };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -80,7 +80,7 @@
     const bonus = useAthletics ? athletics : acrobatics;
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
     const disadvantage = (state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0)
-      + (useAthletics ? TD().strengthD20Disadvantage(state) : 0);
+      + TD().abilityCheckDisadvantage(state) + (useAthletics ? TD().strengthD20Disadvantage(state) : 0);
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {
