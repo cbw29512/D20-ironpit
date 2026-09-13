@@ -80,7 +80,9 @@ def resolve_on_hit_save(
                 expires_round=round_number + effect.duration_rounds if effect.duration_rounds is not None else None,
                 repeat_save_ability=effect.save_ability if effect.repeat_save_timing is not None else None,
                 repeat_save_dc=effect.dc if effect.repeat_save_timing is not None else None,
-                repeat_save_timing=effect.repeat_save_timing, affected_states=affected_states, ends_on_damage=effect.ends_on_damage,
+                repeat_save_timing=effect.repeat_save_timing,
+                repeat_save_failure_condition_id=effect.repeat_save_failure_condition_id,
+                affected_states=affected_states, ends_on_damage=effect.ends_on_damage,
             )
         else:
             if effect.condition_id not in defender.active_effect_ids: defender.active_effect_ids.append(effect.condition_id)
