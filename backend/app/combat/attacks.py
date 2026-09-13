@@ -21,6 +21,7 @@ from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
 from app.combat.parry import resolve_parry_hit
+from app.combat.peerless_aim import resolve_peerless_aim_miss
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.resources import spend_resource
@@ -80,6 +81,7 @@ def resolve_attack(
         target_ac = effective_armor_class(actual_defender); hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
+        hit, peerless_aim_used = resolve_peerless_aim_miss(attacker, hit)
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
@@ -109,6 +111,7 @@ def resolve_attack(
         description = build_attack_description(attacker, defender, actual_defender, attack, hit=hit, critical=critical, natural_1=natural_1, natural_1_ends_turn=natural_1_ends_turn, heroic_reroll=heroic_reroll,
             damage_total=damage_roll.total if damage_roll is not None else None, studied_applied=studied_applied, redirect_used=redirect_used, parry_used=parry_used, weapon_sap_applied=weapon_sap_applied,
             tactical_sap_applied=tactical_sap_applied, vex_applied=vex_applied, topple=topple, damage_outcome=damage_outcome, applied_conditions=applied_conditions)
+        if peerless_aim_used: description += " Peerless Aim converts the miss into a hit."
         return build_attack_event(
             sequence=sequence, round_number=round_number, attacker=attacker, actual_defender=actual_defender,
             attack=attack, attacker_event_id=attacker_event_id, actual_event_id=actual_event_id,

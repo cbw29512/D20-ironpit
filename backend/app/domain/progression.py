@@ -20,6 +20,11 @@ class ProgressionCombatFeatures(BaseModel):
     tactical_master_sap_weapon_ids: list[str] = Field(default_factory=list)
     heroic_warrior: bool = False
     studied_attacks: bool = False
+    peerless_aim: bool = False
     sneak_attack_d6: int = Field(default=0, ge=0, le=10)
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
+    death_save_advantage: bool = False
+    death_save_recovery_minimum: int = Field(default=20, ge=2, le=20)
+    bloodied_start_turn_healing_base: int = Field(default=0, ge=0)
+    bloodied_start_turn_healing_add_constitution: bool = False

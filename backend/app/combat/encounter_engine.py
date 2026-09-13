@@ -16,6 +16,7 @@ from app.combat.encounter_targeting import select_nearest_target
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
+from app.combat.progression_recovery import resolve_bloodied_start_turn_healing
 from app.combat.regeneration import resolve_start_turn_regeneration
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.start_turn_auras import resolve_start_turn_save_condition_auras
@@ -82,6 +83,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
                 resolve_start_turn_regeneration(member.state)
+                resolve_bloodied_start_turn_healing(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
                 expiry_events, sequence = expire_start_of_turn_conditions(sequence, round_number, member, setup)
                 events.extend(expiry_events)
