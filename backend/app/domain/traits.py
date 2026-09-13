@@ -16,5 +16,6 @@ class CombatTrait(StrEnum):
     DARK_DEVOTION = "dark-devotion"
     TWO_HEADED = "two-headed"
     AGGRESSIVE = "aggressive"
+    MARTIAL_ADVANTAGE = "martial-advantage"
     RAMPAGE = "rampage"
     LIFE_DOMAIN = "life-domain"
