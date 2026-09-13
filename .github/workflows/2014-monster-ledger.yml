@@ -1,0 +1,38 @@
+name: 2014 Monster Ledger
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 2014-monster-ledger-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  full-roster-rescan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Iron Pit rules engine
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Rescan all 2014 monsters
+        run: python scripts/export_2014_monster_ledger.py
+      - name: Print blocker yield
+        run: python scripts/report_2014_monster_progress.py
+      - name: Upload full monster ledger
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2014-monster-certification-ledger-${{ github.sha }}
+          path: data/monsters/2014/certification_ledger.json
+          retention-days: 7
+      - name: Enforce committed ledger parity
+        run: git diff --exit-code -- data/monsters/2014/certification_ledger.json
