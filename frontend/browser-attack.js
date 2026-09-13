@@ -24,7 +24,7 @@
     if (Q().has(attacker, "blinded")) disadvantage += 1; if (Q().has(attacker, "invisible")) advantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
+    if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1; disadvantage += T()?.attackRollDisadvantage?.(attacker) || 0;
     disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
     if (Q().attackAdvantage(defender)) advantage += 1; if (Q().has(defender, "invisible")) disadvantage += 1;
