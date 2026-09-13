@@ -124,6 +124,8 @@ class CombatantState(BaseModel):
     heroic_inspiration: bool = False
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
+    legendary_action_uses_remaining: int = Field(default=0, ge=0)
+    legendary_action_locked_option_ids: list[str] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
     active_buff_effect_ids: list[str] = Field(default_factory=list)
     source_effect_immunities: list[str] = Field(default_factory=list)
