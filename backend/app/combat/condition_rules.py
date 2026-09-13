@@ -12,7 +12,8 @@ STUNNED = "stunned"
 
 
 def has_condition(state: CombatantState, condition_id: str) -> bool:
-    return condition_id in state.active_effect_ids and not condition_is_immune(state, condition_id)
+    swallowed_condition = state.swallowed is not None and condition_id in {BLINDED, RESTRAINED}
+    return (swallowed_condition or condition_id in state.active_effect_ids) and not condition_is_immune(state, condition_id)
 
 
 def is_incapacitated(state: CombatantState) -> bool:

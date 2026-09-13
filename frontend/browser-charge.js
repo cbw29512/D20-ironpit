@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS || { resolvePending: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available };
 
   function openingEligible(round, member, setup) {
@@ -17,8 +18,11 @@
   function eventTarget(event, fallback, setup) {
     return [...(setup?.heroes || []), ...(setup?.monsters || [])].find((member) => member.combatant_id === event.target_id) || fallback;
   }
+  function flush(events, sequence, round, setup) {
+    const result = DT().resolvePending(sequence, round, setup); events.push(...result.events); return result.sequence;
+  }
   function followUp(sequence, round, member, target, profile, firstEvent, setup) {
-    if (!firstEvent.hit || !profile.followUpAttackId) return { events: [], sequence };
+    if (!firstEvent.hit || !profile.followUpAttackId || member.state.is_dead || member.state.turn_terminated) return { events: [], sequence };
     const actualTarget = eventTarget(firstEvent, target, setup);
     if (!actualTarget.state.is_alive || actualTarget.state.is_dead || actualTarget.state.current_hp <= 0) return { events: [], sequence };
     const attack = member.state.template.attacks.find((item) => item.id === profile.followUpAttackId);
@@ -54,9 +58,12 @@
     }
     const firstEvent = A().resolveAttack(sequence++, round, member, target, chargedAttack(attack, profile), attack.reach || 5, options);
     const events = [firstEvent];
+    sequence = flush(events, sequence, round, setup);
     const followed = followUp(sequence, round, member, target, profile, firstEvent, setup);
     events.push(...followed.events);
-    return { events, sequence: followed.sequence, handled: true };
+    sequence = followed.sequence;
+    sequence = flush(events, sequence, round, setup);
+    return { events, sequence, handled: true };
   }
   window.IRON_PIT_BROWSER_CHARGE = { openingEligible, openingFeature, resolveClosing };
 })();

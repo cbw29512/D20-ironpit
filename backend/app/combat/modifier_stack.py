@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from app.combat.dice import DiceProvider
+from app.combat.timed_effect_rules import speed_multiplier
 from app.domain.events import DiceRoll
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import CombatantState
@@ -67,9 +68,10 @@ def effective_armor_class(state: CombatantState) -> int:
 
 
 def effective_speed(state: CombatantState) -> int:
-    return max(0, state.template.speed_ft + sum(
+    base = max(0, state.template.speed_ft + sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED
     ))
+    return max(0, int(base * speed_multiplier(state)))
 
 
 def attacks_against_advantage_sources(state: CombatantState) -> int:

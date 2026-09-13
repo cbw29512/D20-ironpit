@@ -14,20 +14,22 @@
     if (slotHeal(action) && (!turnKey || !C().slotSpellAvailable(member.state, turnKey))) return false;
     return (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
   }
-
+  function cleansable(target, action) {
+    const allowed = new Set(action.removableConditions || []);
+    return target.state.active_effect_ids.filter((condition) => allowed.has(condition));
+  }
   function targetAllowed(healer, target, action) {
-    if (target.state.is_dead || !target.state.is_alive || target.state.current_hp >= S().effectiveMaxHp(target.state) || swarm(target.state)) return false;
-    if (distance(healer, target) > (action.range || 5)) return false;
+    if (target.state.is_dead || !target.state.is_alive) return false;
+    if (target.state.current_hp >= S().effectiveMaxHp(target.state) && !cleansable(target, action).length) return false;
+    if (swarm(target.state) || distance(healer, target) > (action.range || 5)) return false;
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
     if (action.targetMode === "other") return target.combatant_id !== healer.combatant_id;
     return target.side === healer.side;
   }
-
   function selfWorthwhile(member, action) {
-    return bloodied(member.state) && ["action", "bonus_action"].includes(action.actionCost);
+    return (bloodied(member.state) || cleansable(member, action).length) && ["action", "bonus_action"].includes(action.actionCost);
   }
-
   function chooseTarget(healer, setup, action, turnKey = null) {
     if (action.actionCost === "reaction" || !E().available(healer.state, action.actionCost)) return null;
     if (!resourceAvailable(healer, action, turnKey)) return null;
@@ -36,19 +38,19 @@
     const others = legal.filter((target) => target.combatant_id !== healer.combatant_id);
     const downed = others.filter((target) => target.state.current_hp === 0);
     if (downed.length) return downed.reduce((best, item) => item.state.death_save_failures > best.state.death_save_failures ? item : best);
+    const afflicted = others.filter((target) => cleansable(target, action).length);
+    if (afflicted.length) return afflicted[0];
     const hurt = others.filter((target) => bloodied(target.state));
     if (hurt.length) return hurt.reduce((best, item) => item.state.current_hp / S().effectiveMaxHp(item.state) < best.state.current_hp / S().effectiveMaxHp(best.state) ? item : best);
     const self = legal.find((target) => target.combatant_id === healer.combatant_id);
     return self && selfWorthwhile(healer, action) ? self : null;
   }
-
   function priority(healer, action, target) {
     const ally = target.combatant_id !== healer.combatant_id;
-    const urgency = ally && target.state.current_hp === 0 ? 0 : ally ? 1 : 2;
+    const urgency = ally && target.state.current_hp === 0 ? 0 : cleansable(target, action).length ? 1 : ally ? 2 : 3;
     const cost = action.actionCost === "bonus_action" ? 0 : 1;
     return [urgency, cost, target.state.current_hp / S().effectiveMaxHp(target.state)];
   }
-
   function chooseAction(healer, setup, turnKey = null) {
     const choices = (healer.state.template.healingActions || []).map((action) => ({ action, target: chooseTarget(healer, setup, action, turnKey) })).filter((item) => item.target);
     choices.sort((a, b) => {
@@ -57,7 +59,6 @@
     });
     return choices[0] || null;
   }
-
   function restore(state, amount) {
     if (state.is_dead || amount <= 0 || swarm(state)) return 0;
     const before = state.current_hp;
@@ -69,7 +70,13 @@
     }
     return healed;
   }
-
+  function removeConditions(target, action) {
+    const removed = cleansable(target, action); if (!removed.length) return [];
+    const ids = new Set(removed);
+    target.state.active_effect_ids = target.state.active_effect_ids.filter((item) => !ids.has(item));
+    target.state.timed_effects = target.state.timed_effects.filter((item) => !ids.has(item.effect_id));
+    return removed;
+  }
   function resolve(sequence, round, healer, target, action, turnKey = null) {
     if (!targetAllowed(healer, target, action) || !resourceAvailable(healer, action, turnKey)) throw new Error("Illegal healing target or turn.");
     if (slotHeal(action)) {
@@ -79,12 +86,10 @@
     E().spend(healer.state, action.actionCost);
     const rolls = Array.from({ length: action.diceCount || 0 }, () => window.IRON_PIT_DICE.roll(action.diceSize || 6));
     const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
-    const hpBefore = target.state.current_hp, healed = restore(target.state, total);
+    const hpBefore = target.state.current_hp, healed = restore(target.state, total), removed = removeConditions(target, action);
     let remaining = null;
-    if (action.resourceId) {
-      healer.state.resources[action.resourceId] -= action.resourceCost || 1;
-      remaining = healer.state.resources[action.resourceId];
-    }
+    if (action.resourceId) { healer.state.resources[action.resourceId] -= action.resourceCost || 1; remaining = healer.state.resources[action.resourceId]; }
+    const cleanse = removed.length ? ` and removes ${removed.join(", ")}` : "";
     return {
       sequence, round_number: round, event_type: "healing", actor_id: healer.combatant_id, actor_name: healer.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name,
@@ -92,7 +97,7 @@
       hp_before: hpBefore, hp_after: target.state.current_hp, death_save_successes: target.state.death_save_successes,
       death_save_failures: target.state.death_save_failures, is_stable: target.state.is_stable, is_dead: target.state.is_dead,
       feature_id: action.id, resource_remaining: remaining, animation: action.animation || "healing",
-      description: `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.`,
+      description: `${healer.state.template.name} uses ${action.name} on ${target.state.template.name}, restores ${healed} HP${cleanse}.`,
     };
   }
 

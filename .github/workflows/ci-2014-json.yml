@@ -1,0 +1,244 @@
+name: 2014 JSON Monster MVP
+
+on:
+  pull_request:
+    paths:
+      - 'backend/app/content/monster_catalog_2014.py'
+      - 'backend/app/content/monster_catalog_2014_models.py'
+      - 'backend/app/content/monster_catalog_2014_traits.py'
+      - 'backend/app/content/monster_catalog_2014_spellcasting.py'
+      - 'backend/app/content/monster_catalog_2014_defenses.py'
+      - 'backend/app/content/monster_catalog_2014_compile_support.py'
+      - 'backend/app/content/monster_catalog_2014_action_support.py'
+      - 'backend/app/content/monster_catalog_2014_multiattack.py'
+      - 'backend/app/domain/attack_action_policy.py'
+      - 'backend/app/domain/zero_hp_prevention.py'
+      - 'backend/app/domain/regeneration.py'
+      - 'backend/app/domain/charge_profiles.py'
+      - 'backend/app/domain/on_hit_saves.py'
+      - 'backend/app/domain/weapons.py'
+      - 'backend/app/domain/targeting.py'
+      - 'backend/app/domain/combatants.py'
+      - 'backend/app/domain/runtime.py'
+      - 'backend/app/domain/actions.py'
+      - 'backend/app/combat/state.py'
+      - 'backend/app/combat/attacks.py'
+      - 'backend/app/combat/zero_hp.py'
+      - 'backend/app/combat/zero_hp_prevention.py'
+      - 'backend/app/combat/regeneration.py'
+      - 'backend/app/combat/parry.py'
+      - 'backend/app/combat/grapple.py'
+      - 'backend/app/combat/resources.py'
+      - 'backend/app/combat/saving_throws.py'
+      - 'backend/app/combat/save_targets.py'
+      - 'backend/app/combat/save_control_effects.py'
+      - 'backend/app/combat/source_effect_immunity.py'
+      - 'backend/app/combat/source_bound_effects.py'
+      - 'backend/app/combat/condition_removal.py'
+      - 'backend/app/combat/condition_removal_policy.py'
+      - 'backend/app/combat/area_save_actions.py'
+      - 'backend/app/combat/area_save_targeting.py'
+      - 'backend/app/combat/area_shapes.py'
+      - 'backend/app/combat/area_targeting.py'
+      - 'backend/app/combat/attack_action_policy.py'
+      - 'backend/app/combat/attack_action_choices.py'
+      - 'backend/app/combat/attack_actions.py'
+      - 'backend/app/combat/encounter_area_actions.py'
+      - 'backend/app/combat/encounter_offense_priority.py'
+      - 'backend/app/combat/encounter_turn_support.py'
+      - 'backend/app/combat/encounter_combat_turn.py'
+      - 'backend/app/combat/timed_conditions.py'
+      - 'backend/app/combat/timed_effect_rules.py'
+      - 'backend/app/combat/condition_lifecycle.py'
+      - 'backend/app/combat/condition_lifecycle_support.py'
+      - 'backend/app/combat/on_hit_saves.py'
+      - 'backend/app/combat/charge.py'
+      - 'backend/app/combat/charge_follow_up.py'
+      - 'backend/app/combat/charge_prone.py'
+      - 'backend/app/combat/legendary_resistance.py'
+      - 'backend/app/combat/saving_throw_rolls.py'
+      - 'backend/app/combat/spell_resolution.py'
+      - 'index.html'
+      - 'frontend/index.html'
+      - 'frontend/browser-state.js'
+      - 'frontend/browser-attack.js'
+      - 'frontend/browser-zero-hp.js'
+      - 'frontend/browser-regeneration.js'
+      - 'frontend/browser-reactions.js'
+      - 'frontend/browser-saves.js'
+      - 'frontend/browser-save-control-effects.js'
+      - 'frontend/browser-source-effect-immunity.js'
+      - 'frontend/browser-source-bound-effects.js'
+      - 'frontend/browser-condition-removal.js'
+      - 'frontend/browser-action-economy.js'
+      - 'frontend/browser-turn.js'
+      - 'frontend/browser-formation.js'
+      - 'frontend/browser-multiattack.js'
+      - 'frontend/browser-modifiers.js'
+      - 'frontend/browser-area-shapes.js'
+      - 'frontend/browser-area-targeting.js'
+      - 'frontend/browser-area-save-actions.js'
+      - 'frontend/browser-grid-forced-movement.js'
+      - 'frontend/browser-spell-resolution.js'
+      - 'frontend/browser-grapple.js'
+      - 'frontend/browser-timed-conditions.js'
+      - 'frontend/browser-condition-lifecycle.js'
+      - 'frontend/browser-2014-grapple.test.cjs'
+      - 'frontend/browser-2014-poison.test.cjs'
+      - 'frontend/browser-2014-parry.test.cjs'
+      - 'frontend/browser-2014-magic-resistance.test.cjs'
+      - 'frontend/browser-2014-recharge.test.cjs'
+      - 'frontend/browser-2014-area-recharge.test.cjs'
+      - 'frontend/browser-2014-frightful-presence.test.cjs'
+      - 'frontend/browser-2014-multiattack-policy.test.cjs'
+      - 'frontend/browser-2014-relentless.test.cjs'
+      - 'frontend/browser-2014-sleep-breath.test.cjs'
+      - 'frontend/browser-2014-slowing-breath.test.cjs'
+      - 'frontend/browser-2014-regeneration.test.cjs'
+      - 'backend/tests/test_parry.py'
+      - 'backend/tests/test_2014_json_catalog.py'
+      - 'backend/tests/test_2014_poison_timing.py'
+      - 'backend/tests/test_2014_secondary_damage.py'
+      - 'backend/tests/test_2014_parry.py'
+      - 'backend/tests/test_2014_charge.py'
+      - 'backend/tests/test_2014_recharge.py'
+      - 'backend/tests/test_2014_area_recharge.py'
+      - 'backend/tests/test_2014_frightful_presence.py'
+      - 'backend/tests/test_2014_legendary_resistance.py'
+      - 'backend/tests/test_2014_on_hit_save.py'
+      - 'backend/tests/test_2014_relentless.py'
+      - 'backend/tests/test_2014_sleep_breath.py'
+      - 'backend/tests/test_2014_slowing_breath.py'
+      - 'backend/tests/test_2014_regeneration.py'
+      - 'backend/tests/test_magic_resistance.py'
+      - 'backend/tests/test_conditional_damage_defenses.py'
+      - 'data/monsters/2014/**'
+      - 'scripts/browser_template_serializer.py'
+      - 'scripts/export_browser_monsters.py'
+      - 'scripts/import_2014_monster_catalog.py'
+      - 'scripts/import_2014_attack_details.py'
+      - 'scripts/import_2014_charge.py'
+      - 'scripts/import_2014_recharge.py'
+      - 'scripts/import_2014_save_actions.py'
+      - 'scripts/import_2014_control_save_actions.py'
+      - 'scripts/import_2014_spellcasting.py'
+      - 'scripts/import_2014_zero_hp_prevention.py'
+      - 'scripts/import_2014_regeneration.py'
+      - 'scripts/enrich_2014_save_actions.py'
+      - 'scripts/enrich_2014_spellcasting.py'
+      - 'scripts/test_2014_save_actions.py'
+      - 'scripts/test_2014_spellcasting.py'
+      - 'scripts/import_2014_multiattack.py'
+      - 'scripts/import_2014_multiattack_policy.py'
+      - 'scripts/test_2014_multiattack_policy.py'
+      - 'scripts/import_2014_reactions.py'
+      - 'scripts/sync_2014_monster_catalog.py'
+      - 'scripts/audit_2014_source_fidelity.py'
+      - 'scripts/verify_2014_full_catalog.py'
+      - 'scripts/report_2014_monster_progress.py'
+      - '.github/workflows/ci-2014-json.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify-2014-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install rules reference
+        run: pip install -e 'backend[dev]'
+      - name: Require tracked canonical catalog
+        run: git ls-files --error-unmatch data/monsters/2014/catalog.json
+      - name: Prove 2014 save/control/AoE source parser
+        run: python scripts/test_2014_save_actions.py
+      - name: Prove 2014 regular spellcasting parser
+        run: python scripts/test_2014_spellcasting.py
+      - name: Prove 2014 Multiattack policy parser
+        run: python scripts/test_2014_multiattack_policy.py
+      - name: Regenerate pinned 327-monster catalog
+        run: python scripts/sync_2014_monster_catalog.py
+      - name: Regenerate derived certification artifacts
+        run: |
+          python scripts/export_browser_heroes.py
+          python scripts/export_browser_monsters.py
+          python scripts/verify_certification_manifests.py --write
+      - name: Sync deterministic generated artifacts
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          paths=(
+            data/monsters/2014/catalog.json
+            frontend/browser-heroes.js
+            frontend/browser-monsters-generated.js
+            data/hero_certification_manifest.json
+            data/monster_certification_manifest.json
+          )
+          if git diff --quiet -- "${paths[@]}"; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${paths[@]}"
+          git commit -m "chore: sync generated 2014 certification artifacts"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
+      - name: Enforce deterministic generated artifacts
+        run: |
+          git diff --exit-code -- \
+            data/monsters/2014/catalog.json \
+            frontend/browser-heroes.js \
+            frontend/browser-monsters-generated.js \
+            data/hero_certification_manifest.json \
+            data/monster_certification_manifest.json
+      - name: Upload regenerated catalog
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated-2014-catalog
+          path: data/monsters/2014/catalog.json
+          retention-days: 1
+      - name: Audit pinned source fidelity
+        run: python scripts/audit_2014_source_fidelity.py
+      - name: Verify all 327 normalized records
+        run: python scripts/verify_2014_full_catalog.py
+      - name: Report reusable mechanic blockers
+        run: python scripts/report_2014_monster_progress.py
+      - name: Prove JSON-to-engine MVP
+        run: >-
+          cd backend && pytest -q
+          tests/test_parry.py
+          tests/test_2014_json_catalog.py
+          tests/test_2014_poison_timing.py
+          tests/test_2014_secondary_damage.py
+          tests/test_2014_parry.py
+          tests/test_2014_charge.py
+          tests/test_2014_recharge.py
+          tests/test_2014_area_recharge.py
+          tests/test_2014_frightful_presence.py
+          tests/test_2014_legendary_resistance.py
+          tests/test_2014_on_hit_save.py
+          tests/test_2014_relentless.py
+          tests/test_2014_sleep_breath.py
+          tests/test_2014_slowing_breath.py
+          tests/test_2014_regeneration.py
+          tests/test_magic_resistance.py
+          tests/test_conditional_damage_defenses.py
+      - name: Prove 2014 browser rules parity
+        run: |
+          node frontend/browser-2014-grapple.test.cjs
+          node frontend/browser-2014-poison.test.cjs
+          node frontend/browser-2014-parry.test.cjs
+          node frontend/browser-2014-magic-resistance.test.cjs
+          node frontend/browser-2014-recharge.test.cjs
+          node frontend/browser-2014-area-recharge.test.cjs
+          node frontend/browser-2014-frightful-presence.test.cjs
+          node frontend/browser-2014-multiattack-policy.test.cjs
+          node frontend/browser-2014-relentless.test.cjs
+          node frontend/browser-2014-sleep-breath.test.cjs
+          node frontend/browser-2014-slowing-breath.test.cjs
+          node frontend/browser-2014-regeneration.test.cjs

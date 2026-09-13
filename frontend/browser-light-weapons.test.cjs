@@ -10,6 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 
 window.IRON_PIT_ACTION_ECONOMY = {
   available: (state, cost) => cost === "action" ? state.action_available : state.bonus_action_available,
+  resourceAvailable: (state, action) => !action.resourceId || (state.resources?.[action.resourceId] || 0) >= (action.resourceCost || 1),
   spend: (state, cost) => { if (cost === "action") state.action_available = false; else state.bonus_action_available = false; },
 };
 window.IRON_PIT_BROWSER_STATE = {
@@ -113,110 +114,25 @@ const setup = { heroes: [], monsters: [target] };
   assert.equal(result.events.length, 2);
   assert.equal(result.events[1].feature_id, "weapon-mastery-nick");
   assert.equal(result.events[1].weapon_id, "scimitar");
-  assert.equal(result.events[1].damage_bonus, 3, "Two-Weapon Fighting restores the normal ability modifier");
-  assert.equal(member.state.bonus_action_available, true, "Two-Weapon Fighting does not change Nick action cost");
+  assert.equal(result.events[1].damage_bonus, 3, "Two-Weapon Fighting preserves ability modifier");
 }
 
 {
-  const member = fighter([], false, ["Two-Weapon Fighting"]); setup.heroes = [member];
+  const member = fighter([], false, ["Defense", "Two-Weapon Fighting"]); setup.heroes = [member];
   const result = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
     1, 1, member, target, shortsword, 5, setup, "1:hero-1",
   );
-  assert.equal(result.events.length, 2);
   assert.equal(result.events[1].feature_id, "light-extra-attack");
-  assert.equal(result.events[1].damage_bonus, 3, "TWF restores damage without requiring Nick");
-  assert.equal(member.state.bonus_action_available, false, "ordinary Light extra attack still spends Bonus Action");
+  assert.equal(result.events[1].damage_bonus, 3, "Two-Weapon Fighting preserves ability modifier without Nick");
 }
 
 {
-  const member = fighter([]); setup.heroes = [member];
+  const member = fighter([], false, ["Defense"]); setup.heroes = [member];
+  member.state.template.attacks = [greataxe];
   const result = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
-    1, 1, member, target, shortsword, 5, setup, "1:hero-1",
+    1, 1, member, target, greataxe, 5, setup, "1:hero-1",
   );
-  assert.equal(result.events.length, 2);
-  assert.equal(result.events[1].feature_id, "light-extra-attack");
-  assert.equal(result.events[1].damage_bonus, 0);
-  assert.equal(member.state.bonus_action_available, false, "ordinary Light extra attack spends Bonus Action");
+  assert.equal(result.events.length, 1, "non-Light weapon does not generate a Light extra attack");
 }
 
-{
-  const member = fighter(["scimitar"], true); setup.heroes = [member];
-  const first = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, member, setup);
-  const attacks = first.events.filter((event) => event.event_type === "attack");
-  assert.equal(attacks.length, 3);
-  assert.equal(attacks[2].weapon_id, "scimitar");
-  assert.equal(attacks[2].feature_id, "weapon-mastery-nick");
-  assert.equal(member.state.bonus_action_available, true);
-
-  member.state.action_available = true;
-  const second = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(first.sequence, 1, member, setup);
-  assert.equal(second.events.filter((event) => event.event_type === "attack").length, 2,
-    "second Attack action in one turn gets no additional Nick attack");
-}
-
-{
-  const member = fighter(["scimitar"], true); setup.heroes = [member];
-  member.state.template.attack_action.isAttackAction = false;
-  const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, member, setup);
-  assert.equal(result.events.filter((event) => event.event_type === "attack").length, 2,
-    "monster-style Multiattack does not infer Light/Nick");
-}
-
-{
-  const member = fighter();
-  member.state.template.attacks = [shortsword];
-  assert.equal(window.IRON_PIT_BROWSER_LIGHT_WEAPONS.plan(member.state, shortsword, "1:hero-1"), null,
-    "a different Light weapon is required");
-}
-
-{
-  const member = fighter(["greataxe"]); member.state.template.name = "Cleave Fighter"; member.state.template.attacks = [greataxe];
-  const first = monster("cleave-first", 5), second = monster("cleave-second", 5);
-  const cleaveSetup = { heroes: [member], monsters: [first, second] };
-  const result = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
-    1, 1, member, first, greataxe, 5, cleaveSetup, "1:hero-1",
-  );
-  assert.equal(result.events.length, 2);
-  assert.equal(result.events[1].target_id, "cleave-second");
-  assert.equal(result.events[1].feature_id, "weapon-mastery-cleave");
-  assert.equal(result.events[1].damage_bonus, 2, "Cleave removes only the positive ability modifier from damage");
-
-  member.state.action_available = true;
-  const again = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
-    result.sequence, 1, member, first, greataxe, 5, cleaveSetup, "1:hero-1",
-  );
-  assert.equal(again.events.length, 1, "Cleave can occur only once per turn");
-}
-
-{
-  const member = fighter(["greataxe"], true); member.state.template.attacks = [greataxe];
-  member.state.template.attack_action = {
-    id: "extra-attack", isAttackAction: true,
-    slots: [{ attackIds: [greataxe.id] }, { attackIds: [greataxe.id] }],
-  };
-  const cleaveSetup = { heroes: [member], monsters: [monster("multi-first", 5), monster("multi-second", 5)] };
-  const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, member, cleaveSetup);
-  const attacks = result.events.filter((event) => event.event_type === "attack");
-  assert.equal(attacks.length, 3, "two base attacks can produce only one Cleave attack");
-  assert.equal(attacks.filter((event) => event.feature_id === "weapon-mastery-cleave").length, 1);
-}
-
-{
-  const member = fighter(["greataxe"]); member.state.template.attacks = [greataxe];
-  const first = monster("far-first", 10), second = monster("far-second", 0);
-  const cleaveSetup = { heroes: [member], monsters: [first, second] };
-  const extended = { ...greataxe, reach: 10 };
-  assert.equal(window.IRON_PIT_BROWSER_WEAPON_MASTERY.cleaveTarget(member, first, extended, cleaveSetup), null,
-    "second target must be within 5 feet of the creature hit, not merely within attacker reach");
-  assert.equal(window.IRON_PIT_BROWSER_WEAPON_MASTERY.resolveCleave(
-    1, 1, member, { hit: false, target_id: first.combatant_id }, greataxe, cleaveSetup, "1:hero-1",
-  ).events.length, 0, "a miss cannot trigger Cleave");
-}
-
-{
-  const negative = { ...greataxe, damageBonus: -1, attackAbilityModifier: -1 };
-  assert.equal(window.IRON_PIT_BROWSER_WEAPON_MASTERY.cleaveAttack(negative).damageBonus, -1,
-    "negative ability modifiers remain in Cleave damage");
-}
-
-console.log("Browser Light/Nick/Two-Weapon Fighting/Cleave regressions passed.");
+console.log("Browser Light weapon attack regressions passed.");

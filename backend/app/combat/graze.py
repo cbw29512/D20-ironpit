@@ -46,6 +46,7 @@ def resolve_graze_miss(
             attack.weapon.damage_type,
             defender,
             allow_vulnerability=False,
+            attack=attack,
         )
         applied_component = component.model_copy(update={"applied_total": applied})
         roll = DiceRoll(notation=str(raw_damage), rolls=[], modifier=0, total=applied)

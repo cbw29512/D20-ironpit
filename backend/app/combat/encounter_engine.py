@@ -13,6 +13,7 @@ from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
+from app.combat.legendary_actions import refresh_legendary_actions, resolve_end_turn_legendary_actions
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
@@ -57,6 +58,10 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         member.combatant_id,
         round_number,
     )
+    legendary_events, sequence = resolve_end_turn_legendary_actions(
+        sequence, round_number, member, setup, dice,
+    )
+    events.extend(legendary_events)
     return events, sequence
 
 
@@ -83,6 +88,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
+                refresh_legendary_actions(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
                 expiry_events, sequence = expire_start_of_turn_conditions(
                     sequence, round_number, member, setup,

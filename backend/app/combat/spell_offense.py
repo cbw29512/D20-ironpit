@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.combat.automatic_damage_spell_policy import choose_automatic_damage_spell
+from app.combat.automatic_damage_spell_resolution import resolve_automatic_damage_spell
 from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.combat.spell_policy import choose_spell
@@ -16,24 +18,30 @@ def resolve_best_spell_offense(
     turn_key: str,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve the legal spell option with the highest expected damage; ties conserve the lower slot."""
+    """Resolve the legal damaging spell with highest expected damage; ties conserve slots."""
     attack = choose_spell_attack(caster, setup, turn_key)
     save = choose_spell(caster, setup, turn_key)
-    if attack is None and save is None:
+    automatic = choose_automatic_damage_spell(caster, setup, turn_key)
+    choices: list[tuple[float, int, int, str]] = []
+    if attack is not None:
+        choices.append((attack.expected_damage, -attack.action.level, 0, "attack"))
+    if save is not None:
+        choices.append((save.expected_damage, -save.slot_level, 1, "save"))
+    if automatic is not None:
+        choices.append((automatic.expected_damage, -automatic.slot_level, 2, "automatic"))
+    if not choices:
         return [], sequence
-    use_attack = save is None or (
-        attack is not None and (
-            attack.expected_damage > save.expected_damage
-            or (
-                attack.expected_damage == save.expected_damage
-                and attack.action.level <= save.action.level
-            )
-        )
-    )
-    if use_attack:
+    kind = max(choices, key=lambda item: item[:3])[3]
+    if kind == "attack":
         assert attack is not None
         event = resolve_spell_attack(
             sequence, round_number, caster, attack.target, attack.action, setup, turn_key, dice,
+        )
+        return [event], sequence + 1
+    if kind == "automatic":
+        assert automatic is not None
+        event = resolve_automatic_damage_spell(
+            sequence, round_number, caster, automatic.target, automatic.action, setup, turn_key, dice,
         )
         return [event], sequence + 1
     assert save is not None

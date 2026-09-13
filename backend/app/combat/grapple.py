@@ -3,8 +3,10 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import condition_speed_is_zero, has_condition
+from app.combat.condition_rules import condition_speed_is_zero, has_condition, is_incapacitated
+from app.combat.d20_effects import strength_d20_disadvantage
 from app.combat.dice import DiceProvider
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
@@ -54,7 +56,8 @@ def speed_is_zero(state: CombatantState) -> bool:
 
 
 def grapple_attack_disadvantage(state: CombatantState, target_id: str) -> int:
-    if not state.grapple_sources:
+    """2024 Grappled penalizes attacks against targets other than the grappler; 2014 does not."""
+    if state.template.ruleset == "2014" or not state.grapple_sources:
         return 0
     return 0 if any(source.source_id == target_id for source in state.grapple_sources) else 1
 
@@ -65,9 +68,9 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
         retained: list[GrappleSource] = []
         for source in target.state.grapple_sources:
             grappler = members.get(source.source_id)
-            if grappler is None or grappler.state.is_dead or grappler.state.is_unconscious:
+            if grappler is None or grappler.state.is_dead or is_incapacitated(grappler.state):
                 continue
-            if abs(grappler.position_ft - target.position_ft) > source.range_ft:
+            if combatant_distance(grappler, target) > source.range_ft:
                 continue
             retained.append(source)
         target.state.grapple_sources = retained
@@ -82,7 +85,11 @@ def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     advantage = strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
     )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
+    disadvantage = (
+        has_condition(state, POISONED_EFFECT_ID)
+        or has_condition(state, FRIGHTENED_EFFECT_ID)
+        or (strength_check and bool(strength_d20_disadvantage(state)))
+    )
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE

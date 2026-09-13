@@ -20,5 +20,13 @@
     return { source: "Sneak Attack", diceCount, diceSize: 6, damageType: attack.damageType };
   }
 
-  window.IRON_PIT_BROWSER_SNEAK_ATTACK = { allyAvailable, bonusDamage };
+  function martialAdvantage(attacker, attack, turnKey, hasAlly) {
+    if (!attacker.template.traits?.includes("martial-advantage") || !hasAlly || !attack.damageType) return null;
+    if (!turnKey) throw new Error("Martial Advantage requires the actual active-turn key.");
+    if (attacker.feature_last_turn_keys["martial-advantage"] === turnKey) return null;
+    attacker.feature_last_turn_keys["martial-advantage"] = turnKey;
+    return { source: "Martial Advantage", diceCount: 2, diceSize: 6, damageType: attack.damageType };
+  }
+
+  window.IRON_PIT_BROWSER_SNEAK_ATTACK = { allyAvailable, bonusDamage, martialAdvantage };
 })();

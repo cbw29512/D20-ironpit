@@ -18,9 +18,10 @@
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
-      grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
+      grapple_sources: [], swallowed: null, timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
-      temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
+      temporary_damage_resistances: [], wielded_attack_id: template.primary_attack_id || template.attacks?.[0]?.id || null,
+      rage_expires_round: null, rage_max_round: null,
     };
   }
 
@@ -78,6 +79,12 @@
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
   const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
 
+  function targetVisibleTo(member, target) {
+    if (target.state.swallowed && target.state.swallowed.source_id !== member.combatant_id) return false;
+    if (member.state.swallowed) return member.state.swallowed.source_id === target.combatant_id;
+    return true;
+  }
+
   function targetPriority(member) {
     const state = member.state;
     if (!state.is_alive || state.is_dead) return null;
@@ -87,7 +94,7 @@
   }
 
   function priorityTargets(member, setup) {
-    const eligible = opponents(member, setup).filter((candidate) => targetPriority(candidate) !== null);
+    const eligible = opponents(member, setup).filter((candidate) => targetVisibleTo(member, candidate) && targetPriority(candidate) !== null);
     if (!eligible.length) return [];
     const priority = Math.min(...eligible.map(targetPriority));
     return eligible.filter((candidate) => targetPriority(candidate) === priority);
@@ -136,6 +143,6 @@
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
     hasAdjacentActiveAlly, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost,
-    targetPriority, terminateTurn,
+    targetPriority, targetVisibleTo, terminateTurn,
   };
 })();
