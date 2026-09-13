@@ -12,7 +12,10 @@ _NUMBER_WORDS = {
     "seven": 7, "eight": 8, "nine": 9, "ten": 10, "twelve": 12,
     "twenty": 20, "twenty-four": 24,
 }
-_TRAIT = re.compile(r"<strong>(?P<name>[^<]+?)\.?\s*</strong>\s*(?P<body>.*)", re.I | re.S)
+_TRAIT = re.compile(
+    r"(?:<[^>]+>)*<strong>(?P<name>[^<]+?)\.?\s*</strong>(?:</[^>]+>)*\s*(?P<body>.*)",
+    re.I | re.S,
+)
 _POOL = re.compile(
     r"\bhas\s+(?P<count>\d+|[a-z-]+)\s+(?P<ammo>[a-z][a-z -]+?)\.\s*"
     r"Used\s+(?P<used>[a-z][a-z -]+?)\s+regrow\s+when\b.*?finishes\s+a\s+long\s+rest",
@@ -42,7 +45,7 @@ def parse_regrowing_ammunition(paragraph: str) -> tuple[str, str, int] | None:
         return None
     ammo = _singular(pool.group("ammo"))
     used = _singular(pool.group("used"))
-    if ammo != used:
+    if ammo != used and not ammo.endswith(f" {used}"):
         return None
     return trait.group("name").rstrip("."), _key(ammo), count
 
@@ -69,7 +72,9 @@ def main() -> int:
                 if action_id not in {attack["id"] for attack in row.get("attacks", [])}:
                     continue
                 row.setdefault("limited_action_uses", {})[action_id] = count
-                row.setdefault("data_bound_trait_names", []).append(trait_name)
+                names = row.setdefault("data_bound_trait_names", [])
+                if trait_name not in names:
+                    names.append(trait_name)
                 parsed_count += 1
         args.catalog.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print(f"enriched {parsed_count} finite attack ammunition pools")
