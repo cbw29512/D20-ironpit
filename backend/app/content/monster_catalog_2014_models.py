@@ -10,6 +10,7 @@ from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.on_hit_saves import OnHitSaveEffect
 from app.domain.regeneration import RegenerationProfile
+from app.domain.restraints import BreakableRestraint
 from app.domain.size import CreatureSize
 from app.domain.weapons import ConditionalDamage, DamageType
 from app.domain.zero_hp_prevention import ZeroHpPrevention
@@ -20,7 +21,7 @@ class CatalogDamage2014(BaseModel):
     dice_count: int = Field(ge=0, le=40)
     dice_size: int = Field(ge=2, le=100)
     bonus: int = 0
-    type: DamageType
+    type: DamageType | None
 
 
 class CatalogAttack2014(BaseModel):
@@ -34,6 +35,9 @@ class CatalogAttack2014(BaseModel):
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
     on_hit_save_effect: OnHitSaveEffect | None = None
     control_effect: HitControlEffect | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
+    breakable_restraint: BreakableRestraint | None = None
     forbid_target_grappled_by_self: bool = False
     charge_profile: ChargeProfileDefinition | None = None
     reach_ft: int = Field(default=5, ge=0)
