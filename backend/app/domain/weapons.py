@@ -44,7 +44,7 @@ class ConditionalDamage(BaseModel):
 
 
 class ConditionalAttackAdvantage(BaseModel):
-    trigger: Literal["target_not_full_hp"]
+    trigger: Literal["target_not_full_hp", "target_grappled_by_source"]
 
 
 class OnHitDamage(BaseModel):
@@ -83,11 +83,10 @@ class AttachmentOnHit(BaseModel):
 class Weapon(BaseModel):
     id: str
     name: str
-    attack_kind: WeaponAttackKind
-    dice_count: int = Field(ge=0, le=20)
-    dice_size: int = Field(ge=2, le=100)
+    kind: WeaponAttackKind
+    damage_dice_count: int = Field(ge=1, le=20)
+    damage_dice_size: int = Field(ge=2, le=100)
     damage_type: DamageType
-    animation: str
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
@@ -102,10 +101,10 @@ class Weapon(BaseModel):
 
 class WeaponAttack(BaseModel):
     id: str
+    name: str
     weapon: Weapon
     attack_bonus: int
     damage_bonus: int
-    damage_die_minimum: int | None = Field(default=None, ge=2, le=100)
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
     fixed_damage: int | None = Field(default=None, ge=0)
@@ -113,17 +112,15 @@ class WeaponAttack(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
-    on_hit_saving_throw: OnHitSavingThrow | None = None
-    max_hp_reduction_on_hit: MaxHpReductionOnHit | None = None
-    ability_score_reduction_on_hit: AbilityScoreReductionOnHit | None = None
-    attachment_on_hit: AttachmentOnHit | None = None
+    rage_eligible: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
-    rage_eligible: bool = False
-    sneak_attack_eligible: bool = False
-    knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
+    on_hit_saving_throw: OnHitSavingThrow | None = None
     charge_profile: ChargeProfile | None = None
+    max_hp_reduction_on_hit: MaxHpReductionOnHit | None = None
+    attachment_on_hit: AttachmentOnHit | None = None
+    ability_score_reduction_on_hit: AbilityScoreReductionOnHit | None = None
     push_target_away_ft: int = Field(default=0, ge=0, le=120)
     push_target_max_size: CreatureSize | None = None
     pull_target_toward_ft: int = Field(default=0, ge=0, le=120)
@@ -131,7 +128,11 @@ class WeaponAttack(BaseModel):
     forbid_target_grappled_by_self: bool = False
 
     @model_validator(mode="after")
-    def validate_forced_movement(self) -> "WeaponAttack":
+    def validate_attack(self) -> "WeaponAttack":
+        if self.fixed_damage is not None and self.damage_bonus != 0:
+            raise ValueError("Fixed-damage attacks cannot also declare a damage bonus.")
+        if self.attack_ability_modifier is not None and self.attack_ability is None:
+            raise ValueError("Attack ability modifier requires an explicit attack ability.")
         if self.push_target_away_ft and self.pull_target_toward_ft:
             raise ValueError("An attack cannot both push and pull the same target on hit.")
         if self.push_target_max_size is not None and self.push_target_away_ft == 0:
