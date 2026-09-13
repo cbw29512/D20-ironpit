@@ -8,11 +8,7 @@ from pydantic import TypeAdapter
 
 from app.content.monster_catalog_2014_absorption import damage_absorptions_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
-from app.content.monster_catalog_2014_arena_policy import (
-    is_arena_disabled_action_2014,
-    is_arena_disabled_attack_detail_2014,
-    usable_movement_speed_2014,
-)
+from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, is_arena_disabled_attack_detail_2014, usable_movement_speed_2014
 from app.content.monster_catalog_2014_auras import start_turn_auras_2014
 from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
@@ -67,11 +63,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
         supported_reactions = {"Parry"} if source.parry_ac_bonus is not None else set()
         blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
-        blockers.extend(
-            f"attack-detail:{attack.name}"
-            for attack in source.attacks
-            if not attack.source_complete and not is_arena_disabled_attack_detail_2014(attack.unsupported_text)
-        )
+        blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete and not is_arena_disabled_attack_detail_2014(attack.unsupported_text))
         blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names, source.data_bound_trait_names))
         blockers.extend(f"spell:{name}" for name in unresolved_spells_2014(source))
