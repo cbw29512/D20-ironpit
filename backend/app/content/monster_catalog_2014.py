@@ -97,7 +97,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         movement = MovementModes(walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0), climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0))
         dex = source.abilities["dex"]
         return CombatantTemplate(
-            id=f"2014-{source.id}", name=source.name, archetype=source.name, challenge_rating=source.challenge_rate,
+            id=f"2014-{source.id}", name=source.name, archetype=source.name, challenge_rating=source.challenge_rating,
             kind="monster", ruleset="2014", creature_type=source.creature_type, size=source.size,
             ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
