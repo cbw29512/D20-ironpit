@@ -88,3 +88,12 @@ def build_karnok_stoneward_level19_profile() -> CharacterBuildProfile:
         source_reference=source, category="feat", combat_relevant=True, automated=True,
         notes="Canonical Epic Boon grants +1 Dexterity (17→18) and Peerless Aim turns one missed attack roll into a hit until the start of Karnok's next turn.",
     )], [source, "Basic Rules 2024: Epic Boon — Boon of Combat Prowess"])
+
+
+def build_karnok_stoneward_level20_profile() -> CharacterBuildProfile:
+    source = "D&D Beyond Basic Rules 2024: Fighter Level 20 Three Extra Attacks"
+    return _advance(build_karnok_stoneward_level19_profile, 20, [FeatureAudit(
+        feature_id="extra-attack-4", feature_name="Three Extra Attacks",
+        source_reference=source, category="class", combat_relevant=True, automated=True,
+        notes="The shared Attack-action slot model makes four attacks whenever Karnok takes the Attack action.",
+    )], [source])
