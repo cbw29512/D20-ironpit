@@ -9,6 +9,7 @@ from app.domain.auras import StartTurnAura
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_defense_rules import ConditionalDamageResistance, DamageAbsorption
+from app.domain.damage_triggers import DamageTriggeredRollPenalty
 from app.domain.gaze import StartTurnGaze
 from app.domain.invisibility import InvisibilityAction
 from app.domain.legendary_actions import LegendaryActionOption
@@ -105,6 +106,7 @@ class CombatantTemplate(BaseModel):
     damage_resistances: list[DamageType] = Field(default_factory=list)
     conditional_damage_resistances: list[ConditionalDamageResistance] = Field(default_factory=list)
     damage_absorptions: list[DamageAbsorption] = Field(default_factory=list)
+    damage_triggered_roll_penalties: list[DamageTriggeredRollPenalty] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
