@@ -24,7 +24,7 @@
       const rolls = window.IRON_PIT_DICE.rollMany(action.damageDiceCountPerProjectile || 1, action.damageDiceSize);
       allRolls.push(...rolls);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.damageBonusPerProjectile || 0);
-      const applied = A().adjustedDamage(target.state, raw, action.damageType);
+      const applied = A().adjustedDamage(target.state, raw, action.damageType, true, true);
       appliedTotal += applied;
       components.push({ source: `${action.name} projectile ${i + 1}`, notation: `${action.damageDiceCountPerProjectile || 1}d${action.damageDiceSize}+${action.damageBonusPerProjectile || 0}`, rolls: [...rolls], modifier: action.damageBonusPerProjectile || 0, damage_type: action.damageType, total: raw, applied_total: applied });
     }
