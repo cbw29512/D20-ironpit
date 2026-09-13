@@ -107,6 +107,19 @@ def _restraint_row(profile):
     return row
 
 
+def _gaze_row(gaze):
+    if gaze is None: return None
+    return {
+        "id": gaze.id, "name": gaze.name, "rangeFt": gaze.range_ft, "saveAbility": gaze.save_ability,
+        "saveDc": gaze.save_dc, "failureConditionId": gaze.failure_condition_id,
+        "repeatSaveTiming": gaze.repeat_save_timing,
+        "repeatSaveFailureConditionId": gaze.repeat_save_failure_condition_id,
+        "immediateFailureMargin": gaze.immediate_failure_margin,
+        "immediateFailureConditionId": gaze.immediate_failure_condition_id,
+        "magicalEffect": gaze.magical_effect, "avertible": gaze.avertible,
+    }
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -117,6 +130,8 @@ def _attach_source_fingerprint(row, template) -> None:
 
 def _attach_monster_actions(row, template) -> None:
     row["creature_subtypes"] = list(template.creature_subtypes)
+    gaze = _gaze_row(template.start_turn_gaze)
+    if gaze: row["startTurnGaze"] = gaze
     if template.ability_scores is not None:
         row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
     for definition in row.get("resource_definitions", []):

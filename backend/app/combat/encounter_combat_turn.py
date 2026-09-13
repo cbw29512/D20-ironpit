@@ -11,6 +11,7 @@ from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
 from app.combat.encounter_offense_priority import resolve_post_movement_offense, resolve_pre_movement_offense
 from app.combat.encounter_turn_support import finish_turn, resolve_support_actions, save_choice
+from app.combat.gaze import resolve_start_turn_gazes
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
@@ -48,12 +49,11 @@ def resolve_combat_turn(
             events.append(regen_event); sequence += 1
         if regen_death:
             return events, sequence
-        begin_turn(attacker.state)
-        recharge_events, sequence = resolve_start_turn_recharges(
-            sequence, round_number, attacker.combatant_id, attacker.state, dice,
-        )
+        begin_turn(attacker.state); turn_key = f"{round_number}:{attacker.combatant_id}"
+        gaze_events, sequence = resolve_start_turn_gazes(sequence, round_number, attacker, setup, dice); events.extend(gaze_events)
+        if is_incapacitated(attacker.state): return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        recharge_events, sequence = resolve_start_turn_recharges(sequence, round_number, attacker.combatant_id, attacker.state, dice)
         events.extend(recharge_events)
-        turn_key = f"{round_number}:{attacker.combatant_id}"
         if forced_retreat_active(attacker.state):
             events.append(build_forced_retreat_event(
                 sequence, round_number, attacker.combatant_id, attacker.state,

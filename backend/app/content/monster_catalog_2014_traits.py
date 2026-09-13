@@ -20,7 +20,7 @@ MODELED_TRAITS = {
 
 DATA_BOUND_TRAITS = frozenset({
     "Angelic Weapons", "Blood Frenzy", "Echolocation", "Innate Spellcasting",
-    "Poor Depth Perception", "Reckless", "Regeneration", "Spellcasting",
+    "Petrifying Gaze", "Poor Depth Perception", "Reckless", "Regeneration", "Spellcasting",
 })
 
 # Preserved in source provenance, but nonblocking when the current Iron Pit ruleset
