@@ -9,6 +9,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Allosaurus": _p("theropod", "allosaurus"),
     "Animated Armor": _p("humanoid", "animated-armor"),
     "Animated Flying Sword": _p("weapon", "flying-sword"),
+    "Ankheg": _p("insect", "ankheg"),
     "Ankylosaurus": _p("reptile", "ankylosaurus"),
     "Ape": _p("primate", "ape"),
     "Archelon": _p("aquatic-reptile", "archelon"),
