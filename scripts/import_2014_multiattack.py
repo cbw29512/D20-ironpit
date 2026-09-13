@@ -117,7 +117,7 @@ def _sequence(text: str, attacks: list[dict]) -> list[list[str]] | None:
 
 def _multiattack_text(paragraph: str) -> str:
     text = _plain(paragraph)
-    return re.sub(r"^Multiattack(?:\.\s*)?(?:\([^)]*form only\)\.?)?\s*", "", text, flags=re.I)
+    return re.sub(r"^Multiattack(?:\.\s*)?\s*(?:\([^)]*form only\)\.?)?\s*", "", text, flags=re.I)
 
 
 def parse_multiattack(source_actions: str | None, attacks: list[dict]) -> dict | None:
