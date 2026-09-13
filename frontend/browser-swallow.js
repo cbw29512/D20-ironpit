@@ -2,7 +2,7 @@
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
-  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS;
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS || { resolvePending: (sequence) => ({ events: [], sequence }) };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const D = () => window.IRON_PIT_DICE;
 
