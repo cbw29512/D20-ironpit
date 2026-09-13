@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from functools import lru_cache
+import logging
 import re
 
 from app.domain.actions import ConditionName
 from app.domain.combatants import DamageType
 
+logger = logging.getLogger(__name__)
 _DAMAGE_TYPES = {item.value for item in DamageType}
 _CONDITIONS = {
     "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
@@ -46,26 +49,35 @@ def _damage_types(value: str, label: str) -> set[str]:
     return result
 
 
+@lru_cache(maxsize=512)
+def _parse_defense_text(raw_text: str) -> tuple[frozenset[str], frozenset[str], frozenset[str], frozenset[str]]:
+    try:
+        vulnerabilities = _damage_types(_section(raw_text, "Vulnerabilities"), "vulnerability")
+        resistances = _damage_types(_section(raw_text, "Resistances"), "resistance")
+        damage_immunities: set[str] = set()
+        condition_immunities: set[str] = set()
+        for token in _tokens(_section(raw_text, "Immunities")):
+            if token in _DAMAGE_TYPES:
+                damage_immunities.add(token)
+            elif token in _CONDITIONS:
+                condition_immunities.add(token)
+            else:
+                raise ValueError(f"Unsupported SRD immunity clause: {token!r}")
+        return tuple(map(frozenset, (vulnerabilities, resistances, damage_immunities, condition_immunities)))
+    except Exception:
+        logger.exception("Failed to parse SRD defense profile.")
+        raise
+
+
 def parse_defense_profile(row: dict[str, object]) -> dict[str, set[str]]:
     """Parse exact combat defenses from a 2024 SRD monster stat block; reject lossy clauses."""
-    raw_text = str(row.get("rawText", ""))
-    vulnerabilities = _damage_types(_section(raw_text, "Vulnerabilities"), "vulnerability")
-    resistances = _damage_types(_section(raw_text, "Resistances"), "resistance")
-    damage_immunities: set[str] = set()
-    condition_immunities: set[str] = set()
-    for token in _tokens(_section(raw_text, "Immunities")):
-        if token in _DAMAGE_TYPES:
-            damage_immunities.add(token)
-        elif token in _CONDITIONS:
-            condition_immunities.add(token)
-        else:
-            raise ValueError(f"Unsupported SRD immunity clause: {token!r}")
-    return {
-        "damage_vulnerabilities": vulnerabilities,
-        "damage_resistances": resistances,
-        "damage_immunities": damage_immunities,
-        "condition_immunities": condition_immunities,
-    }
+    try:
+        values = _parse_defense_text(str(row.get("rawText", "")))
+        keys = ("damage_vulnerabilities", "damage_resistances", "damage_immunities", "condition_immunities")
+        return {key: set(value) for key, value in zip(keys, values, strict=True)}
+    except Exception:
+        logger.exception("Failed to resolve cached SRD defense profile.")
+        raise
 
 
 def defense_issues(template, row: dict[str, object]) -> list[str]:
