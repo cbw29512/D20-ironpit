@@ -18,7 +18,7 @@ from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSave
 from app.domain.swallow import SwallowAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
-from app.domain.weapons import ConditionalDamage, DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.weapons import ConditionalAttackAdvantage, ConditionalDamage, DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.zero_hp_prevention import ZeroHpPrevention
 
 
@@ -104,11 +104,14 @@ class CombatantTemplate(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def _normalize_compatibility_fields(cls, values: object) -> object:
-        if not isinstance(values, dict): return values
+        if not isinstance(values, dict):
+            return values
         normalized = dict(values)
         if "movement_modes" not in normalized and "speed_ft" in normalized:
             normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
-        style, styles = normalized.get("fighting_style"), normalized.get("fighting_styles") or []
+        style = normalized.get("fighting_style")
+        styles = normalized.get("fighting_styles")
+        if styles is None: styles = []
         if not styles and style: normalized["fighting_styles"] = [style]
         elif styles and not style: normalized["fighting_style"] = styles[0]
         return normalized
