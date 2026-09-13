@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 196,
-    "blocked": 134
+    "public_ready": 197,
+    "blocked": 133
   },
   "monsters": [
     {
@@ -1109,24 +1109,18 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "saving-throw-action",
-        "trait"
-      ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "source-attack-count-mismatch"
-      ]
+        "saving-throw-action",
+        "trait"
+      ],
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-ankylosaurus",
@@ -1983,7 +1977,6 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "source-attack-count-mismatch",
         "trait",
         "uncertified-bonus-action:quick-grapple",
         "uncertified-trait:abduct"
@@ -2013,7 +2006,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "source-attack-count-mismatch",
         "trait",
         "uncertified-trait:abduct"
       ]
@@ -6035,7 +6027,6 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "source-attack-count-mismatch",
         "trait",
         "uncertified-bonus-action:shape-shift",
         "uncertified-trait:adhesive"
