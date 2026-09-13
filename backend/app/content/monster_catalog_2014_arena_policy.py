@@ -12,6 +12,8 @@ _ARENA_DISABLED_ACTION_PATTERNS = (
     re.compile(r"\b(?:teleport|plane shift|dimension door|misty step|ethereal(?:ness)?)\b", re.I),
     re.compile(r"\b(?:banish|banishment)\b", re.I),
     re.compile(r"\billusory appearance\b", re.I),
+    # The standard Pit has no underwater environment and permits no destructible terrain.
+    re.compile(r"\b(?:ink cloud|wall of ice)\b", re.I),
 )
 
 ARENA_OUT_OF_SCOPE_TRAITS_2014 = frozenset({
