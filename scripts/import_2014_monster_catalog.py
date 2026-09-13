@@ -31,9 +31,10 @@ CONDITIONS = {
     "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
     "restrained", "stunned", "unconscious",
 }
-_ROLLED_DAMAGE = re.compile(r"Hit:\s*(\d+)\s*\((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)\s*([A-Za-z]+) damage", re.I)
+_SIGN = r"[+\-‐‑‒–—−]"
+_ROLLED_DAMAGE = re.compile(rf"Hit:\s*(\d+)\s*\((\d+)d(\d+)(?:\s*({_SIGN})\s*(\d+))?\)\s*([A-Za-z]+) damage", re.I)
 _FIXED_DAMAGE = re.compile(r"Hit:\s*(\d+)\s+([A-Za-z]+) damage", re.I)
-_ALT_DAMAGE = r"(\d+)\s*\((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)\s*([A-Za-z]+) damage"
+_ALT_DAMAGE = rf"(\d+)\s*\((\d+)d(\d+)(?:\s*({_SIGN})\s*(\d+))?\)\s*([A-Za-z]+) damage"
 _TWO_HANDED = re.compile(r"or\s+" + _ALT_DAMAGE + r"\s+if used with two hands(?: to make a melee attack)?", re.I)
 _MELEE_RANGE = re.compile(r"in melee or\s+" + _ALT_DAMAGE + r"\s+at range", re.I)
 
@@ -77,7 +78,8 @@ def _simple_values(value: str | None, allowed: set[str]) -> tuple[list[str], lis
 def _damage(groups: tuple[str | None, ...]) -> dict | None:
     average, count, size, sign, bonus, damage_type = groups; dtype = (damage_type or "").lower()
     if dtype not in DAMAGE_TYPES: return None
-    modifier = int(bonus or 0) * (-1 if sign in {"-", "−"} else 1)
+    negative_signs = {"-", "‐", "‑", "‒", "–", "—", "−"}
+    modifier = int(bonus or 0) * (-1 if sign in negative_signs else 1)
     return {"average": int(average), "dice_count": int(count), "dice_size": int(size), "bonus": modifier, "type": dtype}
 
 
