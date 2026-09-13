@@ -42,7 +42,9 @@ def test_known_certified_frontiers_fail_closed_on_real_features() -> None:
     assert "canonical-spell-package-incomplete" in frontier["cleric"].content_blockers
 
     assert frontier["fighter"].next_level == 19
-    assert "boon-combat-prowess" in frontier["fighter"].unsupported_features
+    assert frontier["fighter"].unsupported_features == ()
+    assert frontier["fighter"].content_blockers == ()
+    assert frontier["fighter"].ready
 
 
 def test_combined_blockers_include_content_and_engine_work() -> None:
