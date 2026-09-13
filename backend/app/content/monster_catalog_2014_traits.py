@@ -22,7 +22,7 @@ MODELED_TRAITS = {
 }
 
 DATA_BOUND_TRAITS = frozenset({
-    "Angelic Weapons", "Blood Frenzy", "Echolocation", "Innate Spellcasting",
+    "Angelic Weapons", "Barbed Hide", "Blood Frenzy", "Echolocation", "Innate Spellcasting",
     "Petrifying Gaze", "Poor Depth Perception", "Reckless", "Regeneration", "Spellcasting", "Stench",
     "Turning Defiance",
 })
