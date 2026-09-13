@@ -19861,6 +19861,21 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "swallow_actions": [
+      {
+        "id": "swallow",
+        "name": "Swallow",
+        "attack_id": "bite",
+        "max_target_size": "small",
+        "damage_dice_count": 2,
+        "damage_dice_size": 4,
+        "damage_bonus": 0,
+        "damage_type": "acid",
+        "max_swallowed": 1,
+        "exit_movement_ft": 5,
+        "exit_prone": true
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -21151,6 +21166,21 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "swallow_actions": [
+      {
+        "id": "swallow",
+        "name": "Swallow",
+        "attack_id": "bite",
+        "max_target_size": "medium",
+        "damage_dice_count": 3,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "acid",
+        "max_swallowed": 1,
+        "exit_movement_ft": 5,
+        "exit_prone": true
+      }
+    ],
     "spellcasting": null
   },
   {
