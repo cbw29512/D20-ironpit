@@ -16690,6 +16690,46 @@
         "source_complete": true,
         "unsupported_text": null,
         "reach_ft": 5
+      },
+      {
+        "id": "web",
+        "name": "Web",
+        "kind": "ranged",
+        "attack_bonus": 4,
+        "damage": {
+          "average": 0,
+          "dice_count": 0,
+          "dice_size": 6,
+          "bonus": 0,
+          "type": null
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "resource_id": "web",
+        "resource_cost": 1,
+        "breakable_restraint": {
+          "condition_id": "restrained",
+          "escape_ability": "strength",
+          "escape_dc": 11,
+          "object_ac": 10,
+          "object_hp": 5,
+          "damage_vulnerabilities": [
+            "fire"
+          ],
+          "damage_immunities": [
+            "bludgeoning",
+            "poison",
+            "psychic"
+          ],
+          "max_target_size": "large"
+        },
+        "forbid_target_grappled_by_self": false,
+        "normal_range_ft": 30,
+        "long_range_ft": 60,
+        "source_complete": true,
+        "unsupported_text": null
       }
     ],
     "multiattack_slots": [
@@ -20901,6 +20941,45 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "dexterity"
+      },
+      {
+        "id": "web",
+        "name": "Web",
+        "kind": "ranged",
+        "attack_bonus": 5,
+        "damage": {
+          "average": 0,
+          "dice_count": 0,
+          "dice_size": 6,
+          "bonus": 0,
+          "type": null
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "resource_id": "web",
+        "resource_cost": 1,
+        "breakable_restraint": {
+          "condition_id": "restrained",
+          "escape_ability": "strength",
+          "escape_dc": 12,
+          "object_ac": 10,
+          "object_hp": 5,
+          "damage_vulnerabilities": [
+            "fire"
+          ],
+          "damage_immunities": [
+            "bludgeoning",
+            "poison",
+            "psychic"
+          ]
+        },
+        "forbid_target_grappled_by_self": false,
+        "normal_range_ft": 30,
+        "long_range_ft": 60,
+        "source_complete": true,
+        "unsupported_text": null
       }
     ],
     "multiattack_slots": [],
