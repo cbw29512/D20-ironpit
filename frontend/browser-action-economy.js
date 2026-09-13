@@ -30,6 +30,18 @@
     else state.reaction_available = false;
   }
 
+  function resourceAvailable(state, action) {
+    if (!action?.resourceId) return true;
+    return (state.resources?.[action.resourceId] || 0) >= (action.resourceCost || 1);
+  }
+
+  function spendResource(state, action) {
+    if (!action?.resourceId) return null;
+    if (!resourceAvailable(state, action)) throw new Error(`${action.resourceId} resource is unavailable.`);
+    state.resources[action.resourceId] -= action.resourceCost || 1;
+    return state.resources[action.resourceId];
+  }
+
   function rechargeAction(state, action) {
     if (!action.resourceId) return false;
     const definition = (state.template.resource_definitions || []).find((item) => item.id === action.resourceId);
@@ -37,8 +49,8 @@
   }
 
   function rechargeReady(state) {
-    return (state.template.saving_throw_actions || []).some((action) =>
-      rechargeAction(state, action) && (state.resources?.[action.resourceId] || 0) >= (action.resourceCost || 1));
+    const actions = [...(state.template.saving_throw_actions || []), ...(state.template.attacks || [])];
+    return actions.some((action) => rechargeAction(state, action) && resourceAvailable(state, action));
   }
 
   function startTurnRecharges(sequence, round, member) {
@@ -64,6 +76,7 @@
   }
 
   window.IRON_PIT_ACTION_ECONOMY = {
-    available, isIncapacitated: (state) => Q().incapacitated(state), rechargeAction, rechargeReady, spend, startTurnRecharges,
+    available, isIncapacitated: (state) => Q().incapacitated(state), rechargeAction, rechargeReady,
+    resourceAvailable, spend, spendResource, startTurnRecharges,
   };
 })();
