@@ -37,6 +37,7 @@ class HitControlEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     ends_on_damage: bool = False
     source_effect_immunity_on_end: bool = False
@@ -51,10 +52,12 @@ class HitControlEffect(BaseModel):
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")
+        if self.repeat_save_failure_condition_id is not None and not all(item is not None for item in repeat_fields):
+            raise ValueError("Repeat-save failure escalation requires a complete repeat-save lifecycle.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
         if self.duration_rounds is not None and self.expiry_timing is None:
-            raise ValueError("Timed control duration requires an explicit expiry timing.")
+            raise ValueError("Timed control duration requires an explicit condition timing.")
         custom_rules = (
             self.speed_multiplier != 1.0 or self.blocks_reactions or self.action_bonus_exclusive
             or self.max_attacks_per_turn is not None or self.disadvantage_strength_d20_tests
