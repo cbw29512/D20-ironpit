@@ -36,10 +36,20 @@ def _opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[Enco
     return setup.monsters if attacker.side == "heroes" else setup.heroes
 
 
+def _target_visible_to(attacker: EncounterCombatant, target: EncounterCombatant) -> bool:
+    swallowed = target.state.swallowed
+    if swallowed is not None and swallowed.source_id != attacker.combatant_id:
+        return False
+    if attacker.state.swallowed is not None:
+        return attacker.state.swallowed.source_id == target.combatant_id
+    return True
+
+
 def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
-    """Pit visibility is unobstructed; only a non-Incapacitated enemy within 5 ft. threatens a ranged attack."""
+    """Pit visibility is unobstructed except for total cover created by Swallow."""
     return any(
-        member.state.is_alive
+        _target_visible_to(attacker, member)
+        and member.state.is_alive
         and not member.state.is_dead
         and member.state.current_hp > 0
         and not is_incapacitated(member.state)
@@ -62,7 +72,10 @@ def _target_priority(member: EncounterCombatant) -> int | None:
 
 def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
     """Return only the highest-priority eligible target class under deterministic Pit policy."""
-    candidates = [member for member in _opponents(attacker, setup) if _target_priority(member) is not None]
+    candidates = [
+        member for member in _opponents(attacker, setup)
+        if _target_visible_to(attacker, member) and _target_priority(member) is not None
+    ]
     if not candidates:
         return []
     priority = min(_target_priority(member) for member in candidates)

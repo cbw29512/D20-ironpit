@@ -6,6 +6,11 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
+  const resourceAvailable = (state, attack) => {
+    if (!attack?.resourceId) return true;
+    if (E()?.resourceAvailable) return E().resourceAvailable(state, attack);
+    return (state.resources?.[attack.resourceId] || 0) >= (attack.resourceCost || 1);
+  };
 
   function hasRangedWeaponOffense(template) {
     return attacks(template).some((attack) => attack.kind === "ranged" && Number.isFinite(attack.long) && attack.long > 5);
@@ -75,7 +80,7 @@
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false, requiredTargetId = null) {
     const allowed = new Set(ids);
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id)
-      && (!kind || attack.kind === kind) && E().resourceAvailable(member.state, attack));
+      && (!kind || attack.kind === kind) && resourceAvailable(member.state, attack));
     let targets = targetOrder(member, setup, preferBackline);
     if (requiredTargetId) targets = targets.filter((target) => target.combatant_id === requiredTargetId);
     for (const target of targets) {
@@ -95,7 +100,7 @@
   }
   function flexibleSlotHasBoth(member, ids) {
     const allowed = new Set(ids), kinds = new Set(attacks(member.state.template)
-      .filter((attack) => allowed.has(attack.id) && E().resourceAvailable(member.state, attack)).map((attack) => attack.kind));
+      .filter((attack) => allowed.has(attack.id) && resourceAvailable(member.state, attack)).map((attack) => attack.kind));
     return kinds.has("melee") && kinds.has("ranged");
   }
   function backlineHoldsPosition(member, setup) {

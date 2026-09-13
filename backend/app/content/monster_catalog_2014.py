@@ -7,12 +7,7 @@ from pathlib import Path
 from pydantic import TypeAdapter
 
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014
-from app.content.monster_catalog_2014_compile_support import (
-    ability_scores_2014,
-    bind_attack_traits_2014,
-    resources_2014,
-    saving_throw_bonuses_2014,
-)
+from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
@@ -35,27 +30,23 @@ _CHARGE_TRAITS = {"Charge", "Pounce", "Trampling Charge"}
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
     try:
         kind = WeaponAttackKind.MELEE if source.kind == "melee" else WeaponAttackKind.RANGED
-        weapon = Weapon(
-            id=source.id, name=source.name, attack_kind=kind, dice_count=source.damage.dice_count,
-            dice_size=source.damage.dice_size, damage_type=source.damage.type,
-            animation="projectile" if source.kind == "ranged" else "melee", reach_ft=source.reach_ft,
-            normal_range_ft=source.normal_range_ft, long_range_ft=source.long_range_ft, magical=magical,
-        )
-        riders = [
-            OnHitDamage(source=f"{source.name} secondary damage", dice_count=item.dice_count, dice_size=item.dice_size,
-                        damage_bonus=item.bonus, damage_type=item.type)
-            for item in source.on_hit_damage
-        ]
-        return WeaponAttack(
-            id=source.id, weapon=weapon, attack_bonus=source.attack_bonus, damage_bonus=source.damage.bonus,
-            attack_ability=source.attack_ability,
-            attack_ability_modifier=source.damage.bonus if source.attack_ability is not None else None,
-            fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
-            conditional_damage=source.conditional_damage, on_hit_damage=riders,
-            on_hit_save_effect=source.on_hit_save_effect, control_effect=source.control_effect,
-            resource_id=source.resource_id, resource_cost=source.resource_cost, breakable_restraint=source.breakable_restraint,
-            forbid_target_grappled_by_self=source.forbid_target_grappled_by_self, charge_profile=source.charge_profile,
-        )
+        weapon = Weapon(id=source.id, name=source.name, attack_kind=kind, dice_count=source.damage.dice_count,
+                        dice_size=source.damage.dice_size, damage_type=source.damage.type,
+                        animation="projectile" if source.kind == "ranged" else "melee", reach_ft=source.reach_ft,
+                        normal_range_ft=source.normal_range_ft, long_range_ft=source.long_range_ft, magical=magical)
+        riders = [OnHitDamage(source=f"{source.name} secondary damage", dice_count=item.dice_count,
+                              dice_size=item.dice_size, damage_bonus=item.bonus, damage_type=item.type)
+                  for item in source.on_hit_damage]
+        return WeaponAttack(id=source.id, weapon=weapon, attack_bonus=source.attack_bonus, damage_bonus=source.damage.bonus,
+                            attack_ability=source.attack_ability,
+                            attack_ability_modifier=source.damage.bonus if source.attack_ability is not None else None,
+                            fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
+                            conditional_damage=source.conditional_damage, on_hit_damage=riders,
+                            on_hit_save_effect=source.on_hit_save_effect, control_effect=source.control_effect,
+                            resource_id=source.resource_id, resource_cost=source.resource_cost,
+                            breakable_restraint=source.breakable_restraint,
+                            forbid_target_grappled_by_self=source.forbid_target_grappled_by_self,
+                            charge_profile=source.charge_profile)
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
         raise RuntimeError(f"2014 attack {source.id} could not be compiled.") from exc
@@ -76,10 +67,8 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
         blockers.extend(f"legendary:{name}" for name in source.unsupported_legendary_action_names)
-        if source.source_legendary_actions and source.legendary_action_uses <= 0:
-            blockers.append("legendary:unparsed-resource-pool")
-        if source.legendary_action_uses and not source.legendary_actions:
-            blockers.append("legendary:no-parsed-options")
+        if source.source_legendary_actions and source.legendary_action_uses <= 0: blockers.append("legendary:unparsed-resource-pool")
+        if source.legendary_action_uses and not source.legendary_actions: blockers.append("legendary:no-parsed-options")
         if not source.attacks: blockers.append("attack:no-structured-attack")
         return blockers
     except Exception as exc:
@@ -103,8 +92,8 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
-            attack_action=compile_multiattack_2014(source, attacks), saving_throw_actions=source.saving_throw_actions,
-            healing_actions=source.healing_actions,
+            attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
+            saving_throw_actions=source.saving_throw_actions, healing_actions=source.healing_actions,
             spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
             automatic_damage_spell_actions=automatic_spells,
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
@@ -117,8 +106,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
             zero_hp_prevention=source.zero_hp_prevention, regeneration=source.regeneration,
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
-            source=f"2014 JSON catalog: {source.id}",
-        )
+            source=f"2014 JSON catalog: {source.id}")
     except Exception as exc:
         logger.exception("Failed to compile 2014 monster %s.", source.id)
         raise RuntimeError(f"2014 monster {source.id} could not be compiled: {exc}") from exc
@@ -128,8 +116,7 @@ def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     try:
         if path.is_file(): payload = json.loads(path.read_text(encoding="utf-8"))
         else:
-            canonical = path / "catalog.json"
-            files = [canonical] if canonical.exists() else sorted(path.glob("catalog_*.json"))
+            canonical = path / "catalog.json"; files = [canonical] if canonical.exists() else sorted(path.glob("catalog_*.json"))
             files = files or [path / "mvp_catalog.json"]; payload = []
             for file in files: payload.extend(json.loads(file.read_text(encoding="utf-8")))
         return _MONSTERS.validate_python(payload)

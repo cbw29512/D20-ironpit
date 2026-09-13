@@ -15,17 +15,10 @@ from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.regeneration import RegenerationProfile
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.swallow import SwallowAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
-from app.domain.weapons import (
-    ConditionalAttackAdvantage,
-    ConditionalDamage,
-    DamageType,
-    OnHitDamage,
-    Weapon,
-    WeaponAttack,
-    WeaponAttackKind,
-)
+from app.domain.weapons import ConditionalAttackAdvantage, ConditionalDamage, DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.zero_hp_prevention import ZeroHpPrevention
 
 
@@ -71,6 +64,7 @@ class CombatantTemplate(BaseModel):
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
+    swallow_actions: list[SwallowAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
