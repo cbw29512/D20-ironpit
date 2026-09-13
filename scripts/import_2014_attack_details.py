@@ -8,6 +8,7 @@ DAMAGE_TYPES = {
 }
 _ROLLED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([A-Za-z]+) damage", re.I)
 _FIXED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s+([A-Za-z]+) damage", re.I)
+_PUSH_PRONE_SAVE = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be pushed up to (\d+) feet away from (?:the [A-Za-z' -]+|it) and knocked prone\.?'?", re.I)
 _PRONE_SAVE = re.compile(r"(?:If (?:the )?target is (?:(?:(Tiny|Small|Medium|Large|Huge) or smaller)|a creature),?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be knocked prone\.?'?", re.I)
 _TIMED_REPEAT_CONDITION = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or (?:be|become) (poisoned|paralyzed) for 1 minute\.\s*(?:The (?:target|creature)|It) can repeat the saving throw at the end of each of its turns,? ending the effect on itself on a success\.?'?", re.I)
 _DISEASE_POISON = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) Constitution saving throw against disease or become poisoned until the disease is cured\.?'?", re.I)
@@ -107,6 +108,12 @@ def parse_on_hit_save_condition(remainder: str) -> tuple[dict | None, str]:
             if effect is not None:
                 residual = (remainder[:match.start()] + " " + remainder[match.end():]).strip(" .,;")
                 return _zero_hp_rider(effect, residual)
+    pushed = _PUSH_PRONE_SAVE.search(remainder)
+    if pushed:
+        dc, ability, distance = pushed.groups()
+        effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": "prone", "failure_push_ft": int(distance)}
+        residual = (remainder[:pushed.start()] + " " + remainder[pushed.end():]).strip(" .,;")
+        return effect, residual
     match = _PRONE_SAVE.search(remainder)
     if not match: return None, remainder
     max_size, dc, ability = match.groups()

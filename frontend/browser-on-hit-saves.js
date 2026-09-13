@@ -6,6 +6,7 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const D = () => window.IRON_PIT_DICE;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
 
   function adjustedDamage(state, amount, type) {
@@ -44,6 +45,14 @@
     return applied;
   }
 
+  function failedSavePush(target, effect, sourceId, succeeded, setup) {
+    if (succeeded || !effect.failurePushFt) return 0;
+    if (!setup || !FM()) throw new Error("Failed-save forced movement lacks browser encounter context.");
+    const source = [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === sourceId);
+    if (!source) throw new Error("Failed-save forced movement source was not found.");
+    return FM().pushAway(source, target, effect.failurePushFt, setup);
+  }
+
   function resolve(target, attack, sourceId = null, round = null, setup = null) {
     const effect = attack.onHitSaveEffect;
     if (!effect || !target.state.is_alive || target.state.is_dead) return null;
@@ -70,8 +79,9 @@
       }
       if (appliedCondition) appliedConditions.push(appliedCondition);
     }
+    const pushedFt = failedSavePush(target, effect, sourceId, save.succeeded, setup);
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc, saveSucceeded: save.succeeded,
-      appliedCondition, appliedConditions: [...new Set(appliedConditions)], damageTotal: damage.total, damageComponent: damage.component };
+      appliedCondition, appliedConditions: [...new Set(appliedConditions)], damageTotal: damage.total, damageComponent: damage.component, pushedFt };
   }
 
   function actualTarget(target, setup, targetId) {
@@ -100,6 +110,7 @@
         event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), ...result.appliedConditions])];
         for (const condition of result.appliedConditions) event.description += ` ${target.state.template.name} is ${condition}.`;
       }
+      if (result.pushedFt) event.description += ` ${target.state.template.name} is pushed ${result.pushedFt} feet away.`;
       event.description += ` ${result.saveAbility} save DC ${result.saveDc}: ${target.state.template.name} ${result.saveSucceeded ? "succeeds" : "fails"}.`;
       return event;
     };
