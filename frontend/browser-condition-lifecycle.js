@@ -15,9 +15,15 @@
   const expiryDue = (effect, round, timing) => effect.expiry_timing === timing
     && (effect.expires_round == null || round >= effect.expires_round);
   function grantEndImmunity(target, effect) {
-    if (effect.source_effect_immunity_on_end && effect.source_effect_id) {
-      I().grant(target.state, effect.source_id, effect.source_effect_id);
-    }
+    if (effect.source_effect_immunity_on_end && effect.source_effect_id) I().grant(target.state, effect.source_id, effect.source_effect_id);
+  }
+  function escalate(target, effect, round) {
+    if (!effect.repeat_save_failure_condition_id) return { removed: [], applied: [] };
+    const removed = T().removeGroup(target.state, effect);
+    const applied = T().apply(target.state, effect.repeat_save_failure_condition_id, effect.source_id, {
+      sourceEffectId: effect.source_effect_id, appliedRound: round,
+    });
+    return { removed, applied: applied ? [applied] : [] };
   }
 
   function resolveTargetTiming(sequence, round, target, timing) {
@@ -27,6 +33,7 @@
       if (repeatSaveDue(effect, round, timing, target.state)) {
         const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
         const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        const escalated = save.succeeded ? { removed: [], applied: [] } : escalate(target, effect, round);
         if (save.succeeded) grantEndImmunity(target, effect);
         events.push({
           sequence: sequence++, round_number: round, event_type: "saving_throw",
@@ -34,22 +41,20 @@
           target_id: target.combatant_id, target_name: target.state.template.name,
           saving_throw_roll: save.roll, save_ability: effect.repeat_save_ability,
           save_dc: effect.repeat_save_dc, save_succeeded: save.succeeded,
-          removed_condition_ids: removed,
+          removed_condition_ids: [...removed, ...escalated.removed], applied_condition_ids: escalated.applied,
           feature_id: effect.source_effect_id || "condition-repeat-save", animation: "condition-save",
           description: `${target.state.template.name} repeats the ${effect.repeat_save_ability} save against ${label(effect.source_effect_id || effect.effect_id)}: ${save.succeeded ? "SUCCESS" : "FAILURE"}.`,
         });
-        if (save.succeeded) continue;
+        if (save.succeeded || escalated.applied.length) continue;
       }
       if (expiryDue(effect, round, timing)) {
         const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
         grantEndImmunity(target, effect);
-        events.push({
-          sequence: sequence++, round_number: round, event_type: "feature",
+        events.push({ sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: target.combatant_id, actor_name: target.state.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           removed_condition_ids: removed, feature_id: effect.source_effect_id || "condition-ended",
-          animation: "condition-ended", description: `${label(effect.source_effect_id || effect.effect_id)} ends on ${target.state.template.name}.`,
-        });
+          animation: "condition-ended", description: `${label(effect.source_effect_id || effect.effect_id)} ends on ${target.state.template.name}.` });
       }
     }
     if (timing === "target_turn_end") M()?.expireTargetTurn(target.state);
@@ -59,20 +64,16 @@
   function resolveSourceTiming(sequence, round, source, setup, timing) {
     const events = [];
     for (const target of [...setup.heroes, ...setup.monsters]) {
-      const expiring = target.state.timed_effects.filter((effect) =>
-        effect.source_id === source.combatant_id && expiryDue(effect, round, timing),
-      );
+      const expiring = target.state.timed_effects.filter((effect) => effect.source_id === source.combatant_id && expiryDue(effect, round, timing));
       for (const effect of expiring) {
         if (!target.state.timed_effects.includes(effect)) continue;
         const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
         grantEndImmunity(target, effect);
-        events.push({
-          sequence: sequence++, round_number: round, event_type: "feature",
+        events.push({ sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: source.combatant_id, actor_name: source.state.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           removed_condition_ids: removed, feature_id: effect.source_effect_id || "condition-ended",
-          animation: "condition-ended", description: `${label(effect.source_effect_id || effect.effect_id)} ends on ${target.state.template.name}.`,
-        });
+          animation: "condition-ended", description: `${label(effect.source_effect_id || effect.effect_id)} ends on ${target.state.template.name}.` });
       }
     }
     return { events, sequence };
