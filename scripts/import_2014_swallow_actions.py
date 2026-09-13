@@ -23,7 +23,7 @@ def parse_swallow_action(paragraph: str) -> dict | None:
         r"takes \d+ \((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\) acid damage at the start of each of the [A-Za-z' -]+['’]s turns",
         text, re.I,
     )
-    capacity = re.search(r"can have only (?:one|1) creature swallowed at a time", text, re.I)
+    capacity = re.search(r"can have only (?:one|1) (?:creature|target) swallowed at a time", text, re.I)
     release = re.search(
         r"If the [A-Za-z' -]+ dies, a swallowed creature is no longer restrained by it and can escape from the corpse using (\d+) feet of movement, exiting prone",
         text, re.I,
