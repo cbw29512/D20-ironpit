@@ -9,15 +9,18 @@ logger = logging.getLogger(__name__)
 # preserved in source provenance but cannot execute inside the pocket dimension.
 _ARENA_DISABLED_ACTION_PATTERNS = (
     re.compile(r"\b(?:summon|conjure|spawn|split|duplicate|animate)\b", re.I),
-    re.compile(r"\b(?:teleport|plane shift|dimension door|misty step|ethereal)\b", re.I),
+    re.compile(r"\b(?:teleport|plane shift|dimension door|misty step|ethereal(?:ness)?)\b", re.I),
     re.compile(r"\b(?:banish|banishment)\b", re.I),
+    re.compile(r"\billusory appearance\b", re.I),
 )
 
 ARENA_OUT_OF_SCOPE_TRAITS_2014 = frozenset({
     "Earth Glide",
+    "Ethereal Jaunt",
     "False Appearance",
     "Hellish Rejuvenation",
     "Hellish Restoration",
+    "Incorporeal Movement",
     "Mimicry",
     "Rejuvenation",
     "Siege Monster",
