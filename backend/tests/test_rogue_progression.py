@@ -26,7 +26,7 @@ def test_rogue_level2_profile_audits_cunning_action_as_arena_neutral() -> None:
     profile = build_mara_quickstep_level2_profile()
     cunning_action = next(audit for audit in profile.feature_audits if audit.feature_id == "cunning-action")
 
-    assert profile.class_levels == {"rogue": 2}
+    assert (profile.class_id, profile.level) == ("rogue", 2)
     assert cunning_action.combat_relevant is False
     assert cunning_action.automated is True
 
