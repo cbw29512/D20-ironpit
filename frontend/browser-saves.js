@@ -18,11 +18,12 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
-  function saveMode(state, ability, magicalEffect = false) {
+  function saveMode(state, ability, magicalEffect = false, againstCondition = null) {
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
       + DG().dexSaveAdvantageSources(state, ability)
-      + (magicalEffect && state.template.traits?.includes("magic-resistance") ? 1 : 0);
+      + (magicalEffect && state.template.traits?.includes("magic-resistance") ? 1 : 0)
+      + (["charmed", "frightened"].includes(againstCondition) && state.template.traits?.includes("dark-devotion") ? 1 : 0);
     const disadvantage = (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0)
       + (ability === "strength" ? T().strengthD20Disadvantage(state) : 0);
     return R().modeFromSources(advantage, disadvantage);
@@ -54,11 +55,11 @@
   }
 
   function resolveSavingThrow(state, ability, dc, options = {}) {
-    const magicalEffect = typeof options === "boolean" ? options : Boolean(options.magicalEffect);
+    const magicalEffect = typeof options === "boolean" ? options : Boolean(options.magicalEffect), againstCondition = typeof options === "object" ? options.againstCondition || null : null;
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return failedSaveResult(state, null);
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, magicalEffect)));
+    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, magicalEffect, againstCondition)));
     if (roll.total < dc) {
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
@@ -92,7 +93,7 @@
     if (checkResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} resource is unavailable.`);
     if (X().targetImmune(actor, target, action)) throw new Error(`${target.state.template.name} is immune to ${action.name} from this source.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, { magicalEffect: Boolean(action.magicalEffect) });
+    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, { magicalEffect: Boolean(action.magicalEffect), againstCondition: action.failureControlEffect?.conditionId || null });
     let actionResourceRemaining = options.resourceRemaining ?? null;
     if (action.resourceId && spendResource) {
       const cost = action.resourceCost || 1;
