@@ -26,9 +26,9 @@ MODELED_TRAITS = {
 }
 
 DATA_BOUND_TRAITS = frozenset({
-    "Angelic Weapons", "Barbed Hide", "Blood Frenzy", "Echolocation", "Fire Absorption", "Innate Spellcasting",
-    "Invisibility", "Petrifying Gaze", "Poor Depth Perception", "Reckless", "Regeneration", "Spellcasting", "Stench",
-    "Turning Defiance",
+    "Angelic Weapons", "Barbed Hide", "Blood Frenzy", "Echolocation", "Fear of Fire", "Fire Absorption",
+    "Innate Spellcasting", "Invisibility", "Petrifying Gaze", "Poor Depth Perception", "Reckless", "Regeneration",
+    "Spellcasting", "Stench", "Turning Defiance",
 })
 
 ARENA_NEUTRAL_TRAITS = frozenset({
