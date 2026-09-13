@@ -34,8 +34,8 @@ jobs:
           name: 2014-monster-certification-ledger-${{ github.sha }}
           path: data/monsters/2014/certification_ledger.json
           retention-days: 7
-      - name: Persist refreshed ledger on branch pushes
-        if: github.event_name == 'push'
+      - name: Persist refreshed ledger
+        if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
         run: |
           if ! git diff --quiet -- data/monsters/2014/certification_ledger.json || \
              test -n "$(git status --porcelain --untracked-files=all -- data/monsters/2014/certification_ledger.json)"; then
@@ -43,10 +43,10 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/monsters/2014/certification_ledger.json
             git commit -m "certification: refresh 2014 monster ledger"
-            git push origin HEAD:${GITHUB_REF_NAME}
+            TARGET_BRANCH="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+            git push origin "HEAD:${TARGET_BRANCH}"
           fi
-      - name: Enforce committed ledger parity on pull requests
-        if: github.event_name == 'pull_request'
+      - name: Enforce refreshed ledger parity
         run: |
           git diff --exit-code -- data/monsters/2014/certification_ledger.json
           test -z "$(git status --porcelain --untracked-files=all -- data/monsters/2014/certification_ledger.json)"
