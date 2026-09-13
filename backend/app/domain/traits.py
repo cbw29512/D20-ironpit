@@ -15,5 +15,6 @@ class CombatTrait(StrEnum):
     SURE_FOOTED = "sure-footed"
     DARK_DEVOTION = "dark-devotion"
     TWO_HEADED = "two-headed"
+    AGGRESSIVE = "aggressive"
     RAMPAGE = "rampage"
     LIFE_DOMAIN = "life-domain"
