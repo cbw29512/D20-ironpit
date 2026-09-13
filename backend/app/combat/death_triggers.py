@@ -59,3 +59,12 @@ def resolve_pending_death_triggers(
                 )
                 events.append(event)
                 sequence += 1
+
+
+def append_pending_death_triggers(
+    events: list[BattleEvent], sequence: int, round_number: int,
+    setup: EncounterSetup, dice: DiceProvider,
+) -> int:
+    triggered, sequence = resolve_pending_death_triggers(sequence, round_number, setup, dice)
+    events.extend(triggered)
+    return sequence
