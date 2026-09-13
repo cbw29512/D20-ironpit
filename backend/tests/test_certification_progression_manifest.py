@@ -58,12 +58,13 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["public_ready_status"] == "ready"
 
 
-def test_fighter_levels_eighteen_and_nineteen_are_public_with_survivor_and_combat_prowess() -> None:
+def test_fighter_levels_eighteen_through_twenty_are_public() -> None:
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
     level_seventeen = next(level for level in fighter["levels"] if level["level"] == 17)
     level_eighteen = next(level for level in fighter["levels"] if level["level"] == 18)
     level_nineteen = next(level for level in fighter["levels"] if level["level"] == 19)
+    level_twenty = next(level for level in fighter["levels"] if level["level"] == 20)
     counted_ready = sum(
         1
         for hero in manifest["heroes"]
@@ -80,9 +81,10 @@ def test_fighter_levels_eighteen_and_nineteen_are_public_with_survivor_and_comba
         "survivor-heroic-rally",
     }
     level_nineteen_required = {*level_eighteen_required, "boon-combat-prowess"}
+    level_twenty_required = {*level_nineteen_required, "extra-attack-4"}
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 33
+    assert manifest["summary"]["public_ready"] == counted_ready == 34
     assert level_seventeen["runtime_template_id"] == "karnok-stoneward-l17"
     assert level_seventeen_required <= set(level_seventeen["expected_combat_features"])
     assert level_seventeen_required <= set(level_seventeen["supported_mechanics"])
@@ -106,3 +108,11 @@ def test_fighter_levels_eighteen_and_nineteen_are_public_with_survivor_and_comba
     assert level_nineteen["blockers"] == []
     assert level_nineteen["public_ready_status"] == "ready"
     assert "karnok-stoneward-l19" in browser
+
+    assert level_twenty["runtime_template_id"] == "karnok-stoneward-l20"
+    assert level_twenty_required <= set(level_twenty["expected_combat_features"])
+    assert level_twenty_required <= set(level_twenty["supported_mechanics"])
+    assert level_twenty["unsupported_mechanics"] == []
+    assert level_twenty["blockers"] == []
+    assert level_twenty["public_ready_status"] == "ready"
+    assert "karnok-stoneward-l20" in browser
