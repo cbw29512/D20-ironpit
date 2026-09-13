@@ -17,8 +17,8 @@
       const targets = profile.targetRelationship === "grapplers" ? grapplers(source, setup) : [];
       for (const target of targets) {
         const rolls = D().rollMany(profile.diceCount, profile.diceSize);
-        const raw = rolls.reduce((sum, roll) => sum + roll, 0) + (profile.damageBonus || 0);
-        const applied = A().adjustedDamage(target.state, raw, profile.damageType), before = target.state.current_hp;
+        const raw = rolls.reduce((sum, roll) => sum + roll, 0) + (profile.damageBonus || 0), before = target.state.current_hp;
+        const applied = A().adjustedDamage(target.state, raw, profile.damageType, true, true);
         if (applied) A().applyDamage(target.state, applied, false, [profile.damageType], affected);
         const notation = `${profile.diceCount}d${profile.diceSize}+${profile.damageBonus || 0}`;
         events.push({ sequence: sequence++, round_number: round, event_type: "feature",
