@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
+from app.domain.auras import StartTurnAura
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_defense_rules import ConditionalDamageResistance
@@ -80,6 +81,7 @@ class CombatantTemplate(BaseModel):
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     start_turn_gaze: StartTurnGaze | None = None
+    start_turn_auras: list[StartTurnAura] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
     source_bonus_action_names: list[str] = Field(default_factory=list)
