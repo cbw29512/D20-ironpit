@@ -17,6 +17,7 @@ from app.domain.modifiers import ModifierKind
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
+_DARK_DEVOTION_CONDITIONS = {"charmed", "frightened"}
 
 
 def saving_throw_mode(
@@ -25,6 +26,7 @@ def saving_throw_mode(
     *,
     magical_effect: bool = False,
     against_prone: bool = False,
+    against_condition: str | None = None,
 ) -> RollMode:
     try:
         advantage = (
@@ -32,6 +34,7 @@ def saving_throw_mode(
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
             + int(magical_effect and CombatTrait.MAGIC_RESISTANCE in state.template.combat_traits)
+            + int(against_condition in _DARK_DEVOTION_CONDITIONS and CombatTrait.DARK_DEVOTION in state.template.combat_traits)
             + int(
                 against_prone
                 and ability in {"strength", "dexterity"}
@@ -78,6 +81,7 @@ def resolve_saving_throw(
     *,
     magical_effect: bool = False,
     against_prone: bool = False,
+    against_condition: str | None = None,
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
@@ -97,6 +101,7 @@ def resolve_saving_throw(
                     ability,
                     magical_effect=magical_effect,
                     against_prone=against_prone,
+                    against_condition=against_condition,
                 ),
             ),
             dice,
