@@ -11,6 +11,7 @@ MODELED_TRAITS = {
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
     "Magic Weapons": CombatTrait.MAGIC_WEAPONS,
     "Sure-Footed": CombatTrait.SURE_FOOTED,
+    "Dark Devotion": CombatTrait.DARK_DEVOTION,
     "Charge": CombatTrait.CHARGE,
     "Pounce": CombatTrait.CHARGE,
     "Trampling Charge": CombatTrait.CHARGE,

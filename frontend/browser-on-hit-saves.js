@@ -63,7 +63,7 @@
     if (!effect || !target.state.is_alive || target.state.is_dead || !eligible(target.state, effect)) return null;
     if (effect.maxTargetSize && !ST().sizeAtMost(target, effect.maxTargetSize)) return null;
     if (!S()) throw new Error("Browser saving-throw runtime is not loaded.");
-    const save = S().resolveSavingThrow(target.state, effect.saveAbility, effect.dc);
+    const save = S().resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { againstCondition: effect.conditionId || null });
     const damage = saveDamage(target, effect, save.succeeded, setup);
     const appliedConditions = stableZeroHp(target, attack, effect, sourceId, round, damage.total);
     let appliedCondition = null;
