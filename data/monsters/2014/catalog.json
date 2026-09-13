@@ -146,10 +146,16 @@
         "kind": "ability_check",
         "check_ability": "wisdom",
         "check_skill": "perception"
+      },
+      {
+        "id": "tail-swipe",
+        "name": "Tail Swipe",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
       }
     ],
     "unsupported_legendary_action_names": [
-      "Tail Swipe",
       "Psychic Drain"
     ],
     "spellcasting": null
@@ -6244,11 +6250,18 @@
     "regeneration": null,
     "multiattack_policy": null,
     "legendary_action_uses": 3,
-    "legendary_actions": [],
+    "legendary_actions": [
+      {
+        "id": "claw-attack",
+        "name": "Claw Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "claw"
+      }
+    ],
     "unsupported_legendary_action_names": [
-      "Claw Attack",
-      "Teleport (Costs 2 Actions)",
-      "Cast a Spell (Costs 3 Actions)"
+      "Teleport",
+      "Cast a Spell"
     ],
     "spellcasting": {
       "caster_level": 12,
@@ -24092,11 +24105,18 @@
     "regeneration": null,
     "multiattack_policy": null,
     "legendary_action_uses": 3,
-    "legendary_actions": [],
+    "legendary_actions": [
+      {
+        "id": "claw-attack",
+        "name": "Claw Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "claw"
+      }
+    ],
     "unsupported_legendary_action_names": [
-      "Claw Attack",
-      "Teleport (Costs 2 Actions)",
-      "Cast a Spell (Costs 3 Actions)"
+      "Teleport",
+      "Cast a Spell"
     ],
     "spellcasting": {
       "caster_level": 9,
@@ -27202,8 +27222,8 @@
     "legendary_actions": [],
     "unsupported_legendary_action_names": [
       "Tentacle Attack or Fling",
-      "Lightning Storm (Costs 2 Actions)",
-      "Ink Cloud (Costs 3 Actions)"
+      "Lightning Storm",
+      "Ink Cloud"
     ],
     "spellcasting": null
   },
@@ -27599,12 +27619,19 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "legendary_action_uses": 3,
-    "legendary_actions": [],
+    "legendary_actions": [
+      {
+        "id": "paralyzing-touch",
+        "name": "Paralyzing Touch",
+        "cost": 2,
+        "kind": "attack",
+        "attack_id": "paralyzing-touch"
+      }
+    ],
     "unsupported_legendary_action_names": [
       "Cantrip",
-      "Paralyzing Touch (Costs 2 Actions)",
-      "Frightening Gaze (Costs 2 Actions)",
-      "Disrupt Life (Costs 3 Actions)"
+      "Frightening Gaze",
+      "Disrupt Life"
     ],
     "spellcasting": {
       "caster_level": 18,
@@ -30467,9 +30494,9 @@
     "unsupported_legendary_action_names": [
       "Attack",
       "Blinding Dust",
-      "Blasphemous Word (Costs 2 Actions)",
-      "Channel Negative Energy (Costs 2 Actions)",
-      "Whirlwind of Sand (Costs 2 Actions)"
+      "Blasphemous Word",
+      "Channel Negative Energy",
+      "Whirlwind of Sand"
     ],
     "spellcasting": {
       "caster_level": 10,
@@ -37639,8 +37666,8 @@
     "legendary_actions": [],
     "unsupported_legendary_action_names": [
       "Teleport",
-      "Searing Burst (Costs 2 Actions)",
-      "Blinding Gaze (Costs 3 Actions)"
+      "Searing Burst",
+      "Blinding Gaze"
     ],
     "healing_actions": [
       {
@@ -40252,7 +40279,7 @@
     "unsupported_legendary_action_names": [
       "Attack",
       "Move",
-      "Chomp (Costs 2 Actions)"
+      "Chomp"
     ],
     "spellcasting": null
   },
@@ -41479,11 +41506,18 @@
     "regeneration": null,
     "multiattack_policy": null,
     "legendary_action_uses": 3,
-    "legendary_actions": [],
+    "legendary_actions": [
+      {
+        "id": "hooves",
+        "name": "Hooves",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "hooves"
+      }
+    ],
     "unsupported_legendary_action_names": [
-      "Hooves",
-      "Shimmering Shield (Costs 2 Actions)",
-      "Heal Self (Costs 3 Actions)"
+      "Shimmering Shield",
+      "Heal Self"
     ],
     "healing_actions": [
       {
@@ -41670,11 +41704,24 @@
       ]
     },
     "legendary_action_uses": 3,
-    "legendary_actions": [],
+    "legendary_actions": [
+      {
+        "id": "unarmed-strike",
+        "name": "Unarmed Strike",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "unarmed-strike-vampire-form-only"
+      },
+      {
+        "id": "bite",
+        "name": "Bite",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "bite-bat-or-vampire-form-only"
+      }
+    ],
     "unsupported_legendary_action_names": [
-      "Move",
-      "Unarmed Strike",
-      "Bite"
+      "Move"
     ],
     "spellcasting": null
   },
