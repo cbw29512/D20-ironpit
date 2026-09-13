@@ -6,6 +6,7 @@ import unicodedata
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 
 NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape", "weird-insight"})
+ARENA_NEUTRAL_REACTIONS_2014 = frozenset({"Shriek"})
 
 
 def action_key_2014(value: str) -> str:
@@ -41,3 +42,8 @@ def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
 def unresolved_actions_2014(source: CatalogMonster2014) -> list[str]:
     supported = supported_action_ids_2014(source)
     return [name for name in source.action_names if action_key_2014(name) not in supported]
+
+
+def unresolved_reactions_2014(source: CatalogMonster2014, supported: set[str]) -> list[str]:
+    supported_names = supported | ARENA_NEUTRAL_REACTIONS_2014
+    return [name for name in source.reaction_names if name not in supported_names]
