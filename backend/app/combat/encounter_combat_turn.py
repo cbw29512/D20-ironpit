@@ -49,15 +49,10 @@ def resolve_combat_turn(
             events.append(regen_event); sequence += 1
         if regen_death:
             return events, sequence
-        begin_turn(attacker.state)
-        turn_key = f"{round_number}:{attacker.combatant_id}"
-        gaze_events, sequence = resolve_start_turn_gazes(sequence, round_number, attacker, setup, dice)
-        events.extend(gaze_events)
-        if is_incapacitated(attacker.state):
-            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        recharge_events, sequence = resolve_start_turn_recharges(
-            sequence, round_number, attacker.combatant_id, attacker.state, dice,
-        )
+        begin_turn(attacker.state); turn_key = f"{round_number}:{attacker.combatant_id}"
+        gaze_events, sequence = resolve_start_turn_gazes(sequence, round_number, attacker, setup, dice); events.extend(gaze_events)
+        if is_incapacitated(attacker.state): return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        recharge_events, sequence = resolve_start_turn_recharges(sequence, round_number, attacker.combatant_id, attacker.state, dice)
         events.extend(recharge_events)
         if forced_retreat_active(attacker.state):
             events.append(build_forced_retreat_event(
