@@ -79,3 +79,12 @@ def build_karnok_stoneward_level18_profile() -> CharacterBuildProfile:
         ),
     ]
     return _advance(build_karnok_stoneward_level17_profile, 18, audits, [source])
+
+
+def build_karnok_stoneward_level19_profile() -> CharacterBuildProfile:
+    source = "D&D Beyond Basic Rules 2024: Fighter Level 19 Boon of Combat Prowess"
+    return _advance(build_karnok_stoneward_level18_profile, 19, [FeatureAudit(
+        feature_id="boon-combat-prowess", feature_name="Boon of Combat Prowess",
+        source_reference=source, category="feat", combat_relevant=True, automated=True,
+        notes="Canonical Epic Boon grants +1 Dexterity (17→18) and Peerless Aim turns one missed attack roll into a hit until the start of Karnok's next turn.",
+    )], [source, "Basic Rules 2024: Epic Boon — Boon of Combat Prowess"])
