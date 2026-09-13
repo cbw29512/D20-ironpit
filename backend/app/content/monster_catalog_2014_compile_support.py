@@ -40,6 +40,11 @@ def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
         )
         for action_id, minimum_roll in source.action_recharges.items()
     ]
+    resources.extend(
+        ResourceDefinition(id=action_id, name=action_id.replace("-", " ").title(), max_uses=uses)
+        for action_id, uses in source.limited_action_uses.items()
+        if action_id not in source.action_recharges
+    )
     if source.spellcasting is not None:
         resources.extend(
             ResourceDefinition(
