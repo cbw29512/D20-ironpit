@@ -11601,11 +11601,16 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 15,
+          "max_hp_reduction_equals_damage_taken": true,
+          "zero_max_hp_kills": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature, it must succeed on a DC 15 Constitution saving throw or have its hit point maximum reduced by an amount equal to the damage taken. The target dies if this attack reduces its hit point maximum to 0. The reduction lasts until removed by the greater restoration spell or other magic",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       }
@@ -43876,7 +43881,16 @@
         "long_range_ft": 600
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "life-drain",
+        "longbow"
+      ],
+      [
+        "longsword-two-handed",
+        "longbow"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -43900,6 +43914,7 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
