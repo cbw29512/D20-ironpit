@@ -77,10 +77,15 @@ def test_2014_grapple_stops_speed_without_2024_attack_penalty() -> None:
 
 def test_unresolved_monster_mechanics_fail_closed() -> None:
     catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
-    assert "trait:Nimble Escape" in unsupported_mechanics_2014(catalog["goblin"])
     assert "action:Multiattack" in unsupported_mechanics_2014(catalog["brown-bear"])
     with pytest.raises(RuntimeError, match="could not be compiled"):
-        _monster("goblin")
+        _monster("brown-bear")
+
+
+def test_nimble_escape_is_neutral_in_no_hide_no_kiting_arena() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    assert unsupported_mechanics_2014(catalog["goblin"]) == []
+    assert _monster("goblin").name == "Goblin"
 
 
 def test_declarative_multiattack_reuses_shared_action_slots() -> None:
