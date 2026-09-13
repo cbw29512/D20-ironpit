@@ -108,6 +108,7 @@ def _attach_source_fingerprint(row, template) -> None:
 
 
 def _attach_monster_actions(row, template) -> None:
+    row["creature_subtypes"] = list(template.creature_subtypes)
     if template.ability_scores is not None:
         row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
     for definition in row.get("resource_definitions", []):
@@ -130,10 +131,14 @@ def _attach_monster_actions(row, template) -> None:
         if restraint: attack_row["breakableRestraint"] = restraint
         if attack.attack_ability is not None: attack_row["attackAbility"] = attack.attack_ability
         if attack.attack_ability_modifier is not None: attack_row["attackAbilityModifier"] = attack.attack_ability_modifier
-        if effect and effect.failure_push_ft: attack_row.setdefault("onHitSaveEffect", {})["failurePushFt"] = effect.failure_push_ft
-        if effect and effect.zero_hp_stable:
-            rider = attack_row.setdefault("onHitSaveEffect", {}); rider["zeroHpStable"] = True
-            rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
+        if effect:
+            rider = attack_row.setdefault("onHitSaveEffect", {})
+            if effect.failure_push_ft: rider["failurePushFt"] = effect.failure_push_ft
+            if effect.excluded_creature_types: rider["excludedCreatureTypes"] = list(effect.excluded_creature_types)
+            if effect.excluded_creature_subtypes: rider["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
+            if effect.zero_hp_stable:
+                rider["zeroHpStable"] = True; rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids)
+                rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
     healing_rows = row.pop("healing_actions", [])
     if healing_rows:
         healing_by_id = {action.id: action for action in template.healing_actions}
