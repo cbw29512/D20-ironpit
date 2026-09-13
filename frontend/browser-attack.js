@@ -3,8 +3,7 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
-  const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
-  const TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) };
+  const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null }; const TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) };
   const STUDY = () => window.IRON_PIT_BROWSER_STUDIED_ATTACKS || { apply: () => false };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
