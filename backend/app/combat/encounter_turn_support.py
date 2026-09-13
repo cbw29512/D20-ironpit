@@ -9,6 +9,7 @@ from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.rampage import resolve_rampage
 from app.combat.resources import action_resource_available, resource_definition
+from app.combat.restraints import resolve_escape_restraint, should_escape_restraint
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.barbarian import finalize_rage_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -42,6 +43,11 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
 def resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     try:
         events: list[BattleEvent] = []
+        if should_escape_restraint(member.state):
+            events.append(resolve_escape_restraint(
+                sequence, round_number, member.combatant_id, member.state, dice,
+            ))
+            return events, sequence + 1
         healing_choice = choose_healing_action(member, setup, turn_key)
         if healing_choice is not None and healing_choice[1].state.current_hp == 0:
             action, target = healing_choice
