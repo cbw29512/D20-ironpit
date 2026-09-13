@@ -13,6 +13,7 @@ from app.content.monster_catalog_2014_defenses import conditional_resistances_20
 from app.content.monster_catalog_2014_gaze import petrifying_gaze_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
+from app.content.monster_catalog_2014_save_auras import save_advantage_auras_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.content.monster_catalog_2014_unarmed import attacks_with_unarmed_fallback_2014
@@ -94,10 +95,10 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], start_turn_gaze=petrifying_gaze_2014(source.source_traits),
-            start_turn_auras=start_turn_auras_2014(source.source_traits), attack_action=compile_multiattack_2014(source, attacks),
-            swallow_actions=source.swallow_actions, saving_throw_actions=source.saving_throw_actions,
-            death_trigger_actions=source.death_trigger_actions, healing_actions=source.healing_actions,
-            spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
+            start_turn_auras=start_turn_auras_2014(source.source_traits), save_advantage_auras=save_advantage_auras_2014(source.source_traits),
+            attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
+            saving_throw_actions=source.saving_throw_actions, death_trigger_actions=source.death_trigger_actions,
+            healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
             automatic_damage_spell_actions=automatic_spells,
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
