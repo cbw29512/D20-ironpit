@@ -150,6 +150,8 @@ def _attach_source_fingerprint(row, template) -> None:
 
 def _attach_monster_actions(row, template) -> None:
     row["creature_subtypes"] = list(template.creature_subtypes)
+    if template.damage_absorptions:
+        row["damageAbsorptions"] = [{"damageType": rule.damage_type.value, "healingMultiplier": rule.healing_multiplier} for rule in template.damage_absorptions]
     gaze = _gaze_row(template.start_turn_gaze)
     if gaze: row["startTurnGaze"] = gaze
     if template.start_turn_auras: row["startTurnAuras"] = [_aura_row(aura) for aura in template.start_turn_auras]
