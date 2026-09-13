@@ -5,11 +5,60 @@ from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
+from app.combat.forced_movement import push_away
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
+from app.combat.resources import action_resource_available, spend_action_resource
+from app.combat.restraints import apply_breakable_restraint
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
+
+
+def _event_target(event: BattleEvent, target: EncounterCombatant, setup: EncounterSetup | None) -> EncounterCombatant:
+    if setup is None or event.target_id == target.combatant_id:
+        return target
+    return next(
+        (member for member in [*setup.heroes, *setup.monsters] if member.combatant_id == event.target_id),
+        target,
+    )
+
+
+def _apply_on_hit_push(
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    attack: WeaponAttack,
+    event: BattleEvent,
+    setup: EncounterSetup | None,
+) -> None:
+    effect = attack.on_hit_save_effect
+    if (
+        effect is None or effect.failure_push_ft == 0 or setup is None
+        or not event.hit or event.save_succeeded is not False
+    ):
+        return
+    actual_target = _event_target(event, target, setup)
+    moved = push_away(attacker, actual_target, effect.failure_push_ft, setup)
+    if moved:
+        event.description += f" {actual_target.state.template.name} is pushed {moved} feet away."
+
+
+def _apply_restraint(
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    attack: WeaponAttack,
+    event: BattleEvent,
+    setup: EncounterSetup | None,
+) -> None:
+    if not event.hit or attack.breakable_restraint is None:
+        return
+    actual_target = _event_target(event, target, setup)
+    applied = apply_breakable_restraint(actual_target.state, attacker.combatant_id, attack)
+    if not applied:
+        return
+    event.applied_condition_ids = list(dict.fromkeys([*event.applied_condition_ids, *applied]))
+    for condition in applied:
+        event.description += f" {actual_target.state.template.name} is {condition}."
 
 
 def resolve_encounter_attack(
@@ -32,6 +81,8 @@ def resolve_encounter_attack(
     allow_reckless: bool = False,
     off_turn: bool = False,
 ) -> BattleEvent:
+    if not action_resource_available(attacker.state, attack):
+        raise ValueError(f"Attack resource {attack.resource_id!r} is unavailable.")
     reckless_started = allow_reckless and activate_reckless_attack(
         attacker.state, attack, attacker.combatant_id, round_number,
     )
@@ -54,10 +105,15 @@ def resolve_encounter_attack(
         affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
         off_turn=off_turn,
     )
+    remaining = spend_action_resource(attacker.state, attack)
+    if remaining is not None:
+        event.resource_remaining = remaining
     if reckless_started:
         event.description += f" {attacker.state.template.name} uses Reckless Attack."
         if event.feature_id is None:
             event.feature_id = "reckless-attack"
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
+    _apply_on_hit_push(attacker, target, attack, event, setup)
+    _apply_restraint(attacker, target, attack, event, setup)
     return apply_critical_closing_move(attacker, setup, event)

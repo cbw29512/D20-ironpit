@@ -5,23 +5,21 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
+from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.character_builds import AbilityScores
+from app.domain.damage_defense_rules import ConditionalDamageResistance
+from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.regeneration import RegenerationProfile
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.swallow import SwallowAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
-from app.domain.weapons import (
-    ConditionalAttackAdvantage,
-    ConditionalDamage,
-    DamageType,
-    OnHitDamage,
-    Weapon,
-    WeaponAttack,
-    WeaponAttackKind,
-)
+from app.domain.weapons import ConditionalAttackAdvantage, ConditionalDamage, DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.zero_hp_prevention import ZeroHpPrevention
 
 
 class VisualLoadout(BaseModel):
@@ -31,10 +29,17 @@ class VisualLoadout(BaseModel):
     body_style: str = "humanoid"
 
 
+class RechargeRule(BaseModel):
+    trigger: Literal["start_of_turn"] = "start_of_turn"
+    die_size: Literal[6] = 6
+    minimum_roll: int = Field(ge=1, le=6)
+
+
 class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
+    recharge: RechargeRule | None = None
 
 
 class CombatantTemplate(BaseModel):
@@ -44,7 +49,9 @@ class CombatantTemplate(BaseModel):
     level: int | None = Field(default=None, ge=1, le=20)
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
+    ruleset: Literal["2014", "2024"] = "2024"
     creature_type: str | None = None
+    creature_subtypes: list[str] = Field(default_factory=list)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
@@ -57,12 +64,16 @@ class CombatantTemplate(BaseModel):
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
+    swallow_actions: list[SwallowAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
+    automatic_damage_spell_actions: list[AutomaticDamageSpellAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
+    legendary_action_uses: int = Field(default=0, ge=0, le=10)
+    legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
@@ -74,10 +85,13 @@ class CombatantTemplate(BaseModel):
     source_spellcasting_fingerprint: str | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
+    zero_hp_prevention: ZeroHpPrevention | None = None
+    regeneration: RegenerationProfile | None = None
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
+    conditional_damage_resistances: list[ConditionalDamageResistance] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
@@ -97,10 +111,7 @@ class CombatantTemplate(BaseModel):
             normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
         style = normalized.get("fighting_style")
         styles = normalized.get("fighting_styles")
-        if styles is None:
-            styles = []
-        if not styles and style:
-            normalized["fighting_styles"] = [style]
-        elif styles and not style:
-            normalized["fighting_style"] = styles[0]
+        if styles is None: styles = []
+        if not styles and style: normalized["fighting_styles"] = [style]
+        elif styles and not style: normalized["fighting_style"] = styles[0]
         return normalized

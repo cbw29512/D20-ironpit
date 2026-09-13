@@ -2,6 +2,12 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_lifecycle_support import (
+    condition_name,
+    expiry_due,
+    grant_end_immunity,
+    repeat_save_due,
+)
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
@@ -10,20 +16,6 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
-
-
-def _condition_name(effect_id: str) -> str:
-    return effect_id.replace("_", " ").title()
-
-
-def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool:
-    if effect.repeat_save_timing != timing:
-        return False
-    return not (
-        effect.effect_id == "poisoned"
-        and effect.applied_round is not None
-        and round_number <= effect.applied_round
-    )
 
 
 def resolve_target_condition_timing(
@@ -39,7 +31,7 @@ def resolve_target_condition_timing(
         for effect in list(target.state.timed_effects):
             if effect not in target.state.timed_effects:
                 continue
-            if _repeat_save_due(effect, round_number, timing):
+            if repeat_save_due(effect, round_number, timing):
                 roll, succeeded = resolve_saving_throw(
                     target.state,
                     effect.repeat_save_ability,
@@ -47,6 +39,8 @@ def resolve_target_condition_timing(
                     dice,
                 )
                 removed = remove_effect_group(target.state, effect) if succeeded else []
+                if succeeded:
+                    grant_end_immunity(target, effect)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
@@ -64,16 +58,17 @@ def resolve_target_condition_timing(
                     animation="condition-save",
                     description=(
                         f"{target.state.template.name} repeats the {effect.repeat_save_ability.title()} save "
-                        f"against {_condition_name(effect.source_effect_id or effect.effect_id)}: "
+                        f"against {condition_name(effect.source_effect_id or effect.effect_id)}: "
                         f"{'SUCCESS' if succeeded else 'FAILURE'}."
                     ),
                 ))
                 sequence += 1
                 if succeeded:
                     continue
-            if effect.expiry_timing == timing:
+            if expiry_due(effect, round_number, timing):
                 removed = remove_effect_group(target.state, effect)
                 if removed:
+                    grant_end_immunity(target, effect)
                     events.append(BattleEvent(
                         sequence=sequence,
                         round_number=round_number,
@@ -85,7 +80,7 @@ def resolve_target_condition_timing(
                         removed_condition_ids=removed,
                         feature_id=effect.source_effect_id or "condition-ended",
                         animation="condition-ended",
-                        description=f"{_condition_name(effect.source_effect_id or effect.effect_id)} ends on {target.state.template.name}.",
+                        description=f"{condition_name(effect.source_effect_id or effect.effect_id)} ends on {target.state.template.name}.",
                     ))
                     sequence += 1
         if timing == "target_turn_end":
@@ -111,7 +106,8 @@ def resolve_source_condition_timing(
         for target in [*setup.heroes, *setup.monsters]:
             expiring = [
                 effect for effect in target.state.timed_effects
-                if effect.source_id == source.combatant_id and effect.expiry_timing == timing
+                if effect.source_id == source.combatant_id
+                and expiry_due(effect, round_number, timing)
             ]
             for effect in expiring:
                 if effect not in target.state.timed_effects:
@@ -119,6 +115,7 @@ def resolve_source_condition_timing(
                 removed = remove_effect_group(target.state, effect)
                 if not removed:
                     continue
+                grant_end_immunity(target, effect)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
@@ -130,7 +127,7 @@ def resolve_source_condition_timing(
                     removed_condition_ids=removed,
                     feature_id=effect.source_effect_id or "condition-ended",
                     animation="condition-ended",
-                    description=f"{_condition_name(effect.source_effect_id or effect.effect_id)} ends on {target.state.template.name}.",
+                    description=f"{condition_name(effect.source_effect_id or effect.effect_id)} ends on {target.state.template.name}.",
                 ))
                 sequence += 1
         return events, sequence

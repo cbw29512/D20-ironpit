@@ -29,17 +29,24 @@ def apply_timed_condition(
     ends_on_damage: bool = False,
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
+    source_effect_immunity_on_end: bool = False,
+    speed_multiplier: float = 1.0,
+    blocks_reactions: bool = False,
+    action_bonus_exclusive: bool = False,
+    max_attacks_per_turn: int | None = None,
+    disadvantage_strength_d20_tests: bool = False,
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
-    if effect_id == POISONED_EFFECT_ID:
+    arena_poison = effect_id == POISONED_EFFECT_ID and state.template.ruleset != "2014"
+    if arena_poison:
         if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
             return POISONED_EFFECT_ID
         expires_at_start_of_source_turn = False
         expiry_timing = None
         repeat_save_ability = repeat_save_ability or "constitution"
         repeat_save_dc = repeat_save_dc or ARENA_POISON_RECOVERY_DC
-        repeat_save_timing = "target_turn_start"
+        repeat_save_timing = repeat_save_timing or "target_turn_start"
     state.timed_effects = [
         effect for effect in state.timed_effects
         if not (
@@ -64,6 +71,12 @@ def apply_timed_condition(
         ends_on_damage=ends_on_damage,
         ends_if_source_incapacitated=ends_if_source_incapacitated,
         ends_if_source_dead=ends_if_source_dead,
+        source_effect_immunity_on_end=source_effect_immunity_on_end,
+        speed_multiplier=speed_multiplier,
+        blocks_reactions=blocks_reactions,
+        action_bonus_exclusive=action_bonus_exclusive,
+        max_attacks_per_turn=max_attacks_per_turn,
+        disadvantage_strength_d20_tests=disadvantage_strength_d20_tests,
     ))
     if effect_id not in state.active_effect_ids:
         state.active_effect_ids.append(effect_id)

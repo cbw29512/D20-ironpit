@@ -1,0 +1,118 @@
+from import_2014_multiattack import parse_multiattack
+
+
+def attack(attack_id: str, name: str, kind: str = "melee") -> dict:
+    return {"id": attack_id, "name": name, "kind": kind}
+
+
+def main() -> int:
+    grick = (
+        "<p><strong>Multiattack.</strong> The grick makes one attack with its tentacles. "
+        "If that attack hits, the grick can make one beak attack against the same target.</p>"
+    )
+    parsed = parse_multiattack(grick, [attack("tentacles", "Tentacles"), attack("beak", "Beak")])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack", "slots": [["tentacles"], ["beak"]],
+        "policy": {"requires_previous_hit_slots": [1], "same_target_as_previous_slots": [1]},
+    }
+
+    lizardfolk = (
+        "<p><strong>Multiattack.</strong> The lizardfolk makes two melee attacks, "
+        "each one with a different weapon.</p>"
+    )
+    parsed = parse_multiattack(lizardfolk, [
+        attack("bite", "Bite"), attack("heavy-club", "Heavy Club"), attack("javelin", "Javelin", "ranged"),
+    ])
+    assert parsed["slots"] == [["bite", "heavy-club"], ["bite", "heavy-club"]]
+    assert parsed["policy"] == {"distinct_attack_ids": True}
+
+    fungus = "<p><strong>Multiattack.</strong> The fungus makes 1d4 Rotting Touch attacks.</p>"
+    parsed = parse_multiattack(fungus, [attack("rotting-touch", "Rotting Touch")])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack", "slots": [["rotting-touch"]],
+        "policy": {"repeat_slot_index": 0, "repeat_dice_count": 1, "repeat_dice_size": 4},
+    }
+
+    purple_worm = (
+        "<p><strong>Multiattack.</strong> The worm makes two attacks: one with its bite and one with its stinger.</p>"
+    )
+    parsed = parse_multiattack(purple_worm, [
+        attack("bite", "Bite"), attack("tail-stinger", "Tail Stinger"),
+    ])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack", "slots": [["bite"], ["tail-stinger"]],
+    }
+
+    vampire_spawn = (
+        "<p><strong>Multiattack.</strong> The vampire makes two attacks, only one of which can be a bite attack.</p>"
+    )
+    parsed = parse_multiattack(vampire_spawn, [attack("claws", "Claws"), attack("bite", "Bite")])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [["claws", "bite"], ["claws", "bite"]],
+        "policy": {"at_most_once_attack_ids": ["bite"]},
+    }
+
+    veteran = (
+        "<p><strong>Multiattack.</strong> The veteran makes two longsword attacks. "
+        "If it has a shortsword drawn, it can also make a shortsword attack.</p>"
+    )
+    parsed = parse_multiattack(veteran, [attack("longsword", "Longsword"), attack("shortsword", "Shortsword")])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [["longsword"], ["longsword"], ["shortsword"]],
+    }
+
+    werebear = (
+        "<p><strong>Multiattack.</strong> In bear form, the werebear makes two claw attacks. "
+        "In humanoid form, it makes two greataxe attacks. "
+        "In hybrid form, it can attack like a bear or a humanoid.</p>"
+    )
+    parsed = parse_multiattack(werebear, [
+        attack("claw-bear-or-hybrid-form-only", "Claw (Bear or Hybrid Form Only)"),
+        attack("greataxe-humanoid-or-hybrid-form-only", "Greataxe (Humanoid or Hybrid Form Only)"),
+    ])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [
+            ["claw-bear-or-hybrid-form-only", "greataxe-humanoid-or-hybrid-form-only"],
+            ["claw-bear-or-hybrid-form-only", "greataxe-humanoid-or-hybrid-form-only"],
+        ],
+        "policy": {"same_attack_as_previous_slots": [1]},
+    }
+
+    wererat = (
+        "<p><strong>Multiattack (Humanoid or Hybrid Form Only).</strong> "
+        "The wererat makes two attacks, only one of which can be a bite.</p>"
+    )
+    parsed = parse_multiattack(wererat, [
+        attack("bite-rat-or-hybrid-form-only", "Bite (Rat or Hybrid Form Only)"),
+        attack("shortsword-humanoid-or-hybrid-form-only", "Shortsword (Humanoid or Hybrid Form Only)"),
+        attack("hand-crossbow-humanoid-or-hybrid-form-only", "Hand Crossbow (Humanoid or Hybrid Form Only)", "ranged"),
+    ])
+    assert parsed["policy"] == {"at_most_once_attack_ids": ["bite-rat-or-hybrid-form-only"]}
+    assert len(parsed["slots"]) == 2
+
+    werewolf = (
+        "<p><strong>Multiattack. (Humanoid or Hybrid Form Only).</strong> "
+        "The werewolf makes two attacks: one with its bite and one with its claws or spear.</p>"
+    )
+    parsed = parse_multiattack(werewolf, [
+        attack("bite-wolf-or-hybrid-form-only", "Bite (Wolf or Hybrid Form Only)"),
+        attack("claws-hybrid-form-only", "Claws. (Hybrid Form Only)"),
+        attack("spear-humanoid-form-only", "Spear (Humanoid Form Only)"),
+    ])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [
+            ["bite-wolf-or-hybrid-form-only"],
+            ["claws-hybrid-form-only", "spear-humanoid-form-only"],
+        ],
+    }
+
+    print("2014 Multiattack policy regressions passed.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

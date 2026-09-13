@@ -4,20 +4,30 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const I = () => window.IRON_PIT_BROWSER_SOURCE_EFFECT_IMMUNITY;
 
   const label = (id) => id.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
-  function repeatSaveDue(effect, round, timing) {
+  function repeatSaveDue(effect, round, timing, state) {
     if (effect.repeat_save_timing !== timing) return false;
-    return !(effect.effect_id === "poisoned" && effect.applied_round != null && round <= effect.applied_round);
+    const arenaPoison = effect.effect_id === "poisoned" && state.template.ruleset !== "2014";
+    return !(arenaPoison && effect.applied_round != null && round <= effect.applied_round);
+  }
+  const expiryDue = (effect, round, timing) => effect.expiry_timing === timing
+    && (effect.expires_round == null || round >= effect.expires_round);
+  function grantEndImmunity(target, effect) {
+    if (effect.source_effect_immunity_on_end && effect.source_effect_id) {
+      I().grant(target.state, effect.source_id, effect.source_effect_id);
+    }
   }
 
   function resolveTargetTiming(sequence, round, target, timing) {
     const events = [];
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
-      if (repeatSaveDue(effect, round, timing)) {
+      if (repeatSaveDue(effect, round, timing, target.state)) {
         const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
         const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        if (save.succeeded) grantEndImmunity(target, effect);
         events.push({
           sequence: sequence++, round_number: round, event_type: "saving_throw",
           actor_id: target.combatant_id, actor_name: target.state.template.name,
@@ -30,8 +40,9 @@
         });
         if (save.succeeded) continue;
       }
-      if (effect.expiry_timing === timing) {
+      if (expiryDue(effect, round, timing)) {
         const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
+        grantEndImmunity(target, effect);
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: target.combatant_id, actor_name: target.state.template.name,
@@ -49,11 +60,12 @@
     const events = [];
     for (const target of [...setup.heroes, ...setup.monsters]) {
       const expiring = target.state.timed_effects.filter((effect) =>
-        effect.source_id === source.combatant_id && effect.expiry_timing === timing,
+        effect.source_id === source.combatant_id && expiryDue(effect, round, timing),
       );
       for (const effect of expiring) {
         if (!target.state.timed_effects.includes(effect)) continue;
         const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
+        grantEndImmunity(target, effect);
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: source.combatant_id, actor_name: source.state.template.name,

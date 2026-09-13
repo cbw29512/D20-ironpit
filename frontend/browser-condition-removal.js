@@ -4,9 +4,15 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const PRIORITY = {
-    paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0,
+    paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0, unconscious: 0,
     blinded: 1, restrained: 1, poisoned: 2, frightened: 2, charmed: 2,
     deafened: 3, grappled: 3, prone: 4, exhaustion: 4,
+  };
+  const WAKE_SLEEPER = {
+    id: "wake-sleeper", name: "Wake Sleeper", actionCost: "action", range: 5,
+    targetMode: "ally", removableConditions: ["unconscious"], maxConditionsPerUse: 1,
+    resourceCosts: {}, resourceCostsPerCondition: {}, expendsSpellSlot: false,
+    animation: "condition-removal",
   };
 
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
@@ -33,9 +39,11 @@
   }
 
   function effectAllows(target, conditionId, actionId) {
-    return target.state.timed_effects.filter((effect) => effect.effect_id === conditionId).every((effect) =>
-      !effect.allowed_removal_action_ids?.length || effect.allowed_removal_action_ids.includes(actionId),
-    );
+    const effects = target.state.timed_effects.filter((effect) => effect.effect_id === conditionId);
+    if (actionId === "wake-sleeper") {
+      return effects.length > 0 && effects.every((effect) => effect.allowed_removal_action_ids?.includes(actionId));
+    }
+    return effects.every((effect) => !effect.allowed_removal_action_ids?.length || effect.allowed_removal_action_ids.includes(actionId));
   }
 
   function removable(target, action) {
@@ -57,7 +65,8 @@
 
   function chooseAction(remover, setup, turnKey) {
     const choices = [];
-    for (const action of remover.state.template.condition_removal_actions || []) {
+    const actions = [...(remover.state.template.condition_removal_actions || []), WAKE_SLEEPER];
+    for (const action of actions) {
       if (action.actionCost === "reaction" || !E().available(remover.state, action.actionCost)) continue;
       if (!slotAvailable(remover, action, turnKey)) continue;
       for (const target of allies(remover, setup)) {

@@ -1,0 +1,153 @@
+import json
+
+import pytest
+
+from app.combat.attacks import resolve_attack
+from app.combat.conditions import attack_roll_condition_sources
+from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.dice import FixedDiceProvider
+from app.combat.grapple import apply_grapple, speed_is_zero
+from app.combat.state import build_combatant_state
+from app.content.monster_catalog_2014 import (
+    MVP_CATALOG_PATH,
+    compile_monster_2014,
+    load_catalog_2014,
+    monster_by_id_2014,
+    unsupported_mechanics_2014,
+)
+from app.domain.models import DamageType
+from app.domain.traits import CombatTrait
+
+
+def _monster(monster_id: str):
+    return monster_by_id_2014(monster_id, MVP_CATALOG_PATH)
+
+
+def test_mvp_catalog_loads_and_uses_json_stats() -> None:
+    catalog = load_catalog_2014(MVP_CATALOG_PATH)
+    assert {monster.id for monster in catalog} == {"goblin", "skeleton", "brown-bear", "bandit"}
+    bandit = _monster("bandit")
+    assert bandit.ruleset == "2014"
+    assert bandit.armor_class == 12
+    assert bandit.max_hp == 11
+    assert bandit.speed_ft == 30
+    assert bandit.ability_scores.dexterity == 12
+    assert bandit.weapon_attack.weapon.name == "Scimitar"
+    assert bandit.alternate_weapon_attacks[0].weapon.name == "Light Crossbow"
+    assert bandit.alternate_weapon_attacks[0].weapon.normal_range_ft == 80
+    assert bandit.alternate_weapon_attacks[0].weapon.long_range_ft == 320
+
+
+def test_json_ranged_attack_runs_through_universal_resolver() -> None:
+    attacker = build_combatant_state(_monster("bandit"))
+    defender = build_combatant_state(_monster("skeleton"))
+    crossbow = attacker.template.alternate_weapon_attacks[0]
+    event = resolve_attack(1, 1, attacker, defender, crossbow, 80, FixedDiceProvider([10, 4]))
+    assert event.hit is True
+    assert defender.current_hp == 8
+
+
+def test_json_defenses_feed_shared_damage_engine() -> None:
+    skeleton = build_combatant_state(_monster("skeleton"))
+    assert adjusted_damage_amount(5, DamageType.BLUDGEONING, skeleton) == 10
+    assert adjusted_damage_amount(5, DamageType.POISON, skeleton) == 0
+    assert adjusted_damage_amount(5, DamageType.PIERCING, skeleton) == 5
+
+
+def test_runtime_state_is_fresh_for_each_fight() -> None:
+    template = _monster("bandit")
+    first = build_combatant_state(template)
+    second = build_combatant_state(template)
+    first.current_hp = 1
+    assert second.current_hp == 11
+    assert template.max_hp == 11
+
+
+def test_2014_grapple_stops_speed_without_2024_attack_penalty() -> None:
+    attacker = build_combatant_state(_monster("bandit"))
+    grappler = build_combatant_state(_monster("skeleton"))
+    other = build_combatant_state(_monster("bandit"))
+    apply_grapple(attacker, "grappler", 12, 5)
+    _, versus_grappler = attack_roll_condition_sources(attacker, grappler, 5, "grappler")
+    _, versus_other = attack_roll_condition_sources(attacker, other, 5, "other")
+    assert speed_is_zero(attacker) is True
+    assert versus_grappler == 0
+    assert versus_other == 0
+
+
+def test_unresolved_monster_mechanics_fail_closed() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    assert "trait:Nimble Escape" in unsupported_mechanics_2014(catalog["goblin"])
+    assert "action:Multiattack" in unsupported_mechanics_2014(catalog["brown-bear"])
+    with pytest.raises(RuntimeError, match="could not be compiled"):
+        _monster("goblin")
+
+
+def test_declarative_multiattack_reuses_shared_action_slots() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["brown-bear"].model_copy(update={"multiattack_slots": [["bite"], ["claws"]]})
+    assert "action:Multiattack" not in unsupported_mechanics_2014(source)
+    bear = compile_monster_2014(source)
+    assert bear.attack_action is not None
+    assert [slot.attack_ids for slot in bear.attack_action.slots] == [["bite"], ["claws"]]
+
+
+def test_shared_traits_are_data_driven_and_neutral_traits_do_not_block() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["bandit"].model_copy(update={"trait_names": ["Pack Tactics", "Keen Smell"]})
+    assert unsupported_mechanics_2014(source) == []
+    template = compile_monster_2014(source)
+    assert template.combat_traits == [CombatTrait.PACK_TACTICS]
+
+
+def test_blood_frenzy_binds_existing_target_wounded_advantage() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["bandit"].model_copy(update={"trait_names": ["Blood Frenzy"]})
+    assert unsupported_mechanics_2014(source) == []
+    template = compile_monster_2014(source)
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    assert all(attack.conditional_attack_advantage for attack in attacks)
+    assert all(attack.conditional_attack_advantage[0].trigger == "target_not_full_hp" for attack in attacks)
+
+
+def test_reckless_trait_reuses_universal_reckless_attack_feature() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["bandit"].model_copy(update={"trait_names": ["Reckless"]})
+    assert unsupported_mechanics_2014(source) == []
+    template = compile_monster_2014(source)
+    assert template.progression_features.reckless_attack is True
+
+
+def test_poor_depth_perception_adds_disadvantage_beyond_30_feet() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["bandit"].model_copy(update={"trait_names": ["Poor Depth Perception"]})
+    template = compile_monster_2014(source)
+    attacker = build_combatant_state(template)
+    defender = build_combatant_state(_monster("skeleton"))
+    crossbow = attacker.template.alternate_weapon_attacks[0]
+    event = resolve_attack(1, 1, attacker, defender, crossbow, 40, FixedDiceProvider([18, 2]))
+    assert event.attack_roll is not None
+    assert event.attack_roll.mode == "disadvantage"
+    assert event.attack_roll.selected_roll == 2
+
+
+def test_new_basic_monster_is_data_only(tmp_path) -> None:
+    record = {
+        "id": "test-brute", "name": "Test Brute", "ruleset": "2014",
+        "size": "Medium", "creature_type": "humanoid", "alignment": "unaligned",
+        "armor_class": 14, "max_hp": 20, "hit_dice": "3d8+6", "speed": {"walk": 30},
+        "abilities": {"str": 16, "dex": 12, "con": 14, "int": 8, "wis": 10, "cha": 8},
+        "saving_throws": {}, "skills": {}, "damage_resistances": [], "damage_immunities": [],
+        "damage_vulnerabilities": [], "condition_immunities": [], "challenge_rating": "1",
+        "trait_names": [], "action_names": ["Club"], "reaction_names": [], "legendary_action_names": [],
+        "attacks": [{"id": "club", "name": "Club", "kind": "melee", "attack_bonus": 5,
+                     "reach_ft": 5, "damage": {"average": 6, "dice_count": 1, "dice_size": 6,
+                                                   "bonus": 3, "type": "bludgeoning"}}],
+    }
+    path = tmp_path / "monster.json"
+    path.write_text(json.dumps([record]), encoding="utf-8")
+    brute = monster_by_id_2014("test-brute", path)
+    assert brute.ruleset == "2014"
+    assert brute.armor_class == 14
+    assert brute.weapon_attack.attack_bonus == 5
+    assert brute.weapon_attack.weapon.damage_type == DamageType.BLUDGEONING

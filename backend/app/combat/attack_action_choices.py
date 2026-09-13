@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.area_save_targeting import legal_area_save_placements
 from app.combat.dice import DiceProvider
 from app.combat.pit_policy import (
     allied_frontline_active,
@@ -21,6 +22,19 @@ from app.domain.models import WeaponAttackKind
 logger = logging.getLogger(__name__)
 
 
+def area_save_choice(attacker: EncounterCombatant, setup: EncounterSetup, slot: AttackActionSlot):
+    allowed = set(slot.save_action_ids)
+    candidates = []
+    for action in attacker.state.template.saving_throw_actions:
+        if action.id not in allowed or action.area is None:
+            continue
+        placements = legal_area_save_placements(attacker, setup, action)
+        if placements:
+            candidates.append((action, placements[0]))
+    candidates.sort(key=lambda item: (-len(item[1].target_ids), item[0].id))
+    return candidates[0] if candidates else None
+
+
 def save_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
@@ -30,7 +44,7 @@ def save_choice(
         allowed = set(slot.save_action_ids)
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
-                if action.id not in allowed:
+                if action.id not in allowed or action.area is not None:
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance):
@@ -47,23 +61,34 @@ def attack_choice(
     slot: AttackActionSlot,
     *,
     ranged_backline: bool = False,
+    required_target_id: str | None = None,
 ):
     try:
         if ranged_backline:
             choice = choose_attack(
                 attacker, setup, slot.attack_ids,
                 kind=WeaponAttackKind.RANGED, prefer_backline=True,
+                required_target_id=required_target_id,
             )
             if choice is not None:
                 return choice
         if is_backline(attacker) and allied_frontline_active(attacker, setup):
-            ranged = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
+            ranged = choose_attack(
+                attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED,
+                required_target_id=required_target_id,
+            )
             if ranged is not None:
                 return ranged
-        melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)
+        melee = choose_attack(
+            attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE,
+            required_target_id=required_target_id,
+        )
         if melee is not None:
             return melee
-        return choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
+        return choose_attack(
+            attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED,
+            required_target_id=required_target_id,
+        )
     except Exception:
         logger.exception("Failed to choose attack slot for %s.", attacker.combatant_id)
         raise
@@ -75,7 +100,11 @@ def slot_has_legal_choice(
     slot: AttackActionSlot,
 ) -> bool:
     try:
-        return attack_choice(attacker, setup, slot) is not None or save_choice(attacker, setup, slot) is not None
+        return bool(
+            attack_choice(attacker, setup, slot)
+            or area_save_choice(attacker, setup, slot)
+            or save_choice(attacker, setup, slot)
+        )
     except Exception:
         logger.exception("Failed to prove legal Attack/Multiattack slot for %s.", attacker.combatant_id)
         raise

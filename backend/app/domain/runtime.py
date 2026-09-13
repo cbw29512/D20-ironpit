@@ -8,6 +8,8 @@ from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
+from app.domain.restraints import RestraintState
+from app.domain.swallow import SwallowedState
 
 TimedTurnBehavior = Literal["normal", "forced_retreat"]
 
@@ -35,6 +37,12 @@ class TimedEffect(BaseModel):
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
+    source_effect_immunity_on_end: bool = False
+    speed_multiplier: float = Field(default=1.0, gt=0, le=1.0)
+    blocks_reactions: bool = False
+    action_bonus_exclusive: bool = False
+    max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
+    disadvantage_strength_d20_tests: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
@@ -84,18 +92,22 @@ class CombatantState(BaseModel):
     active_buff_effect_ids: list[str] = Field(default_factory=list)
     opening_buff_spell_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
+    restraint_sources: list[RestraintState] = Field(default_factory=list)
+    swallowed: SwallowedState | None = None
     timed_effects: list[TimedEffect] = Field(default_factory=list)
+    source_effect_immunities: list[str] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
+    regeneration_suppressed: bool = False
+    wielded_attack_id: str | None = None
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
 
 
 class BattlefieldState(BaseModel):
     map_definition: BattleMapDefinition | None = None
-    # Migration-only scalar distance fields. Remove after all canonical paths consume grid positions.
     starting_distance_ft: int = Field(default=5, ge=0)
     distance_ft: int = Field(default=5, ge=0)

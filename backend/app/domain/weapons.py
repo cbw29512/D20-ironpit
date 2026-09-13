@@ -6,7 +6,10 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.hit_modifiers import HitModifierEffect
+from app.domain.on_hit_saves import OnHitSaveEffect
+from app.domain.restraints import BreakableRestraint
 from app.domain.size import CreatureSize
 
 
@@ -64,18 +67,27 @@ class Weapon(BaseModel):
     attack_kind: WeaponAttackKind
     dice_count: int = Field(ge=0, le=20)
     dice_size: int = Field(ge=2, le=100)
-    damage_type: DamageType
+    damage_type: DamageType | None
     animation: str
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
     projectile: str | None = None
     mastery_property: str | None = None
+    magical: bool = False
+    silvered: bool = False
+    adamantine: bool = False
     light: bool = False
     finesse: bool = False
     heavy: bool = False
     two_handed: bool = False
     versatile: bool = False
+
+    @model_validator(mode="after")
+    def validate_damage_profile(self) -> "Weapon":
+        if self.damage_type is None and self.dice_count:
+            raise ValueError("An attack without a damage type cannot roll weapon damage dice.")
+        return self
 
 
 class WeaponAttack(BaseModel):
@@ -91,6 +103,11 @@ class WeaponAttack(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
+    on_hit_save_effect: OnHitSaveEffect | None = None
+    charge_profile: ChargeProfileDefinition | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
+    breakable_restraint: BreakableRestraint | None = None
     rage_eligible: bool = False
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None

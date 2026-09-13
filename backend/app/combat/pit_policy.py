@@ -6,6 +6,7 @@ from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
 from app.combat.range import resolve_attack_roll_mode
+from app.combat.resources import action_resource_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
 
@@ -76,6 +77,7 @@ def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind:
         attack
         for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
         if attack.id in allowed and (kind is None or attack.weapon.attack_kind is kind)
+        and action_resource_available(attacker.state, attack)
     ]
 
 
@@ -97,11 +99,15 @@ def choose_attack(
     *,
     kind: WeaponAttackKind | None = None,
     prefer_backline: bool = False,
+    required_target_id: str | None = None,
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Choose an actually legal attack at the combatants' current battlefield positions."""
     try:
         profiles = _attack_profiles(attacker, allowed_ids, kind)
-        for target in target_order(attacker, setup, prefer_backline=prefer_backline):
+        targets = target_order(attacker, setup, prefer_backline=prefer_backline)
+        if required_target_id is not None:
+            targets = [target for target in targets if target.combatant_id == required_target_id]
+        for target in targets:
             distance = combatant_distance(attacker, target)
             for attack in profiles:
                 if attack_allowed_against(attack, attacker.combatant_id, target.state) and _attack_in_range(attack, distance):

@@ -14,12 +14,20 @@ vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-reactions.js")
 
 const defender = {
   reaction_available: true,
-  template: { armor_class: 17, parry_reaction: { ac_bonus: 2 } },
+  active_effect_ids: [],
+  wielded_attack_id: "rapier",
+  template: {
+    armor_class: 17,
+    parry_reaction: { ac_bonus: 2 },
+    primary_attack_id: "rapier",
+    attacks: [{ id: "rapier", kind: "melee" }],
+  },
 };
+const attacker = { active_effect_ids: [], template: {} };
 const attack = { kind: "melee" };
 const attackRoll = { selected_roll: 12, total: 20 };
 
-const result = window.IRON_PIT_BROWSER_REACTIONS.parryHit(defender, attack, attackRoll, true, 19);
+const result = window.IRON_PIT_BROWSER_REACTIONS.parryHit(defender, attacker, attack, attackRoll, true, 19);
 assert.deepEqual(result, { hit: false, used: true });
 assert.equal(defender.reaction_available, false);
 

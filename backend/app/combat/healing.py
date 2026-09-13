@@ -28,49 +28,49 @@ def _resource_available(member: EncounterCombatant, action: HealingAction, turn_
     return resource is not None and resource.current_uses >= action.resource_cost
 
 
+def _cleansable(target: EncounterCombatant, action: HealingAction) -> list[str]:
+    allowed = set(action.removable_conditions)
+    return [condition for condition in target.state.active_effect_ids if condition in allowed]
+
+
 def _target_allowed(healer: EncounterCombatant, target: EncounterCombatant, action: HealingAction) -> bool:
-    if target.state.is_dead or not target.state.is_alive or target.state.current_hp >= effective_max_hp(target.state):
+    if target.state.is_dead or not target.state.is_alive:
+        return False
+    if target.state.current_hp >= effective_max_hp(target.state) and not _cleansable(target, action):
         return False
     if CombatTrait.SWARM in target.state.template.combat_traits or _distance(healer, target) > action.range_ft:
         return False
-    if action.target_mode == "self":
-        return target.combatant_id == healer.combatant_id
-    if action.target_mode == "ally":
-        return target.combatant_id != healer.combatant_id and target.side == healer.side
-    if action.target_mode == "other":
-        return target.combatant_id != healer.combatant_id
+    if action.target_mode == "self": return target.combatant_id == healer.combatant_id
+    if action.target_mode == "ally": return target.combatant_id != healer.combatant_id and target.side == healer.side
+    if action.target_mode == "other": return target.combatant_id != healer.combatant_id
     return target.side == healer.side
 
 
 def _self_heal_worthwhile(member: EncounterCombatant, action: HealingAction) -> bool:
-    """Iron Pit policy: any proactive Action/Bonus Action heal is worthwhile once Bloodied."""
-    return is_bloodied(member.state) and action.action_cost in {"action", "bonus_action"}
+    return (is_bloodied(member.state) or bool(_cleansable(member, action))) and action.action_cost in {"action", "bonus_action"}
 
 
 def choose_healing_target(
     healer: EncounterCombatant, setup: EncounterSetup, action: HealingAction, turn_key: str | None = None,
 ) -> EncounterCombatant | None:
-    """Prefer a living 0-HP ally, then a Bloodied ally, then Bloodied self."""
-    if action.action_cost == "reaction" or not is_available(healer.state, action.action_cost):
-        return None
-    if not _resource_available(healer, action, turn_key):
-        return None
+    if action.action_cost == "reaction" or not is_available(healer.state, action.action_cost): return None
+    if not _resource_available(healer, action, turn_key): return None
     allies = setup.heroes if healer.side == "heroes" else setup.monsters
     legal = [target for target in allies if _target_allowed(healer, target, action)]
     others = [target for target in legal if target.combatant_id != healer.combatant_id]
     downed = [target for target in others if target.state.current_hp == 0]
-    if downed:
-        return max(downed, key=lambda target: target.state.death_save_failures)
+    if downed: return max(downed, key=lambda target: target.state.death_save_failures)
+    afflicted = [target for target in others if _cleansable(target, action)]
+    if afflicted: return afflicted[0]
     bloodied = [target for target in others if is_bloodied(target.state)]
-    if bloodied:
-        return min(bloodied, key=lambda target: target.state.current_hp / effective_max_hp(target.state))
+    if bloodied: return min(bloodied, key=lambda target: target.state.current_hp / effective_max_hp(target.state))
     self_target = next((target for target in legal if target.combatant_id == healer.combatant_id), None)
     return self_target if self_target is not None and _self_heal_worthwhile(healer, action) else None
 
 
 def _choice_priority(healer: EncounterCombatant, action: HealingAction, target: EncounterCombatant) -> tuple[int, int, float]:
     ally = target.combatant_id != healer.combatant_id
-    urgency = 0 if ally and target.state.current_hp == 0 else 1 if ally else 2
+    urgency = 0 if ally and target.state.current_hp == 0 else 1 if _cleansable(target, action) else 2 if ally else 3
     cost = 0 if action.action_cost == "bonus_action" else 1
     return urgency, cost, target.state.current_hp / effective_max_hp(target.state)
 
@@ -85,6 +85,15 @@ def choose_healing_action(
     return min(choices, key=lambda choice: _choice_priority(healer, choice[0], choice[1])) if choices else None
 
 
+def _remove_conditions(target: EncounterCombatant, action: HealingAction) -> list[str]:
+    removed = _cleansable(target, action)
+    if not removed: return []
+    removed_set = set(removed)
+    target.state.active_effect_ids = [item for item in target.state.active_effect_ids if item not in removed_set]
+    target.state.timed_effects = [item for item in target.state.timed_effects if item.effect_id not in removed_set]
+    return removed
+
+
 def resolve_healing(
     sequence: int, round_number: int, healer: EncounterCombatant, target: EncounterCombatant,
     action: HealingAction, dice: DiceProvider, turn_key: str | None = None,
@@ -92,20 +101,19 @@ def resolve_healing(
     if not _target_allowed(healer, target, action) or not _resource_available(healer, action, turn_key):
         raise ValueError("Healing action is not legal for this target or turn.")
     if _slot_heal(action):
-        if turn_key is None:
-            raise ValueError("Spell-slot healing requires an active turn key.")
+        if turn_key is None: raise ValueError("Spell-slot healing requires an active turn key.")
         mark_slot_spell_cast(healer.state, turn_key)
     spend(healer.state, action.action_cost)
     rolls = [dice.roll(action.dice_size) for _ in range(action.dice_count)]
     total = sum(rolls) + action.healing_bonus
-    hp_before = target.state.current_hp
-    healed = restore_hit_points(target.state, total)
+    hp_before = target.state.current_hp; healed = restore_hit_points(target.state, total)
+    removed = _remove_conditions(target, action)
     remaining = None
     if action.resource_id is not None:
         resource = next(item for item in healer.state.resources if item.id == action.resource_id)
-        resource.current_uses -= action.resource_cost
-        remaining = resource.current_uses
+        resource.current_uses -= action.resource_cost; remaining = resource.current_uses
     notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}" if action.dice_count else str(action.healing_bonus)
+    cleanse = f" and removes {', '.join(removed)}" if removed else ""
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="healing",
         actor_id=healer.combatant_id, actor_name=healer.state.template.name,
@@ -115,5 +123,5 @@ def resolve_healing(
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead,
         feature_id=action.id, resource_remaining=remaining, animation=action.animation,
-        description=f"{healer.state.template.name} uses {action.name} on {target.state.template.name} and restores {healed} HP.",
+        description=f"{healer.state.template.name} uses {action.name} on {target.state.template.name}, restores {healed} HP{cleanse}.",
     )

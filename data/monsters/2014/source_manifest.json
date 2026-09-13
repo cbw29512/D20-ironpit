@@ -1,0 +1,10 @@
+{
+  "ruleset": "2014",
+  "source_name": "srd_5e_monsters.json",
+  "source_gist": "https://gist.github.com/tkfu/9819e4ac6d529e225e9fc58b358c3479",
+  "source_revision": "d4df8804c25a662efc42936db60cfbc0a5b19db8",
+  "source_raw_url": "https://gist.githubusercontent.com/tkfu/9819e4ac6d529e225e9fc58b358c3479/raw/d4df8804c25a662efc42936db60cfbc0a5b19db8/srd_5e_monsters.json",
+  "sha256": "3552781a54ca9241df3fe64a712009e4545890bfefcc053dfeb5b48d374281b1",
+  "monster_count": 327,
+  "notes": "Pinned 2014 source supplied for this workstream. Import verifies both revision URL and SHA-256 so source drift is explicit."
+}

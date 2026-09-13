@@ -7,7 +7,10 @@ from app.combat.condition_removal import choose_condition_removal_action, resolv
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.pit_policy import save_distance, target_order
-from app.combat.saving_throws import legal_save_action
+from app.combat.rampage import resolve_rampage
+from app.combat.resources import action_resource_available, resource_definition
+from app.combat.restraints import resolve_escape_restraint, should_escape_restraint
+from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.barbarian import finalize_rage_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -17,6 +20,10 @@ logger = logging.getLogger(__name__)
 
 def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     try:
+        rampage_events, sequence = resolve_rampage(
+            sequence, round_number, attacker, setup, dice, events, turn_key,
+        )
+        events.extend(rampage_events)
         if allow_surge:
             surge_events, sequence = resolve_action_surge_attack(
                 sequence, round_number, attacker, setup, dice, turn_key,
@@ -36,6 +43,11 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
 def resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     try:
         events: list[BattleEvent] = []
+        if should_escape_restraint(member.state):
+            events.append(resolve_escape_restraint(
+                sequence, round_number, member.combatant_id, member.state, dice,
+            ))
+            return events, sequence + 1
         healing_choice = choose_healing_action(member, setup, turn_key)
         if healing_choice is not None and healing_choice[1].state.current_hp == 0:
             action, target = healing_choice
@@ -59,10 +71,71 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         raise
 
 
+def _is_recharge_action(attacker: EncounterCombatant, action) -> bool:
+    try:
+        if action.resource_id is None:
+            return False
+        definition = resource_definition(attacker.state, action.resource_id)
+        return definition is not None and definition.recharge is not None
+    except Exception:
+        logger.exception("Failed Recharge-action probe for %s.", attacker.combatant_id)
+        raise
+
+
+def recharge_action_ready(attacker: EncounterCombatant) -> bool:
+    """Return whether any Recharge-backed save action is currently charged."""
+    try:
+        return any(
+            _is_recharge_action(attacker, action) and action_resource_available(attacker.state, action)
+            for action in attacker.state.template.saving_throw_actions
+        )
+    except Exception:
+        logger.exception("Failed Recharge readiness probe for %s.", attacker.combatant_id)
+        raise
+
+
+def recharge_save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
+    """Choose a legal charged single-target Recharge action before ordinary offense."""
+    try:
+        for target in target_order(attacker, setup):
+            for action in attacker.state.template.saving_throw_actions:
+                if action.area is not None or not _is_recharge_action(attacker, action):
+                    continue
+                if not action_resource_available(attacker.state, action):
+                    continue
+                distance = save_distance(attacker, target, action.range_ft)
+                if legal_save_action(action, target, distance):
+                    return target, action, distance
+        return None
+    except Exception:
+        logger.exception("Failed Recharge save-action choice for %s.", attacker.combatant_id)
+        raise
+
+
+def resolve_ready_recharge_action(sequence, round_number, attacker, setup, dice):
+    """Fire a charged legal single-target Recharge action immediately."""
+    try:
+        choice = recharge_save_choice(attacker, setup)
+        if choice is None:
+            return [], sequence, False
+        target, action, distance = choice
+        affected = [member.state for member in [*setup.heroes, *setup.monsters]]
+        event = resolve_save_action(
+            sequence, round_number, attacker, target, action, distance, dice,
+            affected_states=affected,
+        )
+        return [event], sequence + 1, True
+    except Exception:
+        logger.exception("Failed Recharge action resolution for %s.", attacker.combatant_id)
+        raise
+
+
 def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     try:
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
+                if action.area is not None or not action_resource_available(attacker.state, action):
+                    continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance):
                     return target, action, distance

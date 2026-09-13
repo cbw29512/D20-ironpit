@@ -3,8 +3,13 @@
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
+    speedZero: (state) => state.active_effect_ids.includes("restrained"),
+    incapacitated: (state) => state.is_unconscious || state.active_effect_ids.some((id) => ["incapacitated", "paralyzed", "petrified", "stunned"].includes(id)),
+  };
+  const G = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
+  const TD = () => window.IRON_PIT_BROWSER_TIMED || { strengthD20Disadvantage: () => 0 };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -37,8 +42,18 @@
 
   const speedIsZero = (state) => state.grapple_sources.length > 0 || Q().speedZero(state);
   function attackDisadvantage(state, targetId) {
-    if (!state.grapple_sources.length) return 0;
+    if (state.template.ruleset === "2014" || !state.grapple_sources.length) return 0;
     return state.grapple_sources.some((source) => source.source_id === targetId) ? 0 : 1;
+  }
+
+  function distance(first, second) {
+    const firstPosition = first.state.position, secondPosition = second.state.position;
+    if (firstPosition || secondPosition) {
+      if (!firstPosition || !secondPosition) throw new Error("Grapple cleanup cannot mix scalar and grid position authority.");
+      if (!G()) throw new Error("Grid geometry is required for grid-authoritative grapple cleanup.");
+      return G().footprintDistanceFt(firstPosition, first.state.template.size, secondPosition, second.state.template.size);
+    }
+    return Math.abs(first.position_ft - second.position_ft);
   }
 
   function cleanup(setup) {
@@ -46,8 +61,8 @@
     for (const target of members.values()) {
       target.state.grapple_sources = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
-        if (!grappler || grappler.state.is_dead || grappler.state.is_unconscious) return false;
-        return Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft;
+        if (!grappler || grappler.state.is_dead || Q().incapacitated(grappler.state)) return false;
+        return distance(grappler, target) <= source.range_ft;
       });
       sync(target.state);
     }
@@ -64,7 +79,8 @@
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
+    const disadvantage = (state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0)
+      + (useAthletics ? TD().strengthD20Disadvantage(state) : 0);
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {
