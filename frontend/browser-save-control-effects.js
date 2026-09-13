@@ -18,21 +18,17 @@
     if (!effectId || !target.state.is_alive || target.state.is_dead) return [];
     const expiresRound = control.durationRounds != null ? round + control.durationRounds : null;
     const applied = T().apply(target.state, effectId, actor.combatant_id, {
-      sourceEffectId: action.id,
-      appliedRound: round,
-      expiresRound,
+      sourceEffectId: action.id, appliedRound: round, expiresRound,
       expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn),
       expiryTiming: control.expiryTiming || null,
       repeatSaveAbility: control.repeatSaveAbility || null,
       repeatSaveDc: control.repeatSaveDc ?? null,
       repeatSaveTiming: control.repeatSaveTiming || null,
+      repeatSaveFailureConditionId: control.repeatSaveFailureConditionId || null,
       allowedRemovalActionIds: control.allowedRemovalActionIds || [],
-      endsOnDamage: Boolean(control.endsOnDamage),
-      sourceEffectImmunityOnEnd: Boolean(control.sourceEffectImmunityOnEnd),
-      speedMultiplier: control.speedMultiplier ?? 1,
-      blocksReactions: Boolean(control.blocksReactions),
-      actionBonusExclusive: Boolean(control.actionBonusExclusive),
-      maxAttacksPerTurn: control.maxAttacksPerTurn ?? null,
+      endsOnDamage: Boolean(control.endsOnDamage), sourceEffectImmunityOnEnd: Boolean(control.sourceEffectImmunityOnEnd),
+      speedMultiplier: control.speedMultiplier ?? 1, blocksReactions: Boolean(control.blocksReactions),
+      actionBonusExclusive: Boolean(control.actionBonusExclusive), maxAttacksPerTurn: control.maxAttacksPerTurn ?? null,
       disadvantageStrengthD20Tests: Boolean(control.disadvantageStrengthD20Tests),
     });
     return applied ? [applied] : [];
