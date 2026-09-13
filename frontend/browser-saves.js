@@ -22,7 +22,7 @@
       + B2().dangerSenseAdvantage(state, ability)
       + DG().dexSaveAdvantageSources(state, ability)
       + (magicalEffect && state.template.traits?.includes("magic-resistance") ? 1 : 0)
-      + (["charmed", "frightened"].includes(againstCondition) && state.template.traits?.includes("dark-devotion") ? 1 : 0);
+      + ((["charmed", "frightened"].includes(againstCondition) && state.template.traits?.includes("dark-devotion")) || (["blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"].includes(againstCondition) && state.template.traits?.includes("two-headed")) ? 1 : 0);
     const disadvantage = (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0)
       + (ability === "strength" ? T().strengthD20Disadvantage(state) : 0);
     return R().modeFromSources(advantage, disadvantage);
