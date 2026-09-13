@@ -15,6 +15,7 @@ from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.hit_points import effective_max_hp
 from app.combat.invisibility import end_attack_invisibility
+from app.combat.max_hp_drain import resolve_max_hp_drain
 from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
 from app.combat.on_hit_saves import resolve_on_hit_save
 from app.combat.parry import resolve_parry_hit
@@ -32,7 +33,6 @@ from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
-
 def resolve_attack(
     sequence: int, round_number: int, attacker: CombatantState, defender: CombatantState,
     attack: WeaponAttack, distance_ft: int, dice: DiceProvider,
@@ -84,7 +84,7 @@ def resolve_attack(
         hp_before = actual_defender.current_hp; max_hp_before = effective_max_hp(actual_defender); temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
-        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None; save_rider = None
+        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None; save_rider = None; drain_reduction = drain_healing = 0
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
@@ -95,6 +95,7 @@ def resolve_attack(
             applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components, attack=attack); damage_roll.total = applied_total
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
+            drain_reduction, drain_healing = resolve_max_hp_drain(attacker, actual_defender, attack, damage_components)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
             save_rider = resolve_on_hit_save(
                 actual_defender, attack, dice, source_id=attacker_event_id,
@@ -125,6 +126,7 @@ def resolve_attack(
         if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
         if tactical_sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
         if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
+        if drain_reduction: description += f" Max HP reduced by {drain_reduction}; attacker regains {drain_healing} HP."
         if save_rider and save_rider.save_dc is not None: description += f" {save_rider.save_ability.title()} save DC {save_rider.save_dc}: {actual_defender.template.name} {'succeeds' if save_rider.save_succeeded else 'fails'}."; description += f" Max HP reduced by {save_rider.max_hp_reduction}." if save_rider.max_hp_reduction else ""
         if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
