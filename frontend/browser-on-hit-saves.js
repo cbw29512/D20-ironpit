@@ -76,7 +76,9 @@
           expiresRound: effect.durationRounds ? round + effect.durationRounds : null,
           repeatSaveAbility: effect.repeatSaveTiming ? effect.saveAbility : null,
           repeatSaveDc: effect.repeatSaveTiming ? effect.dc : null,
-          repeatSaveTiming: effect.repeatSaveTiming || null, endsOnDamage: Boolean(effect.endsOnDamage),
+          repeatSaveTiming: effect.repeatSaveTiming || null,
+          repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
+          endsOnDamage: Boolean(effect.endsOnDamage),
         });
       } else {
         if (!target.state.active_effect_ids.includes(effect.conditionId)) target.state.active_effect_ids.push(effect.conditionId);

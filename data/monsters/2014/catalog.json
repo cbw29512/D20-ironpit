@@ -12057,11 +12057,17 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 11,
+          "condition_id": "restrained",
+          "repeat_save_timing": "target_turn_end",
+          "repeat_save_failure_condition_id": "petrified"
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the target must succeed on a DC 11 Constitution saving throw against being magically petrified. On a failed save, the creature begins to turn to stone and is restrained. It must repeat the saving throw at the end of its next turn. On a success, the effect ends. On a failure, the creature is petrified for 24 hours",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
