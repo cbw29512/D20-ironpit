@@ -44,7 +44,7 @@ class ConditionalDamage(BaseModel):
 
 
 class ConditionalAttackAdvantage(BaseModel):
-    trigger: Literal["target_not_full_hp"]
+    trigger: Literal["target_not_full_hp", "target_grappled_by_self"]
 
 
 class OnHitDamage(BaseModel):
