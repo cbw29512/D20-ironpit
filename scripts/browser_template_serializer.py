@@ -89,6 +89,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if effect.repeat_save_timing is not None: row["onHitSaveEffect"]["repeatSaveTiming"] = effect.repeat_save_timing
             if effect.repeat_save_failure_condition_id is not None: row["onHitSaveEffect"]["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
             if effect.ends_on_damage: row["onHitSaveEffect"]["endsOnDamage"] = True
+            if effect.max_hp_reduction_equals_damage_taken: row["onHitSaveEffect"]["maxHpReductionEqualsDamageTaken"] = True
+            if effect.zero_max_hp_kills: row["onHitSaveEffect"]["zeroMaxHpKills"] = True
             if effect.damage_dice_count:
                 row["onHitSaveEffect"].update(
                     damageDiceCount=effect.damage_dice_count, damageDiceSize=effect.damage_dice_size,
