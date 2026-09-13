@@ -152,6 +152,14 @@ def _attach_monster_actions(row, template) -> None:
     row["creature_subtypes"] = list(template.creature_subtypes)
     if template.damage_absorptions:
         row["damageAbsorptions"] = [{"damageType": rule.damage_type.value, "healingMultiplier": rule.healing_multiplier} for rule in template.damage_absorptions]
+    if template.damage_triggered_roll_penalties:
+        row["damageTriggeredRollPenalties"] = [
+            {"id": profile.id, "damageTypes": [item.value for item in profile.damage_types],
+             "attackRollDisadvantage": profile.attack_roll_disadvantage,
+             "abilityCheckDisadvantage": profile.ability_check_disadvantage,
+             "expiresAfterNextTargetTurn": profile.expires_after_next_target_turn}
+            for profile in template.damage_triggered_roll_penalties
+        ]
     gaze = _gaze_row(template.start_turn_gaze)
     if gaze: row["startTurnGaze"] = gaze
     if template.start_turn_auras: row["startTurnAuras"] = [_aura_row(aura) for aura in template.start_turn_auras]
