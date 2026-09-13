@@ -8,7 +8,7 @@ from app.domain.actions import AttackActionDefinition, ConditionName, ConditionR
 from app.domain.auras import StartTurnAura
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.character_builds import AbilityScores
-from app.domain.damage_defense_rules import ConditionalDamageResistance
+from app.domain.damage_defense_rules import ConditionalDamageResistance, DamageAbsorption
 from app.domain.gaze import StartTurnGaze
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.movement import MovementModes
@@ -101,6 +101,7 @@ class CombatantTemplate(BaseModel):
     weapon_masteries: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     conditional_damage_resistances: list[ConditionalDamageResistance] = Field(default_factory=list)
+    damage_absorptions: list[DamageAbsorption] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
