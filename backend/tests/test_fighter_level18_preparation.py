@@ -18,7 +18,7 @@ def test_fighter_level18_profile_is_fully_automated() -> None:
     assert all(audit.automated for audit in survivor.values())
 
 
-def test_fighter_level18_remains_registered_after_level19_certification() -> None:
+def test_fighter_level18_remains_registered_after_level20_certification() -> None:
     template = build_karnok_stoneward_level(18)
     fighter = next(item for item in CERTIFIED_HERO_PROGRESSIONS if item.class_id == "fighter")
     certified_levels = list(fighter.levels)
@@ -26,5 +26,5 @@ def test_fighter_level18_remains_registered_after_level19_certification() -> Non
     assert template.level == 18
     assert template.max_hp == 202
     assert 18 in certified_levels
-    assert certified_levels[-1] == 19
+    assert certified_levels[-1] == 20
     assert fighter.profile(18).template_id == template.id
