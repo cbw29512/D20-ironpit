@@ -13,7 +13,7 @@ from app.domain.regeneration import RegenerationProfile
 from app.domain.restraints import BreakableRestraint
 from app.domain.size import CreatureSize
 from app.domain.swallow import SwallowAction
-from app.domain.weapons import ConditionalDamage, DamageType
+from app.domain.weapons import ConditionalAttackAdvantage, ConditionalDamage, DamageType
 from app.domain.zero_hp_prevention import ZeroHpPrevention
 
 
@@ -32,6 +32,7 @@ class CatalogAttack2014(BaseModel):
     attack_ability: AbilityName | None = None
     damage: CatalogDamage2014
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
+    conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
     on_hit_save_effect: OnHitSaveEffect | None = None
     control_effect: HitControlEffect | None = None
