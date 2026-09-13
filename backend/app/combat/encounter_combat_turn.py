@@ -13,6 +13,7 @@ from app.combat.encounter_offense_priority import resolve_post_movement_offense,
 from app.combat.encounter_turn_support import finish_turn, resolve_support_actions, save_choice
 from app.combat.gaze import resolve_start_turn_gazes
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
+from app.combat.invisibility import can_use_invisibility, resolve_invisibility_action
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
@@ -31,8 +32,6 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
-
-
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
@@ -140,7 +139,7 @@ def resolve_combat_turn(
             )
             events.extend(more)
         elif is_available(attacker.state, "action"):
-            events.append(resolve_dodge_action(sequence, round_number, attacker)); sequence += 1
+            events.append(resolve_invisibility_action(sequence, round_number, attacker, setup) if can_use_invisibility(attacker.state) else resolve_dodge_action(sequence, round_number, attacker)); sequence += 1
         return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     except ValueError:
         raise
