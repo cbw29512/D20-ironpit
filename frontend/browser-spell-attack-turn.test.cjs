@@ -13,7 +13,7 @@ for (const file of [
   "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js",
   "browser-offense-value.js", "browser-spellcasting.js", "browser-spell-modifiers.js",
   "browser-spell-attack-policy.js", "browser-spell-attack.js", "browser-spell-offense.js", "browser-formation.js",
-  "browser-turn.js",
+  "browser-progression-recovery.js", "browser-turn.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
