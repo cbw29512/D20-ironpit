@@ -134,6 +134,13 @@ def _attach_monster_actions(row, template) -> None:
         if effect and effect.zero_hp_stable:
             rider = attack_row.setdefault("onHitSaveEffect", {}); rider["zeroHpStable"] = True
             rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
+    healing_rows = row.pop("healing_actions", [])
+    if healing_rows:
+        healing_by_id = {action.id: action for action in template.healing_actions}
+        for action_row in healing_rows:
+            action = healing_by_id[action_row["id"]]
+            if action.removable_conditions: action_row["removableConditions"] = list(action.removable_conditions)
+        row["healingActions"] = healing_rows
     if template.automatic_damage_spell_actions: row["automatic_damage_spell_actions"] = [_automatic_spell_row(action) for action in template.automatic_damage_spell_actions]
     if "Poor Depth Perception" in template.source_trait_names:
         for attack_row in row.get("attacks", []): attack_row["disadvantageBeyondFt"] = 30
