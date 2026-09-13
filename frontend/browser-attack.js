@@ -58,7 +58,7 @@
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id, extra.setup);
     const advantage = (extra.advantage || 0) + conditions.advantage + R().bloodiedAttackAdvantage(attacker.state, attack)
-      + B2().attackAdvantage(attacker.state, attack) + A().sources(attack, target.state) + MAA(attacker.state) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+      + B2().attackAdvantage(attacker.state, attack) + A().sources(attack, target.state, attacker.combatant_id) + MAA(attacker.state) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state) + MAD(attacker.state) + (attack.attackAbility ? TD(attacker.state, attack.attackAbility) : 0), closeThreat);
     const resourceRemaining = attack.resourceId ? RES().spend(attacker.state, attack.resourceId, attack.resourceCost || 1) : null; const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
