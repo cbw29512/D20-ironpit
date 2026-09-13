@@ -54,7 +54,7 @@ def unresolved_actions_2014(source: CatalogMonster2014) -> list[str]:
         raise ValueError(f"Could not inventory arena-relevant actions for {source.id}.") from exc
 
 
-def unresolved_reactions_2014(source: CatalogMonster2012014, supported: set[str]) -> list[str]:
+def unresolved_reactions_2014(source: CatalogMonster2014, supported: set[str]) -> list[str]:
     try:
         supported_names = supported | ARENA_NEUTRAL_REACTIONS_2014
         return [
