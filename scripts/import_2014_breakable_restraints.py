@@ -26,6 +26,14 @@ def _damage_types(value: str) -> list[str]:
     return parsed if parsed and all(item in DAMAGE_TYPES for item in parsed) else []
 
 
+def _object_stats(text: str) -> tuple[int, int] | None:
+    labeled = re.search(r"AC\s*(\d+)[,;)]*\s*(?:hp|hit points)\s*(\d+)", text, re.I)
+    if labeled:
+        return int(labeled.group(1)), int(labeled.group(2))
+    natural = re.search(r"AC\s*(\d+)[,;)]*\s*(\d+)\s+hit points", text, re.I)
+    return (int(natural.group(1)), int(natural.group(2))) if natural else None
+
+
 def parse_breakable_restraint_attack(paragraph: str, recharges: dict[str, int]) -> dict | None:
     """Parse zero-damage attack rolls that apply an escapable, destructible restraint."""
     try:
@@ -42,7 +50,7 @@ def parse_breakable_restraint_attack(paragraph: str, recharges: dict[str, int]) 
         ranges = re.search(r"range\s+(\d+)\s*/\s*(\d+)\s*ft", text, re.I)
         restrained = re.search(r"Hit:\s*The (?:target|creature) is restrained by ([A-Za-z -]+?)\.", text, re.I)
         escape = re.search(r"DC\s+(\d+)\s+(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) check", text, re.I)
-        object_stats = re.search(r"AC\s*(\d+)[,;)]*\s*(?:hp|hit points)\s*(\d+)", text, re.I)
+        object_stats = _object_stats(text)
         vulnerable = re.search(r"vulnerabilit(?:y|ies) to ([A-Za-z, ]+?) damage", text, re.I)
         immune = re.search(r"immunit(?:y|ies) to ([A-Za-z, ]+?) damage(?:\.|;|\))", text, re.I)
         destroyed = re.search(r"(?:ends if .*?destroyed|attacked and destroyed)", text, re.I)
@@ -52,10 +60,10 @@ def parse_breakable_restraint_attack(paragraph: str, recharges: dict[str, int]) 
         if not vulnerabilities or not immunities:
             return None
         size_match = re.search(r"one (Tiny|Small|Medium|Large|Huge) or smaller creature", text, re.I)
-        escape_dc, escape_ability = escape.groups(); object_ac, object_hp = object_stats.groups()
+        escape_dc, escape_ability = escape.groups(); object_ac, object_hp = object_stats
         restraint = {
             "condition_id": "restrained", "escape_ability": escape_ability.lower(), "escape_dc": int(escape_dc),
-            "object_ac": int(object_ac), "object_hp": int(object_hp),
+            "object_ac": object_ac, "object_hp": object_hp,
             "damage_vulnerabilities": vulnerabilities, "damage_immunities": immunities,
         }
         if size_match:
