@@ -25,7 +25,7 @@ DATA_BOUND_TRAITS = frozenset({
 # Preserved in source provenance, but nonblocking when the current Iron Pit ruleset
 # supplies no combat circumstance in which the trait can change the arena outcome.
 ARENA_NEUTRAL_TRAITS = frozenset({
-    "Agile", "Amorphous", "Amphibious", "Antimagic Susceptibility", "Beast of Burden",
+    "Agile", "Amorphous", "Amphibious", "Antimagic Susceptibility", "Beast of Burden", "Blind Senses",
     "Devil's Sight", "Earth Glide", "False Appearance", "Flyby", "Hellish Rejuvenation",
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Immutable Form", "Jumper",
     "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
@@ -51,5 +51,9 @@ def combat_traits_2014(names: list[str]) -> list[CombatTrait]:
     return list(dict.fromkeys(MODELED_TRAITS[name] for name in names if name in MODELED_TRAITS))
 
 
-def unresolved_traits_2014(names: list[str]) -> list[str]:
-    return [name for name in names if name not in SUPPORTED_TRAITS and _LEGENDARY_RESISTANCE.match(name) is None and _RELENTLESS.match(name) is None]
+def unresolved_traits_2014(names: list[str], data_bound: list[str] | None = None) -> list[str]:
+    supported = SUPPORTED_TRAITS | frozenset(data_bound or [])
+    return [
+        name for name in names
+        if name not in supported and _LEGENDARY_RESISTANCE.match(name) is None and _RELENTLESS.match(name) is None
+    ]

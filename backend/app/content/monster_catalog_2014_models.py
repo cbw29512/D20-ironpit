@@ -135,6 +135,7 @@ class CatalogMonster2014(BaseModel):
     rest_recharge_action_ids: list[str] = Field(default_factory=list)
     action_names: list[str] = Field(default_factory=list)
     trait_names: list[str] = Field(default_factory=list)
+    data_bound_trait_names: list[str] = Field(default_factory=list)
     reaction_names: list[str] = Field(default_factory=list)
     parry_ac_bonus: int | None = Field(default=None, ge=1, le=20)
     legendary_action_names: list[str] = Field(default_factory=list)

@@ -28850,6 +28850,12 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "limited_action_uses": {
+      "tail-spike": 24
+    },
+    "data_bound_trait_names": [
+      "Tail Spike Regrowth"
+    ],
     "spellcasting": null
   },
   {
