@@ -44,6 +44,8 @@ def resolve_target_condition_timing(
         for effect in list(target.state.timed_effects):
             if effect not in target.state.timed_effects:
                 continue
+            if timing == "target_turn_start" and effect.expires_after_next_target_turn:
+                effect.target_turn_started_since_applied = True
             if repeat_save_due(effect, round_number, timing):
                 roll, succeeded = resolve_saving_throw(
                     target.state, effect.repeat_save_ability, effect.repeat_save_dc, dice,
