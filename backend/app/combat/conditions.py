@@ -12,6 +12,7 @@ from app.combat.grapple import (
 from app.combat.hit_modifiers import apply_hit_modifier_effects
 from app.combat.modifier_stack import effective_speed
 from app.combat.timed_conditions import apply_timed_condition
+from app.combat.timed_roll_effects import attack_roll_disadvantage
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
@@ -30,7 +31,7 @@ def attack_roll_condition_sources(
 ) -> tuple[int, int]:
     """Return Advantage and Disadvantage sources from supported conditions."""
     advantage = 0
-    disadvantage = 0
+    disadvantage = attack_roll_disadvantage(attacker)
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
