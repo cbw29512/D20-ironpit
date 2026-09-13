@@ -37,6 +37,7 @@ class HitControlEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     ends_on_damage: bool = False
     source_effect_immunity_on_end: bool = False
@@ -51,6 +52,8 @@ class HitControlEffect(BaseModel):
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")
+        if self.repeat_save_failure_condition_id is not None and not all(item is not None for item in repeat_fields):
+            raise ValueError("Repeat-save failure transition requires a complete repeat-save lifecycle.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
         if self.duration_rounds is not None and self.expiry_timing is None:
@@ -65,13 +68,12 @@ class HitControlEffect(BaseModel):
             raise ValueError("Control effect requires a condition, custom effect, or grapple rule.")
         return self
 
-
 class HealingAction(BaseModel):
     id: str
     name: str
     action_cost: ActionCost
     range_ft: int = Field(default=5, ge=0)
-    target_mode: HealingTargetMode = "self_or_ally"
+    target_mode: HealingTargetMode = "self_or_ally", "other"
     dice_count: int = Field(default=0, ge=0, le=40)
     dice_size: int = Field(default=6, ge=2, le=100)
     healing_bonus: int = Field(default=0, ge=0)
