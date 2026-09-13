@@ -22828,7 +22828,30 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/355/315/315/636252778125099430.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "petrifying-breath",
+        "name": "Petrifying Breath",
+        "save_ability": "constitution",
+        "dc": 13,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "failure_control_effect": {
+          "condition_id": "restrained",
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 13,
+          "repeat_save_timing": "target_turn_end",
+          "repeat_save_failure_condition_id": "petrified"
+        },
+        "resource_id": "petrifying-breath",
+        "resource_cost": 1,
+        "animation": "petrified"
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
