@@ -24,15 +24,38 @@ _MAX_HP_REDUCTION_PATTERNS = (
         re.I,
     ),
 )
+_DIRECT_DRAIN = re.compile(
+    r"The target's hit point maximum is reduced by an amount equal to the ([a-z]+) damage taken, "
+    r"and the [a-z /-]+ regains hit points equal to that amount\.\s*"
+    r"The reduction lasts until the target finishes a long rest\.\s*"
+    r"The target dies if this effect reduces its hit point maximum to 0\.?(?:\s*"
+    r"A humanoid slain in this way.*?under the [a-z /-]+ control)?",
+    re.I,
+)
 
 
 def _match_reduction(text: str):
     return next((match for pattern in _MAX_HP_REDUCTION_PATTERNS if (match := pattern.search(text))), None)
 
 
+def _consume(attack: dict, residual: str, match: re.Match[str]) -> None:
+    remainder = (residual[:match.start()] + " " + residual[match.end():]).strip(" .,;")
+    attack["unsupported_text"] = remainder or None
+    attack["source_complete"] = not remainder
+
+
 def enrich_attack(attack: dict) -> bool:
     try:
         residual = attack.get("unsupported_text") or ""
+        direct = _DIRECT_DRAIN.search(residual)
+        if direct is not None:
+            attack["max_hp_drain"] = {
+                "damage_type": direct.group(1).lower(),
+                "heal_attacker": True,
+                "zero_max_hp_kills": True,
+            }
+            _consume(attack, residual, direct)
+            return True
         match = _match_reduction(residual)
         if match is None:
             return False
@@ -45,9 +68,7 @@ def enrich_attack(attack: dict) -> bool:
             "max_hp_reduction_equals_damage_taken": True,
             "zero_max_hp_kills": True,
         }
-        remainder = (residual[:match.start()] + " " + residual[match.end():]).strip(" .,;")
-        attack["unsupported_text"] = remainder or None
-        attack["source_complete"] = not remainder
+        _consume(attack, residual, match)
         return True
     except Exception:
         logger.exception("Failed to enrich max-HP reduction attack %s.", attack.get("id"))
