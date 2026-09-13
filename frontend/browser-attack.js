@@ -76,7 +76,7 @@
     const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
-    const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
+    const hpBefore = actualTarget.state.current_hp, maxHpBefore = S().effectiveMaxHp(actualTarget.state), temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = "", vexApplied = false, studiedApplied = false;
@@ -88,6 +88,7 @@
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))], affectedStates = states(extra.setup);
       damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes, affectedStates);
+      const drain = window.IRON_PIT_BROWSER_MAX_HP_DRAIN; if (!drain) throw new Error("Browser max-HP drain runtime is not loaded."); drain.resolve(attacker.state, actualTarget.state, attack, damageComponents);
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
@@ -138,7 +139,7 @@
       attack_roll: attackRoll, saving_throw_roll: topple.saveRoll, save_ability: topple.saveDc === null ? null : "constitution", save_dc: topple.saveDc, save_succeeded: topple.saveSucceeded,
       damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [...new Set(applied)], removed_condition_ids: invisibilityEnded ? ["invisible"] : [], hit, critical,
       turn_terminated: naturalOneEndsTurn, turn_termination_reason: naturalOneEndsTurn ? "iron-pit-natural-1-attack" : null,
-      hp_before: hpBefore, hp_after: actualTarget.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
+      hp_before: hpBefore, hp_after: actualTarget.state.current_hp, max_hp_before: maxHpBefore, max_hp_after: S().effectiveMaxHp(actualTarget.state), temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
