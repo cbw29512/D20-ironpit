@@ -3,7 +3,7 @@
 
   const AP = () => window.IRON_PIT_BROWSER_SPELL_ATTACK_POLICY;
   const AR = () => window.IRON_PIT_BROWSER_SPELL_ATTACK;
-  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS;
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS || { resolvePending: (sequence) => ({ events: [], sequence }) };
   const SP = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const SR = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
   const XP = () => window.IRON_PIT_BROWSER_AUTOMATIC_DAMAGE_SPELL_POLICY;
