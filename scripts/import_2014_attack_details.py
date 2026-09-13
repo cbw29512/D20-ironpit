@@ -6,6 +6,10 @@ DAMAGE_TYPES = {
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
 }
+CREATURE_TYPES = {
+    "aberration", "beast", "celestial", "construct", "dragon", "elemental", "fey",
+    "fiend", "giant", "humanoid", "monstrosity", "ooze", "plant", "undead",
+}
 _ROLLED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([A-Za-z]+) damage", re.I)
 _FIXED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s+([A-Za-z]+) damage", re.I)
 _PUSH_PRONE_SAVE = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be pushed up to (\d+) feet away from (?:the [A-Za-z' -]+|it) and knocked prone\.?'?", re.I)
@@ -21,6 +25,7 @@ _NO_REPEAT_TARGET = re.compile(r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t
 _OWN_ATTACK_TARGET = re.compile(r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) use its [A-Za-z' -]+ on another target", re.I)
 _PER_LIMB_GRAPPLE = re.compile(r"The [A-Za-z' -]+ has two [A-Za-z' -]+, each of which can grapple only one target", re.I)
 _ALREADY_CONTROLLING = re.compile(r"(?:if\s+)?(?:the\s+)?[A-Za-z' -]+ (?:isn't|is not) already (?:constricting|grappling) a creature,?\s*(?:and\s+)?", re.I)
+_TARGET_EXCLUSION = re.compile(r"^If the target is a creature other than (.+)$", re.I)
 _EMPTY_CREATURE_QUALIFIER = re.compile(r"^If the target is a creature$", re.I)
 _UNATTENDED_OBJECT_ONLY = re.compile(r"If the target is a flammable object that isn't being worn or carried, it also catches fire", re.I)
 _POST_KILL_ONLY = re.compile(r"If the target is killed by this damage, it is absorbed into the mouther", re.I)
@@ -42,6 +47,16 @@ def strip_noncombat_attack_residual(remainder: str) -> str:
         cleaned = pattern.sub(" ", cleaned)
     cleaned = cleaned.strip(" .,;")
     return "" if _EMPTY_CREATURE_QUALIFIER.fullmatch(cleaned) else cleaned
+
+
+def _target_exclusions(effect: dict, residual: str) -> tuple[dict, str]:
+    match = _TARGET_EXCLUSION.fullmatch(residual.strip(" .,;"))
+    if match is None: return effect, residual
+    raw = re.sub(r"\b(?:an?|the)\s+", "", match.group(1).lower())
+    names = [item.strip() for item in re.split(r"\s*(?:,|\bor\b|\band\b)\s*", raw) if item.strip()]
+    effect["excluded_creature_types"] = [item for item in names if item in CREATURE_TYPES]
+    effect["excluded_creature_subtypes"] = [item for item in names if item not in CREATURE_TYPES]
+    return effect, ""
 
 
 def _rolled(match: re.Match[str]) -> dict | None:
@@ -95,31 +110,32 @@ def parse_on_hit_save_condition(remainder: str) -> tuple[dict | None, str]:
         dc, ability, condition = timed.groups()
         effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": condition.lower(), "duration_rounds": 10, "repeat_save_timing": "target_turn_end"}
         residual = (remainder[:timed.start()] + " " + remainder[timed.end():]).strip(" .,;")
-        return effect, residual
+        return _target_exclusions(effect, residual)
     disease = _DISEASE_POISON.search(remainder)
     if disease:
         effect = {"save_ability": "constitution", "dc": int(disease.group(1)), "condition_id": "poisoned"}
         residual = (remainder[:disease.start()] + " " + remainder[disease.end():]).strip(" .,;")
-        return effect, residual
+        return _target_exclusions(effect, residual)
     for pattern, success in ((_SAVE_DAMAGE_HALF, "half"), (_SAVE_DAMAGE_NONE, "none")):
         match = pattern.search(remainder)
         if match:
             effect = _save_damage_effect(match, success)
             if effect is not None:
                 residual = (remainder[:match.start()] + " " + remainder[match.end():]).strip(" .,;")
-                return _zero_hp_rider(effect, residual)
+                effect, residual = _zero_hp_rider(effect, residual)
+                return _target_exclusions(effect, residual)
     pushed = _PUSH_PRONE_SAVE.search(remainder)
     if pushed:
         dc, ability, distance = pushed.groups()
         effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": "prone", "failure_push_ft": int(distance)}
         residual = (remainder[:pushed.start()] + " " + remainder[pushed.end():]).strip(" .,;")
-        return effect, residual
+        return _target_exclusions(effect, residual)
     match = _PRONE_SAVE.search(remainder)
     if not match: return None, remainder
     max_size, dc, ability = match.groups()
     effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": "prone", "max_target_size": max_size.lower() if max_size else None}
     residual = (remainder[:match.start()] + " " + remainder[match.end():]).strip(" .,;")
-    return effect, residual
+    return _target_exclusions(effect, residual)
 
 
 def parse_on_hit_control(remainder: str) -> tuple[dict | None, bool, str]:
