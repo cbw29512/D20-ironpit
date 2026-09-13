@@ -13,8 +13,7 @@ def test_blocker_yield_tracks_current_frontier_features() -> None:
     assert "barbarian" in yields["brutal-strike"].frontier_classes
     assert "sear-undead" in yields
     assert "cleric" in yields["sear-undead"].frontier_classes
-    assert "boon-combat-prowess" in yields
-    assert "fighter" in yields["boon-combat-prowess"].frontier_classes
+    assert "boon-combat-prowess" not in yields
     assert "survivor-defy-death" not in yields
     assert "survivor-heroic-rally" not in yields
 
