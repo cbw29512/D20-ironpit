@@ -6,11 +6,11 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const GEOM = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
-  const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
+  const effectiveMaxHp = (state) => Math.max(0, state.template.max_hp + (state.max_hp_bonus || 0) - (state.max_hp_reduction || 0));
 
   function buildState(template) {
     return {
-      template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, position: null,
+      template, current_hp: template.max_hp, max_hp_bonus: 0, max_hp_reduction: 0, temporary_hp: 0, position: null,
       initiative_roll: null, initiative_total: null, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false,
       death_save_successes: 0, death_save_failures: 0,
