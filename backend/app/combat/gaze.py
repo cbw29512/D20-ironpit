@@ -4,6 +4,7 @@ from app.combat.auras import resolve_start_turn_auras
 from app.combat.condition_rules import BLINDED, is_incapacitated, has_condition
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.start_turn_damage import resolve_start_turn_relationship_damage
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -44,7 +45,9 @@ def _apply_failure(actor, source, gaze, round_number: int, roll, affected_states
 def resolve_start_turn_gazes(
     sequence: int, round_number: int, actor: EncounterCombatant, setup: EncounterSetup, dice,
 ) -> tuple[list[BattleEvent], int]:
-    events, sequence = resolve_start_turn_auras(sequence, round_number, actor, setup, dice)
+    events, sequence = resolve_start_turn_relationship_damage(sequence, round_number, actor, setup, dice)
+    aura_events, sequence = resolve_start_turn_auras(sequence, round_number, actor, setup, dice)
+    events.extend(aura_events)
     affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
     for source in _opponents(actor, setup):
         gaze = source.state.template.start_turn_gaze
