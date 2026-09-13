@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import re
 
-from app.content.monster_catalog_2014_arena_policy import ARENA_OUT_OF_SCOPE_TRAITS_2014
+from app.content.monster_catalog_2014_arena_policy import (
+    ARENA_OUT_OF_SCOPE_TRAITS_2014,
+    ARENA_USABLE_MOVEMENT_TRAITS_2014,
+)
 from app.domain.traits import CombatTrait
 
 MODELED_TRAITS = {
@@ -37,7 +40,7 @@ ARENA_NEUTRAL_TRAITS = frozenset({
     "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
     "Nimble Escape", "Running Leap", "Shark Telepathy", "Shapechanger", "Snow Camouflage", "Standing Leap",
     "Stone Camouflage", "Sunlight Sensitivity", "Training", "Water Breathing",
-}) | ARENA_OUT_OF_SCOPE_TRAITS_2014
+}) | ARENA_OUT_OF_SCOPE_TRAITS_2014 | ARENA_USABLE_MOVEMENT_TRAITS_2014
 
 SUPPORTED_TRAITS = frozenset(MODELED_TRAITS) | DATA_BOUND_TRAITS | ARENA_NEUTRAL_TRAITS
 _LEGENDARY_RESISTANCE = re.compile(r"^Legendary Resistance \((\d+)/Day\)$", re.I)
