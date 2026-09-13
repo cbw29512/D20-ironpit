@@ -9,7 +9,7 @@
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, R = () => window.IRON_PIT_BROWSER_REGENERATION;
   const RP = () => window.IRON_PIT_BROWSER_RAMPAGE, W = () => window.IRON_PIT_BROWSER_SWALLOW;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
-  const D = () => window.IRON_PIT_DICE;
+  const GZ = () => window.IRON_PIT_BROWSER_GAZE, D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
@@ -68,9 +68,11 @@
     if (regen?.event) { events.push(regen.event); sequence += 1; }
     if (regen?.died) return { events, sequence };
     S().beginTurn(member.state);
+    const turnKey = `${round}:${member.combatant_id}`, gaze = GZ()?.startTurn(sequence, round, member, setup);
+    if (gaze) { events.push(...gaze.events); sequence = gaze.sequence; }
+    if (window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated(member.state)) return finalize(events, sequence, round, member, setup, turnKey);
     const recharge = E().startTurnRecharges?.(sequence, round, member);
     if (recharge) { events.push(...recharge.events); sequence = recharge.sequence; }
-    const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member));
       return finalize(events, sequence, round, member, setup, turnKey, false);
