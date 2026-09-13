@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, HitControlEffect
 from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.hit_modifiers import HitModifierEffect
+from app.domain.max_hp_drain import MaxHpDrainEffect
 from app.domain.on_hit_saves import OnHitSaveEffect
 from app.domain.restraints import BreakableRestraint
 from app.domain.size import CreatureSize
@@ -104,6 +105,7 @@ class WeaponAttack(BaseModel):
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     on_hit_save_effect: OnHitSaveEffect | None = None
+    max_hp_drain: MaxHpDrainEffect | None = None
     charge_profile: ChargeProfileDefinition | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
