@@ -39,6 +39,18 @@ def test_shared_feature_registry_fails_closed_for_unimplemented_combat_mechanics
         "brutal-strike",
     )
     assert unsupported_hero_engine_features(("studied-attacks", "superior-critical")) == ()
-    assert unsupported_hero_engine_features(("superior-critical", "survivor-defy-death", "survivor-heroic-rally")) == (
-        "survivor-defy-death", "survivor-heroic-rally",
+    assert unsupported_hero_engine_features(("superior-critical", "survivor-defy-death", "survivor-heroic-rally")) == ()
+
+
+def test_shared_feature_registry_compiles_peerless_aim_and_survivor_fields() -> None:
+    fighter = compile_progression_feature_fields(
+        ("boon-combat-prowess", "survivor-defy-death", "survivor-heroic-rally"), 19,
     )
+
+    assert fighter == {
+        "peerless_aim": True,
+        "death_save_advantage": True,
+        "death_save_recovery_minimum": 18,
+        "bloodied_start_turn_healing_base": 5,
+        "bloodied_start_turn_healing_add_constitution": True,
+    }
