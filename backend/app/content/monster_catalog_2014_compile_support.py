@@ -76,11 +76,15 @@ def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
 
 def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> list[WeaponAttack]:
     advantage = ConditionalAttackAdvantage(trigger="target_not_full_hp")
+    source_attacks = {attack.id: attack for attack in source.attacks}
     bound: list[WeaponAttack] = []
     for attack in attacks:
         update: dict[str, object] = {}
+        source_attack = source_attacks.get(attack.id)
         if "Blood Frenzy" in source.trait_names:
             update["conditional_attack_advantage"] = [*attack.conditional_attack_advantage, advantage]
+        if source_attack is not None and source_attack.max_hp_drain is not None:
+            update["max_hp_drain"] = source_attack.max_hp_drain
         if attack.id in source.limited_action_uses and attack.resource_id is None:
             update["resource_id"] = attack.id
             update["resource_cost"] = 1
