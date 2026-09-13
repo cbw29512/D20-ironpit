@@ -20,7 +20,7 @@ _MAX_HP_REDUCTION_PATTERNS = (
         rf"If the target is a creature, it must succeed on a DC (\d+) {_ABILITY} saving throw or "
         r"have its hit point maximum reduced by an amount equal to the damage taken\.\s*"
         r"The target dies if this attack reduces its hit point maximum to 0\.\s*"
-        r"The reduction lasts until removed by the greater restoration spell or other magic\. ?",
+        r"The reduction lasts until removed by the greater restoration spell or other magic\.?",
         re.I,
     ),
 )
