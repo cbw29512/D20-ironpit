@@ -18,6 +18,7 @@ from app.domain.regeneration import RegenerationProfile
 from app.domain.save_auras import SaveAdvantageAura
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.start_turn_damage import StartTurnRelationshipDamage
 from app.domain.swallow import SwallowAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
@@ -83,6 +84,7 @@ class CombatantTemplate(BaseModel):
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     start_turn_gaze: StartTurnGaze | None = None
     start_turn_auras: list[StartTurnAura] = Field(default_factory=list)
+    start_turn_relationship_damage: list[StartTurnRelationshipDamage] = Field(default_factory=list)
     save_advantage_auras: list[SaveAdvantageAura] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
