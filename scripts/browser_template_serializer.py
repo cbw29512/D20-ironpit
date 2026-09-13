@@ -81,6 +81,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if attack.on_hit_damage:
             row["onHitDamage"] = [{"source": part.source, "diceCount": part.dice_count, "diceSize": part.dice_size, "damageBonus": part.damage_bonus, "damageType": part.damage_type.value} for part in attack.on_hit_damage]
         if attack.on_hit_modifier_effects: row["onHitModifiers"] = [_hit_modifier(effect) for effect in attack.on_hit_modifier_effects]
+        if attack.max_hp_drain:
+            row["maxHpDrain"] = {"damageType": attack.max_hp_drain.damage_type, "healAttacker": attack.max_hp_drain.heal_attacker,
+                                 "zeroMaxHpKills": attack.max_hp_drain.zero_max_hp_kills}
         if attack.on_hit_save_effect:
             effect = attack.on_hit_save_effect
             row["onHitSaveEffect"] = {"saveAbility": effect.save_ability, "dc": effect.dc, "conditionId": effect.condition_id}
