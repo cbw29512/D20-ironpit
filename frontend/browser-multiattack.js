@@ -5,6 +5,7 @@
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -16,6 +17,9 @@
     const limits = (state.timed_effects || []).map((effect) => effect.max_attacks_per_turn).filter((value) => value != null);
     return limits.length ? Math.min(...limits) : null;
   };
+  function flush(events, sequence, round, setup) {
+    const result = DT().resolvePending(sequence, round, setup); events.push(...result.events); return result.sequence;
+  }
 
   function policySlots(definition) {
     const policy = definition.policy, slots = definition.slots || [];
@@ -37,9 +41,7 @@
     return blocked.size ? { ...data, attackIds: data.attackIds.filter((id) => !blocked.has(id)) } : data;
   }
 
-  function areaChoice(member, setup, data) {
-    return AS()?.choice(member, setup, false, data.saveActionIds) || null;
-  }
+  function areaChoice(member, setup, data) { return AS()?.choice(member, setup, false, data.saveActionIds) || null; }
   function saveChoice(member, setup, data) {
     const allowed = new Set(data.saveActionIds);
     for (const target of F().targetOrder(member, setup)) {
@@ -67,10 +69,7 @@
     try {
       const data = slotData(slot);
       return Boolean(attackChoice(member, setup, data) || areaChoice(member, setup, data) || saveChoice(member, setup, data));
-    } catch (error) {
-      console.error("Failed to prove browser Attack/Multiattack slot legality", { member: member.combatant_id, error });
-      throw error;
-    }
+    } catch (error) { console.error("Failed to prove browser Attack/Multiattack slot legality", { member: member.combatant_id, error }); throw error; }
   }
   function useRangedSplit(member, setup, slots) {
     if (F().isBackline(member)) return false;
@@ -107,10 +106,11 @@
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true,
         });
         events.push(event); previousEvent = event; previousAttackId = choice.attack.id; usedAttackIds.add(choice.attack.id); attacksMade += 1;
-        if (member.state.turn_terminated) break;
+        sequence = flush(events, sequence, round, setup);
+        if (member.state.is_dead || member.state.turn_terminated) break;
         if (maxAttacks == null || attacksMade < maxAttacks) {
           const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
-          events.push(...cleave.events); sequence = cleave.sequence;
+          events.push(...cleave.events); sequence = flush(events, cleave.sequence, round, setup);
         }
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
@@ -119,18 +119,18 @@
       const area = areaChoice(member, setup, data);
       if (area) {
         const resolved = AS().resolve(sequence, round, member, setup, false, { allowedIds: data.saveActionIds, spendAction: false });
-        if (resolved) { events.push(...resolved.events); sequence = resolved.sequence; previousEvent = resolved.events.at(-1) || previousEvent; continue; }
+        if (resolved) { events.push(...resolved.events); sequence = flush(events, resolved.sequence, round, setup); previousEvent = resolved.events.at(-1) || previousEvent; continue; }
       }
       const saved = saveChoice(member, setup, data);
       if (saved) {
-        const event = V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false });
-        events.push(event); previousEvent = event;
+        const event = V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false, setup });
+        events.push(event); previousEvent = event; sequence = flush(events, sequence, round, setup);
       }
     }
 
-    if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated && (maxAttacks == null || attacksMade < maxAttacks)) {
+    if (definition.isAttackAction && lightTrigger && !member.state.is_dead && !member.state.turn_terminated && (maxAttacks == null || attacksMade < maxAttacks)) {
       const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
-      events.push(...extra.events); sequence = extra.sequence;
+      events.push(...extra.events); sequence = flush(events, extra.sequence, round, setup);
     }
     return { events, sequence };
   }
