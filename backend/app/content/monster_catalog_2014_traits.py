@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_catalog_2014_arena_policy import ARENA_OUT_OF_SCOPE_TRAITS_2014
 from app.domain.traits import CombatTrait
 
 MODELED_TRAITS = {
@@ -31,14 +32,12 @@ DATA_BOUND_TRAITS = frozenset({
 # supplies no combat circumstance in which the trait can change the arena outcome.
 ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amorphous", "Amphibious", "Antimagic Susceptibility", "Beast of Burden", "Blind Senses",
-    "Devil's Sight", "Earth Glide", "False Appearance", "Flyby", "Hellish Rejuvenation",
-    "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Immutable Form", "Jumper",
+    "Devil's Sight", "Flyby", "Hold Breath", "Ice Walk", "Illumination", "Immutable Form", "Jumper",
     "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
-    "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness", "Mimicry",
-    "Nimble Escape", "Rejuvenation", "Running Leap", "Shark Telepathy", "Shapechanger", "Siege Monster",
-    "Snow Camouflage", "Spider Climb", "Standing Leap", "Stone Camouflage", "Sunlight Sensitivity", "Training",
-    "Water Breathing", "Web Sense", "Web Walker",
-})
+    "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
+    "Nimble Escape", "Running Leap", "Shark Telepathy", "Shapechanger", "Snow Camouflage", "Standing Leap",
+    "Stone Camouflage", "Sunlight Sensitivity", "Training", "Water Breathing",
+}) | ARENA_OUT_OF_SCOPE_TRAITS_2014
 
 SUPPORTED_TRAITS = frozenset(MODELED_TRAITS) | DATA_BOUND_TRAITS | ARENA_NEUTRAL_TRAITS
 _LEGENDARY_RESISTANCE = re.compile(r"^Legendary Resistance \((\d+)/Day\)$", re.I)

@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import unicodedata
 
+from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 
 NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape", "weird-insight"})
@@ -40,8 +41,14 @@ def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
 
 
 def unresolved_actions_2014(source: CatalogMonster2014) -> list[str]:
-    supported = supported_action_ids_2014(source)
-    return [name for name in source.action_names if action_key_2014(name) not in supported]
+    try:
+        supported = supported_action_ids_2014(source)
+        return [
+            name for name in source.action_names
+            if action_key_2014(name) not in supported and not is_arena_disabled_action_2014(name)
+        ]
+    except Exception as exc:
+        raise ValueError(f"Could not inventory arena-relevant actions for {source.id}.") from exc
 
 
 def unresolved_reactions_2014(source: CatalogMonster2014, supported: set[str]) -> list[str]:

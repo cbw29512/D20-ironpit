@@ -7,6 +7,7 @@ from pathlib import Path
 from pydantic import TypeAdapter
 
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
+from app.content.monster_catalog_2014_arena_policy import usable_movement_speed_2014
 from app.content.monster_catalog_2014_auras import start_turn_auras_2014
 from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
@@ -87,7 +88,11 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         traits = combat_traits_2014(source.trait_names); magical = CombatTrait.MAGIC_WEAPONS in traits
         attacks = attacks_with_unarmed_fallback_2014(source, bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks]))
         spell_attacks, spell_saves, automatic_spells = damage_spell_actions_2014(source)
-        movement = MovementModes(walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0), climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0))
+        movement = MovementModes(
+            walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
+            climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0),
+            burrow_ft=usable_movement_speed_2014("burrow", source.speed.get("burrow", 0)),
+        )
         dex = source.abilities["dex"]
         return CombatantTemplate(
             id=f"2014-{source.id}", name=source.name, archetype=source.name, challenge_rating=source.challenge_rating,
