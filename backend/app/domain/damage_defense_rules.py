@@ -12,3 +12,10 @@ class ConditionalDamageResistance(BaseModel):
     nonmagical_attack_only: bool = False
     bypass_if_silvered: bool = False
     bypass_if_adamantine: bool = False
+
+
+class DamageAbsorption(BaseModel):
+    """Replace incoming typed damage with healing from the raw damage amount."""
+
+    damage_type: DamageType
+    healing_multiplier: int = Field(default=1, ge=1, le=10)

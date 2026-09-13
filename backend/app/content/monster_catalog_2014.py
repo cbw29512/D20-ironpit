@@ -6,6 +6,7 @@ from pathlib import Path
 
 from pydantic import TypeAdapter
 
+from app.content.monster_catalog_2014_absorption import damage_absorptions_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
 from app.content.monster_catalog_2014_arena_policy import usable_movement_speed_2014
 from app.content.monster_catalog_2014_auras import start_turn_auras_2014
@@ -69,6 +70,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         relentless = [name for name in source.trait_names if name.startswith("Relentless (Recharges after")]
         if relentless and source.zero_hp_prevention is None: blockers.extend(f"trait:{name}" for name in relentless)
         if "Regeneration" in source.trait_names and source.regeneration is None: blockers.append("trait:Regeneration")
+        if "Fire Absorption" in source.trait_names and not damage_absorptions_2014(source.source_traits): blockers.append("trait:Fire Absorption")
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in unresolved_reactions_2014(source, supported_reactions))
@@ -113,6 +115,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             source_trait_names=list(source.trait_names), source_legendary_action_names=list(source.legendary_action_names),
             damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
+            damage_absorptions=damage_absorptions_2014(source.source_traits),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,

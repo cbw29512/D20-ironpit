@@ -46,7 +46,7 @@
     if (hit) {
       const count = spell.damageDiceCount * (critical ? 2 : 1), rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
-      const applied = spell.damageType ? A().adjustedDamage(target.state, raw, spell.damageType) : 0;
+      const applied = spell.damageType ? A().adjustedDamage(target.state, raw, spell.damageType, true, true) : 0;
       damageRoll = { notation: `${count}d${spell.damageDiceSize}+${spell.damageBonus || 0}`, rolls, modifier: spell.damageBonus || 0, total: applied };
       if (spell.damageType) damageComponents = [{ source: spell.name, notation: damageRoll.notation, rolls: [...rolls], modifier: spell.damageBonus || 0,
         damage_type: spell.damageType, total: raw, applied_total: applied }];

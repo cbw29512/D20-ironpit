@@ -110,7 +110,7 @@
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
       if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
-      const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
+      const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType, true, true);
       damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
         rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
