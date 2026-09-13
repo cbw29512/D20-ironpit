@@ -9,11 +9,16 @@ from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DiceRoll, WeaponAttack
 from app.domain.size import size_at_most
-from app.domain.swallow import SwallowedState
+from app.domain.swallow import SwallowAction, SwallowedState
 
 
 def _members(setup: EncounterSetup) -> list[EncounterCombatant]:
     return [*setup.heroes, *setup.monsters]
+
+
+def _swallow_action(actor: EncounterCombatant) -> SwallowAction | None:
+    actions = actor.state.template.swallow_actions
+    return actions[0] if actions else None
 
 
 def _attack(actor: EncounterCombatant, attack_id: str) -> WeaponAttack:
@@ -29,7 +34,7 @@ def swallowed_targets(actor: EncounterCombatant, setup: EncounterSetup) -> list[
 
 
 def swallow_target(actor: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
-    action = actor.state.template.swallow_action
+    action = _swallow_action(actor)
     if action is None or len(swallowed_targets(actor, setup)) >= action.max_swallowed:
         return None
     opponents = setup.monsters if actor.side == "heroes" else setup.heroes
@@ -43,7 +48,7 @@ def swallow_target(actor: EncounterCombatant, setup: EncounterSetup) -> Encounte
 def resolve_swallow_action(
     sequence: int, round_number: int, actor: EncounterCombatant, setup: EncounterSetup, dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int, bool]:
-    action = actor.state.template.swallow_action
+    action = _swallow_action(actor)
     target = swallow_target(actor, setup)
     if action is None or target is None:
         return [], sequence, False
