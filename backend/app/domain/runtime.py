@@ -73,6 +73,7 @@ class CombatantState(BaseModel):
     template: CombatantTemplate
     current_hp: int
     max_hp_bonus: int = Field(default=0, ge=0)
+    max_hp_reduction: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     position: GridPosition | None = None
     initiative_roll: int | None = None
@@ -108,9 +109,3 @@ class CombatantState(BaseModel):
     wielded_attack_id: str | None = None
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
-
-
-class BattlefieldState(BaseModel):
-    map_definition: BattleMapDefinition | None = None
-    starting_distance_ft: int = Field(default=5, ge=0)
-    distance_ft: int = Field(default=5, ge=0)
