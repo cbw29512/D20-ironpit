@@ -99,6 +99,33 @@ setup.monsters = [actor];
 result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
 assert.deepEqual(result.events.map((event) => event.attack_name), ["Bite", "Claws"]);
 
+const longsword = { id: "longsword", name: "Longsword", kind: "melee" };
+const longbow = { id: "longbow", name: "Longbow", kind: "ranged" };
+const lifeDrain = { id: "life-drain", name: "Life Drain", kind: "melee" };
+const wightDefinition = {
+  id: "wight", slots: [
+    { attackIds: ["longsword", "longbow", "life-drain"] },
+    { attackIds: ["longsword", "longbow", "life-drain"] },
+  ],
+  policy: {
+    atMostOnceAttackIds: ["life-drain"],
+    exclusiveAttackGroups: [["longsword", "life-drain"], ["longbow"]],
+  },
+};
+setupRuntime([], [true, true]);
+actor = member(wightDefinition, [lifeDrain, longsword, longbow]); setup.monsters = [actor];
+result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
+assert.deepEqual(result.events.map((event) => event.attack_name), ["Life Drain", "Longsword"]);
+
+window.IRON_PIT_BROWSER_FORMATION.isBackline = () => true;
+window.IRON_PIT_BROWSER_FORMATION.alliedFrontlineActive = () => true;
+setupRuntime([], [true, true]);
+actor = member(wightDefinition, [longsword, longbow, lifeDrain]); setup.monsters = [actor];
+result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
+assert.deepEqual(result.events.map((event) => event.attack_name), ["Longbow", "Longbow"]);
+window.IRON_PIT_BROWSER_FORMATION.isBackline = () => false;
+window.IRON_PIT_BROWSER_FORMATION.alliedFrontlineActive = () => false;
+
 const claw = { id: "claw", name: "Claw", kind: "melee" };
 const greataxe = { id: "greataxe", name: "Greataxe", kind: "melee" };
 setupRuntime([], [true, true]);
