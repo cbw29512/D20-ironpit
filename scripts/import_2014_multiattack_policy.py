@@ -9,6 +9,27 @@ _COUNTS = {"two": 2, "three": 3, "four": 4}
 
 
 def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: AttackIds) -> dict | None:
+    exclusive_substitution = re.fullmatch(
+        _SUBJECT + r"makes (two|three|four) ([a-z][a-z -]*?) attacks? or \1 ([a-z][a-z -]*?) attacks?\. "
+        r"(?:it|he|she) can use (?:its|his|her) ([a-z][a-z -]*?) in place of one ([a-z][a-z -]*?) attack\. ?",
+        text, re.I,
+    )
+    if exclusive_substitution:
+        count_word, first_label, second_label, substitute_label, replaced_label = exclusive_substitution.groups()
+        first = ids_for_label(first_label, attacks); second = ids_for_label(second_label, attacks)
+        substitute = ids_for_label(substitute_label, attacks); replaced = ids_for_label(replaced_label, attacks)
+        if first and second and len(substitute) == 1 and set(replaced) in {frozenset(first), frozenset(second)}:
+            replaced_group, other_group = (first, second) if set(replaced) == set(first) else (second, first)
+            choices = list(dict.fromkeys([*first, *second, *substitute]))
+            return {
+                "id": "multiattack", "name": "Multiattack",
+                "slots": [choices[:] for _ in range(_COUNTS[count_word.lower()])],
+                "policy": {
+                    "at_most_once_attack_ids": substitute,
+                    "exclusive_attack_groups": [[*replaced_group, *substitute], other_group],
+                },
+            }
+
     capped = re.fullmatch(
         _SUBJECT + r"makes (two|three|four) attacks, only one of which can be (?:a|an|its|his|her) ([a-z][a-z -]*?)(?: attack)?\. ?",
         text,
