@@ -45,7 +45,10 @@ def resolve_target_condition_timing(
             if effect not in target.state.timed_effects:
                 continue
             if repeat_save_due(effect, round_number, timing):
-                roll, succeeded = resolve_saving_throw(target.state, effect.repeat_save_ability, effect.repeat_save_dc, dice)
+                roll, succeeded = resolve_saving_throw(
+                    target.state, effect.repeat_save_ability, effect.repeat_save_dc, dice,
+                    against_condition=effect.effect_id,
+                )
                 removed = remove_effect_group(target.state, effect) if succeeded else []
                 escalated_removed, escalated_applied = ([], []) if succeeded else _escalate_repeat_failure(target, effect, round_number)
                 if succeeded:
