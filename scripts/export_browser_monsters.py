@@ -69,6 +69,7 @@ def _timed_control_row(effect):
     if effect.duration_rounds is not None: row["durationRounds"] = effect.duration_rounds
     if effect.repeat_save_ability:
         row["repeatSaveAbility"] = effect.repeat_save_ability; row["repeatSaveDc"] = effect.repeat_save_dc; row["repeatSaveTiming"] = effect.repeat_save_timing
+    if effect.repeat_save_failure_condition_id: row["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
     if effect.allowed_removal_action_ids: row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
     if effect.ends_on_damage: row["endsOnDamage"] = True
     if effect.source_effect_immunity_on_end: row["sourceEffectImmunityOnEnd"] = True
@@ -81,13 +82,9 @@ def _timed_control_row(effect):
 
 
 def _death_trigger_row(action):
-    row = {
-        "id": action.id, "name": action.name, "saveAbility": action.save_ability,
-        "dc": action.dc, "range": action.range_ft,
-        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
-        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
-        "successDamage": action.success_damage, "animation": action.animation,
-    }
+    row = {"id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc, "range": action.range_ft,
+        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
+        "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation}
     control = _timed_control_row(action.failure_control_effect)
     if control: row["failureControlEffect"] = control
     return row
@@ -103,11 +100,9 @@ def _serializable_template(template):
 
 def _restraint_row(profile):
     if profile is None: return None
-    row = {
-        "conditionId": profile.condition_id, "escapeAbility": profile.escape_ability,
-        "escapeDc": profile.escape_dc, "objectAc": profile.object_ac, "objectHp": profile.object_hp,
-        "damageVulnerabilities": list(profile.damage_vulnerabilities), "damageImmunities": list(profile.damage_immunities),
-    }
+    row = {"conditionId": profile.condition_id, "escapeAbility": profile.escape_ability, "escapeDc": profile.escape_dc,
+        "objectAc": profile.object_ac, "objectHp": profile.object_hp, "damageVulnerabilities": list(profile.damage_vulnerabilities),
+        "damageImmunities": list(profile.damage_immunities)}
     if profile.max_target_size is not None: row["maxTargetSize"] = profile.max_target_size.value
     return row
 
@@ -150,8 +145,7 @@ def _attach_monster_actions(row, template) -> None:
             if effect.excluded_creature_types: rider["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes: rider["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
             if effect.zero_hp_stable:
-                rider["zeroHpStable"] = True; rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids)
-                rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
+                rider["zeroHpStable"] = True; rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
     healing_rows = row.pop("healing_actions", [])
     if healing_rows:
         healing_by_id = {action.id: action for action in template.healing_actions}
@@ -168,13 +162,9 @@ def _attach_monster_actions(row, template) -> None:
     if template.regeneration: row["regeneration"] = {"amount": template.regeneration.amount, "requiresPositiveHp": template.regeneration.requires_positive_hp, "suppressedByDamageTypes": [item.value for item in template.regeneration.suppressed_by_damage_types], "survivesZeroUntilTurn": template.regeneration.survives_zero_until_turn}
     if template.swallow_actions:
         action = template.swallow_actions[0]
-        row["swallowAction"] = {
-            "id": action.id, "name": action.name, "attackId": action.attack_id,
-            "maxTargetSize": action.max_target_size.value, "damageDiceCount": action.damage_dice_count,
-            "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
-            "damageType": action.damage_type.value, "maxSwallowed": action.max_swallowed,
-            "exitMovementFt": action.exit_movement_ft, "exitProne": action.exit_prone,
-        }
+        row["swallowAction"] = {"id": action.id, "name": action.name, "attackId": action.attack_id, "maxTargetSize": action.max_target_size.value,
+            "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
+            "damageType": action.damage_type.value, "maxSwallowed": action.max_swallowed, "exitMovementFt": action.exit_movement_ft, "exitProne": action.exit_prone}
 
 
 def render() -> str:
