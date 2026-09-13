@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import logging
 import re
 import unicodedata
 
 from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 
+logger = logging.getLogger(__name__)
 NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape", "weird-insight"})
 ARENA_NEUTRAL_REACTIONS_2014 = frozenset({"Shriek"})
 
@@ -48,9 +50,17 @@ def unresolved_actions_2014(source: CatalogMonster2014) -> list[str]:
             if action_key_2014(name) not in supported and not is_arena_disabled_action_2014(name)
         ]
     except Exception as exc:
+        logger.exception("Failed to inventory arena-relevant actions for %s.", source.id)
         raise ValueError(f"Could not inventory arena-relevant actions for {source.id}.") from exc
 
 
-def unresolved_reactions_2014(source: CatalogMonster2014, supported: set[str]) -> list[str]:
-    supported_names = supported | ARENA_NEUTRAL_REACTIONS_2014
-    return [name for name in source.reaction_names if name not in supported_names]
+def unresolved_reactions_2014(source: CatalogMonster2012014, supported: set[str]) -> list[str]:
+    try:
+        supported_names = supported | ARENA_NEUTRAL_REACTIONS_2014
+        return [
+            name for name in source.reaction_names
+            if name not in supported_names and not is_arena_disabled_action_2014(name)
+        ]
+    except Exception as exc:
+        logger.exception("Failed to inventory arena-relevant reactions for %s.", source.id)
+        raise ValueError(f"Could not inventory arena-relevant reactions for {source.id}.") from exc
