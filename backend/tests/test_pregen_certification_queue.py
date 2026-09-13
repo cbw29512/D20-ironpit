@@ -8,7 +8,7 @@ def test_certified_level_by_class_includes_all_canonical_classes() -> None:
     levels = certified_level_by_class()
 
     assert len(levels) == 12
-    assert levels["fighter"] == 19
+    assert levels["fighter"] == 20
     assert levels["barbarian"] == 8
     assert levels["cleric"] == 4
     assert levels["rogue"] == 2
@@ -21,7 +21,9 @@ def test_frontier_is_sequential_and_sorted_by_blocker_count() -> None:
     frontier = build_pregen_certification_frontier()
     levels = certified_level_by_class()
 
-    assert len(frontier) == 12
+    # Fighter is complete through level 20, so only the 11 incomplete classes remain.
+    assert len(frontier) == 11
+    assert "fighter" not in {item.class_id for item in frontier}
     assert all(item.next_level == levels[item.class_id] + 1 for item in frontier)
     assert [item.blocker_count for item in frontier] == sorted(
         item.blocker_count for item in frontier
@@ -41,10 +43,7 @@ def test_known_certified_frontiers_fail_closed_on_real_features() -> None:
     assert "sear-undead" in frontier["cleric"].unsupported_features
     assert "canonical-spell-package-incomplete" in frontier["cleric"].content_blockers
 
-    assert frontier["fighter"].next_level == 20
-    assert frontier["fighter"].unsupported_features == ()
-    assert frontier["fighter"].content_blockers == ()
-    assert frontier["fighter"].ready
+    assert "fighter" not in frontier
 
 
 def test_combined_blockers_include_content_and_engine_work() -> None:
