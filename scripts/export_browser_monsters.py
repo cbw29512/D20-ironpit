@@ -120,6 +120,18 @@ def _gaze_row(gaze):
     }
 
 
+def _aura_row(aura):
+    return {
+        "id": aura.id, "name": aura.name, "rangeFt": aura.range_ft,
+        "saveAbility": aura.save_ability, "saveDc": aura.save_dc,
+        "failureConditionId": aura.failure_condition_id,
+        "failureExpiryTiming": aura.failure_expiry_timing,
+        "failureDurationRounds": aura.failure_duration_rounds,
+        "magicalEffect": aura.magical_effect,
+        "successGrantsSourceImmunity": aura.success_grants_source_immunity,
+    }
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -132,6 +144,7 @@ def _attach_monster_actions(row, template) -> None:
     row["creature_subtypes"] = list(template.creature_subtypes)
     gaze = _gaze_row(template.start_turn_gaze)
     if gaze: row["startTurnGaze"] = gaze
+    if template.start_turn_auras: row["startTurnAuras"] = [_aura_row(aura) for aura in template.start_turn_auras]
     if template.ability_scores is not None:
         row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
     for definition in row.get("resource_definitions", []):
