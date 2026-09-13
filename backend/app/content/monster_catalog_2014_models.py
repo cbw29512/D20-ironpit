@@ -24,7 +24,6 @@ class CatalogDamage2014(BaseModel):
     bonus: int = 0
     type: DamageType | None
 
-
 class CatalogAttack2014(BaseModel):
     id: str
     name: str
@@ -46,7 +45,6 @@ class CatalogAttack2014(BaseModel):
     long_range_ft: int | None = Field(default=None, ge=1)
     source_complete: bool = True
     unsupported_text: str | None = None
-
 
 class CatalogInnateSpell2014(BaseModel):
     id: str
