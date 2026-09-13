@@ -8,6 +8,7 @@ from app.domain.actions import AttackActionDefinition, ConditionName, ConditionR
 from app.domain.auras import EndTurnDamageAura, RollAdvantageAura, StartTurnSaveConditionAura
 from app.domain.character_builds import AbilityScores
 from app.domain.forced_movement_actions import ForcedMovementAction
+from app.domain.legendary_actions import LegendaryActionPool
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
@@ -76,6 +77,7 @@ class CombatantTemplate(BaseModel):
     start_turn_save_condition_auras: list[StartTurnSaveConditionAura] = Field(default_factory=list)
     roll_advantage_auras: list[RollAdvantageAura] = Field(default_factory=list)
     regeneration: RegenerationRule | None = None
+    legendary_actions: LegendaryActionPool | None = None
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
     automatic_spell_actions: list[AutomaticSpellAction] = Field(default_factory=list)
