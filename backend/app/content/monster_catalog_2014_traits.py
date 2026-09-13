@@ -25,7 +25,7 @@ DATA_BOUND_TRAITS = frozenset({
 # Preserved in source provenance, but nonblocking when the current Iron Pit ruleset
 # supplies no combat circumstance in which the trait can change the arena outcome.
 ARENA_NEUTRAL_TRAITS = frozenset({
-    "Agile", "Amorphous", "Amphibious", "Antimagic Susceptibility", "Beast of Burden",
+    "Agile", "Amorphous", "Amphibious", "Antimagic Susceptibility", "Beast of Burden", "Blind Senses",
     "Devil's Sight", "Earth Glide", "False Appearance", "Flyby", "Hellish Rejuvenation",
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Immutable Form", "Jumper",
     "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
