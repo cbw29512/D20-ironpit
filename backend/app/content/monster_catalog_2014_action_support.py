@@ -12,7 +12,7 @@ NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape"})
 
 def action_key_2014(value: str) -> str:
     clean = re.sub(r"\s*\(Recharge\s+[^)]+\)", "", value, flags=re.I).rstrip(".")
-    if re.fullmatch(r"Multiattack\.?\s*\([^)]*form only\)\. ?", clean, re.I):
+    if re.fullmatch(r"Multiattack\.?\s*\([^)]*form only\)\.?", clean, re.I):
         clean = "Multiattack"
     text = unicodedata.normalize("NFKD", clean).encode("ascii", "ignore").decode().lower()
     return re.sub(r"[^a-z0-9]+", "-", text).strip("-")
