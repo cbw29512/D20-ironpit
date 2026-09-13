@@ -38,6 +38,8 @@ def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
     supported.update(action.resource_id for action in source.saving_throw_actions if action.resource_id)
     supported.update(action.resource_id for action in source.healing_actions if action.resource_id)
     supported.update(NONBLOCKING_OPTIONAL_ACTIONS_2014)
+    action_keys = {action_key_2014(name) for name in source.action_names}
+    if "invisibility" in action_keys: supported.add("invisibility")
     if source.multiattack_slots: supported.add("multiattack")
     return supported
 
