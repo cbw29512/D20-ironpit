@@ -20,6 +20,7 @@ window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL = {
 window.IRON_PIT_BROWSER_SUPPORT = { resolve: () => { supportCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_ACTION_SURGE = { resolveAttack: () => { surgeCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_RAGE = { finalize: (sequence) => ({ event: null, sequence }) };
+window.IRON_PIT_BROWSER_PROGRESSION_RECOVERY = { startTurnHealing: () => 0 };
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8"), { filename: "browser-turn.js" });
 
 const member = {
