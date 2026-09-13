@@ -1,6 +1,7 @@
 from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
 from app.content.canonical_hero_policy import assert_canonical_profile_policy
 from app.content.character_resource_audit import assert_character_resources_raw_ready
+from app.content.certified_hero_progressions import CERTIFIED_HERO_PROGRESSIONS
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.fighter_high_level_profiles import build_karnok_stoneward_level20_profile
 from app.content.fighter_progression import build_karnok_stoneward_level
@@ -25,7 +26,9 @@ def test_fighter_level_twenty_passes_profile_fingerprint_and_registry_gates() ->
     combat_profile = build_pregen_combat_profiles()[template.id]
     audits = {item.feature_id: item for item in profile.feature_audits}
     registry = build_certified_hero_registry()
+    fighter = next(item for item in CERTIFIED_HERO_PROGRESSIONS if item.class_id == "fighter")
 
+    assert tuple(fighter.levels) == tuple(range(1, 21))
     assert audits["extra-attack-4"].automated is True
     assert combat_profile.level == 20
     assert combat_profile.max_hp == 224
