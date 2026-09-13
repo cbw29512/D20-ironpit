@@ -10,7 +10,7 @@ _COUNTS = {"two": 2, "three": 3, "four": 4}
 
 def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: AttackIds) -> dict | None:
     capped = re.fullmatch(
-        _SUBJECT + r"makes (two|three|four) attacks, only one of which can be (?:a|an|its|his|her) ([a-z][a-z -]*?) attack\. ?",
+        _SUBJECT + r"makes (two|three|four) attacks, only one of which can be (?:a|an|its|his|her) ([a-z][a-z -]*?)(?: attack)?\. ?",
         text,
         re.I,
     )
