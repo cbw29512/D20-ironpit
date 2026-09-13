@@ -7,6 +7,7 @@ from pathlib import Path
 from app.content.monster_catalog import build_monster_catalog
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
+from app.domain.weapons import DamageType
 from browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
@@ -67,9 +68,7 @@ def _timed_control_row(effect):
     if effect.expiry_timing: row["expiryTiming"] = effect.expiry_timing
     if effect.duration_rounds is not None: row["durationRounds"] = effect.duration_rounds
     if effect.repeat_save_ability:
-        row["repeatSaveAbility"] = effect.repeat_save_ability
-        row["repeatSaveDc"] = effect.repeat_save_dc
-        row["repeatSaveTiming"] = effect.repeat_save_timing
+        row["repeatSaveAbility"] = effect.repeat_save_ability; row["repeatSaveDc"] = effect.repeat_save_dc; row["repeatSaveTiming"] = effect.repeat_save_timing
     if effect.allowed_removal_action_ids: row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
     if effect.ends_on_damage: row["endsOnDamage"] = True
     if effect.source_effect_immunity_on_end: row["sourceEffectImmunityOnEnd"] = True
@@ -81,6 +80,27 @@ def _timed_control_row(effect):
     return row or None
 
 
+def _serializable_template(template):
+    """Keep the shared serializer strict while allowing certified zero-damage control attacks."""
+    copy = template.model_copy(deep=True)
+    attacks = [copy.weapon_attack, *copy.alternate_weapon_attacks]
+    for attack in attacks:
+        if attack.weapon.damage_type is None and attack.weapon.dice_count == 0:
+            attack.weapon = attack.weapon.model_copy(update={"damage_type": DamageType.BLUDGEONING})
+    return copy
+
+
+def _restraint_row(profile):
+    if profile is None: return None
+    row = {
+        "conditionId": profile.condition_id, "escapeAbility": profile.escape_ability,
+        "escapeDc": profile.escape_dc, "objectAc": profile.object_ac, "objectHp": profile.object_hp,
+        "damageVulnerabilities": list(profile.damage_vulnerabilities), "damageImmunities": list(profile.damage_immunities),
+    }
+    if profile.max_target_size is not None: row["maxTargetSize"] = profile.max_target_size.value
+    return row
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -90,6 +110,10 @@ def _attach_source_fingerprint(row, template) -> None:
 
 
 def _attach_monster_actions(row, template) -> None:
+    row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
+    for definition in row.get("resource_definitions", []):
+        if definition.get("recharge"):
+            definition["recharge"].update(trigger="start_of_turn", dieSize=6)
     save_by_id = {action.id: action for action in template.saving_throw_actions}
     for action_row in row.get("saving_throw_actions", []):
         action = save_by_id.get(action_row["id"])
@@ -101,28 +125,30 @@ def _attach_monster_actions(row, template) -> None:
     attack_by_id = {attack.id: attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks]}
     for attack_row in row.get("attacks", []):
         attack = attack_by_id.get(attack_row["id"]); effect = attack.on_hit_save_effect if attack else None
-        if attack and attack.attack_ability is not None: attack_row["attackAbility"] = attack.attack_ability
-        if attack and attack.attack_ability_modifier is not None: attack_row["attackAbilityModifier"] = attack.attack_ability_modifier
-        if effect and effect.failure_push_ft:
-            attack_row.setdefault("onHitSaveEffect", {})["failurePushFt"] = effect.failure_push_ft
+        if attack is None: continue
+        if attack.weapon.damage_type is None: attack_row.pop("damageType", None)
+        if attack.resource_id: attack_row["resourceId"] = attack.resource_id; attack_row["resourceCost"] = attack.resource_cost
+        restraint = _restraint_row(attack.breakable_restraint)
+        if restraint: attack_row["breakableRestraint"] = restraint
+        if attack.attack_ability is not None: attack_row["attackAbility"] = attack.attack_ability
+        if attack.attack_ability_modifier is not None: attack_row["attackAbilityModifier"] = attack.attack_ability_modifier
+        if effect and effect.failure_push_ft: attack_row.setdefault("onHitSaveEffect", {})["failurePushFt"] = effect.failure_push_ft
         if effect and effect.zero_hp_stable:
             rider = attack_row.setdefault("onHitSaveEffect", {}); rider["zeroHpStable"] = True
             rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
-    if template.automatic_damage_spell_actions:
-        row["automatic_damage_spell_actions"] = [_automatic_spell_row(action) for action in template.automatic_damage_spell_actions]
+    if template.automatic_damage_spell_actions: row["automatic_damage_spell_actions"] = [_automatic_spell_row(action) for action in template.automatic_damage_spell_actions]
     if "Poor Depth Perception" in template.source_trait_names:
         for attack_row in row.get("attacks", []): attack_row["disadvantageBeyondFt"] = 30
     if template.attack_action and template.attack_action.policy: row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)
     if template.zero_hp_prevention: row["zeroHpPrevention"] = {"resourceId": template.zero_hp_prevention.resource_id, "maxTriggerDamage": template.zero_hp_prevention.max_trigger_damage, "resultingHp": template.zero_hp_prevention.resulting_hp}
-    if template.regeneration:
-        row["regeneration"] = {"amount": template.regeneration.amount, "requiresPositiveHp": template.regeneration.requires_positive_hp, "suppressedByDamageTypes": [item.value for item in template.regeneration.suppressed_by_damage_types], "survivesZeroUntilTurn": template.regeneration.survives_zero_until_turn}
+    if template.regeneration: row["regeneration"] = {"amount": template.regeneration.amount, "requiresPositiveHp": template.regeneration.requires_positive_hp, "suppressedByDamageTypes": [item.value for item in template.regeneration.suppressed_by_damage_types], "survivesZeroUntilTurn": template.regeneration.survives_zero_until_turn}
 
 
 def render() -> str:
     try:
         rows = []
         for template in _certified_monsters():
-            row = template_row(template); row["creature_type"] = template.creature_type
+            row = template_row(_serializable_template(template)); row["creature_type"] = template.creature_type
             _attach_source_fingerprint(row, template); _attach_monster_actions(row, template); rows.append(row)
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids): raise RuntimeError("Certified browser monster export contains duplicate template IDs.")
@@ -133,10 +159,8 @@ def render() -> str:
 
 
 def main() -> None:
-    try:
-        DESTINATION.write_text(render(), encoding="utf-8"); logger.info("Exported canonical browser monsters to %s.", DESTINATION)
-    except Exception:
-        logger.exception("Certified browser monster export failed."); raise
+    try: DESTINATION.write_text(render(), encoding="utf-8"); logger.info("Exported canonical browser monsters to %s.", DESTINATION)
+    except Exception: logger.exception("Certified browser monster export failed."); raise
 
 
 if __name__ == "__main__":
