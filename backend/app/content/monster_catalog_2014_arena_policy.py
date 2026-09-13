@@ -14,6 +14,8 @@ _ARENA_DISABLED_ACTION_PATTERNS = (
     re.compile(r"\billusory appearance\b", re.I),
 )
 
+# These traits are preserved as source truth but cannot alter an Iron Pit result
+# under the universal pocket-dimension rules. They therefore never block a card.
 ARENA_OUT_OF_SCOPE_TRAITS_2014 = frozenset({
     "Earth Glide",
     "Ethereal Jaunt",
@@ -24,9 +26,15 @@ ARENA_OUT_OF_SCOPE_TRAITS_2014 = frozenset({
     "Mimicry",
     "Rejuvenation",
     "Siege Monster",
-    "Spider Climb",
     "Web Sense",
     "Web Walker",
+})
+
+# These remain usable source mechanics, but the existing movement engine already
+# carries their only meaningful arena consequence. They must not be treated as
+# disabled simply because the Pit prevents unreachable wall/altitude states.
+ARENA_USABLE_MOVEMENT_TRAITS_2014 = frozenset({
+    "Spider Climb",
 })
 
 
