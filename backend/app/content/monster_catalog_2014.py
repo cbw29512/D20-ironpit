@@ -53,6 +53,7 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
             fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
             conditional_damage=source.conditional_damage, on_hit_damage=riders,
             on_hit_save_effect=source.on_hit_save_effect, control_effect=source.control_effect,
+            resource_id=source.resource_id, resource_cost=source.resource_cost, breakable_restraint=source.breakable_restraint,
             forbid_target_grappled_by_self=source.forbid_target_grappled_by_self, charge_profile=source.charge_profile,
         )
     except Exception as exc:
@@ -96,7 +97,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         movement = MovementModes(walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0), climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0))
         dex = source.abilities["dex"]
         return CombatantTemplate(
-            id=f"2014-{source.id}", name=source.name, archetype=source.name, challenge_rating=source.challenge_rating,
+            id=f"2014-{source.id}", name=source.name, archetype=source.name, challenge_rating=source.challenge_rate,
             kind="monster", ruleset="2014", creature_type=source.creature_type, size=source.size,
             ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
