@@ -5,6 +5,7 @@ from typing import Literal
 
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.damage_triggered_effects import apply_damage_triggered_effects
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
@@ -93,7 +94,9 @@ def apply_damage(
     try:
         if amount < 0: raise ValueError("Damage cannot be negative.")
         if amount == 0 or state.is_dead: return "unchanged"
-        incoming = amount; types = damage_types or set(); amount = _after_temporary_hp(state, amount)
+        incoming = amount; types = damage_types or set()
+        apply_damage_triggered_effects(state, incoming, types)
+        amount = _after_temporary_hp(state, amount)
         if amount > 0: note_suppression(state, types)
         if state.current_hp == 0:
             return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
