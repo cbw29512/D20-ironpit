@@ -67,7 +67,7 @@ def resolve_on_hit_save(
     effect = attack.on_hit_save_effect
     if effect is None or defender.is_dead or not defender.is_alive or not _eligible(defender, effect): return OnHitSaveResolution()
     if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size): return OnHitSaveResolution()
-    roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice)
+    roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice, against_condition=effect.condition_id)
     damage_components, damage_total = _save_damage(defender, attack, dice, succeeded, affected_states)
     zero_hp_conditions = _apply_stable_zero_hp(defender, attack, source_id, round_number, affected_states) if damage_total else []
     applied = None
