@@ -31,7 +31,7 @@
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
       if (repeatSaveDue(effect, round, timing, target.state)) {
-        const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
+        const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc, { againstCondition: effect.effect_id });
         const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
         const escalated = save.succeeded ? { removed: [], applied: [] } : escalate(target, effect, round);
         if (save.succeeded) grantEndImmunity(target, effect);
