@@ -20,11 +20,16 @@
     return state.template.legendary_actions?.options?.find((item) => item.id === optionId) || null;
   }
 
+  function incapacitated(state) {
+    const rules = window.IRON_PIT_BROWSER_CONDITION_RULES;
+    return rules ? rules.incapacitated(state) : Boolean(state.is_unconscious || state.active_effect_ids?.includes("incapacitated"));
+  }
+
   function canSpend(state, optionId, ownerId, completedTurnId) {
     try {
       const choice = option(state, optionId);
       if (!choice || ownerId === completedTurnId) return false;
-      if (state.is_dead || state.is_unconscious || state.active_effect_ids?.includes("incapacitated")) return false;
+      if (state.is_dead || incapacitated(state)) return false;
       if ((state.legendary_action_locked_option_ids || []).includes(optionId)) return false;
       return (state.legendary_action_uses_remaining || 0) >= choice.cost;
     } catch (error) {
