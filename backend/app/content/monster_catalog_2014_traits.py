@@ -35,8 +35,8 @@ ARENA_NEUTRAL_TRAITS = frozenset({
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Immutable Form", "Jumper",
     "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
     "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness", "Mimicry",
-    "Rejuvenation", "Running Leap", "Shark Telepathy", "Shapechanger", "Siege Monster", "Snow Camouflage",
-    "Spider Climb", "Standing Leap", "Stone Camouflage", "Sunlight Sensitivity", "Training",
+    "Nimble Escape", "Rejuvenation", "Running Leap", "Shark Telepathy", "Shapechanger", "Siege Monster",
+    "Snow Camouflage", "Spider Climb", "Standing Leap", "Stone Camouflage", "Sunlight Sensitivity", "Training",
     "Water Breathing", "Web Sense", "Web Walker",
 })
 
