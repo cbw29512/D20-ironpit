@@ -62,11 +62,7 @@ def main() -> int:
     ])
     assert parsed == {
         "id": "multiattack", "name": "Multiattack",
-        "slots": [["longsword", "longbow", "life-drain"], ["longsword", "longbow", "life-drain"]],
-        "policy": {
-            "at_most_once_attack_ids": ["life-drain"],
-            "exclusive_attack_groups": [["longsword", "life-drain"], ["longbow"]],
-        },
+        "slots": [["life-drain", "longbow"], ["longsword", "longbow"]],
     }
 
     veteran = (
