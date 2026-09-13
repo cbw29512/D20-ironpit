@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS;
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS || { resolvePending: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const X = () => window.IRON_PIT_BROWSER_SAVE_CONTROL;
