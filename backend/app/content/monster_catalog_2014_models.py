@@ -120,6 +120,7 @@ class CatalogMonster2014(BaseModel):
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
     swallow_actions: list[SwallowAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    death_trigger_actions: list[SavingThrowAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     limited_action_uses: dict[str, int] = Field(default_factory=dict)
     innate_spellcasting: CatalogInnateSpellcasting2014 | None = None
