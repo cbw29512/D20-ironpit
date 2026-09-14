@@ -48,10 +48,29 @@ def _sprite_case() -> None:
     assert parsed["failure_margin_escalation"]["margin"] == 5
 
 
+def _while_poisoned_case() -> None:
+    text = (
+        "the target must succeed on a DC 13 Constitution saving throw or be poisoned for 1 hour. "
+        "If the saving throw fails by 5 or more, the target is also unconscious while poisoned in this way. "
+        "The target wakes up if it takes damage or if another creature takes an action to shake it awake"
+    )
+    parsed = parse_failure_margin_save(text)
+    assert parsed is not None
+    assert parsed["dc"] == 13
+    assert parsed["duration_rounds"] == 600
+    assert parsed["failure_margin_escalation"] == {
+        "margin": 5,
+        "additional_condition_ids": ["unconscious"],
+        "ends_on_damage": True,
+        "allowed_removal_action_ids": ["wake-sleeper"],
+    }
+
+
 def main() -> None:
     _replacement_case()
     _pseudodragon_case()
     _sprite_case()
+    _while_poisoned_case()
     print("2014 failure-margin save parser regressions passed.")
 
 
