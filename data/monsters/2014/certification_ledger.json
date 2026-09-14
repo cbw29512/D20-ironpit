@@ -2,7 +2,7 @@
   "blocked_count": 99,
   "blocker_families": {
     "action": 58,
-    "attack-detail": 48,
+    "attack-detail": 47,
     "legendary": 25,
     "spell": 51,
     "trait": 66
@@ -85,7 +85,6 @@
     "attack-detail:Tentacle": 3,
     "attack-detail:Tentacles": 1,
     "attack-detail:Touch": 2,
-    "attack-detail:Tusks (Boar or Hybrid Form Only)": 1,
     "attack-detail:Unarmed Strike (Vampire Form Only)": 1,
     "attack-detail:War Pick": 1,
     "attack-detail:Whip": 1,
@@ -2660,9 +2659,8 @@
     {
       "id": "wereboar",
       "name": "Wereboar",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "attack-detail:Tusks (Boar or Hybrid Form Only)",
         "trait:Charge (Boar or Hybrid Form Only)"
       ],
       "status": "blocked"
