@@ -1,8 +1,8 @@
 {
-  "blocked_count": 77,
+  "blocked_count": 76,
   "blocker_families": {
     "action": 55,
-    "attack-detail": 33,
+    "attack-detail": 32,
     "legendary": 25,
     "spell": 40,
     "trait": 42
@@ -67,7 +67,6 @@
     "attack-detail:Longsword": 1,
     "attack-detail:Pincer": 1,
     "attack-detail:Pseudopod": 1,
-    "attack-detail:Quarterstaff": 1,
     "attack-detail:Rotting Fist": 2,
     "attack-detail:Scimitar": 1,
     "attack-detail:Slaying Longbow": 1,
@@ -889,11 +888,9 @@
     {
       "id": "druid",
       "name": "Druid",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Quarterstaff"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "dryad",
@@ -2731,7 +2728,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 250,
+  "ready_count": 251,
   "ruleset": "2014",
   "schema_version": 1
 }

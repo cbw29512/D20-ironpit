@@ -15338,10 +15338,53 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "4 (1d8) bludgeoning damage if wielded with two hands, or 6 (1d8 + 2) bludgeoning damage with shillelagh",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
+      },
+      {
+        "id": "quarterstaff-two-handed",
+        "name": "Quarterstaff",
+        "kind": "melee",
+        "attack_bonus": 2,
+        "damage": {
+          "average": 4,
+          "dice_count": 1,
+          "dice_size": 8,
+          "bonus": 0,
+          "type": "bludgeoning"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5,
+        "attack_ability": "strength"
+      },
+      {
+        "id": "quarterstaff-shillelagh",
+        "name": "Quarterstaff",
+        "kind": "melee",
+        "attack_bonus": 4,
+        "damage": {
+          "average": 6,
+          "dice_count": 1,
+          "dice_size": 8,
+          "bonus": 2,
+          "type": "bludgeoning"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5
       }
     ],
     "multiattack_slots": [],
