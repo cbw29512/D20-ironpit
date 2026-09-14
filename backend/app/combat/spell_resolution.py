@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_policy import SpellChoice
+from app.combat.spell_reflection import reflection_target, spend_spell_reflection
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -75,14 +77,28 @@ def resolve_spell(
     by_id = {member.combatant_id: member for member in members}
     affected_states = [member.state for member in members]
     save_action = _save_action(choice)
+    reflectable = spell.area_radius_ft is None and len(choice.target_ids) == 1
     shared_damage_rolls: list[int] | None = None
     for target_id in choice.target_ids:
         target = by_id[target_id]
+        precomputed = None
+        reflected_from = None
+        if reflectable and target.state.template.spell_reflection_reaction is not None:
+            precomputed = resolve_saving_throw(
+                target.state, save_action.save_ability, save_action.dc, dice, magical_effect=True,
+            )
+            if precomputed[1]:
+                reflected = reflection_target(target, caster, setup)
+                if reflected is not None:
+                    spend_spell_reflection(target); reflected_from = target; target = reflected; precomputed = None
         event = resolve_save_action(
             sequence, round_number, caster, target, save_action,
-            abs(caster.position_ft - target.position_ft), dice, spend_action=False,
-            shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
+            0 if reflected_from is not None else abs(caster.position_ft - target.position_ft), dice, spend_action=False,
+            shared_damage_rolls=shared_damage_rolls, affected_states=affected_states, setup=setup,
+            precomputed_save=precomputed,
         )
+        if reflected_from is not None:
+            event.description = f"{reflected_from.state.template.name} uses Spell Reflection; {spell.name} targets {target.state.template.name} instead. {event.description}"
         events.append(event)
         if shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)
