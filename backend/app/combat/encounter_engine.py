@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.aura_activation import expire_active_auras
+from app.combat.auras import resolve_start_turn_auras
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
@@ -90,6 +92,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 refresh_start_of_turn(member.state)
                 refresh_legendary_actions(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
+                aura_expiry_events, sequence = expire_active_auras(sequence, round_number, member)
+                events.extend(aura_expiry_events)
                 expiry_events, sequence = expire_start_of_turn_conditions(
                     sequence, round_number, member, setup,
                 )
@@ -98,6 +102,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, "target_turn_start", dice,
                 )
                 events.extend(lifecycle_events)
+                aura_events, sequence = resolve_start_turn_auras(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(aura_events)
 
                 death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
                 if death_event is not None:
