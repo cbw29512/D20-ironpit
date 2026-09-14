@@ -16,7 +16,9 @@
 
   function target(member, setup) {
     const action = member.state.template.swallowAction;
-    if (!action || swallowedBy(member, setup).length >= (action.maxSwallowed || 1)) return null;
+    if (!action) return null;
+    const swallowedCount = swallowedBy(member, setup).length;
+    if (action.maxSwallowed != null && swallowedCount >= action.maxSwallowed) return null;
     return opponents(member, setup).find((candidate) =>
       candidate.state.current_hp > 0 && !candidate.state.is_dead
       && candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id)
