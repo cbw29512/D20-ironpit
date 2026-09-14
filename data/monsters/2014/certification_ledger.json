@@ -1,11 +1,11 @@
 {
-  "blocked_count": 100,
+  "blocked_count": 99,
   "blocker_families": {
     "action": 58,
     "attack-detail": 48,
     "legendary": 25,
     "spell": 51,
-    "trait": 67
+    "trait": 65
   },
   "blocker_yield": {
     "action:Acid Spray (Recharge 6)": 1,
@@ -153,7 +153,6 @@
     "trait:Bound": 1,
     "trait:Brave": 2,
     "trait:Brute": 2,
-    "trait:Charge (Boar or Hybrid Form Only)": 1,
     "trait:Consume Life": 1,
     "trait:Corrosive Form": 1,
     "trait:Cunning Action": 1,
@@ -183,7 +182,6 @@
     "trait:Limited Magic Immunity": 1,
     "trait:Multiple Heads": 1,
     "trait:Ooze Cube": 1,
-    "trait:Pounce (Tiger or Hybrid Form Only)": 1,
     "trait:Reactive": 1,
     "trait:Reactive Heads": 1,
     "trait:Reflective Carapace": 1,
@@ -2661,10 +2659,9 @@
     {
       "id": "wereboar",
       "name": "Wereboar",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "attack-detail:Tusks (Boar or Hybrid Form Only)",
-        "trait:Charge (Boar or Hybrid Form Only)"
+        "attack-detail:Tusks (Boar or Hybrid Form Only)"
       ],
       "status": "blocked"
     },
@@ -2678,11 +2675,9 @@
     {
       "id": "weretiger",
       "name": "Weretiger",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "trait:Pounce (Tiger or Hybrid Form Only)"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "werewolf",
@@ -2843,7 +2838,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 227,
+  "ready_count": 228,
   "ruleset": "2014",
   "schema_version": 1
 }
