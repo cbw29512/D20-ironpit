@@ -4,6 +4,7 @@ import logging
 
 from app.combat.legendary_actions import LEGENDARY_ACTION_RESOURCE_ID
 from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
+from app.content.monster_catalog_2014_action_support import limited_action_uses_2014
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.monster_catalog_2014_reactive_damage import reactive_melee_damage_2014
 from app.content.monster_catalog_2014_sneak_attack import sneak_attack_d6_2014
@@ -35,6 +36,7 @@ def saving_throw_bonuses_2014(source: CatalogMonster2014) -> dict[str, int]:
 
 
 def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
+    limited_uses = limited_action_uses_2014(source)
     resources = [
         ResourceDefinition(
             id=action_id, name=action_id.replace("-", " ").title(), max_uses=1,
@@ -44,7 +46,7 @@ def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
     ]
     resources.extend(
         ResourceDefinition(id=action_id, name=action_id.replace("-", " ").title(), max_uses=uses)
-        for action_id, uses in source.limited_action_uses.items()
+        for action_id, uses in limited_uses.items()
         if action_id not in source.action_recharges
     )
     if source.innate_spellcasting is not None:
@@ -91,6 +93,7 @@ def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAtta
     blood_frenzy = ConditionalAttackAdvantage(trigger="target_not_full_hp")
     sneak_attack_d6 = sneak_attack_d6_2014(source.source_traits)
     catalog_attacks = {attack.id: attack for attack in source.attacks}
+    limited_uses = limited_action_uses_2014(source)
     bound: list[WeaponAttack] = []
     for attack in attacks:
         update: dict[str, object] = {}
@@ -113,7 +116,7 @@ def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAtta
             update["on_hit_save_effect"] = source_attack.on_hit_save_effect
         if source_attack is not None and source_attack.on_hit_contested_movement is not None:
             update["on_hit_contested_movement"] = source_attack.on_hit_contested_movement
-        if attack.id in source.limited_action_uses and attack.resource_id is None:
+        if attack.id in limited_uses and attack.resource_id is None:
             update["resource_id"] = attack.id
             update["resource_cost"] = 1
         bound.append(attack.model_copy(update=update) if update else attack)
