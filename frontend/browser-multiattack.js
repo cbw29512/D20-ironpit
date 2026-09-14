@@ -1,5 +1,4 @@
-(() => {
-  "use strict";
+(() => { "use strict";
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const AU = () => window.IRON_PIT_BROWSER_AURAS || { attackAdvantageSources: () => 0 };
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
