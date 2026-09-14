@@ -1,8 +1,8 @@
 {
-  "blocked_count": 97,
+  "blocked_count": 95,
   "blocker_families": {
     "action": 58,
-    "attack-detail": 46,
+    "attack-detail": 44,
     "legendary": 25,
     "spell": 51,
     "trait": 65
@@ -76,9 +76,7 @@
     "attack-detail:Rotting Fist": 2,
     "attack-detail:Scimitar": 1,
     "attack-detail:Shield Bash": 1,
-    "attack-detail:Shortbow": 1,
     "attack-detail:Slaying Longbow": 1,
-    "attack-detail:Sting": 1,
     "attack-detail:Strength Drain": 1,
     "attack-detail:Tail": 3,
     "attack-detail:Tentacle": 3,
@@ -2072,11 +2070,9 @@
     {
       "id": "pseudodragon",
       "name": "Pseudodragon",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Sting"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "pteranodon",
@@ -2370,11 +2366,9 @@
     {
       "id": "sprite",
       "name": "Sprite",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Shortbow"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "spy",
@@ -2832,7 +2826,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 230,
+  "ready_count": 232,
   "ruleset": "2014",
   "schema_version": 1
 }
