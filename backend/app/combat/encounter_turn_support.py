@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.encounter_action_surge import resolve_action_surge_attack
@@ -12,7 +13,7 @@ from app.combat.rampage import resolve_rampage
 from app.combat.resources import action_resource_available, resource_definition
 from app.combat.restraints import resolve_escape_restraint, should_escape_restraint
 from app.combat.saving_throws import legal_save_action, resolve_save_action
-from app.combat.barbarian import finalize_rage_turn
+from app.combat.swallow_lifecycle import resolve_end_turn_regurgitation
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -35,6 +36,10 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
         )
         if rage_event is not None:
             events.append(rage_event)
+        regurgitation_events, sequence = resolve_end_turn_regurgitation(
+            sequence, round_number, attacker, setup, events, dice,
+        )
+        events.extend(regurgitation_events)
         return events, sequence
     except Exception:
         logger.exception("Failed to finalize turn for %s.", attacker.combatant_id)
