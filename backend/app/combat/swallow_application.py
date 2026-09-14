@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from app.combat.grapple import release_grapple
-from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
 from app.domain.size import size_at_most
@@ -9,10 +8,13 @@ from app.domain.swallow import SwallowAction, SwallowedState
 
 
 def _action_for_attack(attacker: EncounterCombatant, attack: WeaponAttack) -> SwallowAction | None:
+    effect = attack.on_hit_save_effect
+    if effect is None or not effect.swallow_on_failure:
+        return None
     return next(
         (
             action for action in attacker.state.template.swallow_actions
-            if action.attack_id == attack.id and action.on_hit_save_ability is not None
+            if action.attack_id == attack.id and not action.requires_existing_grapple
         ),
         None,
     )
@@ -29,10 +31,7 @@ def _capacity_available(attacker: EncounterCombatant, setup: EncounterSetup, act
 
 
 def apply_swallowed(
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    action: SwallowAction,
-    event: BattleEvent,
+    attacker: EncounterCombatant, target: EncounterCombatant, action: SwallowAction, event: BattleEvent,
 ) -> None:
     release_grapple(target.state, attacker.combatant_id)
     target.state.swallowed = SwallowedState(
@@ -53,26 +52,15 @@ def apply_swallowed(
 
 
 def resolve_on_hit_swallow(
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    attack: WeaponAttack,
-    event: BattleEvent,
-    setup: EncounterSetup | None,
-    dice,
+    attacker: EncounterCombatant, target: EncounterCombatant, attack: WeaponAttack,
+    event: BattleEvent, setup: EncounterSetup | None,
 ) -> None:
     action = _action_for_attack(attacker, attack)
-    if action is None or setup is None or not event.hit or target.state.is_dead or not target.state.is_alive:
+    if action is None or setup is None or not event.hit or event.save_succeeded is not False:
         return
-    if target.state.swallowed is not None or not size_at_most(target.state.template.size, action.max_target_size):
+    if target.state.is_dead or not target.state.is_alive or target.state.swallowed is not None:
         return
-    if not _capacity_available(attacker, setup, action):
+    if not size_at_most(target.state.template.size, action.max_target_size):
         return
-    roll, succeeded = resolve_saving_throw(
-        target.state, action.on_hit_save_ability, action.on_hit_save_dc, dice,
-    )
-    event.saving_throw_roll = roll
-    event.save_ability = action.on_hit_save_ability
-    event.save_dc = action.on_hit_save_dc
-    event.save_succeeded = succeeded
-    if not succeeded:
+    if _capacity_available(attacker, setup, action):
         apply_swallowed(attacker, target, action, event)
