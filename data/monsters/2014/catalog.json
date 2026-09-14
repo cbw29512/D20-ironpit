@@ -25357,11 +25357,25 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 10,
+          "condition_id": "poisoned",
+          "duration_rounds": 10,
+          "failure_margin_escalation": {
+            "margin": 5,
+            "additional_condition_ids": [
+              "unconscious"
+            ],
+            "replacement_duration_dice_count": 1,
+            "replacement_duration_dice_size": 10,
+            "replacement_duration_round_multiplier": 10
+          }
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the target must succeed on a DC 10 Constitution saving throw or be poisoned for 1 minute. If the saving throw fails by 5 or more, the target is instead poisoned for 5 (1d10) minutes and unconscious while poisoned in this way",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
