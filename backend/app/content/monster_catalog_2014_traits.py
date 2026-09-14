@@ -33,7 +33,7 @@ MODELED_TRAITS = {
 DATA_BOUND_TRAITS = frozenset({
     "Angelic Weapons", "Aversion of Fire", "Barbed Hide", "Blood Frenzy", "Brute", "Echolocation", "Fear of Fire",
     "Heated Body", "Heated Weapons", "Innate Spellcasting", "Invisibility", "Petrifying Gaze", "Poor Depth Perception",
-    "Reckless", "Regeneration", "Spellcasting", "Stench", "Turning Defiance",
+    "Reckless", "Regeneration", "Sneak Attack", "Sneak Attack (1/Turn)", "Spellcasting", "Stench", "Turning Defiance",
 }) | ABSORPTION_TRAITS_2014
 
 ARENA_NEUTRAL_TRAITS = frozenset({
