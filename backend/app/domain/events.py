@@ -40,8 +40,10 @@ class BattleEvent(BaseModel):
     check_dc: int | None = Field(default=None, ge=1)
     check_succeeded: bool | None = None
     damage_roll: DiceRoll | None = None
+    reactive_damage_roll: DiceRoll | None = None
     death_save_roll: DiceRoll | None = None
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
+    reactive_damage_components: list[DamageRollComponent] = Field(default_factory=list)
     applied_condition_ids: list[str] = Field(default_factory=list)
     removed_condition_ids: list[str] = Field(default_factory=list)
     healing_roll: DiceRoll | None = None
@@ -51,6 +53,8 @@ class BattleEvent(BaseModel):
     turn_termination_reason: str | None = None
     hp_before: int | None = None
     hp_after: int | None = None
+    actor_hp_before: int | None = None
+    actor_hp_after: int | None = None
     max_hp_before: int | None = Field(default=None, ge=0)
     max_hp_after: int | None = Field(default=None, ge=0)
     temporary_hp_before: int | None = Field(default=None, ge=0)
