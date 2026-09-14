@@ -43,18 +43,24 @@ def _shared_swallow_data(text: str) -> dict | None:
         re.search(r"blinded and restrained", text, re.I),
         re.search(r"total cover against attacks and other effects outside", text, re.I),
     )
-    if acid is None or release is None or regurgitation is None or not all(required):
+    if acid is None or release is None or not all(required):
         return None
     count, size, sign, bonus = acid.groups()
-    threshold, ability, dc, release_range = regurgitation
-    return {
+    row = {
         "damage_dice_count": int(count), "damage_dice_size": int(size),
         "damage_bonus": int(bonus or 0) * (-1 if sign == "-" else 1), "damage_type": "acid",
         "max_swallowed": 1 if capacity is not None else None,
-        "regurgitation_damage_threshold": threshold, "regurgitation_save_ability": ability,
-        "regurgitation_save_dc": dc, "regurgitation_range_ft": release_range,
+        "regurgitation_damage_threshold": None, "regurgitation_save_ability": None,
+        "regurgitation_save_dc": None, "regurgitation_range_ft": None,
         "exit_movement_ft": int(release.group(1)), "exit_prone": True,
     }
+    if regurgitation is not None:
+        threshold, ability, dc, release_range = regurgitation
+        row.update(
+            regurgitation_damage_threshold=threshold, regurgitation_save_ability=ability,
+            regurgitation_save_dc=dc, regurgitation_range_ft=release_range,
+        )
+    return row
 
 
 def parse_swallow_action(paragraph: str) -> dict | None:
