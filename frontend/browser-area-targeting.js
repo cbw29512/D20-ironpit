@@ -52,6 +52,20 @@
   }
 
   const dimension = (area, camel, snake) => area[camel] ?? area[snake];
+  function pointOrigins(actor, setup, rangeFt) {
+    const actorPoints = points(actor), result = [];
+    for (let x = 0; x < setup.map_definition.width_squares; x += 1) {
+      for (let y = 0; y < setup.map_definition.height_squares; y += 1) {
+        const point = A().cellCenterFt(x, y);
+        const inRange = actorPoints.some((source) => Math.max(
+          Math.abs(point[0] - source[0]), Math.abs(point[1] - source[1]),
+        ) <= rangeFt);
+        if (inRange) result.push(point);
+      }
+    }
+    return result;
+  }
+
   function hits(area, origins, origin, direction, target) {
     const targetPoints = points(target);
     const radius = dimension(area, "radiusFt", "radius_ft");
@@ -66,19 +80,21 @@
     throw new Error(`Unsupported browser area shape: ${area.shape}`);
   }
 
-  function legalPlacements(actor, setup, area) {
+  function legalPlacements(actor, setup, area, rangeFt = 0) {
     try {
-      if (!area || area.origin !== "self") throw new Error("Browser universal area must originate from self.");
+      if (!area || !["self", "point"].includes(area.origin)) throw new Error("Browser universal area has an invalid origin.");
       if (!setup.map_definition) throw new Error("Area targeting requires an authoritative battle map.");
       const enemies = livingSide(actor, setup, true);
       if (!enemies.length) return [];
-      const friends = livingSide(actor, setup, false), origins = points(actor), result = new Map();
-      const areaDirections = ["radius", "emanation"].includes(area.shape) ? [null] : directions(origins, enemies);
+      const friends = livingSide(actor, setup, false), actorOrigins = points(actor), result = new Map();
+      const origins = area.origin === "point" ? pointOrigins(actor, setup, rangeFt) : actorOrigins;
+      const directionOrigins = area.origin === "point" ? origins : actorOrigins;
+      const areaDirections = ["radius", "emanation"].includes(area.shape) ? [null] : directions(directionOrigins, enemies);
       for (const origin of origins) {
         for (const direction of areaDirections) {
-          const targetIds = enemies.filter((enemy) => hits(area, origins, origin, direction, enemy)).map((enemy) => enemy.combatant_id);
+          const targetIds = enemies.filter((enemy) => hits(area, actorOrigins, origin, direction, enemy)).map((enemy) => enemy.combatant_id);
           if (!targetIds.length) continue;
-          const friendlyIds = friends.filter((friend) => hits(area, origins, origin, direction, friend)).map((friend) => friend.combatant_id);
+          const friendlyIds = friends.filter((friend) => hits(area, actorOrigins, origin, direction, friend)).map((friend) => friend.combatant_id);
           const key = `${targetIds.join("|")}::${friendlyIds.join("|")}`;
           if (!result.has(key)) result.set(key, { targetIds, enemyIds: targetIds, friendlyIds, origin, direction });
         }
