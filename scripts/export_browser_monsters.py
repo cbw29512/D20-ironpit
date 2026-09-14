@@ -161,9 +161,14 @@ def _ongoing_damage_row(effect):
     row = {
         "id": effect.id, "name": effect.name, "diceCount": effect.dice_count, "diceSize": effect.dice_size,
         "damageBonus": effect.damage_bonus, "damageType": effect.damage_type, "applyOn": effect.apply_on,
-        "stacksOnReapply": effect.stacks_on_reapply, "endsOnMagicalHealing": effect.ends_on_magical_healing,
+        "tickTiming": effect.tick_timing, "stacksOnReapply": effect.stacks_on_reapply,
+        "endsOnMagicalHealing": effect.ends_on_magical_healing,
         "endsWhenGrappleSourceEnds": effect.ends_when_grapple_source_ends,
+        "blocksSourceAttacks": effect.blocks_source_attacks, "actionRemovable": effect.action_removable,
+        "actionRemovalRangeFt": effect.action_removal_range_ft,
     }
+    if effect.source_detach_movement_ft is not None: row["sourceDetachMovementFt"] = effect.source_detach_movement_ft
+    if effect.auto_end_after_hp_loss is not None: row["autoEndAfterHpLoss"] = effect.auto_end_after_hp_loss
     if effect.removal_ability: row.update(removalAbility=effect.removal_ability, removalSkill=effect.removal_skill, removalDc=effect.removal_dc)
     return row
 
