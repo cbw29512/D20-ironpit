@@ -8,7 +8,7 @@ from app.domain.combatants import DamageType
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.reactive_damage import MeleeHitReactiveDamage
 from app.domain.runtime import CombatantState
-from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
+from app.domain.spells import DefensiveSpellAction, SpellModifierEffect, SpellSaveAction
 
 _REACTIVE_KIND = "adjacent-melee-hit-reactive-damage"
 
@@ -57,6 +57,43 @@ def _apply_reactive_effect(target: CombatantState, spell_id: str, effect: SpellM
     )
     if rule.id not in {item.id for item in target.temporary_melee_hit_reactive_damage}:
         target.temporary_melee_hit_reactive_damage.append(rule)
+
+
+def start_save_spell_concentration(
+    owner: CombatantState,
+    source_id: str,
+    spell: SpellSaveAction,
+    round_number: int,
+    affected_states: Iterable[CombatantState] | None = None,
+) -> None:
+    if not spell.concentration:
+        return
+    if spell.duration_minutes is None:
+        raise ValueError(f"{spell.name} concentration requires a duration.")
+    duration_rounds = spell.duration_minutes * 10
+    start_concentration(
+        owner, source_id, spell.id, round_number, affected_states,
+        expires_round=round_number + duration_rounds + (1 if round_number == 0 else 0),
+    )
+
+
+def apply_failed_save_spell_modifiers(
+    target_id: str,
+    target: CombatantState,
+    source_id: str,
+    spell: SpellSaveAction,
+    round_number: int,
+) -> list[CombatModifier]:
+    modifiers = [
+        build_spell_modifier(
+            source_id, target_id, spell.id, effect, index,
+            concentration_required=spell.concentration, round_number=round_number,
+        )
+        for index, effect in enumerate(spell.failure_modifier_effects)
+    ]
+    for modifier in modifiers:
+        add_modifier(target, modifier)
+    return modifiers
 
 
 def apply_spell_modifiers(
