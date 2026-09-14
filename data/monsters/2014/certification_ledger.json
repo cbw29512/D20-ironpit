@@ -1,10 +1,10 @@
 {
-  "blocked_count": 78,
+  "blocked_count": 77,
   "blocker_families": {
     "action": 55,
     "attack-detail": 34,
     "legendary": 25,
-    "spell": 41,
+    "spell": 40,
     "trait": 42
   },
   "blocker_yield": {
@@ -99,7 +99,6 @@
     "legendary:no-parsed-options": 4,
     "spell:acid arrow": 1,
     "spell:blade barrier": 2,
-    "spell:blindness/deafness": 1,
     "spell:cloudkill": 1,
     "spell:cone of cold": 1,
     "spell:confusion": 1,
@@ -803,11 +802,9 @@
     {
       "id": "deep-gnome-svirfneblin",
       "name": "Deep Gnome (Svirfneblin)",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "spell:blindness/deafness"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "deer",
@@ -2736,7 +2733,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 249,
+  "ready_count": 250,
   "ruleset": "2014",
   "schema_version": 1
 }
