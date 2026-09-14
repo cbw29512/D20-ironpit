@@ -15,6 +15,8 @@ class SaveFailureMarginEscalation(BaseModel):
     replacement_duration_dice_count: int = Field(default=0, ge=0, le=20)
     replacement_duration_dice_size: int = Field(default=6, ge=2, le=100)
     replacement_duration_round_multiplier: int = Field(default=1, ge=1, le=600)
+    ends_on_damage: bool = False
+    allowed_removal_action_ids: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_duration(self) -> "SaveFailureMarginEscalation":
