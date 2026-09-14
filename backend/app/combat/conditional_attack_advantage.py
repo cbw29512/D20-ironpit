@@ -5,6 +5,7 @@ import logging
 from app.combat.conditional_damage import round1_initiative_lead
 from app.combat.hit_points import effective_max_hp
 from app.domain.models import CombatantState, WeaponAttack
+from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,17 @@ def _grappled_by(target: CombatantState, attacker_event_id: str | None) -> bool:
     if attacker_event_id is None:
         return False
     return any(source.source_id == attacker_event_id for source in target.grapple_sources)
+
+
+def assassinate_advantage(attacker: CombatantState, target: CombatantState, round_number: int | None) -> int:
+    return int(
+        CombatTrait.ASSASSINATE in attacker.template.combat_traits
+        and round1_initiative_lead(attacker, target, round_number)
+    )
+
+
+def assassinate_critical(attacker: CombatantState, target: CombatantState) -> bool:
+    return CombatTrait.ASSASSINATE in attacker.template.combat_traits and "surprised" in target.active_effect_ids
 
 
 def conditional_attack_advantage_sources(
@@ -38,6 +50,8 @@ def conditional_attack_advantage_sources(
                 total += int(round1_initiative_lead(attacker, target, round_number))
                 continue
             raise ValueError(f"Unsupported conditional attack Advantage trigger: {spec.trigger!r}.")
+        if attacker is not None:
+            total += assassinate_advantage(attacker, target, round_number)
         return total
     except Exception:
         logger.exception("Failed to evaluate conditional attack Advantage for %s.", attack.id)
