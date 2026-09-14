@@ -13,6 +13,7 @@ from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.restraints import apply_breakable_restraint
+from app.combat.swallow_application import resolve_on_hit_swallow
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
 
@@ -27,17 +28,11 @@ def _event_target(event: BattleEvent, target: EncounterCombatant, setup: Encount
 
 
 def _apply_on_hit_push(
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    attack: WeaponAttack,
-    event: BattleEvent,
-    setup: EncounterSetup | None,
+    attacker: EncounterCombatant, target: EncounterCombatant, attack: WeaponAttack,
+    event: BattleEvent, setup: EncounterSetup | None,
 ) -> None:
     effect = attack.on_hit_save_effect
-    if (
-        effect is None or effect.failure_push_ft == 0 or setup is None
-        or not event.hit or event.save_succeeded is not False
-    ):
+    if effect is None or effect.failure_push_ft == 0 or setup is None or not event.hit or event.save_succeeded is not False:
         return
     actual_target = _event_target(event, target, setup)
     moved = push_away(attacker, actual_target, effect.failure_push_ft, setup)
@@ -46,11 +41,8 @@ def _apply_on_hit_push(
 
 
 def _apply_restraint(
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    attack: WeaponAttack,
-    event: BattleEvent,
-    setup: EncounterSetup | None,
+    attacker: EncounterCombatant, target: EncounterCombatant, attack: WeaponAttack,
+    event: BattleEvent, setup: EncounterSetup | None,
 ) -> None:
     if not event.hit or attack.breakable_restraint is None:
         return
@@ -64,24 +56,11 @@ def _apply_restraint(
 
 
 def resolve_encounter_attack(
-    sequence: int,
-    round_number: int,
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    attack: WeaponAttack,
-    distance_ft: int,
-    dice: DiceProvider,
-    setup: EncounterSetup | None,
-    *,
-    spend_action: bool = True,
-    advantage_sources: int = 0,
-    other_disadvantage_sources: int = 0,
-    feature_id: str | None = None,
-    turn_key: str | None = None,
-    bonus_damage: BonusDamageSpec | None = None,
-    close_enemy_active: bool | None = None,
-    allow_reckless: bool = False,
-    off_turn: bool = False,
+    sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
+    attack: WeaponAttack, distance_ft: int, dice: DiceProvider, setup: EncounterSetup | None, *,
+    spend_action: bool = True, advantage_sources: int = 0, other_disadvantage_sources: int = 0,
+    feature_id: str | None = None, turn_key: str | None = None, bonus_damage: BonusDamageSpec | None = None,
+    close_enemy_active: bool | None = None, allow_reckless: bool = False, off_turn: bool = False,
 ) -> BattleEvent:
     if not action_resource_available(attacker.state, attack):
         raise ValueError(f"Attack resource {attack.resource_id!r} is unavailable.")
@@ -104,8 +83,7 @@ def resolve_encounter_attack(
         turn_key=turn_key, bonus_damage=bonus_damage, close_enemy_active=close_enemy,
         redirect_target=redirect.state if redirect is not None else None,
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
-        affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
-        off_turn=off_turn,
+        affected_states=affected_states, sneak_attack_ally_available=sneak_ally, off_turn=off_turn,
     )
     remaining = spend_action_resource(attacker.state, attack)
     if remaining is not None:
@@ -120,5 +98,6 @@ def resolve_encounter_attack(
     _apply_on_hit_push(attacker, target, attack, event, setup)
     _apply_restraint(attacker, target, attack, event, setup)
     apply_on_hit_contested_movement(attacker, actual_target, attack, event, setup, dice)
+    resolve_on_hit_swallow(attacker, actual_target, attack, event, setup, dice)
     apply_melee_hit_reactive_damage(event, attacker, actual_target, attack, distance_ft, dice, setup)
     return apply_critical_closing_move(attacker, setup, event)
