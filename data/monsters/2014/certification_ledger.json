@@ -5,7 +5,7 @@
     "attack-detail": 35,
     "legendary": 25,
     "spell": 41,
-    "trait": 52
+    "trait": 51
   },
   "blocker_yield": {
     "action:Acid Spray (Recharge 6)": 1,
@@ -133,7 +133,6 @@
     "trait:Aberrant Ground": 1,
     "trait:Air Form": 1,
     "trait:Assassinate": 1,
-    "trait:Aversion of Fire": 1,
     "trait:Berserk": 2,
     "trait:Bound": 1,
     "trait:Consume Life": 1,
@@ -1041,9 +1040,8 @@
     {
       "id": "flesh-golem",
       "name": "Flesh Golem",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "trait:Aversion of Fire",
         "trait:Berserk"
       ],
       "status": "blocked"
