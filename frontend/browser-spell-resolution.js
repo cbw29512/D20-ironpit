@@ -6,18 +6,23 @@
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const SR = () => window.IRON_PIT_BROWSER_SPELL_REFLECTION;
+  const dimension = (area, camel, snake) => area?.[camel] ?? area?.[snake] ?? 0;
+
+  function effectReach(spell) {
+    if (!spell.area) return spell.range + (spell.areaRadius || 0);
+    const extent = dimension(spell.area, "radiusFt", "radius_ft") || dimension(spell.area, "lengthFt", "length_ft");
+    return spell.area.origin === "point" ? spell.range + extent : extent;
+  }
 
   function saveAction(choice) {
     const spell = choice.action;
     if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     return {
       id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
-      range: spell.range + (spell.areaRadius || 0),
-      damageDiceCount: spell.damageDiceCount,
+      range: effectReach(spell), damageDiceCount: spell.damageDiceCount,
       damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
       damageType: spell.damageType, successDamage: spell.successDamage || "none",
-      magicalEffect: true,
-      animation: spell.animation || "spell-save",
+      magicalEffect: true, animation: spell.animation || "spell-save",
     };
   }
 
@@ -31,16 +36,13 @@
     if (choice.slotLevel > 0) {
       const resourceId = `spell-slot-${choice.slotLevel}`;
       if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
-      C().markSlotSpellCast(caster.state, turnKey);
-      caster.state.resources[resourceId] -= 1;
+      C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1;
       remaining = caster.state.resources[resourceId];
     }
     E().spend(caster.state, spell.actionCost);
 
     const placement = choice.placement;
-    const detail = placement
-      ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
-      : "";
+    const detail = placement ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} allies.` : "";
     const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
     const events = [{
       sequence: sequence++, round_number: round, event_type: "feature",
@@ -50,7 +52,7 @@
     }];
 
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
-    const action = saveAction(choice), reflectable = !spell.areaRadius && choice.targetIds.length === 1;
+    const action = saveAction(choice), reflectable = !spell.area && !spell.areaRadius && choice.targetIds.length === 1;
     let sharedDamageRolls = null;
     for (const targetId of choice.targetIds) {
       let target = members.get(targetId), precomputedSave = null, reflectedFrom = null;
@@ -62,14 +64,13 @@
         }
       }
       const event = V().resolveAction(
-        sequence++, round, caster, target, action, reflectedFrom ? 0 : S().distance(caster, target),
+        sequence++, round, caster, target, action,
+        placement || reflectedFrom ? 0 : S().distance(caster, target),
         { spendAction: false, sharedDamageRolls, precomputedSave, setup },
       );
       if (reflectedFrom) event.description = `${reflectedFrom.state.template.name} uses Spell Reflection; ${spell.name} targets ${target.state.template.name} instead. ${event.description}`;
       events.push(event);
-      if (sharedDamageRolls == null && event.damage_components?.length) {
-        sharedDamageRolls = [...event.damage_components[0].rolls];
-      }
+      if (sharedDamageRolls == null && event.damage_components?.length) sharedDamageRolls = [...event.damage_components[0].rolls];
     }
     return { events, sequence };
   }
