@@ -9,6 +9,7 @@ from app.combat.spellcasting import mark_slot_spell_cast
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
+from app.domain.spells import SpellSaveAction
 
 
 def _resource(state, level: int):
@@ -23,6 +24,30 @@ def _effect_reach(choice: SpellChoice) -> int:
     area = spell.area
     extent = area.radius_ft or area.length_ft or 0
     return spell.range_ft + extent if area.origin == "point" else extent
+
+
+def _target_type(target: EncounterCombatant) -> str:
+    return (target.state.template.creature_type or "").lower()
+
+
+def _spell_affects(spell: SpellSaveAction, target: EncounterCombatant) -> bool:
+    return _target_type(target) not in spell.excluded_creature_types
+
+
+def _target_save(spell: SpellSaveAction, target: EncounterCombatant, action: SavingThrowAction, dice):
+    disadvantage = int(_target_type(target) in spell.save_disadvantage_creature_types)
+    if not disadvantage:
+        return None
+    return resolve_saving_throw(
+        target.state, action.save_ability, action.dc, dice,
+        magical_effect=True, disadvantage_sources=disadvantage,
+    )
+
+
+def _target_damage_rolls(spell: SpellSaveAction, target: EncounterCombatant) -> list[int] | None:
+    if _target_type(target) not in spell.maximize_damage_creature_types:
+        return None
+    return [spell.damage_dice_size] * spell.damage_dice_count
 
 
 def _save_action(choice: SpellChoice) -> SavingThrowAction:
@@ -89,26 +114,35 @@ def resolve_spell(
     shared_damage_rolls: list[int] | None = None
     for target_id in choice.target_ids:
         target = by_id[target_id]
+        if not _spell_affects(spell, target):
+            continue
         precomputed = None
         reflected_from = None
         if reflectable and target.state.template.spell_reflection_reaction is not None:
             precomputed = resolve_saving_throw(
                 target.state, save_action.save_ability, save_action.dc, dice, magical_effect=True,
+                disadvantage_sources=int(_target_type(target) in spell.save_disadvantage_creature_types),
             )
             if precomputed[1]:
                 reflected = reflection_target(target, caster, setup)
                 if reflected is not None:
                     spend_spell_reflection(target); reflected_from = target; target = reflected; precomputed = None
+        if not _spell_affects(spell, target):
+            continue
+        if precomputed is None:
+            precomputed = _target_save(spell, target, save_action, dice)
+        maximized_rolls = _target_damage_rolls(spell, target)
+        damage_rolls = maximized_rolls if maximized_rolls is not None else shared_damage_rolls
         event = resolve_save_action(
             sequence, round_number, caster, target, save_action,
             0 if placement is not None or reflected_from is not None else abs(caster.position_ft - target.position_ft),
-            dice, spend_action=False, shared_damage_rolls=shared_damage_rolls,
+            dice, spend_action=False, shared_damage_rolls=damage_rolls,
             affected_states=affected_states, setup=setup, precomputed_save=precomputed,
         )
         if reflected_from is not None:
             event.description = f"{reflected_from.state.template.name} uses Spell Reflection; {spell.name} targets {target.state.template.name} instead. {event.description}"
         events.append(event)
-        if shared_damage_rolls is None and event.damage_components:
+        if maximized_rolls is None and shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)
         sequence += 1
     return events, sequence

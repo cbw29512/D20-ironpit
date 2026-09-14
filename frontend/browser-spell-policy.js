@@ -15,10 +15,13 @@
     return (caster.state.resources?.[resourceId] || 0) > 0 ? action.level : null;
   }
 
+  const creatureType = (target) => (target.state.template.creature_type || "").toLowerCase();
+  const rule = (action, field) => action[field] || window.IRON_PIT_BROWSER_SPELL_TARGET_RULES?.[action.id]?.[field] || [];
+  const spellAffects = (action, target) => !rule(action, "excludedCreatureTypes").includes(creatureType(target));
   function legalSingleTargets(caster, setup, action) {
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     return enemies.filter((target) => target.state.is_alive && !target.state.is_dead
-      && target.state.current_hp > 0 && S().distance(caster, target) <= action.range);
+      && target.state.current_hp > 0 && S().distance(caster, target) <= action.range && spellAffects(action, target));
   }
 
   function areaScore(placement, members, action) {

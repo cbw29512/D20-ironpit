@@ -8,7 +8,7 @@ from app.domain.traits import CombatTrait
 def _member(combatant_id: str, side: str, reactive: bool) -> EncounterCombatant:
     template = build_goblin_warrior().model_copy(deep=True)
     if reactive:
-        template.combat_traits.add(CombatTrait.REACTIVE)
+        template.combat_traits.append(CombatTrait.REACTIVE)
     state = build_combatant_state(template)
     state.reaction_available = False
     return EncounterCombatant(combatant_id=combatant_id, side=side, position_ft=0, state=state)

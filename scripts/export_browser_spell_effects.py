@@ -4,6 +4,7 @@ import json
 import logging
 from pathlib import Path
 
+from app.content.monster_spell_actions_2014 import SPELL_TARGET_RULES_2014
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from browser_template_serializer import defense_row
 
@@ -12,14 +13,27 @@ ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-spell-effects.js"
 
 
+def _target_rules() -> dict[str, dict[str, list[str]]]:
+    return {
+        spell_id: {
+            "excludedCreatureTypes": list(rule.get("excluded_creature_types", [])),
+            "saveDisadvantageCreatureTypes": list(rule.get("save_disadvantage_creature_types", [])),
+            "maximizeDamageCreatureTypes": list(rule.get("maximize_damage_creature_types", [])),
+        }
+        for spell_id, rule in SPELL_TARGET_RULES_2014.items()
+    }
+
+
 def render() -> str:
     rows = [defense_row(BLESS), defense_row(SHIELD_OF_FAITH)]
     payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
+    rules = json.dumps(_target_rules(), separators=(",", ":"), sort_keys=True)
     return (
         "/* GENERATED from canonical Python certified spell effects. Do not hand-edit. */\n"
         "(() => {\n  \"use strict\";\n"
         f"  const spells = {payload};\n"
         "  window.IRON_PIT_BROWSER_SPELL_EFFECTS = Object.fromEntries(spells.map((item) => [item.id, item]));\n"
+        f"  window.IRON_PIT_BROWSER_SPELL_TARGET_RULES = {rules};\n"
         "})();\n"
     )
 

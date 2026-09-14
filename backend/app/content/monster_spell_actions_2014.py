@@ -6,10 +6,17 @@ from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveA
 from app.domain.targeting import AreaTargeting
 
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
-    "cone-of-cold", "disintegrate", "fire-bolt", "fireball", "guiding-bolt",
+    "blight", "cone-of-cold", "disintegrate", "fire-bolt", "fireball", "guiding-bolt",
     "inflict-wounds", "lightning-bolt", "magic-missile", "produce-flame",
     "ray-of-frost", "sacred-flame", "shocking-grasp",
 })
+SPELL_TARGET_RULES_2014 = {
+    "blight": {
+        "excluded_creature_types": ["undead", "construct"],
+        "save_disadvantage_creature_types": ["plant"],
+        "maximize_damage_creature_types": ["plant"],
+    },
+}
 
 
 def _cantrip_dice(caster_level: int) -> int:
@@ -53,6 +60,13 @@ def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> S
             save_ability="dexterity", dc=save_dc, damage_dice_count=8,
             damage_dice_size=6, damage_type="fire", success_damage="half",
             upcast_dice_per_level=1, animation=spell_id,
+        )
+    if spell_id == "blight":
+        return SpellSaveAction(
+            id=spell_id, name="Blight", level=level, range_ft=30,
+            save_ability="constitution", dc=save_dc, damage_dice_count=8,
+            damage_dice_size=8, damage_type="necrotic", success_damage="half",
+            upcast_dice_per_level=1, animation=spell_id, **SPELL_TARGET_RULES_2014[spell_id],
         )
     if spell_id == "cone-of-cold":
         return SpellSaveAction(
@@ -99,7 +113,7 @@ def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[
     attack_actions: list[SpellAttackAction] = []
     save_actions: list[SpellSaveAction] = []
     automatic_actions: list[AutomaticDamageSpellAction] = []
-    save_ids = {"sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt"}
+    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt"}
     for spell in profile.spells:
         if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014:
             continue

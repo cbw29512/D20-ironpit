@@ -29,6 +29,7 @@ def saving_throw_mode(
     against_prone: bool = False,
     against_condition: str | None = None,
     advantage_sources: int = 0,
+    disadvantage_sources: int = 0,
 ) -> RollMode:
     try:
         advantage = (
@@ -46,7 +47,8 @@ def saving_throw_mode(
             )
         )
         disadvantage = (
-            int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
+            disadvantage_sources
+            + int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
             + int(ability == "strength") * strength_d20_disadvantage(state)
         )
         if (advantage > 0) == (disadvantage > 0):
@@ -87,6 +89,7 @@ def resolve_saving_throw(
     against_prone: bool = False,
     against_condition: str | None = None,
     advantage_sources: int = 0,
+    disadvantage_sources: int = 0,
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
@@ -104,6 +107,7 @@ def resolve_saving_throw(
                 saving_throw_mode(
                     state, ability, magical_effect=magical_effect, against_prone=against_prone,
                     against_condition=against_condition, advantage_sources=advantage_sources,
+                    disadvantage_sources=disadvantage_sources,
                 ),
             ),
             dice,

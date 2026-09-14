@@ -31,12 +31,20 @@ def _slot_level(caster: EncounterCombatant, action: SpellSaveAction, turn_key: s
     return action.level if resource is not None and resource.current_uses > 0 else None
 
 
+def _creature_type(target: EncounterCombatant) -> str:
+    return (target.state.template.creature_type or "").lower()
+
+
+def _spell_affects(action: SpellSaveAction, target: EncounterCombatant) -> bool:
+    return _creature_type(target) not in action.excluded_creature_types
+
+
 def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, action: SpellSaveAction):
     enemies = setup.monsters if caster.side == "heroes" else setup.heroes
     return [
         target for target in enemies
         if target.state.is_alive and not target.state.is_dead and target.state.current_hp > 0
-        and combatant_distance(caster, target) <= action.range_ft
+        and combatant_distance(caster, target) <= action.range_ft and _spell_affects(action, target)
     ]
 
 
