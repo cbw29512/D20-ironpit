@@ -21,6 +21,7 @@ from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_start_turn_damage import start_turn_relationship_damage_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.content.monster_catalog_2014_unarmed import attacks_with_unarmed_fallback_2014
+from app.content.monster_defensive_spell_actions_2014 import defensive_spell_actions_2014
 from app.content.monster_innate_spell_actions_2014 import innate_save_actions_2014
 from app.content.monster_spell_actions_2014 import damage_spell_actions_2014
 from app.domain.models import CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
@@ -105,9 +106,10 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
             saving_throw_actions=[*source.saving_throw_actions, *innate_save_actions_2014(source)], death_trigger_actions=source.death_trigger_actions,
             healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
-            automatic_damage_spell_actions=automatic_spells, starts_invisible=starts_invisible_2014(source),
-            invisibility_action=invisibility_action_2014(source), legendary_action_uses=source.legendary_action_uses,
-            legendary_actions=source.legendary_actions, saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
+            automatic_damage_spell_actions=automatic_spells, defensive_spell_actions=defensive_spell_actions_2014(source),
+            starts_invisible=starts_invisible_2014(source), invisibility_action=invisibility_action_2014(source),
+            legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
+            saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
             source_trait_names=list(source.trait_names), source_legendary_action_names=list(source.legendary_action_names),
             damage_resistances=source.damage_resistances, conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_absorptions=damage_absorptions_2014(source.source_traits), damage_triggered_roll_penalties=damage_triggered_roll_penalties_2014(source.source_traits),
