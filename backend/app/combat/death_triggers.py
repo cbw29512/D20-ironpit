@@ -117,11 +117,17 @@ def resolve_death_triggers(
 
 
 def resolve_event_death_triggers(
-    sequence: int, round_number: int, event: BattleEvent, setup: EncounterSetup, dice: DiceProvider,
+    sequence: int,
+    round_number: int,
+    event: BattleEvent,
+    setup: EncounterSetup,
+    dice: DiceProvider,
+    *,
+    resolved: set[str] | None = None,
 ) -> tuple[list[BattleEvent], int]:
-    """Dispatch a target's on-death effects immediately after its lethal battle event."""
+    """Dispatch on-death effects only for an event that itself records a lethal transition."""
     try:
-        if not event.target_id:
+        if not event.target_id or event.is_dead is not True:
             return [], sequence
         target = next(
             (member for member in [*setup.heroes, *setup.monsters] if member.combatant_id == event.target_id),
@@ -129,7 +135,7 @@ def resolve_event_death_triggers(
         )
         if target is None or not target.state.is_dead or not target.state.template.death_trigger_effects:
             return [], sequence
-        return resolve_death_triggers(sequence, round_number, target, setup, dice)
+        return resolve_death_triggers(sequence, round_number, target, setup, dice, resolved=resolved)
     except Exception:
         logger.exception("Failed to dispatch death triggers after event %s.", event.sequence)
         raise
