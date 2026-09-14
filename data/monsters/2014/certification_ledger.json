@@ -4,7 +4,7 @@
     "action": 58,
     "attack-detail": 36,
     "legendary": 25,
-    "spell": 43,
+    "spell": 41,
     "trait": 63
   },
   "blocker_yield": {
@@ -127,7 +127,7 @@
     "spell:spirit guardians": 1,
     "spell:spiritual weapon": 3,
     "spell:telekinesis": 1,
-    "spell:thunderwave": 3,
+    "spell:thunderwave": 1,
     "spell:unparsed-innate-spellcasting": 1,
     "spell:vicious mockery": 1,
     "spell:wall of fire": 1,
@@ -922,10 +922,9 @@
     {
       "id": "druid",
       "name": "Druid",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "attack-detail:Quarterstaff",
-        "spell:thunderwave"
+        "attack-detail:Quarterstaff"
       ],
       "status": "blocked"
     },
@@ -1675,7 +1674,7 @@
     {
       "id": "lich",
       "name": "Lich",
-      "remaining_blocker_count": 9,
+      "remaining_blocker_count": 8,
       "remaining_blockers": [
         "legendary:Cantrip",
         "legendary:Disrupt Life",
@@ -1684,7 +1683,6 @@
         "spell:cloudkill",
         "spell:finger of death",
         "spell:power word kill",
-        "spell:thunderwave",
         "trait:Turn Resistance"
       ],
       "status": "blocked"
