@@ -20,16 +20,25 @@ class SpellChoice:
     target_ids: tuple[str, ...]
     placement: LegacyAreaPlacement | GridAreaPlacement | None = None
     expected_damage: float = 0.0
+    resource_id: str | None = None
 
 
-def _slot_level(caster: EncounterCombatant, action: SpellSaveAction, turn_key: str) -> int | None:
-    if action.level == 0:
-        return 0
-    if not slot_spell_available(caster.state, turn_key):
-        return None
-    resource_id = f"spell-slot-{action.level}"
-    resource = next((item for item in caster.state.resources if item.id == resource_id), None)
-    return action.level if resource is not None and resource.current_uses > 0 else None
+def _resource(caster: EncounterCombatant, resource_id: str):
+    return next((item for item in caster.state.resources if item.id == resource_id), None)
+
+
+def _cast_access(caster: EncounterCombatant, action: SpellSaveAction, turn_key: str) -> tuple[int, str | None] | None:
+    innate_id = f"innate-{action.id}"
+    innate = _resource(caster, innate_id)
+    if innate is not None:
+        return (action.level, innate_id) if innate.current_uses > 0 else None
+    slot_id = f"spell-slot-{action.level}"
+    slot = _resource(caster, slot_id)
+    if slot is not None:
+        if not slot_spell_available(caster.state, turn_key) or slot.current_uses < 1:
+            return None
+        return action.level, slot_id
+    return action.level, None
 
 
 def _creature_type(target: EncounterCombatant) -> str:
@@ -67,18 +76,21 @@ def choose_spell(
     members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
     protected = protected_ally_ids or set()
     for index, action in enumerate(caster.state.template.spell_save_actions):
-        if action.action_cost == "reaction" or action.concentration or not is_available(caster.state, action.action_cost):
+        if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             continue
-        slot_level = _slot_level(caster, action, turn_key)
-        if slot_level is None:
+        if action.concentration and caster.state.concentration is not None and caster.state.concentration.effect_id == action.id:
             continue
+        access = _cast_access(caster, action, turn_key)
+        if access is None:
+            continue
+        slot_level, resource_id = access
         if action.area is not None:
             for placement in legal_area_placements(caster, setup, action.area, action.range_ft):
                 if protected.intersection(placement.friendly_ids):
                     continue
                 score = _area_score(placement, members, action)
                 target_ids = (*placement.enemy_ids, *placement.friendly_ids)
-                candidates.append((score, -action.level, -index, SpellChoice(action, slot_level, target_ids, placement, score)))
+                candidates.append((score, -action.level, -index, SpellChoice(action, slot_level, target_ids, placement, score, resource_id)))
             continue
         if action.area_radius_ft is not None:
             placement = best_area_placement(caster, setup, action.area_radius_ft, action.range_ft, protected)
@@ -86,7 +98,7 @@ def choose_spell(
                 continue
             target_ids = (*placement.enemy_ids, *placement.friendly_ids)
             score = _area_score(placement, members, action)
-            choice = SpellChoice(action, slot_level, target_ids, placement, score)
+            choice = SpellChoice(action, slot_level, target_ids, placement, score, resource_id)
             candidates.append((score, -action.level, -index, choice))
             continue
         legal = _legal_single_targets(caster, setup, action)
@@ -97,6 +109,6 @@ def choose_spell(
             key=lambda item: (save_spell_expected_damage(item, action), -item.state.current_hp, item.combatant_id),
         )
         score = save_spell_expected_damage(target, action)
-        choice = SpellChoice(action, slot_level, (target.combatant_id,), expected_damage=score)
+        choice = SpellChoice(action, slot_level, (target.combatant_id,), expected_damage=score, resource_id=resource_id)
         candidates.append((score, -action.level, -index, choice))
     return max(candidates, key=lambda item: item[:3])[3] if candidates else None
