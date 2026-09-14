@@ -54,3 +54,14 @@ def test_charge_prone_uses_printed_save_instead_of_automatic_prone() -> None:
     assert resolved.save_succeeded is False
     assert "prone" in target.state.active_effect_ids
     assert "prone" in resolved.applied_condition_ids
+
+
+def test_form_qualified_pounce_binds_to_weretiger_claw() -> None:
+    weretiger = monster_by_id_2014("weretiger")
+    attacks = [weretiger.weapon_attack, *weretiger.alternate_weapon_attacks]
+    claw = next(attack for attack in attacks if attack.weapon.name.startswith("Claw"))
+
+    assert claw.charge_profile is not None
+    assert claw.charge_profile.minimum_move_ft == 15
+    assert claw.charge_profile.prone_save_dc == 14
+    assert claw.charge_profile.follow_up_attack_id == "bite-tiger-or-hybrid-form-only"
