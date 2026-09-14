@@ -14,6 +14,14 @@ def test_azer_heated_traits_compile_from_source_data() -> None:
     assert any(part.damage_type.value == "fire" for part in azer.weapon_attack.on_hit_damage)
 
 
+def test_black_pudding_corrosive_form_reuses_reactive_damage() -> None:
+    pudding = monster_by_id_2014("black-pudding")
+    assert len(pudding.melee_hit_reactive_damage) == 1
+    corrosive = pudding.melee_hit_reactive_damage[0]
+    assert corrosive.id == "corrosive-form"
+    assert (corrosive.range_ft, corrosive.dice_count, corrosive.dice_size, corrosive.damage_type.value) == (5, 1, 8, "acid")
+
+
 def test_melee_hit_inside_range_applies_heated_body_to_attacker() -> None:
     attacker = EncounterCombatant(
         combatant_id="hero-1", side="heroes", position_ft=5,
