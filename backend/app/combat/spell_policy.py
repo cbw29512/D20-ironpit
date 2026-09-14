@@ -3,9 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from app.combat.action_economy import is_available
+from app.combat.area_targeting import AreaPlacement as GridAreaPlacement, legal_area_placements
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
-from app.combat.spell_area import AreaPlacement, best_area_placement
+from app.combat.spell_area import AreaPlacement as LegacyAreaPlacement, best_area_placement
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -16,7 +17,7 @@ class SpellChoice:
     action: SpellSaveAction
     slot_level: int
     target_ids: tuple[str, ...]
-    placement: AreaPlacement | None = None
+    placement: LegacyAreaPlacement | GridAreaPlacement | None = None
     expected_damage: float = 0.0
 
 
@@ -39,6 +40,11 @@ def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, act
     ]
 
 
+def _area_score(placement, members, action: SpellSaveAction) -> float:
+    score = sum(save_spell_expected_damage(members[target_id], action) for target_id in placement.enemy_ids)
+    return score - sum(save_spell_expected_damage(members[target_id], action) for target_id in placement.friendly_ids)
+
+
 def choose_spell(
     caster: EncounterCombatant,
     setup: EncounterSetup,
@@ -47,19 +53,27 @@ def choose_spell(
 ) -> SpellChoice | None:
     candidates: list[tuple[float, int, int, SpellChoice]] = []
     members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
+    protected = protected_ally_ids or set()
     for index, action in enumerate(caster.state.template.spell_save_actions):
         if action.action_cost == "reaction" or action.concentration or not is_available(caster.state, action.action_cost):
             continue
         slot_level = _slot_level(caster, action, turn_key)
         if slot_level is None:
             continue
+        if action.area is not None:
+            for placement in legal_area_placements(caster, setup, action.area, action.range_ft):
+                if protected.intersection(placement.friendly_ids):
+                    continue
+                score = _area_score(placement, members, action)
+                target_ids = (*placement.enemy_ids, *placement.friendly_ids)
+                candidates.append((score, -action.level, -index, SpellChoice(action, slot_level, target_ids, placement, score)))
+            continue
         if action.area_radius_ft is not None:
-            placement = best_area_placement(caster, setup, action.area_radius_ft, action.range_ft, protected_ally_ids)
+            placement = best_area_placement(caster, setup, action.area_radius_ft, action.range_ft, protected)
             if placement is None:
                 continue
             target_ids = (*placement.enemy_ids, *placement.friendly_ids)
-            score = sum(save_spell_expected_damage(members[target_id], action) for target_id in placement.enemy_ids)
-            score -= sum(save_spell_expected_damage(members[target_id], action) for target_id in placement.friendly_ids)
+            score = _area_score(placement, members, action)
             choice = SpellChoice(action, slot_level, target_ids, placement, score)
             candidates.append((score, -action.level, -index, choice))
             continue
