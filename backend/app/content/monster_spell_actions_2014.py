@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
-from app.domain.spells import SpellAttackAction, SpellSaveAction
+from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveAction
 
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
     "disintegrate", "fire-bolt", "fireball", "guiding-bolt", "magic-missile",
-    "inflict-wounds", "produce-flame", "sacred-flame", "shocking-grasp",
+    "inflict-wounds", "produce-flame", "ray-of-frost", "sacred-flame", "shocking-grasp",
 })
 
 
@@ -20,14 +20,21 @@ def _attack_spell(spell_id: str, level: int, attack_bonus: int, caster_level: in
         "fire-bolt": ("Fire Bolt", "ranged", 120, scaling, 10, "fire"),
         "shocking-grasp": ("Shocking Grasp", "melee", 5, scaling, 8, "lightning"),
         "produce-flame": ("Produce Flame", "ranged", 30, scaling, 8, "fire"),
+        "ray-of-frost": ("Ray of Frost", "ranged", 60, scaling, 8, "cold"),
         "guiding-bolt": ("Guiding Bolt", "ranged", 120, 4, 6, "radiant"),
         "inflict-wounds": ("Inflict Wounds", "melee", 5, 3, 10, "necrotic"),
     }
     name, kind, range_ft, count, size, damage_type = specs[spell_id]
+    modifiers = []
+    if spell_id == "ray-of-frost":
+        modifiers.append(SpellModifierEffect(
+            kind="speed", flat_bonus=-10, expires_at_start_of_source_turn=True,
+        ))
     return SpellAttackAction(
         id=spell_id, name=name, level=level, attack_kind=kind, range_ft=range_ft,
         attack_bonus=attack_bonus, damage_dice_count=count, damage_dice_size=size,
-        damage_type=damage_type, animation=spell_id, source="SRD 5.1 / 2014 monster spell",
+        damage_type=damage_type, on_hit_modifier_effects=modifiers,
+        animation=spell_id, source="SRD 5.1 / 2014 monster spell",
     )
 
 
