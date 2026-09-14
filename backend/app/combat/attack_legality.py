@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.ongoing_damage_policy import source_attacks_blocked
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
@@ -32,6 +33,8 @@ def attack_allowed_against(
     opponent_states: list[CombatantState] | None = None,
 ) -> bool:
     try:
+        if opponent_states is not None and source_attacks_blocked(attacker_event_id, opponent_states):
+            return False
         restraint = attack.breakable_restraint
         if restraint is not None:
             if restraint.max_target_size is not None and not size_at_most(defender.template.size, restraint.max_target_size):
