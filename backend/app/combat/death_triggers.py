@@ -2,50 +2,13 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.death_trigger_support import compile_action, distance_ft
 from app.combat.dice import DiceProvider
-from app.combat.grid_geometry import footprint_distance_ft
 from app.combat.saving_throws import resolve_save_action
-from app.domain.actions import SavingThrowAction
-from app.domain.death_triggers import DeathTriggeredSaveEffect
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
 
 logger = logging.getLogger(__name__)
-
-
-def _action(effect: DeathTriggeredSaveEffect) -> SavingThrowAction:
-    try:
-        return SavingThrowAction(
-            id=effect.id,
-            name=effect.name,
-            save_ability=effect.save_ability,
-            dc=effect.dc,
-            range_ft=effect.radius_ft,
-            damage_dice_count=effect.damage_dice_count,
-            damage_dice_size=effect.damage_dice_size,
-            damage_bonus=effect.damage_bonus,
-            damage_type=effect.damage_type.value,
-            success_damage="half" if effect.half_damage_on_success else "none",
-            animation="death-trigger",
-        )
-    except Exception:
-        logger.exception("Failed to compile death-trigger effect %s.", effect.id)
-        raise
-
-
-def _distance(source: EncounterCombatant, target: EncounterCombatant) -> int:
-    try:
-        if source.state.position is None or target.state.position is None:
-            raise ValueError("Death-trigger resolution requires authoritative grid positions.")
-        return footprint_distance_ft(
-            source.state.position,
-            source.state.template.size,
-            target.state.position,
-            target.state.template.size,
-        )
-    except Exception:
-        logger.exception("Failed death-trigger distance check: %s -> %s.", source.combatant_id, target.combatant_id)
-        raise
 
 
 def resolve_death_triggers(
@@ -70,12 +33,12 @@ def resolve_death_triggers(
             if key in resolved_keys:
                 continue
             resolved_keys.add(key)
-            action = _action(effect)
+            action = compile_action(effect)
             targets = [
                 target for target in members
                 if target.combatant_id != source.combatant_id
                 and not target.state.is_dead
-                and _distance(source, target) <= effect.radius_ft
+                and distance_ft(source, target) <= effect.radius_ft
             ]
             shared_rolls: list[int] = []
             newly_dead: list[EncounterCombatant] = []
@@ -87,7 +50,7 @@ def resolve_death_triggers(
                     source,
                     target,
                     action,
-                    _distance(source, target),
+                    distance_ft(source, target),
                     dice,
                     spend_action=False,
                     spend_resource_cost=False,
