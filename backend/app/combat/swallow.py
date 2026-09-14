@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from app.combat.conditions import PRONE_EFFECT_ID
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
@@ -63,6 +62,10 @@ def resolve_swallow_action(
             source_id=actor.combatant_id, source_effect_id=action.id,
             damage_dice_count=action.damage_dice_count, damage_dice_size=action.damage_dice_size,
             damage_bonus=action.damage_bonus, damage_type=action.damage_type,
+            regurgitation_damage_threshold=action.regurgitation_damage_threshold,
+            regurgitation_save_ability=action.regurgitation_save_ability,
+            regurgitation_save_dc=action.regurgitation_save_dc,
+            regurgitation_range_ft=action.regurgitation_range_ft,
             exit_movement_ft=action.exit_movement_ft, exit_prone=action.exit_prone,
         )
         event.applied_condition_ids = list(dict.fromkeys([*event.applied_condition_ids, "blinded", "restrained", "swallowed"]))
@@ -75,14 +78,12 @@ def cleanup_swallowed(setup: EncounterSetup) -> None:
     members = {member.combatant_id: member for member in _members(setup)}
     for target in members.values():
         swallowed = target.state.swallowed
-        if swallowed is None:
+        if swallowed is None or swallowed.source_dead:
             continue
         source = members.get(swallowed.source_id)
         if source is not None and source.state.is_alive and not source.state.is_dead:
             continue
-        target.state.swallowed = None
-        if swallowed.exit_prone and PRONE_EFFECT_ID not in target.state.active_effect_ids:
-            target.state.active_effect_ids.append(PRONE_EFFECT_ID)
+        swallowed.source_dead = True
 
 
 def resolve_start_turn_damage(
@@ -91,7 +92,7 @@ def resolve_start_turn_damage(
     events: list[BattleEvent] = []
     for target in swallowed_targets(actor, setup):
         swallowed = target.state.swallowed
-        if swallowed is None:
+        if swallowed is None or swallowed.source_dead:
             continue
         rolls = [dice.roll(swallowed.damage_dice_size) for _ in range(swallowed.damage_dice_count)]
         rolled = DamageRollComponent(
