@@ -25,7 +25,6 @@ _MODELED_TRAITS = {
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
 
-
 def _heading_name(value: str) -> str:
     return re.sub(r"\s*\([^)]*\)$", "", value).strip()
 
