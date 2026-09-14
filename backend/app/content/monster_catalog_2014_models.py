@@ -40,6 +40,7 @@ class CatalogAttack2014(BaseModel):
     resource_cost: int = Field(default=1, ge=1, le=20)
     breakable_restraint: BreakableRestraint | None = None
     forbid_target_grappled_by_self: bool = False
+    grapple_target_policy: Literal["normal", "auto_hit_own_grapple"] = "normal"
     charge_profile: ChargeProfileDefinition | None = None
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
