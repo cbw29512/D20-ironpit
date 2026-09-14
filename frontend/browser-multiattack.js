@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const AU = () => window.IRON_PIT_BROWSER_AURAS || { attackAdvantageSources: () => 0 };
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
@@ -17,12 +16,9 @@
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [], forcedMovementActionIds: [] }
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [], forcedMovementActionIds: slot.forcedMovementActionIds || [] };
   const sizeAllowed = (target, maximum) => !maximum || window.IRON_PIT_BROWSER_STATE.sizeAtMost(target, maximum);
-
   function settleDeathEvent(sequence, round, event, setup, resolved) {
     try {
       if (!event?.target_id || event.is_dead !== true) return { events: [], sequence };
-      const target = [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === event.target_id);
-      if (!target?.state.is_dead || !(target.state.template.death_trigger_effects || []).length) return { events: [], sequence };
       if (!DT()?.afterEvent) throw new Error("Browser death-trigger lifecycle is unavailable.");
       return DT().afterEvent(sequence, round, event, setup, resolved);
     } catch (error) {
@@ -50,7 +46,6 @@
     if ((action.failureEffects || []).some((effect) => saveEffectIsNew(member, target, action, effect))) return true;
     return action.grappleEscapeDc != null && !(target.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id);
   }
-
   function saveChoice(member, setup, data) {
     try {
       const allowed = new Set(data.saveActionIds);
@@ -95,7 +90,6 @@
     if (!slots.slice(1).some((slot) => F().flexibleSlotHasBoth(member, slotData(slot).attackIds))) return false;
     return D().roll(100) >= 76;
   }
-
   function resolveAttackAction(sequence, round, member, setup) {
     const definition = member.state.template.attack_action, slots = definition?.slots;
     if (!slots?.length || !E().available(member.state, "action") || !F().targetOrder(member, setup).length) return { events: [], sequence };
@@ -105,7 +99,6 @@
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
     let lightTrigger = null, rangedSplitUsed = false;
     const rangedSplit = useRangedSplit(member, setup, slots), turnKey = `${round}:${member.combatant_id}`;
-
     for (let index = 0; index < slots.length; index += 1) {
       if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
       const data = slotData(slots[index]), movement = movementChoice(member, setup, data);
@@ -144,7 +137,6 @@
         openingFeature = null;
       }
     }
-
     if (definition.isAttackAction && lightTrigger && !(member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated)) {
       const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
       events.push(...extra.events); sequence = extra.sequence;
@@ -155,6 +147,5 @@
     }
     return { events, sequence };
   }
-
   window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction };
 })();
