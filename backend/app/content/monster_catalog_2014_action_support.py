@@ -9,7 +9,7 @@ from app.content.monster_catalog_2014_models import CatalogMonster2014
 
 logger = logging.getLogger(__name__)
 NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape", "weird-insight"})
-ARENA_NEUTRAL_REACTIONS_2014 = frozenset({"Shriek"})
+ARENA_NEUTRAL_REACTIONS_2014 = frozenset({"Shriek", "Shield"})
 
 
 def action_key_2014(value: str) -> str:
