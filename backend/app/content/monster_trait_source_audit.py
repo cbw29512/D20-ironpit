@@ -9,6 +9,7 @@ from app.content.monster_death_trigger_source import parse_death_trigger_effects
 from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
 from app.content.monster_regeneration_source import regeneration_trait_issues
 from app.content.monster_trait_aura_audit import aura_trait_issues
+from app.content.monster_trait_policy import ARENA_NEUTRAL_TRAITS
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
 
@@ -23,15 +24,6 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
-_ARENA_NEUTRAL_TRAITS = frozenset({
-    "Agile", "Amorphous", "Amphibious", "Beast of Burden", "Demonic Restoration", "Diabolical Restoration", "Divine Awareness",
-    "Earth Glide", "Eldritch Restoration", "Elemental Restoration", "Exalted Restoration", "False Appearance", "Flyby",
-    "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Inscrutable", "Jumper", "Keen Hearing",
-    "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness",
-    "Mimicry", "Probing Telepathy", "Running Leap", "Sense Magic", "Shark Telepathy", "Siege Monster", "Spider Climb",
-    "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness", "Telepathic Bond", "Training", "Treasure Sense", "Troll Spawn",
-    "Tunneler", "Water Breathing", "Web Walker",
-})
 
 
 def _heading_name(value: str) -> str:
@@ -110,7 +102,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     issues.extend(legendary_issues)
     aura_issues, aura_certified = aura_trait_issues(template, row, expected)
     issues.extend(aura_issues)
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified
     if legendary_certified:
         certified.add("Legendary Resistance")
     for name in expected:
