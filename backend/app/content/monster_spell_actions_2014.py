@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.content.shared_spell_actions_2014 import build_faerie_fire
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
-    "blight", "cone-of-cold", "disintegrate", "fire-bolt", "fireball", "guiding-bolt",
+    "blight", "cone-of-cold", "disintegrate", "faerie-fire", "fire-bolt", "fireball", "guiding-bolt",
     "inflict-wounds", "lightning-bolt", "magic-missile", "produce-flame",
     "ray-of-frost", "sacred-flame", "shocking-grasp", "thunderwave",
 })
@@ -35,10 +36,7 @@ def _attack_spell(spell_id: str, level: int, attack_bonus: int, caster_level: in
     }
     name, kind, range_ft, count, size, damage_type = specs[spell_id]
     modifiers = []
-    if spell_id == "ray-of-frost":
-        modifiers.append(SpellModifierEffect(
-            kind="speed", flat_bonus=-10, expires_at_start_of_source_turn=True,
-        ))
+    if spell_id == "ray-of-frost": modifiers.append(SpellModifierEffect(kind="speed", flat_bonus=-10, expires_at_start_of_source_turn=True))
     return SpellAttackAction(
         id=spell_id, name=name, level=level, attack_kind=kind, range_ft=range_ft,
         attack_bonus=attack_bonus, damage_dice_count=count, damage_dice_size=size,
@@ -48,6 +46,7 @@ def _attack_spell(spell_id: str, level: int, attack_bonus: int, caster_level: in
 
 
 def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> SpellSaveAction:
+    if spell_id == "faerie-fire": return build_faerie_fire(save_dc)
     if spell_id == "sacred-flame":
         return SpellSaveAction(
             id=spell_id, name="Sacred Flame", level=0, range_ft=60,
@@ -101,36 +100,25 @@ def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> S
 
 
 def _automatic_spell(spell_id: str, level: int) -> AutomaticDamageSpellAction:
-    if spell_id != "magic-missile":
-        raise ValueError(f"Unsupported automatic-damage spell: {spell_id}")
+    if spell_id != "magic-missile": raise ValueError(f"Unsupported automatic-damage spell: {spell_id}")
     return AutomaticDamageSpellAction(
         id="magic-missile", name="Magic Missile", level=level, range_ft=120,
-        base_projectiles=3, projectiles_per_slot_above=1,
-        damage_dice_count_per_projectile=1, damage_dice_size=4,
-        damage_bonus_per_projectile=1, damage_type="force",
+        base_projectiles=3, projectiles_per_slot_above=1, damage_dice_count_per_projectile=1,
+        damage_dice_size=4, damage_bonus_per_projectile=1, damage_type="force",
         animation="magic-missile", source="SRD 5.1 / 2014 monster spell",
     )
 
 
-def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[
-    list[SpellAttackAction], list[SpellSaveAction], list[AutomaticDamageSpellAction],
-]:
+def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[list[SpellAttackAction], list[SpellSaveAction], list[AutomaticDamageSpellAction]]:
     profile = source.spellcasting
-    if profile is None:
-        return [], [], []
-    attack_actions: list[SpellAttackAction] = []
-    save_actions: list[SpellSaveAction] = []
-    automatic_actions: list[AutomaticDamageSpellAction] = []
-    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt", "thunderwave"}
+    if profile is None: return [], [], []
+    attack_actions: list[SpellAttackAction] = []; save_actions: list[SpellSaveAction] = []; automatic_actions: list[AutomaticDamageSpellAction] = []
+    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt", "thunderwave", "faerie-fire"}
     for spell in profile.spells:
-        if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014:
-            continue
-        if spell.id == "magic-missile":
-            automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
+        if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014: continue
+        if spell.id == "magic-missile": automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
         if spell.id in save_ids:
-            if profile.save_dc is not None:
-                save_actions.append(_save_spell(spell.id, spell.level, profile.save_dc, profile.caster_level))
+            if profile.save_dc is not None: save_actions.append(_save_spell(spell.id, spell.level, profile.save_dc, profile.caster_level))
             continue
-        if profile.attack_bonus is not None:
-            attack_actions.append(_attack_spell(spell.id, spell.level, profile.attack_bonus, profile.caster_level))
+        if profile.attack_bonus is not None: attack_actions.append(_attack_spell(spell.id, spell.level, profile.attack_bonus, profile.caster_level))
     return attack_actions, save_actions, automatic_actions
