@@ -9,8 +9,18 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 logger = logging.getLogger(__name__)
 
 
+def _swallowed_together(attacker: EncounterCombatant, target: EncounterCombatant) -> bool:
+    swallowed = attacker.state.swallowed
+    if swallowed is not None and swallowed.source_id == target.combatant_id:
+        return True
+    swallowed = target.state.swallowed
+    return swallowed is not None and swallowed.source_id == attacker.combatant_id
+
+
 def combatant_distance(attacker: EncounterCombatant, target: EncounterCombatant) -> int:
     try:
+        if _swallowed_together(attacker, target):
+            return 0
         attacker_position = attacker.state.position
         target_position = target.state.position
         if attacker_position is not None or target_position is not None:
