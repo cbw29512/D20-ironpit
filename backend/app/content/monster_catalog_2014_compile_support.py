@@ -5,6 +5,7 @@ import logging
 from app.combat.legendary_actions import LEGENDARY_ACTION_RESOURCE_ID
 from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
 from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.content.monster_catalog_2014_reactive_damage import reactive_melee_damage_2014
 from app.content.monster_catalog_2014_traits import legendary_resistance_uses_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import RechargeRule, ResourceDefinition
