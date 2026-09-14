@@ -122,7 +122,7 @@ def _gaze_row(gaze):
 
 
 def _aura_row(aura):
-    return {
+    row = {
         "id": aura.id, "name": aura.name, "rangeFt": aura.range_ft,
         "saveAbility": aura.save_ability, "saveDc": aura.save_dc,
         "failureConditionId": aura.failure_condition_id,
@@ -131,6 +131,8 @@ def _aura_row(aura):
         "magicalEffect": aura.magical_effect,
         "successGrantsSourceImmunity": aura.success_grants_source_immunity,
     }
+    if aura.reaction_cost: row["reactionCost"] = True
+    return row
 
 
 def _relationship_damage_row(profile):
