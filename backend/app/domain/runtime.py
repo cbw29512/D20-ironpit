@@ -9,6 +9,7 @@ from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
 from app.domain.ongoing_damage import OngoingDamageState
+from app.domain.reactive_damage import MeleeHitReactiveDamage
 from app.domain.restraints import RestraintState
 from app.domain.swallow import SwallowedState
 
@@ -111,6 +112,7 @@ class CombatantState(BaseModel):
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
+    temporary_melee_hit_reactive_damage: list[MeleeHitReactiveDamage] = Field(default_factory=list)
     regeneration_suppressed: bool = False
     wielded_attack_id: str | None = None
     rage_expires_round: int | None = Field(default=None, ge=1)
