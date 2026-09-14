@@ -37,7 +37,7 @@ def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: Atta
                 }
 
     capped = re.fullmatch(
-        _SUBJECT + r"makes (two|three|four) attacks, only one of which can be (?:a|an|its|his|her) ([a-z][a-z -]*?)(?: attack)?\. ?",
+        _SUBJECT + r"makes (two|three|four) attacks, only one of which can be (?:with )?(?:a|an|its|his|her) ([a-z][a-z -]*?)(?: attack)?\. ?",
         text,
         re.I,
     )
@@ -81,13 +81,23 @@ def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: Atta
         same_count = _COUNTS[first_count.lower()] == _COUNTS[second_count.lower()]
         referenced_forms = {like_first.lower(), like_second.lower()} == {first_form.lower(), second_form.lower()}
         if first and second and same_count and referenced_forms:
-            choices = list(dict.fromkeys([*first, *second]))
-            count = _COUNTS[first_count.lower()]
-            return {
-                "id": "multiattack", "name": "Multiattack",
-                "slots": [choices[:] for _ in range(count)],
-                "policy": {"same_attack_as_previous_slots": list(range(1, count))},
-            }
+            choices = list(dict.fromkeys([*first, *second])); count = _COUNTS[first_count.lower()]
+            return {"id": "multiattack", "name": "Multiattack", "slots": [choices[:] for _ in range(count)],
+                    "policy": {"same_attack_as_previous_slots": list(range(1, count))}}
+
+    mixed_form_choice = re.fullmatch(
+        r"in ([a-z][a-z -]*?) form, " + _SUBJECT + r"makes (two|three|four) ([a-z][a-z -]*?) attacks? or (two|three|four) ([a-z][a-z -]*?) attacks?\. "
+        r"in ([a-z][a-z -]*?) form, (?:it|he|she) can attack like (?:a|an) ([a-z][a-z -]*?) or make (two|three|four) ([a-z][a-z -]*?) attacks?\. ?",
+        text, re.I,
+    )
+    if mixed_form_choice:
+        first_form, first_count, first_label, second_count, second_label, _, like_form, third_count, third_label = mixed_form_choice.groups()
+        first = ids_for_label(first_label, attacks); second = ids_for_label(second_label, attacks); third = ids_for_label(third_label, attacks)
+        counts = {_COUNTS[first_count.lower()], _COUNTS[second_count.lower()], _COUNTS[third_count.lower()]}
+        if first and second and third and len(counts) == 1 and like_form.lower() == first_form.lower():
+            choices = list(dict.fromkeys([*first, *second, *third])); count = counts.pop()
+            return {"id": "multiattack", "name": "Multiattack", "slots": [choices[:] for _ in range(count)],
+                    "policy": {"same_attack_as_previous_slots": list(range(1, count))}}
 
     hit_follow_up = re.fullmatch(
         _SUBJECT + r"makes one attack with (?:its|his|her) ([a-z][a-z -]*?)\. "
