@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
+from app.combat.aura_activation import resolve_ready_activated_aura
 from app.combat.charge import resolve_charge_closing
 from app.combat.death_triggers import append_pending_death_triggers
 from app.combat.encounter_area_actions import resolve_ready_area_action
@@ -35,10 +36,27 @@ def resolve_recharge_priority(sequence, round_number, attacker, setup, dice):
         raise
 
 
+def _resolve_aura_priority(sequence, round_number, attacker, setup, dice):
+    try:
+        events, sequence, fired = resolve_ready_activated_aura(
+            sequence, round_number, attacker, setup,
+        )
+        if fired:
+            sequence = _flush(events, sequence, round_number, setup, dice)
+        return events, sequence, fired
+    except Exception:
+        logger.exception("Failed activated-aura priority for %s.", attacker.combatant_id)
+        raise
+
+
 def resolve_pre_movement_offense(sequence, round_number, attacker, setup, turn_key, dice):
-    """Resolve mandatory Recharge, held-target Swallow, spell offense, and Charge before movement."""
+    """Resolve priority offense that is already legal before ordinary movement."""
     try:
         events, sequence, fired = resolve_recharge_priority(sequence, round_number, attacker, setup, dice)
+        if fired:
+            return events, sequence, True
+        aura_events, sequence, fired = _resolve_aura_priority(sequence, round_number, attacker, setup, dice)
+        events.extend(aura_events)
         if fired:
             return events, sequence, True
         swallow_events, sequence, swallowed = resolve_swallow_action(sequence, round_number, attacker, setup, dice)
@@ -67,9 +85,13 @@ def resolve_pre_movement_offense(sequence, round_number, attacker, setup, turn_k
 
 
 def resolve_post_movement_offense(sequence, round_number, attacker, setup, turn_key, dice):
-    """Retry mandatory Recharge and Swallow after movement, then allow ordinary spell offense."""
+    """Retry priority offense after movement, then allow ordinary spell offense."""
     try:
         events, sequence, fired = resolve_recharge_priority(sequence, round_number, attacker, setup, dice)
+        if fired:
+            return events, sequence, True
+        aura_events, sequence, fired = _resolve_aura_priority(sequence, round_number, attacker, setup, dice)
+        events.extend(aura_events)
         if fired:
             return events, sequence, True
         swallow_events, sequence, swallowed = resolve_swallow_action(sequence, round_number, attacker, setup, dice)
