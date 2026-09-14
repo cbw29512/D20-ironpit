@@ -1,8 +1,8 @@
 {
-  "blocked_count": 95,
+  "blocked_count": 94,
   "blocker_families": {
     "action": 58,
-    "attack-detail": 44,
+    "attack-detail": 42,
     "legendary": 25,
     "spell": 51,
     "trait": 65
@@ -78,7 +78,7 @@
     "attack-detail:Shield Bash": 1,
     "attack-detail:Slaying Longbow": 1,
     "attack-detail:Strength Drain": 1,
-    "attack-detail:Tail": 3,
+    "attack-detail:Tail": 1,
     "attack-detail:Tentacle": 3,
     "attack-detail:Tentacles": 1,
     "attack-detail:Touch": 2,
@@ -1775,9 +1775,8 @@
     {
       "id": "marilith",
       "name": "Marilith",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "attack-detail:Tail",
         "trait:Reactive"
       ],
       "status": "blocked"
@@ -2219,11 +2218,9 @@
     {
       "id": "salamander",
       "name": "Salamander",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Tail"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "satyr",
@@ -2826,7 +2823,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 232,
+  "ready_count": 233,
   "ruleset": "2014",
   "schema_version": 1
 }
