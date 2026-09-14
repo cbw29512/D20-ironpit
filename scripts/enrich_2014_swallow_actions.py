@@ -6,7 +6,7 @@ import logging
 import re
 from pathlib import Path
 
-from import_2014_swallow_actions import parse_swallow_action
+from import_2014_swallow_actions import parse_on_hit_swallow_attack, parse_swallow_action
 
 logger = logging.getLogger(__name__)
 
@@ -14,11 +14,11 @@ logger = logging.getLogger(__name__)
 def _parse_swallow_from_actions(actions: str) -> dict | None:
     paragraphs = re.findall(r"<p>(.*?)</p>", actions or "", re.I | re.S)
     for index, paragraph in enumerate(paragraphs):
-        parsed = parse_swallow_action(paragraph)
-        if parsed is not None:
-            return parsed
+        candidates = [paragraph]
         if index + 1 < len(paragraphs):
-            parsed = parse_swallow_action(f"{paragraph} {paragraphs[index + 1]}")
+            candidates.append(f"{paragraph} {paragraphs[index + 1]}")
+        for candidate in candidates:
+            parsed = parse_swallow_action(candidate) or parse_on_hit_swallow_attack(candidate)
             if parsed is not None:
                 return parsed
     return None
