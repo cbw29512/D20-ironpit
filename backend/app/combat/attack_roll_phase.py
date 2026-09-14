@@ -9,10 +9,10 @@ from app.combat.conditional_attack_advantage import conditional_attack_advantage
 from app.combat.d20_effects import strength_d20_disadvantage
 from app.combat.dice import DiceProvider
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
-from app.combat.hit_points import effective_max_hp
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice,
     attacks_against_advantage_sources,
+    effective_armor_class,
     next_attack_against_advantage_sources,
 )
 from app.combat.range import resolve_attack_roll_mode
@@ -72,7 +72,7 @@ def resolve_attack_roll_phase(
     )
     base_roll = roll_d20(dice, attack.attack_bonus, mode)
     base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(
-        attacker, base_roll, effective_max_hp(defender) * 0 + defender.template.armor_class, dice,
+        attacker, base_roll, effective_armor_class(defender), dice,
     )
     attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
     natural = attack_roll.selected_roll or 0
