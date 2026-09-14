@@ -113,3 +113,4 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     forbid_target_grappled_by_self: bool = False
+    grapple_target_policy: Literal["normal", "auto_hit_own_grapple"] = "normal"
