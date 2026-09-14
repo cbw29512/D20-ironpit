@@ -124,6 +124,7 @@ class SpellSaveAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
+    failure_push_ft: int = Field(default=0, ge=0, le=120)
     upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
     excluded_creature_types: list[str] = Field(default_factory=list)
     save_disadvantage_creature_types: list[str] = Field(default_factory=list)

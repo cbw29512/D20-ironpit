@@ -8,7 +8,7 @@ from app.domain.targeting import AreaTargeting
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
     "blight", "cone-of-cold", "disintegrate", "fire-bolt", "fireball", "guiding-bolt",
     "inflict-wounds", "lightning-bolt", "magic-missile", "produce-flame",
-    "ray-of-frost", "sacred-flame", "shocking-grasp",
+    "ray-of-frost", "sacred-flame", "shocking-grasp", "thunderwave",
 })
 SPELL_TARGET_RULES_2014 = {
     "blight": {
@@ -84,6 +84,14 @@ def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> S
             damage_dice_size=6, damage_type="lightning", success_damage="half",
             upcast_dice_per_level=1, animation=spell_id,
         )
+    if spell_id == "thunderwave":
+        return SpellSaveAction(
+            id=spell_id, name="Thunderwave", level=level, range_ft=0,
+            area=AreaTargeting(shape="cube", origin="self", length_ft=15),
+            save_ability="constitution", dc=save_dc, damage_dice_count=2,
+            damage_dice_size=8, damage_type="thunder", success_damage="half",
+            failure_push_ft=10, upcast_dice_per_level=1, animation=spell_id,
+        )
     return SpellSaveAction(
         id=spell_id, name="Disintegrate", level=level, range_ft=60,
         save_ability="dexterity", dc=save_dc, damage_dice_count=10,
@@ -113,7 +121,7 @@ def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[
     attack_actions: list[SpellAttackAction] = []
     save_actions: list[SpellSaveAction] = []
     automatic_actions: list[AutomaticDamageSpellAction] = []
-    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt"}
+    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt", "thunderwave"}
     for spell in profile.spells:
         if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014:
             continue

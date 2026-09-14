@@ -38,6 +38,10 @@ def line_contains(origin: Point, direction: Direction, point: Point, length_ft: 
     return -_EPSILON <= forward <= length_ft + _EPSILON and sideways <= width_ft / 2.0 + _EPSILON
 
 
+def cube_contains(origin: Point, direction: Direction, point: Point, length_ft: int) -> bool:
+    return line_contains(origin, direction, point, length_ft, length_ft)
+
+
 def cone_contains(origin: Point, direction: Direction, point: Point, length_ft: int) -> bool:
     forward, sideways = _projection(origin, direction, point)
     if forward < -_EPSILON or forward > length_ft + _EPSILON:

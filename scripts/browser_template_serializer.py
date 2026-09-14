@@ -147,6 +147,7 @@ def _spell(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost, "range": action.range_ft, "saveAbility": action.save_ability, "dc": action.dc, "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus, "damageType": action.damage_type, "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level, "concentration": action.concentration, "animation": action.animation}
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
     if action.area is not None: row["area"] = action.area.model_dump(exclude_none=True)
+    if action.failure_push_ft: row["failurePushFt"] = action.failure_push_ft
     return row
 
 

@@ -62,6 +62,7 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
         range_ft=_effect_reach(choice), damage_dice_count=spell.damage_dice_count,
         damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
         damage_type=spell.damage_type, success_damage=spell.success_damage,
+        failure_push_ft=spell.failure_push_ft,
         magical_effect=True, animation=spell.animation,
     )
 

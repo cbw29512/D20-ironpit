@@ -103,4 +103,22 @@ function caster(spells, slots) {
   assert.deepEqual(new Set(choice.targetIds), new Set(["enemy", "ally"]));
 }
 
-console.log("Browser spell priority, ally-aware AoE, universal line targeting, and printed-level slot regressions passed.");
+{
+  const cube = {
+    ...spell("thunderwave", 1, null, 0),
+    saveAbility: "constitution", damageDiceCount: 2, damageDiceSize: 8,
+    damageType: "thunder", failurePushFt: 10,
+    area: { shape: "cube", origin: "self", length_ft: 15 },
+  };
+  const template = structuredClone(base); template.spell_save_actions = [cube]; template.resources = { "spell-slot-1": 1 };
+  const c = gridMember("caster", "heroes", 1, 1, template);
+  const first = gridMember("first", "monsters", 2, 1);
+  const second = gridMember("second", "monsters", 2, 2);
+  const setup = { heroes: [c], monsters: [first, second], map_definition: { id: "grid", width_squares: 8, height_squares: 8 } };
+  const choice = P.choose(c, setup, "1:caster");
+  assert.equal(choice.action.id, "thunderwave");
+  assert.deepEqual(new Set(choice.placement.enemyIds), new Set(["first", "second"]));
+  assert.equal(X.saveAction(choice).failurePushFt, 10);
+}
+
+console.log("Browser spell priority, ally-aware AoE, universal line/cube targeting, and printed-level slot regressions passed.");

@@ -25,6 +25,7 @@
       range: effectReach(spell), damageDiceCount: spell.damageDiceCount,
       damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
       damageType: spell.damageType, successDamage: spell.successDamage || "none",
+      failurePushFt: spell.failurePushFt || 0,
       magicalEffect: true, animation: spell.animation || "spell-save",
     };
   }

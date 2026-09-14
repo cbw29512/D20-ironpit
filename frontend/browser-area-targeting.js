@@ -61,6 +61,7 @@
     if (area.shape === "emanation") return targetPoints.some((point) => A().emanationContains(origins, point, radius));
     if (!direction) return false;
     if (area.shape === "cone") return targetPoints.some((point) => A().coneContains(origin, direction, point, length));
+    if (area.shape === "cube") return targetPoints.some((point) => A().cubeContains(origin, direction, point, length));
     if (area.shape === "line") return targetPoints.some((point) => A().lineContains(origin, direction, point, length, width));
     throw new Error(`Unsupported browser area shape: ${area.shape}`);
   }

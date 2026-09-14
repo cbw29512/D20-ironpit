@@ -5,7 +5,7 @@ import logging
 from dataclasses import dataclass
 
 from app.combat.area_shapes import (
-    Direction, Point, cell_center_ft, cone_contains, emanation_contains,
+    Direction, Point, cell_center_ft, cone_contains, cube_contains, emanation_contains,
     line_contains, normalized, radius_contains,
 )
 from app.combat.grid_geometry import occupied_cells
@@ -70,6 +70,7 @@ def _hits(area: AreaTargeting, origins: tuple[Point, ...], origin: Point, direct
     if area.shape == "emanation": return any(emanation_contains(origins, point, area.radius_ft or 0) for point in points)
     if direction is None: return False
     if area.shape == "cone": return any(cone_contains(origin, direction, point, area.length_ft or 0) for point in points)
+    if area.shape == "cube": return any(cube_contains(origin, direction, point, area.length_ft or 0) for point in points)
     return any(line_contains(origin, direction, point, area.length_ft or 0, area.width_ft or 0) for point in points)
 
 

@@ -35,6 +35,10 @@
       && sideways <= widthFt / 2 + EPSILON;
   }
 
+  function cubeContains(origin, direction, point, lengthFt) {
+    return lineContains(origin, direction, point, lengthFt, lengthFt);
+  }
+
   function coneContains(origin, direction, point, lengthFt) {
     const { forward, sideways } = projection(origin, direction, point);
     if (forward < -EPSILON || forward > lengthFt + EPSILON) return false;
@@ -47,6 +51,7 @@
     radiusContains,
     emanationContains,
     lineContains,
+    cubeContains,
     coneContains,
   };
 })();
