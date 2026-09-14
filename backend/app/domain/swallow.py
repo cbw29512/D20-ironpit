@@ -17,6 +17,9 @@ class SwallowAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageType = DamageType.ACID
     max_swallowed: int | None = Field(default=1, ge=1, le=8)
+    requires_existing_grapple: bool = True
+    on_hit_save_ability: AbilityName | None = None
+    on_hit_save_dc: int | None = Field(default=None, ge=1, le=40)
     regurgitation_damage_threshold: int | None = Field(default=None, ge=1, le=1000)
     regurgitation_save_ability: AbilityName | None = None
     regurgitation_save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -25,13 +28,18 @@ class SwallowAction(BaseModel):
     exit_prone: bool = True
 
     @model_validator(mode="after")
-    def validate_regurgitation(self) -> "SwallowAction":
-        fields = (
+    def validate_swallow(self) -> "SwallowAction":
+        regurgitation = (
             self.regurgitation_damage_threshold, self.regurgitation_save_ability,
             self.regurgitation_save_dc, self.regurgitation_range_ft,
         )
-        if any(item is not None for item in fields) and not all(item is not None for item in fields):
+        if any(item is not None for item in regurgitation) and not all(item is not None for item in regurgitation):
             raise ValueError("Swallow regurgitation requires threshold, save ability, DC, and release range.")
+        on_hit_save = (self.on_hit_save_ability, self.on_hit_save_dc)
+        if any(item is not None for item in on_hit_save) != all(item is not None for item in on_hit_save):
+            raise ValueError("Save-triggered Swallow requires both save ability and DC.")
+        if self.requires_existing_grapple and self.on_hit_save_ability is not None:
+            raise ValueError("Swallow cannot require an existing grapple and an on-hit save together.")
         return self
 
 
