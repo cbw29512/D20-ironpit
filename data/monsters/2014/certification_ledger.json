@@ -1,5 +1,5 @@
 {
-  "blocked_count": 103,
+  "blocked_count": 102,
   "blocker_families": {
     "action": 60,
     "attack-detail": 48,
@@ -7,7 +7,7 @@
     "legendary": 25,
     "reaction": 4,
     "spell": 51,
-    "trait": 72
+    "trait": 67
   },
   "blocker_yield": {
     "action:Acid Spray (Recharge 6)": 1,
@@ -184,8 +184,6 @@
     "trait:Gnome Cunning": 1,
     "trait:Grappler": 1,
     "trait:Grasping Tendrils": 1,
-    "trait:Heated Body": 3,
-    "trait:Heated Weapons": 2,
     "trait:Hellish Weapons": 1,
     "trait:Horrific Appearance": 1,
     "trait:Ignited Illumination": 1,
@@ -480,12 +478,9 @@
     {
       "id": "azer",
       "name": "Azer",
-      "remaining_blocker_count": 2,
-      "remaining_blockers": [
-        "trait:Heated Body",
-        "trait:Heated Weapons"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "baboon",
@@ -2173,10 +2168,9 @@
     {
       "id": "remorhaz",
       "name": "Remorhaz",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "action:Swallow",
-        "trait:Heated Body"
+        "action:Swallow"
       ],
       "status": "blocked"
     },
@@ -2246,11 +2240,9 @@
     {
       "id": "salamander",
       "name": "Salamander",
-      "remaining_blocker_count": 3,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "attack-detail:Tail",
-        "trait:Heated Body",
-        "trait:Heated Weapons"
+        "attack-detail:Tail"
       ],
       "status": "blocked"
     },
@@ -2870,7 +2862,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 224,
+  "ready_count": 225,
   "ruleset": "2014",
   "schema_version": 1
 }
