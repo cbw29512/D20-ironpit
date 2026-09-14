@@ -17,6 +17,7 @@ class CombatTrait(StrEnum):
     DARK_DEVOTION = "dark-devotion"
     BRAVE = "brave"
     TWO_HEADED = "two-headed"
+    FEY_ANCESTRY = "fey-ancestry"
     AGGRESSIVE = "aggressive"
     CUNNING_ACTION = "cunning-action"
     EVASION = "evasion"
