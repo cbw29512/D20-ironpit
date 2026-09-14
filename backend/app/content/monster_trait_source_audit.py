@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_death_trigger_source import parse_death_trigger_effects
 from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
 from app.content.monster_regeneration_source import regeneration_trait_issues
 from app.content.monster_trait_aura_audit import aura_trait_issues
@@ -82,6 +83,13 @@ def _magic_resistance_issues(template: CombatantTemplate, expected: list[str]) -
     return []
 
 
+def _death_trigger_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
+    expected = parse_death_trigger_effects(row.get("traits", ""))
+    if template.death_trigger_effects != expected:
+        return ["death-trigger-source-data-mismatch"]
+    return []
+
+
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_trait_names(row.get("traits", ""))
     issues: list[str] = []
@@ -96,6 +104,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-source-missing:{runtime_trait.value}")
     issues.extend(_movement_trait_issues(template, expected))
     issues.extend(_magic_resistance_issues(template, expected))
+    issues.extend(_death_trigger_issues(template, row))
     issues.extend(regeneration_trait_issues(template, row))
     legendary_issues, legendary_certified = legendary_resistance_trait_issues(template, expected)
     issues.extend(legendary_issues)
@@ -130,7 +139,10 @@ def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> l
             if template.kind != "monster":
                 completed.append(template)
                 continue
-            names = source_trait_names(template.name)
+            row = _rows_by_name().get(template.name)
+            if row is None:
+                raise ValueError(f"No SRD 5.2.1 source row for monster {template.name!r}.")
+            names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
             traits = list(template.combat_traits)
             for source_name, runtime_trait in _MODELED_TRAITS.items():
                 if source_name in names and runtime_trait not in traits:
@@ -139,6 +151,7 @@ def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> l
                 "source_trait_names": names,
                 "combat_traits": traits,
                 "magic_resistance": "Magic Resistance" in names,
+                "death_trigger_effects": parse_death_trigger_effects(row.get("traits", "")),
             }))
         return completed
     except Exception as exc:
