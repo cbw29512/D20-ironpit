@@ -14,15 +14,10 @@
     }
     return {
       id: `${sourceId}:${spell.id}:${targetId}:${index}`,
-      source_id: sourceId,
-      source_effect_id: spell.id,
-      kind: effect.kind,
-      flat_bonus: effect.flatBonus || 0,
-      dice_count: effect.diceCount || 0,
-      dice_size: effect.diceSize || 0,
-      damage_type: effect.damageType || null,
-      target_id: targetId,
-      concentration_required: Boolean(spell.concentration),
+      source_id: sourceId, source_effect_id: spell.id, kind: effect.kind,
+      flat_bonus: effect.flatBonus || 0, dice_count: effect.diceCount || 0,
+      dice_size: effect.diceSize || 0, damage_type: effect.damageType || null,
+      target_id: targetId, concentration_required: Boolean(spell.concentration),
       consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
       expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
       expires_source_turn_end_round: expiry,
@@ -40,17 +35,30 @@
     });
   }
 
+  function startSave(owner, sourceId, spell, roundNumber, states = []) {
+    if (!spell.concentration) return;
+    if (!spell.durationMinutes) throw new Error(`${spell.name} concentration requires a duration.`);
+    if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
+    const rounds = spell.durationMinutes * 10;
+    C().start(owner, sourceId, spell.id, roundNumber, states, roundNumber + rounds + (roundNumber === 0 ? 1 : 0));
+  }
+
+  function applyFailedSave(targetId, state, sourceId, spell, roundNumber) {
+    const modifiers = (spell.failureModifierEffects || []).map((effect, index) =>
+      build(sourceId, targetId, spell, effect, index, roundNumber));
+    modifiers.forEach((modifier) => M().add(state, modifier));
+    return modifiers;
+  }
+
   function apply(owner, targets, sourceId, spell, roundNumber, states = []) {
-    const ordinary = (spell.modifierEffects || [])
-      .map((effect, index) => ({ effect, index }))
+    const ordinary = (spell.modifierEffects || []).map((effect, index) => ({ effect, index }))
       .filter(({ effect }) => effect.kind !== REACTIVE_KIND);
     const modifiers = targets.flatMap(({ targetId }) => ordinary
       .map(({ effect, index }) => build(sourceId, targetId, spell, effect, index, roundNumber)));
     if (spell.concentration) {
       if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
       const durationRounds = spell.durationMinutes * 10;
-      const expiresRound = roundNumber + durationRounds + (roundNumber === 0 ? 1 : 0);
-      C().start(owner, sourceId, spell.id, roundNumber, states, expiresRound);
+      C().start(owner, sourceId, spell.id, roundNumber, states, roundNumber + durationRounds + (roundNumber === 0 ? 1 : 0));
     }
     for (const { targetId, state } of targets) {
       (spell.modifierEffects || []).forEach((effect, index) => {
@@ -61,5 +69,5 @@
     return modifiers;
   }
 
-  window.IRON_PIT_BROWSER_SPELL_MODIFIERS = { apply, build };
+  window.IRON_PIT_BROWSER_SPELL_MODIFIERS = { apply, applyFailedSave, build, startSave };
 })();
