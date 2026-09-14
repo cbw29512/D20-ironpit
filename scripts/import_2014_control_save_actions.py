@@ -5,7 +5,7 @@ import re
 
 def _duration_rounds(text: str) -> int | None:
     patterns = (
-        r"(?:unconscious|paralyzed)\s+for\s+(\d+)\s+(minute|minutes|round|rounds)",
+        r"(?:unconscious|paralyzed|frightened)\s+for\s+(\d+)\s+(minute|minutes|round|rounds)",
         r"effects last for\s+(\d+)\s+(minute|minutes|round|rounds)",
         r"disadvantage .*? for\s+(\d+)\s+(minute|minutes|round|rounds)",
     )
@@ -90,10 +90,35 @@ def _repulsion(name: str, text: str, area: dict, save: tuple[str, int], resource
         "failure_push_ft": int(push.group(1)), "resource_id": resource_id, "resource_cost": 1, "animation": "forced-movement"}
 
 
+def _repeating_fear(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
+    duration = _duration_rounds(text)
+    required = (
+        r"frightened for 1 minute",
+        r"repeat the saving throw at the end of each of its turns",
+        r"immune to .* for the next 24 hours",
+    )
+    if duration is None or not all(re.search(pattern, text, re.I) for pattern in required): return None
+    ability, dc = save
+    action_id = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    return {
+        "id": action_id, "name": name, "save_ability": ability, "dc": dc,
+        "range_ft": _range(area), "area": area,
+        "failure_control_effect": {
+            "condition_id": "frightened", "expiry_timing": "target_turn_end",
+            "duration_rounds": duration, "repeat_save_ability": ability,
+            "repeat_save_dc": dc, "repeat_save_timing": "target_turn_end",
+            "source_effect_immunity_on_end": True,
+        },
+        "source_effect_immunity_on_success": True,
+        "resource_id": resource_id, "resource_cost": 1, "animation": "fear",
+    }
+
+
 def parse_control_save_action(heading: str, text: str, area: dict | None, save: tuple[str, int] | None, resource_id: str | None) -> dict | None:
     """Normalize control save actions represented by universal timed effects or forced movement."""
     name = heading.split("(Recharge", 1)[0].strip()
     if area is None or save is None or resource_id is None: return None
     return (_sleep_breath(name, text, area, save, resource_id) or _paralyzing_breath(name, text, area, save, resource_id)
         or _slowing_effect(name, text, area, save, resource_id) or _weakening_breath(name, text, area, save, resource_id)
-        or _petrifying_breath(name, text, area, save, resource_id) or _repulsion(name, text, area, save, resource_id))
+        or _petrifying_breath(name, text, area, save, resource_id) or _repulsion(name, text, area, save, resource_id)
+        or _repeating_fear(name, text, area, save, resource_id))
