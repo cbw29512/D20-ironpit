@@ -18,6 +18,7 @@ ConditionName = Literal["blinded", "charmed", "deafened", "exhaustion", "frighte
 
 class GrappleSource(BaseModel):
     source_id: str
+    source_effect_id: str | None = None
     escape_dc: int = Field(ge=1, le=40)
     range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
