@@ -26,11 +26,17 @@
     if (restrained) state.active_effect_ids.push("restrained");
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceEffectId = null) {
     if (I().immune(state, "grappled")) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained");
-    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains });
+    state.grapple_sources.push({
+      source_id: sourceId,
+      source_effect_id: sourceEffectId,
+      escape_dc: escapeDc,
+      range_ft: rangeFt,
+      restrains: effectiveRestrains,
+    });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
   }
