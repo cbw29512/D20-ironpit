@@ -27,6 +27,7 @@ MODELED_TRAITS = {
     "Cunning Action": CombatTrait.CUNNING_ACTION,
     "Evasion": CombatTrait.EVASION,
     "Martial Advantage": CombatTrait.MARTIAL_ADVANTAGE,
+    "Assassinate": CombatTrait.ASSASSINATE,
     "Charge": CombatTrait.CHARGE,
     "Pounce": CombatTrait.CHARGE,
     "Trampling Charge": CombatTrait.CHARGE,
