@@ -23,6 +23,7 @@ const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
 const G = window.IRON_PIT_BROWSER_GRAPPLE;
 const V = window.IRON_PIT_BROWSER_SAVES;
+const F = window.IRON_PIT_BROWSER_FORMATION;
 const heroes = window.IRON_PIT_BROWSER_HEROES;
 const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 const member = (id, side, template, position = side === "heroes" ? 0 : 5) => ({
@@ -142,6 +143,25 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const failed = V.resolveAction(1, 1, snake, hero, action, 5);
   assert.equal(hero.state.current_hp, 0); assert.equal(hero.state.is_unconscious, true);
   assert.deepEqual(failed.applied_condition_ids, ["grappled"]);
+}
+
+{
+  const held = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"], 0);
+  const other = member("hero-2:rokhan", "heroes", heroes["rokhan-stonefury-l1"], 0);
+  const crab = member("monster-1:crab", "monsters", monsters["srd-giant-crab"], 5);
+  const tail = {
+    ...crab.state.template.attacks[0], id: "tail", name: "Tail", bonus: -20,
+    diceCount: 1, diceSize: 6, damageBonus: 0, damageType: "bludgeoning", reach: 10,
+    controlEffect: null, forbidSelfGrappledTarget: false, grappleTargetPolicy: "auto_hit_own_grapple",
+  };
+  crab.state.template.attacks = [tail]; held.state.template.armor_class = 99;
+  G.apply(held.state, crab.combatant_id, 12, 10, false, tail.id);
+  const choice = F.chooseAttack(crab, { heroes: [other, held], monsters: [crab] }, [tail.id], "melee");
+  assert.equal(choice.target, held);
+  window.IRON_PIT_DICE = queuedDice([4]);
+  const event = A.resolveAttack(1, 1, crab, held, tail, 5);
+  assert.equal(event.hit, true); assert.equal(event.attack_roll, null); assert.equal(event.critical, false);
+  assert.equal(event.damage_roll.total, 4); assert.match(event.description, /Automatic hit: no attack roll/);
 }
 
 console.log("Browser saving throw and control-condition regressions passed.");
