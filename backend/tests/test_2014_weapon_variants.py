@@ -45,6 +45,47 @@ def test_versatile_attack_wording_compiles_to_two_damage_modes(wording: str) -> 
     assert attacks[1]["damage"]["dice_size"] == 8
 
 
+def test_named_weapon_enhancement_compiles_with_versatile_profile() -> None:
+    importer = _load_importer()
+    paragraph = (
+        "<strong>Quarterstaff.</strong> Melee Weapon Attack: +2 to hit (+4 to hit with shillelagh), "
+        "reach 5 ft., one target. Hit: 3 (1d6) bludgeoning damage, or 4 (1d8) bludgeoning damage "
+        "if wielded with two hands, or 6 (1d8 + 2) bludgeoning damage with shillelagh."
+    )
+
+    attacks = importer._attacks(paragraph)
+
+    assert [attack["id"] for attack in attacks] == [
+        "quarterstaff",
+        "quarterstaff-two-handed",
+        "quarterstaff-shillelagh",
+    ]
+    assert all(attack["source_complete"] for attack in attacks)
+    enhanced = attacks[2]
+    assert enhanced["attack_bonus"] == 4
+    assert enhanced["damage"]["dice_count"] == 1
+    assert enhanced["damage"]["dice_size"] == 8
+    assert enhanced["damage"]["bonus"] == 2
+
+
+def test_named_weapon_enhancement_compiles_without_other_variant() -> None:
+    importer = _load_importer()
+    paragraph = (
+        "<strong>Club.</strong> Melee Weapon Attack: +2 to hit (+6 to hit with shillelagh), "
+        "reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage, or 8 (1d8 + 4) "
+        "bludgeoning damage with shillelagh."
+    )
+
+    attacks = importer._attacks(paragraph)
+
+    assert [attack["id"] for attack in attacks] == ["club", "club-shillelagh"]
+    assert all(attack["source_complete"] for attack in attacks)
+    enhanced = attacks[1]
+    assert enhanced["attack_bonus"] == 6
+    assert enhanced["damage"]["dice_size"] == 8
+    assert enhanced["damage"]["bonus"] == 4
+
+
 def test_2014_versatile_weapon_uses_highest_legal_damage_mode() -> None:
     # Free second hand: use the stronger versatile profile.
     assert select_damage_mode_2014("quarterstaff", second_hand_free=True) == (1, 8, None)
