@@ -37,7 +37,7 @@ window.IRON_PIT_ACTION_ECONOMY = { available: () => true, spend: () => {} };
 window.IRON_PIT_DICE = {
   rollMany: () => {
     damageRollCalls += 1;
-    if (damageRollCalls > 1) throw new Error("Death Burst damage rolled more than once.");
+    if (damageRollCalls > 1) throw new Error("Death Burst damage rolled more than once per trigger.");
     return [6, 6];
   },
 };
@@ -97,10 +97,13 @@ const skipped = window.IRON_PIT_BROWSER_DEATH_TRIGGERS.afterEvent(
 assert.deepEqual(skipped.events, []);
 assert.equal(skipped.sequence, result.sequence);
 
+saveRolls.push(1, 20);
+damageRollCalls = 0;
 const fired = window.IRON_PIT_BROWSER_DEATH_TRIGGERS.afterEvent(
   skipped.sequence, 2, { target_id: "magma", is_dead: true }, setup, dispatchResolved,
 );
 assert.equal(fired.events.length, 2);
+assert.equal(damageRollCalls, 1);
 const repeated = window.IRON_PIT_BROWSER_DEATH_TRIGGERS.afterEvent(
   fired.sequence, 2, { target_id: "magma", is_dead: true }, setup, dispatchResolved,
 );
