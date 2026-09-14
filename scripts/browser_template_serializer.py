@@ -63,6 +63,20 @@ def _charge(profile: Any) -> dict[str, Any]:
     return row
 
 
+def _failure_margin(spec: Any) -> dict[str, Any]:
+    row = {"margin": spec.margin, "additionalConditionIds": list(spec.additional_condition_ids)}
+    if spec.replacement_duration_rounds is not None: row["replacementDurationRounds"] = spec.replacement_duration_rounds
+    if spec.replacement_duration_dice_count:
+        row.update(
+            replacementDurationDiceCount=spec.replacement_duration_dice_count,
+            replacementDurationDiceSize=spec.replacement_duration_dice_size,
+            replacementDurationRoundMultiplier=spec.replacement_duration_round_multiplier,
+        )
+    if spec.ends_on_damage: row["endsOnDamage"] = True
+    if spec.allowed_removal_action_ids: row["allowedRemovalActionIds"] = list(spec.allowed_removal_action_ids)
+    return row
+
+
 def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
     try:
         weapon = attack.weapon
@@ -88,6 +102,7 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if effect.duration_rounds is not None: row["onHitSaveEffect"]["durationRounds"] = effect.duration_rounds
             if effect.repeat_save_timing is not None: row["onHitSaveEffect"]["repeatSaveTiming"] = effect.repeat_save_timing
             if effect.repeat_save_failure_condition_id is not None: row["onHitSaveEffect"]["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
+            if effect.failure_margin_escalation is not None: row["onHitSaveEffect"]["failureMarginEscalation"] = _failure_margin(effect.failure_margin_escalation)
             if effect.ends_on_damage: row["onHitSaveEffect"]["endsOnDamage"] = True
             if effect.max_hp_reduction_equals_damage_taken: row["onHitSaveEffect"]["maxHpReductionEqualsDamageTaken"] = True
             if effect.zero_max_hp_kills: row["onHitSaveEffect"]["zeroMaxHpKills"] = True
