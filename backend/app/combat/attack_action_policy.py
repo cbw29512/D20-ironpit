@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import logging
+
 from app.combat.dice import DiceProvider
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.models import BattleEvent
+
+logger = logging.getLogger(__name__)
 
 
 def expanded_slots(definition: AttackActionDefinition, dice: DiceProvider) -> list[tuple[int, AttackActionSlot]]:
@@ -52,19 +56,28 @@ def filtered_slot(
     used_attack_ids: set[str],
     required_attack: str | None = None,
 ) -> AttackActionSlot:
-    policy = definition.policy
-    if required_attack is not None:
-        return slot.model_copy(update={
-            "attack_ids": [attack_id for attack_id in slot.attack_ids if attack_id == required_attack],
-        })
-    if policy is None:
-        return slot
-    blocked = set()
-    if policy.distinct_attack_ids:
-        blocked.update(used_attack_ids)
-    blocked.update(attack_id for attack_id in policy.at_most_once_attack_ids if attack_id in used_attack_ids)
-    if not blocked:
-        return slot
-    return slot.model_copy(update={
-        "attack_ids": [attack_id for attack_id in slot.attack_ids if attack_id not in blocked],
-    })
+    try:
+        policy = definition.policy
+        if required_attack is not None:
+            return slot.model_copy(update={
+                "attack_ids": [attack_id for attack_id in slot.attack_ids if attack_id == required_attack],
+            })
+        if policy is None:
+            return slot
+        allowed_ids = list(slot.attack_ids)
+        active_group = next(
+            (set(group) for group in policy.exclusive_attack_groups if any(attack_id in used_attack_ids for attack_id in group)),
+            None,
+        )
+        if active_group is not None:
+            allowed_ids = [attack_id for attack_id in allowed_ids if attack_id in active_group]
+        blocked = set()
+        if policy.distinct_attack_ids:
+            blocked.update(used_attack_ids)
+        blocked.update(attack_id for attack_id in policy.at_most_once_attack_ids if attack_id in used_attack_ids)
+        if blocked:
+            allowed_ids = [attack_id for attack_id in allowed_ids if attack_id not in blocked]
+        return slot.model_copy(update={"attack_ids": allowed_ids})
+    except Exception as exc:
+        logger.exception("Failed to filter Multiattack slot %s.", definition.id)
+        raise RuntimeError("Multiattack slot policy could not be evaluated.") from exc
