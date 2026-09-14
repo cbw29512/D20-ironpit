@@ -15,7 +15,7 @@ from app.domain.invisibility import InvisibilityAction
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.reactions import ParryReaction, ProjectileCatchReaction, RedirectAttackReaction, SpellReflectionReaction
 from app.domain.reactive_damage import MeleeHitReactiveDamage
 from app.domain.regeneration import RegenerationProfile
 from app.domain.save_auras import SaveAdvantageAura
@@ -99,7 +99,9 @@ class CombatantTemplate(BaseModel):
     source_legendary_action_names: list[str] = Field(default_factory=list)
     source_spellcasting_fingerprint: str | None = None
     parry_reaction: ParryReaction | None = None
+    projectile_catch_reaction: ProjectileCatchReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
+    spell_reflection_reaction: SpellReflectionReaction | None = None
     zero_hp_prevention: ZeroHpPrevention | None = None
     regeneration: RegenerationProfile | None = None
     fighting_style: str | None = None
