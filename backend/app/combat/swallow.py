@@ -3,12 +3,12 @@ from __future__ import annotations
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
-from app.combat.grapple import release_grapple
+from app.combat.swallow_application import apply_swallowed
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DiceRoll, WeaponAttack
 from app.domain.size import size_at_most
-from app.domain.swallow import SwallowAction, SwallowedState
+from app.domain.swallow import SwallowAction
 
 
 def _members(setup: EncounterSetup) -> list[EncounterCombatant]:
@@ -16,8 +16,10 @@ def _members(setup: EncounterSetup) -> list[EncounterCombatant]:
 
 
 def _swallow_action(actor: EncounterCombatant) -> SwallowAction | None:
-    actions = actor.state.template.swallow_actions
-    return actions[0] if actions else None
+    return next(
+        (action for action in actor.state.template.swallow_actions if action.requires_existing_grapple),
+        None,
+    )
 
 
 def _attack(actor: EncounterCombatant, attack_id: str) -> WeaponAttack:
@@ -57,20 +59,7 @@ def resolve_swallow_action(
     attack = _attack(actor, action.attack_id)
     event = resolve_encounter_attack(sequence, round_number, actor, target, attack, 5, dice, setup)
     if event.hit and target.state.current_hp > 0 and not target.state.is_dead:
-        release_grapple(target.state, actor.combatant_id)
-        target.state.swallowed = SwallowedState(
-            source_id=actor.combatant_id, source_effect_id=action.id,
-            damage_dice_count=action.damage_dice_count, damage_dice_size=action.damage_dice_size,
-            damage_bonus=action.damage_bonus, damage_type=action.damage_type,
-            regurgitation_damage_threshold=action.regurgitation_damage_threshold,
-            regurgitation_save_ability=action.regurgitation_save_ability,
-            regurgitation_save_dc=action.regurgitation_save_dc,
-            regurgitation_range_ft=action.regurgitation_range_ft,
-            exit_movement_ft=action.exit_movement_ft, exit_prone=action.exit_prone,
-        )
-        event.applied_condition_ids = list(dict.fromkeys([*event.applied_condition_ids, "blinded", "restrained", "swallowed"]))
-        event.feature_id = action.id
-        event.description += f" {target.state.template.name} is swallowed."
+        apply_swallowed(actor, target, action, event)
     return [event], sequence + 1, True
 
 
@@ -103,8 +92,10 @@ def resolve_start_turn_damage(
         applied, components = apply_damage_defenses(target.state, [rolled])
         hp_before = target.state.current_hp
         if applied:
-            apply_damage(target.state, applied, damage_types={swallowed.damage_type}, dice=dice,
-                         affected_states=[member.state for member in _members(setup)])
+            apply_damage(
+                target.state, applied, damage_types={swallowed.damage_type}, dice=dice,
+                affected_states=[member.state for member in _members(setup)],
+            )
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="feature",
             actor_id=actor.combatant_id, actor_name=actor.state.template.name,
@@ -112,7 +103,8 @@ def resolve_start_turn_damage(
             feature_id="swallow", damage_roll=DiceRoll(
                 notation=rolled.notation, rolls=rolls, modifier=swallowed.damage_bonus, total=applied,
             ), damage_components=components, hp_before=hp_before, hp_after=target.state.current_hp,
-            animation="damage", description=f"{target.state.template.name} takes {applied} {swallowed.damage_type.value} damage while swallowed.",
+            animation="damage",
+            description=f"{target.state.template.name} takes {applied} {swallowed.damage_type.value} damage while swallowed.",
         ))
         sequence += 1
     return events, sequence
