@@ -30,7 +30,7 @@ def _merge_attack_effects(existing: list, source: list, *, charge_profile: objec
     return [*existing, *additions]
 
 
-def _merge_attacks(existing: CombatantDefinition, source: CombatantDefinition):
+def _merge_attacks(existing: CombatantDefinition, source: CombatantDefinition, resource_rebinds: dict[str, str]):
     source_by_id = {attack.id: attack for attack in source.attacks}
     source_by_name = {_normalized_name(attack.name): attack for attack in source.attacks}
     merged = []
@@ -43,6 +43,9 @@ def _merge_attacks(existing: CombatantDefinition, source: CombatantDefinition):
         charge_profile = attack.charge_profile or derived.charge_profile
         if attack.charge_profile is None and derived.charge_profile is not None:
             updates["charge_profile"] = derived.charge_profile
+        if attack.resource_id is None and derived.resource_id is not None:
+            updates["resource_id"] = resource_rebinds.get(derived.resource_id, derived.resource_id)
+            updates["resource_cost"] = derived.resource_cost
         effects = _merge_attack_effects(
             attack.effects,
             derived.effects,
@@ -113,8 +116,8 @@ def _merge_save_actions(existing: list, source: list, resource_rebinds: dict[str
 
 
 def enrich_definition(existing: CombatantDefinition, source: CombatantDefinition) -> CombatantDefinition:
-    attacks = _merge_attacks(existing, source)
     resource_rebinds = _resource_rebinds(existing.resources, source.resources)
+    attacks = _merge_attacks(existing, source, resource_rebinds)
     save_actions = _merge_save_actions(existing.save_actions, source.save_actions, resource_rebinds)
     resources = _merge_resources(existing.resources, source.resources)
     traits = list(dict.fromkeys([*existing.combat_traits, *source.combat_traits]))
