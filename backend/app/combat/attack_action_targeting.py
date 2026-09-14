@@ -11,11 +11,17 @@ from app.domain.size import size_at_most
 logger = logging.getLogger(__name__)
 
 
-def _slot_statically_allows(attacker: EncounterCombatant, target: EncounterCombatant, slot: AttackActionSlot) -> bool:
+def _slot_statically_allows(
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    slot: AttackActionSlot,
+    opponents: list[EncounterCombatant],
+) -> bool:
     attacks = [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
+    opponent_states = [member.state for member in opponents]
     if any(
         attack.id in slot.attack_ids
-        and attack_allowed_against(attack, attacker.combatant_id, target.state)
+        and attack_allowed_against(attack, attacker.combatant_id, target.state, opponent_states)
         for attack in attacks
     ):
         return True
@@ -37,7 +43,7 @@ def select_slot_target(
         preferred = select_nearest_target(attacker, setup)
         opponents = sorted(living_opponents(attacker, setup), key=lambda target: combatant_distance(attacker, target))
         candidates = ([preferred] if preferred is not None else []) + [target for target in opponents if target is not preferred]
-        return next((target for target in candidates if _slot_statically_allows(attacker, target, slot)), None)
+        return next((target for target in candidates if _slot_statically_allows(attacker, target, slot, opponents)), None)
     except Exception as exc:
         logger.exception("Multiattack slot target selection failed for %s.", attacker.combatant_id)
         raise RuntimeError("Multiattack slot target could not be selected.") from exc
