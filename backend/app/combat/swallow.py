@@ -35,7 +35,10 @@ def swallowed_targets(actor: EncounterCombatant, setup: EncounterSetup) -> list[
 
 def swallow_target(actor: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
     action = _swallow_action(actor)
-    if action is None or len(swallowed_targets(actor, setup)) >= action.max_swallowed:
+    if action is None:
+        return None
+    swallowed_count = len(swallowed_targets(actor, setup))
+    if action.max_swallowed is not None and swallowed_count >= action.max_swallowed:
         return None
     opponents = setup.monsters if actor.side == "heroes" else setup.heroes
     for target in opponents:
