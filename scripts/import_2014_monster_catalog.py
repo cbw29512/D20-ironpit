@@ -57,6 +57,17 @@ def _names(value: str | None) -> list[str]:
     return [_plain(item).rstrip(".") for item in re.findall(r"<strong>(.*?)</strong>", value or "", re.I | re.S)]
 
 
+def _action_paragraphs(value: str | None) -> list[str]:
+    """Keep unnamed continuation paragraphs with the preceding named action."""
+    grouped: list[str] = []
+    for paragraph in re.findall(r"<p>(.*?)</p>", value or "", re.I | re.S):
+        if re.search(r"<strong>.*?</strong>", paragraph, re.I | re.S):
+            grouped.append(paragraph)
+        elif grouped:
+            grouped[-1] = f"{grouped[-1]} {paragraph}"
+    return grouped
+
+
 def _speed(value: str | None) -> dict[str, int]:
     return {mode or "walk": int(amount) for mode, amount in re.findall(r"(?:(walk|fly|swim|climb|burrow)\s+)?(\d+)\s*ft\.", (value or "").lower())}
 
@@ -156,7 +167,7 @@ def _attacks(paragraph: str) -> list[dict]:
 
 def _record(source: dict) -> dict:
     meta = source.get("meta", ""); size, _, _ = meta.partition(" "); creature_type, creature_type_text, creature_subtypes, alignment = parse_identity(meta); hp = source.get("Hit Points", ""); hit_dice = re.search(r"\(([^)]+)\)", hp); action_text = source.get("Actions", ""); reactions_text = source.get("Reactions", ""); challenge_text = source.get("Challenge")
-    attacks = [attack for paragraph in re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S) for attack in _attacks(paragraph)]
+    attacks = [attack for paragraph in _action_paragraphs(action_text) for attack in _attacks(paragraph)]
     for attack_id, profile in parse_charge_profiles(source.get("Traits"), attacks).items(): next(item for item in attacks if item["id"] == attack_id)["charge_profile"] = profile
     multiattack = parse_multiattack(action_text, attacks); resist, bad_resist = _simple_values(source.get("Damage Resistances"), DAMAGE_TYPES); immune, bad_immune = _simple_values(source.get("Damage Immunities"), DAMAGE_TYPES); vulnerable, bad_vulnerable = _simple_values(source.get("Damage Vulnerabilities"), DAMAGE_TYPES); condition_immune, bad_condition = _simple_values(source.get("Condition Immunities"), CONDITIONS)
     return {
