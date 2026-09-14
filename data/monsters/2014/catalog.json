@@ -10629,7 +10629,16 @@
           "bonus": 2,
           "type": "piercing"
         },
-        "conditional_damage": [],
+        "conditional_damage": [
+          {
+            "trigger": "round1_initiative_lead",
+            "mode": "add",
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10650,7 +10659,16 @@
           "bonus": 2,
           "type": "piercing"
         },
-        "conditional_damage": [],
+        "conditional_damage": [
+          {
+            "trigger": "round1_initiative_lead",
+            "mode": "add",
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10673,7 +10691,16 @@
           "bonus": 2,
           "type": "piercing"
         },
-        "conditional_damage": [],
+        "conditional_damage": [
+          {
+            "trigger": "round1_initiative_lead",
+            "mode": "add",
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10704,6 +10731,9 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/221/1000/1000/636252765234633232.jpeg",
+    "data_bound_trait_names": [
+      "Surprise Attack"
+    ],
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
@@ -14382,7 +14412,16 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
-        "conditional_damage": [],
+        "conditional_damage": [
+          {
+            "trigger": "round1_initiative_lead",
+            "mode": "add",
+            "dice_count": 3,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "bludgeoning"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14421,6 +14460,9 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/289/315/315/636252770983164351.jpeg",
+    "data_bound_trait_names": [
+      "Surprise Attack"
+    ],
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
