@@ -16,6 +16,7 @@ from app.combat.modifier_stack import (
 from app.combat.reckless_attack import attacks_against_reckless_advantage
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
+from app.combat.spell_attack_reflection import reflect_missed_spell_attack
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.zero_hp import apply_damage
@@ -80,6 +81,12 @@ def resolve_spell_attack(
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
+        reflected_from = None
+        if not hit and target.state.template.spell_reflection_reaction is not None:
+            reflected = reflect_missed_spell_attack(caster, target, spell, setup, dice)
+            if reflected is not None:
+                reflected_from = target
+                target, attack_roll, target_ac, hit, critical, distance = reflected
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
@@ -98,6 +105,8 @@ def resolve_spell_attack(
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
+        if reflected_from is not None:
+            description = f"{reflected_from.state.template.name} uses Spell Reflection; {spell.name} targets {target.state.template.name} instead. " + description
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
         return BattleEvent(
