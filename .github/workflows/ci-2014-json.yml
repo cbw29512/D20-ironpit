@@ -12,9 +12,11 @@ on:
       - 'backend/app/content/monster_catalog_2014_action_support.py'
       - 'backend/app/content/monster_catalog_2014_multiattack.py'
       - 'backend/app/content/monster_catalog_2014_damage_triggers.py'
+      - 'backend/app/content/monster_catalog_2014_reactive_damage.py'
       - 'backend/app/domain/attack_action_policy.py'
       - 'backend/app/domain/zero_hp_prevention.py'
       - 'backend/app/domain/regeneration.py'
+      - 'backend/app/domain/reactive_damage.py'
       - 'backend/app/domain/charge_profiles.py'
       - 'backend/app/domain/on_hit_saves.py'
       - 'backend/app/domain/damage_triggers.py'
@@ -25,6 +27,7 @@ on:
       - 'backend/app/domain/actions.py'
       - 'backend/app/combat/state.py'
       - 'backend/app/combat/attacks.py'
+      - 'backend/app/combat/reactive_damage.py'
       - 'backend/app/combat/zero_hp.py'
       - 'backend/app/combat/zero_hp_prevention.py'
       - 'backend/app/combat/regeneration.py'
@@ -52,6 +55,7 @@ on:
       - 'backend/app/combat/encounter_offense_priority.py'
       - 'backend/app/combat/encounter_turn_support.py'
       - 'backend/app/combat/encounter_combat_turn.py'
+      - 'backend/app/combat/encounter_attacks.py'
       - 'backend/app/combat/timed_conditions.py'
       - 'backend/app/combat/timed_effect_rules.py'
       - 'backend/app/combat/condition_lifecycle.py'
@@ -67,6 +71,7 @@ on:
       - 'frontend/index.html'
       - 'frontend/browser-state.js'
       - 'frontend/browser-attack.js'
+      - 'frontend/browser-reactive-damage.js'
       - 'frontend/browser-zero-hp.js'
       - 'frontend/browser-regeneration.js'
       - 'frontend/browser-reactions.js'
@@ -104,6 +109,7 @@ on:
       - 'frontend/browser-2014-slowing-breath.test.cjs'
       - 'frontend/browser-2014-regeneration.test.cjs'
       - 'frontend/browser-2014-fear-of-fire.test.cjs'
+      - 'frontend/browser-2014-heated-body.test.cjs'
       - 'frontend/browser-save-failure-margin.test.cjs'
       - 'backend/tests/test_parry.py'
       - 'backend/tests/test_2014_json_catalog.py'
@@ -117,6 +123,7 @@ on:
       - 'backend/tests/test_2014_legendary_resistance.py'
       - 'backend/tests/test_2014_on_hit_save.py'
       - 'backend/tests/test_save_failure_margin.py'
+      - 'backend/tests/test_2014_heated_body.py'
       - 'backend/tests/test_2014_relentless.py'
       - 'backend/tests/test_2014_sleep_breath.py'
       - 'backend/tests/test_2014_slowing_breath.py'
@@ -239,6 +246,7 @@ jobs:
           tests/test_2014_legendary_resistance.py
           tests/test_2014_on_hit_save.py
           tests/test_save_failure_margin.py
+          tests/test_2014_heated_body.py
           tests/test_2014_relentless.py
           tests/test_2014_sleep_breath.py
           tests/test_2014_slowing_breath.py
@@ -262,3 +270,4 @@ jobs:
           node frontend/browser-2014-regeneration.test.cjs
           node frontend/browser-2014-fear-of-fire.test.cjs
           node frontend/browser-save-failure-margin.test.cjs
+          node frontend/browser-2014-heated-body.test.cjs
