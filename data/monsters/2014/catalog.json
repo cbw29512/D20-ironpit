@@ -15202,11 +15202,26 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 13,
+          "condition_id": "poisoned",
+          "duration_rounds": 600,
+          "failure_margin_escalation": {
+            "margin": 5,
+            "additional_condition_ids": [
+              "unconscious"
+            ],
+            "ends_on_damage": true,
+            "allowed_removal_action_ids": [
+              "wake-sleeper"
+            ]
+          }
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the target must succeed on a DC 13 Constitution saving throw or be poisoned for 1 hour. If the saving throw fails by 5 or more, the target is also unconscious while poisoned in this way. The target wakes up if it takes damage or if another creature takes an action to shake it awake",
+        "source_complete": true,
+        "unsupported_text": null,
         "normal_range_ft": 30,
         "long_range_ft": 120,
         "attack_ability": "dexterity"
