@@ -3,8 +3,10 @@
 
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
+  const REACTIVE_KIND = "adjacent-melee-hit-reactive-damage";
 
   function build(sourceId, targetId, spell, effect, index, roundNumber = null) {
+    if (effect.kind === REACTIVE_KIND) throw new Error("Reactive spell effects compile to combat state, not modifiers.");
     let expiry = null;
     if (effect.expiresAfterSourceTurns != null) {
       if (roundNumber == null) throw new Error("Source-turn modifier expiry requires the application round.");
@@ -27,9 +29,23 @@
     };
   }
 
+  function applyReactive(state, spell, effect, index) {
+    if (!effect.damageType) throw new Error("Reactive spell damage requires a damage type.");
+    state.temporary_melee_hit_reactive_damage ||= [];
+    const id = `${spell.id}:${index}`;
+    if (state.temporary_melee_hit_reactive_damage.some((rule) => rule.id === id)) return;
+    state.temporary_melee_hit_reactive_damage.push({
+      id, rangeFt: 5, diceCount: effect.diceCount, diceSize: effect.diceSize,
+      damageBonus: effect.flatBonus || 0, damageType: effect.damageType,
+    });
+  }
+
   function apply(owner, targets, sourceId, spell, roundNumber, states = []) {
-    const modifiers = targets.flatMap(({ targetId }) => (spell.modifierEffects || [])
-      .map((effect, index) => build(sourceId, targetId, spell, effect, index, roundNumber)));
+    const ordinary = (spell.modifierEffects || [])
+      .map((effect, index) => ({ effect, index }))
+      .filter(({ effect }) => effect.kind !== REACTIVE_KIND);
+    const modifiers = targets.flatMap(({ targetId }) => ordinary
+      .map(({ effect, index }) => build(sourceId, targetId, spell, effect, index, roundNumber)));
     if (spell.concentration) {
       if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
       const durationRounds = spell.durationMinutes * 10;
@@ -37,7 +53,10 @@
       C().start(owner, sourceId, spell.id, roundNumber, states, expiresRound);
     }
     for (const { targetId, state } of targets) {
-      (spell.modifierEffects || []).forEach((effect, index) => M().add(state, build(sourceId, targetId, spell, effect, index, roundNumber)));
+      (spell.modifierEffects || []).forEach((effect, index) => {
+        if (effect.kind === REACTIVE_KIND) applyReactive(state, spell, effect, index);
+        else M().add(state, build(sourceId, targetId, spell, effect, index, roundNumber));
+      });
     }
     return modifiers;
   }
