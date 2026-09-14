@@ -18,10 +18,12 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function saveMode(state, ability, magicalEffect = false, againstCondition = null, advantageSources = 0, disadvantageSources = 0) {
+    const mental = ["intelligence", "wisdom", "charisma"].includes(ability);
     const advantage = advantageSources + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
       + DG().dexSaveAdvantageSources(state, ability)
       + (magicalEffect && state.template.traits?.includes("magic-resistance") ? 1 : 0)
+      + (magicalEffect && mental && state.template.traits?.includes("gnome-cunning") ? 1 : 0)
       + ((["charmed", "frightened"].includes(againstCondition) && state.template.traits?.includes("dark-devotion")) || (againstCondition === "frightened" && state.template.traits?.includes("brave")) || (againstCondition === "charmed" && state.template.traits?.includes("fey-ancestry")) || (["blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"].includes(againstCondition) && state.template.traits?.includes("two-headed")) ? 1 : 0);
     const disadvantage = disadvantageSources + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0)
       + (ability === "strength" ? T().strengthD20Disadvantage(state) : 0);
@@ -44,10 +46,8 @@
   }
   function failedSaveResult(state, roll) {
     if (!useLegendaryResistance(state)) return { roll, succeeded: false, legendaryResistanceUsed: false };
-    return {
-      roll, succeeded: true, legendaryResistanceUsed: true,
-      legendaryResistanceRemaining: state.resources["legendary-resistance"],
-    };
+    return { roll, succeeded: true, legendaryResistanceUsed: true,
+      legendaryResistanceRemaining: state.resources["legendary-resistance"] };
   }
   function resolveSavingThrow(state, ability, dc, options = {}) {
     const magicalEffect = typeof options === "boolean" ? options : Boolean(options.magicalEffect), againstCondition = typeof options === "object" ? options.againstCondition || null : null, advantageSources = typeof options === "object" ? options.advantageSources || 0 : 0, disadvantageSources = typeof options === "object" ? options.disadvantageSources || 0 : 0;
