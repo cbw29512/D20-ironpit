@@ -11,6 +11,7 @@ _ARENA_DISABLED_ACTION_PATTERNS = (
     re.compile(r"\b(?:summon|conjure|spawn|split|duplicate|animate)\b", re.I),
     re.compile(r"\b(?:teleport|plane shift|dimension door|misty step|ethereal(?:ness)?)\b", re.I),
     re.compile(r"\b(?:banish|banishment)\b", re.I),
+    re.compile(r"\bwall of ice\b", re.I),
     re.compile(r"\billusory appearance\b", re.I),
     re.compile(
         r"^(?:Enslave|Possession|Nightmare Haunting|Phantasms|Read Thoughts|Heart Sight|"
