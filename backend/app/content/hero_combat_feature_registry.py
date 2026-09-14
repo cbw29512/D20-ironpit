@@ -8,7 +8,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "feral-instinct",
-    "sneak-attack", "weapon-mastery",
+    "sneak-attack", "cunning-action", "evasion", "weapon-mastery",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
 }
@@ -32,6 +32,8 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "mindless-rage": {"mindless_rage": True},
     "feral-instinct": {"initiative_advantage": True},
     "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
+    "cunning-action": {"cunning_action": True},
+    "evasion": {"evasion": True},
 }
 
 
