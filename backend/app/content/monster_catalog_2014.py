@@ -21,6 +21,7 @@ from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_start_turn_damage import start_turn_relationship_damage_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.content.monster_catalog_2014_unarmed import attacks_with_unarmed_fallback_2014
+from app.content.monster_innate_spell_actions_2014 import innate_save_actions_2014
 from app.content.monster_spell_actions_2014 import damage_spell_actions_2014
 from app.domain.models import CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.movement import MovementModes
@@ -70,8 +71,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         if "Fear of Fire" in source.trait_names and not damage_triggered_roll_penalties_2014(source.source_traits): blockers.append("trait:Fear of Fire")
         if "Heated Body" in source.trait_names and not reactive_melee_damage_2014(source.source_traits): blockers.append("trait:Heated Body")
         charge_traits = [name for name in source.trait_names if CombatTrait.CHARGE in combat_traits_2014([name])]
-        if charge_traits and not any(attack.charge_profile for attack in source.attacks):
-            blockers.extend(f"trait:{name}" for name in charge_traits)
+        if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in charge_traits)
         blockers.extend(f"reaction:{name}" for name in unresolved_reactions_2014(source, supported_reactions))
         blockers.extend(f"legendary:{name}" for name in source.unsupported_legendary_action_names if not is_arena_disabled_action_2014(name))
         if source.source_legendary_actions and source.legendary_action_uses <= 0: blockers.append("legendary:unparsed-resource-pool")
@@ -88,9 +88,8 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         attacks = attacks_with_unarmed_fallback_2014(source, bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks]))
         spell_attacks, spell_saves, automatic_spells = damage_spell_actions_2014(source)
         movement = MovementModes(
-            walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
-            climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0),
-            burrow_ft=usable_movement_speed_2014("burrow", source.speed.get("burrow", 0)),
+            walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0), climb_ft=source.speed.get("climb", 0),
+            swim_ft=source.speed.get("swim", 0), burrow_ft=usable_movement_speed_2014("burrow", source.speed.get("burrow", 0)),
         )
         dex = source.abilities["dex"]
         return CombatantTemplate(
@@ -104,23 +103,20 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             start_turn_relationship_damage=start_turn_relationship_damage_2014(source.source_traits),
             melee_hit_reactive_damage=reactive_melee_damage_2014(source.source_traits), save_advantage_auras=save_advantage_auras_2014(source.source_traits),
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
-            saving_throw_actions=source.saving_throw_actions, death_trigger_actions=source.death_trigger_actions,
+            saving_throw_actions=[*source.saving_throw_actions, *innate_save_actions_2014(source)], death_trigger_actions=source.death_trigger_actions,
             healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
             automatic_damage_spell_actions=automatic_spells, starts_invisible=starts_invisible_2014(source),
             invisibility_action=invisibility_action_2014(source), legendary_action_uses=source.legendary_action_uses,
             legendary_actions=source.legendary_actions, saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
             source_trait_names=list(source.trait_names), source_legendary_action_names=list(source.legendary_action_names),
-            damage_resistances=source.damage_resistances,
-            conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
-            damage_absorptions=damage_absorptions_2014(source.source_traits),
-            damage_triggered_roll_penalties=damage_triggered_roll_penalties_2014(source.source_traits),
+            damage_resistances=source.damage_resistances, conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
+            damage_absorptions=damage_absorptions_2014(source.source_traits), damage_triggered_roll_penalties=damage_triggered_roll_penalties_2014(source.source_traits),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
             projectile_catch_reaction=projectile_catch_reaction_2014(source), spell_reflection_reaction=spell_reflection_reaction_2014(source),
             zero_hp_prevention=source.zero_hp_prevention, regeneration=source.regeneration,
-            visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
-            source=f"2014 JSON catalog: {source.id}")
+            visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type), source=f"2014 JSON catalog: {source.id}")
     except Exception as exc:
         logger.exception("Failed to compile 2014 monster %s.", source.id)
         raise RuntimeError(f"2014 monster {source.id} could not be compiled: {exc}") from exc
