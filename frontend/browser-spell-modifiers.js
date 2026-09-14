@@ -4,6 +4,7 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const REACTIVE_KIND = "adjacent-melee-hit-reactive-damage";
+  const shared = (spell) => window.IRON_PIT_BROWSER_SPELL_EFFECTS?.[spell.id] || {};
 
   function build(sourceId, targetId, spell, effect, index, roundNumber = null) {
     if (effect.kind === REACTIVE_KIND) throw new Error("Reactive spell effects compile to combat state, not modifiers.");
@@ -37,15 +38,16 @@
 
   function startSave(owner, sourceId, spell, roundNumber, states = []) {
     if (!spell.concentration) return;
-    if (!spell.durationMinutes) throw new Error(`${spell.name} concentration requires a duration.`);
+    const duration = spell.durationMinutes ?? shared(spell).durationMinutes;
+    if (!duration) throw new Error(`${spell.name} concentration requires a duration.`);
     if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
-    const rounds = spell.durationMinutes * 10;
+    const rounds = duration * 10;
     C().start(owner, sourceId, spell.id, roundNumber, states, roundNumber + rounds + (roundNumber === 0 ? 1 : 0));
   }
 
   function applyFailedSave(targetId, state, sourceId, spell, roundNumber) {
-    const modifiers = (spell.failureModifierEffects || []).map((effect, index) =>
-      build(sourceId, targetId, spell, effect, index, roundNumber));
+    const effects = spell.failureModifierEffects || shared(spell).failureModifierEffects || [];
+    const modifiers = effects.map((effect, index) => build(sourceId, targetId, spell, effect, index, roundNumber));
     modifiers.forEach((modifier) => M().add(state, modifier));
     return modifiers;
   }
