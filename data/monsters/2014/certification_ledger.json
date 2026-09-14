@@ -1,8 +1,8 @@
 {
-  "blocked_count": 99,
+  "blocked_count": 98,
   "blocker_families": {
     "action": 58,
-    "attack-detail": 47,
+    "attack-detail": 46,
     "legendary": 25,
     "spell": 51,
     "trait": 66
@@ -79,7 +79,6 @@
     "attack-detail:Shortbow": 1,
     "attack-detail:Slaying Longbow": 1,
     "attack-detail:Sting": 1,
-    "attack-detail:Sting (Bite in Beast Form)": 1,
     "attack-detail:Strength Drain": 1,
     "attack-detail:Tail": 3,
     "attack-detail:Tentacle": 3,
@@ -1610,11 +1609,9 @@
     {
       "id": "imp",
       "name": "Imp",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Sting (Bite in Beast Form)"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "invisible-stalker",
@@ -2838,7 +2835,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 228,
+  "ready_count": 229,
   "ruleset": "2014",
   "schema_version": 1
 }
