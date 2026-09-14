@@ -139,3 +139,20 @@ def resolve_event_death_triggers(
     except Exception:
         logger.exception("Failed to dispatch death triggers after event %s.", event.sequence)
         raise
+
+
+def append_after_event(
+    output: list[BattleEvent], sequence: int, round_number: int, event: BattleEvent,
+    setup: EncounterSetup, dice: DiceProvider, resolved: set[str],
+) -> int:
+    """Append immediate lifecycle events after their causal combat event."""
+    try:
+        output.append(event)
+        triggered, sequence = resolve_event_death_triggers(
+            sequence, round_number, event, setup, dice, resolved=resolved,
+        )
+        output.extend(triggered)
+        return sequence
+    except Exception as exc:
+        logger.exception("Post-event death lifecycle failed after event %s.", event.sequence)
+        raise RuntimeError("Post-event death lifecycle could not be resolved.") from exc
