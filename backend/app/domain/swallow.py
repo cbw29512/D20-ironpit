@@ -45,7 +45,7 @@ class SwallowedState(BaseModel):
     damage_type: DamageType = DamageType.ACID
     regurgitation_damage_threshold: int | None = Field(default=None, ge=1, le=1000)
     regurgitation_save_ability: AbilityName | None = None
-    regurgitation_save_dc: int | None = None
+    regurgitation_save_dc: int | None = Field(default=None, ge=1, le=40)
     regurgitation_range_ft: int | None = Field(default=None, ge=0, le=120)
     exit_movement_ft: int = Field(default=5, ge=0, le=60)
     exit_prone: bool = True
