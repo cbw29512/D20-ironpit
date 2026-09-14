@@ -192,8 +192,12 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
+        if template.projectile_catch_reaction:
+            row["projectile_catch_reaction"] = {"save_ability": template.projectile_catch_reaction.save_ability, "save_dc": template.projectile_catch_reaction.save_dc, "damage_type": template.projectile_catch_reaction.damage_type.value}
         if template.redirect_attack_reaction:
             row["redirect_attack_reaction"] = {"ally_range_ft": template.redirect_attack_reaction.ally_range_ft, "ally_max_size": template.redirect_attack_reaction.ally_max_size.value}
+        if template.spell_reflection_reaction:
+            row["spell_reflection_reaction"] = {"range_ft": template.spell_reflection_reaction.range_ft}
         if template.ruleset != "2024": row["ruleset"] = template.ruleset
         recharge_resources = [item for item in template.resources if item.recharge is not None]
         if recharge_resources:
