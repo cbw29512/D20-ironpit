@@ -70,7 +70,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         if relentless and source.zero_hp_prevention is None: blockers.extend(f"trait:{name}" for name in relentless)
         if "Regeneration" in source.trait_names and source.regeneration is None: blockers.append("trait:Regeneration")
         if "Fear of Fire" in source.trait_names and not damage_triggered_roll_penalties_2014(source.source_traits): blockers.append("trait:Fear of Fire")
-        if "Heated Body" in source.trait_names and not reactive_melee_damage_2014(source.source_traits): blockers.append("trait:Heated Body")
+        reactive_ids = {item.id for item in reactive_melee_damage_2014(source.source_traits)}; blockers.extend(f"trait:{name}" for name in ("Heated Body", "Corrosive Form") if name in source.trait_names and name.lower().replace(" ", "-") not in reactive_ids)
         charge_traits = [name for name in source.trait_names if CombatTrait.CHARGE in combat_traits_2014([name])]
         if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in charge_traits)
         blockers.extend(f"reaction:{name}" for name in unresolved_reactions_2014(source, supported_reactions))
