@@ -152,6 +152,7 @@ def _spell(action: Any) -> dict[str, Any]:
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count, "diceSize": effect.dice_size, "damageType": effect.damage_type}
     if effect.consume_on_attack_against: row["consumeOnAttackAgainst"] = True
+    if effect.expires_at_start_of_source_turn: row["expiresAtStartOfSourceTurn"] = True
     if effect.expires_after_source_turns is not None: row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
     return row
 
