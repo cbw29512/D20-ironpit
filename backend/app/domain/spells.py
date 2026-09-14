@@ -11,6 +11,7 @@ from app.domain.targeting import AreaTargeting
 SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die",
     "attacks-against-advantage", "bonus-damage", "speed",
+    "adjacent-melee-hit-reactive-damage",
 ]
 SpellTargetPolicy = Literal["self", "friendly"]
 SpellAttackKind = Literal["melee", "ranged"]
@@ -30,14 +31,15 @@ class SpellModifierEffect(BaseModel):
 
     @model_validator(mode="after")
     def validate_payload(self) -> "SpellModifierEffect":
-        die_kind = self.kind in {"attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"}
+        damage_kinds = {"bonus-damage", "adjacent-melee-hit-reactive-damage"}
+        die_kind = self.kind in {"attack-roll-bonus-die", "saving-throw-bonus-die", *damage_kinds}
         if die_kind and (self.dice_count < 1 or self.dice_size < 2):
             raise ValueError(f"{self.kind} requires certified dice.")
         if not die_kind and (self.dice_count or self.dice_size):
             raise ValueError(f"{self.kind} does not accept dice.")
-        if self.kind == "bonus-damage" and self.damage_type is None:
-            raise ValueError("Bonus damage requires a damage type.")
-        if self.kind != "bonus-damage" and self.damage_type is not None:
+        if self.kind in damage_kinds and self.damage_type is None:
+            raise ValueError(f"{self.kind} requires a damage type.")
+        if self.kind not in damage_kinds and self.damage_type is not None:
             raise ValueError(f"{self.kind} does not accept a damage type.")
         if self.kind == "attacks-against-advantage" and self.flat_bonus:
             raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
