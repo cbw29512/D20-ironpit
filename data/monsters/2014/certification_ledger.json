@@ -4,7 +4,7 @@
     "action": 60,
     "attack-detail": 48,
     "legendary": 25,
-    "reaction": 2,
+    "reaction": 1,
     "spell": 51,
     "trait": 67
   },
@@ -111,7 +111,6 @@
     "legendary:Whirlwind of Sand": 1,
     "legendary:no-parsed-options": 4,
     "reaction:Spell Reflection": 1,
-    "reaction:Unnerving Mask": 1,
     "spell:acid arrow": 1,
     "spell:blade barrier": 2,
     "spell:blight": 2,
@@ -698,10 +697,9 @@
     {
       "id": "chain-devil",
       "name": "Chain Devil",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "attack-detail:Chain",
-        "reaction:Unnerving Mask"
+        "attack-detail:Chain"
       ],
       "status": "blocked"
     },
