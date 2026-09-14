@@ -49,34 +49,52 @@ def _cleanup_ongoing(state: CombatantState) -> None:
     ]
 
 
+def _tick(sequence, round_number, target, ongoing, setup, dice) -> tuple[BattleEvent, int, bool]:
+    effect = ongoing.effect; count = effect.dice_count * ongoing.stacks
+    rolls = [dice.roll(effect.dice_size) for _ in range(count)]
+    modifier = effect.damage_bonus * ongoing.stacks; raw = max(0, sum(rolls) + modifier)
+    before = target.state.current_hp; components = []; applied = raw
+    if effect.damage_type is None:
+        apply_hit_point_loss(target.state, raw); applied = before - target.state.current_hp
+    else:
+        dtype = DamageType(effect.damage_type)
+        component = DamageRollComponent(
+            source=effect.name, notation=f"{count}d{effect.dice_size}+{modifier}", rolls=rolls,
+            modifier=modifier, damage_type=dtype, total=raw,
+        )
+        applied, components = apply_damage_defenses(target.state, [component])
+        affected = [item.state for item in [*setup.heroes, *setup.monsters]]
+        if applied: apply_damage(target.state, applied, damage_types={dtype}, dice=dice, affected_states=affected)
+    ongoing.accumulated_hp_loss += max(0, before - target.state.current_hp)
+    threshold = effect.auto_end_after_hp_loss
+    ended = target.state.is_dead or not target.state.is_alive or (threshold is not None and ongoing.accumulated_hp_loss >= threshold)
+    wording = f"loses {applied} hit points" if effect.damage_type is None else f"takes {applied} {effect.damage_type} damage"
+    detach = " The source detaches." if ended and effect.tick_timing == "source_turn_start" else ""
+    event = BattleEvent(
+        sequence=sequence, round_number=round_number, event_type="feature", actor_id=ongoing.source_id,
+        actor_name=effect.name, target_id=target.combatant_id, target_name=target.state.template.name,
+        feature_id=effect.id, damage_roll=DiceRoll(
+            notation=f"{count}d{effect.dice_size}+{modifier}", rolls=rolls, modifier=modifier, total=applied,
+        ), damage_components=components, hp_before=before, hp_after=target.state.current_hp,
+        is_dead=target.state.is_dead, animation="damage",
+        description=f"{target.state.template.name} {wording} from {effect.name}.{detach}",
+    )
+    return event, sequence + 1, ended
+
+
 def resolve_start_turn_ongoing_damage(sequence: int, round_number: int, member, setup, dice):
-    _cleanup_ongoing(member.state); events: list[BattleEvent] = []
-    affected = [item.state for item in [*setup.heroes, *setup.monsters]]
+    events: list[BattleEvent] = []; members = [*setup.heroes, *setup.monsters]
+    _cleanup_ongoing(member.state)
     for ongoing in list(member.state.ongoing_damage_effects):
-        effect = ongoing.effect; count = effect.dice_count * ongoing.stacks
-        rolls = [dice.roll(effect.dice_size) for _ in range(count)]
-        modifier = effect.damage_bonus * ongoing.stacks; raw = max(0, sum(rolls) + modifier)
-        hp_before = member.state.current_hp; components = []; applied = raw
-        if effect.damage_type is None:
-            apply_hit_point_loss(member.state, raw)
-        else:
-            dtype = DamageType(effect.damage_type)
-            component = DamageRollComponent(
-                source=effect.name, notation=f"{count}d{effect.dice_size}+{modifier}", rolls=rolls,
-                modifier=modifier, damage_type=dtype, total=raw,
-            )
-            applied, components = apply_damage_defenses(member.state, [component])
-            if applied: apply_damage(member.state, applied, damage_types={dtype}, dice=dice, affected_states=affected)
-        wording = f"loses {applied} hit points" if effect.damage_type is None else f"takes {applied} {effect.damage_type} damage"
-        events.append(BattleEvent(
-            sequence=sequence, round_number=round_number, event_type="feature", actor_id=ongoing.source_id,
-            actor_name=effect.name, target_id=member.combatant_id, target_name=member.state.template.name,
-            feature_id=effect.id, damage_roll=DiceRoll(
-                notation=f"{count}d{effect.dice_size}+{modifier}", rolls=rolls, modifier=modifier, total=applied,
-            ), damage_components=components, hp_before=hp_before, hp_after=member.state.current_hp,
-            is_dead=member.state.is_dead, animation="damage",
-            description=f"{member.state.template.name} {wording} from {effect.name}.",
-        )); sequence += 1
+        if ongoing.effect.tick_timing != "target_turn_start": continue
+        event, sequence, ended = _tick(sequence, round_number, member, ongoing, setup, dice); events.append(event)
+        if ended and ongoing in member.state.ongoing_damage_effects: member.state.ongoing_damage_effects.remove(ongoing)
+    for target in members:
+        _cleanup_ongoing(target.state)
+        for ongoing in list(target.state.ongoing_damage_effects):
+            if ongoing.source_id != member.combatant_id or ongoing.effect.tick_timing != "source_turn_start": continue
+            event, sequence, ended = _tick(sequence, round_number, target, ongoing, setup, dice); events.append(event)
+            if ended and ongoing in target.state.ongoing_damage_effects: target.state.ongoing_damage_effects.remove(ongoing)
     return events, sequence
 
 
@@ -96,10 +114,8 @@ def resolve_start_turn_relationship_damage(sequence: int, round_number: int, sou
                 source=profile.name, notation=f"{profile.dice_count}d{profile.dice_size}+{profile.damage_bonus}",
                 rolls=rolls, modifier=profile.damage_bonus, damage_type=profile.damage_type, total=raw,
             )
-            applied_total, components = apply_damage_defenses(target.state, [component])
-            hp_before = target.state.current_hp
-            if applied_total:
-                apply_damage(target.state, applied_total, damage_types={profile.damage_type}, dice=dice, affected_states=affected_states)
+            applied_total, components = apply_damage_defenses(target.state, [component]); hp_before = target.state.current_hp
+            if applied_total: apply_damage(target.state, applied_total, damage_types={profile.damage_type}, dice=dice, affected_states=affected_states)
             events.append(BattleEvent(
                 sequence=sequence, round_number=round_number, event_type="feature", actor_id=source.combatant_id,
                 actor_name=source.state.template.name, target_id=target.combatant_id, target_name=target.state.template.name,
