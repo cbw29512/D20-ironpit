@@ -17,7 +17,8 @@ def test_source_attack_header_grapple_advantage_compiles_declaratively() -> None
     try:
         match = _ATTACK.search(ANKHEG_BITE)
         assert match is not None
-        attack = _attack({"name": "Ankheg"}, ANKHEG_BITE, match)
+        attack, resource = _attack({"name": "Ankheg"}, ANKHEG_BITE, match)
+        assert resource is None
         assert [item.trigger for item in attack.conditional_attack_advantage] == ["target_grappled_by_source"]
         assert any(effect.kind == "grapple" for effect in attack.effects)
     except Exception:
