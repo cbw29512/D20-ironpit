@@ -6,6 +6,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.max_hp import reduce_max_hp
+from app.combat.save_failure_margin import failure_margin_conditions_and_duration
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
@@ -62,6 +63,24 @@ def _apply_stable_zero_hp(defender, attack, source_id, round_number, affected_st
     return applied
 
 
+def _apply_failed_condition(defender, condition_id, attack, effect, source_id, round_number, duration_rounds, *, repeat=False, affected_states=None):
+    if condition_is_immune(defender, condition_id): return None
+    timed = duration_rounds is not None or (repeat and effect.repeat_save_timing is not None) or effect.ends_on_damage
+    if timed:
+        if source_id is None or round_number is None: raise ValueError("Timed on-hit save effects require source_id and round_number.")
+        return apply_timed_condition(
+            defender, condition_id, source_id, source_effect_id=attack.id, applied_round=round_number,
+            expires_round=round_number + duration_rounds if duration_rounds is not None else None,
+            repeat_save_ability=effect.save_ability if repeat and effect.repeat_save_timing is not None else None,
+            repeat_save_dc=effect.dc if repeat and effect.repeat_save_timing is not None else None,
+            repeat_save_timing=effect.repeat_save_timing if repeat else None,
+            repeat_save_failure_condition_id=effect.repeat_save_failure_condition_id if repeat else None,
+            affected_states=affected_states, ends_on_damage=effect.ends_on_damage,
+        )
+    if condition_id not in defender.active_effect_ids: defender.active_effect_ids.append(condition_id)
+    return condition_id
+
+
 def resolve_on_hit_save(
     defender: CombatantState, attack: WeaponAttack, dice: DiceProvider, *, source_id: str | None = None,
     round_number: int | None = None, affected_states: list[CombatantState] | None = None,
@@ -71,29 +90,20 @@ def resolve_on_hit_save(
     if effect is None or defender.is_dead or not defender.is_alive or not _eligible(defender, effect): return OnHitSaveResolution()
     if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size): return OnHitSaveResolution()
     roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice, against_condition=effect.condition_id)
+    margin_conditions, duration_rounds = failure_margin_conditions_and_duration(effect, roll, succeeded, dice)
     damage_components, damage_total = _save_damage(defender, attack, dice, succeeded, affected_states)
     zero_hp_conditions = _apply_stable_zero_hp(defender, attack, source_id, round_number, affected_states) if damage_total else []
     max_hp_reduction = 0
     if effect.max_hp_reduction_equals_damage_taken and not succeeded and defender.is_alive and not defender.is_dead:
         max_hp_reduction = reduce_max_hp(defender, triggering_damage_total, kill_at_zero=effect.zero_max_hp_kills)
-    applied = None
-    if effect.condition_id is not None and not succeeded and defender.is_alive and not defender.is_dead and not condition_is_immune(defender, effect.condition_id):
-        timed = effect.duration_rounds is not None or effect.repeat_save_timing is not None or effect.ends_on_damage
-        if timed:
-            if source_id is None or round_number is None: raise ValueError("Timed on-hit save effects require source_id and round_number.")
-            applied = apply_timed_condition(
-                defender, effect.condition_id, source_id, source_effect_id=attack.id, applied_round=round_number,
-                expires_round=round_number + effect.duration_rounds if effect.duration_rounds is not None else None,
-                repeat_save_ability=effect.save_ability if effect.repeat_save_timing is not None else None,
-                repeat_save_dc=effect.dc if effect.repeat_save_timing is not None else None,
-                repeat_save_timing=effect.repeat_save_timing,
-                repeat_save_failure_condition_id=effect.repeat_save_failure_condition_id,
-                affected_states=affected_states, ends_on_damage=effect.ends_on_damage,
-            )
-        else:
-            if effect.condition_id not in defender.active_effect_ids: defender.active_effect_ids.append(effect.condition_id)
-            applied = effect.condition_id
-    all_conditions = [*zero_hp_conditions, *([applied] if applied else [])]
+    applied = None; escalated: list[str] = []
+    if effect.condition_id is not None and not succeeded and defender.is_alive and not defender.is_dead:
+        applied = _apply_failed_condition(defender, effect.condition_id, attack, effect, source_id, round_number, duration_rounds, repeat=True, affected_states=affected_states)
+        if applied:
+            for condition_id in margin_conditions:
+                result = _apply_failed_condition(defender, condition_id, attack, effect, source_id, round_number, duration_rounds, affected_states=affected_states)
+                if result: escalated.append(result)
+    all_conditions = [*zero_hp_conditions, *([applied] if applied else []), *escalated]
     return OnHitSaveResolution(
         save_roll=roll, save_ability=effect.save_ability, save_dc=effect.dc, save_succeeded=succeeded,
         applied_condition=applied, damage_components=damage_components, damage_total=damage_total,
