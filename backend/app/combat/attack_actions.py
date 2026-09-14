@@ -7,6 +7,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, forced_movement_choice, save_choice, slot_has_legal_choice, use_ranged_split
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
+from app.combat.death_triggers import resolve_event_death_triggers
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import close_ranged_threat_exists
@@ -20,6 +21,24 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
+
+
+def _settle_death_event(
+    sequence: int,
+    round_number: int,
+    event: BattleEvent,
+    setup: EncounterSetup,
+    dice: DiceProvider,
+    resolved: set[str],
+) -> tuple[list[BattleEvent], int]:
+    """Resolve immediate on-death lifecycle work before combat may continue."""
+    try:
+        return resolve_event_death_triggers(
+            sequence, round_number, event, setup, dice, resolved=resolved,
+        )
+    except Exception as exc:
+        logger.exception("Post-event death lifecycle failed after event %s.", event.sequence)
+        raise RuntimeError("Post-event death lifecycle could not be resolved.") from exc
 
 
 def resolve_attack_action(
@@ -37,6 +56,7 @@ def resolve_attack_action(
 
         spend(attacker.state, "action")
         events: list[BattleEvent] = []
+        resolved_death_triggers: set[str] = set()
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None
@@ -67,11 +87,18 @@ def resolve_attack_action(
                 or prefer_save_replacement(attacker, chosen_save[0], chosen_save[1])
             ):
                 target, save_action, distance = chosen_save
-                events.append(resolve_save_action(
+                event = resolve_save_action(
                     sequence, round_number, attacker, target, save_action,
                     distance, dice, spend_action=False, affected_states=affected_states, setup=setup,
-                ))
+                )
+                events.append(event)
                 sequence += 1
+                death_events, sequence = _settle_death_event(
+                    sequence, round_number, event, setup, dice, resolved_death_triggers,
+                )
+                events.extend(death_events)
+                if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
+                    break
                 continue
             if chosen_attack is not None:
                 target, attack, distance = chosen_attack
@@ -87,21 +114,37 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 sequence += 1
-                if attacker.state.turn_terminated:
+                death_events, sequence = _settle_death_event(
+                    sequence, round_number, event, setup, dice, resolved_death_triggers,
+                )
+                events.extend(death_events)
+                if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                     break
                 cleave, sequence = resolve_cleave_extra_attack(
                     sequence, round_number, attacker, event, attack, setup, dice, turn_key,
                 )
                 events.extend(cleave)
+                for cleave_event in cleave:
+                    death_events, sequence = _settle_death_event(
+                        sequence, round_number, cleave_event, setup, dice, resolved_death_triggers,
+                    )
+                    events.extend(death_events)
                 if definition.is_attack_action and light_trigger is None and attack.weapon.light:
                     light_trigger = attack
                 opening_feature = None
 
-        if definition.is_attack_action and light_trigger is not None and not attacker.state.turn_terminated:
+        if definition.is_attack_action and light_trigger is not None and not (
+            attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated
+        ):
             more, sequence = resolve_light_extra_attack(
                 sequence, round_number, attacker, setup, dice, light_trigger, turn_key,
             )
             events.extend(more)
+            for light_event in more:
+                death_events, sequence = _settle_death_event(
+                    sequence, round_number, light_event, setup, dice, resolved_death_triggers,
+                )
+                events.extend(death_events)
         return events, sequence
     except ValueError:
         raise
