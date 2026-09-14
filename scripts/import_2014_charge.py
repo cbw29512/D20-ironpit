@@ -10,7 +10,8 @@ def _plain(value: str | None) -> str:
 
 
 def _key(value: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "", value.lower()).rstrip("s")
+    base = re.sub(r"\s*\([^)]*form only\)\s*$", "", value, flags=re.I)
+    return re.sub(r"[^a-z0-9]+", "", base.lower()).rstrip("s")
 
 
 def _attack(attacks: list[dict], name: str) -> dict | None:
@@ -19,8 +20,8 @@ def _attack(attacks: list[dict], name: str) -> dict | None:
 
 def _standard_charge(text: str, attacks: list[dict]) -> dict[str, dict]:
     pattern = re.compile(
-        r"moves at least (\d+) feet straight toward a target and then hits it with (?:a|an) "
-        r"([A-Za-z' -]+?) attack on the same turn, the target takes an extra "
+        r"moves at least (\d+) feet straight toward a target and then hits it with (?:a|an|its) "
+        r"([A-Za-z' -]+?) attack?s? on the same turn, the target takes an extra "
         r"\d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)(?: ([A-Za-z]+))? damage",
         re.I,
     )
