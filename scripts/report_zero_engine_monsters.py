@@ -37,11 +37,12 @@ _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
     re.I,
 )
 # Keep this list limited to source riders that are not represented by the
-# production attack-rider parser. Flat ``plus N <type> damage`` riders are
-# intentionally absent: monster_source_attack_riders.py models them as an
-# immutable DamageEffectDefinition and the source audit verifies them.
+# production attack-rider parser. Speed reduction, next-attack modifiers,
+# max-HP reduction, and flat ``plus N <type> damage`` riders are intentionally
+# absent because monster_source_attack_riders.py already compiles them to
+# source-neutral universal effects and the source audit verifies those effects.
 _HIDDEN_RIDER = re.compile(
-    r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:|Hit Point maximum decreases)\b"
+    r"\b(?:attaches?|detaches?|Hit or Miss:)\b"
     r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b",
     re.I,
 )
