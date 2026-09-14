@@ -10,7 +10,7 @@ from app.domain.targeting import AreaTargeting
 
 SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die",
-    "attacks-against-advantage", "bonus-damage", "speed",
+    "attacks-against-advantage", "bonus-damage", "speed", "invisibility-suppressed",
     "adjacent-melee-hit-reactive-damage",
 ]
 SpellTargetPolicy = Literal["self", "friendly"]
@@ -133,7 +133,9 @@ class SpellSaveAction(BaseModel):
     excluded_creature_types: list[str] = Field(default_factory=list)
     save_disadvantage_creature_types: list[str] = Field(default_factory=list)
     maximize_damage_creature_types: list[str] = Field(default_factory=list)
+    failure_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
+    duration_minutes: int | None = Field(default=None, ge=1)
     animation: str = "spell-save"
 
     @model_validator(mode="after")
@@ -144,4 +146,6 @@ class SpellSaveAction(BaseModel):
             raise ValueError("Spell saves must use legacy radius or universal area targeting, not both.")
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spells require a damage type.")
+        if self.concentration and self.failure_modifier_effects and self.duration_minutes is None:
+            raise ValueError("Concentration save modifiers require a duration.")
         return self
