@@ -16,7 +16,6 @@ from app.domain.swallow import SwallowAction
 from app.domain.weapons import ConditionalAttackAdvantage, ConditionalDamage, DamageType
 from app.domain.zero_hp_prevention import ZeroHpPrevention
 
-
 class CatalogDamage2014(BaseModel):
     average: int = Field(ge=0)
     dice_count: int = Field(ge=0, le=40)
