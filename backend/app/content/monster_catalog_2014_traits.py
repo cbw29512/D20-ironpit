@@ -22,6 +22,7 @@ MODELED_TRAITS = {
     "Two-Headed": CombatTrait.TWO_HEADED,
     "Two Heads": CombatTrait.TWO_HEADED,
     "Fey Ancestry": CombatTrait.FEY_ANCESTRY,
+    "Gnome Cunning": CombatTrait.GNOME_CUNNING,
     "Aggressive": CombatTrait.AGGRESSIVE,
     "Cunning Action": CombatTrait.CUNNING_ACTION,
     "Evasion": CombatTrait.EVASION,
