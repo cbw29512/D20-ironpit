@@ -1,7 +1,7 @@
 {
   "blocked_count": 100,
   "blocker_families": {
-    "action": 60,
+    "action": 58,
     "attack-detail": 48,
     "legendary": 25,
     "spell": 51,
@@ -38,7 +38,6 @@
     "action:Luring Song": 1,
     "action:Moan": 1,
     "action:Multiattack": 6,
-    "action:Multiattack (Humanoid or Hybrid Form Only)": 2,
     "action:Reel": 1,
     "action:Roar (3/Day)": 1,
     "action:Scare (1/Day)": 1,
@@ -2662,9 +2661,8 @@
     {
       "id": "wereboar",
       "name": "Wereboar",
-      "remaining_blocker_count": 3,
+      "remaining_blocker_count": 2,
       "remaining_blockers": [
-        "action:Multiattack (Humanoid or Hybrid Form Only)",
         "attack-detail:Tusks (Boar or Hybrid Form Only)",
         "trait:Charge (Boar or Hybrid Form Only)"
       ],
@@ -2680,9 +2678,8 @@
     {
       "id": "weretiger",
       "name": "Weretiger",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "action:Multiattack (Humanoid or Hybrid Form Only)",
         "trait:Pounce (Tiger or Hybrid Form Only)"
       ],
       "status": "blocked"
