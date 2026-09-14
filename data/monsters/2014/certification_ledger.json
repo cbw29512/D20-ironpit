@@ -1,11 +1,11 @@
 {
-  "blocked_count": 89,
+  "blocked_count": 88,
   "blocker_families": {
     "action": 58,
     "attack-detail": 38,
     "legendary": 25,
     "spell": 43,
-    "trait": 64
+    "trait": 63
   },
   "blocker_yield": {
     "action:Acid Spray (Recharge 6)": 1,
@@ -169,7 +169,6 @@
     "trait:Ignited Illumination": 1,
     "trait:Light Sensitivity": 1,
     "trait:Lightning Absorption": 2,
-    "trait:Limited Magic Immunity": 1,
     "trait:Multiple Heads": 1,
     "trait:Ooze Cube": 1,
     "trait:Reactive Heads": 1,
@@ -2088,11 +2087,9 @@
     {
       "id": "rakshasa",
       "name": "Rakshasa",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "trait:Limited Magic Immunity"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "rat",
@@ -2798,7 +2795,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 238,
+  "ready_count": 239,
   "ruleset": "2014",
   "schema_version": 1
 }
