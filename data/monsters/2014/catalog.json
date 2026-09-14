@@ -29135,10 +29135,11 @@
           "max_target_size": "medium"
         },
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the marilith can automatically hit the target with its tail, and the marilith can't make tail attacks against other targets",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "grapple_target_policy": "auto_hit_own_grapple"
       }
     ],
     "multiattack_slots": [
@@ -36195,10 +36196,11 @@
           "restrains_while_grappled": true
         },
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the salamander can automatically hit the target with its tail, and the salamander can't make tail attacks against other targets",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "grapple_target_policy": "auto_hit_own_grapple"
       }
     ],
     "multiattack_slots": [
