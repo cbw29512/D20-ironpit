@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.content.monster_innate_spell_actions_2014 import SUPPORTED_INNATE_ACTION_SPELLS_2014
 from app.content.monster_spell_actions_2014 import SUPPORTED_DAMAGE_SPELLS_2014
 
 # Explicit roster-loading scope: preserve every printed spell in source data, but
@@ -41,9 +42,11 @@ def _innate_unresolved(source: CatalogMonster2014) -> list[str]:
     profile = source.innate_spellcasting
     if profile is None or not profile.source_complete or not profile.spells:
         return ["unparsed-innate-spellcasting"]
-    # Innate damage resources are a separate binding tranche; do not mark a
-    # damaging spell supported here until its at-will/per-day pool is compiled.
-    return [spell.name for spell in profile.spells if spell.id not in SCOPED_OUT_NON_DAMAGE_SPELLS_2014]
+    return [
+        spell.name for spell in profile.spells
+        if spell.id not in SCOPED_OUT_NON_DAMAGE_SPELLS_2014
+        and spell.id not in SUPPORTED_INNATE_ACTION_SPELLS_2014
+    ]
 
 
 def unresolved_spells_2014(source: CatalogMonster2014) -> list[str]:
