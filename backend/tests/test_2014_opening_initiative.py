@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from app.combat.conditional_attack_advantage import assassinate_advantage, assassinate_critical
 from app.combat.conditional_damage import conditional_damage_active, round1_initiative_lead
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.combat.attacks import resolve_attack
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.content.monster_catalog_2014 import monster_by_id_2014
 from app.domain.models import ConditionalDamage, RollMode
+from app.domain.traits import CombatTrait
 
 
 def _states():
@@ -49,3 +52,23 @@ def test_opening_initiative_damage_enters_canonical_attack_damage() -> None:
     event = resolve_attack(1, 1, attacker, target, _opening_attack(), 5, FixedDiceProvider([19, 4, 3, 2]))
     assert event.hit
     assert any(part.source == "Opening initiative bonus damage" for part in event.damage_components)
+
+
+def test_assassin_compiles_with_assassinate_and_opening_advantage() -> None:
+    assassin = build_combatant_state(monster_by_id_2014("assassin"))
+    target = build_combatant_state(build_demo_fighter())
+    assassin.initiative_total = 18
+    target.initiative_total = 12
+    assert CombatTrait.ASSASSINATE in assassin.template.combat_traits
+    assert assassinate_advantage(assassin, target, 1) == 1
+    assert assassinate_advantage(assassin, target, 2) == 0
+
+
+def test_assassinate_promotes_hit_against_surprised_target_to_critical() -> None:
+    template = build_goblin_warrior().model_copy(update={"combat_traits": [CombatTrait.ASSASSINATE]})
+    attacker = build_combatant_state(template)
+    target = build_combatant_state(build_demo_fighter())
+    target.active_effect_ids.append("surprised")
+    assert assassinate_critical(attacker, target)
+    event = resolve_attack(1, 1, attacker, target, template.weapon_attack, 5, FixedDiceProvider([19, 3, 4]))
+    assert event.hit and event.critical
