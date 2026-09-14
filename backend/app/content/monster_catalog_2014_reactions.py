@@ -43,7 +43,12 @@ def reaction_start_turn_auras_2014(source: CatalogMonster2014) -> list[StartTurn
 
 def supported_reaction_names_2014(source: CatalogMonster2014) -> set[str]:
     supported: set[str] = set()
-    if source.parry_ac_bonus is not None: supported.add("Parry")
-    if projectile_catch_reaction_2014(source) is not None: supported.add("Rock Catching")
-    if reaction_start_turn_auras_2014(source): supported.add("Unnerving Mask")
+    if source.parry_ac_bonus is not None:
+        supported.add("Parry")
+    if projectile_catch_reaction_2014(source) is not None:
+        supported.add("Rock Catching")
+    if reaction_start_turn_auras_2014(source):
+        supported.add("Unnerving Mask")
+    if spell_reflection_reaction_2014(source) is not None:
+        supported.add("Spell Reflection")
     return supported
