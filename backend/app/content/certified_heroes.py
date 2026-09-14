@@ -7,6 +7,7 @@ from app.content.character_resource_audit import assert_character_resources_raw_
 from app.content.hero_progressions import CANONICAL_BUILD_ID
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
+from app.content.shared_progression_traits import apply_progression_combat_traits
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
@@ -19,6 +20,7 @@ def _validated(
     template: CombatantTemplate,
     profile: CharacterBuildProfile,
 ) -> tuple[HeroBuildKey, CombatantTemplate]:
+    template = apply_progression_combat_traits(template)
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, template)
     combat_profile = build_pregen_combat_profiles().get(template.id)
