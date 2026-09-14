@@ -1,7 +1,7 @@
 {
-  "blocked_count": 73,
+  "blocked_count": 72,
   "blocker_families": {
-    "action": 55,
+    "action": 54,
     "attack-detail": 31,
     "legendary": 25,
     "spell": 37,
@@ -51,7 +51,6 @@
     "action:Tentacles": 1,
     "action:Third Roar": 1,
     "action:Wail (1/Day)": 1,
-    "action:Wall of Ice (Recharge 6)": 1,
     "action:Whelm (Recharge 4\u20136)": 1,
     "action:Whirlwind (Recharge 4\u20136)": 1,
     "attack-detail:Beard": 1,
@@ -1513,11 +1512,9 @@
     {
       "id": "ice-devil",
       "name": "Ice Devil",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "action:Wall of Ice (Recharge 6)"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "ice-mephit",
@@ -2718,7 +2715,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 254,
+  "ready_count": 255,
   "ruleset": "2014",
   "schema_version": 1
 }
