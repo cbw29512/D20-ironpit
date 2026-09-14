@@ -11,9 +11,21 @@ RESTRAINED = "restrained"
 STUNNED = "stunned"
 
 
+def _swallowed_condition(state: CombatantState, condition_id: str) -> bool:
+    swallowed = state.swallowed
+    if swallowed is None:
+        return False
+    if condition_id == BLINDED:
+        return True
+    if condition_id == RESTRAINED:
+        return not swallowed.source_dead
+    return False
+
+
 def has_condition(state: CombatantState, condition_id: str) -> bool:
-    swallowed_condition = state.swallowed is not None and condition_id in {BLINDED, RESTRAINED}
-    return (swallowed_condition or condition_id in state.active_effect_ids) and not condition_is_immune(state, condition_id)
+    return (
+        _swallowed_condition(state, condition_id) or condition_id in state.active_effect_ids
+    ) and not condition_is_immune(state, condition_id)
 
 
 def is_incapacitated(state: CombatantState) -> bool:
