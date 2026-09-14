@@ -8,6 +8,7 @@ on:
       - 'backend/app/content/monster_catalog_2014_traits.py'
       - 'backend/app/content/monster_catalog_2014_spellcasting.py'
       - 'backend/app/content/monster_catalog_2014_defenses.py'
+      - 'backend/app/content/monster_catalog_2014_arena_policy.py'
       - 'backend/app/content/monster_catalog_2014_compile_support.py'
       - 'backend/app/content/monster_catalog_2014_action_support.py'
       - 'backend/app/content/monster_catalog_2014_multiattack.py'
@@ -124,6 +125,7 @@ on:
       - 'backend/tests/test_2014_on_hit_save.py'
       - 'backend/tests/test_save_failure_margin.py'
       - 'backend/tests/test_2014_heated_body.py'
+      - 'backend/tests/test_2014_weapon_defense_policy.py'
       - 'backend/tests/test_2014_relentless.py'
       - 'backend/tests/test_2014_sleep_breath.py'
       - 'backend/tests/test_2014_slowing_breath.py'
@@ -247,6 +249,7 @@ jobs:
           tests/test_2014_on_hit_save.py
           tests/test_save_failure_margin.py
           tests/test_2014_heated_body.py
+          tests/test_2014_weapon_defense_policy.py
           tests/test_2014_relentless.py
           tests/test_2014_sleep_breath.py
           tests/test_2014_slowing_breath.py
