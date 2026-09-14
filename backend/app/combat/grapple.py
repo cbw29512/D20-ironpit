@@ -34,14 +34,24 @@ def _sync_effect_ids(state: CombatantState) -> None:
 
 
 def apply_grapple(
-    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *, restrains: bool = False,
+    state: CombatantState,
+    source_id: str,
+    escape_dc: int,
+    range_ft: int,
+    *,
+    restrains: bool = False,
+    source_effect_id: str | None = None,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
     state.grapple_sources.append(GrappleSource(
-        source_id=source_id, escape_dc=escape_dc, range_ft=range_ft, restrains=restrains,
+        source_id=source_id,
+        source_effect_id=source_effect_id,
+        escape_dc=escape_dc,
+        range_ft=range_ft,
+        restrains=restrains,
     ))
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
