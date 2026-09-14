@@ -3,6 +3,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_damage_application import apply_attack_damage
+from app.combat.attack_legality import attack_is_automatic_hit
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
@@ -27,10 +28,11 @@ from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
-from app.domain.models import BattleEvent, CombatantState, WeaponAttack
+from app.domain.models import BattleEvent, CombatantState, RollMode, WeaponAttack
 from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
+
 def resolve_attack(
     sequence: int, round_number: int, attacker: CombatantState, defender: CombatantState,
     attack: WeaponAttack, distance_ft: int, dice: DiceProvider,
@@ -46,38 +48,51 @@ def resolve_attack(
             raise ValueError("Action is not available for an attack.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
-        condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
-        mode = resolve_attack_roll_mode(
-            weapon, distance_ft,
-            advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
-                               + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
-                               + reckless_attack_advantage(attacker, attack)
-                               + conditional_attack_advantage_sources(attack, defender, attacker_event_id)
-                               + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
-                                        + int("Poor Depth Perception" in attacker.template.source_trait_names and distance_ft > 30)
-                                        + int(attack.attack_ability == "strength") * strength_d20_disadvantage(attacker)),
-            close_enemy_active=close_enemy_active,
-        )
+        automatic_hit = attack_is_automatic_hit(attack, attacker_event_id, defender)
+        if automatic_hit:
+            mode = RollMode.NORMAL
+            attack_roll = None
+            heroic_reroll = False
+        else:
+            condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
+            mode = resolve_attack_roll_mode(
+                weapon, distance_ft,
+                advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
+                                   + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
+                                   + reckless_attack_advantage(attacker, attack)
+                                   + conditional_attack_advantage_sources(attack, defender, attacker_event_id)
+                                   + next_attack_against_advantage_sources(attacker, defender_event_id)),
+                other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
+                                            + int("Poor Depth Perception" in attacker.template.source_trait_names and distance_ft > 30)
+                                            + int(attack.attack_ability == "strength") * strength_d20_disadvantage(attacker)),
+                close_enemy_active=close_enemy_active,
+            )
+            base_roll = roll_d20(dice, attack.attack_bonus, mode)
+            base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
+            attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
         attacker.wielded_attack_id = attack.id
-        base_roll = roll_d20(dice, attack.attack_bonus, mode)
-        base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
-        attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
         invisibility_ended = end_attack_invisibility(attacker, affected_states)
-        consume_next_attack_against_advantage(attacker, defender_event_id); consume_sap(attacker)
-        consume_attacks_against_advantage(defender); extend_rage_from_attack(attacker, round_number)
+        if not automatic_hit:
+            consume_next_attack_against_advantage(attacker, defender_event_id); consume_sap(attacker)
+            consume_attacks_against_advantage(defender)
+        extend_rage_from_attack(attacker, round_number)
         if spend_action: spend(attacker, "action")
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
-        if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
+        if not automatic_hit and redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        natural = attack_roll.selected_roll or 0; natural_20 = natural == 20
-        natural_1 = natural == 1; natural_1_ends_turn = natural_1 and not off_turn
+        natural = attack_roll.selected_roll if attack_roll and attack_roll.selected_roll is not None else 0
+        natural_20 = natural == 20; natural_1 = natural == 1
+        natural_1_ends_turn = natural_1 and not off_turn
         if natural_1_ends_turn: terminate_turn(attacker, "iron-pit-natural-1-attack")
-        expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
-        target_ac = effective_armor_class(actual_defender); hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
-        hit, parry_used = resolve_parry_hit(actual_defender, attacker, attack, attack_roll.total, natural, hit)
-        if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
+        expanded_critical = bool(attack_roll and natural >= attacker.template.progression_features.critical_hit_minimum)
+        target_ac = effective_armor_class(actual_defender)
+        hit = automatic_hit or (not natural_1 and (natural_20 or bool(attack_roll and attack_roll.total >= target_ac)))
+        if automatic_hit:
+            parry_used = False
+        else:
+            hit, parry_used = resolve_parry_hit(actual_defender, attacker, attack, attack_roll.total, natural, hit)
+            if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; max_hp_before = effective_max_hp(actual_defender); temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
@@ -113,6 +128,7 @@ def resolve_attack(
                 damage_roll, damage_components, damage_outcome = graze; end_rage_if_incapacitated(actual_defender)
             studied_applied = apply_studied_attack_miss(attacker, attacker_event_id, defender_event_id, round_number)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS"); description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if automatic_hit: description += " Automatic hit: no attack roll."
         if invisibility_ended: description += f" {attacker.template.name}'s Invisibility ends after the attack."
         if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
