@@ -18,7 +18,19 @@ _GRAPPLE_DAMAGE = re.compile(
     r"(?:the target|it)?\s*(?:and\s+)?takes \d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage at the start of each of its turns\.??",
     re.I,
 )
+_ATTACHED_DRAIN = re.compile(
+    r"(?:and\s+)?the (?P<source>[^.]+?) attaches to the target\.\s*"
+    r"While attached, the (?P=source) doesn['’]t attack\.\s*Instead, at the start of each of the (?P=source)['’]s turns, the target loses \d+ \((?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+\-−])\s*(?P<bonus>\d+))?\) hit points due to blood loss\.\s*"
+    r"The (?P=source) can detach itself by spending (?P<movement>\d+) feet of its movement\.\s*"
+    r"It does so after it drains (?P<threshold>\d+) hit points of blood from the target or the target dies\.\s*"
+    r"A creature, including the target, can use its action to detach the (?P=source)\.??",
+    re.I,
+)
 _DAMAGE_TYPES = {"acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic", "piercing", "poison", "psychic", "radiant", "slashing", "thunder"}
+
+
+def _modifier(sign: str | None, bonus: str | None) -> int:
+    return int(bonus or 0) * (-1 if sign in {"-", "−"} else 1)
 
 
 def parse_ongoing_damage(text: str, attack: dict) -> tuple[dict | None, dict | None, str]:
@@ -37,15 +49,26 @@ def parse_ongoing_damage(text: str, attack: dict) -> tuple[dict | None, dict | N
         }
         residual = f"{text[:infernal.start()]} {text[infernal.end():]}".strip(" .,;")
         return ongoing, save, residual
+    attached = _ATTACHED_DRAIN.search(text)
+    if attached:
+        data = attached.groupdict()
+        ongoing = {
+            "id": "attached-blood-drain", "name": attack.get("name", "Blood Drain"),
+            "dice_count": int(data["count"]), "dice_size": int(data["size"]),
+            "damage_bonus": _modifier(data["sign"], data["bonus"]), "tick_timing": "source_turn_start",
+            "blocks_source_attacks": True, "action_removable": True, "action_removal_range_ft": 5,
+            "source_detach_movement_ft": int(data["movement"]), "auto_end_after_hp_loss": int(data["threshold"]),
+        }
+        residual = f"{text[:attached.start()]} {text[attached.end():]}".strip(" .,;")
+        return ongoing, None, residual
     control = attack.get("control_effect") or {}
     grapple = _GRAPPLE_DAMAGE.search(text)
     if grapple and control.get("grapple_escape_dc"):
         count, size, sign, bonus, damage_type = grapple.groups(); damage_type = damage_type.lower()
         if damage_type not in _DAMAGE_TYPES: return None, None, text
-        modifier = int(bonus or 0) * (-1 if sign in {"-", "−"} else 1)
         ongoing = {
             "id": "grapple-start-turn-damage", "name": f"{attack.get('name', 'Grapple')} grapple",
-            "dice_count": int(count), "dice_size": int(size), "damage_bonus": modifier, "damage_type": damage_type,
+            "dice_count": int(count), "dice_size": int(size), "damage_bonus": _modifier(sign, bonus), "damage_type": damage_type,
             "apply_on": "hit", "ends_when_grapple_source_ends": True,
         }
         residual = f"{text[:grapple.start()]} {text[grapple.end():]}".strip(" .,;")
