@@ -4,13 +4,13 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { has: (state, id) => state.active_effect_ids.includes(id) };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
+  const isInvisible = (state) => state.active_effect_ids.includes("invisible");
 
   function canUse(state) {
     try {
       const profile = state.template.invisibilityAction;
-      return Boolean(profile && E().available(state, profile.actionCost || "action") && !Q().has(state, "invisible"));
+      return Boolean(profile && E().available(state, profile.actionCost || "action") && !isInvisible(state));
     } catch (error) {
       console.error("Browser invisibility legality failed.", error);
       throw error;
@@ -44,7 +44,7 @@
   function breakAfterAttack(state, setup) {
     try {
       const profile = state.template.invisibilityAction;
-      if (!profile?.endsOnAttack || !Q().has(state, "invisible")) return false;
+      if (!profile?.endsOnAttack || !isInvisible(state)) return false;
       const effect = state.timed_effects.find((item) => item.effect_id === "invisible" && item.source_effect_id === profile.id);
       if (!effect) return false;
       const affected = states(setup);
