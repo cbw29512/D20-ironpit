@@ -15,6 +15,7 @@ from app.content.monster_catalog_2014_gaze import petrifying_gaze_2014
 from app.content.monster_catalog_2014_invisibility import invisibility_action_2014, starts_invisible_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
+from app.content.monster_catalog_2014_reactions import projectile_catch_reaction_2014, spell_reflection_reaction_2014, supported_reaction_names_2014
 from app.content.monster_catalog_2014_save_auras import save_advantage_auras_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_start_turn_damage import start_turn_relationship_damage_2014
@@ -59,7 +60,7 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
 
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
-        supported_reactions = {"Parry"} if source.parry_ac_bonus is not None else set()
+        supported_reactions = supported_reaction_names_2014(source)
         blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete and not is_arena_disabled_attack_detail_2014(attack.unsupported_text))
         blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
@@ -119,6 +120,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
+            projectile_catch_reaction=projectile_catch_reaction_2014(source), spell_reflection_reaction=spell_reflection_reaction_2014(source),
             zero_hp_prevention=source.zero_hp_prevention, regeneration=source.regeneration,
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
             source=f"2014 JSON catalog: {source.id}")
