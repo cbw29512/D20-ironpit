@@ -52,29 +52,28 @@
     return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates);
   }
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
-    const spendAction = extra.spendAction !== false;
+    const spendAction = extra.spendAction !== false, automaticHit = attack.grappleTargetPolicy === "auto_hit_own_grapple" && (target.state.grapple_sources || []).some((source) => source.source_id === attacker.combatant_id && source.source_effect_id === attack.id);
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
-    const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
+    const recklessStarted = !automaticHit && extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + B2().attackAdvantage(attacker.state, attack) + A().sources(attack, target.state, attacker.combatant_id) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const strengthPenalty = attack.attackAbility === "strength" ? (T()?.strengthD20Disadvantage?.(attacker.state) || 0) : 0;
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state) + strengthPenalty, closeThreat);
-    attacker.state.wielded_attack_id = attack.id; const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
-    const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll), invisibilityEnded = INV().breakAfterAttack(attacker.state, extra.setup);
-    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
-    M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
-    if (spendAction) E().spend(attacker.state, "action");
-    const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
-    const natural = attackRoll.selected_roll, naturalTwenty = natural === 20, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
+    const mode = automaticHit ? "normal" : R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state) + strengthPenalty, closeThreat);
+    attacker.state.wielded_attack_id = attack.id; const heroic = automaticHit ? { roll: null, used: false } : HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
+    const attackRoll = automaticHit ? null : M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll), invisibilityEnded = INV().breakAfterAttack(attacker.state, extra.setup);
+    if (!automaticHit) { M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state); M().consumeAttacksAgainstAdvantage(target.state); }
+    window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round); if (spendAction) E().spend(attacker.state, "action");
+    const redirected = automaticHit ? null : window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
+    const natural = attackRoll?.selected_roll || 0, naturalTwenty = natural === 20, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
     const naturalOne = natural === 1, naturalOneEndsTurn = naturalOne && extra.offTurn !== true;
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
-    const initialHit = !naturalOne && (naturalTwenty || attackRoll.total >= baseTargetAc);
-    const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attacker.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
+    const initialHit = automaticHit || (!naturalOne && (naturalTwenty || attackRoll.total >= baseTargetAc));
+    const parry = automaticHit ? { hit: true, used: false } : window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attacker.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
     const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
-    const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
+    const expandedCritical = !automaticHit && natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
@@ -91,7 +90,7 @@
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
-      if (living && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled)));
+      if (living && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled), attack.id));
       if (living && control?.conditionId) {
         const timed = T().apply(actualTarget.state, control.conditionId, attacker.combatant_id, { sourceEffectId: attack.id, appliedRound: round,
           expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn), expiryTiming: control.expiryTiming || null,
@@ -118,7 +117,7 @@
       studiedApplied = STUDY().apply(attacker.state, attacker.combatant_id, target.combatant_id, round);
     }
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
-    if (invisibilityEnded) description += ` ${attacker.state.template.name}'s Invisibility ends after the attack.`; if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
+    if (automaticHit) description += " Automatic hit: no attack roll."; if (invisibilityEnded) description += ` ${attacker.state.template.name}'s Invisibility ends after the attack.`; if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
     else if (naturalOne) description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn.";
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
     if (!hit && damageRoll !== null) description += ` Graze deals ${damageRoll.total} ${attack.damageType} damage.`;
