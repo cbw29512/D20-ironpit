@@ -3,7 +3,6 @@ import json
 import logging
 from pathlib import Path
 from pydantic import TypeAdapter
-
 from app.content.monster_catalog_2014_absorption import damage_absorptions_2014, unresolved_absorption_traits_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
 from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, is_arena_disabled_attack_detail_2014, usable_movement_speed_2014
@@ -17,6 +16,7 @@ from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMo
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
 from app.content.monster_catalog_2014_reactions import projectile_catch_reaction_2014, reaction_start_turn_auras_2014, spell_reflection_reaction_2014, supported_reaction_names_2014
 from app.content.monster_catalog_2014_save_auras import save_advantage_auras_2014
+from app.content.monster_catalog_2014_sneak_attack import sneak_attack_d6_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_start_turn_damage import start_turn_relationship_damage_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
@@ -32,7 +32,6 @@ logger = logging.getLogger(__name__)
 CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014"
 MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
-
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
     try:
         kind = WeaponAttackKind.MELEE if source.kind == "melee" else WeaponAttackKind.RANGED
@@ -56,7 +55,6 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
         raise RuntimeError(f"2014 attack {source.id} could not be compiled.") from exc
-
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
         supported_reactions = supported_reaction_names_2014(source)
@@ -82,7 +80,6 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     except Exception as exc:
         logger.exception("Failed to inventory 2014 mechanics for %s.", source.id)
         raise RuntimeError(f"2014 monster {source.id} mechanics could not be inventoried.") from exc
-
 def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
     try:
         blockers = unsupported_mechanics_2014(source)
@@ -101,7 +98,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             kind="monster", ruleset="2014", creature_type=source.creature_type, creature_subtypes=source.creature_subtypes,
             size=source.size, ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
-            progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
+            progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names, sneak_attack_d6=sneak_attack_d6_2014(source.source_traits)),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], start_turn_gaze=petrifying_gaze_2014(source.source_traits),
             start_turn_auras=[*start_turn_auras_2014(source.source_traits), *reaction_start_turn_auras_2014(source)],
             start_turn_relationship_damage=start_turn_relationship_damage_2014(source.source_traits),
@@ -127,7 +124,6 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
     except Exception as exc:
         logger.exception("Failed to compile 2014 monster %s.", source.id)
         raise RuntimeError(f"2014 monster {source.id} could not be compiled: {exc}") from exc
-
 def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     try:
         if path.is_file(): payload = json.loads(path.read_text(encoding="utf-8"))
@@ -139,7 +135,6 @@ def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     except Exception as exc:
         logger.exception("Failed to load 2014 monster catalog from %s.", path)
         raise RuntimeError(f"2014 monster catalog could not be loaded from {path}.") from exc
-
 def monster_by_id_2014(monster_id: str, path: Path = CATALOG_ROOT) -> CombatantTemplate:
     try:
         source = next(item for item in load_catalog_2014(path) if item.id == monster_id)
