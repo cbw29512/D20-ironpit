@@ -28,7 +28,7 @@ def test_melee_hit_inside_range_applies_heated_body_to_attacker() -> None:
     before = attacker.state.current_hp
     event = resolve_encounter_attack(
         1, 1, attacker, defender, attacker.state.template.weapon_attack, 5,
-        FixedDiceProvider([20, 4, 7]), setup,
+        FixedDiceProvider([20, 4, 7, 7]), setup,
     )
     assert event.hit is True
     assert event.actor_hp_before == before
