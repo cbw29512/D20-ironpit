@@ -28,7 +28,8 @@ _CONDITION_UNTIL_NEXT_TURN = re.compile(
 
 def _plain(value: str | None) -> str:
     text = re.sub(r"<[^>]+>", " ", value or "")
-    return re.sub(r"\s+", " ", html.unescape(text)).strip()
+    text = html.unescape(text).replace("\u00ad", "")
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def _slug(value: str) -> str:
