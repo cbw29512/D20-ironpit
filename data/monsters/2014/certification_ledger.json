@@ -5,7 +5,7 @@
     "attack-detail": 35,
     "legendary": 25,
     "spell": 41,
-    "trait": 48
+    "trait": 47
   },
   "blocker_yield": {
     "action:Acid Spray (Recharge 6)": 1,
@@ -144,7 +144,6 @@
     "trait:Duergar Resilience": 1,
     "trait:Ephemeral": 1,
     "trait:Ethereal Sight": 1,
-    "trait:Evasion": 1,
     "trait:Fear Aura": 1,
     "trait:Fey Ancestry": 2,
     "trait:Fire Aura": 1,
@@ -407,10 +406,9 @@
     {
       "id": "assassin",
       "name": "Assassin",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "trait:Assassinate",
-        "trait:Evasion"
+        "trait:Assassinate"
       ],
       "status": "blocked"
     },
