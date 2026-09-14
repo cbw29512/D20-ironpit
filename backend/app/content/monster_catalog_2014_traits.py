@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_catalog_2014_absorption import ABSORPTION_TRAITS_2014
 from app.content.monster_catalog_2014_arena_policy import (
     ARENA_OUT_OF_SCOPE_TRAITS_2014,
     ARENA_USABLE_MOVEMENT_TRAITS_2014,
@@ -29,10 +30,10 @@ MODELED_TRAITS = {
 }
 
 DATA_BOUND_TRAITS = frozenset({
-    "Angelic Weapons", "Barbed Hide", "Blood Frenzy", "Brute", "Echolocation", "Fear of Fire", "Fire Absorption",
+    "Angelic Weapons", "Barbed Hide", "Blood Frenzy", "Brute", "Echolocation", "Fear of Fire",
     "Heated Body", "Heated Weapons", "Innate Spellcasting", "Invisibility", "Petrifying Gaze", "Poor Depth Perception",
     "Reckless", "Regeneration", "Spellcasting", "Stench", "Turning Defiance",
-})
+}) | ABSORPTION_TRAITS_2014
 
 ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amorphous", "Amphibious", "Antimagic Susceptibility", "Beast of Burden", "Blind Senses",

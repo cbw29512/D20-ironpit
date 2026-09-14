@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 from pydantic import TypeAdapter
 
-from app.content.monster_catalog_2014_absorption import damage_absorptions_2014
+from app.content.monster_catalog_2014_absorption import damage_absorptions_2014, unresolved_absorption_traits_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
 from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, is_arena_disabled_attack_detail_2014, usable_movement_speed_2014
 from app.content.monster_catalog_2014_auras import start_turn_auras_2014
@@ -64,11 +64,11 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete and not is_arena_disabled_attack_detail_2014(attack.unsupported_text))
         blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names, source.data_bound_trait_names))
+        blockers.extend(f"trait:{name}" for name in unresolved_absorption_traits_2014(source.trait_names, source.source_traits))
         blockers.extend(f"spell:{name}" for name in unresolved_spells_2014(source))
         relentless = [name for name in source.trait_names if name.startswith("Relentless (Recharges after")]
         if relentless and source.zero_hp_prevention is None: blockers.extend(f"trait:{name}" for name in relentless)
         if "Regeneration" in source.trait_names and source.regeneration is None: blockers.append("trait:Regeneration")
-        if "Fire Absorption" in source.trait_names and not damage_absorptions_2014(source.source_traits): blockers.append("trait:Fire Absorption")
         if "Fear of Fire" in source.trait_names and not damage_triggered_roll_penalties_2014(source.source_traits): blockers.append("trait:Fear of Fire")
         if "Heated Body" in source.trait_names and not reactive_melee_damage_2014(source.source_traits): blockers.append("trait:Heated Body")
         charge_traits = [name for name in source.trait_names if CombatTrait.CHARGE in combat_traits_2014([name])]
