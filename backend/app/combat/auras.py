@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available, spend
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.source_effect_immunity import grant_source_effect_immunity, source_effect_is_immune
@@ -23,6 +24,10 @@ def resolve_start_turn_auras(
         for aura in source.state.template.start_turn_auras:
             if combatant_distance(target, source) > aura.range_ft:
                 continue
+            if aura.reaction_cost:
+                if source.side == target.side or not is_available(source.state, "reaction"):
+                    continue
+                spend(source.state, "reaction")
             if source_effect_is_immune(target.state, source.combatant_id, aura.id):
                 continue
             roll, succeeded = resolve_saving_throw(
@@ -42,6 +47,7 @@ def resolve_start_turn_auras(
                 )
             outcome = "SUCCEEDS" if succeeded else "FAILS"
             description = f"{target.state.template.name} {outcome} a DC {aura.save_dc} {aura.save_ability.title()} save against {source.state.template.name}'s {aura.name}."
+            if aura.reaction_cost: description += f" {source.state.template.name} spends its reaction."
             if applied: description += f" {target.state.template.name} is {applied.title()}."
             events.append(BattleEvent(
                 sequence=sequence, round_number=round_number, event_type="saving_throw",
