@@ -1,7 +1,7 @@
 {
-  "blocked_count": 80,
+  "blocked_count": 78,
   "blocker_families": {
-    "action": 57,
+    "action": 55,
     "attack-detail": 34,
     "legendary": 25,
     "spell": 41,
@@ -45,7 +45,7 @@
     "action:Spit Poison": 1,
     "action:Spores (Recharge 6)": 1,
     "action:Stunning Screech (1/Day)": 1,
-    "action:Swallow": 3,
+    "action:Swallow": 1,
     "action:Tendril": 1,
     "action:Tentacle Slam": 1,
     "action:Tentacles": 1,
@@ -1181,11 +1181,9 @@
     {
       "id": "giant-frog",
       "name": "Giant Frog",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "action:Swallow"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "giant-goat",
@@ -1267,11 +1265,9 @@
     {
       "id": "giant-toad",
       "name": "Giant Toad",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "action:Swallow"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "giant-vulture",
@@ -2740,7 +2736,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 247,
+  "ready_count": 249,
   "ruleset": "2014",
   "schema_version": 1
 }
