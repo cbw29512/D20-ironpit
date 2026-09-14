@@ -43090,6 +43090,17 @@
         "source_complete": true,
         "unsupported_text": null,
         "reach_ft": 5,
+        "charge_profile": {
+          "minimum_move_ft": 15,
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_type": "slashing",
+            "damage_bonus": 0
+          },
+          "prone_save_ability": "strength",
+          "prone_save_dc": 13
+        },
         "attack_ability": "strength"
       }
     ],
