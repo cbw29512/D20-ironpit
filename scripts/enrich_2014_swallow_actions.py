@@ -24,6 +24,27 @@ def _parse_swallow_from_actions(actions: str) -> dict | None:
     return None
 
 
+def _bind_on_hit_swallow(row: dict, parsed: dict) -> dict:
+    ability = parsed.pop("on_hit_save_ability", None)
+    dc = parsed.pop("on_hit_save_dc", None)
+    if ability is None and dc is None:
+        return parsed
+    if ability is None or dc is None:
+        raise ValueError(f"Incomplete save-triggered Swallow data for {row['name']}.")
+    attack = next((item for item in row.get("attacks", []) if item.get("id") == parsed["attack_id"]), None)
+    if attack is None:
+        raise ValueError(f"Swallow attack {parsed['attack_id']!r} is missing for {row['name']}.")
+    if attack.get("on_hit_save_effect") is not None:
+        raise ValueError(f"Swallow attack {parsed['attack_id']!r} already has a save rider for {row['name']}.")
+    attack["on_hit_save_effect"] = {
+        "save_ability": ability, "dc": dc,
+        "max_target_size": parsed["max_target_size"], "swallow_on_failure": True,
+    }
+    attack["source_complete"] = True
+    attack["unsupported_text"] = None
+    return parsed
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Enrich 2014 Swallow actions from pinned source text.")
     parser.add_argument("source", type=Path)
@@ -40,7 +61,7 @@ def main() -> int:
             parsed = _parse_swallow_from_actions(raw.get("Actions", ""))
             if parsed is None:
                 continue
-            row["swallow_actions"] = [parsed]
+            row["swallow_actions"] = [_bind_on_hit_swallow(row, parsed)]
             parsed_count += 1
         args.catalog.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print(f"enriched {parsed_count} swallow actions")
