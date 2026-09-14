@@ -57,11 +57,12 @@ def test_unknown_death_burst_wording_fails_closed() -> None:
 
 
 def test_roster_binds_death_burst_data_without_claiming_runtime_certification() -> None:
+    rows = _rows_by_name()
     roster = {template.name: template for template in build_arena_roster().monsters}
     for name in _EXPECTED:
         template = roster[name]
         assert len(template.death_trigger_effects) == 1
-        issues = audit_monster_source(template)
+        issues = audit_monster_source(template, rows[name])
         assert "death-trigger-source-data-mismatch" not in issues
         assert "uncertified-trait:death-burst" in issues
 
