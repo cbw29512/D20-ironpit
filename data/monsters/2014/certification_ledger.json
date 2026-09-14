@@ -5,7 +5,7 @@
     "attack-detail": 35,
     "legendary": 25,
     "spell": 41,
-    "trait": 43
+    "trait": 42
   },
   "blocker_yield": {
     "action:Acid Spray (Recharge 6)": 1,
@@ -149,7 +149,6 @@
     "trait:Freedom of Movement": 1,
     "trait:Freeze": 1,
     "trait:Gibbering": 1,
-    "trait:Gnome Cunning": 1,
     "trait:Grappler": 1,
     "trait:Grasping Tendrils": 1,
     "trait:Hellish Weapons": 1,
@@ -804,10 +803,9 @@
     {
       "id": "deep-gnome-svirfneblin",
       "name": "Deep Gnome (Svirfneblin)",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "spell:blindness/deafness",
-        "trait:Gnome Cunning"
+        "spell:blindness/deafness"
       ],
       "status": "blocked"
     },
