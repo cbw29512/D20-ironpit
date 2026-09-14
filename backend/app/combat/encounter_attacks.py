@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
+from app.combat.contested_movement import apply_on_hit_contested_movement
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.forced_movement import push_away
@@ -115,7 +116,9 @@ def resolve_encounter_attack(
             event.feature_id = "reckless-attack"
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
+    actual_target = _event_target(event, target, setup)
     _apply_on_hit_push(attacker, target, attack, event, setup)
     _apply_restraint(attacker, target, attack, event, setup)
-    apply_melee_hit_reactive_damage(event, attacker, _event_target(event, target, setup), attack, distance_ft, dice, setup)
+    apply_on_hit_contested_movement(attacker, actual_target, attack, event, setup, dice)
+    apply_melee_hit_reactive_damage(event, attacker, actual_target, attack, distance_ft, dice, setup)
     return apply_critical_closing_move(attacker, setup, event)

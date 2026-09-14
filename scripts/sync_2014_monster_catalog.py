@@ -39,6 +39,7 @@ def main() -> int:
             [sys.executable, "scripts/enrich_2014_failure_margin_saves.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_plain_grapples.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_grapple_attack_policy.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_contested_movement.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_ongoing_damage.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_legendary_actions.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_spellcasting.py", str(source), "--catalog", str(OUTPUT)],

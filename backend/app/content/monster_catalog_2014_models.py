@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, field_validator
 from app.domain.actions import AbilityName, ConditionName, HealingAction, HitControlEffect, SavingThrowAction
 from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.charge_profiles import ChargeProfileDefinition
+from app.domain.contested_movement import OnHitContestedMovement
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.on_hit_saves import OnHitSaveEffect
 from app.domain.ongoing_damage import OngoingDamageEffect
@@ -35,6 +36,7 @@ class CatalogAttack2014(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
     on_hit_save_effect: OnHitSaveEffect | None = None
+    on_hit_contested_movement: OnHitContestedMovement | None = None
     ongoing_damage_effect: OngoingDamageEffect | None = None
     control_effect: HitControlEffect | None = None
     resource_id: str | None = None

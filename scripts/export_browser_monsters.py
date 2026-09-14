@@ -168,6 +168,16 @@ def _ongoing_damage_row(effect):
     return row
 
 
+def _contested_movement_row(effect):
+    if effect is None: return None
+    row = {
+        "sourceAbility": effect.source_ability, "targetAbility": effect.target_ability,
+        "distanceFt": effect.distance_ft, "direction": effect.direction,
+    }
+    if effect.max_target_size is not None: row["maxTargetSize"] = effect.max_target_size.value
+    return row
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -223,6 +233,8 @@ def _attach_monster_actions(row, template) -> None:
         if attack.attack_ability_modifier is not None: attack_row["attackAbilityModifier"] = attack.attack_ability_modifier
         ongoing = _ongoing_damage_row(attack.ongoing_damage_effect)
         if ongoing: attack_row["ongoingDamageEffect"] = ongoing
+        contest = _contested_movement_row(attack.on_hit_contested_movement)
+        if contest: attack_row["onHitContestedMovement"] = contest
         if effect:
             rider = attack_row.setdefault("onHitSaveEffect", {})
             if effect.failure_push_ft: rider["failurePushFt"] = effect.failure_push_ft
@@ -263,7 +275,7 @@ def render() -> str:
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids): raise RuntimeError("Certified browser monster export contains duplicate template IDs.")
         payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
-        return "/* GENERATED from canonical Python RAW-ready monster templates. Do not hand-edit. */\n(() => {\n  \"use strict\";\n" + f"  const monsters = {payload};\n" + "  window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));\n  window.IRON_PIT_CANONICAL_MONSTERS_READY = true;\n})();\n"
+        return "/* GENERATED from canonical Python RAW-ready monster templates. Do not hand-edit. */\n(() => {\n  \"use strict\";\n" + f"  const monsters = {payload};\n" + "  window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));\n})();\n"
     except Exception:
         logger.exception("Certified browser monster rendering failed."); raise
 
@@ -274,4 +286,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO); main()
+    logging.basicConfig(level=logging.INFO)
+    main()

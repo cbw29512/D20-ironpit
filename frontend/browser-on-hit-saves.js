@@ -3,7 +3,9 @@
 
   const S = () => window.IRON_PIT_BROWSER_SAVES;
   const ST = () => window.IRON_PIT_BROWSER_STATE;
+  const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
   const D = () => window.IRON_PIT_DICE;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
@@ -96,16 +98,55 @@
     return [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === targetId) || target;
   }
 
+  function abilityModifier(state, ability) {
+    const direct = state.template.ability_modifiers?.[ability];
+    if (Number.isInteger(direct)) return direct;
+    const attack = (state.template.attacks || []).find((item) => item.attackAbility === ability && Number.isInteger(item.attackAbilityModifier));
+    if (attack) return attack.attackAbilityModifier;
+    throw new Error(`${state.template.name} lacks a certified ${ability} ability modifier.`);
+  }
+
+  function abilityCheck(state, ability) {
+    const advantage = ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0;
+    const disadvantage = (state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0)
+      + (T()?.abilityCheckDisadvantage?.(state) || 0) + (ability === "strength" ? (T()?.strengthD20Disadvantage?.(state) || 0) : 0);
+    return R().d20(abilityModifier(state, ability), R().modeFromSources(advantage, disadvantage));
+  }
+
+  function applyContestedMovement(event, source, target, attack, setup) {
+    const effect = attack.onHitContestedMovement;
+    if (!event.hit || !effect || !setup || !target.state.is_alive || target.state.is_dead) return;
+    if (effect.maxTargetSize && !ST().sizeAtMost(target, effect.maxTargetSize)) return;
+    if (!FM() || !R()) throw new Error("Contested movement dependencies are not loaded.");
+    const sourceRoll = abilityCheck(source.state, effect.sourceAbility), originalTargetRoll = abilityCheck(target.state, effect.targetAbility);
+    let targetRoll = originalTargetRoll, succeeded = targetRoll.total >= sourceRoll.total, tactical = null;
+    if (!succeeded && TM()) {
+      tactical = TM().apply(target.state, targetRoll, sourceRoll.total);
+      targetRoll = tactical.roll; succeeded = tactical.succeeded;
+    }
+    let moved = 0;
+    if (!succeeded) moved = effect.direction === "away_from_source"
+      ? FM().pushAway(source, target, effect.distanceFt, setup)
+      : FM().pullToward(source, target, effect.distanceFt, setup);
+    event.ability_check_roll = targetRoll; event.check_ability = effect.targetAbility;
+    event.check_dc = sourceRoll.total; event.check_succeeded = succeeded;
+    if (moved) event.movement_ft = (event.movement_ft || 0) + moved;
+    const tacticalText = tactical?.used ? " after using Tactical Mind" : "";
+    const outcome = succeeded ? "resists" : `is moved ${moved} feet`;
+    event.description += ` ${target.state.template.name} ${outcome}${tacticalText} in the opposed ${effect.targetAbility} check (${targetRoll.total} vs. ${sourceRoll.total}).`;
+  }
+
   function install() {
     const attackRuntime = window.IRON_PIT_BROWSER_ATTACK;
     if (!attackRuntime || attackRuntime.onHitSaveWrapped) return;
     const original = attackRuntime.resolveAttack;
     attackRuntime.resolveAttack = (...args) => {
       const event = original(...args), attack = args[4], extra = args[6] || {};
-      const target = actualTarget(args[3], extra.setup, event.target_id);
+      const target = actualTarget(args[3], extra.setup, event.target_id), source = args[2];
+      applyContestedMovement(event, source, target, attack, extra.setup);
       if (!event.hit || (!attack.onHitSaveEffect && !attack.ongoingDamageEffect)) return event;
       const triggeringDamageTotal = (event.damage_components || []).reduce((sum, part) => sum + (part.applied_total || 0), 0);
-      const result = resolve(target, attack, args[2].combatant_id, args[1], extra.setup, triggeringDamageTotal);
+      const result = resolve(target, attack, source.combatant_id, args[1], extra.setup, triggeringDamageTotal);
       if (!result) return event;
       event.saving_throw_roll = result.saveRoll; event.save_ability = result.saveAbility;
       event.save_dc = result.saveDc; event.save_succeeded = result.saveSucceeded;
@@ -127,6 +168,6 @@
     attackRuntime.onHitSaveWrapped = true;
   }
 
-  window.IRON_PIT_BROWSER_ON_HIT_SAVES = { resolve, install };
+  window.IRON_PIT_BROWSER_ON_HIT_SAVES = { applyContestedMovement, resolve, install };
   install();
 })();
