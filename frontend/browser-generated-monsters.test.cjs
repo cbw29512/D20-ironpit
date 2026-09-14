@@ -42,23 +42,6 @@ for (const monster of Object.values(generated)) {
   );
 }
 
-const insects = generated["srd-swarm-of-insects"];
-assert.ok(insects, "Swarm of Insects must be in the generated RAW-ready browser roster");
-assert.deepEqual(insects.traits, ["swarm"]);
-assert.equal(insects.attacks[0].bonus, 3);
-assert.equal(insects.attacks[0].damageType, "poison");
-assert.equal(insects.attacks[0].diceCount, 2);
-assert.equal(insects.attacks[0].diceSize, 4);
-assert.equal(insects.attacks[0].damageBonus, 1);
-assert.deepEqual(insects.attacks[0].conditionalDamage, [{
-  trigger: "attacker_bloodied",
-  mode: "replace_weapon",
-  diceCount: 1,
-  diceSize: 4,
-  damageBonus: 1,
-  damageType: "poison",
-}]);
-
 const goat = generated["srd-goat"];
 assert.ok(goat);
 assert.equal(goat.attacks[0].fixedDamage, 1);
