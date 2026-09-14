@@ -57,7 +57,6 @@ class CatalogInnateSpell2014(BaseModel):
     shared_pool: bool = False
     qualifier: str | None = None
 
-
 class CatalogInnateSpellcasting2014(BaseModel):
     ability: AbilityName
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -65,7 +64,6 @@ class CatalogInnateSpellcasting2014(BaseModel):
     spells: list[CatalogInnateSpell2014] = Field(default_factory=list)
     source_complete: bool = True
     unsupported_text: str | None = None
-
 
 class CatalogPreparedSpell2014(BaseModel):
     id: str

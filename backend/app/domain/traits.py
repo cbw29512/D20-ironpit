@@ -18,4 +18,5 @@ class CombatTrait(StrEnum):
     AGGRESSIVE = "aggressive"
     MARTIAL_ADVANTAGE = "martial-advantage"
     RAMPAGE = "rampage"
+    REACTIVE = "reactive"
     LIFE_DOMAIN = "life-domain"

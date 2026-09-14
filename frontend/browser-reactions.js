@@ -8,6 +8,16 @@
   const SV = () => window.IRON_PIT_BROWSER_SAVES;
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
 
+  function refreshReactive(setup) {
+    let refreshed = 0;
+    for (const member of [...setup.heroes, ...setup.monsters]) {
+      if (member.state.is_alive && !member.state.is_dead && member.state.template.traits?.includes("reactive")) {
+        member.state.reaction_available = true; refreshed += 1;
+      }
+    }
+    return refreshed;
+  }
+
   function unarmedOpportunityAttack(template) {
     const profile = template.unarmed_opportunity_attack || window.IRON_PIT_UNARMED_OPPORTUNITY?.[template.id];
     if (!profile) return null;
@@ -95,5 +105,5 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, projectileCatch, redirectAttack, resolveOpportunityAttack };
+  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, projectileCatch, redirectAttack, refreshReactive, resolveOpportunityAttack };
 })();

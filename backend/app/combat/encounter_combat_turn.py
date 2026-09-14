@@ -20,6 +20,7 @@ from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.pit_policy import choose_standard_attack
 from app.combat.policy import should_use_second_wind
+from app.combat.reactive import refresh_reactive_reactions
 from app.combat.regeneration import resolve_start_turn as resolve_regeneration
 from app.combat.resources import resolve_start_turn_recharges
 from app.combat.saving_throws import resolve_save_action
@@ -37,11 +38,9 @@ def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve one Iron Pit turn through shared legality, movement, and fallback policy."""
     try:
         events: list[BattleEvent] = []
-        cleanup_grapples(setup)
-        cleanup_swallowed(setup)
+        refresh_reactive_reactions(setup); cleanup_grapples(setup); cleanup_swallowed(setup)
         swallow_events, sequence = resolve_start_turn_damage(sequence, round_number, attacker, setup, dice)
         events.extend(swallow_events)
         ongoing_events, sequence = resolve_start_turn_ongoing_damage(sequence, round_number, attacker, setup, dice); events.extend(ongoing_events)

@@ -6,7 +6,7 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
-  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, R = () => window.IRON_PIT_BROWSER_REGENERATION;
+  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, R = () => window.IRON_PIT_BROWSER_REGENERATION, RX = () => window.IRON_PIT_BROWSER_REACTIONS;
   const RP = () => window.IRON_PIT_BROWSER_RAMPAGE, W = () => window.IRON_PIT_BROWSER_SWALLOW, STD = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, INV = () => window.IRON_PIT_BROWSER_INVISIBILITY, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const GZ = () => window.IRON_PIT_BROWSER_GAZE, D = () => window.IRON_PIT_DICE;
@@ -38,7 +38,7 @@
     if (state.death_save_failures >= 3) {
       state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false;
     } else if (state.death_save_successes >= 3) {
-      state.is_stable = true; state.is_unconscious = true; state.death_save_successes = 0; state.death_save_failures = 0;
+      state.is_stable = true; state.is_unconscious = true; state.is_stable = true; state.death_save_successes = 0; state.death_save_failures = 0;
       result = "third success; becomes Stable";
     }
     return {
@@ -61,7 +61,7 @@
 
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); W()?.cleanup(setup);
+    const events = []; RX()?.refreshReactive(setup); H().cleanup(setup); W()?.cleanup(setup);
     const swallowed = W()?.startTurn(sequence, round, member, setup);
     if (swallowed) { events.push(...swallowed.events); sequence = swallowed.sequence; }
     const ongoing = STD()?.ongoingStartTurn(sequence, round, member, setup); if (ongoing) { events.push(...ongoing.events); sequence = ongoing.sequence; }
