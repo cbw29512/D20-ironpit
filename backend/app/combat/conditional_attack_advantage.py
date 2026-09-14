@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditional_damage import round1_initiative_lead
 from app.combat.hit_points import effective_max_hp
 from app.domain.models import CombatantState, WeaponAttack
 
@@ -18,6 +19,8 @@ def conditional_attack_advantage_sources(
     attack: WeaponAttack,
     target: CombatantState,
     attacker_event_id: str | None = None,
+    attacker: CombatantState | None = None,
+    round_number: int | None = None,
 ) -> int:
     """Return declarative attack-roll Advantage sources satisfied by target state."""
     try:
@@ -28,6 +31,11 @@ def conditional_attack_advantage_sources(
                 continue
             if spec.trigger == "target_grappled_by_self":
                 total += int(_grappled_by(target, attacker_event_id))
+                continue
+            if spec.trigger == "round1_initiative_lead":
+                if attacker is None:
+                    raise ValueError("Opening initiative Advantage requires attacker state.")
+                total += int(round1_initiative_lead(attacker, target, round_number))
                 continue
             raise ValueError(f"Unsupported conditional attack Advantage trigger: {spec.trigger!r}.")
         return total

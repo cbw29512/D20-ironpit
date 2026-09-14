@@ -46,6 +46,7 @@ def resolve_attack_roll_phase(
     advantage_sources: int,
     other_disadvantage_sources: int,
     close_enemy_active: bool,
+    round_number: int | None = None,
 ) -> AttackRollPhase:
     automatic_hit = attack_is_automatic_hit(attack, attacker_event_id, defender)
     if automatic_hit:
@@ -60,7 +61,9 @@ def resolve_attack_roll_phase(
             advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
             + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
             + reckless_attack_advantage(attacker, attack)
-            + conditional_attack_advantage_sources(attack, defender, attacker_event_id)
+            + conditional_attack_advantage_sources(
+                attack, defender, attacker_event_id, attacker=attacker, round_number=round_number,
+            )
             + next_attack_against_advantage_sources(attacker, defender_event_id)
         ),
         other_disadvantage_sources=(

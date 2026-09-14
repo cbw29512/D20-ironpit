@@ -42,7 +42,7 @@ def resolve_attack(
         attacker_event_id = actor_event_id or attacker.template.id
         phase = resolve_attack_roll_phase(
             attacker, defender, attack, distance_ft, dice, attacker_event_id, defender_event_id,
-            advantage_sources, other_disadvantage_sources, close_enemy_active,
+            advantage_sources, other_disadvantage_sources, close_enemy_active, round_number=round_number,
         )
         automatic_hit = phase.automatic_hit; mode = phase.mode; attack_roll = phase.attack_roll
         attacker.wielded_attack_id = attack.id
