@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.monster_catalog_2014_arena_policy import is_arena_ignored_weapon_defense_2014
 from app.domain.damage_defense_rules import ConditionalDamageResistance
 from app.domain.weapons import DamageType
 
@@ -13,6 +14,8 @@ def _normalized(value: str) -> str:
 
 def _rule(clause: str) -> ConditionalDamageResistance | None:
     value = _normalized(clause)
+    if is_arena_ignored_weapon_defense_2014(value):
+        return None
     if value == _NONMAGICAL:
         return ConditionalDamageResistance(damage_types=_PHYSICAL, nonmagical_attack_only=True)
     if value == f"{_NONMAGICAL} that aren't silvered":
@@ -35,4 +38,7 @@ def conditional_resistances_2014(clauses: list[str]) -> list[ConditionalDamageRe
 
 
 def unresolved_defenses_2014(clauses: list[str]) -> list[str]:
-    return [clause for clause in clauses if _rule(clause) is None]
+    return [
+        clause for clause in clauses
+        if _rule(clause) is None and not is_arena_ignored_weapon_defense_2014(clause)
+    ]
