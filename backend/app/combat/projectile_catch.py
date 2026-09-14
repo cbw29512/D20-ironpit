@@ -11,17 +11,17 @@ def resolve_projectile_catch(
     attack: WeaponAttack,
     components: list[DamageRollComponent],
     dice,
-) -> tuple[list[DamageRollComponent], DiceRoll | None, bool]:
+) -> tuple[list[DamageRollComponent], DiceRoll | None, bool | None]:
     """Spend the defender's reaction to catch a matching ranged projectile on a successful save."""
     profile = defender.template.projectile_catch_reaction
     if profile is None or not is_available(defender, "reaction") or attack.weapon.attack_kind is not WeaponAttackKind.RANGED:
-        return components, None, False
+        return components, None, None
     if not any(part.damage_type == profile.damage_type and (part.applied_total or 0) > 0 for part in components):
-        return components, None, False
+        return components, None, None
     spend(defender, "reaction")
     roll, succeeded = resolve_saving_throw(defender, profile.save_ability, profile.save_dc, dice)
     if not succeeded:
-        return components, roll, True
+        return components, roll, False
     caught = [
         part.model_copy(update={"applied_total": 0}) if part.damage_type == profile.damage_type else part
         for part in components
