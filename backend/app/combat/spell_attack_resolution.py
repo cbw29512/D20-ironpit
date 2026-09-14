@@ -17,6 +17,7 @@ from app.combat.reckless_attack import attacks_against_reckless_advantage
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_attack_reflection import reflect_missed_spell_attack
+from app.combat.spell_immunity import spell_affects_target
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.zero_hp import apply_damage
@@ -55,6 +56,8 @@ def resolve_spell_attack(
             raise ValueError(f"{spell.name} cannot be cast in this action window.")
         if target.side == caster.side or target.state.is_dead or not target.state.is_alive:
             raise ValueError(f"{spell.name} requires a living enemy target.")
+        if not spell_affects_target(target.state, spell.level):
+            raise ValueError(f"{spell.name} cannot affect this target.")
         distance = combatant_distance(caster, target)
         if distance > spell.range_ft:
             raise ValueError(f"{spell.name} target is out of range.")
@@ -87,6 +90,8 @@ def resolve_spell_attack(
             if reflected is not None:
                 reflected_from = target
                 target, attack_roll, target_ac, hit, critical, distance = reflected
+                if not spell_affects_target(target.state, spell.level):
+                    hit = critical = False
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None

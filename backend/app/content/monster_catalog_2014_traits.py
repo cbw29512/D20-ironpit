@@ -13,6 +13,7 @@ MODELED_TRAITS = {
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
+    "Limited Magic Immunity": CombatTrait.LIMITED_MAGIC_IMMUNITY,
     "Magic Weapons": CombatTrait.MAGIC_WEAPONS,
     "Sure-Footed": CombatTrait.SURE_FOOTED,
     "Dark Devotion": CombatTrait.DARK_DEVOTION,
@@ -61,7 +62,10 @@ def legendary_resistance_uses_2014(names: list[str]) -> int:
 
 def combat_traits_2014(names: list[str]) -> list[CombatTrait]:
     modeled = [_modeled_trait(name) for name in names]
-    return list(dict.fromkeys(item for item in modeled if item is not None))
+    traits = list(dict.fromkeys(item for item in modeled if item is not None))
+    if CombatTrait.LIMITED_MAGIC_IMMUNITY in traits and CombatTrait.MAGIC_RESISTANCE not in traits:
+        traits.append(CombatTrait.MAGIC_RESISTANCE)
+    return traits
 
 
 def unresolved_traits_2014(names: list[str], data_bound: list[str] | None = None) -> list[str]:

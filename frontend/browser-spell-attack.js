@@ -22,6 +22,7 @@
   function resolve(sequence, round, caster, target, spell, setup, turnKey) {
     if (spell.actionCost === "reaction" || !E().available(caster.state, spell.actionCost)) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
+    if (!C().affectsTarget(target.state, spell.level)) throw new Error(`${spell.name} cannot affect this target.`);
     let distance = S().distance(caster, target);
     if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
     const resourceId = slotResource(caster, spell, turnKey);
@@ -46,6 +47,7 @@
       if (reflected) {
         reflectedFrom = target; target = reflected.target; attackRoll = reflected.attackRoll;
         targetAc = reflected.targetAc; hit = reflected.hit; critical = reflected.critical; distance = reflected.distance;
+        if (!C().affectsTarget(target.state, spell.level)) { hit = false; critical = false; }
       }
     }
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;

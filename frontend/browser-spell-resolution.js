@@ -9,7 +9,7 @@
   const dimension = (area, camel, snake) => area?.[camel] ?? area?.[snake] ?? 0;
   const creatureType = (target) => (target.state.template.creature_type || "").toLowerCase();
   const rule = (spell, field) => spell[field] || window.IRON_PIT_BROWSER_SPELL_TARGET_RULES?.[spell.id]?.[field] || [];
-  const spellAffects = (spell, target) => !rule(spell, "excludedCreatureTypes").includes(creatureType(target));
+  const spellAffects = (spell, target) => !rule(spell, "excludedCreatureTypes").includes(creatureType(target)) && C().affectsTarget(target.state, spell.level);
 
   function effectReach(spell) {
     if (!spell.area) return spell.range + (spell.areaRadius || 0);

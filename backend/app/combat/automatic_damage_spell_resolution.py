@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.spell_immunity import spell_affects_target
 from app.combat.spell_slot_selection import lowest_available_spell_slot
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.zero_hp import apply_damage
@@ -32,6 +33,8 @@ def resolve_automatic_damage_spell(
     if slot is None:
         raise ValueError(f"No legal spell slot remains for {action.name}.")
     slot_level, resource = slot
+    if not spell_affects_target(target.state, slot_level):
+        raise ValueError(f"{action.name} cannot affect this target at slot level {slot_level}.")
     projectile_count = action.projectile_count(slot_level)
     rolled: list[DamageRollComponent] = []
     all_rolls: list[int] = []

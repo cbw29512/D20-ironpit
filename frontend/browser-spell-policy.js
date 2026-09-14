@@ -17,7 +17,7 @@
 
   const creatureType = (target) => (target.state.template.creature_type || "").toLowerCase();
   const rule = (action, field) => action[field] || window.IRON_PIT_BROWSER_SPELL_TARGET_RULES?.[action.id]?.[field] || [];
-  const spellAffects = (action, target) => !rule(action, "excludedCreatureTypes").includes(creatureType(target));
+  const spellAffects = (action, target) => !rule(action, "excludedCreatureTypes").includes(creatureType(target)) && C().affectsTarget(target.state, action.level);
   function legalSingleTargets(caster, setup, action) {
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     return enemies.filter((target) => target.state.is_alive && !target.state.is_dead

@@ -6,6 +6,7 @@ from app.combat.encounter_targeting import close_ranged_threat_exists, combatant
 from app.combat.modifier_stack import attacks_against_advantage_sources, effective_armor_class
 from app.combat.rolls import resolve_roll_mode
 from app.combat.saving_throw_rolls import saving_throw_mode
+from app.combat.spell_immunity import spell_affects_target
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import RollMode
@@ -70,6 +71,8 @@ def _attack_probabilities(state, bonus: int, armor_class: int, mode: RollMode, c
 def spell_attack_expected_damage(
     caster: EncounterCombatant, target: EncounterCombatant, spell: SpellAttackAction, setup: EncounterSetup,
 ) -> float:
+    if not spell_affects_target(target.state, spell.level):
+        return 0.0
     distance = combatant_distance(caster, target)
     advantage, disadvantage = attack_roll_condition_sources(caster.state, target.state, distance, target.combatant_id)
     advantage += attacks_against_advantage_sources(target.state)
@@ -103,7 +106,7 @@ def _save_success_probability(target, action: SpellSaveAction) -> float:
 
 
 def save_spell_expected_damage(target: EncounterCombatant, action: SpellSaveAction) -> float:
-    if not action.damage_dice_count or not action.damage_type:
+    if not action.damage_dice_count or not action.damage_type or not spell_affects_target(target.state, action.level):
         return 0.0
     creature_type = (target.state.template.creature_type or "").lower()
     if creature_type in action.excluded_creature_types:

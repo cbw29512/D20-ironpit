@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.spell_immunity import spell_affects_target
 from app.combat.spell_slot_selection import lowest_available_spell_slot
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -52,7 +53,7 @@ def choose_automatic_damage_spell(
         for target in enemies:
             if not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0:
                 continue
-            if combatant_distance(caster, target) > action.range_ft:
+            if combatant_distance(caster, target) > action.range_ft or not spell_affects_target(target.state, slot_level):
                 continue
             score = mean * _damage_factor(target, DamageType(action.damage_type))
             choice = AutomaticDamageSpellChoice(action, target, slot_level, score)

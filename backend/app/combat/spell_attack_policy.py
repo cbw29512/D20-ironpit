@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import spell_attack_expected_damage
+from app.combat.spell_immunity import spell_affects_target
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellAttackAction
@@ -44,6 +45,7 @@ def choose_spell_attack(
             if (
                 not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0
                 or combatant_distance(caster, target) > action.range_ft
+                or not spell_affects_target(target.state, action.level)
             ):
                 continue
             score = spell_attack_expected_damage(caster, target, action, setup)

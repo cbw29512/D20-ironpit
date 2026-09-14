@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
@@ -67,6 +68,7 @@
   }
 
   function spellAttack(caster, target, spell, setup) {
+    if (!C().affectsTarget(target.state, spell.level)) return 0;
     const distance = S().distance(caster, target);
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const closeThreat = A().rangedCloseThreat(caster, target, distance, setup);
@@ -97,7 +99,7 @@
   }
 
   function saveSpell(target, action) {
-    if (!(action.damageDiceCount > 0) || !action.damageType) return 0;
+    if (!(action.damageDiceCount > 0) || !action.damageType || !C().affectsTarget(target.state, action.level)) return 0;
     const type = creatureType(target);
     if (rule(action, "excludedCreatureTypes").includes(type)) return 0;
     const success = saveSuccess(target, action), factor = damageFactor(target.state, action.damageType);

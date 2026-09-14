@@ -7,6 +7,7 @@ from app.combat.area_targeting import AreaPlacement as GridAreaPlacement, legal_
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import AreaPlacement as LegacyAreaPlacement, best_area_placement
+from app.combat.spell_immunity import spell_affects_target
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -36,7 +37,10 @@ def _creature_type(target: EncounterCombatant) -> str:
 
 
 def _spell_affects(action: SpellSaveAction, target: EncounterCombatant) -> bool:
-    return _creature_type(target) not in action.excluded_creature_types
+    return (
+        _creature_type(target) not in action.excluded_creature_types
+        and spell_affects_target(target.state, action.level)
+    )
 
 
 def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, action: SpellSaveAction):

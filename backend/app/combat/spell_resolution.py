@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.saving_throws import resolve_save_action
+from app.combat.spell_immunity import spell_affects_target
 from app.combat.spell_policy import SpellChoice
 from app.combat.spell_reflection import reflection_target, spend_spell_reflection
 from app.combat.spellcasting import mark_slot_spell_cast
@@ -31,7 +32,10 @@ def _target_type(target: EncounterCombatant) -> str:
 
 
 def _spell_affects(spell: SpellSaveAction, target: EncounterCombatant) -> bool:
-    return _target_type(target) not in spell.excluded_creature_types
+    return (
+        _target_type(target) not in spell.excluded_creature_types
+        and spell_affects_target(target.state, spell.level)
+    )
 
 
 def _target_save(spell: SpellSaveAction, target: EncounterCombatant, action: SavingThrowAction, dice):
