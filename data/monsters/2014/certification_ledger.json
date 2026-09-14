@@ -1,8 +1,8 @@
 {
-  "blocked_count": 88,
+  "blocked_count": 87,
   "blocker_families": {
     "action": 58,
-    "attack-detail": 38,
+    "attack-detail": 37,
     "legendary": 25,
     "spell": 43,
     "trait": 63
@@ -65,7 +65,6 @@
     "attack-detail:Crush": 1,
     "attack-detail:Glaive": 1,
     "attack-detail:Hand Crossbow": 1,
-    "attack-detail:Harpoon": 1,
     "attack-detail:Javelin": 1,
     "attack-detail:Longbow": 1,
     "attack-detail:Longsword": 1,
@@ -1785,11 +1784,9 @@
     {
       "id": "merrow",
       "name": "Merrow",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Harpoon"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "mimic",
@@ -2795,7 +2792,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 239,
+  "ready_count": 240,
   "ruleset": "2014",
   "schema_version": 1
 }

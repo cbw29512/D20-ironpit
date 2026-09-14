@@ -29775,12 +29775,19 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a Huge or smaller creature, it must succeed on a Strength contest against the merrow or be pulled up to 20 feet toward the merrow",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
         "long_range_ft": 60,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "on_hit_contested_movement": {
+          "source_ability": "strength",
+          "target_ability": "strength",
+          "max_target_size": "huge",
+          "distance_ft": 20,
+          "direction": "toward_source"
+        }
       }
     ],
     "multiattack_slots": [
