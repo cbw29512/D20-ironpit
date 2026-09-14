@@ -16,11 +16,21 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 
-def _movement_budget(attacker: EncounterCombatant) -> tuple[int, bool]:
+def _bonus_movement_feature(attacker: EncounterCombatant) -> str | None:
+    if not is_available(attacker.state, "bonus_action"):
+        return None
+    traits = attacker.state.template.combat_traits
+    if CombatTrait.CUNNING_ACTION in traits:
+        return "cunning-action"
+    if CombatTrait.AGGRESSIVE in traits:
+        return "aggressive"
+    return None
+
+
+def _movement_budget(attacker: EncounterCombatant) -> tuple[int, str | None]:
     base = attacker.state.movement_remaining_ft
-    aggressive = CombatTrait.AGGRESSIVE in attacker.state.template.combat_traits
-    can_bonus_move = aggressive and is_available(attacker.state, "bonus_action")
-    return base + (effective_speed(attacker.state) if can_bonus_move else 0), can_bonus_move
+    feature = _bonus_movement_feature(attacker)
+    return base + (effective_speed(attacker.state) if feature else 0), feature
 
 
 def choose_offensive_movement_intent(
@@ -35,7 +45,7 @@ def choose_offensive_movement_intent(
         if attacker.state.position is None:
             raise ValueError("Grid offensive movement requires an authoritative attacker position.")
         members = [*setup.heroes, *setup.monsters]
-        budget, can_bonus_move = _movement_budget(attacker)
+        budget, bonus_feature = _movement_budget(attacker)
         base_budget = attacker.state.movement_remaining_ft
         candidates: list[tuple[int, int, str, str, int, bool]] = []
         offense_legal_now = False
@@ -52,7 +62,7 @@ def choose_offensive_movement_intent(
                 )
                 if not plan.goal_reachable or not plan.path or plan.final_distance_ft >= distance:
                     continue
-                uses_bonus = can_bonus_move and plan.movement_cost_ft > base_budget
+                uses_bonus = bonus_feature is not None and plan.movement_cost_ft > base_budget
                 candidates.append((
                     plan.movement_cost_ft, distance, target.combatant_id, family, desired_distance, uses_bonus,
                 ))
@@ -91,14 +101,18 @@ def move_to_enable_offense(
             raise ValueError(f"Offensive movement target {intent.target_id!r} is missing.")
         events: list[BattleEvent] = []
         if intent.uses_bonus_action_movement:
+            feature = _bonus_movement_feature(attacker)
+            if feature is None:
+                raise ValueError("Bonus-action movement intent lost its legal movement feature.")
             speed = effective_speed(attacker.state)
             spend(attacker.state, "bonus_action")
             attacker.state.movement_remaining_ft += speed
+            label = "Cunning Action to Dash" if feature == "cunning-action" else "Aggressive"
             events.append(BattleEvent(
                 sequence=sequence, round_number=round_number, event_type="feature",
                 actor_id=attacker.combatant_id, actor_name=attacker.state.template.name,
-                feature_id="aggressive", movement_ft=speed, animation="advance",
-                description=f"{attacker.state.template.name} uses Aggressive to surge toward an enemy.",
+                feature_id=feature, movement_ft=speed, animation="advance",
+                description=f"{attacker.state.template.name} uses {label} toward a usable offensive position.",
             ))
             sequence += 1
         moved, sequence, _ = move_toward_with_reactions(

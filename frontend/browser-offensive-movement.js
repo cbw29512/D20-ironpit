@@ -9,11 +9,17 @@
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
+  function bonusMovementFeature(member) {
+    if (!E().available(member.state, "bonus_action")) return null;
+    const traits = member.state.template.traits || [];
+    if (traits.includes("cunning-action")) return "cunning-action";
+    if (traits.includes("aggressive")) return "aggressive";
+    return null;
+  }
+
   function movementBudget(member) {
-    const base = member.state.movement_remaining_ft;
-    const aggressive = member.state.template.traits?.includes("aggressive");
-    const canBonusMove = aggressive && E().available(member.state, "bonus_action");
-    return { base, max: base + (canBonusMove ? M().effectiveSpeed(member.state) : 0), canBonusMove };
+    const base = member.state.movement_remaining_ft, bonusFeature = bonusMovementFeature(member);
+    return { base, max: base + (bonusFeature ? M().effectiveSpeed(member.state) : 0), bonusFeature };
   }
 
   function chooseIntent(member, setup, turnKey) {
@@ -33,7 +39,7 @@
           candidates.push({
             cost: plan.movement_cost_ft, distance, targetId: target.combatant_id,
             family: option.family, range: option.range,
-            usesBonusActionMovement: budget.canBonusMove && plan.movement_cost_ft > budget.base,
+            usesBonusActionMovement: Boolean(budget.bonusFeature) && plan.movement_cost_ft > budget.base,
           });
         }
       }
@@ -58,12 +64,15 @@
       if (!target) throw new Error(`Missing offensive movement target ${intent.targetId}.`);
       const events = [];
       if (intent.usesBonusActionMovement) {
+        const feature = bonusMovementFeature(member);
+        if (!feature) throw new Error("Bonus-action movement intent lost its legal movement feature.");
         const speed = M().effectiveSpeed(member.state);
         E().spend(member.state, "bonus_action"); member.state.movement_remaining_ft += speed;
+        const label = feature === "cunning-action" ? "Cunning Action to Dash" : "Aggressive";
         events.push({ sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: member.combatant_id, actor_name: member.state.template.name,
-          feature_id: "aggressive", movement_ft: speed, animation: "advance",
-          description: `${member.state.template.name} uses Aggressive to surge toward an enemy.` });
+          feature_id: feature, movement_ft: speed, animation: "advance",
+          description: `${member.state.template.name} uses ${label} toward a usable offensive position.` });
       }
       const result = R().moveToward(sequence, round, member, target, setup, intent.desiredDistanceFt, "speed", { turnKey });
       return { events: [...events, ...result.events], sequence: result.sequence };

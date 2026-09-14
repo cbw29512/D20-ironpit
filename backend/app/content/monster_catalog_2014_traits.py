@@ -22,6 +22,7 @@ MODELED_TRAITS = {
     "Two-Headed": CombatTrait.TWO_HEADED,
     "Two Heads": CombatTrait.TWO_HEADED,
     "Aggressive": CombatTrait.AGGRESSIVE,
+    "Cunning Action": CombatTrait.CUNNING_ACTION,
     "Martial Advantage": CombatTrait.MARTIAL_ADVANTAGE,
     "Charge": CombatTrait.CHARGE,
     "Pounce": CombatTrait.CHARGE,

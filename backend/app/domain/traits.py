@@ -18,6 +18,7 @@ class CombatTrait(StrEnum):
     BRAVE = "brave"
     TWO_HEADED = "two-headed"
     AGGRESSIVE = "aggressive"
+    CUNNING_ACTION = "cunning-action"
     MARTIAL_ADVANTAGE = "martial-advantage"
     RAMPAGE = "rampage"
     REACTIVE = "reactive"
