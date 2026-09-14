@@ -5,6 +5,7 @@
   const AU = () => window.IRON_PIT_BROWSER_AURAS || { attackAdvantageSources: () => 0 };
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT_ACTION;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
@@ -17,6 +18,18 @@
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [], forcedMovementActionIds: slot.forcedMovementActionIds || [] };
   const sizeAllowed = (target, maximum) => !maximum || window.IRON_PIT_BROWSER_STATE.sizeAtMost(target, maximum);
 
+  function settleDeathEvent(sequence, round, event, setup, resolved) {
+    try {
+      if (!event?.target_id || event.is_dead !== true) return { events: [], sequence };
+      const target = [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === event.target_id);
+      if (!target?.state.is_dead || !(target.state.template.death_trigger_effects || []).length) return { events: [], sequence };
+      if (!DT()?.afterEvent) throw new Error("Browser death-trigger lifecycle is unavailable.");
+      return DT().afterEvent(sequence, round, event, setup, resolved);
+    } catch (error) {
+      console.error("Post-event browser death lifecycle failed", { sequence, event: event?.sequence, error });
+      throw error;
+    }
+  }
   function movementChoice(member, setup, data) {
     const allowed = new Set(data.forcedMovementActionIds);
     return (member.state.template.forced_movement_actions || []).find((action) =>
@@ -87,7 +100,7 @@
     const definition = member.state.template.attack_action, slots = definition?.slots;
     if (!slots?.length || !E().available(member.state, "action") || !F().targetOrder(member, setup).length) return { events: [], sequence };
     if (!slots.some((slot) => slotHasLegalChoice(member, setup, slot))) return { events: [], sequence };
-    const events = [];
+    const events = [], resolvedDeathTriggers = new Set();
     E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
     let lightTrigger = null, rangedSplitUsed = false;
@@ -104,7 +117,11 @@
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
       const choice = attackChoice(member, setup, data, splitThis), saved = saveChoice(member, setup, data);
       if (saved && (!choice || preferSaveReplacement(member, saved.target, saved.save))) {
-        events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false, setup }));
+        const event = V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false, setup });
+        events.push(event);
+        const death = settleDeathEvent(sequence, round, event, setup, resolvedDeathTriggers);
+        events.push(...death.events); sequence = death.sequence;
+        if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
         continue;
       }
       if (choice) {
@@ -114,17 +131,27 @@
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
         const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, { spendAction: false, advantage, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true });
         events.push(event);
-        if (member.state.turn_terminated) break;
+        const death = settleDeathEvent(sequence, round, event, setup, resolvedDeathTriggers);
+        events.push(...death.events); sequence = death.sequence;
+        if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;
+        for (const cleaveEvent of cleave.events) {
+          const cleaveDeath = settleDeathEvent(sequence, round, cleaveEvent, setup, resolvedDeathTriggers);
+          events.push(...cleaveDeath.events); sequence = cleaveDeath.sequence;
+        }
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
       }
     }
 
-    if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated) {
+    if (definition.isAttackAction && lightTrigger && !(member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated)) {
       const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
       events.push(...extra.events); sequence = extra.sequence;
+      for (const lightEvent of extra.events) {
+        const lightDeath = settleDeathEvent(sequence, round, lightEvent, setup, resolvedDeathTriggers);
+        events.push(...lightDeath.events); sequence = lightDeath.sequence;
+      }
     }
     return { events, sequence };
   }
