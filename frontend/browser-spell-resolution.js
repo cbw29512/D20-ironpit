@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const SR = () => window.IRON_PIT_BROWSER_SPELL_REFLECTION;
 
   function saveAction(choice) {
     const spell = choice.action;
@@ -49,14 +50,22 @@
     }];
 
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
-    const action = saveAction(choice);
+    const action = saveAction(choice), reflectable = !spell.areaRadius && choice.targetIds.length === 1;
     let sharedDamageRolls = null;
     for (const targetId of choice.targetIds) {
-      const target = members.get(targetId);
+      let target = members.get(targetId), precomputedSave = null, reflectedFrom = null;
+      if (reflectable && target.state.template.spell_reflection_reaction) {
+        precomputedSave = V().resolveSavingThrow(target.state, action.saveAbility, action.dc, { magicalEffect: true });
+        if (precomputedSave.succeeded) {
+          const reflected = SR()?.target(target, caster, setup);
+          if (reflected) { SR().spend(target); reflectedFrom = target; target = reflected; precomputedSave = null; }
+        }
+      }
       const event = V().resolveAction(
-        sequence++, round, caster, target, action, S().distance(caster, target),
-        { spendAction: false, sharedDamageRolls },
+        sequence++, round, caster, target, action, reflectedFrom ? 0 : S().distance(caster, target),
+        { spendAction: false, sharedDamageRolls, precomputedSave, setup },
       );
+      if (reflectedFrom) event.description = `${reflectedFrom.state.template.name} uses Spell Reflection; ${spell.name} targets ${target.state.template.name} instead. ${event.description}`;
       events.push(event);
       if (sharedDamageRolls == null && event.damage_components?.length) {
         sharedDamageRolls = [...event.damage_components[0].rolls];
