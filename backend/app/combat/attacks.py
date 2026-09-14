@@ -6,6 +6,7 @@ from app.combat.attack_damage_application import apply_attack_damage
 from app.combat.attack_roll_phase import resolve_attack_roll_phase
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.condition_rules import close_hit_is_automatic_critical
+from app.combat.conditional_attack_advantage import assassinate_critical
 from app.combat.conditions import apply_hit_conditions
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.dice import DiceProvider
@@ -24,7 +25,6 @@ from app.combat.vex import apply_vex_mastery
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
-
 def resolve_attack(
     sequence: int, round_number: int, attacker: CombatantState, defender: CombatantState,
     attack: WeaponAttack, distance_ft: int, dice: DiceProvider,
@@ -65,7 +65,7 @@ def resolve_attack(
         else:
             hit, parry_used = resolve_parry_hit(actual_defender, attacker, attack, attack_roll.total, natural, hit)
             if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
-        critical = bool(hit and (phase.expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
+        critical = bool(hit and (phase.expanded_critical or assassinate_critical(attacker, actual_defender) or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; max_hp_before = effective_max_hp(actual_defender); temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
