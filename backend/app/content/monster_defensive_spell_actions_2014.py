@@ -1,10 +1,18 @@
 from __future__ import annotations
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
-from app.domain.reactive_damage import MeleeHitReactiveDamage
-from app.domain.spells import DefensiveSpellAction
+from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 SUPPORTED_DEFENSIVE_SPELLS_2014 = frozenset({"fire-shield"})
+
+
+def _retaliation(damage_type: str) -> list[SpellModifierEffect]:
+    return [SpellModifierEffect(
+        kind="adjacent-melee-hit-reactive-damage",
+        dice_count=2,
+        dice_size=8,
+        damage_type=damage_type,
+    )]
 
 
 def defensive_spell_actions_2014(source: CatalogMonster2014) -> list[DefensiveSpellAction]:
@@ -19,18 +27,10 @@ def defensive_spell_actions_2014(source: CatalogMonster2014) -> list[DefensiveSp
     return [
         DefensiveSpellAction(
             id="fire-shield-warm", damage_resistances=["cold"], priority=1,
-            melee_hit_reactive_damage=[MeleeHitReactiveDamage(
-                id="fire-shield-warm", range_ft=5, dice_count=2, dice_size=8,
-                damage_type="fire",
-            )],
-            **common,
+            modifier_effects=_retaliation("fire"), **common,
         ),
         DefensiveSpellAction(
             id="fire-shield-chill", damage_resistances=["fire"], priority=0,
-            melee_hit_reactive_damage=[MeleeHitReactiveDamage(
-                id="fire-shield-chill", range_ft=5, dice_count=2, dice_size=8,
-                damage_type="cold",
-            )],
-            **common,
+            modifier_effects=_retaliation("cold"), **common,
         ),
     ]
