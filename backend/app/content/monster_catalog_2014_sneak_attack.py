@@ -4,7 +4,7 @@ import html
 import re
 
 _SNEAK_ATTACK = re.compile(
-    r"Sneak Attack(?: \(1/Turn\))?\.\s*Once per turn,.*?extra\s+\d+\s*\((\d+)d6\)\s+damage",
+    r"Sneak Attack(?: \(1/Turn\))?\.\s*(?:Once per turn,\s*)?.*?extra\s+\d+\s*\((\d+)d6\)\s+damage",
     re.I | re.S,
 )
 
