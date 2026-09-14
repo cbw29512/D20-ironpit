@@ -2,6 +2,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.attack_damage_application import apply_attack_damage
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
@@ -9,7 +10,6 @@ from app.combat.conditions import apply_hit_conditions, attack_roll_condition_so
 from app.combat.conditional_attack_advantage import conditional_attack_advantage_sources
 from app.combat.d20_effects import strength_d20_disadvantage
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
-from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
@@ -27,7 +27,6 @@ from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
-from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.modifiers import ModifierKind
 
@@ -85,6 +84,7 @@ def resolve_attack(
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
         damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None; save_rider = None
+        projectile_catch_roll = None; projectile_catch_succeeded = None
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
@@ -92,9 +92,9 @@ def resolve_attack(
                 attacker, attack, dice, critical, mode, active_turn_key, bonus_damage=bonus_damage,
                 target=actual_defender, sneak_attack_ally_available=sneak_attack_ally_available,
             )
-            applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components, attack=attack); damage_roll.total = applied_total
-            applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
-            damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
+            applied_total, damage_components, damage_outcome, projectile_catch_roll, projectile_catch_succeeded = apply_attack_damage(
+                actual_defender, attack, rolled_components, dice, critical=critical, affected_states=affected_states,
+            ); damage_roll.total = applied_total
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
             save_rider = resolve_on_hit_save(
                 actual_defender, attack, dice, source_id=attacker_event_id,
@@ -118,6 +118,7 @@ def resolve_attack(
         if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
+        if projectile_catch_succeeded is not None: description += f" {actual_defender.template.name} uses Projectile Catch and {'catches the projectile' if projectile_catch_succeeded else 'fails to catch the projectile'} (save {projectile_catch_roll.total if projectile_catch_roll else 'auto-fail'})."
         if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
         if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
