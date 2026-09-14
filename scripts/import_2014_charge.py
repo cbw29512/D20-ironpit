@@ -21,7 +21,7 @@ def _attack(attacks: list[dict], name: str) -> dict | None:
 def _standard_charge(text: str, attacks: list[dict]) -> dict[str, dict]:
     pattern = re.compile(
         r"moves at least (\d+) feet straight toward a target and then hits it with (?:a|an|its) "
-        r"([A-Za-z' -]+?) attack?s? on the same turn, the target takes an extra "
+        r"([A-Za-z' -]+?)(?: attack)? on the same turn, the target takes an extra "
         r"\d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)(?: ([A-Za-z]+))? damage",
         re.I,
     )
