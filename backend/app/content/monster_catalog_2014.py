@@ -6,7 +6,7 @@ from pydantic import TypeAdapter
 from app.content.monster_catalog_2014_absorption import damage_absorptions_2014, unresolved_absorption_traits_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
 from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, is_arena_disabled_attack_detail_2014, usable_movement_speed_2014
-from app.content.monster_catalog_2014_auras import start_turn_auras_2014
+from app.content.monster_catalog_2014_auras import activated_start_turn_auras_2014, start_turn_auras_2014
 from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, reactive_melee_damage_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_damage_triggers import damage_triggered_roll_penalties_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
@@ -100,7 +100,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names, sneak_attack_d6=sneak_attack_d6_2014(source.source_traits)),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], start_turn_gaze=petrifying_gaze_2014(source.source_traits),
-            start_turn_auras=[*start_turn_auras_2014(source.source_traits), *reaction_start_turn_auras_2014(source)],
+            start_turn_auras=[*start_turn_auras_2014(source.source_traits), *activated_start_turn_auras_2014(source.source_actions), *reaction_start_turn_auras_2014(source)],
             start_turn_relationship_damage=start_turn_relationship_damage_2014(source.source_traits),
             melee_hit_reactive_damage=reactive_melee_damage_2014(source.source_traits), save_advantage_auras=save_advantage_auras_2014(source.source_traits),
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
