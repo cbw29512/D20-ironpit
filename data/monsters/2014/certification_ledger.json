@@ -1,8 +1,8 @@
 {
-  "blocked_count": 84,
+  "blocked_count": 83,
   "blocker_families": {
     "action": 58,
-    "attack-detail": 36,
+    "attack-detail": 35,
     "legendary": 25,
     "spell": 41,
     "trait": 53
@@ -72,7 +72,6 @@
     "attack-detail:Quarterstaff": 1,
     "attack-detail:Rotting Fist": 2,
     "attack-detail:Scimitar": 1,
-    "attack-detail:Shield Bash": 1,
     "attack-detail:Slaying Longbow": 1,
     "attack-detail:Strength Drain": 1,
     "attack-detail:Tentacle": 3,
@@ -1341,11 +1340,9 @@
     {
       "id": "gladiator",
       "name": "Gladiator",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Shield Bash"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "gnoll",
@@ -2769,7 +2766,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 243,
+  "ready_count": 244,
   "ruleset": "2014",
   "schema_version": 1
 }

@@ -22183,12 +22183,12 @@
           "save_ability": "strength",
           "dc": 15,
           "condition_id": "prone",
-          "max_target_size": null
+          "max_target_size": "medium"
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a Medium or smaller creature",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       }
