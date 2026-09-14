@@ -16,3 +16,4 @@ class StartTurnAura(BaseModel):
     failure_duration_rounds: int = Field(default=1, ge=1, le=100)
     magical_effect: bool = False
     success_grants_source_immunity: bool = False
+    reaction_cost: bool = False
