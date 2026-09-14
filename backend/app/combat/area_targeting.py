@@ -93,7 +93,8 @@ def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area
         friends = _living_side(actor, setup, opponents=False)
         actor_points = _points(actor, actor_position)
         origins = _point_origins(actor, setup, range_ft, actor_position) if area.origin == "point" else actor_points
-        directions = (None,) if area.shape in {"radius", "emanation"} else _directions(actor_points, enemies)
+        direction_origins = origins if area.origin == "point" else actor_points
+        directions = (None,) if area.shape in {"radius", "emanation"} else _directions(direction_origins, enemies)
         placements: dict[tuple[tuple[str, ...], tuple[str, ...]], AreaPlacement] = {}
         for origin in origins:
             for direction in directions:
