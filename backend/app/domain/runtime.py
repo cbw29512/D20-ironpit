@@ -23,6 +23,12 @@ class ResourceState(BaseModel):
     max_uses: int = Field(ge=0)
 
 
+class ActiveAuraState(BaseModel):
+    aura_id: str
+    activated_round: int = Field(ge=1)
+    expires_round: int = Field(ge=2)
+
+
 class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
@@ -100,6 +106,7 @@ class CombatantState(BaseModel):
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
     active_buff_effect_ids: list[str] = Field(default_factory=list)
+    active_auras: list[ActiveAuraState] = Field(default_factory=list)
     opening_buff_spell_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     restraint_sources: list[RestraintState] = Field(default_factory=list)
