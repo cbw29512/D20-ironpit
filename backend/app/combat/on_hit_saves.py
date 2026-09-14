@@ -63,9 +63,13 @@ def _apply_stable_zero_hp(defender, attack, source_id, round_number, affected_st
     return applied
 
 
-def _apply_failed_condition(defender, condition_id, attack, effect, source_id, round_number, duration_rounds, *, repeat=False, affected_states=None):
+def _apply_failed_condition(
+    defender, condition_id, attack, effect, source_id, round_number, duration_rounds, *,
+    repeat=False, affected_states=None, ends_on_damage=False, allowed_removal_action_ids=None,
+):
     if condition_is_immune(defender, condition_id): return None
-    timed = duration_rounds is not None or (repeat and effect.repeat_save_timing is not None) or effect.ends_on_damage
+    removable = list(allowed_removal_action_ids or [])
+    timed = duration_rounds is not None or (repeat and effect.repeat_save_timing is not None) or ends_on_damage or bool(removable)
     if timed:
         if source_id is None or round_number is None: raise ValueError("Timed on-hit save effects require source_id and round_number.")
         return apply_timed_condition(
@@ -75,7 +79,8 @@ def _apply_failed_condition(defender, condition_id, attack, effect, source_id, r
             repeat_save_dc=effect.dc if repeat and effect.repeat_save_timing is not None else None,
             repeat_save_timing=effect.repeat_save_timing if repeat else None,
             repeat_save_failure_condition_id=effect.repeat_save_failure_condition_id if repeat else None,
-            affected_states=affected_states, ends_on_damage=effect.ends_on_damage,
+            affected_states=affected_states, ends_on_damage=ends_on_damage,
+            allowed_removal_action_ids=removable,
         )
     if condition_id not in defender.active_effect_ids: defender.active_effect_ids.append(condition_id)
     return condition_id
@@ -98,10 +103,19 @@ def resolve_on_hit_save(
         max_hp_reduction = reduce_max_hp(defender, triggering_damage_total, kill_at_zero=effect.zero_max_hp_kills)
     applied = None; escalated: list[str] = []
     if effect.condition_id is not None and not succeeded and defender.is_alive and not defender.is_dead:
-        applied = _apply_failed_condition(defender, effect.condition_id, attack, effect, source_id, round_number, duration_rounds, repeat=True, affected_states=affected_states)
+        applied = _apply_failed_condition(
+            defender, effect.condition_id, attack, effect, source_id, round_number, duration_rounds,
+            repeat=True, affected_states=affected_states, ends_on_damage=effect.ends_on_damage,
+        )
         if applied:
+            escalation = effect.failure_margin_escalation
             for condition_id in margin_conditions:
-                result = _apply_failed_condition(defender, condition_id, attack, effect, source_id, round_number, duration_rounds, affected_states=affected_states)
+                result = _apply_failed_condition(
+                    defender, condition_id, attack, effect, source_id, round_number, duration_rounds,
+                    affected_states=affected_states,
+                    ends_on_damage=bool(escalation and escalation.ends_on_damage),
+                    allowed_removal_action_ids=escalation.allowed_removal_action_ids if escalation else [],
+                )
                 if result: escalated.append(result)
     all_conditions = [*zero_hp_conditions, *([applied] if applied else []), *escalated]
     return OnHitSaveResolution(
