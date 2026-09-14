@@ -43,6 +43,12 @@ ARENA_NEUTRAL_TRAITS = frozenset({
 SUPPORTED_TRAITS = frozenset(MODELED_TRAITS) | DATA_BOUND_TRAITS | ARENA_NEUTRAL_TRAITS
 _LEGENDARY_RESISTANCE = re.compile(r"^Legendary Resistance \((\d+)/Day\)$", re.I)
 _RELENTLESS = re.compile(r"^Relentless \(Recharges after a Short or Long Rest\)$", re.I)
+_FORM_ONLY_SUFFIX = re.compile(r"\s*\([^)]*form only\)$", re.I)
+
+
+def _modeled_trait(name: str) -> CombatTrait | None:
+    """Resolve modeled traits while preserving source form qualifiers in the catalog."""
+    return MODELED_TRAITS.get(name) or MODELED_TRAITS.get(_FORM_ONLY_SUFFIX.sub("", name))
 
 
 def legendary_resistance_uses_2014(names: list[str]) -> int:
@@ -53,12 +59,16 @@ def legendary_resistance_uses_2014(names: list[str]) -> int:
 
 
 def combat_traits_2014(names: list[str]) -> list[CombatTrait]:
-    return list(dict.fromkeys(MODELED_TRAITS[name] for name in names if name in MODELED_TRAITS))
+    modeled = [_modeled_trait(name) for name in names]
+    return list(dict.fromkeys(item for item in modeled if item is not None))
 
 
 def unresolved_traits_2014(names: list[str], data_bound: list[str] | None = None) -> list[str]:
     supported = SUPPORTED_TRAITS | frozenset(data_bound or [])
     return [
         name for name in names
-        if name not in supported and _LEGENDARY_RESISTANCE.match(name) is None and _RELENTLESS.match(name) is None
+        if name not in supported
+        and _modeled_trait(name) is None
+        and _LEGENDARY_RESISTANCE.match(name) is None
+        and _RELENTLESS.match(name) is None
     ]
