@@ -15,7 +15,7 @@
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
   };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function saveMode(state, ability, magicalEffect = false, againstCondition = null, advantageSources = 0, disadvantageSources = 0) {
     const advantage = advantageSources + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
@@ -27,7 +27,6 @@
       + (ability === "strength" ? T().strengthD20Disadvantage(state) : 0);
     return R().modeFromSources(advantage, disadvantage);
   }
-
   function indomitableRevision(original, replacement) {
     return {
       source_effect_id: "indomitable", kind: "full_reroll",
@@ -37,14 +36,12 @@
       original_total: original.total, replacement_total: replacement.total, accepted: "replacement", replaced_die_index: null,
     };
   }
-
   function useLegendaryResistance(state) {
     const uses = state.resources?.["legendary-resistance"] || 0;
     if (uses <= 0) return false;
     state.resources["legendary-resistance"] = uses - 1;
     return true;
   }
-
   function failedSaveResult(state, roll) {
     if (!useLegendaryResistance(state)) return { roll, succeeded: false, legendaryResistanceUsed: false };
     return {
@@ -52,7 +49,6 @@
       legendaryResistanceRemaining: state.resources["legendary-resistance"],
     };
   }
-
   function resolveSavingThrow(state, ability, dc, options = {}) {
     const magicalEffect = typeof options === "boolean" ? options : Boolean(options.magicalEffect), againstCondition = typeof options === "object" ? options.againstCondition || null : null, advantageSources = typeof options === "object" ? options.advantageSources || 0 : 0, disadvantageSources = typeof options === "object" ? options.disadvantageSources || 0 : 0;
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return failedSaveResult(state, null);
@@ -66,24 +62,24 @@
     if (roll.total >= dc) return { roll, succeeded: true, legendaryResistanceUsed: false };
     return failedSaveResult(state, roll);
   }
-
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
-
   function resourceAvailable(state, action) {
     if (!action.resourceId) return true;
     return (state.resources?.[action.resourceId] || 0) >= (action.resourceCost || 1);
   }
-
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
     if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
     return [...shared];
   }
-
+  function evasionApplies(state, action) {
+    if (!state.template.traits?.includes("evasion") || action.saveAbility !== "dexterity" || action.successDamage !== "half") return false;
+    return state.template.ruleset !== "2024" || !Q().incapacitated(state);
+  }
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false;
     const checkResource = options.checkResource !== false;
@@ -105,11 +101,13 @@
     const concentrationBefore = target.state.concentration?.effect_id || null, positionBefore = target.state.position ? { ...target.state.position } : null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
     const count = action.damageDiceCount || 0;
+    const evasionUsed = evasionApplies(target.state, action);
     if (count && !(save.succeeded && action.successDamage === "none")) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
-      if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
+      if (evasionUsed) total = save.succeeded ? 0 : Math.floor(total / 2);
+      else if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
       const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType, true, true);
       damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
         rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
@@ -127,6 +125,7 @@
     }
     appliedConditions = [...new Set(appliedConditions)];
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    if (evasionUsed) description += ` Evasion changes the save damage to ${save.succeeded ? "none" : "half"}.`;
     if (pushedFt) description += ` ${target.state.template.name} is pushed ${pushedFt} feet away.`;
     if (save.legendaryResistanceUsed) description += ` Legendary Resistance converts the failed save to a success; ${save.legendaryResistanceRemaining} use(s) remain.`;
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
@@ -145,6 +144,5 @@
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }
-
-  window.IRON_PIT_BROWSER_SAVES = { legalAction, resourceAvailable, resolveAction, resolveSavingThrow, saveMode };
+  window.IRON_PIT_BROWSER_SAVES = { evasionApplies, legalAction, resourceAvailable, resolveAction, resolveSavingThrow, saveMode };
 })();
