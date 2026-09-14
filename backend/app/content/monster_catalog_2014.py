@@ -32,7 +32,6 @@ logger = logging.getLogger(__name__)
 CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014"
 MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
-_CHARGE_TRAITS = {"Charge", "Pounce", "Trampling Charge"}
 
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
     try:
@@ -72,8 +71,9 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         if "Fire Absorption" in source.trait_names and not damage_absorptions_2014(source.source_traits): blockers.append("trait:Fire Absorption")
         if "Fear of Fire" in source.trait_names and not damage_triggered_roll_penalties_2014(source.source_traits): blockers.append("trait:Fear of Fire")
         if "Heated Body" in source.trait_names and not reactive_melee_damage_2014(source.source_traits): blockers.append("trait:Heated Body")
-        charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
-        if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
+        charge_traits = [name for name in source.trait_names if CombatTrait.CHARGE in combat_traits_2014([name])]
+        if charge_traits and not any(attack.charge_profile for attack in source.attacks):
+            blockers.extend(f"trait:{name}" for name in charge_traits)
         blockers.extend(f"reaction:{name}" for name in unresolved_reactions_2014(source, supported_reactions))
         blockers.extend(f"legendary:{name}" for name in source.unsupported_legendary_action_names if not is_arena_disabled_action_2014(name))
         if source.source_legendary_actions and source.legendary_action_uses <= 0: blockers.append("legendary:unparsed-resource-pool")
