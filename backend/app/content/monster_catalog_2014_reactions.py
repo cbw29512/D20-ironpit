@@ -1,0 +1,34 @@
+from __future__ import annotations
+
+import re
+
+from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.domain.reactions import ProjectileCatchReaction, SpellReflectionReaction
+
+
+def projectile_catch_reaction_2014(source: CatalogMonster2014) -> ProjectileCatchReaction | None:
+    if "Rock Catching" not in source.reaction_names:
+        return None
+    text = source.source_reactions or ""
+    match = re.search(r"Rock Catching.*?DC\s+(\d+)\s+Dexterity saving throw", text, re.I | re.S)
+    if not match:
+        return None
+    return ProjectileCatchReaction(save_dc=int(match.group(1)))
+
+
+def spell_reflection_reaction_2014(source: CatalogMonster2014) -> SpellReflectionReaction | None:
+    if "Spell Reflection" not in source.reaction_names:
+        return None
+    text = source.source_reactions or ""
+    match = re.search(r"Spell Reflection.*?within\s+(\d+)\s+feet", text, re.I | re.S)
+    if not match:
+        return None
+    return SpellReflectionReaction(range_ft=int(match.group(1)))
+
+
+def supported_reaction_names_2014(source: CatalogMonster2014) -> set[str]:
+    supported: set[str] = set()
+    if source.parry_ac_bonus is not None: supported.add("Parry")
+    if projectile_catch_reaction_2014(source) is not None: supported.add("Rock Catching")
+    if spell_reflection_reaction_2014(source) is not None: supported.add("Spell Reflection")
+    return supported
