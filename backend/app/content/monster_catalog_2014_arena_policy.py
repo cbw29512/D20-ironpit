@@ -30,6 +30,10 @@ _CREATURE_EFFECT = re.compile(
     r"blinded|stunned|prone|frightened|paralyzed|unconscious|swallowed)\b",
     re.I,
 )
+_WEAPON_QUALIFIED_DEFENSE = re.compile(
+    r"\b(?:nonmagical attacks?|magic(?:al)? weapons?|silvered|adamantine|wielded by .* creatures?)\b",
+    re.I,
+)
 
 # These traits are preserved as source truth but cannot alter an Iron Pit result
 # under the universal pocket-dimension rules. They therefore never block a card.
@@ -101,6 +105,15 @@ def is_arena_disabled_attack_detail_2014(text: str | None) -> bool:
     except Exception as exc:
         logger.exception("Failed to classify 2014 attack residual %r.", text)
         raise ValueError("Could not classify 2014 attack residual.") from exc
+
+
+def is_arena_ignored_weapon_defense_2014(text: str) -> bool:
+    """Ignore defenses whose only extra rule is a weapon material, magic, or wielder qualifier."""
+    try:
+        return _WEAPON_QUALIFIED_DEFENSE.search(text) is not None
+    except Exception as exc:
+        logger.exception("Failed to classify 2014 weapon-qualified defense %r.", text)
+        raise ValueError("Could not classify 2014 weapon-qualified defense.") from exc
 
 
 def usable_movement_speed_2014(mode: str, speed_ft: int) -> int:
