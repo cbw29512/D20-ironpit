@@ -19,7 +19,11 @@
       if (!event.hit || attack.kind !== "melee" || attacker.state.is_dead) return event;
       const defender = actualTarget(target, extra.setup, event.target_id);
       const distance = extra.setup ? S().distance(attacker, defender) : args[5];
-      const rules = (defender.state.template.meleeHitReactiveDamage || []).filter((rule) => distance <= rule.rangeFt);
+      const allRules = [
+        ...(defender.state.template.meleeHitReactiveDamage || []),
+        ...(defender.state.temporary_melee_hit_reactive_damage || []),
+      ];
+      const rules = allRules.filter((rule) => distance <= rule.rangeFt);
       if (!rules.length) return event;
       event.actor_hp_before = attacker.state.current_hp; event.reactive_damage_components = [];
       let total = 0, modifier = 0, rolls = [], notation = [];
