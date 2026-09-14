@@ -16,7 +16,7 @@ def parse_swallow_action(paragraph: str) -> dict | None:
         return None
     text = _plain(paragraph)
     opener = re.search(
-        r"makes one ([A-Za-z' -]+) attack against a (Tiny|Small|Medium|Large|Huge) or smaller target it is grappling",
+        r"makes one ([A-Za-z' -]+) attack against a (Tiny|Small|Medium|Large|Huge) or smaller (?:target|creature) it is grappling",
         text, re.I,
     )
     acid = re.search(
@@ -25,15 +25,15 @@ def parse_swallow_action(paragraph: str) -> dict | None:
     )
     capacity = re.search(r"can have only (?:one|1) (?:creature|target) swallowed at a time", text, re.I)
     release = re.search(
-        r"If the [A-Za-z' -]+ dies, a swallowed creature is no longer restrained by it and can escape from the corpse using (\d+) feet of movement, exiting prone",
+        r"If the [A-Za-z' -]+ dies, a swallowed creature is no longer restrained by it and can escape from the corpse (?:by )?using (\d+) feet of movement, exiting prone",
         text, re.I,
     )
     required = (
-        re.search(r"the target is swallowed, and the grapple ends", text, re.I),
+        re.search(r"(?:the target|that creature|the creature).*?is swallowed, and the grapple ends", text, re.I),
         re.search(r"blinded and restrained", text, re.I),
         re.search(r"total cover against attacks and other effects outside", text, re.I),
     )
-    if opener is None or acid is None or capacity is None or release is None or not all(required):
+    if opener is None or acid is None or release is None or not all(required):
         return None
     attack_name, max_size = opener.groups(); count, size, sign, bonus = acid.groups()
     modifier = int(bonus or 0) * (-1 if sign == "-" else 1)
@@ -42,5 +42,6 @@ def parse_swallow_action(paragraph: str) -> dict | None:
         "id": "swallow", "name": "Swallow", "attack_id": attack_id,
         "max_target_size": max_size.lower(), "damage_dice_count": int(count),
         "damage_dice_size": int(size), "damage_bonus": modifier, "damage_type": "acid",
-        "max_swallowed": 1, "exit_movement_ft": int(release.group(1)), "exit_prone": True,
+        "max_swallowed": 1 if capacity is not None else None,
+        "exit_movement_ft": int(release.group(1)), "exit_prone": True,
     }
