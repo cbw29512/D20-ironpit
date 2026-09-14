@@ -37,7 +37,7 @@ class WeaponAttackKind(StrEnum):
 
 
 class ConditionalDamage(BaseModel):
-    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied"]
+    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead"]
     mode: Literal["add", "replace_weapon"] = "add"
     dice_count: int = Field(ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)

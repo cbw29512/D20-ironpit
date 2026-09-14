@@ -62,11 +62,12 @@ def resolve_weapon_damage(
     bonus_damage: BonusDamageSpec | None = None,
     target: CombatantState | None = None,
     sneak_attack_ally_available: bool = False,
+    round_number: int | None = None,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
         weapon = attack.weapon
-        replacement = active_replacement_damage(attacker, target, attack, attack_mode)
+        replacement = active_replacement_damage(attacker, target, attack, attack_mode, round_number)
         if replacement is not None:
             components = [roll_damage_component(
                 dice, weapon.name, replacement.dice_count, replacement.dice_size,
@@ -96,10 +97,12 @@ def resolve_weapon_damage(
             ))
 
         for conditional in attack.conditional_damage:
-            if conditional.mode != "add" or not conditional_damage_active(conditional, attacker, target, attack_mode):
+            if conditional.mode != "add" or not conditional_damage_active(
+                conditional, attacker, target, attack_mode, round_number
+            ):
                 continue
             components.append(roll_damage_component(
-                dice=dice, source="Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage",
+                dice=dice, source="Opening initiative bonus damage" if conditional.trigger == "round1_initiative_lead" else "Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage",
                 dice_count=conditional.dice_count, dice_size=conditional.dice_size,
                 modifier=conditional.damage_bonus, damage_type=conditional.damage_type, critical=critical,
             ))

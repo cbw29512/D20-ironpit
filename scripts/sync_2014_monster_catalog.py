@@ -28,6 +28,7 @@ def main() -> int:
     try:
         commands = [
             [sys.executable, "scripts/import_2014_monster_catalog.py", str(source), "--output", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_opening_initiative.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_max_hp_reduction.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_save_actions.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_breakable_restraints.py", str(source), "--catalog", str(OUTPUT)],

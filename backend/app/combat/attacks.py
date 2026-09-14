@@ -77,6 +77,7 @@ def resolve_attack(
             damage_roll, rolled_components = resolve_weapon_damage(
                 attacker, attack, dice, critical, mode, active_turn_key, bonus_damage=bonus_damage,
                 target=actual_defender, sneak_attack_ally_available=sneak_attack_ally_available,
+                round_number=round_number,
             )
             applied_total, damage_components, damage_outcome, projectile_catch_roll, projectile_catch_succeeded = apply_attack_damage(
                 actual_defender, attack, rolled_components, dice, critical=critical, affected_states=affected_states,
