@@ -28,6 +28,6 @@ class AreaTargeting(BaseModel):
                 raise ValueError(f"{self.shape} requires length_ft only.")
         elif self.length_ft is None or self.width_ft is None or self.radius_ft is not None:
             raise ValueError("line requires length_ft and width_ft.")
-        if self.shape in {"cone", "line", "cube", "emanation"} and self.origin != "self":
+        if self.shape in {"cone", "line", "emanation"} and self.origin != "self":
             raise ValueError(f"{self.shape} must originate from self.")
         return self
