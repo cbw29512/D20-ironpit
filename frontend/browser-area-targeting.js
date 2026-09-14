@@ -11,9 +11,12 @@
       .map(([x, y]) => A().cellCenterFt(x, y));
   }
 
-  function livingOpponents(actor, setup) {
-    const pool = actor.side === "heroes" ? setup.monsters : setup.heroes;
-    return pool.filter((member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0);
+  function livingSide(actor, setup, opponents) {
+    const pool = opponents
+      ? (actor.side === "heroes" ? setup.monsters : setup.heroes)
+      : (actor.side === "heroes" ? setup.heroes : setup.monsters);
+    return pool.filter((member) => member.combatant_id !== actor.combatant_id
+      && member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0);
   }
 
   function directionKey(direction) {
@@ -59,29 +62,28 @@
     if (!direction) return false;
     if (area.shape === "cone") return targetPoints.some((point) => A().coneContains(origin, direction, point, length));
     if (area.shape === "line") return targetPoints.some((point) => A().lineContains(origin, direction, point, length, width));
-    throw new Error(`Unsupported browser monster area shape: ${area.shape}`);
+    throw new Error(`Unsupported browser area shape: ${area.shape}`);
   }
 
   function legalPlacements(actor, setup, area) {
     try {
-      if (!area || area.origin !== "self") throw new Error("Browser monster area must originate from self.");
+      if (!area || area.origin !== "self") throw new Error("Browser universal area must originate from self.");
       if (!setup.map_definition) throw new Error("Area targeting requires an authoritative battle map.");
-      const enemies = livingOpponents(actor, setup);
+      const enemies = livingSide(actor, setup, true);
       if (!enemies.length) return [];
-      const origins = points(actor), result = new Map();
+      const friends = livingSide(actor, setup, false), origins = points(actor), result = new Map();
       const areaDirections = ["radius", "emanation"].includes(area.shape) ? [null] : directions(origins, enemies);
       for (const origin of origins) {
         for (const direction of areaDirections) {
-          const targetIds = enemies
-            .filter((enemy) => hits(area, origins, origin, direction, enemy))
-            .map((enemy) => enemy.combatant_id);
+          const targetIds = enemies.filter((enemy) => hits(area, origins, origin, direction, enemy)).map((enemy) => enemy.combatant_id);
           if (!targetIds.length) continue;
-          const key = targetIds.join("|");
-          if (!result.has(key)) result.set(key, { targetIds, origin, direction });
+          const friendlyIds = friends.filter((friend) => hits(area, origins, origin, direction, friend)).map((friend) => friend.combatant_id);
+          const key = `${targetIds.join("|")}::${friendlyIds.join("|")}`;
+          if (!result.has(key)) result.set(key, { targetIds, enemyIds: targetIds, friendlyIds, origin, direction });
         }
       }
       return [...result.values()].sort((left, right) =>
-        right.targetIds.length - left.targetIds.length
+        right.targetIds.length - left.targetIds.length || left.friendlyIds.length - right.friendlyIds.length
         || left.targetIds.join("|").localeCompare(right.targetIds.join("|")));
     } catch (error) {
       console.error("Failed browser area targeting", { actor: actor.combatant_id, error });
