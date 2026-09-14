@@ -114,3 +114,22 @@ def resolve_death_triggers(
     except Exception as exc:
         logger.exception("Death-trigger resolution failed for %s.", source.combatant_id)
         raise RuntimeError("Death-trigger resolution could not be completed.") from exc
+
+
+def resolve_event_death_triggers(
+    sequence: int, round_number: int, event: BattleEvent, setup: EncounterSetup, dice: DiceProvider,
+) -> tuple[list[BattleEvent], int]:
+    """Dispatch a target's on-death effects immediately after its lethal battle event."""
+    try:
+        if not event.target_id:
+            return [], sequence
+        target = next(
+            (member for member in [*setup.heroes, *setup.monsters] if member.combatant_id == event.target_id),
+            None,
+        )
+        if target is None or not target.state.is_dead or not target.state.template.death_trigger_effects:
+            return [], sequence
+        return resolve_death_triggers(sequence, round_number, target, setup, dice)
+    except Exception:
+        logger.exception("Failed to dispatch death triggers after event %s.", event.sequence)
+        raise
