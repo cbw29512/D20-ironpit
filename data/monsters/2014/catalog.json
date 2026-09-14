@@ -13418,7 +13418,7 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "the darkmantle attaches to the target. If the target is Medium or smaller and the darkmantle has advantage on the attack roll, it attaches by engulfing the target's head, and the target is also blinded and unable to breathe while the darkmantle is attached in this way",
+        "unsupported_text": "the darkmantle attaches to the target. If the target is Medium or smaller and the darkmantle has advantage on the attack roll, it attaches by engulfing the target's head, and the target is also blinded and unable to breathe while the darkmantle is attached in this way. While attached to the target, the darkmantle can attack no other creature except the target but has advantage on its attack rolls. The darkmantle's speed also becomes 0, it can't benefit from any bonus to its speed, and it moves with the target. A creature can detach the darkmantle by making a successful DC 13 Strength check as an action. On its turn, the darkmantle can detach itself from the target by using 5 feet of movement",
         "reach_ft": 5,
         "attack_ability": "strength"
       }
@@ -27209,7 +27209,7 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "If the target is a Large or smaller creature grappled by the kraken, that creature is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the kraken, and it takes 42 (12d6) acid damage at the start of each of the kraken's turns",
+        "unsupported_text": "If the target is a Large or smaller creature grappled by the kraken, that creature is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the kraken, and it takes 42 (12d6) acid damage at the start of each of the kraken's turns. If the kraken takes 50 damage or more on a single turn from a creature inside it, the kraken must succeed on a DC 25 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the kraken. If the kraken dies, a swallowed creature is no longer restrained by it and can escape from the corpse using 15 feet of movement, exiting prone",
         "reach_ft": 5,
         "attack_ability": "strength"
       },
@@ -34105,7 +34105,7 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "If the target is a Large or smaller creature, it must succeed on a DC 19 Dexterity saving throw or be swallowed by the worm. A swallowed creature is blinded and restrained, it has total cover against attacks and other effects outside the worm, and it takes 21 (6d6) acid damage at the start of each of the worm's turns",
+        "unsupported_text": "If the target is a Large or smaller creature, it must succeed on a DC 19 Dexterity saving throw or be swallowed by the worm. A swallowed creature is blinded and restrained, it has total cover against attacks and other effects outside the worm, and it takes 21 (6d6) acid damage at the start of each of the worm's turns. If the worm takes 30 damage or more on a single turn from a creature inside it, the worm must succeed on a DC 21 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the worm. If the worm dies, a swallowed creature is no longer restrained by it and can escape from the corpse by using 20 feet of movement, exiting prone",
         "reach_ft": 10,
         "attack_ability": "strength"
       },
@@ -36924,7 +36924,7 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "the target's Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest",
+        "unsupported_text": "the target's Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest. If a non-evil humanoid dies from this attack, a new shadow rises from the corpse 1d4 hours later",
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
@@ -38809,10 +38809,23 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the stirge attaches to the target. While attached, the stirge doesn't attack. Instead, at the start of each of the stirge's turns, the target loses 5 (1d4 + 3) hit points due to blood loss",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
-        "attack_ability": "dexterity"
+        "attack_ability": "dexterity",
+        "ongoing_damage_effect": {
+          "id": "attached-blood-drain",
+          "name": "Blood Drain",
+          "dice_count": 1,
+          "dice_size": 4,
+          "damage_bonus": 3,
+          "tick_timing": "source_turn_start",
+          "blocks_source_attacks": true,
+          "action_removable": true,
+          "action_removal_range_ft": 5,
+          "source_detach_movement_ft": 5,
+          "auto_end_after_hp_loss": 10
+        }
       }
     ],
     "multiattack_slots": [],
@@ -44017,8 +44030,8 @@
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": true,
-        "unsupported_text": null,
+        "source_complete": false,
+        "unsupported_text": "A humanoid slain by this attack rises 24 hours later as a zombie under the wight's control, unless the humanoid is restored to life or its body is destroyed. The wight can have no more than twelve zombies under its control at one time",
         "reach_ft": 5
       },
       {
