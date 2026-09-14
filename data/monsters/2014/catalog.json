@@ -14429,6 +14429,11 @@
         "source_complete": true,
         "unsupported_text": null,
         "reach_ft": 5,
+        "conditional_attack_advantage": [
+          {
+            "trigger": "round1_initiative_lead"
+          }
+        ],
         "attack_ability": "dexterity"
       }
     ],
@@ -14461,7 +14466,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/289/315/315/636252770983164351.jpeg",
     "data_bound_trait_names": [
-      "Surprise Attack"
+      "Surprise Attack",
+      "Ambusher"
     ],
     "saving_throw_actions": [],
     "innate_spellcasting": null,
