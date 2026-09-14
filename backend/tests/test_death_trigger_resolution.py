@@ -87,7 +87,7 @@ def test_event_dispatch_requires_event_to_record_death_and_is_once_only() -> Non
     resolved: set[str] = set()
 
     skipped, sequence = resolve_event_death_triggers(
-        5, 1, _event("magma", is_dead=False), setup, FixedDiceProvider([]), resolved=resolved,
+        5, 1, _event("magma", is_dead=False), setup, FixedDiceProvider([1]), resolved=resolved,
     )
     assert skipped == []
     assert sequence == 5
@@ -97,7 +97,7 @@ def test_event_dispatch_requires_event_to_record_death_and_is_once_only() -> Non
         FixedDiceProvider([20, 2, 2]), resolved=resolved,
     )
     repeated, final_sequence = resolve_event_death_triggers(
-        sequence, 1, _event("magma", is_dead=True), setup, FixedDiceProvider([]), resolved=resolved,
+        sequence, 1, _event("magma", is_dead=True), setup, FixedDiceProvider([1]), resolved=resolved,
     )
     assert len(fired) == 1
     assert repeated == []
