@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_SPELL_AREA;
+  const U = () => window.IRON_PIT_BROWSER_AREA_TARGETING;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const O = () => window.IRON_PIT_BROWSER_OFFENSE_VALUE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -20,17 +21,31 @@
       && target.state.current_hp > 0 && S().distance(caster, target) <= action.range);
   }
 
+  function areaScore(placement, members, action) {
+    const enemy = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), action), 0);
+    return enemy - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), action), 0);
+  }
+
   function choose(caster, setup, turnKey, protectedAllyIds = []) {
     const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+    const protectedIds = new Set(protectedAllyIds);
     for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
       if (action.actionCost === "reaction" || action.concentration || !E().available(caster.state, action.actionCost)) continue;
       const castLevel = slotLevel(caster, action, turnKey);
       if (castLevel == null) continue;
+      if (action.area) {
+        for (const placement of U().legalPlacements(caster, setup, action.area)) {
+          if (placement.friendlyIds.some((id) => protectedIds.has(id))) continue;
+          const score = areaScore(placement, members, action);
+          candidates.push({ action, index, score, slotLevel: castLevel,
+            targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement });
+        }
+        continue;
+      }
       if (action.areaRadius) {
         const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
         if (!placement) continue;
-        const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), action), 0)
-          - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), action), 0);
+        const score = areaScore(placement, members, action);
         candidates.push({ action, index, score, slotLevel: castLevel,
           targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement });
         continue;
