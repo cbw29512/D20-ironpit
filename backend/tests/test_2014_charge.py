@@ -65,3 +65,13 @@ def test_form_qualified_pounce_binds_to_weretiger_claw() -> None:
     assert claw.charge_profile.minimum_move_ft == 15
     assert claw.charge_profile.prone_save_dc == 14
     assert claw.charge_profile.follow_up_attack_id == "bite-tiger-or-hybrid-form-only"
+
+
+def test_wereboar_compiles_with_form_qualified_charge_and_arena_neutral_curse() -> None:
+    wereboar = monster_by_id_2014("wereboar")
+    attacks = [wereboar.weapon_attack, *wereboar.alternate_weapon_attacks]
+    tusks = next(attack for attack in attacks if attack.weapon.name.startswith("Tusks"))
+
+    assert tusks.charge_profile is not None
+    assert tusks.charge_profile.minimum_move_ft == 15
+    assert tusks.charge_profile.prone_save_dc == 13
