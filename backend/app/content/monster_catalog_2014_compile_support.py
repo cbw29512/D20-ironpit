@@ -95,6 +95,8 @@ def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAtta
             advantage.append(blood_frenzy)
         if advantage:
             update["conditional_attack_advantage"] = _unique_advantage(advantage)
+        if source_attack is not None and source_attack.grapple_target_policy != "normal":
+            update["grapple_target_policy"] = source_attack.grapple_target_policy
         if attack.id in source.limited_action_uses and attack.resource_id is None:
             update["resource_id"] = attack.id
             update["resource_cost"] = 1
