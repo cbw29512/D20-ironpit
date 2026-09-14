@@ -92,6 +92,7 @@ def apply_hit_conditions(
                 control.grapple_escape_dc,
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
+                source_effect_id=attack.id,
             ))
     if control is not None and control.condition_id is not None:
         timed = apply_timed_condition(
