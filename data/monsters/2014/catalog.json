@@ -43387,6 +43387,12 @@
         "source_complete": true,
         "unsupported_text": null,
         "reach_ft": 5,
+        "charge_profile": {
+          "minimum_move_ft": 15,
+          "prone_save_ability": "strength",
+          "prone_save_dc": 14,
+          "follow_up_attack_id": "bite-tiger-or-hybrid-form-only"
+        },
         "attack_ability": "strength"
       },
       {
