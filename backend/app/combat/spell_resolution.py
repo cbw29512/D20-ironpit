@@ -65,7 +65,6 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
         failure_push_ft=spell.failure_push_ft,
         magical_effect=True, animation=spell.animation,
     )
-
 def resolve_spell(
     sequence: int,
     round_number: int,
