@@ -26,6 +26,14 @@ _SLEEP_POISON_PATTERN = re.compile(
     r"another creature (?:uses|takes) an action to shake (?:it|the target) awake\.?'?",
     re.I,
 )
+_SLEEP_POISON_WHILE_PATTERN = re.compile(
+    r"(?:and\s+)?the target must succeed on a DC (?P<dc>\d+) "
+    r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or "
+    r"be(?:come)? poisoned for (?P<base_amount>\d+) (?P<base_unit>minutes?|hours?)\.\s*"
+    r"If the saving throw fails by (?P<margin>\d+) or more, the target is also unconscious while poisoned in this way\.\s*"
+    r"The target wakes up if it takes damage or if another creature (?:uses|takes) an action to shake it awake\.?'?",
+    re.I,
+)
 
 
 def _rounds(amount: int, unit: str) -> int:
@@ -49,20 +57,15 @@ def _replacement_effect(match: re.Match[str]) -> dict:
 
 
 def _sleep_poison_effect(match: re.Match[str]) -> dict | None:
-    dc = int(match.group("dc"))
-    margin = int(match.group("margin")) if match.group("margin") else dc - int(match.group("max_result"))
-    if margin < 1:
-        return None
+    groups = match.groupdict(); dc = int(groups["dc"])
+    margin = int(groups["margin"]) if groups.get("margin") else dc - int(groups["max_result"])
+    if margin < 1: return None
     return {
-        "save_ability": match.group("ability").lower(),
-        "dc": dc,
-        "condition_id": "poisoned",
-        "duration_rounds": _rounds(int(match.group("base_amount")), match.group("base_unit")),
+        "save_ability": groups["ability"].lower(), "dc": dc, "condition_id": "poisoned",
+        "duration_rounds": _rounds(int(groups["base_amount"]), groups["base_unit"]),
         "failure_margin_escalation": {
-            "margin": margin,
-            "additional_condition_ids": ["unconscious"],
-            "ends_on_damage": True,
-            "allowed_removal_action_ids": ["wake-sleeper"],
+            "margin": margin, "additional_condition_ids": ["unconscious"],
+            "ends_on_damage": True, "allowed_removal_action_ids": ["wake-sleeper"],
         },
     }
 
@@ -70,10 +73,11 @@ def _sleep_poison_effect(match: re.Match[str]) -> dict | None:
 def parse_failure_margin_save(text: str) -> dict | None:
     cleaned = text.strip(" .,;")
     replacement = _REPLACEMENT_PATTERN.fullmatch(cleaned)
-    if replacement is not None:
-        return _replacement_effect(replacement)
-    sleep_poison = _SLEEP_POISON_PATTERN.fullmatch(cleaned)
-    return _sleep_poison_effect(sleep_poison) if sleep_poison is not None else None
+    if replacement is not None: return _replacement_effect(replacement)
+    for pattern in (_SLEEP_POISON_PATTERN, _SLEEP_POISON_WHILE_PATTERN):
+        sleep_poison = pattern.fullmatch(cleaned)
+        if sleep_poison is not None: return _sleep_poison_effect(sleep_poison)
+    return None
 
 
 def main() -> int:
