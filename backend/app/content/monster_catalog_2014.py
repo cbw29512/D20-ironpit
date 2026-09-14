@@ -8,7 +8,7 @@ from app.content.monster_catalog_2014_absorption import damage_absorptions_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
 from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, is_arena_disabled_attack_detail_2014, usable_movement_speed_2014
 from app.content.monster_catalog_2014_auras import start_turn_auras_2014
-from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, resources_2014, saving_throw_bonuses_2014
+from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, reactive_melee_damage_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_damage_triggers import damage_triggered_roll_penalties_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_gaze import petrifying_gaze_2014
@@ -32,7 +32,6 @@ CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014
 MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
 _CHARGE_TRAITS = {"Charge", "Pounce", "Trampling Charge"}
-
 
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
     try:
@@ -58,7 +57,6 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
         raise RuntimeError(f"2014 attack {source.id} could not be compiled.") from exc
 
-
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
         supported_reactions = {"Parry"} if source.parry_ac_bonus is not None else set()
@@ -72,6 +70,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         if "Regeneration" in source.trait_names and source.regeneration is None: blockers.append("trait:Regeneration")
         if "Fire Absorption" in source.trait_names and not damage_absorptions_2014(source.source_traits): blockers.append("trait:Fire Absorption")
         if "Fear of Fire" in source.trait_names and not damage_triggered_roll_penalties_2014(source.source_traits): blockers.append("trait:Fear of Fire")
+        if "Heated Body" in source.trait_names and not reactive_melee_damage_2014(source.source_traits): blockers.append("trait:Heated Body")
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in unresolved_reactions_2014(source, supported_reactions))
@@ -82,7 +81,6 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     except Exception as exc:
         logger.exception("Failed to inventory 2014 mechanics for %s.", source.id)
         raise RuntimeError(f"2014 monster {source.id} mechanics could not be inventoried.") from exc
-
 
 def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
     try:
@@ -106,7 +104,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], start_turn_gaze=petrifying_gaze_2014(source.source_traits),
             start_turn_auras=start_turn_auras_2014(source.source_traits),
             start_turn_relationship_damage=start_turn_relationship_damage_2014(source.source_traits),
-            save_advantage_auras=save_advantage_auras_2014(source.source_traits),
+            melee_hit_reactive_damage=reactive_melee_damage_2014(source.source_traits), save_advantage_auras=save_advantage_auras_2014(source.source_traits),
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
             saving_throw_actions=source.saving_throw_actions, death_trigger_actions=source.death_trigger_actions,
             healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
@@ -128,7 +126,6 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         logger.exception("Failed to compile 2014 monster %s.", source.id)
         raise RuntimeError(f"2014 monster {source.id} could not be compiled: {exc}") from exc
 
-
 def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     try:
         if path.is_file(): payload = json.loads(path.read_text(encoding="utf-8"))
@@ -140,7 +137,6 @@ def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     except Exception as exc:
         logger.exception("Failed to load 2014 monster catalog from %s.", path)
         raise RuntimeError(f"2014 monster catalog could not be loaded from {path}.") from exc
-
 
 def monster_by_id_2014(monster_id: str, path: Path = CATALOG_ROOT) -> CombatantTemplate:
     try:
