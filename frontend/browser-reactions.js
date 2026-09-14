@@ -5,6 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
+  const SV = () => window.IRON_PIT_BROWSER_SAVES;
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
 
   function unarmedOpportunityAttack(template) {
@@ -48,6 +49,19 @@
     return { hit: false, used: true };
   }
 
+  function projectileCatch(defender, attack, components) {
+    const profile = defender.template.projectile_catch_reaction;
+    if (!profile || attack.kind !== "ranged" || !E().available(defender, "reaction")) return { components, succeeded: null, roll: null };
+    if (!components.some((part) => part.damage_type === profile.damage_type && (part.applied_total || 0) > 0)) return { components, succeeded: null, roll: null };
+    E().spend(defender, "reaction");
+    const save = SV().resolveSavingThrow(defender, profile.save_ability, profile.save_dc);
+    if (!save.succeeded) return { components, succeeded: false, roll: save.roll };
+    return {
+      components: components.map((part) => part.damage_type === profile.damage_type ? { ...part, applied_total: 0 } : part),
+      succeeded: true, roll: save.roll,
+    };
+  }
+
   function swapWouldProvoke(defender, ally, setup) {
     const opponents = defender.side === "heroes" ? setup.monsters : setup.heroes;
     return opponents.some((reactor) => opportunityAttackWeapon(
@@ -81,5 +95,5 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack };
+  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, projectileCatch, redirectAttack, resolveOpportunityAttack };
 })();
