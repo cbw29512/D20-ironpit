@@ -8856,13 +8856,33 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 12,
+          "excluded_creature_types": [
+            "undead",
+            "construct"
+          ],
+          "gates_ongoing_damage": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature other than an undead or a construct, it must succeed on a DC 12 Constitution saving throw or lose 5 (1d10) hit points at the start of each of its turns due to an infernal wound. Each time the devil hits the wounded target with this attack, the damage dealt by the wound increases by 5 (1d10). Any creature can take an action to stanch the wound with a successful DC 12 Wisdom (Medicine) check. The wound also closes if the target receives magical healing",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "ongoing_damage_effect": {
+          "id": "infernal-wound",
+          "name": "Infernal Wound",
+          "dice_count": 1,
+          "dice_size": 10,
+          "apply_on": "failed_on_hit_save",
+          "stacks_on_reapply": true,
+          "ends_on_magical_healing": true,
+          "removal_ability": "wisdom",
+          "removal_skill": "medicine",
+          "removal_dc": 12
+        }
       }
     ],
     "multiattack_slots": [
@@ -11217,10 +11237,20 @@
           "restrains_while_grappled": true
         },
         "forbid_target_grappled_by_self": true,
-        "source_complete": false,
-        "unsupported_text": "and takes 7 (2d6) piercing damage at the start of each of its turns",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "ongoing_damage_effect": {
+          "id": "grapple-start-turn-damage",
+          "name": "Chain grapple",
+          "dice_count": 2,
+          "dice_size": 6,
+          "damage_bonus": 0,
+          "damage_type": "piercing",
+          "apply_on": "hit",
+          "ends_when_grapple_source_ends": true
+        }
       }
     ],
     "multiattack_slots": [
@@ -25500,13 +25530,33 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 17,
+          "excluded_creature_types": [
+            "undead",
+            "construct"
+          ],
+          "gates_ongoing_damage": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature other than an undead or a construct, it must succeed on a DC 17 Constitution saving throw or lose 10 (3d6) hit points at the start of each of its turns due to an infernal wound. Each time the devil hits the wounded target with this attack, the damage dealt by the wound increases by 10 (3d6). Any creature can take an action to stanch the wound with a successful DC 12 Wisdom (Medicine) check. The wound also closes if the target receives magical healing",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "ongoing_damage_effect": {
+          "id": "infernal-wound",
+          "name": "Infernal Wound",
+          "dice_count": 3,
+          "dice_size": 6,
+          "apply_on": "failed_on_hit_save",
+          "stacks_on_reapply": true,
+          "ends_on_magical_healing": true,
+          "removal_ability": "wisdom",
+          "removal_skill": "medicine",
+          "removal_dc": 12
+        }
       },
       {
         "id": "hurl-flame",
