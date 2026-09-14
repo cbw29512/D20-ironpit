@@ -39,6 +39,7 @@ def saving_throw_mode(
             + dodge_dex_save_advantage_sources(state, ability)
             + int(magical_effect and CombatTrait.MAGIC_RESISTANCE in state.template.combat_traits)
             + int(against_condition in _DARK_DEVOTION_CONDITIONS and CombatTrait.DARK_DEVOTION in state.template.combat_traits)
+            + int(against_condition == "frightened" and CombatTrait.BRAVE in state.template.combat_traits)
             + int(against_condition in _TWO_HEADED_CONDITIONS and CombatTrait.TWO_HEADED in state.template.combat_traits)
             + int(
                 against_prone

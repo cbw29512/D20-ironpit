@@ -17,6 +17,7 @@ MODELED_TRAITS = {
     "Magic Weapons": CombatTrait.MAGIC_WEAPONS,
     "Sure-Footed": CombatTrait.SURE_FOOTED,
     "Dark Devotion": CombatTrait.DARK_DEVOTION,
+    "Brave": CombatTrait.BRAVE,
     "Two-Headed": CombatTrait.TWO_HEADED,
     "Aggressive": CombatTrait.AGGRESSIVE,
     "Martial Advantage": CombatTrait.MARTIAL_ADVANTAGE,
@@ -28,7 +29,7 @@ MODELED_TRAITS = {
 }
 
 DATA_BOUND_TRAITS = frozenset({
-    "Angelic Weapons", "Barbed Hide", "Blood Frenzy", "Echolocation", "Fear of Fire", "Fire Absorption",
+    "Angelic Weapons", "Barbed Hide", "Blood Frenzy", "Brute", "Echolocation", "Fear of Fire", "Fire Absorption",
     "Heated Body", "Heated Weapons", "Innate Spellcasting", "Invisibility", "Petrifying Gaze", "Poor Depth Perception",
     "Reckless", "Regeneration", "Spellcasting", "Stench", "Turning Defiance",
 })

@@ -15,6 +15,7 @@ class CombatTrait(StrEnum):
     MAGIC_WEAPONS = "magic-weapons"
     SURE_FOOTED = "sure-footed"
     DARK_DEVOTION = "dark-devotion"
+    BRAVE = "brave"
     TWO_HEADED = "two-headed"
     AGGRESSIVE = "aggressive"
     MARTIAL_ADVANTAGE = "martial-advantage"
