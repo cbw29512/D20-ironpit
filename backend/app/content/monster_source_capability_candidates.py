@@ -60,7 +60,6 @@ def _ranges(text: str) -> tuple[int, int | None, int | None]:
     long = int(ranged.group(2) or ranged.group(1)) if ranged else None
     return int(reach.group(1)) if reach else 5, normal, long
 
-
 def _rider_text(actions: str, match: re.Match[str]) -> str:
     text = match.group("tail") or ""
     following = actions[match.end():].lstrip()
@@ -70,7 +69,6 @@ def _rider_text(actions: str, match: re.Match[str]) -> str:
     if re.match(r"(?:If|Until|The target|Whenever|While)\b", following, re.I):
         text += ". " + following.split(".", 1)[0]
     return text
-
 
 def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> tuple[AttackCapabilityDefinition, ResourceDefinition | None]:
     name = match.group("name").strip()
@@ -97,7 +95,6 @@ def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> tuple
             base_dice_size=int(match.group("size")), base_damage_bonus=base_bonus, base_damage_type=match.group("dtype")),
     ), resource
 
-
 def _multiattack(row: dict[str, object], attacks: list[AttackCapabilityDefinition]) -> MultiattackCapabilityDefinition | None:
     text = str(row.get("actions", ""))
     match = _MULTI_COUNT.search(text)
@@ -112,7 +109,6 @@ def _multiattack(row: dict[str, object], attacks: list[AttackCapabilityDefinitio
         if ids:
             return MultiattackCapabilityDefinition(id=f"srd-{_slug(str(row['name']))}-multiattack", slots=[CapabilityActionSlot(attack_ids=ids) for _ in range(_WORD_COUNT[match.group(1).lower()])])
     return None
-
 
 def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantDefinition]:
     candidates: dict[str, CombatantDefinition] = {}
