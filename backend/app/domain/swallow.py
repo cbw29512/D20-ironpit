@@ -15,7 +15,7 @@ class SwallowAction(BaseModel):
     damage_dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageType = DamageType.ACID
-    max_swallowed: int = Field(default=1, ge=1, le=8)
+    max_swallowed: int | None = Field(default=1, ge=1, le=8)
     exit_movement_ft: int = Field(default=5, ge=0, le=60)
     exit_prone: bool = True
 
