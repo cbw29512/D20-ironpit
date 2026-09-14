@@ -89,4 +89,21 @@ assert.equal(damageRollCalls, 1);
 const again = window.IRON_PIT_BROWSER_DEATH_TRIGGERS.resolve(result.sequence, 2, source, setup, resolved);
 assert.deepEqual(again.events, []);
 assert.equal(again.sequence, result.sequence);
-console.log("Browser universal Death Burst shared-roll and once-only parity passed.");
+
+const dispatchResolved = new Set();
+const skipped = window.IRON_PIT_BROWSER_DEATH_TRIGGERS.afterEvent(
+  result.sequence, 2, { target_id: "magma", is_dead: false }, setup, dispatchResolved,
+);
+assert.deepEqual(skipped.events, []);
+assert.equal(skipped.sequence, result.sequence);
+
+const fired = window.IRON_PIT_BROWSER_DEATH_TRIGGERS.afterEvent(
+  skipped.sequence, 2, { target_id: "magma", is_dead: true }, setup, dispatchResolved,
+);
+assert.equal(fired.events.length, 2);
+const repeated = window.IRON_PIT_BROWSER_DEATH_TRIGGERS.afterEvent(
+  fired.sequence, 2, { target_id: "magma", is_dead: true }, setup, dispatchResolved,
+);
+assert.deepEqual(repeated.events, []);
+assert.equal(repeated.sequence, fired.sequence);
+console.log("Browser universal Death Burst shared-roll, lethal-dispatch, and once-only parity passed.");
