@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
+from app.domain.reactive_damage import MeleeHitReactiveDamage
 from app.domain.targeting import AreaTargeting
 
 SpellModifierKind = Literal[
@@ -64,6 +65,7 @@ class DefensiveSpellAction(BaseModel):
     max_hp_increase: int = Field(default=0, ge=0)
     current_hp_increase: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
+    melee_hit_reactive_damage: list[MeleeHitReactiveDamage] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
     priority: int = 0
@@ -73,9 +75,9 @@ class DefensiveSpellAction(BaseModel):
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
-        if not direct_hp and not self.damage_resistances and not self.modifier_effects:
+        if not direct_hp and not self.damage_resistances and not self.melee_hit_reactive_damage and not self.modifier_effects:
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
-        if self.concentration and (direct_hp or self.damage_resistances):
+        if self.concentration and (direct_hp or self.damage_resistances or self.melee_hit_reactive_damage):
             raise ValueError("Concentration defenses require source-owned modifier effects.")
         if self.target_policy == "self" and (self.target_count != 1 or self.target_count_per_slot_above):
             raise ValueError("Self-target policy supports exactly one target.")
