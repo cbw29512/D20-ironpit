@@ -4,6 +4,7 @@
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const O = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
   const resourceAvailable = (state, attack) => {
@@ -82,6 +83,7 @@
     return Number.isFinite(attack.long) && distance <= attack.long;
   }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false, requiredTargetId = null) {
+    if (O()?.sourceAttacksBlocked(member.combatant_id, enemies(member, setup))) return null;
     const allowed = new Set(ids);
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id)
       && (!kind || attack.kind === kind) && resourceAvailable(member.state, attack));
