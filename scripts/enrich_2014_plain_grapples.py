@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 _CREATURE_GRAPPLE_PREFIX = re.compile(
     r"^If the target is a creature,?\s*(?=(?:the target|it) is grappled\b)", re.I,
 )
+_DANGLING_GRAPPLE_DURATION = re.compile(r"^Until (?:this|the) grapple ends[.,]?$", re.I)
 
 
 def parse_plain_creature_grapple(text: str) -> tuple[dict | None, bool, str]:
@@ -23,7 +24,7 @@ def parse_plain_creature_grapple(text: str) -> tuple[dict | None, bool, str]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Enrich plain creature-qualified 2014 grapple riders.")
+    parser = argparse.ArgumentParser(description="Enrich residual 2014 grapple riders.")
     parser.add_argument("--catalog", type=Path, default=Path("data/monsters/2014/catalog.json"))
     args = parser.parse_args()
     try:
@@ -33,6 +34,15 @@ def main() -> int:
             for attack in monster.get("attacks", []):
                 text = attack.get("unsupported_text") or ""
                 if not text:
+                    continue
+                if (
+                    attack.get("control_effect")
+                    and attack.get("forbid_target_grappled_by_self")
+                    and _DANGLING_GRAPPLE_DURATION.fullmatch(text.strip())
+                ):
+                    attack["unsupported_text"] = None
+                    attack["source_complete"] = True
+                    enriched += 1
                     continue
                 control, forbid, residual = parse_plain_creature_grapple(text)
                 if control is None or residual.strip(" .,;"):
@@ -46,10 +56,10 @@ def main() -> int:
                 attack["source_complete"] = True
                 enriched += 1
         args.catalog.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        print(f"enriched {enriched} plain creature grapple rider(s)")
+        print(f"enriched {enriched} residual grapple rider(s)")
         return 0
     except Exception as exc:
-        logger.exception("2014 plain creature grapple enrichment failed: %s", exc)
+        logger.exception("2014 residual grapple enrichment failed: %s", exc)
         return 1
 
 
