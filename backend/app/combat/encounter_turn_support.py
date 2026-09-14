@@ -6,6 +6,7 @@ from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.healing import choose_healing_action, resolve_healing
+from app.combat.ongoing_damage_policy import choose_action_removal, resolve_action_removal
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.rampage import resolve_rampage
 from app.combat.resources import action_resource_available, resource_definition
@@ -53,6 +54,10 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             action, target = healing_choice
             events.append(resolve_healing(sequence, round_number, member, target, action, dice, turn_key))
             sequence += 1
+        attachment = choose_action_removal(member, setup)
+        if attachment is not None:
+            target, ongoing = attachment
+            events.append(resolve_action_removal(sequence, round_number, member, target, ongoing)); sequence += 1
         removal_choice = choose_condition_removal_action(member, setup, turn_key)
         if removal_choice is not None:
             action, target, conditions = removal_choice
