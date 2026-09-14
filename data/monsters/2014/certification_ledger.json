@@ -5,7 +5,7 @@
     "attack-detail": 35,
     "legendary": 25,
     "spell": 41,
-    "trait": 53
+    "trait": 52
   },
   "blocker_yield": {
     "action:Acid Spray (Recharge 6)": 1,
@@ -172,7 +172,6 @@
     "trait:Steadfast": 1,
     "trait:Transparent": 1,
     "trait:Turn Resistance": 1,
-    "trait:Two Heads": 1,
     "trait:Vampire Weaknesses": 2,
     "trait:Variable Illumination": 1,
     "trait:Wakeful": 2,
@@ -1006,9 +1005,8 @@
     {
       "id": "ettin",
       "name": "Ettin",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "trait:Two Heads",
         "trait:Wakeful"
       ],
       "status": "blocked"
