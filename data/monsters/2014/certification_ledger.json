@@ -1,9 +1,8 @@
 {
-  "blocked_count": 83,
+  "blocked_count": 82,
   "blocker_families": {
     "action": 58,
     "attack-detail": 35,
-    "compile": 1,
     "legendary": 25,
     "spell": 41,
     "trait": 48
@@ -80,7 +79,6 @@
     "attack-detail:Unarmed Strike (Vampire Form Only)": 1,
     "attack-detail:War Pick": 1,
     "attack-detail:Whip": 1,
-    "compile:universal-runtime": 1,
     "legendary:Attack": 2,
     "legendary:Blasphemous Word": 1,
     "legendary:Blinding Dust": 1,
@@ -2309,11 +2307,9 @@
     {
       "id": "spy",
       "name": "Spy",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "compile:universal-runtime"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "steam-mephit",
@@ -2759,7 +2755,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 244,
+  "ready_count": 245,
   "ruleset": "2014",
   "schema_version": 1
 }
