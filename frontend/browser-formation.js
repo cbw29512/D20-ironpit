@@ -52,14 +52,18 @@
     const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
     return allies.some((ally) => ally !== member && alive(ally) && !isBackline(ally));
   }
-  function targetAllowed(member, target, attack) {
+  const heldByAttack = (member, target, attack) => (target.state.grapple_sources || []).some(
+    (source) => source.source_id === member.combatant_id && source.source_effect_id === attack.id,
+  );
+  function targetAllowed(member, target, attack, opponents = null) {
     const restraint = attack.breakableRestraint;
     if (restraint) {
       if (restraint.maxTargetSize && !S().sizeAtMost(target, restraint.maxTargetSize)) return false;
       if ((target.state.restraint_sources || []).some((source) => source.source_id === member.combatant_id && source.source_effect_id === attack.id)) return false;
     }
-    if (!attack.forbidSelfGrappledTarget) return true;
-    return !(target.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id);
+    if (attack.forbidSelfGrappledTarget && (target.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id)) return false;
+    if (attack.grappleTargetPolicy !== "auto_hit_own_grapple" || !opponents) return true;
+    return !opponents.some((candidate) => heldByAttack(member, candidate, attack)) || heldByAttack(member, target, attack);
   }
   function attackDistance(member, target) {
     try { return S().distance(member, target); }
@@ -81,11 +85,11 @@
     const allowed = new Set(ids);
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id)
       && (!kind || attack.kind === kind) && resourceAvailable(member.state, attack));
-    let targets = targetOrder(member, setup, preferBackline);
+    const opponents = livingTargets(member, setup); let targets = targetOrder(member, setup, preferBackline);
     if (requiredTargetId) targets = targets.filter((target) => target.combatant_id === requiredTargetId);
     for (const target of targets) {
       const distance = attackDistance(member, target);
-      const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
+      const attack = profiles.find((profile) => targetAllowed(member, target, profile, opponents) && attackInRange(profile, distance));
       if (attack) return { target, attack, distance };
     }
     return null;
