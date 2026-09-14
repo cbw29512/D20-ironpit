@@ -29,6 +29,11 @@ assert.deepEqual(
   { form: "quadruped", detail: "canine" },
   "Death Dog must retain its reviewed canine figure profile when runnable",
 );
+assert.deepEqual(
+  { form: monster("Minotaur of Baphomet").form, detail: monster("Minotaur of Baphomet").detail },
+  { form: "brute", detail: "minotaur" },
+  "Minotaur of Baphomet must retain its reviewed minotaur figure profile when runnable",
+);
 
 assert.deepEqual(
   { form: monster("Owlbear", "large").form, detail: monster("Owlbear", "large").detail },
