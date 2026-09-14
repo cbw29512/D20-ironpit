@@ -275,7 +275,14 @@ def render() -> str:
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids): raise RuntimeError("Certified browser monster export contains duplicate template IDs.")
         payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
-        return "/* GENERATED from canonical Python RAW-ready monster templates. Do not hand-edit. */\n(() => {\n  \"use strict\";\n" + f"  const monsters = {payload};\n" + "  window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));\n})();\n"
+        return (
+            "/* GENERATED from canonical Python RAW-ready monster templates. Do not hand-edit. */\n"
+            "(() => {\n  \"use strict\";\n"
+            f"  const monsters = {payload};\n"
+            "  window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));\n"
+            "  window.IRON_PIT_CANONICAL_MONSTERS_READY = true;\n"
+            "})();\n"
+        )
     except Exception:
         logger.exception("Certified browser monster rendering failed."); raise
 
