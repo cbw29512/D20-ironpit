@@ -15,6 +15,8 @@ global.window = {
 };
 vm.runInThisContext(fs.readFileSync(require.resolve("./browser-on-hit-save-conditions.js"), "utf8"), { filename: "browser-on-hit-save-conditions.js" });
 
+const attack = { id: "bite" };
+const target = () => ({ state: { is_alive: true, is_dead: false, active_effect_ids: [], timed_effects: [] } });
 const effect = {
   saveAbility: "constitution", dc: 10, conditionId: "poisoned", durationRounds: 10,
   failureMarginEscalation: {
@@ -22,8 +24,6 @@ const effect = {
     replacementDurationDiceSize: 10, replacementDurationRoundMultiplier: 10,
   },
 };
-const attack = { id: "bite" };
-const target = () => ({ state: { is_alive: true, is_dead: false, active_effect_ids: [], timed_effects: [] } });
 
 const nearMiss = target();
 let result = window.IRON_PIT_BROWSER_ON_HIT_SAVE_CONDITIONS.applyFailure(nearMiss, attack, effect, { succeeded: false, roll: { total: 6 } }, "homunculus", 2);
@@ -34,4 +34,21 @@ const escalated = target();
 result = window.IRON_PIT_BROWSER_ON_HIT_SAVE_CONDITIONS.applyFailure(escalated, attack, effect, { succeeded: false, roll: { total: 5 } }, "homunculus", 2);
 assert.deepEqual(new Set(result.appliedConditions), new Set(["poisoned", "unconscious"]));
 assert.deepEqual(new Set(escalated.state.timed_effects.map((item) => item.expiresRound)), new Set([72]));
+
+const sleepPoison = {
+  saveAbility: "constitution", dc: 10, conditionId: "poisoned", durationRounds: 10,
+  failureMarginEscalation: {
+    margin: 5, additionalConditionIds: ["unconscious"], endsOnDamage: true,
+    allowedRemovalActionIds: ["wake-sleeper"],
+  },
+};
+const sleeper = target();
+result = window.IRON_PIT_BROWSER_ON_HIT_SAVE_CONDITIONS.applyFailure(sleeper, attack, sleepPoison, { succeeded: false, roll: { total: 5 } }, "sprite", 3);
+assert.deepEqual(new Set(result.appliedConditions), new Set(["poisoned", "unconscious"]));
+const byCondition = Object.fromEntries(sleeper.state.timed_effects.map((item) => [item.effect_id, item]));
+assert.equal(byCondition.poisoned.endsOnDamage, false);
+assert.deepEqual(byCondition.poisoned.allowedRemovalActionIds, []);
+assert.equal(byCondition.unconscious.endsOnDamage, true);
+assert.deepEqual(byCondition.unconscious.allowedRemovalActionIds, ["wake-sleeper"]);
+assert.equal(byCondition.unconscious.expiresRound, 13);
 console.log("Browser failed-save margin escalation regressions passed.");
