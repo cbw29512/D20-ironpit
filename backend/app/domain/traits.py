@@ -23,6 +23,7 @@ class CombatTrait(StrEnum):
     CUNNING_ACTION = "cunning-action"
     EVASION = "evasion"
     MARTIAL_ADVANTAGE = "martial-advantage"
+    ASSASSINATE = "assassinate"
     RAMPAGE = "rampage"
     REACTIVE = "reactive"
     LIFE_DOMAIN = "life-domain"
