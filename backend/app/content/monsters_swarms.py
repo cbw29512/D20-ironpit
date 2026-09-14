@@ -13,7 +13,6 @@ _SPECS = {
     "Swarm of Bats": ("Bites", 4, 2, 4, 0, 1, 4, "piercing", None),
     "Swarm of Rats": ("Bites", 2, 2, 4, 0, 1, 4, "piercing", None),
     "Swarm of Crawling Claws": ("Swarm of Grasping Hands", 4, 4, 8, 2, 2, 8, "necrotic", CreatureSize.MEDIUM),
-    "Swarm of Insects": ("Bites", 3, 2, 4, 1, 1, 4, "poison", None),
 }
 
 
