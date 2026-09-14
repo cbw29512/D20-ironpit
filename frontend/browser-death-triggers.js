@@ -76,12 +76,12 @@
     }
   }
 
-  function afterEvent(sequence, round, event, setup) {
+  function afterEvent(sequence, round, event, setup, resolved = new Set()) {
     try {
-      if (!event.target_id) return { events: [], sequence };
+      if (!event.target_id || event.is_dead !== true) return { events: [], sequence };
       const target = [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === event.target_id);
       if (!target?.state.is_dead || !(target.state.template.death_trigger_effects || []).length) return { events: [], sequence };
-      return resolve(sequence, round, target, setup);
+      return resolve(sequence, round, target, setup, resolved);
     } catch (error) {
       console.error("Failed browser death-trigger event dispatch", { sequence, error });
       throw error;
