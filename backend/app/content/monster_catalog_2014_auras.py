@@ -19,6 +19,11 @@ _SAVE = re.compile(
     r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw",
     re.I,
 )
+_RADIUS = re.compile(r"\b(?P<feet>\d+)\s*[-‐‑‒–—]?\s*foot\s+radius\b", re.I)
+_CONDITION_UNTIL_NEXT_TURN = re.compile(
+    r"or\s+be\s+(?P<condition>[A-Za-z]+)\s+until\s+(?:the\s+)?start\s+of\s+(?:its|the target'?s)\s+next\s+turn",
+    re.I,
+)
 
 
 def _plain(value: str | None) -> str:
@@ -32,7 +37,7 @@ def _slug(value: str) -> str:
 
 
 def _duration_rounds(text: str) -> int | None:
-    match = re.search(r"\blasts for\s+(\d+)\s+(minute|minutes|round|rounds)\b", text, re.I)
+    match = re.search(r"\blasts?\s+for\s+(\d+)\s+(minute|minutes|round|rounds)\b", text, re.I)
     if match is None:
         return None
     amount, unit = match.groups()
@@ -73,21 +78,28 @@ def activated_start_turn_auras_2014(source_actions: str | None) -> list[StartTur
             text = _plain(paragraph)
             if use_match is None or not re.search(r"starts its turn in that area", text, re.I):
                 continue
-            radius = re.search(r"\b(\d+)-foot radius\b", text, re.I)
+            radius = _RADIUS.search(text)
             duration = _duration_rounds(text)
             save = _SAVE.search(text)
-            condition = re.search(r"or be ([A-Za-z]+) until the start of its next turn", text, re.I)
-            if radius is None or duration is None or save is None or condition is None:
-                raise ValueError(f"Activated start-turn aura is only partially parsed: {heading!r}.")
+            condition = _CONDITION_UNTIL_NEXT_TURN.search(text)
+            missing = [
+                key for key, value in (
+                    ("radius", radius), ("duration", duration), ("save", save), ("condition", condition),
+                ) if value is None
+            ]
+            if missing:
+                raise ValueError(
+                    f"Activated start-turn aura is missing parsed {','.join(missing)}: {heading!r}; text={text!r}."
+                )
             name = re.sub(r"\s*\(\d+\s*/\s*Day\)\s*$", "", heading, flags=re.I).strip()
             aura_id = _slug(name)
             results.append(StartTurnAura(
                 id=aura_id,
                 name=name,
-                range_ft=int(radius.group(1)),
+                range_ft=int(radius.group("feet")),
                 save_ability=save.group("ability").lower(),
                 save_dc=int(save.group("dc")),
-                failure_condition_id=condition.group(1).lower(),
+                failure_condition_id=condition.group("condition").lower(),
                 failure_expiry_timing="target_turn_start",
                 failure_duration_rounds=1,
                 failure_blocks_reactions=bool(re.search(r"can(?:not|'t) take reactions", text, re.I)),
