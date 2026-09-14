@@ -25,6 +25,11 @@ SAVE_FAILURE_CONDITION_PATTERN = re.compile(
     rf"until the (?P<edge>start|end) of (?P<owner>its|the [^.]+?[’']s) next turn",
     re.I,
 )
+FIRST_FAILURE_CONDITION_PATTERN = re.compile(
+    rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*(?P<dc>\d+)[^.]*\.\s*"
+    rf"First Failure:\s*(?:The\s+)?target has the (?P<condition>{_CONDITIONS}) condition\.",
+    re.I,
+)
 SEVERE_FAILURE_PATTERN = re.compile(
     rf"Failure by (?P<margin>\d+) or More:\s*The target has the (?P<condition>{_CONDITIONS}) condition "
     rf"for (?P<minutes>\d+) minute(?:s)?\.\s*While (?P=condition), the target has the "
@@ -82,6 +87,20 @@ def _staged_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffec
     )
 
 
+def _out_of_match_staged_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDefinition | None:
+    """Keep the initial combat effect when all repeat-save timing is outside an Iron Pit match."""
+    match = FIRST_FAILURE_CONDITION_PATTERN.search(text)
+    if match is None or not re.search(r"\b(?:24 hours?|Long Rest)\b", text, re.I):
+        return None
+    failure = ConditionEffectDefinition(
+        condition=match.group("condition").lower(), max_target_size=maximum,
+    )
+    return HitSavingThrowEffectDefinition(
+        save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
+        target_filter=target_filter(text), failure_effects=[failure],
+    )
+
+
 def _severe_failure(text: str, maximum: CreatureSize | None) -> tuple[int, list[ConditionEffectDefinition]] | None:
     match = SEVERE_FAILURE_PATTERN.search(text)
     if match is None:
@@ -103,6 +122,9 @@ def hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDef
     staged = _staged_save(text, maximum)
     if staged is not None:
         return staged
+    out_of_match = _out_of_match_staged_save(text, maximum)
+    if out_of_match is not None:
+        return out_of_match
     match = SAVE_CONDITION_PATTERN.search(text) or SAVE_FAILURE_CONDITION_PATTERN.search(text)
     if match is None:
         return None
