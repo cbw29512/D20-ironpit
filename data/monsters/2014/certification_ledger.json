@@ -1,11 +1,11 @@
 {
-  "blocked_count": 92,
+  "blocked_count": 91,
   "blocker_families": {
     "action": 58,
     "attack-detail": 39,
     "legendary": 25,
     "spell": 45,
-    "trait": 65
+    "trait": 64
   },
   "blocker_yield": {
     "action:Acid Spray (Recharge 6)": 1,
@@ -174,7 +174,6 @@
     "trait:Limited Magic Immunity": 1,
     "trait:Multiple Heads": 1,
     "trait:Ooze Cube": 1,
-    "trait:Reactive": 1,
     "trait:Reactive Heads": 1,
     "trait:Reflective Carapace": 1,
     "trait:Shadow Stealth": 1,
@@ -1762,11 +1761,9 @@
     {
       "id": "marilith",
       "name": "Marilith",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "trait:Reactive"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "mastiff",
@@ -2808,7 +2805,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 235,
+  "ready_count": 236,
   "ruleset": "2014",
   "schema_version": 1
 }
