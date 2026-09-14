@@ -47,6 +47,12 @@ def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
         for action_id, uses in source.limited_action_uses.items()
         if action_id not in source.action_recharges
     )
+    if source.innate_spellcasting is not None:
+        resources.extend(
+            ResourceDefinition(id=f"innate-{spell.id}", name=spell.name.title(), max_uses=spell.uses_per_day)
+            for spell in source.innate_spellcasting.spells
+            if spell.usage == "per_day" and spell.uses_per_day is not None and not spell.shared_pool
+        )
     if source.spellcasting is not None:
         resources.extend(
             ResourceDefinition(
