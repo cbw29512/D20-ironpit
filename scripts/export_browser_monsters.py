@@ -141,6 +141,19 @@ def _relationship_damage_row(profile):
     }
 
 
+def _failure_margin_row(spec):
+    if spec is None: return None
+    row = {
+        "margin": spec.margin,
+        "additionalConditionIds": list(spec.additional_condition_ids),
+        "replacementDurationDiceCount": spec.replacement_duration_dice_count,
+        "replacementDurationDiceSize": spec.replacement_duration_dice_size,
+        "replacementDurationRoundMultiplier": spec.replacement_duration_round_multiplier,
+    }
+    if spec.replacement_duration_rounds is not None: row["replacementDurationRounds"] = spec.replacement_duration_rounds
+    return row
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -193,6 +206,8 @@ def _attach_monster_actions(row, template) -> None:
             if effect.failure_push_ft: rider["failurePushFt"] = effect.failure_push_ft
             if effect.excluded_creature_types: rider["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes: rider["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
+            margin = _failure_margin_row(effect.failure_margin_escalation)
+            if margin: rider["failureMarginEscalation"] = margin
             if effect.zero_hp_stable:
                 rider["zeroHpStable"] = True; rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
     healing_rows = row.pop("healing_actions", [])
