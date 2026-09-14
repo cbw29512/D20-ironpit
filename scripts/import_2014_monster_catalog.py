@@ -35,7 +35,7 @@ _SIGN = r"[+\-‐‑‒–—−]"
 _ROLLED_DAMAGE = re.compile(rf"Hit:\s*(\d+)\s*\((\d+)d(\d+)(?:\s*({_SIGN})\s*(\d+))?\)\s*([A-Za-z]+) damage", re.I)
 _FIXED_DAMAGE = re.compile(r"Hit:\s*(\d+)\s+([A-Za-z]+) damage", re.I)
 _ALT_DAMAGE = rf"(\d+)\s*\((\d+)d(\d+)(?:\s*({_SIGN})\s*(\d+))?\)\s*([A-Za-z]+) damage"
-_TWO_HANDED = re.compile(r"or\s+" + _ALT_DAMAGE + r"\s+if used with two hands(?: to make a melee attack)?", re.I)
+_TWO_HANDED = re.compile(r"or\s+" + _ALT_DAMAGE + r"\s+(?:if|when) (?:used|wielded) with two hands(?: to make a melee attack)?", re.I)
 _MELEE_RANGE = re.compile(r"in melee or\s+" + _ALT_DAMAGE + r"\s+at range", re.I)
 
 
