@@ -40,13 +40,15 @@ def test_multiattack_settles_lethal_event_before_next_slot(monkeypatch) -> None:
         calls["attacks"] += 1
         return SimpleNamespace(sequence=sequence, event_type="attack", target_id="target", is_dead=True)
 
-    def settle_death(sequence, *_args, **_kwargs):
+    def append_death(output, sequence, _round, event, *_args):
         calls["death"] += 1
+        output.append(event)
+        output.append(SimpleNamespace(sequence=sequence, event_type="saving_throw"))
         attacker_state.is_dead = True
-        return [SimpleNamespace(sequence=sequence, event_type="saving_throw")], sequence + 1
+        return sequence + 1
 
     monkeypatch.setattr(attack_actions, "resolve_encounter_attack", resolve_attack)
-    monkeypatch.setattr(attack_actions, "resolve_event_death_triggers", settle_death)
+    monkeypatch.setattr(attack_actions, "append_after_event", append_death)
     monkeypatch.setattr(
         attack_actions,
         "resolve_cleave_extra_attack",
