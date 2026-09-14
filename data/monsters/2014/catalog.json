@@ -31487,8 +31487,8 @@
           "restrains_while_grappled": false
         },
         "forbid_target_grappled_by_self": true,
-        "source_complete": false,
-        "unsupported_text": "Until this grapple ends",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
