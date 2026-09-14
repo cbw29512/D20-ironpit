@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
+from app.domain.actions import AbilityName
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
@@ -16,8 +17,22 @@ class SwallowAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageType = DamageType.ACID
     max_swallowed: int | None = Field(default=1, ge=1, le=8)
+    regurgitation_damage_threshold: int | None = Field(default=None, ge=1, le=1000)
+    regurgitation_save_ability: AbilityName | None = None
+    regurgitation_save_dc: int | None = Field(default=None, ge=1, le=40)
+    regurgitation_range_ft: int | None = Field(default=None, ge=0, le=120)
     exit_movement_ft: int = Field(default=5, ge=0, le=60)
     exit_prone: bool = True
+
+    @model_validator(mode="after")
+    def validate_regurgitation(self) -> "SwallowAction":
+        fields = (
+            self.regurgitation_damage_threshold, self.regurgitation_save_ability,
+            self.regurgitation_save_dc, self.regurgitation_range_ft,
+        )
+        if any(item is not None for item in fields) and not all(item is not None for item in fields):
+            raise ValueError("Swallow regurgitation requires threshold, save ability, DC, and release range.")
+        return self
 
 
 class SwallowedState(BaseModel):
@@ -27,6 +42,10 @@ class SwallowedState(BaseModel):
     damage_dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageType = DamageType.ACID
+    regurgitation_damage_threshold: int | None = Field(default=None, ge=1, le=1000)
+    regurgitation_save_ability: AbilityName | None = None
+    regurgitation_save_dc: int | None = Field(default=None, ge=1, le=40)
+    regurgitation_range_ft: int | None = Field(default=None, ge=0, le=120)
     exit_movement_ft: int = Field(default=5, ge=0, le=60)
     exit_prone: bool = True
     source_dead: bool = False
