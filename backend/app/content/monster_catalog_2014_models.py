@@ -81,7 +81,6 @@ class CatalogSpellcasting2014(BaseModel):
     source_complete: bool = True
     unsupported_text: str | None = None
 
-
 class CatalogMonster2014(BaseModel):
     id: str
     name: str
