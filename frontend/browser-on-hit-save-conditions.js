@@ -7,7 +7,7 @@
   function escalation(effect, save) {
     const spec = effect.failureMarginEscalation;
     if (!spec || save.succeeded || !save.roll || effect.dc - save.roll.total < spec.margin) {
-      return { conditionIds: [], durationRounds: effect.durationRounds ?? null };
+      return { conditionIds: [], durationRounds: effect.durationRounds ?? null, spec: null };
     }
     let durationRounds = effect.durationRounds ?? null;
     if (spec.replacementDurationRounds != null) durationRounds = spec.replacementDurationRounds;
@@ -15,12 +15,14 @@
       const rolls = D().rollMany(spec.replacementDurationDiceCount, spec.replacementDurationDiceSize);
       durationRounds = rolls.reduce((sum, roll) => sum + roll, 0) * (spec.replacementDurationRoundMultiplier || 1);
     }
-    return { conditionIds: [...(spec.additionalConditionIds || [])], durationRounds };
+    return { conditionIds: [...(spec.additionalConditionIds || [])], durationRounds, spec };
   }
 
-  function applyOne(target, attack, effect, conditionId, sourceId, round, durationRounds, repeat) {
+  function applyOne(target, attack, effect, conditionId, sourceId, round, durationRounds, repeat, lifecycle = {}) {
     if (I().immune(target.state, conditionId)) return null;
-    const timed = durationRounds != null || (repeat && effect.repeatSaveTiming) || effect.endsOnDamage;
+    const endsOnDamage = Boolean(lifecycle.endsOnDamage);
+    const allowedRemovalActionIds = [...(lifecycle.allowedRemovalActionIds || [])];
+    const timed = durationRounds != null || (repeat && effect.repeatSaveTiming) || endsOnDamage || allowedRemovalActionIds.length > 0;
     if (timed) {
       if (!sourceId || round == null || !T()) throw new Error("Timed on-hit save effect lacks browser source context.");
       return T().apply(target.state, conditionId, sourceId, {
@@ -30,7 +32,7 @@
         repeatSaveDc: repeat && effect.repeatSaveTiming ? effect.dc : null,
         repeatSaveTiming: repeat ? effect.repeatSaveTiming || null : null,
         repeatSaveFailureConditionId: repeat ? effect.repeatSaveFailureConditionId || null : null,
-        endsOnDamage: Boolean(effect.endsOnDamage),
+        endsOnDamage, allowedRemovalActionIds,
       });
     }
     if (!target.state.active_effect_ids.includes(conditionId)) target.state.active_effect_ids.push(conditionId);
@@ -42,11 +44,17 @@
       return { appliedCondition: null, appliedConditions: [] };
     }
     const resolved = escalation(effect, save);
-    const primary = applyOne(target, attack, effect, effect.conditionId, sourceId, round, resolved.durationRounds, true);
+    const primary = applyOne(
+      target, attack, effect, effect.conditionId, sourceId, round, resolved.durationRounds, true,
+      { endsOnDamage: effect.endsOnDamage },
+    );
     if (!primary) return { appliedCondition: null, appliedConditions: [] };
     const applied = [primary];
     for (const conditionId of resolved.conditionIds) {
-      const extra = applyOne(target, attack, effect, conditionId, sourceId, round, resolved.durationRounds, false);
+      const extra = applyOne(
+        target, attack, effect, conditionId, sourceId, round, resolved.durationRounds, false,
+        resolved.spec || {},
+      );
       if (extra) applied.push(extra);
     }
     return { appliedCondition: primary, appliedConditions: [...new Set(applied)] };
