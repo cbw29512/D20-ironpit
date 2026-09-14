@@ -70,7 +70,7 @@ def resolve_spell(
     if placement is not None:
         detail = (
             f" Area covers {len(placement.enemy_ids)} enemies and "
-            f"{len(placement.friendly_ids)} allies."
+            f"{len(placement.friendly_ids)} unprotected allies."
         )
     slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
     events = [BattleEvent(
