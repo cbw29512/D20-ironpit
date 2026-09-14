@@ -7,12 +7,21 @@
   const O = () => window.IRON_PIT_BROWSER_OFFENSE_VALUE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
+  const owns = (object, key) => Object.prototype.hasOwnProperty.call(object || {}, key);
+
+  function castAccess(caster, action, turnKey) {
+    const resources = caster.state.resources || {}, innateId = `innate-${action.id}`;
+    if (owns(resources, innateId)) return resources[innateId] > 0 ? { slotLevel: action.level, resourceId: innateId } : null;
+    const slotId = `spell-slot-${action.level}`;
+    if (owns(resources, slotId)) {
+      return C().slotSpellAvailable(caster.state, turnKey) && resources[slotId] > 0
+        ? { slotLevel: action.level, resourceId: slotId } : null;
+    }
+    return { slotLevel: action.level, resourceId: null };
+  }
 
   function slotLevel(caster, action, turnKey) {
-    if (action.level === 0) return 0;
-    if (!C().slotSpellAvailable(caster.state, turnKey)) return null;
-    const resourceId = `spell-slot-${action.level}`;
-    return (caster.state.resources?.[resourceId] || 0) > 0 ? action.level : null;
+    return castAccess(caster, action, turnKey)?.slotLevel ?? null;
   }
 
   const creatureType = (target) => (target.state.template.creature_type || "").toLowerCase();
@@ -33,14 +42,15 @@
     const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     const protectedIds = new Set(protectedAllyIds);
     for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
-      if (action.actionCost === "reaction" || action.concentration || !E().available(caster.state, action.actionCost)) continue;
-      const castLevel = slotLevel(caster, action, turnKey);
-      if (castLevel == null) continue;
+      if (action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) continue;
+      if (action.concentration && caster.state.concentration?.effect_id === action.id) continue;
+      const access = castAccess(caster, action, turnKey);
+      if (!access) continue;
       if (action.area) {
-        for (const placement of U().legalPlacements(caster, setup, action.area)) {
+        for (const placement of U().legalPlacements(caster, setup, action.area, action.range)) {
           if (placement.friendlyIds.some((id) => protectedIds.has(id))) continue;
           const score = areaScore(placement, members, action);
-          candidates.push({ action, index, score, slotLevel: castLevel,
+          candidates.push({ action, index, score, ...access,
             targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement });
         }
         continue;
@@ -49,12 +59,12 @@
         const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
         if (!placement) continue;
         const score = areaScore(placement, members, action);
-        candidates.push({ action, index, score, slotLevel: castLevel,
+        candidates.push({ action, index, score, ...access,
           targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement });
         continue;
       }
       for (const target of legalSingleTargets(caster, setup, action)) {
-        candidates.push({ action, index, score: O().saveSpell(target, action), slotLevel: castLevel,
+        candidates.push({ action, index, score: O().saveSpell(target, action), ...access,
           targetIds: [target.combatant_id], placement: null, hp: target.state.current_hp });
       }
     }
@@ -62,9 +72,9 @@
       || (a.hp ?? Number.MAX_SAFE_INTEGER) - (b.hp ?? Number.MAX_SAFE_INTEGER) || a.index - b.index);
     if (!candidates.length) return null;
     const best = candidates[0];
-    return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds,
-      placement: best.placement, expectedDamage: best.score };
+    return { action: best.action, slotLevel: best.slotLevel, resourceId: best.resourceId,
+      targetIds: best.targetIds, placement: best.placement, expectedDamage: best.score };
   }
 
-  window.IRON_PIT_BROWSER_SPELL_POLICY = { choose, slotLevel };
+  window.IRON_PIT_BROWSER_SPELL_POLICY = { castAccess, choose, slotLevel };
 })();
