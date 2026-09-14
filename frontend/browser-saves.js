@@ -92,7 +92,7 @@
     if (checkResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} resource is unavailable.`);
     if (X().targetImmune(actor, target, action)) throw new Error(`${target.state.template.name} is immune to ${action.name} from this source.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, { magicalEffect: Boolean(action.magicalEffect), againstCondition: action.failureControlEffect?.conditionId || null });
+    const save = options.precomputedSave || resolveSavingThrow(target.state, action.saveAbility, action.dc, { magicalEffect: Boolean(action.magicalEffect), againstCondition: action.failureControlEffect?.conditionId || null });
     let actionResourceRemaining = options.resourceRemaining ?? null;
     if (action.resourceId && spendResource) {
       const cost = action.resourceCost || 1;
