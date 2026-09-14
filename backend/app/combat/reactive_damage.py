@@ -18,7 +18,8 @@ def apply_melee_hit_reactive_damage(
 ) -> None:
     if not event.hit or attack.weapon.attack_kind is not WeaponAttackKind.MELEE:
         return
-    profiles = [rule for rule in defender.state.template.melee_hit_reactive_damage if distance_ft <= rule.range_ft]
+    rules = [*defender.state.template.melee_hit_reactive_damage, *defender.state.temporary_melee_hit_reactive_damage]
+    profiles = [rule for rule in rules if distance_ft <= rule.range_ft]
     if not profiles or attacker.state.is_dead:
         return
     event.actor_hp_before = attacker.state.current_hp
