@@ -34,14 +34,30 @@ def _bind_attack_abilities(row: dict) -> None:
         attack["attack_ability"] = "strength" if strength_match else "dexterity"
 
 
-def _bind_frightful_multiattack(row: dict, actions: str) -> None:
-    save_ids = {action["id"] for action in row["saving_throw_actions"]}
-    if "frightful-presence" not in save_ids: return
-    multiattack = next((paragraph for paragraph in re.findall(r"<p>(.*?)</p>", actions or "", re.I | re.S) if re.search(r"<strong>\s*Multiattack", paragraph, re.I)), "")
-    if not re.search(r"can use (?:its )?Frightful Presence", multiattack, re.I): return
+def _multiattack_paragraph(actions: str) -> str:
+    return next((
+        paragraph for paragraph in re.findall(r"<p>(.*?)</p>", actions or "", re.I | re.S)
+        if re.search(r"<strong>\s*Multiattack", paragraph, re.I)
+    ), "")
+
+
+def _bind_save_multiattack(row: dict, actions: str) -> None:
+    """Prepend printed save actions that Multiattack explicitly says to use."""
+    multiattack = _multiattack_paragraph(actions)
     slots = row.get("multiattack_slots") or []
-    if not slots or any("frightful-presence" in slot for slot in slots): return
-    row["multiattack_slots"] = [["frightful-presence"], *slots]
+    if not multiattack or not slots:
+        return
+    existing = {choice for slot in slots for choice in slot}
+    required: list[list[str]] = []
+    for action in row.get("saving_throw_actions") or []:
+        action_id = action["id"]
+        if action_id in existing:
+            continue
+        name = re.escape(action["name"])
+        if re.search(rf"\b(?:can\s+)?use(?:s)?\s+(?:its\s+)?{name}\b", multiattack, re.I):
+            required.append([action_id])
+    if required:
+        row["multiattack_slots"] = [*required, *slots]
 
 
 def _bind_multiattack_policy(row: dict, actions: str) -> None:
@@ -91,7 +107,7 @@ def enrich(source_path: Path, catalog_path: Path) -> None:
         row["regeneration"] = parse_regeneration(traits)
         _bind_attack_abilities(row)
         _bind_multiattack_policy(row, actions)
-        _bind_frightful_multiattack(row, actions)
+        _bind_save_multiattack(row, actions)
         _bind_legendary_actions(row, source.get("Legendary Actions", ""))
     catalog_path.write_text(json.dumps(catalog_rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
