@@ -34,6 +34,32 @@ Audit steps use these universal phases:
 
 A single resolved event may contain several ordered audit steps. The phase labels document when evidence belongs in the resolution chain; they do not create new mechanical timing hooks by themselves.
 
+## Source attribution schema
+
+Every mechanically relevant event must preserve the actual runtime source and ability attribution whenever a source ability exists. This attribution is evidence/display metadata, not a rules-dispatch mechanism.
+
+Required where applicable:
+
+```text
+source_combatant_id       stable runtime combatant id
+source_combatant_name     actual display name of the creature/hero
+source_ability_id         stable structured ability/effect id
+source_ability_name       actual source ability display name
+target_combatant_id       target runtime id, when applicable
+target_combatant_name     target display name, when applicable
+```
+
+The formatter should be able to produce evidence such as:
+
+```text
+Dretch uses Fetid Cloud.
+Goblin fails DC 11 Constitution save against Dretch — Fetid Cloud and becomes Poisoned.
+```
+
+The strings `Dretch` and `Fetid Cloud` identify the source for humans and audit/replay. They must never be used as hidden switches that decide which resolver or rule path executes.
+
+If several creatures use structurally similar abilities, each event still logs the actual source combatant and actual source ability name while the shared mechanic resolves from structured data.
+
 ## Roll revision schema
 
 Any mechanic that changes or compares a roll preserves both candidates:
@@ -77,6 +103,7 @@ Optional structured values may be added later, but the audit formatter must neve
 
 ## Rules-lawyer guarantees
 
+- Every mechanically relevant source ability preserves actual source combatant + source ability attribution when available.
 - Advantage/disadvantage shows every rolled d20 and the selected die.
 - Rerolls and replacements show original and replacement candidates.
 - Attack checks show the accepted total and AC.
@@ -85,4 +112,5 @@ Optional structured values may be added later, but the audit formatter must neve
 - Temporary HP and regular HP are shown as separate state transitions.
 - Conditions, concentration, resources, 0-HP state, death saves, death, victory, and draw remain explicit.
 - Missing evidence must be reported as missing; the audit layer must not invent it.
+- Source names and ability names are attribution only; mechanics resolve from structured state/data.
 - RAW/Iron Pit policy decisions should eventually carry stable rule identifiers rather than relying only on prose descriptions.
