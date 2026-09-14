@@ -15492,10 +15492,31 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 8 (1d8 + 4) bludgeoning damage with shillelagh",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
+      },
+      {
+        "id": "club-shillelagh",
+        "name": "Club",
+        "kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "average": 8,
+          "dice_count": 1,
+          "dice_size": 8,
+          "bonus": 4,
+          "type": "bludgeoning"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5
       }
     ],
     "multiattack_slots": [],
