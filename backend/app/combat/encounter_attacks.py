@@ -7,6 +7,7 @@ from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.forced_movement import push_away
 from app.combat.frenzy import mark_reckless_use_while_raging
+from app.combat.reactive_damage import apply_melee_hit_reactive_damage
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
 from app.combat.resources import action_resource_available, spend_action_resource
@@ -116,4 +117,5 @@ def resolve_encounter_attack(
         swap_redirect_positions(target, redirect)
     _apply_on_hit_push(attacker, target, attack, event, setup)
     _apply_restraint(attacker, target, attack, event, setup)
+    apply_melee_hit_reactive_damage(event, attacker, _event_target(event, target, setup), attack, distance_ft, dice, setup)
     return apply_critical_closing_move(attacker, setup, event)
