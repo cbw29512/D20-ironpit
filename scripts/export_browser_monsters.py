@@ -246,6 +246,7 @@ def _attach_monster_actions(row, template) -> None:
             if effect.excluded_creature_types: rider["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes: rider["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
             if effect.gates_ongoing_damage: rider["gatesOngoingDamage"] = True
+            if effect.swallow_on_failure: rider["swallowOnFailure"] = True
             margin = _failure_margin_row(effect.failure_margin_escalation)
             if margin: rider["failureMarginEscalation"] = margin
             if effect.zero_hp_stable:
@@ -266,9 +267,17 @@ def _attach_monster_actions(row, template) -> None:
     if template.regeneration: row["regeneration"] = {"amount": template.regeneration.amount, "requiresPositiveHp": template.regeneration.requires_positive_hp, "suppressedByDamageTypes": [item.value for item in template.regeneration.suppressed_by_damage_types], "survivesZeroUntilTurn": template.regeneration.survives_zero_until_turn}
     if template.swallow_actions:
         action = template.swallow_actions[0]
-        row["swallowAction"] = {"id": action.id, "name": action.name, "attackId": action.attack_id, "maxTargetSize": action.max_target_size.value,
+        row["swallowAction"] = {
+            "id": action.id, "name": action.name, "attackId": action.attack_id, "maxTargetSize": action.max_target_size.value,
             "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
-            "damageType": action.damage_type.value, "maxSwallowed": action.max_swallowed, "exitMovementFt": action.exit_movement_ft, "exitProne": action.exit_prone}
+            "damageType": action.damage_type.value, "maxSwallowed": action.max_swallowed,
+            "requiresExistingGrapple": action.requires_existing_grapple,
+            "regurgitationDamageThreshold": action.regurgitation_damage_threshold,
+            "regurgitationSaveAbility": action.regurgitation_save_ability,
+            "regurgitationSaveDc": action.regurgitation_save_dc,
+            "regurgitationRangeFt": action.regurgitation_range_ft,
+            "exitMovementFt": action.exit_movement_ft, "exitProne": action.exit_prone,
+        }
 
 
 def render() -> str:
