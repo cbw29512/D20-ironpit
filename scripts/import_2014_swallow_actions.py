@@ -12,6 +12,10 @@ def _plain(value: str | None) -> str:
     return re.sub(r"\s+", " ", html.unescape(text).replace("\u00ad", "")).strip()
 
 
+def _slug(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+
+
 def _regurgitation(text: str) -> tuple[int, str, int, int] | None:
     match = re.search(
         rf"takes (\d+) damage or more on a single turn from (?:the swallowed creature|a creature inside it).*?"
@@ -24,16 +28,7 @@ def _regurgitation(text: str) -> tuple[int, str, int, int] | None:
     return int(threshold), ability.lower(), int(dc), int(release_range)
 
 
-def parse_swallow_action(paragraph: str) -> dict | None:
-    """Parse the common 2014 attack-to-swallow action shape into shared data."""
-    heading = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S)
-    if heading is None or _plain(heading.group(1)).rstrip(".").lower() != "swallow":
-        return None
-    text = _plain(paragraph)
-    opener = re.search(
-        r"makes one ([A-Za-z' -]+) attack against a (Tiny|Small|Medium|Large|Huge) or smaller (?:target|creature) it is grappling",
-        text, re.I,
-    )
+def _shared_swallow_data(text: str) -> dict | None:
     acid = re.search(
         r"takes \d+ \((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\) acid damage at the start of each of the [A-Za-z' -]+['’]s turns",
         text, re.I,
@@ -45,22 +40,61 @@ def parse_swallow_action(paragraph: str) -> dict | None:
     )
     regurgitation = _regurgitation(text)
     required = (
-        re.search(r"(?:the target|that creature|the creature).*?is swallowed, and the grapple ends", text, re.I),
         re.search(r"blinded and restrained", text, re.I),
         re.search(r"total cover against attacks and other effects outside", text, re.I),
     )
-    if opener is None or acid is None or release is None or regurgitation is None or not all(required):
+    if acid is None or release is None or regurgitation is None or not all(required):
         return None
-    attack_name, max_size = opener.groups(); count, size, sign, bonus = acid.groups()
+    count, size, sign, bonus = acid.groups()
     threshold, ability, dc, release_range = regurgitation
-    modifier = int(bonus or 0) * (-1 if sign == "-" else 1)
-    attack_id = re.sub(r"[^a-z0-9]+", "-", attack_name.lower()).strip("-")
     return {
-        "id": "swallow", "name": "Swallow", "attack_id": attack_id,
-        "max_target_size": max_size.lower(), "damage_dice_count": int(count),
-        "damage_dice_size": int(size), "damage_bonus": modifier, "damage_type": "acid",
+        "damage_dice_count": int(count), "damage_dice_size": int(size),
+        "damage_bonus": int(bonus or 0) * (-1 if sign == "-" else 1), "damage_type": "acid",
         "max_swallowed": 1 if capacity is not None else None,
         "regurgitation_damage_threshold": threshold, "regurgitation_save_ability": ability,
         "regurgitation_save_dc": dc, "regurgitation_range_ft": release_range,
         "exit_movement_ft": int(release.group(1)), "exit_prone": True,
+    }
+
+
+def parse_swallow_action(paragraph: str) -> dict | None:
+    """Parse the common grapple-then-attack 2014 Swallow action shape."""
+    heading = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S)
+    if heading is None or _plain(heading.group(1)).rstrip(".").lower() != "swallow":
+        return None
+    text = _plain(paragraph)
+    opener = re.search(
+        r"makes one ([A-Za-z' -]+) attack against a (Tiny|Small|Medium|Large|Huge) or smaller (?:target|creature) it is grappling",
+        text, re.I,
+    )
+    shared = _shared_swallow_data(text)
+    if opener is None or shared is None or not re.search(
+        r"(?:the target|that creature|the creature).*?is swallowed, and the grapple ends", text, re.I,
+    ):
+        return None
+    attack_name, max_size = opener.groups()
+    return {
+        "id": "swallow", "name": "Swallow", "attack_id": _slug(attack_name),
+        "max_target_size": max_size.lower(), "requires_existing_grapple": True, **shared,
+    }
+
+
+def parse_on_hit_swallow_attack(paragraph: str) -> dict | None:
+    """Parse an ordinary attack whose hit rider swallows on a failed saving throw."""
+    heading = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S)
+    if heading is None:
+        return None
+    text = _plain(paragraph)
+    rider = re.search(
+        rf"If the target is a (Tiny|Small|Medium|Large|Huge) or smaller creature, it must succeed on a DC (\d+) ({_ABILITIES}) saving throw or be swallowed",
+        text, re.I,
+    )
+    shared = _shared_swallow_data(text)
+    if rider is None or shared is None:
+        return None
+    max_size, dc, ability = rider.groups()
+    return {
+        "id": "swallow", "name": "Swallow", "attack_id": _slug(_plain(heading.group(1)).rstrip(".")),
+        "max_target_size": max_size.lower(), "requires_existing_grapple": False,
+        "on_hit_save_ability": ability.lower(), "on_hit_save_dc": int(dc), **shared,
     }
