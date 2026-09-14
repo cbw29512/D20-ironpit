@@ -7,7 +7,7 @@
   const D = () => window.IRON_PIT_DICE;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
-  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const CND = () => window.IRON_PIT_BROWSER_ON_HIT_SAVE_CONDITIONS;
 
   function eligible(state, effect) {
     const type = String(state.template.creature_type || "").toLowerCase();
@@ -73,35 +73,17 @@
     const effect = attack.onHitSaveEffect;
     if (!effect || !target.state.is_alive || target.state.is_dead || !eligible(target.state, effect)) return null;
     if (effect.maxTargetSize && !ST().sizeAtMost(target, effect.maxTargetSize)) return null;
-    if (!S()) throw new Error("Browser saving-throw runtime is not loaded.");
+    if (!S() || !CND()) throw new Error("Browser on-hit save dependencies are not loaded.");
     const save = S().resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { againstCondition: effect.conditionId || null });
     const damage = saveDamage(target, effect, save.succeeded, setup);
     const appliedConditions = stableZeroHp(target, attack, effect, sourceId, round, damage.total);
     const maxHp = effect.maxHpReductionEqualsDamageTaken && !save.succeeded && target.state.is_alive && !target.state.is_dead
       ? reduceMaxHp(target, triggeringDamageTotal, Boolean(effect.zeroMaxHpKills)) : { reduction: 0, before: ST().effectiveMaxHp(target.state), after: ST().effectiveMaxHp(target.state) };
-    let appliedCondition = null;
-    if (effect.conditionId && !save.succeeded && target.state.is_alive && !target.state.is_dead && !I().immune(target.state, effect.conditionId)) {
-      const timed = Boolean(effect.durationRounds || effect.repeatSaveTiming || effect.endsOnDamage);
-      if (timed) {
-        if (!sourceId || round === null || !T()) throw new Error("Timed on-hit save effect lacks browser source context.");
-        appliedCondition = T().apply(target.state, effect.conditionId, sourceId, {
-          sourceEffectId: attack.id, appliedRound: round,
-          expiresRound: effect.durationRounds ? round + effect.durationRounds : null,
-          repeatSaveAbility: effect.repeatSaveTiming ? effect.saveAbility : null,
-          repeatSaveDc: effect.repeatSaveTiming ? effect.dc : null,
-          repeatSaveTiming: effect.repeatSaveTiming || null,
-          repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
-          endsOnDamage: Boolean(effect.endsOnDamage),
-        });
-      } else {
-        if (!target.state.active_effect_ids.includes(effect.conditionId)) target.state.active_effect_ids.push(effect.conditionId);
-        appliedCondition = effect.conditionId;
-      }
-      if (appliedCondition) appliedConditions.push(appliedCondition);
-    }
+    const failed = CND().applyFailure(target, attack, effect, save, sourceId, round);
+    appliedConditions.push(...failed.appliedConditions);
     const pushedFt = failedSavePush(target, effect, sourceId, save.succeeded, setup);
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc, saveSucceeded: save.succeeded,
-      appliedCondition, appliedConditions: [...new Set(appliedConditions)], damageTotal: damage.total, damageComponent: damage.component,
+      appliedCondition: failed.appliedCondition, appliedConditions: [...new Set(appliedConditions)], damageTotal: damage.total, damageComponent: damage.component,
       pushedFt, maxHpReduction: maxHp.reduction, maxHpBefore: maxHp.before, maxHpAfter: maxHp.after };
   }
 
