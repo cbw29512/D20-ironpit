@@ -45,6 +45,7 @@ def test_environment_only_mechanics_can_fully_unlock_monsters() -> None:
     try:
         assert _blockers("Nightmare") == []
         assert _blockers("Giant Octopus") == []
+        assert _blockers("Ice Devil") == []
     except Exception as exc:
         raise AssertionError("Arena-only blockers still prevent otherwise runnable monsters.") from exc
 
