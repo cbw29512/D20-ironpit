@@ -20,6 +20,7 @@ from app.domain.combatants import (
     WeaponAttack,
     WeaponAttackKind,
 )
+from app.domain.death_triggers import DeathTriggeredSaveEffect
 from app.domain.encounters import (
     EncounterBattleResult,
     EncounterCombatant,
@@ -70,6 +71,7 @@ __all__ = [
     "ConditionalDamage",
     "DamageRollComponent",
     "DamageType",
+    "DeathTriggeredSaveEffect",
     "DemoRoster",
     "DiceRoll",
     "EncounterBattleResult",
