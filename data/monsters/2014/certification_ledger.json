@@ -1,10 +1,10 @@
 {
-  "blocked_count": 101,
+  "blocked_count": 100,
   "blocker_families": {
     "action": 60,
     "attack-detail": 48,
     "legendary": 25,
-    "reaction": 3,
+    "reaction": 2,
     "spell": 51,
     "trait": 67
   },
@@ -110,7 +110,6 @@
     "legendary:Tentacle Attack or Fling": 1,
     "legendary:Whirlwind of Sand": 1,
     "legendary:no-parsed-options": 4,
-    "reaction:Rock Catching": 1,
     "reaction:Spell Reflection": 1,
     "reaction:Unnerving Mask": 1,
     "spell:acid arrow": 1,
@@ -2418,11 +2417,9 @@
     {
       "id": "stone-giant",
       "name": "Stone Giant",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "reaction:Rock Catching"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "stone-golem",
@@ -2854,7 +2851,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 226,
+  "ready_count": 227,
   "ruleset": "2014",
   "schema_version": 1
 }
