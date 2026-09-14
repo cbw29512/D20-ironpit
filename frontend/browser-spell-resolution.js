@@ -42,7 +42,7 @@
     E().spend(caster.state, spell.actionCost);
 
     const placement = choice.placement;
-    const detail = placement ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} allies.` : "";
+    const detail = placement ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.` : "";
     const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
     const events = [{
       sequence: sequence++, round_number: round, event_type: "feature",
