@@ -3,10 +3,12 @@ from __future__ import annotations
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveAction
+from app.domain.targeting import AreaTargeting
 
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
-    "disintegrate", "fire-bolt", "fireball", "guiding-bolt", "magic-missile",
-    "inflict-wounds", "produce-flame", "ray-of-frost", "sacred-flame", "shocking-grasp",
+    "cone-of-cold", "disintegrate", "fire-bolt", "fireball", "guiding-bolt",
+    "inflict-wounds", "lightning-bolt", "magic-missile", "produce-flame",
+    "ray-of-frost", "sacred-flame", "shocking-grasp",
 })
 
 
@@ -43,14 +45,29 @@ def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> S
         return SpellSaveAction(
             id=spell_id, name="Sacred Flame", level=0, range_ft=60,
             save_ability="dexterity", dc=save_dc, damage_dice_count=_cantrip_dice(caster_level),
-            damage_dice_size=8, damage_type="radiant", success_damage="none",
-            animation=spell_id,
+            damage_dice_size=8, damage_type="radiant", success_damage="none", animation=spell_id,
         )
     if spell_id == "fireball":
         return SpellSaveAction(
             id=spell_id, name="Fireball", level=level, range_ft=150, area_radius_ft=20,
             save_ability="dexterity", dc=save_dc, damage_dice_count=8,
             damage_dice_size=6, damage_type="fire", success_damage="half",
+            upcast_dice_per_level=1, animation=spell_id,
+        )
+    if spell_id == "cone-of-cold":
+        return SpellSaveAction(
+            id=spell_id, name="Cone of Cold", level=level, range_ft=0,
+            area=AreaTargeting(shape="cone", origin="self", length_ft=60),
+            save_ability="constitution", dc=save_dc, damage_dice_count=8,
+            damage_dice_size=8, damage_type="cold", success_damage="half",
+            upcast_dice_per_level=1, animation=spell_id,
+        )
+    if spell_id == "lightning-bolt":
+        return SpellSaveAction(
+            id=spell_id, name="Lightning Bolt", level=level, range_ft=0,
+            area=AreaTargeting(shape="line", origin="self", length_ft=100, width_ft=5),
+            save_ability="dexterity", dc=save_dc, damage_dice_count=8,
+            damage_dice_size=6, damage_type="lightning", success_damage="half",
             upcast_dice_per_level=1, animation=spell_id,
         )
     return SpellSaveAction(
@@ -82,12 +99,13 @@ def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[
     attack_actions: list[SpellAttackAction] = []
     save_actions: list[SpellSaveAction] = []
     automatic_actions: list[AutomaticDamageSpellAction] = []
+    save_ids = {"sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt"}
     for spell in profile.spells:
         if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014:
             continue
         if spell.id == "magic-missile":
             automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
-        if spell.id in {"sacred-flame", "fireball", "disintegrate"}:
+        if spell.id in save_ids:
             if profile.save_dc is not None:
                 save_actions.append(_save_spell(spell.id, spell.level, profile.save_dc, profile.caster_level))
             continue
