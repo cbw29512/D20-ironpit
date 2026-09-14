@@ -7,6 +7,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, forced_movement_choice, save_choice, slot_has_legal_choice, use_ranged_split
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
+from app.combat.death_triggers import resolve_event_death_triggers
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import close_ranged_threat_exists
@@ -67,11 +68,14 @@ def resolve_attack_action(
                 or prefer_save_replacement(attacker, chosen_save[0], chosen_save[1])
             ):
                 target, save_action, distance = chosen_save
-                events.append(resolve_save_action(
+                event = resolve_save_action(
                     sequence, round_number, attacker, target, save_action,
                     distance, dice, spend_action=False, affected_states=affected_states, setup=setup,
-                ))
+                )
+                events.append(event)
                 sequence += 1
+                triggered, sequence = resolve_event_death_triggers(sequence, round_number, event, setup, dice)
+                events.extend(triggered)
                 continue
             if chosen_attack is not None:
                 target, attack, distance = chosen_attack
@@ -87,7 +91,9 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 sequence += 1
-                if attacker.state.turn_terminated:
+                triggered, sequence = resolve_event_death_triggers(sequence, round_number, event, setup, dice)
+                events.extend(triggered)
+                if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                     break
                 cleave, sequence = resolve_cleave_extra_attack(
                     sequence, round_number, attacker, event, attack, setup, dice, turn_key,
