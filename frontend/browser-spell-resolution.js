@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
   const SR = () => window.IRON_PIT_BROWSER_SPELL_REFLECTION;
   const dimension = (area, camel, snake) => area?.[camel] ?? area?.[snake] ?? 0;
   const creatureType = (target) => (target.state.template.creature_type || "").toLowerCase();
@@ -25,8 +26,7 @@
       range: effectReach(spell), damageDiceCount: spell.damageDiceCount,
       damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
       damageType: spell.damageType, successDamage: spell.successDamage || "none",
-      failurePushFt: spell.failurePushFt || 0,
-      magicalEffect: true, animation: spell.animation || "spell-save",
+      failurePushFt: spell.failurePushFt || 0, magicalEffect: true, animation: spell.animation || "spell-save",
     };
   }
 
@@ -41,32 +41,37 @@
     return Array(spell.damageDiceCount || 0).fill(spell.damageDiceSize);
   }
 
+  function spendResource(caster, choice, turnKey) {
+    if (!choice.resourceId) return null;
+    if (!(caster.state.resources?.[choice.resourceId] > 0)) throw new Error(`No ${choice.resourceId} resource remains.`);
+    if (choice.resourceId.startsWith("spell-slot-")) C().markSlotSpellCast(caster.state, turnKey);
+    caster.state.resources[choice.resourceId] -= 1;
+    return caster.state.resources[choice.resourceId];
+  }
+
+  function resourceText(choice) {
+    if (!choice.resourceId) return choice.slotLevel === 0 ? "cantrip" : "at-will spell";
+    return choice.resourceId.startsWith("innate-") ? "innate spell use" : `level ${choice.slotLevel} slot`;
+  }
+
   function resolve(sequence, round, caster, setup, choice, turnKey) {
     const spell = choice.action;
     if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
     if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
-
-    let remaining = null;
-    if (choice.slotLevel > 0) {
-      const resourceId = `spell-slot-${choice.slotLevel}`;
-      if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
-      C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1;
-      remaining = caster.state.resources[resourceId];
-    }
-    E().spend(caster.state, spell.actionCost);
-
+    const remaining = spendResource(caster, choice, turnKey); E().spend(caster.state, spell.actionCost);
+    const memberList = [...setup.heroes, ...setup.monsters], states = memberList.map((member) => member.state);
+    SM().startSave(caster.state, caster.combatant_id, spell, round, states);
     const placement = choice.placement;
     const detail = placement ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.` : "";
-    const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
     const events = [{
       sequence: sequence++, round_number: round, event_type: "feature",
       actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       feature_id: spell.id, resource_remaining: remaining, animation: spell.animation || "spell-save",
-      description: `${caster.state.template.name} casts ${spell.name} using a ${slotText}.${detail}`,
+      concentration_started_effect_id: spell.concentration ? spell.id : null,
+      description: `${caster.state.template.name} casts ${spell.name} using a ${resourceText(choice)}.${detail}`,
     }];
-
-    const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+    const members = new Map(memberList.map((member) => [member.combatant_id, member]));
     const action = saveAction(choice), reflectable = !spell.area && !spell.areaRadius && choice.targetIds.length === 1;
     let sharedDamageRolls = null;
     for (const targetId of choice.targetIds) {
@@ -84,11 +89,12 @@
       if (!spellAffects(spell, target)) continue;
       if (!precomputedSave) precomputedSave = targetSave(spell, target, action);
       const maximized = targetDamageRolls(spell, target), damageRolls = maximized || sharedDamageRolls;
-      const event = V().resolveAction(
-        sequence++, round, caster, target, action,
+      const event = V().resolveAction(sequence++, round, caster, target, action,
         placement || reflectedFrom ? 0 : S().distance(caster, target),
-        { spendAction: false, sharedDamageRolls: damageRolls, precomputedSave, setup },
-      );
+        { spendAction: false, sharedDamageRolls: damageRolls, precomputedSave, setup });
+      if (event.save_succeeded === false && spell.failureModifierEffects?.length) {
+        SM().applyFailedSave(target.combatant_id, target.state, caster.combatant_id, spell, round);
+      }
       if (reflectedFrom) event.description = `${reflectedFrom.state.template.name} uses Spell Reflection; ${spell.name} targets ${target.state.template.name} instead. ${event.description}`;
       events.push(event);
       if (!maximized && sharedDamageRolls == null && event.damage_components?.length) sharedDamageRolls = [...event.damage_components[0].rolls];
