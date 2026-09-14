@@ -76,5 +76,17 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_DEATH_TRIGGERS = { resolve };
+  function afterEvent(sequence, round, event, setup) {
+    try {
+      if (!event.target_id) return { events: [], sequence };
+      const target = [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === event.target_id);
+      if (!target?.state.is_dead || !(target.state.template.death_trigger_effects || []).length) return { events: [], sequence };
+      return resolve(sequence, round, target, setup);
+    } catch (error) {
+      console.error("Failed browser death-trigger event dispatch", { sequence, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_DEATH_TRIGGERS = { resolve, afterEvent };
 })();
