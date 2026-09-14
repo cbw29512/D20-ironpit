@@ -37,8 +37,9 @@ def parse_ongoing_damage(text: str, attack: dict) -> tuple[dict | None, dict | N
         }
         residual = f"{text[:infernal.start()]} {text[infernal.end():]}".strip(" .,;")
         return ongoing, save, residual
+    control = attack.get("control_effect") or {}
     grapple = _GRAPPLE_DAMAGE.search(text)
-    if grapple and attack.get("control_effect", {}).get("grapple_escape_dc"):
+    if grapple and control.get("grapple_escape_dc"):
         count, size, sign, bonus, damage_type = grapple.groups(); damage_type = damage_type.lower()
         if damage_type not in _DAMAGE_TYPES: return None, None, text
         modifier = int(bonus or 0) * (-1 if sign in {"-", "−"} else 1)

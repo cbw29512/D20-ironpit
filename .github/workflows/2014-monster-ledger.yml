@@ -24,6 +24,8 @@ jobs:
       - name: Install Iron Pit rules engine
         working-directory: backend
         run: pip install -e '.[dev]'
+      - name: Regenerate pinned 2014 catalog
+        run: python scripts/sync_2014_monster_catalog.py
       - name: Rescan all 2014 monsters
         run: python scripts/export_2014_monster_ledger.py
       - name: Print blocker yield
@@ -34,19 +36,19 @@ jobs:
           name: 2014-monster-certification-ledger-${{ github.sha }}
           path: data/monsters/2014/certification_ledger.json
           retention-days: 7
-      - name: Persist refreshed ledger
+      - name: Persist refreshed catalog and ledger
         if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
         run: |
-          if ! git diff --quiet -- data/monsters/2014/certification_ledger.json || \
-             test -n "$(git status --porcelain --untracked-files=all -- data/monsters/2014/certification_ledger.json)"; then
+          if ! git diff --quiet -- data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json || \
+             test -n "$(git status --porcelain --untracked-files=all -- data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json)"; then
             git config user.name "iron-pit-certification-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/monsters/2014/certification_ledger.json
-            git commit -m "certification: refresh 2014 monster ledger"
+            git add data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json
+            git commit -m "certification: refresh 2014 catalog and monster ledger"
             TARGET_BRANCH="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
             git push origin "HEAD:${TARGET_BRANCH}"
           fi
-      - name: Enforce refreshed ledger parity
+      - name: Enforce refreshed catalog and ledger parity
         run: |
-          git diff --exit-code -- data/monsters/2014/certification_ledger.json
-          test -z "$(git status --porcelain --untracked-files=all -- data/monsters/2014/certification_ledger.json)"
+          git diff --exit-code -- data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json
+          test -z "$(git status --porcelain --untracked-files=all -- data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json)"
