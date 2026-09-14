@@ -43,6 +43,7 @@ class OnHitSaveEffect(BaseModel):
     damage_bonus: int = 0
     damage_type: str | None = None
     success_damage: Literal["none", "half"] = "none"
+    gates_ongoing_damage: bool = False
     max_hp_reduction_equals_damage_taken: bool = False
     zero_max_hp_kills: bool = False
     zero_hp_stable: bool = False
@@ -55,8 +56,8 @@ class OnHitSaveEffect(BaseModel):
             raise ValueError("On-hit forced movement must use 5-foot increments.")
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("On-hit save damage requires a damage type.")
-        if self.condition_id is None and self.damage_dice_count == 0 and self.failure_push_ft == 0 and not self.max_hp_reduction_equals_damage_taken:
-            raise ValueError("On-hit save effect requires a condition, damage, forced movement, or max-HP reduction.")
+        if self.condition_id is None and self.damage_dice_count == 0 and self.failure_push_ft == 0 and not self.max_hp_reduction_equals_damage_taken and not self.gates_ongoing_damage:
+            raise ValueError("On-hit save effect requires a condition, damage, forced movement, max-HP reduction, or ongoing-effect gate.")
         if self.failure_margin_escalation is not None and self.condition_id is None:
             raise ValueError("Failure-margin escalation requires a primary failed-save condition.")
         if self.zero_max_hp_kills and not self.max_hp_reduction_equals_damage_taken:

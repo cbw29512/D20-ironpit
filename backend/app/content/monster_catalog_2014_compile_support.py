@@ -97,6 +97,10 @@ def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAtta
             update["conditional_attack_advantage"] = _unique_advantage(advantage)
         if source_attack is not None and source_attack.grapple_target_policy != "normal":
             update["grapple_target_policy"] = source_attack.grapple_target_policy
+        if source_attack is not None and source_attack.ongoing_damage_effect is not None:
+            update["ongoing_damage_effect"] = source_attack.ongoing_damage_effect
+        if source_attack is not None and source_attack.on_hit_save_effect is not None:
+            update["on_hit_save_effect"] = source_attack.on_hit_save_effect
         if attack.id in source.limited_action_uses and attack.resource_id is None:
             update["resource_id"] = attack.id
             update["resource_cost"] = 1

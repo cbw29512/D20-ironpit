@@ -5,6 +5,7 @@ from app.combat.bloodied import is_bloodied
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.start_turn_damage import clear_magical_healing
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
@@ -107,13 +108,14 @@ def resolve_healing(
     rolls = [dice.roll(action.dice_size) for _ in range(action.dice_count)]
     total = sum(rolls) + action.healing_bonus
     hp_before = target.state.current_hp; healed = restore_hit_points(target.state, total)
-    removed = _remove_conditions(target, action)
+    removed = _remove_conditions(target, action); closed = clear_magical_healing(target.state) if healed else []
     remaining = None
     if action.resource_id is not None:
         resource = next(item for item in healer.state.resources if item.id == action.resource_id)
         resource.current_uses -= action.resource_cost; remaining = resource.current_uses
     notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}" if action.dice_count else str(action.healing_bonus)
     cleanse = f" and removes {', '.join(removed)}" if removed else ""
+    closure = f" and closes {', '.join(closed)}" if closed else ""
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="healing",
         actor_id=healer.combatant_id, actor_name=healer.state.template.name,
@@ -123,5 +125,5 @@ def resolve_healing(
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead,
         feature_id=action.id, resource_remaining=remaining, animation=action.animation,
-        description=f"{healer.state.template.name} uses {action.name} on {target.state.template.name}, restores {healed} HP{cleanse}.",
+        description=f"{healer.state.template.name} uses {action.name} on {target.state.template.name}, restores {healed} HP{cleanse}{closure}.",
     )

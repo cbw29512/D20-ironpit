@@ -8,6 +8,7 @@ from app.combat.dice import DiceProvider
 from app.combat.max_hp import reduce_max_hp
 from app.combat.save_failure_margin import failure_margin_conditions_and_duration
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.start_turn_damage import apply_on_hit_ongoing_damage, should_skip_on_hit_save
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, WeaponAttack
@@ -92,7 +93,12 @@ def resolve_on_hit_save(
     triggering_damage_total: int = 0,
 ) -> OnHitSaveResolution:
     effect = attack.on_hit_save_effect
-    if effect is None or defender.is_dead or not defender.is_alive or not _eligible(defender, effect): return OnHitSaveResolution()
+    if source_id is not None and should_skip_on_hit_save(defender, attack, source_id):
+        apply_on_hit_ongoing_damage(defender, attack, source_id, None); return OnHitSaveResolution()
+    if effect is None:
+        if source_id is not None: apply_on_hit_ongoing_damage(defender, attack, source_id, None)
+        return OnHitSaveResolution()
+    if defender.is_dead or not defender.is_alive or not _eligible(defender, effect): return OnHitSaveResolution()
     if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size): return OnHitSaveResolution()
     roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice, against_condition=effect.condition_id)
     margin_conditions, duration_rounds = failure_margin_conditions_and_duration(effect, roll, succeeded, dice)
@@ -117,6 +123,7 @@ def resolve_on_hit_save(
                     allowed_removal_action_ids=escalation.allowed_removal_action_ids if escalation else [],
                 )
                 if result: escalated.append(result)
+    if source_id is not None: apply_on_hit_ongoing_damage(defender, attack, source_id, succeeded)
     all_conditions = [*zero_hp_conditions, *([applied] if applied else []), *escalated]
     return OnHitSaveResolution(
         save_roll=roll, save_ability=effect.save_ability, save_dc=effect.dc, save_succeeded=succeeded,

@@ -24,6 +24,7 @@ from app.combat.regeneration import resolve_start_turn as resolve_regeneration
 from app.combat.resources import resolve_start_turn_recharges
 from app.combat.saving_throws import resolve_save_action
 from app.combat.standard_attack_action import resolve_standard_attack_action
+from app.combat.start_turn_damage import resolve_start_turn_ongoing_damage
 from app.combat.state import begin_turn
 from app.combat.swallow import cleanup_swallowed, resolve_start_turn_damage
 from app.combat.tactical_shift import resolve_tactical_shift
@@ -43,6 +44,7 @@ def resolve_combat_turn(
         cleanup_swallowed(setup)
         swallow_events, sequence = resolve_start_turn_damage(sequence, round_number, attacker, setup, dice)
         events.extend(swallow_events)
+        ongoing_events, sequence = resolve_start_turn_ongoing_damage(sequence, round_number, attacker, setup, dice); events.extend(ongoing_events)
         regen_event, regen_death = resolve_regeneration(sequence, round_number, attacker.combatant_id, attacker.state)
         if regen_event is not None:
             events.append(regen_event); sequence += 1

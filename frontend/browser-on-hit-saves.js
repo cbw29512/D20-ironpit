@@ -8,6 +8,7 @@
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const CND = () => window.IRON_PIT_BROWSER_ON_HIT_SAVE_CONDITIONS;
+  const OD = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
 
   function eligible(state, effect) {
     const type = String(state.template.creature_type || "").toLowerCase();
@@ -71,7 +72,9 @@
 
   function resolve(target, attack, sourceId = null, round = null, setup = null, triggeringDamageTotal = 0) {
     const effect = attack.onHitSaveEffect;
-    if (!effect || !target.state.is_alive || target.state.is_dead || !eligible(target.state, effect)) return null;
+    if (sourceId && OD()?.shouldSkipSave(target.state, attack, sourceId)) { OD().applyOnHit(target.state, attack, sourceId, null); return null; }
+    if (!effect) { if (sourceId) OD()?.applyOnHit(target.state, attack, sourceId, null); return null; }
+    if (!target.state.is_alive || target.state.is_dead || !eligible(target.state, effect)) return null;
     if (effect.maxTargetSize && !ST().sizeAtMost(target, effect.maxTargetSize)) return null;
     if (!S() || !CND()) throw new Error("Browser on-hit save dependencies are not loaded.");
     const save = S().resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { againstCondition: effect.conditionId || null });
@@ -82,6 +85,7 @@
     const failed = CND().applyFailure(target, attack, effect, save, sourceId, round);
     appliedConditions.push(...failed.appliedConditions);
     const pushedFt = failedSavePush(target, effect, sourceId, save.succeeded, setup);
+    if (sourceId) OD()?.applyOnHit(target.state, attack, sourceId, save.succeeded);
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc, saveSucceeded: save.succeeded,
       appliedCondition: failed.appliedCondition, appliedConditions: [...new Set(appliedConditions)], damageTotal: damage.total, damageComponent: damage.component,
       pushedFt, maxHpReduction: maxHp.reduction, maxHpBefore: maxHp.before, maxHpAfter: maxHp.after };
@@ -99,7 +103,7 @@
     attackRuntime.resolveAttack = (...args) => {
       const event = original(...args), attack = args[4], extra = args[6] || {};
       const target = actualTarget(args[3], extra.setup, event.target_id);
-      if (!event.hit || !attack.onHitSaveEffect) return event;
+      if (!event.hit || (!attack.onHitSaveEffect && !attack.ongoingDamageEffect)) return event;
       const triggeringDamageTotal = (event.damage_components || []).reduce((sum, part) => sum + (part.applied_total || 0), 0);
       const result = resolve(target, attack, args[2].combatant_id, args[1], extra.setup, triggeringDamageTotal);
       if (!result) return event;

@@ -61,6 +61,17 @@
     return outcome;
   }
 
+  function applyHitPointLoss(state, amount) {
+    if (amount < 0) throw new Error("Hit-point loss cannot be negative.");
+    if (!amount || state.is_dead || state.current_hp === 0) return "unchanged";
+    const before = state.current_hp; state.current_hp = Math.max(0, before - amount);
+    if (state.current_hp > 0) return "damaged";
+    if (R()?.holdsAtZero(state)) { holdForRegeneration(state); return "regeneration_hold"; }
+    if (state.template.kind === "monster") { markDead(state); return "dead"; }
+    if (useRelentless(state, Math.max(0, amount - before))) return "relentless_endurance";
+    markUnconscious(state); return "unconscious";
+  }
+
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
@@ -87,5 +98,5 @@
     markUnconscious(state); return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyHitPointLoss };
 })();

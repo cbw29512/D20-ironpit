@@ -78,6 +78,18 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
     return healed
 
 
+def apply_hit_point_loss(state: CombatantState, amount: int) -> ZeroHpOutcome:
+    """Apply RAW hit-point loss without treating it as damage or consuming temporary HP."""
+    if amount < 0: raise ValueError("Hit-point loss cannot be negative.")
+    if amount == 0 or state.is_dead or state.current_hp == 0: return "unchanged"
+    before = state.current_hp; state.current_hp = max(0, before - amount)
+    if state.current_hp > 0: return "damaged"
+    if holds_at_zero(state): return _hold_for_regeneration(state)
+    if state.template.kind == "monster": return _mark_dead(state)
+    if use_relentless_endurance(state, max(0, amount - before)): return "relentless_endurance"
+    return _mark_unconscious(state)
+
+
 def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
     if holds_at_zero(state): return _hold_for_regeneration(state)
     if state.template.kind == "monster" or incoming >= effective_max_hp(state): return _mark_dead(state)

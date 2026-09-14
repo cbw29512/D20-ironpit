@@ -9,6 +9,7 @@ from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.on_hit_saves import OnHitSaveEffect
+from app.domain.ongoing_damage import OngoingDamageEffect
 from app.domain.regeneration import RegenerationProfile
 from app.domain.restraints import BreakableRestraint
 from app.domain.size import CreatureSize
@@ -34,6 +35,7 @@ class CatalogAttack2014(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
     on_hit_save_effect: OnHitSaveEffect | None = None
+    ongoing_damage_effect: OngoingDamageEffect | None = None
     control_effect: HitControlEffect | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)

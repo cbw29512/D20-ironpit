@@ -156,6 +156,18 @@ def _failure_margin_row(spec):
     return row
 
 
+def _ongoing_damage_row(effect):
+    if effect is None: return None
+    row = {
+        "id": effect.id, "name": effect.name, "diceCount": effect.dice_count, "diceSize": effect.dice_size,
+        "damageBonus": effect.damage_bonus, "damageType": effect.damage_type, "applyOn": effect.apply_on,
+        "stacksOnReapply": effect.stacks_on_reapply, "endsOnMagicalHealing": effect.ends_on_magical_healing,
+        "endsWhenGrappleSourceEnds": effect.ends_when_grapple_source_ends,
+    }
+    if effect.removal_ability: row.update(removalAbility=effect.removal_ability, removalSkill=effect.removal_skill, removalDc=effect.removal_dc)
+    return row
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -209,11 +221,14 @@ def _attach_monster_actions(row, template) -> None:
         if restraint: attack_row["breakableRestraint"] = restraint
         if attack.attack_ability is not None: attack_row["attackAbility"] = attack.attack_ability
         if attack.attack_ability_modifier is not None: attack_row["attackAbilityModifier"] = attack.attack_ability_modifier
+        ongoing = _ongoing_damage_row(attack.ongoing_damage_effect)
+        if ongoing: attack_row["ongoingDamageEffect"] = ongoing
         if effect:
             rider = attack_row.setdefault("onHitSaveEffect", {})
             if effect.failure_push_ft: rider["failurePushFt"] = effect.failure_push_ft
             if effect.excluded_creature_types: rider["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes: rider["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
+            if effect.gates_ongoing_damage: rider["gatesOngoingDamage"] = True
             margin = _failure_margin_row(effect.failure_margin_escalation)
             if margin: rider["failureMarginEscalation"] = margin
             if effect.zero_hp_stable:

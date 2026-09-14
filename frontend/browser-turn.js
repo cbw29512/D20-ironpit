@@ -7,7 +7,7 @@
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, R = () => window.IRON_PIT_BROWSER_REGENERATION;
-  const RP = () => window.IRON_PIT_BROWSER_RAMPAGE, W = () => window.IRON_PIT_BROWSER_SWALLOW;
+  const RP = () => window.IRON_PIT_BROWSER_RAMPAGE, W = () => window.IRON_PIT_BROWSER_SWALLOW, STD = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, INV = () => window.IRON_PIT_BROWSER_INVISIBILITY, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const GZ = () => window.IRON_PIT_BROWSER_GAZE, D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
@@ -64,6 +64,7 @@
     const events = []; H().cleanup(setup); W()?.cleanup(setup);
     const swallowed = W()?.startTurn(sequence, round, member, setup);
     if (swallowed) { events.push(...swallowed.events); sequence = swallowed.sequence; }
+    const ongoing = STD()?.ongoingStartTurn(sequence, round, member, setup); if (ongoing) { events.push(...ongoing.events); sequence = ongoing.sequence; }
     const regen = R()?.startTurn(sequence, round, member);
     if (regen?.event) { events.push(regen.event); sequence += 1; }
     if (regen?.died) return { events, sequence };

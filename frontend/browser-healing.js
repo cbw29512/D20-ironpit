@@ -4,6 +4,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const OD = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
   const bloodied = (state) => state.current_hp * 2 <= S().effectiveMaxHp(state);
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const swarm = (state) => state.template.traits?.includes("swarm");
@@ -87,9 +88,10 @@
     const rolls = Array.from({ length: action.diceCount || 0 }, () => window.IRON_PIT_DICE.roll(action.diceSize || 6));
     const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
     const hpBefore = target.state.current_hp, healed = restore(target.state, total), removed = removeConditions(target, action);
+    const closed = healed ? (OD()?.clearMagicalHealing(target.state) || []) : [];
     let remaining = null;
     if (action.resourceId) { healer.state.resources[action.resourceId] -= action.resourceCost || 1; remaining = healer.state.resources[action.resourceId]; }
-    const cleanse = removed.length ? ` and removes ${removed.join(", ")}` : "";
+    const cleanse = removed.length ? ` and removes ${removed.join(", ")}` : "", closure = closed.length ? ` and closes ${closed.join(", ")}` : "";
     return {
       sequence, round_number: round, event_type: "healing", actor_id: healer.combatant_id, actor_name: healer.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name,
@@ -97,7 +99,7 @@
       hp_before: hpBefore, hp_after: target.state.current_hp, death_save_successes: target.state.death_save_successes,
       death_save_failures: target.state.death_save_failures, is_stable: target.state.is_stable, is_dead: target.state.is_dead,
       feature_id: action.id, resource_remaining: remaining, animation: action.animation || "healing",
-      description: `${healer.state.template.name} uses ${action.name} on ${target.state.template.name}, restores ${healed} HP${cleanse}.`,
+      description: `${healer.state.template.name} uses ${action.name} on ${target.state.template.name}, restores ${healed} HP${cleanse}${closure}.`,
     };
   }
 

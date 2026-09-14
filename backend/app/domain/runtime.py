@@ -8,6 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, ConditionTiming, Grap
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
+from app.domain.ongoing_damage import OngoingDamageState
 from app.domain.restraints import RestraintState
 from app.domain.swallow import SwallowedState
 
@@ -103,6 +104,7 @@ class CombatantState(BaseModel):
     restraint_sources: list[RestraintState] = Field(default_factory=list)
     swallowed: SwallowedState | None = None
     timed_effects: list[TimedEffect] = Field(default_factory=list)
+    ongoing_damage_effects: list[OngoingDamageState] = Field(default_factory=list)
     source_effect_immunities: list[str] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
