@@ -124,6 +124,11 @@
       }
       if (result.pushedFt) event.description += ` ${target.state.template.name} is pushed ${result.pushedFt} feet away.`;
       event.description += ` ${result.saveAbility} save DC ${result.saveDc}: ${target.state.template.name} ${result.saveSucceeded ? "succeeds" : "fails"}.`;
+      if (!result.saveSucceeded && attack.onHitSaveEffect?.swallowOnFailure) {
+        const swallow = window.IRON_PIT_BROWSER_SWALLOW;
+        if (!swallow?.applyOnHit) throw new Error("Browser Swallow runtime is not loaded.");
+        swallow.applyOnHit(source, target, attack, event, extra.setup);
+      }
       return event;
     };
     attackRuntime.onHitSaveWrapped = true;
