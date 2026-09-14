@@ -6,6 +6,7 @@ from app.combat.legendary_actions import LEGENDARY_ACTION_RESOURCE_ID
 from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.monster_catalog_2014_reactive_damage import reactive_melee_damage_2014
+from app.content.monster_catalog_2014_sneak_attack import sneak_attack_d6_2014
 from app.content.monster_catalog_2014_traits import legendary_resistance_uses_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import RechargeRule, ResourceDefinition
@@ -82,6 +83,7 @@ def _unique_advantage(specs: list[ConditionalAttackAdvantage]) -> list[Condition
 
 def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> list[WeaponAttack]:
     blood_frenzy = ConditionalAttackAdvantage(trigger="target_not_full_hp")
+    sneak_attack_d6 = sneak_attack_d6_2014(source.source_traits)
     catalog_attacks = {attack.id: attack for attack in source.attacks}
     bound: list[WeaponAttack] = []
     for attack in attacks:
@@ -95,6 +97,8 @@ def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAtta
             advantage.append(blood_frenzy)
         if advantage:
             update["conditional_attack_advantage"] = _unique_advantage(advantage)
+        if sneak_attack_d6:
+            update["sneak_attack_eligible"] = True
         if source_attack is not None and source_attack.grapple_target_policy != "normal":
             update["grapple_target_policy"] = source_attack.grapple_target_policy
         if source_attack is not None and source_attack.ongoing_damage_effect is not None:
