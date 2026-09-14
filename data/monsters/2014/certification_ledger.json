@@ -1,10 +1,10 @@
 {
-  "blocked_count": 76,
+  "blocked_count": 75,
   "blocker_families": {
     "action": 55,
     "attack-detail": 32,
     "legendary": 25,
-    "spell": 40,
+    "spell": 39,
     "trait": 42
   },
   "blocker_yield": {
@@ -104,7 +104,6 @@
     "spell:faerie fire": 2,
     "spell:feather fall": 2,
     "spell:finger of death": 1,
-    "spell:fire shield": 1,
     "spell:flame strike": 3,
     "spell:flaming sphere": 1,
     "spell:fog cloud": 2,
@@ -390,11 +389,9 @@
     {
       "id": "archmage",
       "name": "Archmage",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "spell:fire shield"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "assassin",
@@ -2728,7 +2725,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 251,
+  "ready_count": 252,
   "ruleset": "2014",
   "schema_version": 1
 }
