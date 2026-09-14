@@ -22,23 +22,15 @@ logger = logging.getLogger(__name__)
 
 def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     try:
-        rampage_events, sequence = resolve_rampage(
-            sequence, round_number, attacker, setup, dice, events, turn_key,
-        )
+        rampage_events, sequence = resolve_rampage(sequence, round_number, attacker, setup, dice, events, turn_key)
         events.extend(rampage_events)
         if allow_surge:
-            surge_events, sequence = resolve_action_surge_attack(
-                sequence, round_number, attacker, setup, dice, turn_key,
-            )
+            surge_events, sequence = resolve_action_surge_attack(sequence, round_number, attacker, setup, dice, turn_key)
             events.extend(surge_events)
-        rage_event, sequence = finalize_rage_turn(
-            sequence, round_number, attacker.state, attacker.combatant_id,
-        )
+        rage_event, sequence = finalize_rage_turn(sequence, round_number, attacker.state, attacker.combatant_id)
         if rage_event is not None:
             events.append(rage_event)
-        regurgitation_events, sequence = resolve_end_turn_regurgitation(
-            sequence, round_number, attacker, setup, events, dice,
-        )
+        regurgitation_events, sequence = resolve_end_turn_regurgitation(sequence, round_number, attacker, setup, events, dice)
         events.extend(regurgitation_events)
         return events, sequence
     except Exception:
@@ -50,9 +42,7 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
     try:
         events: list[BattleEvent] = []
         if should_escape_restraint(member.state):
-            events.append(resolve_escape_restraint(
-                sequence, round_number, member.combatant_id, member.state, dice,
-            ))
+            events.append(resolve_escape_restraint(sequence, round_number, member.combatant_id, member.state, dice))
             return events, sequence + 1
         healing_choice = choose_healing_action(member, setup, turn_key)
         if healing_choice is not None and healing_choice[1].state.current_hp == 0:
@@ -130,10 +120,7 @@ def resolve_ready_recharge_action(sequence, round_number, attacker, setup, dice)
             return [], sequence, False
         target, action, distance = choice
         affected = [member.state for member in [*setup.heroes, *setup.monsters]]
-        event = resolve_save_action(
-            sequence, round_number, attacker, target, action, distance, dice,
-            affected_states=affected,
-        )
+        event = resolve_save_action(sequence, round_number, attacker, target, action, distance, dice, affected_states=affected)
         return [event], sequence + 1, True
     except Exception:
         logger.exception("Failed Recharge action resolution for %s.", attacker.combatant_id)
