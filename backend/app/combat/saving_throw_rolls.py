@@ -40,6 +40,7 @@ def saving_throw_mode(
             + int(magical_effect and CombatTrait.MAGIC_RESISTANCE in state.template.combat_traits)
             + int(against_condition in _DARK_DEVOTION_CONDITIONS and CombatTrait.DARK_DEVOTION in state.template.combat_traits)
             + int(against_condition == "frightened" and CombatTrait.BRAVE in state.template.combat_traits)
+            + int(against_condition == "charmed" and CombatTrait.FEY_ANCESTRY in state.template.combat_traits)
             + int(against_condition in _TWO_HEADED_CONDITIONS and CombatTrait.TWO_HEADED in state.template.combat_traits)
             + int(
                 against_prone
@@ -65,15 +66,10 @@ def _indomitable_revision(original: DiceRoll, replacement: DiceRoll) -> RollRevi
         return RollRevision(
             source_effect_id="indomitable",
             kind="full_reroll",
-            original_rolls=list(original.rolls),
-            replacement_rolls=list(replacement.rolls),
-            original_modifier=original.modifier,
-            replacement_modifier=replacement.modifier,
-            original_selected=original.selected_roll,
-            replacement_selected=replacement.selected_roll,
-            original_total=original.total,
-            replacement_total=replacement.total,
-            accepted="replacement",
+            original_rolls=list(original.rolls), replacement_rolls=list(replacement.rolls),
+            original_modifier=original.modifier, replacement_modifier=replacement.modifier,
+            original_selected=original.selected_roll, replacement_selected=replacement.selected_roll,
+            original_total=original.total, replacement_total=replacement.total, accepted="replacement",
         )
     except Exception as exc:
         logger.exception("Failed to build Indomitable revision evidence.")
@@ -94,8 +90,7 @@ def resolve_saving_throw(
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
-            if use_legendary_resistance_on_failure(state):
-                return None, True
+            if use_legendary_resistance_on_failure(state): return None, True
             return None, False
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
@@ -115,15 +110,12 @@ def resolve_saving_throw(
         )
         if roll.total < dc:
             from app.combat.indomitable import use_indomitable
-
             reroll = use_indomitable(state, ability, dice)
             if reroll is not None:
                 revision = _indomitable_revision(roll, reroll)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
-        if roll.total >= dc:
-            return roll, True
-        if use_legendary_resistance_on_failure(state):
-            return roll, True
+        if roll.total >= dc: return roll, True
+        if use_legendary_resistance_on_failure(state): return roll, True
         return roll, False
     except ValueError:
         raise
