@@ -44,7 +44,7 @@ ARENA_NEUTRAL_TRAITS = frozenset({
     "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
     "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
     "Nimble Escape", "Running Leap", "Shark Telepathy", "Shapechanger", "Snow Camouflage", "Standing Leap",
-    "Stone Camouflage", "Sunlight Sensitivity", "Training", "Water Breathing",
+    "Stone Camouflage", "Sunlight Sensitivity", "Training", "Wakeful", "Water Breathing",
 }) | ARENA_OUT_OF_SCOPE_TRAITS_2014 | ARENA_USABLE_MOVEMENT_TRAITS_2014
 
 SUPPORTED_TRAITS = frozenset(MODELED_TRAITS) | DATA_BOUND_TRAITS | ARENA_NEUTRAL_TRAITS
