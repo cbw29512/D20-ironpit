@@ -10,20 +10,23 @@ from app.content.monster_source_attack_advantage import parse_attack_header_adva
 from app.content.monster_source_attack_riders import parse_attack_riders
 from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_source_fixed_attack_candidates import source_fixed_attack_candidates
+from app.content.monster_source_limited_resources import source_limited_resource
 from app.content.monster_source_save_candidates import source_save_candidates
 from app.content.movement_modes import source_movement_modes, standard_arena_closing_speed
 from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition, CapabilityActionSlot, MultiattackCapabilityDefinition
 from app.domain.capability_effects import DamageEffectDefinition, DiceSpec
-from app.domain.combatants import VisualLoadout
+from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
+_LIMIT = r"Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day"
 _ATTACK = re.compile(
-    r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)\.\s+(?P<kind>Melee|Ranged|Melee or Ranged) Attack Roll:\s*"
+    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>{_LIMIT})\))?\.\s+"
+    r"(?P<kind>Melee|Ranged|Melee or Ranged) Attack Roll:\s*"
     r"(?P<bonus>[+-]?\d+)(?P<header_advantage>\s*\(\s*with\s+Advantage\s+if\s+the\s+target\s+is\s+Grappled\s+by\s+the\s+[^)]+\))?,\s*"
     r"(?P<range>reach\s+\d+\s*ft\.|range\s+\d+(?:/\d+)?\s*ft\."
     r"|reach\s+\d+\s*ft\.\s+or\s+range\s+\d+(?:/\d+)?\s*ft\.)\s*Hit:\s*"
@@ -69,7 +72,7 @@ def _rider_text(actions: str, match: re.Match[str]) -> str:
     return text
 
 
-def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> AttackCapabilityDefinition:
+def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> tuple[AttackCapabilityDefinition, ResourceDefinition | None]:
     name = match.group("name").strip()
     reach, normal, long = _ranges(match.group("range"))
     rider_text = _rider_text(actions, match)
@@ -81,18 +84,18 @@ def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> Attac
             count=int(extra.group(1)), size=int(extra.group(2)), bonus=mod,
         ), damage_type=DamageType(extra.group(5).lower())))
     attack_id = f"srd-{_slug(str(row['name']))}-{_slug(name)}"
+    resource = source_limited_resource(attack_id, name, match.group("limit"))
     base_bonus = _bonus(match)
     return AttackCapabilityDefinition(
         id=attack_id, name=name, weapon_id=f"{attack_id}-weapon",
         attack_kind=WeaponAttackKind(match.group("kind").lower().replace(" ", "_")), attack_bonus=int(match.group("bonus")),
         damage=DiceSpec(count=int(match.group("count")), size=int(match.group("size")), bonus=base_bonus),
         damage_type=DamageType(match.group("dtype").lower()), animation="strike", reach_ft=reach,
-        normal_range_ft=normal, long_range_ft=long,
-        conditional_attack_advantage=parse_attack_header_advantage(match.group("header_advantage")),
-        effects=effects,
+        normal_range_ft=normal, long_range_ft=long, resource_id=resource.id if resource else None,
+        conditional_attack_advantage=parse_attack_header_advantage(match.group("header_advantage")), effects=effects,
         charge_profile=parse_charge_replacement(rider_text, base_dice_count=int(match.group("count")),
             base_dice_size=int(match.group("size")), base_damage_bonus=base_bonus, base_damage_type=match.group("dtype")),
-    )
+    ), resource
 
 
 def _multiattack(row: dict[str, object], attacks: list[AttackCapabilityDefinition]) -> MultiattackCapabilityDefinition | None:
@@ -119,11 +122,14 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
             continue
         try:
             action_text = str(row.get("actions", ""))
-            attacks = [_attack(row, action_text, match) for match in _ATTACK.finditer(action_text)]
+            parsed_attacks = [_attack(row, action_text, match) for match in _ATTACK.finditer(action_text)]
+            attacks = [attack for attack, _resource in parsed_attacks]
+            attack_resources = [resource for _attack_definition, resource in parsed_attacks if resource is not None]
             attacks.extend(source_fixed_attack_candidates(row, action_text))
             if not attacks:
                 attacks = [general_unarmed_attack(row, definition_id)]
-            save_actions, resources = source_save_candidates(row)
+            save_actions, save_resources = source_save_candidates(row)
+            resources = {resource.id: resource for resource in [*attack_resources, *save_resources]}
             defenses = parse_defense_profile(row)
             initiative = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
             if initiative is None:
@@ -135,7 +141,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 armor_class=int(re.search(r"\d+", str(row["armorClass"])).group()), max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()),
                 speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=source_movement_modes(str(row["name"])),
                 initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
-                attack_action=_multiattack(row, attacks), save_actions=save_actions, resources=resources,
+                attack_action=_multiattack(row, attacks), save_actions=save_actions, resources=list(resources.values()),
                 combat_traits=[CombatTrait.CHARGE] if any(item.charge_profile for item in attacks) else [],
                 unarmed_opportunity_attack=monster_unarmed_profile(row),
                 damage_vulnerabilities=sorted(defenses["damage_vulnerabilities"]), damage_resistances=sorted(defenses["damage_resistances"]),
