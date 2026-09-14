@@ -16,14 +16,22 @@ def _resource(state, level: int):
     return next((item for item in state.resources if item.id == resource_id), None)
 
 
+def _effect_reach(choice: SpellChoice) -> int:
+    spell = choice.action
+    if spell.area is None:
+        return spell.range_ft + (spell.area_radius_ft or 0)
+    area = spell.area
+    extent = area.radius_ft or area.length_ft or 0
+    return spell.range_ft + extent if area.origin == "point" else extent
+
+
 def _save_action(choice: SpellChoice) -> SavingThrowAction:
     spell = choice.action
     if choice.slot_level != spell.level:
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
-    target_range = spell.range_ft + (spell.area_radius_ft or 0)
     return SavingThrowAction(
         id=spell.id, name=spell.name, save_ability=spell.save_ability, dc=spell.dc,
-        range_ft=target_range, damage_dice_count=spell.damage_dice_count,
+        range_ft=_effect_reach(choice), damage_dice_count=spell.damage_dice_count,
         damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
         damage_type=spell.damage_type, success_damage=spell.success_damage,
         magical_effect=True, animation=spell.animation,
@@ -62,7 +70,7 @@ def resolve_spell(
     if placement is not None:
         detail = (
             f" Area covers {len(placement.enemy_ids)} enemies and "
-            f"{len(placement.friendly_ids)} unprotected allies."
+            f"{len(placement.friendly_ids)} allies."
         )
     slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
     events = [BattleEvent(
@@ -77,7 +85,7 @@ def resolve_spell(
     by_id = {member.combatant_id: member for member in members}
     affected_states = [member.state for member in members]
     save_action = _save_action(choice)
-    reflectable = spell.area_radius_ft is None and len(choice.target_ids) == 1
+    reflectable = spell.area is None and spell.area_radius_ft is None and len(choice.target_ids) == 1
     shared_damage_rolls: list[int] | None = None
     for target_id in choice.target_ids:
         target = by_id[target_id]
@@ -93,9 +101,9 @@ def resolve_spell(
                     spend_spell_reflection(target); reflected_from = target; target = reflected; precomputed = None
         event = resolve_save_action(
             sequence, round_number, caster, target, save_action,
-            0 if reflected_from is not None else abs(caster.position_ft - target.position_ft), dice, spend_action=False,
-            shared_damage_rolls=shared_damage_rolls, affected_states=affected_states, setup=setup,
-            precomputed_save=precomputed,
+            0 if placement is not None or reflected_from is not None else abs(caster.position_ft - target.position_ft),
+            dice, spend_action=False, shared_damage_rolls=shared_damage_rolls,
+            affected_states=affected_states, setup=setup, precomputed_save=precomputed,
         )
         if reflected_from is not None:
             event.description = f"{reflected_from.state.template.name} uses Spell Reflection; {spell.name} targets {target.state.template.name} instead. {event.description}"
