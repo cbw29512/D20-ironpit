@@ -78,6 +78,10 @@ def attacks_against_advantage_sources(state: CombatantState) -> int:
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.ATTACKS_AGAINST_ADVANTAGE)
 
 
+def invisibility_suppressed(state: CombatantState) -> bool:
+    return any(item.kind is ModifierKind.INVISIBILITY_SUPPRESSED for item in state.active_modifiers)
+
+
 def consume_attacks_against_advantage(state: CombatantState) -> int:
     before = len(state.active_modifiers)
     state.active_modifiers = [
