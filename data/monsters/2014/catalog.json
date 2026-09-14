@@ -36924,7 +36924,7 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "the target's Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest. If a non-evil humanoid dies from this attack, a new shadow rises from the corpse 1d4 hours later",
+        "unsupported_text": "the target's Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest",
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
@@ -44030,8 +44030,8 @@
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "A humanoid slain by this attack rises 24 hours later as a zombie under the wight's control, unless the humanoid is restored to life or its body is destroyed. The wight can have no more than twelve zombies under its control at one time",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
