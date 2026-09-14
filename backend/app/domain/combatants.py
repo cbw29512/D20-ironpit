@@ -16,6 +16,7 @@ from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.reactive_damage import MeleeHitReactiveDamage
 from app.domain.regeneration import RegenerationProfile
 from app.domain.save_auras import SaveAdvantageAura
 from app.domain.size import CreatureSize
@@ -89,6 +90,7 @@ class CombatantTemplate(BaseModel):
     start_turn_gaze: StartTurnGaze | None = None
     start_turn_auras: list[StartTurnAura] = Field(default_factory=list)
     start_turn_relationship_damage: list[StartTurnRelationshipDamage] = Field(default_factory=list)
+    melee_hit_reactive_damage: list[MeleeHitReactiveDamage] = Field(default_factory=list)
     save_advantage_auras: list[SaveAdvantageAura] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
