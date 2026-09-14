@@ -179,6 +179,12 @@ def _attach_monster_actions(row, template) -> None:
     if template.start_turn_auras: row["startTurnAuras"] = [_aura_row(aura) for aura in template.start_turn_auras]
     if template.start_turn_relationship_damage:
         row["startTurnRelationshipDamage"] = [_relationship_damage_row(profile) for profile in template.start_turn_relationship_damage]
+    if template.melee_hit_reactive_damage:
+        row["meleeHitReactiveDamage"] = [
+            {"id": rule.id, "rangeFt": rule.range_ft, "diceCount": rule.dice_count, "diceSize": rule.dice_size,
+             "damageBonus": rule.damage_bonus, "damageType": rule.damage_type.value}
+            for rule in template.melee_hit_reactive_damage
+        ]
     if template.ability_scores is not None:
         row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
     for definition in row.get("resource_definitions", []):
