@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from app.combat.action_economy import is_available, spend
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.saving_throws import resolve_save_action
@@ -65,7 +64,6 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
         damage_type=spell.damage_type, success_damage=spell.success_damage,
         magical_effect=True, animation=spell.animation,
     )
-
 
 def resolve_spell(
     sequence: int,

@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
@@ -71,7 +70,6 @@ class CatalogPreparedSpell2014(BaseModel):
     id: str
     name: str
     level: int = Field(ge=0, le=9)
-
 
 class CatalogSpellcasting2014(BaseModel):
     caster_level: int = Field(ge=1, le=20)
