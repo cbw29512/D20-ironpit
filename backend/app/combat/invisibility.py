@@ -4,7 +4,6 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.concentration import end_concentration, start_concentration
-from app.combat.condition_rules import has_condition
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, CombatantState
@@ -19,12 +18,16 @@ def _states(setup: EncounterSetup | None) -> list[CombatantState]:
     return [member.state for member in [*setup.heroes, *setup.monsters]]
 
 
+def _is_invisible(state: CombatantState) -> bool:
+    return INVISIBLE_EFFECT_ID in state.active_effect_ids
+
+
 def can_use_invisibility(state: CombatantState) -> bool:
     try:
         return (
             state.template.invisibility_action is not None
             and is_available(state, state.template.invisibility_action.action_cost)
-            and not has_condition(state, INVISIBLE_EFFECT_ID)
+            and not _is_invisible(state)
         )
     except Exception:
         logger.exception("Failed to evaluate invisibility legality for %s.", state.template.name)
@@ -87,7 +90,7 @@ def end_attack_invisibility(
 ) -> bool:
     try:
         profile = state.template.invisibility_action
-        if profile is None or not profile.ends_on_attack or not has_condition(state, INVISIBLE_EFFECT_ID):
+        if profile is None or not profile.ends_on_attack or not _is_invisible(state):
             return False
         owns_effect = any(
             effect.effect_id == INVISIBLE_EFFECT_ID and effect.source_effect_id == profile.id
