@@ -22,7 +22,7 @@ from app.content.monster_catalog_2014_start_turn_damage import start_turn_relati
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.content.monster_catalog_2014_unarmed import attacks_with_unarmed_fallback_2014
 from app.content.monster_defensive_spell_actions_2014 import defensive_spell_actions_2014
-from app.content.monster_innate_spell_actions_2014 import innate_save_actions_2014
+from app.content.monster_innate_spell_actions_2014 import innate_save_actions_2014, innate_spell_save_actions_2014
 from app.content.monster_spell_actions_2014 import damage_spell_actions_2014
 from app.domain.models import CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.movement import MovementModes
@@ -105,7 +105,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             melee_hit_reactive_damage=reactive_melee_damage_2014(source.source_traits), save_advantage_auras=save_advantage_auras_2014(source.source_traits),
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
             saving_throw_actions=[*source.saving_throw_actions, *innate_save_actions_2014(source)], death_trigger_actions=source.death_trigger_actions,
-            healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
+            healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=[*spell_saves, *innate_spell_save_actions_2014(source)],
             automatic_damage_spell_actions=automatic_spells, defensive_spell_actions=defensive_spell_actions_2014(source),
             starts_invisible=starts_invisible_2014(source), invisibility_action=invisibility_action_2014(source),
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
