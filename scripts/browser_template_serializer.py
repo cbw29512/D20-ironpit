@@ -142,6 +142,16 @@ def _regeneration_row(rule: Any) -> dict[str, Any]:
     }
 
 
+def _death_trigger_row(effect: Any) -> dict[str, Any]:
+    return {
+        "id": effect.id, "name": effect.name, "radius_ft": effect.radius_ft,
+        "save_ability": effect.save_ability, "dc": effect.dc,
+        "damage_dice_count": effect.damage_dice_count, "damage_dice_size": effect.damage_dice_size,
+        "damage_bonus": effect.damage_bonus, "damage_type": effect.damage_type.value,
+        "half_damage_on_success": effect.half_damage_on_success,
+    }
+
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -179,6 +189,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]
         if template.swallow_actions:
             row["swallow_actions"] = [_swallow_row(action) for action in template.swallow_actions]
+        if template.death_trigger_effects:
+            row["death_trigger_effects"] = [_death_trigger_row(effect) for effect in template.death_trigger_effects]
         if template.end_turn_damage_auras:
             row["end_turn_damage_auras"] = [_aura_row(aura) for aura in template.end_turn_damage_auras]
         if template.start_turn_save_condition_auras:
