@@ -4,10 +4,11 @@ from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.monster_defensive_spell_actions_2014 import SUPPORTED_DEFENSIVE_SPELLS_2014
 from app.content.monster_innate_spell_actions_2014 import SUPPORTED_INNATE_ACTION_SPELLS_2014
 from app.content.monster_spell_actions_2014 import SUPPORTED_DAMAGE_SPELLS_2014
+from app.content.monster_spell_substitutions_2014 import ARENA_DAMAGE_SUBSTITUTIONS_2014
 
 # Explicit roster-loading scope: preserve every printed spell in source data, but
-# non-damaging spells do not block the damage-first monster milestone. Unknown
-# spells still fail closed; only names reviewed here are intentionally scoped out.
+# non-damaging spells do not block the damage-first monster milestone. Complex
+# combat spells may execute a documented simpler arena damage substitution.
 SCOPED_OUT_NON_DAMAGE_SPELLS_2014 = frozenset({
     "animal-messenger", "animate-dead", "banishment", "barkskin", "bestow-curse",
     "bless", "blur", "calm-emotions", "charm-person", "clairvoyance", "command",
@@ -32,7 +33,12 @@ def _regular_unresolved(source: CatalogMonster2014) -> list[str]:
     profile = source.spellcasting
     if profile is None or not profile.source_complete or not profile.spells:
         return ["unparsed-regular-spellcasting"]
-    supported = SCOPED_OUT_NON_DAMAGE_SPELLS_2014 | SUPPORTED_DAMAGE_SPELLS_2014 | SUPPORTED_DEFENSIVE_SPELLS_2014
+    supported = (
+        SCOPED_OUT_NON_DAMAGE_SPELLS_2014
+        | SUPPORTED_DAMAGE_SPELLS_2014
+        | SUPPORTED_DEFENSIVE_SPELLS_2014
+        | ARENA_DAMAGE_SUBSTITUTIONS_2014
+    )
     return [spell.name for spell in profile.spells if spell.id not in supported]
 
 
@@ -40,11 +46,12 @@ def _innate_unresolved(source: CatalogMonster2014) -> list[str]:
     profile = source.innate_spellcasting
     if profile is None or not profile.source_complete or not profile.spells:
         return ["unparsed-innate-spellcasting"]
-    return [
-        spell.name for spell in profile.spells
-        if spell.id not in SCOPED_OUT_NON_DAMAGE_SPELLS_2014
-        and spell.id not in SUPPORTED_INNATE_ACTION_SPELLS_2014
-    ]
+    supported = (
+        SCOPED_OUT_NON_DAMAGE_SPELLS_2014
+        | SUPPORTED_INNATE_ACTION_SPELLS_2014
+        | ARENA_DAMAGE_SUBSTITUTIONS_2014
+    )
+    return [spell.name for spell in profile.spells if spell.id not in supported]
 
 
 def unresolved_spells_2014(source: CatalogMonster2014) -> list[str]:
