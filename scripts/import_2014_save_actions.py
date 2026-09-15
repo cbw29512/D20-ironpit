@@ -147,12 +147,14 @@ def parse_save_actions(source_actions: str | None, recharges: dict[str, int]) ->
         action_id = _slug(heading.split("(Recharge", 1)[0].strip())
         success_damage = "half" if re.search(r"half as much damage on a successful", text, re.I) else "none"
         requires_no_active_grapple = bool(re.search(r"provided that (?:it|the [A-Za-z' -]+) has no creature grappled", text, re.I))
-        results.append({
+        row = {
             "id": action_id, "name": heading.split("(Recharge", 1)[0].strip(),
             "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", area.get("radius_ft", 0)),
             "area": area, "damage_dice_count": count, "damage_dice_size": size,
             "damage_bonus": bonus, "damage_type": damage_type, "success_damage": success_damage,
             "resource_id": resource_id, "resource_cost": 1,
-            "requires_no_active_grapple": requires_no_active_grapple,
-        })
+        }
+        if requires_no_active_grapple:
+            row["requires_no_active_grapple"] = True
+        results.append(row)
     return results
