@@ -24,6 +24,9 @@ jobs:
       - name: Install Iron Pit rules engine
         working-directory: backend
         run: pip install -e '.[dev]'
+      - name: Prove qualified 2014 weapon defenses
+        working-directory: backend
+        run: pytest -q tests/test_2014_weapon_defense_policy.py
       - name: Build pure 2014 browser package
         run: |
           python scripts/prepare_static_site.py
@@ -32,8 +35,10 @@ jobs:
       - name: Validate changed JavaScript syntax
         run: |
           node --check frontend/app.js
+          node --check frontend/battlefield-picker.js
           node --check frontend/battlefield-view.js
           node --check frontend/battle-log-format.js
+          node --check frontend/browser-attack.js
       - name: Prove readable battle transcript
         run: node frontend/battle-log-format.test.cjs
       - name: Run dedicated 2014 browser regressions
@@ -48,10 +53,12 @@ jobs:
           done
           test "$count" -gt 0
           echo "Completed $count dedicated 2014 browser regression files."
-      - name: Confirm beta copy and test controls
+      - name: Confirm beta copy and picker contrast
         run: |
           grep -q 'D&D 5e 2014 · SRD PLAYTEST' frontend/app.js
           grep -q 'PLAYTEST LOOP' frontend/app.js
           grep -q 'COPY LOG' frontend/app.js
           grep -q '2014 TEST HEROES' frontend/app.js
           grep -q 'Condition: .* resists' frontend/battle-log-format.js
+          grep -q 'Selected: .*2014 READY' frontend/battlefield-picker.js
+          grep -q 'color-scheme:light' frontend/battlefield.css
