@@ -10,6 +10,10 @@ def compile_multiattack_2014(
     attacks: list[WeaponAttack],
 ) -> AttackActionDefinition | None:
     """Compile ordered printed Multiattack slots that may contain attacks or save actions."""
+    if source.multiattack_binding is not None and not source.multiattack_slots:
+        raise ValueError(
+            f"Bound Multiattack for {source.id} still requires executable action binding support."
+        )
     if not source.multiattack_slots:
         return None
     attack_ids = {attack.id for attack in attacks}
