@@ -10,6 +10,7 @@ AttackIds = Callable[[str, list[dict]], list[str]]
 _COUNTS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7}
 _WORDS = "|".join(_COUNTS)
 _LABEL = r"[a-z][a-z -]*?"
+_SIZE = r"Tiny|Small|Medium|Large|Huge|Gargantuan"
 
 
 def _slug(value: str) -> str:
@@ -63,15 +64,18 @@ def parse_multiattack_binding(text: str, attacks: list[dict], ids_for_label: Att
             return {"slots": _slots(choices, replacement.group(1))}
 
         all_hit_follow_up = re.fullmatch(
-            rf"the .+? makes ({_WORDS}) ({_LABEL}) attacks?\. if both attacks hit .+?, .+? uses (?:its|his|her) ({_LABEL}) on (?:it|him|her)\.?",
+            rf"the .+? makes ({_WORDS}) ({_LABEL}) attacks?\. if both attacks hit a ({_SIZE}) or smaller (?:target|creature), "
+            rf"(?:the target|the creature|it) is grappled \(escape DC (\d+)\), and .+? uses (?:its|his|her) ({_LABEL}) on (?:it|him|her)\.?",
             text,
             re.I,
         )
         if all_hit_follow_up and _COUNTS[all_hit_follow_up.group(1).lower()] == 2:
             return {
                 "slots": _slots(_refs(all_hit_follow_up.group(2), attacks, ids_for_label), all_hit_follow_up.group(1)),
-                "follow_up_action_id": _refs(all_hit_follow_up.group(3), attacks, ids_for_label)[0],
+                "follow_up_action_id": _refs(all_hit_follow_up.group(5), attacks, ids_for_label)[0],
                 "follow_up_condition": "all_attacks_hit_same_target",
+                "follow_up_max_target_size": all_hit_follow_up.group(3).lower(),
+                "follow_up_grapple_escape_dc": int(all_hit_follow_up.group(4)),
             }
 
         grapple_extra = re.fullmatch(
