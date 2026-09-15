@@ -4,14 +4,14 @@ import logging
 
 from app.combat.condition_rules import has_condition
 from app.combat.zero_hp import restore_hit_points
-from app.domain.damage_defense_rules import ConditionalDamageResistance, DamageAbsorption
+from app.domain.damage_defense_rules import ConditionalDamageImmunity, ConditionalDamageResistance, DamageAbsorption
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
 
-def _conditional_resistance_applies(
-    rule: ConditionalDamageResistance,
+def _conditional_defense_applies(
+    rule: ConditionalDamageResistance | ConditionalDamageImmunity,
     damage_type: DamageType,
     attack: WeaponAttack | None,
 ) -> bool:
@@ -44,7 +44,11 @@ def adjusted_damage_amount(
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
         template = target.template
-        if _absorption_rule(target, damage_type) is not None or damage_type in template.damage_immunities:
+        conditional_immunity = any(
+            _conditional_defense_applies(rule, damage_type, attack)
+            for rule in template.conditional_damage_immunities
+        )
+        if _absorption_rule(target, damage_type) is not None or damage_type in template.damage_immunities or conditional_immunity:
             return 0
 
         adjusted = amount
@@ -52,11 +56,11 @@ def adjusted_damage_amount(
             *template.damage_resistances,
             *target.temporary_damage_resistances,
         }
-        conditional = any(
-            _conditional_resistance_applies(rule, damage_type, attack)
+        conditional_resistance = any(
+            _conditional_defense_applies(rule, damage_type, attack)
             for rule in template.conditional_damage_resistances
         )
-        if damage_type in resistances or conditional or has_condition(target, "petrified"):
+        if damage_type in resistances or conditional_resistance or has_condition(target, "petrified"):
             adjusted //= 2
         if allow_vulnerability and damage_type in template.damage_vulnerabilities:
             adjusted *= 2
