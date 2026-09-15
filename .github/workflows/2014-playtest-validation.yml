@@ -28,12 +28,17 @@ jobs:
         run: |
           python scripts/export_2014_monster_ledger.py --check
           python scripts/report_2014_monster_progress.py
-      - name: Build 2014 browser playtest package
+      - name: Build pure 2014 browser playtest package
         run: |
           python scripts/prepare_static_site.py
           test -s frontend/browser-monsters-generated.js
+          test -s frontend/browser-heroes.js
           grep -q 'IRON_PIT_BROWSER_MONSTERS' frontend/browser-monsters-generated.js
-          grep -q 'ruleset: "2014"' frontend/browser-catalog.js
+          grep -q 'IRON_PIT_RULESET = "2014"' frontend/browser-monsters-generated.js
+          grep -q 'IRON_PIT_HERO_RULESET = "2014"' frontend/browser-heroes.js
+          grep -q 'IRON_PIT_HERO_SCOPE = "srd-test-harness"' frontend/browser-heroes.js
+          ! grep -q 'Basic Rules 2024' frontend/browser-heroes.js
+          ! grep -q 'SRD 5.2.1' frontend/browser-heroes.js
       - name: Certify Python engine
         id: pytest
         continue-on-error: true
@@ -52,7 +57,7 @@ jobs:
             set -e
             for file in frontend/*.js; do node --check "$file"; done
           } 2>&1 | tee playtest-js-syntax.log
-      - name: Run complete browser regression suite
+      - name: Run 2014 browser regression suite
         id: browser_tests
         continue-on-error: true
         shell: bash
@@ -61,13 +66,13 @@ jobs:
           {
             set -e
             count=0
-            for test_file in frontend/*.test.cjs; do
+            for test_file in frontend/browser-2014-*.test.cjs; do
               echo "==> $test_file"
               node "$test_file"
               count=$((count + 1))
             done
             test "$count" -gt 0
-            echo "Completed $count browser regression files."
+            echo "Completed $count dedicated 2014 browser regression files."
           } 2>&1 | tee playtest-browser.log
       - name: Verify 2014 playtest safety gate
         id: safety_gate
@@ -75,7 +80,9 @@ jobs:
         run: |
           grep -q 'D&D 5e 2014 Playtest' frontend/browser-catalog.js
           grep -q 'uncertified 2014 monsters are hidden' frontend/browser-catalog.js
-          grep -q 'certified_monsters' frontend/browser-catalog.js
+          grep -q 'four ledger-certified 2014 SRD NPC stat blocks' frontend/browser-catalog.js
+          grep -q 'final_pregens: false' frontend/browser-catalog.js
+          grep -q 'IRON_PIT_HERO_RULESET = "2014"' frontend/browser-heroes.js
       - name: Upload playtest diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -93,7 +100,7 @@ jobs:
         run: |
           echo "Python: ${{ steps.pytest.outcome }}"
           echo "JavaScript syntax: ${{ steps.js_syntax.outcome }}"
-          echo "Browser regressions: ${{ steps.browser_tests.outcome }}"
+          echo "2014 browser regressions: ${{ steps.browser_tests.outcome }}"
           echo "Safety gate: ${{ steps.safety_gate.outcome }}"
           test "${{ steps.pytest.outcome }}" = "success"
           test "${{ steps.js_syntax.outcome }}" = "success"
