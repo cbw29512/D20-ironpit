@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 import logging
-
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
