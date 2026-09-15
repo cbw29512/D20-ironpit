@@ -4,7 +4,7 @@
     "action": 47,
     "attack-detail": 27,
     "legendary": 25,
-    "spell": 31,
+    "spell": 29,
     "trait": 38
   },
   "blocker_yield": {
@@ -93,7 +93,7 @@
     "spell:cloudkill": 1,
     "spell:confusion": 1,
     "spell:enlarge/reduce": 1,
-    "spell:flame strike": 3,
+    "spell:flame strike": 1,
     "spell:flaming sphere": 1,
     "spell:fog cloud": 2,
     "spell:goodberry": 1,
@@ -328,14 +328,13 @@
     {
       "id": "androsphinx",
       "name": "Androsphinx",
-      "remaining_blocker_count": 6,
+      "remaining_blocker_count": 5,
       "remaining_blockers": [
         "action:First Roar",
         "action:Roar (3/Day)",
         "action:Second Roar",
         "action:Third Roar",
-        "legendary:Cast a Spell",
-        "spell:flame strike"
+        "legendary:Cast a Spell"
       ],
       "status": "blocked"
     },
@@ -1364,10 +1363,9 @@
     {
       "id": "guardian-naga",
       "name": "Guardian Naga",
-      "remaining_blocker_count": 2,
+      "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "action:Spit Poison",
-        "spell:flame strike"
+        "action:Spit Poison"
       ],
       "status": "blocked"
     },
