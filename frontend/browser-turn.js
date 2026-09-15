@@ -55,6 +55,7 @@
     if (rampage) { events.push(...rampage.events); sequence = rampage.sequence; }
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
+    const buff = window.IRON_PIT_BROWSER_SELF_BUFFS?.finish(sequence, round, member, setup, turnKey); if (buff) { events.push(...buff.events); sequence = buff.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
   }
@@ -79,7 +80,7 @@
       return finalize(events, sequence, round, member, setup, turnKey, false);
     }
     const support = P()?.resolve(sequence, round, member, setup, turnKey);
-    if (support) { events.push(...support.events); sequence = support.sequence; }
+    if (support) { events.push(...support.events); sequence = support.sequence; } if (support?.handled) return finalize(events, sequence, round, member, setup, turnKey);
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = P()?.secondWind(sequence, round, member);
     if (wind) {
