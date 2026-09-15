@@ -128,6 +128,7 @@ class SavingThrowAction(BaseModel):
     source_effect_immunity_on_success: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
+    requires_no_active_grapple: bool = False
     magical_effect: bool = False
     animation: str = "save-effect"
 
