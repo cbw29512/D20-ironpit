@@ -18,6 +18,7 @@ from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_
 from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
+from app.combat.persistent_spells import refresh_spell_turn_state
 from app.combat.pit_policy import choose_standard_attack
 from app.combat.policy import should_use_second_wind
 from app.combat.reactive import refresh_reactive_reactions
@@ -49,7 +50,9 @@ def resolve_combat_turn(
             events.append(regen_event); sequence += 1
         if regen_death:
             return events, sequence
-        begin_turn(attacker.state); turn_key = f"{round_number}:{attacker.combatant_id}"
+        begin_turn(attacker.state)
+        refresh_spell_turn_state(attacker.state, round_number)
+        turn_key = f"{round_number}:{attacker.combatant_id}"
         gaze_events, sequence = resolve_start_turn_gazes(sequence, round_number, attacker, setup, dice); events.extend(gaze_events)
         if is_incapacitated(attacker.state): return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         recharge_events, sequence = resolve_start_turn_recharges(sequence, round_number, attacker.combatant_id, attacker.state, dice)
