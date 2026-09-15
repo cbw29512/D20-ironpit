@@ -5,6 +5,10 @@ import re
 import unicodedata
 
 ABILITIES = {"strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"}
+_GROUP = re.compile(
+    r"(?:^|\s)(At will|([1-9])/day( each)?):\s*(.+?)(?=\s+(?:At will|[1-9]/day(?: each)?):|$)",
+    re.I,
+)
 
 
 def _plain(value: str | None) -> str:
@@ -37,23 +41,30 @@ def _header_metadata(text: str) -> tuple[str | None, int | None, int | None]:
     return ability, int(save_match.group(1)) if save_match else None, int(attack_match.group(1)) if attack_match else None
 
 
-def _standard_groups(paragraphs: list[str], start: int) -> tuple[list[dict], int]:
+def _groups_from_text(text: str) -> list[dict]:
     spells: list[dict] = []
-    index = start + 1
-    while index < len(paragraphs):
-        raw = paragraphs[index]
-        if re.search(r"<strong>", raw, re.I):
-            break
-        text = _plain(raw)
-        match = re.match(r"^(At will|([1-9])/day( each)?):\s*(.+)$", text, re.I)
-        if not match:
-            break
+    for match in _GROUP.finditer(text):
         at_will = match.group(1).lower() == "at will"
         uses = None if at_will else int(match.group(2))
         each = bool(match.group(3))
         values = [item.strip() for item in match.group(4).split(",") if item.strip()]
         shared = not at_will and not each and len(values) > 1
         spells.extend(_spell(item, "at_will" if at_will else "per_day", uses, shared) for item in values)
+    return spells
+
+
+def _standard_groups(paragraphs: list[str], start: int) -> tuple[list[dict], int]:
+    spells = _groups_from_text(_plain(paragraphs[start]))
+    index = start + 1
+    while index < len(paragraphs):
+        raw = paragraphs[index]
+        if re.search(r"<strong>", raw, re.I):
+            break
+        text = _plain(raw)
+        parsed = _groups_from_text(text)
+        if not parsed:
+            break
+        spells.extend(parsed)
         index += 1
     return spells, index
 
@@ -69,7 +80,6 @@ def parse_innate_spellcasting(source_traits: str | None) -> dict | None:
         ability, save_dc, attack_bonus = _header_metadata(header)
         single = re.search(r"Innate Spellcasting\.\s*\((\d+)/Day\).*?cast\s+([^,]+)", header, re.I)
         if single:
-            ability = ability or _header_metadata(header)[0]
             spell_rows = [_spell(single.group(2), "per_day", int(single.group(1)), False)]
         else:
             spell_rows, _ = _standard_groups(paragraphs, index)
