@@ -26,6 +26,11 @@ _ATTACHED_DRAIN = re.compile(
     r"A creature, including the target, can use its action to detach the (?P=source)\.??",
     re.I,
 )
+_IGNITION_START = re.compile(
+    r"If the target is a creature or a flammable object, it ignites\.\s*"
+    r"Until a creature takes an action to douse the fire, the target takes \d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) fire damage at the start of each of its turns\.??",
+    re.I,
+)
 _DAMAGE_TYPES = {"acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic", "piercing", "poison", "psychic", "radiant", "slashing", "thunder"}
 
 
@@ -49,6 +54,16 @@ def parse_ongoing_damage(text: str, attack: dict) -> tuple[dict | None, dict | N
         }
         residual = f"{text[:infernal.start()]} {text[infernal.end():]}".strip(" .,;")
         return ongoing, save, residual
+    ignition = _IGNITION_START.search(text)
+    if ignition:
+        count, size, sign, bonus = ignition.groups()
+        ongoing = {
+            "id": "ignited", "name": "Burning", "dice_count": int(count), "dice_size": int(size),
+            "damage_bonus": _modifier(sign, bonus), "damage_type": "fire", "apply_on": "hit",
+            "tick_timing": "target_turn_start", "action_removable": True, "action_removal_range_ft": 5,
+        }
+        residual = f"{text[:ignition.start()]} {text[ignition.end():]}".strip(" .,;")
+        return ongoing, None, residual
     attached = _ATTACHED_DRAIN.search(text)
     if attached:
         data = attached.groupdict()
