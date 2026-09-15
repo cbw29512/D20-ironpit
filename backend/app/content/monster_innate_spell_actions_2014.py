@@ -1,17 +1,23 @@
 from __future__ import annotations
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
-from app.content.monster_spell_actions_2014 import _save_spell
+from app.content.monster_spell_actions_2014 import _automatic_spell, _save_spell
 from app.content.shared_spell_actions_2014 import build_faerie_fire
 from app.domain.actions import HitControlEffect, SavingThrowAction
+from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.spells import SpellSaveAction
 
 _INNATE_SAVE_LEVELS_2014 = {
     "cone-of-cold": 5,
     "thunderwave": 1,
 }
+_INNATE_AUTOMATIC_LEVELS_2014 = {
+    "magic-missile": 1,
+}
 SUPPORTED_INNATE_ACTION_SPELLS_2014 = frozenset({
-    "blindness-deafness", "faerie-fire", *_INNATE_SAVE_LEVELS_2014,
+    "blindness-deafness", "faerie-fire",
+    *_INNATE_SAVE_LEVELS_2014,
+    *_INNATE_AUTOMATIC_LEVELS_2014,
 })
 
 
@@ -28,6 +34,17 @@ def innate_spell_save_actions_2014(source: CatalogMonster2014) -> list[SpellSave
         if level is None: continue
         if profile.save_dc is None: raise ValueError(f"{spell.name} requires an innate spell save DC.")
         actions.append(_save_spell(spell.id, level, profile.save_dc, 1))
+    return actions
+
+
+def innate_automatic_damage_spell_actions_2014(source: CatalogMonster2014) -> list[AutomaticDamageSpellAction]:
+    profile = source.innate_spellcasting
+    if profile is None: return []
+    actions: list[AutomaticDamageSpellAction] = []
+    for spell in profile.spells:
+        level = _INNATE_AUTOMATIC_LEVELS_2014.get(spell.id)
+        if level is None: continue
+        actions.append(_automatic_spell(spell.id, level))
     return actions
 
 
