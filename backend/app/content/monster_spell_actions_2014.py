@@ -7,7 +7,7 @@ from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveA
 from app.domain.targeting import AreaTargeting
 
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
-    "blight", "cone-of-cold", "disintegrate", "faerie-fire", "fire-bolt", "fireball", "guiding-bolt",
+    "blight", "cone-of-cold", "disintegrate", "faerie-fire", "finger-of-death", "fire-bolt", "fireball", "guiding-bolt",
     "inflict-wounds", "lightning-bolt", "magic-missile", "produce-flame",
     "ray-of-frost", "sacred-flame", "shocking-grasp", "thunderwave",
 })
@@ -52,6 +52,13 @@ def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> S
             id=spell_id, name="Sacred Flame", level=0, range_ft=60,
             save_ability="dexterity", dc=save_dc, damage_dice_count=_cantrip_dice(caster_level),
             damage_dice_size=8, damage_type="radiant", success_damage="none", animation=spell_id,
+        )
+    if spell_id == "finger-of-death":
+        return SpellSaveAction(
+            id=spell_id, name="Finger of Death", level=7, range_ft=60,
+            save_ability="constitution", dc=save_dc, damage_dice_count=7,
+            damage_dice_size=8, damage_bonus=30, damage_type="necrotic", success_damage="half",
+            animation=spell_id,
         )
     if spell_id == "fireball":
         return SpellSaveAction(
@@ -114,7 +121,7 @@ def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[list[SpellAtt
     save_actions: list[SpellSaveAction] = []
     automatic_actions: list[AutomaticDamageSpellAction] = []
     profile = source.spellcasting
-    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt", "thunderwave", "faerie-fire"}
+    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "finger-of-death", "lightning-bolt", "thunderwave", "faerie-fire"}
     if profile is not None:
         for spell in profile.spells:
             if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014: continue
