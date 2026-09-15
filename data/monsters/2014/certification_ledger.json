@@ -3,10 +3,10 @@
   "blocker_families": {
     "action": 47,
     "attack-detail": 27,
-    "compile": 2,
+    "compile": 1,
     "defense": 1,
     "legendary": 25,
-    "spell": 3,
+    "spell": 4,
     "trait": 38
   },
   "blocker_yield": {
@@ -71,7 +71,7 @@
     "attack-detail:Unarmed Strike (Vampire Form Only)": 1,
     "attack-detail:War Pick": 1,
     "attack-detail:Whip": 1,
-    "compile:universal-runtime": 2,
+    "compile:universal-runtime": 1,
     "defense:piercing from magic weapons wielded by good creatures": 1,
     "legendary:Attack": 2,
     "legendary:Blasphemous Word": 1,
@@ -93,6 +93,7 @@
     "legendary:Whirlwind of Sand": 1,
     "legendary:no-parsed-options": 4,
     "spell:acid arrow": 1,
+    "spell:telekinesis": 1,
     "spell:unparsed-innate-spellcasting": 1,
     "spell:vicious mockery": 1,
     "trait:Aberrant Ground": 1,
@@ -652,7 +653,7 @@
       "name": "Cloud Giant",
       "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "compile:universal-runtime"
+        "spell:telekinesis"
       ],
       "status": "blocked"
     },
