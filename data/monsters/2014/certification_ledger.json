@@ -2,7 +2,7 @@
   "blocked_count": 65,
   "blocker_families": {
     "action": 47,
-    "attack-detail": 30,
+    "attack-detail": 29,
     "legendary": 25,
     "spell": 37,
     "trait": 38
@@ -50,7 +50,7 @@
     "action:Whelm (Recharge 4\u20136)": 1,
     "action:Whirlwind (Recharge 4\u20136)": 1,
     "attack-detail:Beard": 1,
-    "attack-detail:Bite": 5,
+    "attack-detail:Bite": 4,
     "attack-detail:Bite. (Bat or Vampire Form Only)": 1,
     "attack-detail:Claws": 2,
     "attack-detail:Claws (Bite in Beast Form)": 1,
@@ -1556,11 +1556,10 @@
     {
       "id": "kraken",
       "name": "Kraken",
-      "remaining_blocker_count": 8,
+      "remaining_blocker_count": 7,
       "remaining_blockers": [
         "action:Fling",
         "action:Multiattack",
-        "attack-detail:Bite",
         "attack-detail:Tentacle",
         "legendary:Lightning Storm",
         "legendary:Tentacle Attack or Fling",
