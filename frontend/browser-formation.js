@@ -72,7 +72,8 @@
       if ((target.state.restraint_sources || []).some((source) => source.source_id === member.combatant_id && source.source_effect_id === attack.id)) return false;
     }
     if (attack.forbidSelfGrappledTarget && (target.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id)) return false;
-    if (attack.grappleTargetPolicy !== "auto_hit_own_grapple" || !opponents) return true;
+    const restrictToHeld = ["auto_hit_own_grapple", "own_grapple_only"].includes(attack.grappleTargetPolicy);
+    if (!restrictToHeld || !opponents) return true;
     return !opponents.some((candidate) => heldByAttack(member, candidate, attack)) || heldByAttack(member, target, attack);
   }
   function attackDistance(member, target) {
