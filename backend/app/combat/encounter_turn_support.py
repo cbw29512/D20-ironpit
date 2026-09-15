@@ -13,6 +13,7 @@ from app.combat.rampage import resolve_rampage
 from app.combat.resources import action_resource_available, resource_definition
 from app.combat.restraints import resolve_escape_restraint, should_escape_restraint
 from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.self_buffs import finish_self_buff_turn
 from app.combat.swallow_lifecycle import resolve_end_turn_regurgitation
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -27,6 +28,8 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
         if allow_surge:
             surge_events, sequence = resolve_action_surge_attack(sequence, round_number, attacker, setup, dice, turn_key)
             events.extend(surge_events)
+        buff_events, sequence = finish_self_buff_turn(sequence, round_number, attacker, setup, dice, turn_key)
+        events.extend(buff_events)
         rage_event, sequence = finalize_rage_turn(sequence, round_number, attacker.state, attacker.combatant_id)
         if rage_event is not None:
             events.append(rage_event)
