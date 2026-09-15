@@ -9,6 +9,7 @@ from app.domain.spells import SpellSaveAction
 
 _INNATE_SAVE_LEVELS_2014 = {
     "cone-of-cold": 5,
+    "flame-strike": 5,
     "thunderwave": 1,
 }
 _INNATE_AUTOMATIC_LEVELS_2014 = {
