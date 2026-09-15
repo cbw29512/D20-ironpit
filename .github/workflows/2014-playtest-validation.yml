@@ -1,0 +1,58 @@
+name: 2014 Playtest Validation
+
+on:
+  push:
+    branches:
+      - beta/2014-playtest
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 2014-playtest-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  validate-playtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Iron Pit rules engine
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Verify certified 2014 ledger
+        run: |
+          python scripts/export_2014_monster_ledger.py --check
+          python scripts/report_2014_monster_progress.py
+      - name: Build 2014 browser playtest package
+        run: |
+          python scripts/prepare_static_site.py
+          test -s frontend/browser-monsters-generated.js
+          grep -q 'IRON_PIT_BROWSER_MONSTERS' frontend/browser-monsters-generated.js
+          grep -q 'ruleset: "2014"' frontend/browser-catalog.js
+      - name: Certify Python engine
+        working-directory: backend
+        run: pytest -q
+      - name: Validate browser JavaScript syntax
+        run: |
+          for file in frontend/*.js; do node --check "$file"; done
+      - name: Run complete browser regression suite
+        run: |
+          set -e
+          count=0
+          for test_file in frontend/*.test.cjs; do
+            echo "==> $test_file"
+            node "$test_file"
+            count=$((count + 1))
+          done
+          test "$count" -gt 0
+          echo "Completed $count browser regression files."
+      - name: Verify 2014 playtest safety gate
+        run: |
+          grep -q 'D&D 5e 2014 Playtest' frontend/browser-catalog.js
+          grep -q 'uncertified 2014 monsters are hidden' frontend/browser-catalog.js
+          grep -q 'certified_monsters' frontend/browser-catalog.js
