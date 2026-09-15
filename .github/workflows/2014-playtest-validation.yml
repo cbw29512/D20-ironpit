@@ -4,13 +4,16 @@ on:
   push:
     branches:
       - beta/2014-playtest
+  pull_request:
+    branches:
+      - beta/2014-playtest
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: 2014-playtest-${{ github.ref_name }}
+  group: 2014-playtest-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
