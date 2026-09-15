@@ -56,7 +56,7 @@ def test_unknown_death_burst_wording_fails_closed() -> None:
         parse_death_trigger_effects("Death Burst. The creature explodes when it dies in a strange unmodeled way.")
 
 
-def test_roster_binds_death_burst_data_without_claiming_runtime_certification() -> None:
+def test_roster_binds_and_source_certifies_death_burst_data() -> None:
     rows = _rows_by_name()
     roster = {template.name: template for template in build_arena_roster().monsters}
     for name in _EXPECTED:
@@ -64,7 +64,7 @@ def test_roster_binds_death_burst_data_without_claiming_runtime_certification() 
         assert len(template.death_trigger_effects) == 1
         issues = audit_monster_source(template, rows[name])
         assert "death-trigger-source-data-mismatch" not in issues
-        assert "uncertified-trait:death-burst" in issues
+        assert "uncertified-trait:death-burst" not in issues
 
 
 def test_browser_template_serializes_the_same_death_trigger_contract() -> None:
