@@ -44,12 +44,13 @@ def _attack(row: dict, attack_id: str) -> dict:
 
 
 def _bind_on_hit_swallow(row: dict, parsed: dict) -> dict:
+    inline_attack = bool(parsed.pop("_inline_attack", False))
     ability = parsed.pop("on_hit_save_ability", None)
     dc = parsed.pop("on_hit_save_dc", None)
     attack_id = parsed.get("attack_id")
     if attack_id is None:
-        if ability is not None or dc is not None:
-            raise ValueError(f"Save-triggered Swallow is missing an attack id for {row['name']}.")
+        if ability is not None or dc is not None or inline_attack:
+            raise ValueError(f"Attack-triggered Swallow is missing an attack id for {row['name']}.")
         return parsed
     attack = _attack(row, attack_id)
     if ability is not None or dc is not None:
@@ -64,7 +65,7 @@ def _bind_on_hit_swallow(row: dict, parsed: dict) -> dict:
         attack["source_complete"] = True
         attack["unsupported_text"] = None
         return parsed
-    if parsed.get("requires_existing_grapple") and attack.get("unsupported_text"):
+    if inline_attack:
         attack["source_complete"] = True
         attack["unsupported_text"] = None
     return parsed
