@@ -29,6 +29,19 @@ SCOPED_OUT_NON_DAMAGE_SPELLS_2014 = frozenset({
 })
 
 
+def _missing_substitution_dc(profile: object) -> list[str]:
+    """Return explicit blockers when a save-based arena substitute has no legal source DC."""
+    save_dc = getattr(profile, "save_dc", None)
+    if save_dc is not None:
+        return []
+    spells = getattr(profile, "spells", [])
+    return [
+        f"{spell.name} (arena substitution requires spell save DC)"
+        for spell in spells
+        if spell.id in ARENA_DAMAGE_SUBSTITUTIONS_2014
+    ]
+
+
 def _regular_unresolved(source: CatalogMonster2014) -> list[str]:
     profile = source.spellcasting
     if profile is None or not profile.source_complete or not profile.spells:
@@ -39,7 +52,9 @@ def _regular_unresolved(source: CatalogMonster2014) -> list[str]:
         | SUPPORTED_DEFENSIVE_SPELLS_2014
         | ARENA_DAMAGE_SUBSTITUTIONS_2014
     )
-    return [spell.name for spell in profile.spells if spell.id not in supported]
+    unresolved = [spell.name for spell in profile.spells if spell.id not in supported]
+    unresolved.extend(_missing_substitution_dc(profile))
+    return unresolved
 
 
 def _innate_unresolved(source: CatalogMonster2014) -> list[str]:
@@ -51,7 +66,9 @@ def _innate_unresolved(source: CatalogMonster2014) -> list[str]:
         | SUPPORTED_INNATE_ACTION_SPELLS_2014
         | ARENA_DAMAGE_SUBSTITUTIONS_2014
     )
-    return [spell.name for spell in profile.spells if spell.id not in supported]
+    unresolved = [spell.name for spell in profile.spells if spell.id not in supported]
+    unresolved.extend(_missing_substitution_dc(profile))
+    return unresolved
 
 
 def unresolved_spells_2014(source: CatalogMonster2014) -> list[str]:

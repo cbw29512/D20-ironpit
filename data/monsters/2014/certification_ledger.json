@@ -3,9 +3,8 @@
   "blocker_families": {
     "action": 47,
     "attack-detail": 27,
-    "compile": 1,
     "legendary": 25,
-    "spell": 7,
+    "spell": 9,
     "trait": 38
   },
   "blocker_yield": {
@@ -70,7 +69,6 @@
     "attack-detail:Unarmed Strike (Vampire Form Only)": 1,
     "attack-detail:War Pick": 1,
     "attack-detail:Whip": 1,
-    "compile:universal-runtime": 1,
     "legendary:Attack": 2,
     "legendary:Blasphemous Word": 1,
     "legendary:Blinding Dust": 1,
@@ -92,6 +90,7 @@
     "legendary:no-parsed-options": 4,
     "spell:acid arrow": 1,
     "spell:enlarge/reduce": 1,
+    "spell:fog cloud (arena substitution requires spell save DC)": 2,
     "spell:goodberry": 1,
     "spell:protection from poison": 1,
     "spell:telekinesis": 1,
@@ -652,8 +651,9 @@
     {
       "id": "cloud-giant",
       "name": "Cloud Giant",
-      "remaining_blocker_count": 1,
+      "remaining_blocker_count": 2,
       "remaining_blockers": [
+        "spell:fog cloud (arena substitution requires spell save DC)",
         "spell:telekinesis"
       ],
       "status": "blocked"
@@ -1464,7 +1464,7 @@
       "name": "Ice Mephit",
       "remaining_blocker_count": 1,
       "remaining_blockers": [
-        "compile:universal-runtime"
+        "spell:fog cloud (arena substitution requires spell save DC)"
       ],
       "status": "blocked"
     },

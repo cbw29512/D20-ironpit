@@ -35,7 +35,9 @@ def innate_spell_save_actions_2014(source: CatalogMonster2014) -> list[SpellSave
             actions.append(build_faerie_fire(profile.save_dc)); continue
         substitute_level = ARENA_DAMAGE_SUBSTITUTION_LEVELS_2014.get(spell.id)
         if substitute_level is not None:
-            if profile.save_dc is None: raise ValueError(f"{spell.name} requires an innate spell save DC.")
+            # Certification reports this as an explicit blocker. Do not invent a
+            # save DC merely because Iron Pit replaces the source spell.
+            if profile.save_dc is None: continue
             actions.append(build_arena_damage_substitute(spell.id, spell.name, substitute_level, profile.save_dc)); continue
         level = _INNATE_SAVE_LEVELS_2014.get(spell.id)
         if level is None: continue
