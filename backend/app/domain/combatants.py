@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.auras import StartTurnAura
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
+from app.domain.berserk import BerserkProfile
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_defense_rules import ConditionalDamageResistance, DamageAbsorption
 from app.domain.damage_triggers import DamageTriggeredRollPenalty
@@ -104,6 +105,7 @@ class CombatantTemplate(BaseModel):
     spell_reflection_reaction: SpellReflectionReaction | None = None
     zero_hp_prevention: ZeroHpPrevention | None = None
     regeneration: RegenerationProfile | None = None
+    berserk: BerserkProfile | None = None
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
