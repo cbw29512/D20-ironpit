@@ -7,6 +7,7 @@ from app.content.monster_catalog_2014_absorption import damage_absorptions_2014,
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
 from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, is_arena_disabled_attack_detail_2014, usable_movement_speed_2014
 from app.content.monster_catalog_2014_auras import activated_start_turn_auras_2014, start_turn_auras_2014
+from app.content.monster_catalog_2014_berserk import berserk_profile_2014
 from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, reactive_melee_damage_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_damage_triggers import damage_triggered_roll_penalties_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
@@ -69,6 +70,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         relentless = [name for name in source.trait_names if name.startswith("Relentless (Recharges after")]
         if relentless and source.zero_hp_prevention is None: blockers.extend(f"trait:{name}" for name in relentless)
         if "Regeneration" in source.trait_names and source.regeneration is None: blockers.append("trait:Regeneration")
+        if "Berserk" in source.trait_names and berserk_profile_2014(source.source_traits) is None: blockers.append("trait:Berserk")
         if "Fear of Fire" in source.trait_names and not damage_triggered_roll_penalties_2014(source.source_traits): blockers.append("trait:Fear of Fire")
         reactive_ids = {item.id for item in reactive_melee_damage_2014(source.source_traits)}; blockers.extend(f"trait:{name}" for name in ("Heated Body", "Corrosive Form") if name in source.trait_names and name.lower().replace(" ", "-") not in reactive_ids)
         charge_traits = [name for name in source.trait_names if CombatTrait.CHARGE in combat_traits_2014([name])]
@@ -118,6 +120,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
             projectile_catch_reaction=projectile_catch_reaction_2014(source), spell_reflection_reaction=spell_reflection_reaction_2014(source),
             zero_hp_prevention=source.zero_hp_prevention, regeneration=source.regeneration,
+            berserk=berserk_profile_2014(source.source_traits),
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type), source=f"2014 JSON catalog: {source.id}")
     except Exception as exc:
         logger.exception("Failed to compile 2014 monster %s.", source.id)
