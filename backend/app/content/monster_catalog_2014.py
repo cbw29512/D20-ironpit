@@ -17,6 +17,7 @@ from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMo
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
 from app.content.monster_catalog_2014_reactions import projectile_catch_reaction_2014, reaction_start_turn_auras_2014, spell_reflection_reaction_2014, supported_reaction_names_2014
 from app.content.monster_catalog_2014_save_auras import save_advantage_auras_2014
+from app.content.monster_catalog_2014_self_buffs import self_buff_actions_2014
 from app.content.monster_catalog_2014_sneak_attack import sneak_attack_d6_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_start_turn_damage import start_turn_relationship_damage_2014
@@ -107,7 +108,8 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             melee_hit_reactive_damage=reactive_melee_damage_2014(source.source_traits), save_advantage_auras=save_advantage_auras_2014(source.source_traits),
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
             saving_throw_actions=[*source.saving_throw_actions, *innate_save_actions_2014(source)], death_trigger_actions=source.death_trigger_actions,
-            healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=[*spell_saves, *innate_spell_save_actions_2014(source)],
+            healing_actions=source.healing_actions, self_buff_actions=self_buff_actions_2014(source.source_actions),
+            spell_attack_actions=spell_attacks, spell_save_actions=[*spell_saves, *innate_spell_save_actions_2014(source)],
             automatic_damage_spell_actions=automatic_spells, defensive_spell_actions=defensive_spell_actions_2014(source),
             starts_invisible=starts_invisible_2014(source), invisibility_action=invisibility_action_2014(source),
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
