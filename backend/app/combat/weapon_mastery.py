@@ -1,3 +1,11 @@
+"""Shared 2024 weapon-mastery capability checks.
+
+Actor kind is intentionally irrelevant. Characters and monsters use the same
+contract: the combatant must own the weapon and explicitly select mastery for
+that weapon. Content data grants the mechanic; the engine does not reserve it
+for player characters.
+"""
+
 from __future__ import annotations
 
 from app.combat.tactical_master_policy import tactical_master_sap_selected
