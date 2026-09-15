@@ -9,6 +9,7 @@ from app.combat.death_triggers import append_pending_death_triggers
 from app.combat.encounter_area_actions import resolve_ready_area_action
 from app.combat.encounter_turn_support import recharge_action_ready, resolve_ready_recharge_action
 from app.combat.pit_policy import target_order
+from app.combat.self_buffs import activate_self_buff, choose_ready_self_buff
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.swallow import resolve_swallow_action
 
@@ -21,6 +22,9 @@ def _flush(events, sequence, round_number, setup, dice):
 
 def resolve_recharge_priority(sequence, round_number, attacker, setup, dice):
     try:
+        self_buff = choose_ready_self_buff(attacker.state)
+        if self_buff is not None and is_available(attacker.state, "action"):
+            return [activate_self_buff(sequence, round_number, attacker, self_buff)], sequence + 1, True
         area_events, sequence, fired = resolve_ready_area_action(
             sequence, round_number, attacker, setup, dice, recharge_only=True,
         )
