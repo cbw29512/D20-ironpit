@@ -15,7 +15,7 @@ SCOPED_OUT_NON_DAMAGE_SPELLS_2014 = frozenset({
     "create-food-and-water", "creation", "cure-wounds", "dancing-lights", "darkness",
     "detect-evil-and-good", "detect-magic", "detect-thoughts", "dimension-door", "disguise-self",
     "dispel-evil-and-good", "dispel-magic", "divination", "dominate-monster", "dominate-person",
-    "dream", "druidcraft", "entangle", "fly", "freedom-of-movement", "gaseous-form", "geas",
+    "dream", "druidcraft", "entangle", "feather-fall", "fly", "freedom-of-movement", "gaseous-form", "geas",
     "globe-of-invulnerability", "greater-invisibility", "greater-restoration", "heroes-feast",
     "hold-person", "identify", "invisibility", "legend-lore", "lesser-restoration", "light",
     "locate-object", "longstrider", "mage-armor", "mage-hand", "major-image", "mending",
