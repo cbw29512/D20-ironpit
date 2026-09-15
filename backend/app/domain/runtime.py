@@ -107,6 +107,9 @@ class CombatantState(BaseModel):
     active_effect_ids: list[str] = Field(default_factory=list)
     active_buff_effect_ids: list[str] = Field(default_factory=list)
     active_self_buff_expiry_rounds: dict[str, int] = Field(default_factory=dict)
+    active_persistent_spell_expiry_rounds: dict[str, int] = Field(default_factory=dict)
+    spell_turn_active_ids: list[str] = Field(default_factory=list)
+    spell_turn_concentration_locked: bool = False
     active_auras: list[ActiveAuraState] = Field(default_factory=list)
     opening_buff_spell_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
