@@ -1,14 +1,13 @@
 {
-  "blocked_count": 66,
+  "blocked_count": 65,
   "blocker_families": {
-    "action": 50,
+    "action": 49,
     "attack-detail": 30,
     "legendary": 25,
     "spell": 37,
     "trait": 38
   },
   "blocker_yield": {
-    "action:Acid Spray (Recharge 6)": 1,
     "action:Blinding Breath (Recharge 6)": 1,
     "action:Blinding Spittle (Recharge 5\u20136)": 1,
     "action:Charm": 2,
@@ -357,11 +356,9 @@
     {
       "id": "ankheg",
       "name": "Ankheg",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "action:Acid Spray (Recharge 6)"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "ankylosaurus",
@@ -2695,7 +2692,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 261,
+  "ready_count": 262,
   "ruleset": "2014",
   "schema_version": 1
 }
