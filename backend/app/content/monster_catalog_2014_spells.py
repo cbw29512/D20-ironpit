@@ -43,7 +43,7 @@ def _regular_unresolved(source: CatalogMonster2014) -> list[str]:
     return [spell.name for spell in profile.spells if spell.id not in supported]
 
 
-def _innate_unresolved(source: CatalogMonster2012014) -> list[str]:
+def _innate_unresolved(source: CatalogMonster2014) -> list[str]:
     profile = source.innate_spellcasting
     if profile is None or not profile.source_complete or not profile.spells:
         return ["unparsed-innate-spellcasting"]
