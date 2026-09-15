@@ -15,6 +15,7 @@ _FIXED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s+([A-Za-z]+) damage", re.I)
 _PUSH_PRONE_SAVE = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be pushed up to (\d+) feet away from (?:the [A-Za-z' -]+|it) and knocked prone\.?'?", re.I)
 _PRONE_SAVE = re.compile(r"(?:If (?:the )?target is (?:(?:a )?(Tiny|Small|Medium|Large|Huge) or smaller(?: creature)?|a creature),?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be knocked prone\.?'?", re.I)
 _TIMED_REPEAT_CONDITION = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or (?:be|become) (poisoned|paralyzed) for 1 minute\.\s*(?:The (?:target|creature)|It) can repeat the saving throw at the end of each of its turns,? ending the effect on itself on a success\.?'?", re.I)
+_SAVE_DAMAGE_REPEAT_CONDITION = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or take \d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage and (?:be|become) (poisoned|paralyzed) for 1 minute\.\s*(?:The (?:target|creature)|It) can repeat the saving throw at the end of each of its turns,? ending the effect on itself on a success\.?'?", re.I)
 _DISEASE_POISON = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) Constitution saving throw against disease or become poisoned until the disease is cured\.?'?", re.I)
 _SAVE_DAMAGE_HALF = re.compile(r"(?:the target|it) must make (?:on )?a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw,? taking \d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage on a failed save,? or half as much damage on a successful one\.?'?", re.I)
 _SAVE_DAMAGE_NONE = re.compile(r"(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or take \d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage\.?'?", re.I)
@@ -78,6 +79,18 @@ def _save_damage_effect(match: re.Match[str], success_damage: str) -> dict | Non
     return {"save_ability": ability.lower(), "dc": int(dc), "damage_dice_count": int(count), "damage_dice_size": int(size), "damage_bonus": modifier, "damage_type": dtype, "success_damage": success_damage}
 
 
+def _save_damage_condition_effect(match: re.Match[str]) -> dict | None:
+    dc, ability, count, size, sign, bonus, damage_type, condition = match.groups(); dtype = damage_type.lower()
+    if dtype not in DAMAGE_TYPES: return None
+    modifier = int(bonus or 0) * (-1 if sign in {"-", "−"} else 1)
+    return {
+        "save_ability": ability.lower(), "dc": int(dc), "condition_id": condition.lower(),
+        "duration_rounds": 10, "repeat_save_timing": "target_turn_end",
+        "damage_dice_count": int(count), "damage_dice_size": int(size), "damage_bonus": modifier,
+        "damage_type": dtype, "success_damage": "none",
+    }
+
+
 def _zero_hp_rider(effect: dict, residual: str) -> tuple[dict, str]:
     match = _ZERO_HP_STABLE.search(residual)
     if match is None: return effect, residual
@@ -105,6 +118,12 @@ def parse_secondary_damage(remainder: str) -> tuple[list[dict], str]:
 
 
 def parse_on_hit_save_condition(remainder: str) -> tuple[dict | None, str]:
+    combined = _SAVE_DAMAGE_REPEAT_CONDITION.search(remainder)
+    if combined:
+        effect = _save_damage_condition_effect(combined)
+        if effect is not None:
+            residual = (remainder[:combined.start()] + " " + remainder[combined.end():]).strip(" .,;")
+            return _target_exclusions(effect, residual)
     timed = _TIMED_REPEAT_CONDITION.search(remainder)
     if timed:
         dc, ability, condition = timed.groups()
