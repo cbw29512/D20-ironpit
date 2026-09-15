@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import Literal
-
 from pydantic import BaseModel, Field, field_validator
 from app.domain.actions import AbilityName, ConditionName, HealingAction, HitControlEffect, SavingThrowAction
 from app.domain.attack_action_policy import AttackActionPolicy
