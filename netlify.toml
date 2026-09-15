@@ -2,5 +2,7 @@
   command = "python3 -m pip install -e ./backend && python3 scripts/prepare_static_site.py"
   publish = "frontend"
   # Netlify ignore commands return 0 to skip a build and 1 to continue.
-  # Keep deploy previews disabled while the 2014 playtest is being validated in GitHub.
-  ignore = 'test "$CONTEXT" != "production"'
+  # Allow the PR Deploy Preview for the validated 2014 beta while keeping
+  # ordinary branch deploys skipped. Continued development stays off this
+  # frozen beta branch so the preview is not rebuilt on every monster change.
+  ignore = 'test "$CONTEXT" != "production" && test "$CONTEXT" != "deploy-preview"'
