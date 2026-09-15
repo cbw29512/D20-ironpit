@@ -68,6 +68,7 @@ jobs:
           set -o pipefail
           {
             set -e
+            node frontend/arena-visuals.test.cjs
             count=0
             for test_file in frontend/browser-2014-*.test.cjs; do
               echo "==> $test_file"
@@ -75,7 +76,7 @@ jobs:
               count=$((count + 1))
             done
             test "$count" -gt 0
-            echo "Completed $count dedicated 2014 browser regression files."
+            echo "Completed Iron Pit arena visual contract plus $count dedicated 2014 browser regression files."
           } 2>&1 | tee playtest-browser.log
       - name: Verify 2014 playtest safety gate
         id: safety_gate
