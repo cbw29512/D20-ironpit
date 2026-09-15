@@ -76,3 +76,16 @@ def expire_self_buffs(state, round_number: int) -> list[str]:
     for effect_id in expired:
         state.active_self_buff_expiry_rounds.pop(effect_id, None)
     return expired
+
+
+def finish_self_buff_turn(sequence, round_number, member, setup, dice, turn_key):
+    events, sequence = resolve_bonus_attack(sequence, round_number, member, setup, dice, turn_key)
+    expired = expire_self_buffs(member.state, round_number)
+    for effect_id in expired:
+        events.append(BattleEvent(
+            sequence=sequence, round_number=round_number, event_type="feature",
+            actor_id=member.combatant_id, actor_name=member.state.template.name,
+            feature_id=effect_id, removed_condition_ids=[effect_id], animation="feature",
+            description=f"{member.state.template.name}'s {effect_id.replace('-', ' ').title()} ends.",
+        )); sequence += 1
+    return events, sequence
