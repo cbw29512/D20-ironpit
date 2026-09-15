@@ -1,7 +1,7 @@
 {
-  "blocked_count": 69,
+  "blocked_count": 68,
   "blocker_families": {
-    "action": 53,
+    "action": 51,
     "attack-detail": 31,
     "legendary": 25,
     "spell": 37,
@@ -18,7 +18,7 @@
     "action:Death Glare": 1,
     "action:Draining Kiss": 1,
     "action:Dreadful Glare": 2,
-    "action:Engulf": 2,
+    "action:Engulf": 1,
     "action:Enlarge (Recharges after a Short or Long Rest)": 1,
     "action:Eye Rays": 1,
     "action:Fey Charm": 1,
@@ -35,7 +35,7 @@
     "action:Lightning Breath (Recharge 5\u20136)": 1,
     "action:Luring Song": 1,
     "action:Moan": 1,
-    "action:Multiattack": 6,
+    "action:Multiattack": 5,
     "action:Reel": 1,
     "action:Roar (3/Day)": 1,
     "action:Scare (1/Day)": 1,
@@ -2167,12 +2167,9 @@
     {
       "id": "shambling-mound",
       "name": "Shambling Mound",
-      "remaining_blocker_count": 2,
-      "remaining_blockers": [
-        "action:Engulf",
-        "action:Multiattack"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "shield-guardian",
@@ -2706,7 +2703,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 258,
+  "ready_count": 259,
   "ruleset": "2014",
   "schema_version": 1
 }

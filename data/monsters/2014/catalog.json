@@ -37722,8 +37722,8 @@
     },
     "swallow_actions": [
       {
-        "id": "slam",
-        "name": "Slam",
+        "id": "engulf",
+        "name": "Engulf",
         "attack_id": null,
         "max_target_size": "medium",
         "requires_existing_grapple": true,
