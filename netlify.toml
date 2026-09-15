@@ -1,3 +1,5 @@
 [build]
   command = "python3 -m pip install -e ./backend && python3 scripts/prepare_static_site.py"
   publish = "frontend"
+  # Return 1 to build production or this exact 2014 playtest deploy preview; skip everything else.
+  ignore = 'if [ "$CONTEXT" = "production" ] || { [ "$CONTEXT" = "deploy-preview" ] && [ "$HEAD" = "beta/2014-playtest" ]; }; then exit 1; else exit 0; fi'
