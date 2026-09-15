@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.concentration import start_concentration
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.damage_defenses import apply_damage_defenses
@@ -12,6 +13,10 @@ from app.combat.modifier_stack import (
     add_modifier, apply_d20_bonus_dice, attacks_against_advantage_sources,
     consume_attacks_against_advantage, consume_next_attack_against_advantage,
     effective_armor_class, next_attack_against_advantage_sources,
+)
+from app.combat.persistent_spells import (
+    activate_persistent_spell, initial_spell_cast_allowed, lock_concentration_for_turn,
+    persistent_spell_active,
 )
 from app.combat.reckless_attack import attacks_against_reckless_advantage
 from app.combat.rolls import resolve_roll_mode, roll_d20
@@ -61,8 +66,11 @@ def resolve_spell_attack(
         distance = combatant_distance(caster, target)
         if distance > spell.range_ft:
             raise ValueError(f"{spell.name} target is out of range.")
-        resource = _slot_resource(caster, spell, turn_key)
-        if spell.level > 0 and resource is None:
+        follow_up = spell.persistent_duration_rounds is not None and persistent_spell_active(caster.state, spell.id)
+        if not follow_up and not initial_spell_cast_allowed(caster.state, spell.id, concentration=spell.concentration):
+            raise ValueError(f"{spell.name} cannot be cast while its spell-state gate is active.")
+        resource = None if follow_up else _slot_resource(caster, spell, turn_key)
+        if spell.level > 0 and not follow_up and resource is None:
             raise ValueError(f"No level {spell.level} spell slot remains for {spell.name}.")
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
             caster.state, target.state, distance, target.combatant_id,
@@ -81,6 +89,16 @@ def resolve_spell_attack(
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
         spend(caster.state, spell.action_cost)
+        if not follow_up and spell.persistent_duration_rounds is not None:
+            activate_persistent_spell(caster.state, spell.id, round_number, spell.persistent_duration_rounds)
+        if not follow_up and spell.concentration:
+            duration = spell.persistent_duration_rounds
+            affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
+            start_concentration(
+                caster.state, caster.combatant_id, spell.id, round_number, affected_states,
+                expires_round=round_number + duration if duration is not None else None,
+            )
+            lock_concentration_for_turn(caster.state)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
@@ -110,6 +128,8 @@ def resolve_spell_attack(
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
+        if follow_up:
+            description += " Uses the already-active spell; no new spell slot is spent."
         if reflected_from is not None:
             description = f"{reflected_from.state.template.name} uses Spell Reflection; {spell.name} targets {target.state.template.name} instead. " + description
         if heroic_reroll:
