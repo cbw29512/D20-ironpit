@@ -104,3 +104,39 @@ def parse_on_hit_swallow_attack(paragraph: str) -> dict | None:
         "max_target_size": max_size.lower(), "requires_existing_grapple": False,
         "on_hit_save_ability": ability.lower(), "on_hit_save_dc": int(dc), **shared,
     }
+
+
+def parse_grapple_containment_action(paragraph: str) -> dict | None:
+    """Parse direct grapple-based containment with source-turn save-gated damage."""
+    heading = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S)
+    if heading is None:
+        return None
+    name = _plain(heading.group(1)).rstrip(".")
+    text = _plain(paragraph)
+    opener = re.search(
+        r"(?:engulfs|envelops) a (Tiny|Small|Medium|Large|Huge|Gargantuan) or smaller creature grappled by it",
+        text, re.I,
+    )
+    save = re.search(rf"DC (\d+) ({_ABILITIES}) saving throw", text, re.I)
+    damage = re.search(
+        r"(?:failed save[^.]*?|\bor\s+)takes? \d+ \((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\) ([A-Za-z]+) damage",
+        text, re.I,
+    )
+    source_turn = re.search(r"start of each of (?:the |its )?[A-Za-z' -]+['’]s turns", text, re.I)
+    required = (
+        re.search(r"blinded", text, re.I), re.search(r"restrained", text, re.I),
+        re.search(r"unable to breathe", text, re.I), re.search(r"moves? with (?:it|the [A-Za-z' -]+)", text, re.I),
+    )
+    if opener is None or save is None or damage is None or source_turn is None or not all(required):
+        return None
+    count, size, sign, bonus, damage_type = damage.groups()
+    capacity = re.search(r"can have only (?:one|1) (?:creature|target) (?:engulfed|enveloped) at a time", text, re.I)
+    return {
+        "id": _slug(name), "name": name, "attack_id": None,
+        "max_target_size": opener.group(1).lower(), "requires_existing_grapple": True,
+        "damage_dice_count": int(count), "damage_dice_size": int(size),
+        "damage_bonus": int(bonus or 0) * (-1 if sign == "-" else 1), "damage_type": damage_type.lower(),
+        "max_swallowed": 1 if capacity is not None else None,
+        "start_turn_save_dc": int(save.group(1)), "start_turn_save_ability": save.group(2).lower(),
+        "source_death_release": "immediate", "exit_movement_ft": 0, "exit_prone": False,
+    }
