@@ -7,6 +7,7 @@ import unicodedata
 from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014
 from app.content.monster_catalog_2014_auras import activated_start_turn_auras_2014
 from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.content.monster_catalog_2014_multiattack import binding_executable_2014
 
 logger = logging.getLogger(__name__)
 NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape", "weird-insight"})
@@ -60,7 +61,7 @@ def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
     action_keys = {action_key_2014(name) for name in source.action_names}
     if "invisibility" in action_keys:
         supported.add("invisibility")
-    if source.multiattack_slots or source.multiattack_binding is not None:
+    if source.multiattack_slots or binding_executable_2014(source):
         supported.add("multiattack")
     return supported
 
