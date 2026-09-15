@@ -17322,10 +17322,22 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature or a flammable object, it ignites. Until a creature takes an action to douse the fire, the target takes 5 (1d10) fire damage at the start of each of its turns",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
-        "attack_ability": "dexterity"
+        "attack_ability": "dexterity",
+        "ongoing_damage_effect": {
+          "id": "ignited",
+          "name": "Burning",
+          "dice_count": 1,
+          "dice_size": 10,
+          "damage_bonus": 0,
+          "damage_type": "fire",
+          "apply_on": "hit",
+          "tick_timing": "target_turn_start",
+          "action_removable": true,
+          "action_removal_range_ft": 5
+        }
       }
     ],
     "multiattack_slots": [
