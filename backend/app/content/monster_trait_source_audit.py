@@ -1,9 +1,7 @@
 from __future__ import annotations
-
 import logging
 import re
 from functools import lru_cache
-
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_death_trigger_source import parse_death_trigger_effects
 from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
@@ -28,7 +26,6 @@ _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
 def _heading_name(value: str) -> str:
     return re.sub(r"\s*\([^)]*\)$", "", value).strip()
 
-
 def _is_heading(value: str) -> bool:
     if not value or len(value) > 80:
         return False
@@ -39,7 +36,6 @@ def _is_heading(value: str) -> bool:
     if not words:
         return False
     return all(word.lower() in _CONNECTORS or re.fullmatch(r"[A-Z][A-Za-z’'\-]*", word) for word in words)
-
 
 def parse_trait_names(source_traits: object) -> list[str]:
     text = str(source_traits or "").strip()
@@ -54,7 +50,6 @@ def parse_trait_names(source_traits: object) -> list[str]:
         raise ValueError(f"SRD trait headings could not be parsed from: {text!r}")
     return names
 
-
 def _movement_trait_issues(template: CombatantTemplate, expected: list[str]) -> list[str]:
     source_has = "Incorporeal Movement" in expected
     runtime_has = template.movement_modes.pass_through_creatures_as_difficult_terrain
@@ -64,7 +59,6 @@ def _movement_trait_issues(template: CombatantTemplate, expected: list[str]) -> 
         return ["trait-source-missing:incorporeal-movement"]
     return []
 
-
 def _magic_resistance_issues(template: CombatantTemplate, expected: list[str]) -> list[str]:
     source_has = "Magic Resistance" in expected
     if source_has and not template.magic_resistance:
@@ -73,13 +67,11 @@ def _magic_resistance_issues(template: CombatantTemplate, expected: list[str]) -
         return ["trait-source-missing:magic-resistance"]
     return []
 
-
 def _death_trigger_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_death_trigger_effects(row.get("traits", ""))
     if template.death_trigger_effects != expected:
         return ["death-trigger-source-data-mismatch"]
     return []
-
 
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_trait_names(row.get("traits", ""))
@@ -112,18 +104,15 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"uncertified-trait:{slug}")
     return issues
 
-
 @lru_cache(maxsize=1)
 def _rows_by_name() -> dict[str, dict[str, object]]:
     return {str(row["name"]): row for row in load_monster_rows()}
-
 
 def source_trait_names(name: str) -> list[str]:
     row = _rows_by_name().get(name)
     if row is None:
         raise ValueError(f"No SRD 5.2.1 source row for monster {name!r}.")
     return parse_trait_names(row.get("traits", ""))
-
 
 def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
