@@ -512,8 +512,7 @@
         "damage_type": "acid",
         "success_damage": "half",
         "resource_id": "acid-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -780,8 +779,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "lightning-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -1044,8 +1042,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "sleep-breath",
@@ -1333,8 +1330,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "repulsion-breath",
@@ -1612,8 +1608,7 @@
         "damage_type": "acid",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "slowing-breath",
@@ -1904,8 +1899,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "weakening-breath",
@@ -2201,8 +2195,7 @@
         "damage_type": "poison",
         "success_damage": "half",
         "resource_id": "poison-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -2468,8 +2461,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "fire-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -2731,8 +2723,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "paralyzing-breath",
@@ -3023,8 +3014,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "cold-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -3541,8 +3531,7 @@
         "damage_type": "acid",
         "success_damage": "half",
         "resource_id": "acid-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -3809,8 +3798,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "lightning-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -4074,8 +4062,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "sleep-breath",
@@ -4363,8 +4350,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "repulsion-breath",
@@ -4643,8 +4629,7 @@
         "damage_type": "acid",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "slowing-breath",
@@ -4935,8 +4920,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "weakening-breath",
@@ -5232,8 +5216,7 @@
         "damage_type": "poison",
         "success_damage": "half",
         "resource_id": "poison-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -5499,8 +5482,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "fire-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -5762,8 +5744,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "paralyzing-breath",
@@ -6054,8 +6035,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "cold-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -9465,8 +9445,7 @@
         "damage_type": "acid",
         "success_damage": "half",
         "resource_id": "acid-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -9923,8 +9902,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "lightning-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -10327,8 +10305,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "sleep-breath",
@@ -10485,8 +10462,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "repulsion-breath",
@@ -11569,8 +11545,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "fire-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -12615,8 +12590,7 @@
         "damage_type": "acid",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "slowing-breath",
@@ -14888,8 +14862,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "steam-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -23129,8 +23102,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "weakening-breath",
@@ -23566,8 +23538,7 @@
         "damage_type": "poison",
         "success_damage": "half",
         "resource_id": "poison-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -24853,8 +24824,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "fire-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -25206,8 +25176,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "fire-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -26689,8 +26658,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "frost-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": {
@@ -27138,8 +27106,7 @@
         "damage_type": "poison",
         "success_damage": "half",
         "resource_id": "poison-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -27754,8 +27721,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": null,
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -29153,8 +29119,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "fire-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": {
@@ -31876,8 +31841,7 @@
         "damage_type": "necrotic",
         "success_damage": "none",
         "resource_id": null,
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -35569,8 +35533,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "fire-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -38118,8 +38081,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "paralyzing-breath",
@@ -39459,8 +39421,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "steam-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": {
@@ -40054,8 +40015,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "lightning-strike",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": {
@@ -44777,8 +44737,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "cold-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -45213,8 +45172,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "cold-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -45981,8 +45939,7 @@
         "damage_type": "cold",
         "success_damage": "none",
         "resource_id": null,
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -46155,8 +46112,7 @@
         "damage_type": "acid",
         "success_damage": "half",
         "resource_id": "acid-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -46327,8 +46283,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "lightning-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -46494,8 +46449,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "sleep-breath",
@@ -46687,8 +46641,7 @@
         "damage_type": "lightning",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "repulsion-breath",
@@ -46870,8 +46823,7 @@
         "damage_type": "acid",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "slowing-breath",
@@ -47066,8 +47018,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "weakening-breath",
@@ -47266,8 +47217,7 @@
         "damage_type": "poison",
         "success_damage": "half",
         "resource_id": "poison-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -47437,8 +47387,7 @@
         "damage_type": "fire",
         "success_damage": "half",
         "resource_id": "fire-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
@@ -47603,8 +47552,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "breath-weapons",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       },
       {
         "id": "paralyzing-breath",
@@ -47800,8 +47748,7 @@
         "damage_type": "cold",
         "success_damage": "half",
         "resource_id": "cold-breath",
-        "resource_cost": 1,
-        "requires_no_active_grapple": false
+        "resource_cost": 1
       }
     ],
     "innate_spellcasting": null,
