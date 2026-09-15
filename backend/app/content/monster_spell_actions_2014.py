@@ -3,11 +3,12 @@ from __future__ import annotations
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.shared_spell_actions_2014 import build_faerie_fire
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
+from app.domain.spell_damage import SpellDamageComponent
 from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
-    "blight", "cone-of-cold", "disintegrate", "faerie-fire", "finger-of-death", "fire-bolt", "fireball", "guiding-bolt",
+    "blight", "cone-of-cold", "disintegrate", "faerie-fire", "finger-of-death", "fire-bolt", "fireball", "flame-strike", "guiding-bolt",
     "inflict-wounds", "lightning-bolt", "magic-missile", "produce-flame",
     "ray-of-frost", "sacred-flame", "shocking-grasp", "thunderwave",
 })
@@ -59,6 +60,14 @@ def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> S
             save_ability="constitution", dc=save_dc, damage_dice_count=7,
             damage_dice_size=8, damage_bonus=30, damage_type="necrotic", success_damage="half",
             animation=spell_id,
+        )
+    if spell_id == "flame-strike":
+        return SpellSaveAction(
+            id=spell_id, name="Flame Strike", level=5, range_ft=60, area_radius_ft=10,
+            save_ability="dexterity", dc=save_dc, damage_dice_count=4,
+            damage_dice_size=6, damage_type="fire",
+            additional_damage_components=[SpellDamageComponent(dice_count=4, dice_size=6, damage_type="radiant")],
+            success_damage="half", animation=spell_id,
         )
     if spell_id == "fireball":
         return SpellSaveAction(
@@ -121,7 +130,7 @@ def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[list[SpellAtt
     save_actions: list[SpellSaveAction] = []
     automatic_actions: list[AutomaticDamageSpellAction] = []
     profile = source.spellcasting
-    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "finger-of-death", "lightning-bolt", "thunderwave", "faerie-fire"}
+    save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "finger-of-death", "flame-strike", "lightning-bolt", "thunderwave", "faerie-fire"}
     if profile is not None:
         for spell in profile.spells:
             if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014: continue
