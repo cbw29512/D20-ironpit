@@ -219,6 +219,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["redirect_attack_reaction"] = {"ally_range_ft": template.redirect_attack_reaction.ally_range_ft, "ally_max_size": template.redirect_attack_reaction.ally_max_size.value}
         if template.spell_reflection_reaction:
             row["spell_reflection_reaction"] = {"range_ft": template.spell_reflection_reaction.range_ft}
+        if template.berserk:
+            row["berserk"] = {"hpThreshold": template.berserk.hp_threshold, "dieSize": template.berserk.die_size, "triggerRoll": template.berserk.trigger_roll, "effectId": template.berserk.effect_id}
         if template.ruleset != "2024": row["ruleset"] = template.ruleset
         recharge_resources = [item for item in template.resources if item.recharge is not None]
         if recharge_resources:
