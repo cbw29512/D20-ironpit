@@ -9,7 +9,7 @@ from app.domain.targeting import AreaTargeting
 
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
     "blight", "cone-of-cold", "disintegrate", "faerie-fire", "finger-of-death", "fire-bolt", "fireball", "flame-strike", "guiding-bolt",
-    "inflict-wounds", "lightning-bolt", "magic-missile", "produce-flame",
+    "inflict-wounds", "lightning-bolt", "magic-missile", "power-word-kill", "produce-flame",
     "ray-of-frost", "sacred-flame", "shocking-grasp", "thunderwave",
 })
 SPELL_TARGET_RULES_2014 = {
@@ -116,10 +116,16 @@ def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> S
 
 
 def _automatic_spell(spell_id: str, level: int) -> AutomaticDamageSpellAction:
-    if spell_id != "magic-missile": raise ValueError(f"Unsupported automatic-damage spell: {spell_id}")
+    if spell_id == "power-word-kill":
+        return AutomaticDamageSpellAction(
+            id=spell_id, name="Power Word Kill", level=9, range_ft=60,
+            instant_death_hp_threshold=100, animation=spell_id,
+            source="SRD 5.1 / 2014 monster spell",
+        )
+    if spell_id != "magic-missile": raise ValueError(f"Unsupported automatic spell: {spell_id}")
     return AutomaticDamageSpellAction(
         id="magic-missile", name="Magic Missile", level=level, range_ft=120,
-        base_projectiles=3, projectiles_per_slot_above=1, damage_dice_count_per_projectile=1,
+        base_projectiles=3, damage_dice_count_per_projectile=1,
         damage_dice_size=4, damage_bonus_per_projectile=1, damage_type="force",
         animation="magic-missile", source="SRD 5.1 / 2014 monster spell",
     )
@@ -131,10 +137,12 @@ def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[list[SpellAtt
     automatic_actions: list[AutomaticDamageSpellAction] = []
     profile = source.spellcasting
     save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "finger-of-death", "flame-strike", "lightning-bolt", "thunderwave", "faerie-fire"}
+    automatic_ids = {"magic-missile", "power-word-kill"}
     if profile is not None:
         for spell in profile.spells:
             if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014: continue
-            if spell.id == "magic-missile": automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
+            if spell.id in automatic_ids:
+                automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
             if spell.id in save_ids:
                 if profile.save_dc is not None: save_actions.append(_save_spell(spell.id, spell.level, profile.save_dc, profile.caster_level))
                 continue
