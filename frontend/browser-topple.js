@@ -13,7 +13,12 @@
 
   function resolve(attacker, target, attack) {
     try {
-      if (!W().active(attacker.state, attack, "Topple")) return empty();
+      // Topple is a 2024 weapon-mastery source. Non-Topple attacks, including
+      // all ordinary 2014 attacks, never need the mastery runtime at all.
+      if (attack?.masteryProperty !== "Topple") return empty();
+      const mastery = W();
+      if (!mastery?.active) throw new Error("Topple requires the weapon-mastery runtime.");
+      if (!mastery.active(attacker.state, attack, "Topple")) return empty();
       if (!target.state.is_alive || target.state.is_dead) return empty();
       if (target.state.active_effect_ids.includes("prone") || I().immune(target.state, "prone")) return empty();
       const modifier = attack.attackAbilityModifier;
