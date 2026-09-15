@@ -8,6 +8,7 @@ from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_acti
 from app.content.monster_catalog_2014_auras import activated_start_turn_auras_2014
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.monster_catalog_2014_multiattack import binding_executable_2014
+from app.content.monster_catalog_2014_self_buffs import self_buff_actions_2014
 
 logger = logging.getLogger(__name__)
 NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape", "weird-insight"})
@@ -55,6 +56,7 @@ def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
     supported.update(action.id for action in source.saving_throw_actions)
     supported.update(action.id for action in source.healing_actions)
     supported.update(action.id for action in activated_start_turn_auras_2014(source.source_actions))
+    supported.update(action.id for action in self_buff_actions_2014(source.source_actions))
     supported.update(action.resource_id for action in source.saving_throw_actions if action.resource_id)
     supported.update(action.resource_id for action in source.healing_actions if action.resource_id)
     supported.update(NONBLOCKING_OPTIONAL_ACTIONS_2014)
