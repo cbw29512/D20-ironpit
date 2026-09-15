@@ -18,15 +18,14 @@ logger = logging.getLogger(__name__)
 def _parse_swallow_from_actions(actions: str) -> dict | None:
     paragraphs = re.findall(r"<p>(.*?)</p>", actions or "", re.I | re.S)
     for index, paragraph in enumerate(paragraphs):
+        direct = parse_grapple_containment_action(paragraph)
+        if direct is not None:
+            return direct
         candidates = [paragraph]
         if index + 1 < len(paragraphs):
             candidates.append(f"{paragraph} {paragraphs[index + 1]}")
         for candidate in candidates:
-            parsed = (
-                parse_swallow_action(candidate)
-                or parse_on_hit_swallow_attack(candidate)
-                or parse_grapple_containment_action(candidate)
-            )
+            parsed = parse_swallow_action(candidate) or parse_on_hit_swallow_attack(candidate)
             if parsed is not None:
                 return parsed
     return None
