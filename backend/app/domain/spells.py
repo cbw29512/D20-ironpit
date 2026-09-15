@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
 from app.domain.reactive_damage import MeleeHitReactiveDamage
@@ -19,7 +18,6 @@ SpellAttackKind = Literal["melee", "ranged"]
 
 class SpellModifierEffect(BaseModel):
     """Source-neutral modifier data converted to a runtime CombatModifier when a spell resolves."""
-
     kind: SpellModifierKind
     flat_bonus: int = 0
     dice_count: int = Field(default=0, ge=0, le=20)
@@ -52,7 +50,6 @@ class SpellModifierEffect(BaseModel):
 
 class DefensiveSpellAction(BaseModel):
     """A certified precombat defensive/buff spell with deterministic arena targeting."""
-
     id: str
     name: str
     level: int = Field(ge=1, le=9)
@@ -88,7 +85,6 @@ class DefensiveSpellAction(BaseModel):
 
 class SpellAttackAction(BaseModel):
     """A spell resolved with an attack roll rather than a saving throw."""
-
     id: str
     name: str
     level: int = Field(ge=0, le=9)
@@ -117,7 +113,6 @@ class SpellAttackAction(BaseModel):
 
 class SpellSaveAction(BaseModel):
     """A spell whose certified combat resolution is a saving throw and optional damage."""
-
     id: str
     name: str
     level: int = Field(ge=0, le=9)
