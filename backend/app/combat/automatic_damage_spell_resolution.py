@@ -30,7 +30,12 @@ def resolve_automatic_damage_spell(
         raise ValueError(f"{action.name} requires a living enemy target.")
     if combatant_distance(caster, target) > action.range_ft:
         raise ValueError(f"{action.name} target is out of range.")
-    slot = lowest_available_spell_slot(caster.state, action.level, turn_key)
+    slot = lowest_available_spell_slot(
+        caster.state,
+        action.level,
+        turn_key,
+        allow_higher=action.supports_upcast,
+    )
     if slot is None:
         raise ValueError(f"No legal spell slot remains for {action.name}.")
     slot_level, resource = slot
