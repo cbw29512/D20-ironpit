@@ -10,7 +10,7 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const T = () => window.IRON_PIT_BROWSER_TIMED || { strengthD20Disadvantage: () => 0 };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
-  const D = () => window.IRON_PIT_DICE;
+  const D = () => window.IRON_PIT_DICE, SB = () => window.IRON_PIT_BROWSER_SELF_BUFFS || { saveAdvantage: () => 0 };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -19,7 +19,7 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function saveMode(state, ability, magicalEffect = false, againstCondition = null, advantageSources = 0, disadvantageSources = 0) {
     const mental = ["intelligence", "wisdom", "charisma"].includes(ability);
-    const advantage = advantageSources + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
+    const advantage = advantageSources + SB().saveAdvantage(state, ability) + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
       + DG().dexSaveAdvantageSources(state, ability)
       + (magicalEffect && state.template.traits?.includes("magic-resistance") ? 1 : 0)
