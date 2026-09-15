@@ -10,6 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 load("browser-condition-immunity.js");
 load("browser-condition-rules.js");
 load("browser-action-economy.js");
+load("browser-resources.js");
 load("browser-spellcasting.js");
 load("browser-condition-removal.js");
 

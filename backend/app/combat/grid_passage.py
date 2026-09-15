@@ -23,6 +23,8 @@ def can_pass_through(mover: EncounterCombatant, occupant: EncounterCombatant) ->
     try:
         if mover.combatant_id == occupant.combatant_id:
             return True
+        if mover.state.template.movement_modes.pass_through_creatures_as_difficult_terrain:
+            return True
         if mover.side == occupant.side:
             return True
         if is_incapacitated(occupant.state):
@@ -46,6 +48,8 @@ def creature_space_is_difficult(mover: EncounterCombatant, occupant: EncounterCo
     try:
         if mover.combatant_id == occupant.combatant_id:
             return False
+        if mover.state.template.movement_modes.pass_through_creatures_as_difficult_terrain:
+            return True
         if mover.side == occupant.side:
             return False
         return occupant.state.template.size is not CreatureSize.TINY

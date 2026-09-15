@@ -5,6 +5,8 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
+from app.domain.automatic_spells import AutomaticSpellAction
+from app.domain.targeting import AreaTargeting
 
 SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die",
@@ -44,12 +46,14 @@ class SpellModifierEffect(BaseModel):
 
 
 class DefensiveSpellAction(BaseModel):
-    """A certified precombat defensive/buff spell with deterministic arena targeting."""
+    """A certified defensive/buff spell using the shared action/resource contract."""
 
     id: str
     name: str
     level: int = Field(ge=1, le=9)
     action_cost: ActionCost = "action"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     range_ft: int = Field(default=0, ge=0)
     duration_minutes: int = Field(ge=1)
     target_policy: SpellTargetPolicy = "self"
@@ -79,12 +83,14 @@ class DefensiveSpellAction(BaseModel):
 
 
 class SpellAttackAction(BaseModel):
-    """A spell resolved with an attack roll rather than a saving throw."""
+    """A spell attack using the shared action/resource contract."""
 
     id: str
     name: str
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     attack_kind: SpellAttackKind = "ranged"
     range_ft: int = Field(ge=0)
     attack_bonus: int
@@ -104,14 +110,17 @@ class SpellAttackAction(BaseModel):
 
 
 class SpellSaveAction(BaseModel):
-    """A spell whose certified combat resolution is a saving throw and optional damage."""
+    """A saving-throw spell using the shared action/resource contract."""
 
     id: str
     name: str
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     range_ft: int = Field(ge=0)
     area_radius_ft: int | None = Field(default=None, ge=5)
+    area: AreaTargeting | None = None
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     damage_dice_count: int = Field(default=0, ge=0, le=40)
@@ -127,6 +136,12 @@ class SpellSaveAction(BaseModel):
     def validate_spell(self) -> "SpellSaveAction":
         if self.area_radius_ft is not None and self.area_radius_ft % 5:
             raise ValueError("Iron Pit area spell radii must use 5-foot increments.")
+        if self.area is None and self.area_radius_ft is not None:
+            self.area = AreaTargeting(shape="radius", origin="point", radius_ft=self.area_radius_ft)
+        elif self.area is not None and self.area_radius_ft is not None:
+            expected = AreaTargeting(shape="radius", origin="point", radius_ft=self.area_radius_ft)
+            if self.area != expected:
+                raise ValueError("Legacy spell radius and universal area geometry disagree.")
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spells require a damage type.")
         return self

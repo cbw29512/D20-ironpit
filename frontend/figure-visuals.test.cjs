@@ -24,6 +24,16 @@ for (const name of Object.keys(registry)) {
   assert.notEqual(info.form, "unknown", `${name} must not render as an unknown creature`);
 }
 assert.ok(registry.Jackal, "Jackal must retain its reviewed canine figure profile");
+assert.deepEqual(
+  { form: monster("Death Dog").form, detail: monster("Death Dog").detail },
+  { form: "quadruped", detail: "canine" },
+  "Death Dog must retain its reviewed canine figure profile when runnable",
+);
+assert.deepEqual(
+  { form: monster("Minotaur of Baphomet").form, detail: monster("Minotaur of Baphomet").detail },
+  { form: "brute", detail: "minotaur" },
+  "Minotaur of Baphomet must retain its reviewed minotaur figure profile when runnable",
+);
 
 assert.deepEqual(
   { form: monster("Owlbear", "large").form, detail: monster("Owlbear", "large").detail },
@@ -33,6 +43,7 @@ assert.deepEqual(
   { form: monster("Axe Beak", "large").form, detail: monster("Axe Beak", "large").detail },
   { form: "bird", detail: "beak" },
 );
+assert.deepEqual({ form: monster("Ape").form, detail: monster("Ape").detail }, { form: "primate", detail: "ape" });
 assert.equal(monster("Baboon", "small").form, "primate");
 assert.equal(monster("Plesiosaurus", "large").form, "aquatic-reptile");
 assert.equal(monster("Pteranodon").form, "pterosaur");

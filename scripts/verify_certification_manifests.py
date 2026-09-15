@@ -69,18 +69,30 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("heroic-warrior")
     if features.studied_attacks:
         mechanics.add("studied-attacks")
+    if features.peerless_aim:
+        mechanics.add("boon-combat-prowess")
     if features.sneak_attack_d6:
         mechanics.add("sneak-attack")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
         mechanics.add("tactical-shift")
+    if features.death_save_advantage or features.death_save_recovery_minimum < 20:
+        mechanics.add("survivor-defy-death")
+    if features.bloodied_start_turn_healing_base or features.bloodied_start_turn_healing_add_constitution:
+        mechanics.add("survivor-heroic-rally")
     return sorted(mechanics)
 
 
 def _assert_generated_artifact(path: Path, expected: str) -> None:
     if path.read_text(encoding="utf-8") != expected:
         raise RuntimeError(f"Generated browser artifact is stale: {path.relative_to(ROOT)}")
+
+
+def _refresh_generated_browser_artifacts() -> None:
+    """Make --write self-contained while later CI diff gates still enforce committed parity."""
+    HERO_BROWSER_ARTIFACT.write_text(render_browser_heroes(), encoding="utf-8")
+    MONSTER_BROWSER_ARTIFACT.write_text(render_browser_monsters(), encoding="utf-8")
 
 
 def build_hero_manifest() -> dict[str, Any]:
@@ -242,6 +254,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate or verify Iron Pit certification manifests.")
     parser.add_argument("--write", action="store_true", help="Rewrite manifests from authoritative repository state.")
     args = parser.parse_args()
+    if args.write:
+        _refresh_generated_browser_artifacts()
     heroes = build_hero_manifest()
     monsters = build_monster_manifest()
     _validate_invariants(heroes, monsters)

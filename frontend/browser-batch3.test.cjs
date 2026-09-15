@@ -8,8 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
-  "browser-monsters-beast2.js", "browser-monsters-batch3.js", "browser-state.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-charge.js",
   "browser-formation.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
@@ -25,7 +24,7 @@ const M = window.IRON_PIT_BROWSER_MULTIATTACK;
 const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 const heroes = window.IRON_PIT_BROWSER_HEROES;
 
-assert.equal(Object.keys(monsters).length, 55, "browser runtime should expose exactly 55 certified candidates");
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "batch regressions must use the canonical generated roster");
 
 function freshHero() {
   return {
@@ -52,6 +51,9 @@ function multiattackIds(monsterId, protectedByFrontline = false) {
     .map((event) => event.weapon_id);
 }
 
+for (const id of ["srd-owlbear", "srd-saber-toothed-tiger", "srd-scout", "srd-warrior-infantry", "srd-ogre"]) {
+  assert.ok(monsters[id], `${id} must exist in the generated certified roster`);
+}
 assert.deepEqual(multiattackIds("srd-owlbear"), ["owlbear-rend", "owlbear-rend"]);
 assert.deepEqual(multiattackIds("srd-saber-toothed-tiger"), [
   "saber-toothed-tiger-rend", "saber-toothed-tiger-rend",
@@ -95,4 +97,4 @@ assert.deepEqual(multiattackIds("srd-scout", false), ["scout-shortsword", "scout
   assert.deepEqual([one.state.template.attacks[1].normal, one.state.template.attacks[1].long], [20, 60]);
 }
 
-console.log("55-monster browser batch regressions passed.");
+console.log("Canonical generated browser batch regressions passed.");

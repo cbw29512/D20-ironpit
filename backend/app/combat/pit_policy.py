@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.attack_legality import attack_allowed_against
+from app.combat.attack_legality import attack_allowed_against, attack_available_for_source
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
 from app.combat.range import resolve_attack_roll_mode
+from app.combat.resources import resource_available
+from app.combat.swallow_policy import forbidden_attacks_while_swallowing
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
 
@@ -71,12 +73,19 @@ def save_distance(attacker: EncounterCombatant, target: EncounterCombatant, rang
 
 
 def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind: WeaponAttackKind | None):
-    allowed = set(allowed_ids)
-    return [
-        attack
-        for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
-        if attack.id in allowed and (kind is None or attack.weapon.attack_kind is kind)
-    ]
+    try:
+        allowed = set(allowed_ids)
+        return [
+            attack
+            for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
+            if attack.id in allowed
+            and (kind is None or attack.weapon.attack_kind is kind or attack.weapon.attack_kind is WeaponAttackKind.MELEE_OR_RANGED)
+            and resource_available(attacker.state, attack.resource_id, attack.resource_cost)
+            and attack_available_for_source(attack, attacker.state)
+        ]
+    except Exception as exc:
+        logger.exception("Failed to collect legal resource attack profiles for %s.", attacker.combatant_id)
+        raise RuntimeError("Resource attack profiles could not be evaluated.") from exc
 
 
 def _attack_in_range(attack: WeaponAttack, distance_ft: int) -> bool:
@@ -100,7 +109,8 @@ def choose_attack(
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Choose an actually legal attack at the combatants' current battlefield positions."""
     try:
-        profiles = _attack_profiles(attacker, allowed_ids, kind)
+        forbidden = forbidden_attacks_while_swallowing(attacker, setup)
+        profiles = [attack for attack in _attack_profiles(attacker, allowed_ids, kind) if attack.id not in forbidden]
         for target in target_order(attacker, setup, prefer_backline=prefer_backline):
             distance = combatant_distance(attacker, target)
             for attack in profiles:
@@ -117,10 +127,7 @@ def choose_standard_attack(
     setup: EncounterSetup,
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Use legal range now: ranged holds position; melee is preferred when engaged."""
-    ids = [
-        attacker.state.template.weapon_attack.id,
-        *(attack.id for attack in attacker.state.template.alternate_weapon_attacks),
-    ]
+    ids = [attacker.state.template.weapon_attack.id, *(attack.id for attack in attacker.state.template.alternate_weapon_attacks)]
     if is_backline(attacker) and allied_frontline_active(attacker, setup):
         ranged = choose_attack(attacker, setup, ids, kind=WeaponAttackKind.RANGED)
         if ranged is not None:
@@ -134,4 +141,4 @@ def choose_standard_attack(
 def flexible_slot_has_both(attacker: EncounterCombatant, allowed_ids: list[str]) -> bool:
     profiles = _attack_profiles(attacker, allowed_ids, None)
     kinds = {attack.weapon.attack_kind for attack in profiles}
-    return WeaponAttackKind.MELEE in kinds and WeaponAttackKind.RANGED in kinds
+    return WeaponAttackKind.MELEE_OR_RANGED in kinds or {WeaponAttackKind.MELEE, WeaponAttackKind.RANGED} <= kinds

@@ -15,9 +15,24 @@ _SPELL_GROUP = re.compile(
     r"\b(?:At Will|\d+/Day(?: Each)?):\s*(.*?)(?=\s+(?:At Will|\d+/Day(?: Each)?):|$)",
     re.IGNORECASE,
 )
+# A direct cast outside the structured "casts one of the following spells" block is a
+# separate combat capability until it is parsed explicitly. This keeps the neutral-spell
+# audit fail-closed for bonus actions, reactions, named cast actions, and "can cast" rules.
+_DIRECT_CAST = re.compile(
+    r"(?:\bcasts?\s+(?!one of the following spells\b)|\bcan\s+cast\s+)",
+    re.IGNORECASE,
+)
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
 # These spells are never selected as combat actions; unknown additions fail closed.
-_ARENA_NEUTRAL_SPELLS = frozenset({"Detect Evil and Good", "Detect Magic", "Clairvoyance"})
+_ARENA_NEUTRAL_SPELLS = frozenset(
+    {
+        "Detect Evil and Good",
+        "Detect Magic",
+        "Clairvoyance",
+        "Minor Illusion",
+        "Zone of Truth",
+    }
+)
 
 
 def _normalized(value: object) -> str:
@@ -51,6 +66,9 @@ def _printed_spell_names(row: dict[str, object]) -> set[str]:
 
 def arena_neutral_spellcasting(row: dict[str, object]) -> bool:
     """True only when every parsed printed spell is explicitly certified arena-neutral."""
+    text = spellcasting_source_text(row)
+    if _DIRECT_CAST.search(text):
+        return False
     spells = _printed_spell_names(row)
     return bool(spells) and spells <= _ARENA_NEUTRAL_SPELLS
 

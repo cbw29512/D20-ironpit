@@ -13,11 +13,13 @@ from app.domain.capability_attacks import (
 )
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
+from app.domain.forced_movement_actions import ForcedMovementAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
+from app.domain.swallow import SwallowAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import DamageType
@@ -31,6 +33,8 @@ class CombatantDefinition(BaseModel):
     level: int | None = Field(default=None, ge=1, le=20)
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
+    creature_type: str | None = None
+    creature_tags: list[str] = Field(default_factory=list)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
@@ -44,6 +48,8 @@ class CombatantDefinition(BaseModel):
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: MultiattackCapabilityDefinition | None = None
     save_actions: list[SaveCapabilityDefinition] = Field(default_factory=list)
+    forced_movement_actions: list[ForcedMovementAction] = Field(default_factory=list)
+    swallow_actions: list[SwallowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
@@ -51,6 +57,7 @@ class CombatantDefinition(BaseModel):
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
+    magic_resistance: bool = False
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
     source_bonus_action_names: list[str] = Field(default_factory=list)
@@ -88,17 +95,8 @@ class CombatantDefinition(BaseModel):
         return normalized
 
     @model_validator(mode="after")
-    def validate_references(self) -> "CombatantDefinition":
+    def validate_primary_attack(self) -> "CombatantDefinition":
         attack_ids = {attack.id for attack in self.attacks}
-        save_ids = {action.id for action in self.save_actions}
-        if self.kind == "character" and self.ability_scores is None:
-            raise ValueError("Character combatant definitions require ability scores.")
-        if len(attack_ids) != len(self.attacks) or len(save_ids) != len(self.save_actions):
-            raise ValueError("Capability ids must be unique within their action family.")
         if self.primary_attack_id not in attack_ids:
-            raise ValueError("primary_attack_id must reference a declared attack.")
-        if self.attack_action:
-            for slot in self.attack_action.slots:
-                if not set(slot.attack_ids) <= attack_ids or not set(slot.save_action_ids) <= save_ids:
-                    raise ValueError("Multiattack slot references an undeclared capability id.")
+            raise ValueError("Primary attack must reference a declared attack capability.")
         return self

@@ -4,7 +4,7 @@ from app.combat.conditions import attack_roll_condition_sources
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
-from app.combat.timed_conditions import ARENA_POISON_RECOVERY_DC, apply_timed_condition
+from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import EncounterSelection, RollMode
 
 
@@ -23,10 +23,12 @@ def test_giant_centipede_preserves_exact_srd_poison_source_profile() -> None:
     assert (attack.attack_bonus, attack.weapon.dice_count, attack.weapon.dice_size, attack.damage_bonus) == (4, 1, 4, 2)
     assert attack.control_effect is not None
     assert attack.control_effect.condition_id == "poisoned"
+    assert attack.control_effect.expiry_timing == "source_turn_start"
     assert attack.control_effect.expires_at_start_of_source_turn is True
+    assert attack.control_effect.repeat_save_ability is None
 
 
-def test_poison_hit_normalizes_to_one_arena_recovery_effect() -> None:
+def test_poison_hit_keeps_source_expiry_and_does_not_invent_recovery_save() -> None:
     setup = _setup()
     hero, centipede = setup.heroes[0], setup.monsters[0]
     event = resolve_attack(
@@ -38,11 +40,11 @@ def test_poison_hit_normalizes_to_one_arena_recovery_effect() -> None:
     assert len(hero.state.timed_effects) == 1
     poison = hero.state.timed_effects[0]
     assert poison.effect_id == "poisoned"
-    assert poison.expiry_timing is None
-    assert poison.expires_at_start_of_source_turn is False
-    assert (poison.repeat_save_ability, poison.repeat_save_dc, poison.repeat_save_timing) == (
-        "constitution", ARENA_POISON_RECOVERY_DC, "target_turn_start",
-    )
+    assert poison.expiry_timing == "source_turn_start"
+    assert poison.expires_at_start_of_source_turn is True
+    assert poison.repeat_save_ability is None
+    assert poison.repeat_save_dc is None
+    assert poison.repeat_save_timing is None
 
 
 def test_poisoned_gives_attack_and_escape_check_disadvantage() -> None:
@@ -67,7 +69,7 @@ def test_poison_does_not_stack_across_sources() -> None:
     assert len([effect for effect in hero.state.timed_effects if effect.effect_id == "poisoned"]) == 1
 
 
-def test_protection_from_poison_blocks_arena_poison() -> None:
+def test_protection_from_poison_blocks_poisoned_condition() -> None:
     setup = _setup()
     hero, centipede = setup.heroes[0], setup.monsters[0]
     hero.state.active_buff_effect_ids.append("protection-from-poison")
@@ -75,24 +77,27 @@ def test_protection_from_poison_blocks_arena_poison() -> None:
     assert "poisoned" not in hero.state.active_effect_ids
 
 
-def test_poison_recovery_starts_next_round_and_repeats_until_success() -> None:
+def test_explicit_repeat_save_delay_is_condition_neutral() -> None:
     setup = _setup()
     hero, centipede = setup.heroes[0], setup.monsters[0]
-    apply_timed_condition(hero.state, "poisoned", centipede.combatant_id, applied_round=1)
+    apply_timed_condition(
+        hero.state,
+        "frightened",
+        centipede.combatant_id,
+        source_effect_id="test-fear",
+        applied_round=1,
+        expires_at_start_of_source_turn=False,
+        repeat_save_ability="constitution",
+        repeat_save_dc=10,
+        repeat_save_timing="target_turn_start",
+        repeat_save_delay_rounds=1,
+    )
 
     same_round, sequence = resolve_target_condition_timing(1, 1, hero, "target_turn_start", FixedDiceProvider([20]))
-    assert same_round == []
-    assert sequence == 1
-    assert "poisoned" in hero.state.active_effect_ids
-
+    assert same_round == [] and sequence == 1
     failed, sequence = resolve_target_condition_timing(sequence, 2, hero, "target_turn_start", FixedDiceProvider([1]))
-    assert sequence == 2
-    assert failed[0].save_succeeded is False
-    assert "poisoned" in hero.state.active_effect_ids
-
+    assert failed[0].save_succeeded is False and "frightened" in hero.state.active_effect_ids
     succeeded, sequence = resolve_target_condition_timing(sequence, 3, hero, "target_turn_start", FixedDiceProvider([20]))
-    assert sequence == 3
     assert succeeded[0].save_succeeded is True
-    assert succeeded[0].removed_condition_ids == ["poisoned"]
-    assert "poisoned" not in hero.state.active_effect_ids
-    assert hero.state.timed_effects == []
+    assert succeeded[0].removed_condition_ids == ["frightened"]
+    assert "frightened" not in hero.state.active_effect_ids

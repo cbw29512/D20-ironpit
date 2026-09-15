@@ -4,20 +4,19 @@
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
+  const AT = () => window.IRON_PIT_BROWSER_ATTACHMENTS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function resolve(sequence, round, member, setup, turnKey) {
     const events = [];
+    const detach = AT()?.detachAction(sequence, round, member, setup);
+    if (detach) { events.push(detach); sequence += 1; return { events, sequence }; }
     let healing = H()?.chooseAction(member, setup, turnKey);
-    if (healing?.target.state.current_hp === 0) {
-      events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
-    }
+    if (healing?.target.state.current_hp === 0) events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
     const removal = C()?.chooseAction(member, setup, turnKey);
-    if (removal) {
-      events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
-    }
+    if (removal) events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
     healing = H()?.chooseAction(member, setup, turnKey);
     if (healing) events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
     const channel = K()?.resolve(sequence, round, member, setup);
@@ -40,10 +39,8 @@
 
   function adrenaline(sequence, round, member) {
     const state = member.state, pb = 2 + Math.floor((state.template.level - 1) / 4);
-    if (!state.template.traits?.includes("adrenaline-rush") || !E().available(state, "bonus_action")
-        || !(state.resources["adrenaline-rush"] > 0) || state.temporary_hp >= pb) return null;
-    state.resources["adrenaline-rush"] -= 1; E().spend(state, "bonus_action");
-    S().grantTemporaryHp(state, pb);
+    if (!state.template.traits?.includes("adrenaline-rush") || !E().available(state, "bonus_action") || !(state.resources["adrenaline-rush"] > 0) || state.temporary_hp >= pb) return null;
+    state.resources["adrenaline-rush"] -= 1; E().spend(state, "bonus_action"); S().grantTemporaryHp(state, pb);
     return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: state.template.name,
       feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: 0,
       animation: "dash", description: `${state.template.name} uses Adrenaline Rush; Dash movement is abstracted by fixed Pit formation.` };

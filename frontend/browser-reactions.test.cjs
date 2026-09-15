@@ -8,8 +8,8 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-beast2.js", "browser-monsters-generated.js",
-  "browser-unarmed-opportunity.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-unarmed-opportunity.js",
+  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
   "browser-zero-hp.js", "browser-attack.js", "browser-reactions.js",
 ]) load(file);
@@ -17,8 +17,9 @@ for (const file of [
 const S = window.IRON_PIT_BROWSER_STATE;
 const X = window.IRON_PIT_BROWSER_REACTIONS;
 const A = window.IRON_PIT_BROWSER_ATTACK;
+const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 const heroTemplate = () => structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
-const monsterTemplate = (id) => structuredClone(window.IRON_PIT_BROWSER_MONSTERS[id]);
+const monsterTemplate = (id) => structuredClone(monsters[id]);
 const member = (id, side, template, position) => ({ combatant_id: id, side, position_ft: position, state: S.buildState(template) });
 const dice = () => { window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 19 : 1) }; };
 const fixedDice = (values) => {
@@ -29,17 +30,15 @@ const fixedDice = (values) => {
   };
 };
 
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "reaction regressions must use the canonical generated roster");
+for (const id of ["srd-goblin-warrior", "srd-goblin-boss", "srd-plesiosaurus"]) {
+  assert.ok(monsters[id], `${id} must exist in the generated certified roster`);
+}
+
 function setup(monsterId = "srd-goblin-warrior") {
   const hero = member("hero-1", "heroes", heroTemplate(), 5);
   const monster = member("monster-1", "monsters", monsterTemplate(monsterId), 0);
   return { hero, monster, fight: { heroes: [hero], monsters: [monster] } };
-}
-
-function redirectTemplate() {
-  const template = monsterTemplate("srd-goblin-warrior");
-  template.name = "Goblin Boss"; template.armor_class = 17; template.max_hp = 21;
-  template.redirect_attack_reaction = { ally_range_ft: 5, ally_max_size: "medium" };
-  return template;
 }
 
 {
@@ -112,7 +111,7 @@ function redirectTemplate() {
 }
 {
   const attacker = member("archer-1", "heroes", monsterTemplate("srd-goblin-warrior"), 0);
-  const boss = member("boss-1", "monsters", redirectTemplate(), 20);
+  const boss = member("boss-1", "monsters", monsterTemplate("srd-goblin-boss"), 20);
   const ally = member("ally-1", "monsters", monsterTemplate("srd-goblin-warrior"), 25);
   const fight = { heroes: [attacker], monsters: [boss, ally] };
   const ranged = attacker.state.template.attacks.find((attack) => attack.kind === "ranged");
@@ -126,17 +125,17 @@ function redirectTemplate() {
 }
 {
   const attacker = member("hero-1", "heroes", heroTemplate(), 0);
-  const boss = member("boss-1", "monsters", redirectTemplate(), 5);
+  const boss = member("boss-1", "monsters", monsterTemplate("srd-goblin-boss"), 5);
   const ally = member("ally-1", "monsters", monsterTemplate("srd-goblin-warrior"), 10);
   const fight = { heroes: [attacker], monsters: [boss, ally] };
   assert.equal(X.redirectAttack(boss, fight), null); assert.equal(boss.state.reaction_available, true);
   assert.deepEqual([boss.position_ft, ally.position_ft], [5, 10]);
 }
 {
-  const boss = member("boss-1", "monsters", redirectTemplate(), 20);
+  const boss = member("boss-1", "monsters", monsterTemplate("srd-goblin-boss"), 20);
   const ally = member("ally-1", "monsters", monsterTemplate("srd-goblin-warrior"), 25);
   const fight = { heroes: [member("hero-1", "heroes", heroTemplate(), 0)], monsters: [boss, ally] };
   boss.state.active_effect_ids.push("blinded");
   assert.equal(X.redirectAttack(boss, fight), null); assert.equal(boss.state.reaction_available, true);
 }
-console.log("Browser Opportunity Attack, Parry, and Redirect Attack regressions passed.");
+console.log("Canonical generated Opportunity Attack, Parry, and Redirect Attack regressions passed.");

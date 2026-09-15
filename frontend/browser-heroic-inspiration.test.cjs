@@ -88,7 +88,7 @@ load("browser-state.js");
   assert.equal(downed.reaction_available, true); assert.equal(downed.heroic_inspiration, true);
 }
 
-window.IRON_PIT_BROWSER_TIMED = { apply: () => null };
+load("browser-timed-conditions.js");
 window.IRON_PIT_BROWSER_SAP = { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
 window.IRON_PIT_BROWSER_TACTICAL_MASTER = { apply: () => false };
 window.IRON_PIT_BROWSER_GRAZE = { rawDamage: () => null };

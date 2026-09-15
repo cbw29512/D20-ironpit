@@ -11,8 +11,11 @@ class ModifierKind(StrEnum):
     ARMOR_CLASS = "armor-class"
     ATTACK_ROLL_BONUS_DIE = "attack-roll-bonus-die"
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
+    ABILITY_CHECK_BONUS_DIE = "ability-check-bonus-die"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
+    NEXT_ATTACK_ADVANTAGE = "next-attack-advantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
+    NEXT_ATTACK_DISADVANTAGE = "next-attack-disadvantage"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
 
@@ -38,6 +41,7 @@ class CombatModifier(BaseModel):
         die_kind = self.kind in {
             ModifierKind.ATTACK_ROLL_BONUS_DIE,
             ModifierKind.SAVING_THROW_BONUS_DIE,
+            ModifierKind.ABILITY_CHECK_BONUS_DIE,
             ModifierKind.BONUS_DAMAGE,
         }
         if die_kind and (self.dice_count < 1 or self.dice_size < 2):
@@ -48,9 +52,14 @@ class CombatModifier(BaseModel):
             raise ValueError("Bonus damage requires a damage type.")
         if self.kind is not ModifierKind.BONUS_DAMAGE and self.damage_type is not None:
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
-        advantage_kinds = {ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE}
-        if self.kind in advantage_kinds and self.flat_bonus:
-            raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+        roll_mode_kinds = {
+            ModifierKind.ATTACKS_AGAINST_ADVANTAGE,
+            ModifierKind.NEXT_ATTACK_ADVANTAGE,
+            ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE,
+            ModifierKind.NEXT_ATTACK_DISADVANTAGE,
+        }
+        if self.kind in roll_mode_kinds and self.flat_bonus:
+            raise ValueError("Attack roll-mode modifiers do not accept a flat bonus.")
         if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
             raise ValueError("Speed modifiers require a nonzero flat bonus.")
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:

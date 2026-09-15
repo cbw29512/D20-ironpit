@@ -2,7 +2,12 @@ import logging
 
 import pytest
 
-from app.content.movement_modes import parse_movement_modes, parse_movement_profile, standard_arena_closing_speed
+from app.content.movement_modes import (
+    movement_source_issues,
+    parse_movement_modes,
+    parse_movement_profile,
+    standard_arena_closing_speed,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +63,41 @@ def test_swim_speed_is_not_reinterpreted_as_generic_speed() -> None:
         assert standard_arena_closing_speed("20 ft., Swim 40 ft.") == 20
     except Exception:
         logger.exception("Swim source-speed separation regression failed.")
+        raise
+
+
+def test_form_only_speed_stays_out_of_default_runtime_profile() -> None:
+    try:
+        source = "30 ft., 40 ft. (wolf form only)"
+        assert parse_movement_modes(source) == {"walk": 30}
+        assert standard_arena_closing_speed(source) == 30
+        assert movement_source_issues(source) == ["movement-form-source-unmodeled"]
+    except Exception:
+        logger.exception("Conditional form movement regression failed.")
+        raise
+
+
+def test_truncated_form_parenthetical_is_safe_and_blocks_certification() -> None:
+    try:
+        source = "30 ft., 40 ft. (bear form only), Climb 30 ft. (bear"
+        assert parse_movement_modes(source) == {"walk": 30}
+        assert movement_source_issues(source) == [
+            "movement-form-source-unmodeled",
+            "movement-parenthetical-source-malformed",
+        ]
+    except Exception:
+        logger.exception("Malformed conditional movement regression failed.")
+        raise
+
+
+def test_gm_choice_movement_is_not_silently_selected() -> None:
+    try:
+        source = "20 ft., Climb or Fly 20 ft. (GM’s choice)"
+        assert parse_movement_modes(source) == {"walk": 20}
+        assert standard_arena_closing_speed(source) == 20
+        assert movement_source_issues(source) == ["movement-choice-source-unmodeled"]
+    except Exception:
+        logger.exception("GM-choice movement fail-closed regression failed.")
         raise
 
 

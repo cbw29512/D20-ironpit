@@ -8,10 +8,11 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-grapple.js", "browser-state.js",
-  "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-charge.js",
-  "browser-formation.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-modifiers.js", "browser-state.js",
+  "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-resources.js",
+  "browser-save-failure-effects.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js",
+  "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -22,6 +23,7 @@ const queuedDice = (values, fallback = 10) => {
 const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
 const G = window.IRON_PIT_BROWSER_GRAPPLE;
+const M = window.IRON_PIT_BROWSER_MODIFIERS;
 const V = window.IRON_PIT_BROWSER_SAVES;
 const heroes = window.IRON_PIT_BROWSER_HEROES;
 const monsters = window.IRON_PIT_BROWSER_MONSTERS;
@@ -29,7 +31,10 @@ const member = (id, side, template, position = side === "heroes" ? 0 : 5) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
 
-assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser roster to 58 monsters");
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "control regressions must use the canonical generated roster");
+for (const id of ["srd-crocodile", "srd-giant-crab", "srd-constrictor-snake", "srd-commoner"]) {
+  assert.ok(monsters[id], `${id} must exist in the generated certified roster`);
+}
 
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
@@ -62,11 +67,8 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const crab = member("monster-1:crab", "monsters", monsters["srd-giant-crab"]);
   G.apply(held.state, crab.combatant_id, 11, 5, false);
   held.state.current_hp = 0; held.state.is_unconscious = true;
-  assert.equal(
-    S.nearestTarget(crab, { heroes: [held, other], monsters: [crab] }),
-    other,
-    "an active combatant must be targeted before an Unconscious disabled target",
-  );
+  assert.equal(S.nearestTarget(crab, { heroes: [held, other], monsters: [crab] }), other,
+    "an active combatant must be targeted before an Unconscious disabled target");
   crab.state.is_dead = true; crab.state.is_alive = false;
   G.cleanup({ heroes: [held, other], monsters: [crab] });
   assert.equal(held.state.grapple_sources.length, 0);
@@ -144,4 +146,65 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   assert.deepEqual(failed.applied_condition_ids, ["grappled"]);
 }
 
-console.log("Browser saving throw and control-condition regressions passed.");
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const commoner = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  const action = {
+    id: "test-failed-save-riders", name: "Test Failed Save Riders", saveAbility: "dexterity", dc: 30, range: 30,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
+    failureEffects: [
+      { kind: "prone" },
+      { kind: "condition", condition: "frightened", expiryTiming: "target_turn_end" },
+      { kind: "speed", flatBonus: -10, expiresAtEndOfTargetTurn: true },
+    ], animation: "save-effect",
+  };
+  window.IRON_PIT_DICE = queuedDice([1]);
+  const failed = V.resolveAction(1, 1, commoner, hero, action, 5, { spendAction: false });
+  assert.deepEqual(failed.applied_condition_ids, ["prone", "frightened"]);
+  assert.deepEqual(hero.state.active_effect_ids.slice(-2), ["prone", "frightened"]);
+  assert.equal(M.effectiveSpeed(hero.state), hero.state.template.speed_ft - 10);
+  assert.match(hero.state.active_modifiers[0].id, /failed-save-modifier:2$/);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const commoner = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  const action = {
+    id: "test-failed-save-riders", name: "Test Failed Save Riders", saveAbility: "dexterity", dc: 1, range: 30,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
+    failureEffects: [{ kind: "prone" }, { kind: "speed", flatBonus: -10 }], animation: "save-effect",
+  };
+  window.IRON_PIT_DICE = queuedDice([20]);
+  const passed = V.resolveAction(1, 1, commoner, hero, action, 5, { spendAction: false });
+  assert.deepEqual(passed.applied_condition_ids, []);
+  assert.equal(hero.state.active_effect_ids.includes("prone"), false);
+  assert.deepEqual(hero.state.active_modifiers, []);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const actor = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  const attack = actor.state.template.attacks[0];
+  actor.state.template.saving_throw_actions = [{
+    id: "test-roar", name: "Test Roar", saveAbility: "wisdom", dc: 30, range: 15,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
+    failureEffects: [{ kind: "condition", condition: "frightened", expiryTiming: "source_turn_start" }],
+    animation: "roar",
+  }];
+  actor.state.template.attack_action = {
+    id: "test-mixed-multiattack", isAttackAction: false,
+    slots: [
+      { attackIds: [attack.id], saveActionIds: ["test-roar"] },
+      { attackIds: [attack.id], saveActionIds: [] },
+    ],
+  };
+  window.IRON_PIT_DICE = queuedDice([1, 20, 1]);
+  const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, { heroes: [hero], monsters: [actor] });
+  assert.equal(result.events.length, 2);
+  assert.equal(result.events[0].feature_id, "test-roar");
+  assert.equal(result.events[0].save_succeeded, false);
+  assert.deepEqual(result.events[0].applied_condition_ids, ["frightened"]);
+  assert.equal(result.events[1].event_type, "attack");
+}
+
+console.log("Canonical generated saving throw and control-condition regressions passed.");

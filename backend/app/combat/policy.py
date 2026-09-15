@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.range import resolve_attack_roll_mode
+from app.combat.resources import is_recharge_resource, resource_available
 from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
@@ -24,15 +25,24 @@ def should_use_second_wind(state: CombatantState) -> bool:
 
 
 def weapon_attack_profiles(state: CombatantState) -> list[WeaponAttack]:
-    return [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
-
-
-def _legal_attack(attack: WeaponAttack, distance_ft: int) -> bool:
     try:
+        return [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+    except Exception as exc:
+        logger.exception("Failed to collect weapon attack profiles for %s.", state.template.name)
+        raise RuntimeError("Weapon attack profiles could not be collected.") from exc
+
+
+def _legal_attack(state: CombatantState, attack: WeaponAttack, distance_ft: int) -> bool:
+    try:
+        if not resource_available(state, attack.resource_id, attack.resource_cost):
+            return False
         resolve_attack_roll_mode(attack.weapon, distance_ft)
         return True
     except ValueError:
         return False
+    except Exception as exc:
+        logger.exception("Failed to evaluate weapon legality for %s.", state.template.name)
+        raise RuntimeError("Weapon legality could not be evaluated.") from exc
 
 
 def select_allowed_weapon_attack(
@@ -40,36 +50,52 @@ def select_allowed_weapon_attack(
     distance_ft: int,
     allowed_ids: list[str],
 ) -> WeaponAttack | None:
-    """Prefer legal melee while engaged; otherwise use the first legal allowed profile."""
+    """Prioritize a legal Recharge attack, then legal melee while engaged, then normal card order."""
     try:
         allowed = set(allowed_ids)
         profiles = [attack for attack in weapon_attack_profiles(state) if attack.id in allowed]
+        recharge = next((
+            attack for attack in profiles
+            if is_recharge_resource(state, attack.resource_id) and _legal_attack(state, attack, distance_ft)
+        ), None)
+        if recharge is not None:
+            return recharge
         melee = next((
             attack for attack in profiles
-            if attack.weapon.attack_kind is WeaponAttackKind.MELEE and _legal_attack(attack, distance_ft)
+            if attack.weapon.attack_kind is WeaponAttackKind.MELEE and _legal_attack(state, attack, distance_ft)
         ), None)
         if melee is not None:
             return melee
-        return next((attack for attack in profiles if _legal_attack(attack, distance_ft)), None)
+        return next((attack for attack in profiles if _legal_attack(state, attack, distance_ft)), None)
     except Exception as exc:
         logger.exception("Failed to select allowed attack for %s.", state.template.name)
         raise RuntimeError("Allowed attack selection could not be evaluated.") from exc
 
 
 def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
-    """Use a melee option when engaged; otherwise preserve the card's attack priority."""
-    return select_allowed_weapon_attack(
-        state,
-        distance_ft,
-        [attack.id for attack in weapon_attack_profiles(state)],
-    )
+    """Use Recharge when legal, otherwise melee while engaged, then normal card priority."""
+    try:
+        return select_allowed_weapon_attack(
+            state,
+            distance_ft,
+            [attack.id for attack in weapon_attack_profiles(state)],
+        )
+    except Exception as exc:
+        logger.exception("Failed to select weapon attack for %s.", state.template.name)
+        raise RuntimeError("Weapon attack selection could not be evaluated.") from exc
 
 
 def preferred_distance_for_attacks(state: CombatantState, allowed_ids: list[str]) -> int:
-    """Use the first allowed profile's melee reach or normal ranged distance as approach range."""
+    """Use the first available allowed profile's melee reach or normal ranged distance as approach range."""
     try:
         allowed = set(allowed_ids)
-        attack = next(profile for profile in weapon_attack_profiles(state) if profile.id in allowed)
+        profiles = [
+            profile for profile in weapon_attack_profiles(state)
+            if profile.id in allowed and resource_available(state, profile.resource_id, profile.resource_cost)
+        ]
+        attack = next((profile for profile in profiles if is_recharge_resource(state, profile.resource_id)), None)
+        if attack is None:
+            attack = next(iter(profiles))
         weapon = attack.weapon
         if weapon.attack_kind is WeaponAttackKind.MELEE:
             return weapon.reach_ft
@@ -83,4 +109,8 @@ def preferred_distance_for_attacks(state: CombatantState, allowed_ids: list[str]
 
 def preferred_approach_distance(state: CombatantState) -> int:
     """Close to the primary attack's melee reach or normal ranged distance."""
-    return preferred_distance_for_attacks(state, [state.template.weapon_attack.id])
+    try:
+        return preferred_distance_for_attacks(state, [state.template.weapon_attack.id])
+    except Exception as exc:
+        logger.exception("Failed to choose approach distance for %s.", state.template.name)
+        raise RuntimeError("Approach policy could not be evaluated.") from exc

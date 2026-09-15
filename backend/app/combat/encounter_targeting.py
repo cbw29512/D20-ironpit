@@ -36,13 +36,22 @@ def _opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[Enco
     return setup.monsters if attacker.side == "heroes" else setup.heroes
 
 
+def _swallow_targetable(attacker: EncounterCombatant, target: EncounterCombatant) -> bool:
+    swallowed_attacker = attacker.state.swallowed
+    if swallowed_attacker is not None:
+        return target.combatant_id == swallowed_attacker.source_id
+    swallowed_target = target.state.swallowed
+    return swallowed_target is None or not swallowed_target.total_cover_from_outside
+
+
 def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
-    """Pit visibility is unobstructed; only a non-Incapacitated enemy within 5 ft. threatens a ranged attack."""
+    """Pit visibility is unobstructed; only a non-Incapacitated targetable enemy within 5 ft. threatens."""
     return any(
         member.state.is_alive
         and not member.state.is_dead
         and member.state.current_hp > 0
         and not is_incapacitated(member.state)
+        and _swallow_targetable(attacker, member)
         and combatant_distance(attacker, member) <= 5
         for member in _opponents(attacker, setup)
     )
@@ -61,12 +70,19 @@ def _target_priority(member: EncounterCombatant) -> int | None:
 
 
 def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
-    """Return only the highest-priority eligible target class under deterministic Pit policy."""
-    candidates = [member for member in _opponents(attacker, setup) if _target_priority(member) is not None]
-    if not candidates:
-        return []
-    priority = min(_target_priority(member) for member in candidates)
-    return [member for member in candidates if _target_priority(member) == priority]
+    """Return only the highest-priority targetable class under deterministic Pit policy."""
+    try:
+        candidates = [
+            member for member in _opponents(attacker, setup)
+            if _target_priority(member) is not None and _swallow_targetable(attacker, member)
+        ]
+        if not candidates:
+            return []
+        priority = min(_target_priority(member) for member in candidates)
+        return [member for member in candidates if _target_priority(member) == priority]
+    except Exception as exc:
+        logger.exception("Failed to collect living opponents for %s.", attacker.combatant_id)
+        raise RuntimeError("Living opponents could not be evaluated.") from exc
 
 
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:

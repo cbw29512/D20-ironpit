@@ -23,7 +23,7 @@ function member(id, side, x, y, size = "medium", incapacitated = false) {
     state: {
       position: { x, y },
       is_unconscious: incapacitated,
-      template: { id, name: id, size },
+      template: { id, name: id, size, movement_modes: {} },
     },
   };
 }
@@ -34,6 +34,8 @@ const hostile = member("hostile", "monsters", 1, 1);
 const incapacitated = member("incapacitated", "monsters", 1, 1, "medium", true);
 const tiny = member("tiny", "monsters", 1, 1, "tiny");
 const huge = member("huge", "monsters", 1, 1, "huge");
+const incorporeal = member("incorporeal", "heroes", 0, 0);
+incorporeal.state.template.movement_modes.pass_through_creatures_as_difficult_terrain = true;
 
 assert.equal(M.canPassThrough(mover, ally), true);
 assert.equal(M.creatureSpaceIsDifficult(mover, ally), false);
@@ -44,6 +46,11 @@ assert.equal(M.canPassThrough(mover, tiny), true);
 assert.equal(M.creatureSpaceIsDifficult(mover, tiny), false);
 assert.equal(M.canPassThrough(mover, huge), true);
 assert.equal(M.creatureSpaceIsDifficult(mover, huge), true);
+assert.equal(M.canPassThrough(incorporeal, hostile), true);
+assert.equal(M.creatureSpaceIsDifficult(incorporeal, hostile), true);
+assert.equal(M.canPassThrough(incorporeal, ally), true);
+assert.equal(M.creatureSpaceIsDifficult(incorporeal, ally), true);
+assert.equal(M.movementStepCostFt(map, incorporeal, { x: 1, y: 1 }, [incorporeal, hostile]), 10);
 
 assert.equal(M.movementStepCostFt(map, mover, { x: 1, y: 1 }, [mover]), 5);
 assert.equal(M.movementStepCostFt(map, mover, { x: 1, y: 1 }, [mover, ally]), 5);

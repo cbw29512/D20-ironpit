@@ -18,6 +18,16 @@ def _value(item: Any) -> Any:
     return getattr(item, "value", item)
 
 
+def _bloodied_progression_healing(template: CombatantTemplate) -> int:
+    progression = template.progression_features
+    amount = progression.bloodied_start_turn_healing_base
+    if progression.bloodied_start_turn_healing_add_constitution:
+        if template.ability_scores is None:
+            raise ValueError(f"{template.id} requires Constitution for progression healing.")
+        amount += (template.ability_scores.constitution - 10) // 2
+    return max(0, amount)
+
+
 def _control(effect: Any) -> dict[str, Any] | None:
     if effect is None:
         return None
@@ -204,6 +214,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "sneak_attack_d6": progression.sneak_attack_d6,
         "critical_move_fraction": progression.critical_move_fraction,
         "tactical_shift_fraction": progression.tactical_shift_fraction,
+        "peerless_aim": progression.peerless_aim,
+        "death_save_advantage": progression.death_save_advantage,
+        "death_save_recovery_minimum": progression.death_save_recovery_minimum,
+        "bloodied_start_turn_healing": _bloodied_progression_healing(template),
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},

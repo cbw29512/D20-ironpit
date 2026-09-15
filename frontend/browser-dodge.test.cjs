@@ -20,6 +20,7 @@ window.IRON_PIT_BROWSER_GRAPPLE = { speedIsZero: (state) => Boolean(state.speed_
 window.IRON_PIT_BROWSER_MODIFIERS = { effectiveSpeed: (state) => state.template.speed_ft };
 window.IRON_PIT_BROWSER_BARBARIAN2 = { dangerSenseAdvantage: () => 0 };
 window.IRON_PIT_BROWSER_ROLLS = {
+  bloodiedSaveAdvantage: () => 0,
   modeFromSources: (advantage, disadvantage) => {
     if (Boolean(advantage) === Boolean(disadvantage)) return "normal";
     return advantage ? "advantage" : "disadvantage";

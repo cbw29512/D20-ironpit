@@ -1,6 +1,13 @@
 "use strict";
 
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
+
+global.window = globalThis;
+const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
+for (const file of ["browser-heroes.js", "browser-state.js", "browser-rolls.js"]) load(file);
 
 const H = window.IRON_PIT_BROWSER_HEROES;
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -74,4 +81,3 @@ function setDice(values) {
 }
 
 console.log("Generated browser Fighter 7 Great Weapon Fighting regressions passed.");
-require("./browser-fighter8.test.cjs");

@@ -1,0 +1,29 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-green-dragon-wyrmling",
+    "name": "Green Dragon Wyrmling",
+    "archetype": "source-certified recharge breath",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 17,
+    "max_hp": 38,
+    "speed_ft": 30,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 60, "climb_ft": 0, "swim_ft": 30, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 3,
+    "attacks": [{"id": "srd-green-dragon-wyrmling-rend", "name": "Rend", "weapon_id": "srd-green-dragon-wyrmling-rend-weapon", "attack_kind": "melee", "attack_bonus": 4, "damage": {"count": 1, "size": 10, "bonus": 2}, "damage_type": "slashing", "animation": "claw", "reach_ft": 5, "effects": [{"kind": "damage", "source": "Poison", "dice": {"count": 1, "size": 6, "bonus": 0}, "damage_type": "poison", "trigger": "on_hit", "mode": "add"}]}],
+    "primary_attack_id": "srd-green-dragon-wyrmling-rend",
+    "attack_action": {"id": "srd-green-dragon-wyrmling-multiattack", "name": "Multiattack", "slots": [{"attack_ids": ["srd-green-dragon-wyrmling-rend"]}, {"attack_ids": ["srd-green-dragon-wyrmling-rend"]}]},
+    "save_actions": [{"id": "srd-green-dragon-wyrmling-poison-breath", "name": "Poison Breath", "save_ability": "constitution", "dc": 11, "range_ft": 0, "area": {"shape": "cone", "origin": "self", "length_ft": 15}, "damage": {"count": 6, "size": 6, "bonus": 0}, "damage_type": "poison", "success_damage": "half", "resource_id": "srd-green-dragon-wyrmling-poison-breath-resource", "animation": "poison-breath"}],
+    "resources": [{"id": "srd-green-dragon-wyrmling-poison-breath-resource", "name": "Poison Breath", "max_uses": 1, "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 5}}],
+    "saving_throw_bonuses": {"strength": 2, "dexterity": 3, "constitution": 1, "intelligence": 2, "wisdom": 2, "charisma": 1},
+    "skill_bonuses": {"perception": 4, "stealth": 3},
+    "source_trait_names": ["Amphibious"],
+    "source_limited_use_names": ["actions:Poison Breath (Recharge 5–6)"],
+    "damage_immunities": ["poison"],
+    "condition_immunities": ["poisoned"],
+    "visual": {"armor": "natural", "main_hand": "claw", "body_style": "dragon"},
+    "source": "SRD 5.2.1 Green Dragon Wyrmling"
+  }
+]

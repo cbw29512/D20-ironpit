@@ -16,6 +16,7 @@ for (const file of [
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
+const T = window.IRON_PIT_BROWSER_TIMED;
 const L = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
 const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 const heroes = window.IRON_PIT_BROWSER_HEROES;
@@ -27,15 +28,6 @@ const setD20 = (value) => {
     roll: (sides) => sides === 20 ? value : 1,
     rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? value : 1),
   };
-};
-const assertArenaPoison = (target) => {
-  const poison = target.state.timed_effects.find((effect) => effect.effect_id === "poisoned");
-  assert.ok(poison);
-  assert.equal(poison.expiry_timing, null);
-  assert.equal(poison.expires_at_start_of_source_turn, false);
-  assert.equal(poison.repeat_save_ability, "constitution");
-  assert.equal(poison.repeat_save_dc, 10);
-  assert.equal(poison.repeat_save_timing, "target_turn_start");
 };
 
 {
@@ -53,12 +45,16 @@ const assertArenaPoison = (target) => {
   const event = A.resolveAttack(1, 1, source, target, gouge, 5, { spendAction: false, setup: { heroes: [target], monsters: [source] } });
   assert.equal(event.hit, true);
   assert.ok(event.applied_condition_ids.includes("poisoned"));
-  assertArenaPoison(target);
-  setD20(20);
-  const sameRound = L.resolveTargetTiming(2, 1, target, "target_turn_start");
-  assert.equal(sameRound.events.length, 0, "arena Poisoned must last through the round in which it was applied");
-  const ended = L.resolveTargetTiming(sameRound.sequence, 2, target, "target_turn_start");
+  const poison = target.state.timed_effects.find((effect) => effect.effect_id === "poisoned");
+  assert.equal(poison.expiry_timing, "target_turn_end");
+  assert.equal(poison.repeat_save_ability, null);
+  assert.equal(poison.repeat_save_dc, null);
+  assert.equal(poison.repeat_save_timing, null);
+  const start = L.resolveTargetTiming(2, 1, target, "target_turn_start");
+  assert.equal(start.events.length, 0);
+  const ended = L.resolveTargetTiming(start.sequence, 1, target, "target_turn_end");
   assert.equal(ended.events.length, 1);
+  assert.equal(ended.events[0].saving_throw_roll, undefined);
   assert.deepEqual(ended.events[0].removed_condition_ids, ["poisoned"]);
 }
 
@@ -82,11 +78,14 @@ const assertArenaPoison = (target) => {
   const event = A.resolveAttack(1, 1, source, target, sting, 10, { spendAction: false, setup });
   assert.equal(event.hit, true);
   assert.ok(event.applied_condition_ids.includes("poisoned"));
-  assertArenaPoison(target);
-  setD20(20);
-  const ended = L.resolveTargetTiming(2, 2, target, "target_turn_start");
+  const poison = target.state.timed_effects.find((effect) => effect.effect_id === "poisoned");
+  assert.equal(poison.expiry_timing, "source_turn_start");
+  assert.equal(poison.repeat_save_ability, null);
+  assert.equal(poison.repeat_save_dc, null);
+  assert.equal(poison.repeat_save_timing, null);
+  const ended = T.expireSourceStart(2, 2, source, setup);
   assert.equal(ended.events.length, 1);
   assert.deepEqual(ended.events[0].removed_condition_ids, ["poisoned"]);
 }
 
-console.log("Generated Giant Vulture/Wyvern source fidelity and next-round arena Poisoned policy regressions passed.");
+console.log("Generated Giant Vulture/Wyvern source-defined Poisoned lifecycle regressions passed.");

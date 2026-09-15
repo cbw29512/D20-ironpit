@@ -73,15 +73,91 @@ def test_environmental_breathing_traits_are_arena_neutral() -> None:
         raise
 
 
-def test_unknown_outcome_changing_trait_fails_closed() -> None:
+def test_information_only_traits_do_not_block_combat_certification() -> None:
+    try:
+        wolf = _monster("Wolf")
+        for trait_name, description in (
+            ("Divine Awareness", "The creature knows if it hears a lie."),
+            (
+                "Inscrutable",
+                "No magic can observe the creature remotely or detect its thoughts without permission.",
+            ),
+        ):
+            row = {"traits": f"{trait_name}. {description}"}
+            synthetic = wolf.model_copy(update={"source_trait_names": [trait_name], "combat_traits": []})
+            assert trait_issues(synthetic, row) == []
+            assert synthetic.source_trait_names == [trait_name]
+    except Exception:
+        logger.exception("Information-only trait neutrality regression failed.")
+        raise
+
+
+def test_real_srd_information_traits_are_fingerprinted_without_trait_blockers() -> None:
+    try:
+        for monster_name, trait_slug in (
+            ("Planetar", "divine-awareness"),
+            ("Solar", "divine-awareness"),
+            ("Sphinx of Lore", "inscrutable"),
+            ("Sphinx of Valor", "inscrutable"),
+        ):
+            issues = trait_issues(_monster(monster_name), _row(monster_name))
+            assert f"uncertified-trait:{trait_slug}" not in issues
+    except Exception:
+        logger.exception("Real SRD information-only trait regression failed.")
+        raise
+
+
+def test_tunneler_is_arena_neutral_but_remains_source_fingerprinted() -> None:
+    try:
+        for monster_name in ("Ankheg", "Purple Worm"):
+            monster = _monster(monster_name)
+            assert "Tunneler" in monster.source_trait_names
+            assert monster.movement_modes.burrow_ft > 0
+            assert "uncertified-trait:tunneler" not in trait_issues(monster, _row(monster_name))
+    except Exception:
+        logger.exception("Tunneler arena-neutral trait regression failed.")
+        raise
+
+
+def test_sunlight_sensitivity_is_inactive_without_explicit_sunlight() -> None:
+    try:
+        wolf = _monster("Wolf")
+        row = {
+            "traits": (
+                "Sunlight Sensitivity. While in sunlight, the creature has Disadvantage on attack rolls."
+            )
+        }
+        synthetic = wolf.model_copy(
+            update={"source_trait_names": ["Sunlight Sensitivity"], "combat_traits": []}
+        )
+        assert trait_issues(synthetic, row) == []
+        assert synthetic.source_trait_names == ["Sunlight Sensitivity"]
+    except Exception:
+        logger.exception("Default no-sunlight certification regression failed.")
+        raise
+
+
+def test_shadow_open_arena_traits_are_source_fingerprinted_but_inactive() -> None:
+    try:
+        shadow = _monster("Shadow")
+        assert shadow.source_trait_names == ["Amorphous", "Sunlight Weakness"]
+        assert trait_issues(shadow, _row("Shadow")) == []
+    except Exception:
+        logger.exception("Shadow arena-neutral trait regression failed.")
+        raise
+
+
+def test_recognized_magic_resistance_trait_fails_closed_without_runtime_support() -> None:
     try:
         wolf = _monster("Wolf")
         row = dict(_row("Wolf"))
         row["traits"] = "Magic Resistance. The wolf has Advantage on saving throws against spells and magical effects."
-        drifted = wolf.model_copy(update={"source_trait_names": ["Magic Resistance"], "combat_traits": []})
-        assert "uncertified-trait:magic-resistance" in trait_issues(drifted, row)
+        drifted = wolf.model_copy(
+            update={"source_trait_names": ["Magic Resistance"], "combat_traits": [], "magic_resistance": False}
+        )
+        assert "trait-runtime-missing:magic-resistance" in trait_issues(drifted, row)
     except Exception:
-        logger.exception("Unknown outcome-changing trait fail-closed regression failed.")
+        logger.exception("Magic Resistance runtime fail-closed regression failed.")
         raise
 
 

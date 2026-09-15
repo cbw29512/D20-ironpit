@@ -1,0 +1,69 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-azer-sentinel",
+    "name": "Azer Sentinel",
+    "archetype": "source-certified fire aura sentinel",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 17,
+    "max_hp": 39,
+    "speed_ft": 30,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 0, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 1,
+    "attacks": [{"id":"srd-azer-sentinel-burning-hammer","name":"Burning Hammer","weapon_id":"srd-azer-sentinel-burning-hammer-weapon","attack_kind":"melee","attack_bonus":5,"damage":{"count":1,"size":10,"bonus":3},"damage_type":"bludgeoning","animation":"heavy-strike","reach_ft":5,"effects":[{"kind":"damage","source":"Fire","dice":{"count":1,"size":6,"bonus":0},"damage_type":"fire"}]}],
+    "primary_attack_id": "srd-azer-sentinel-burning-hammer",
+    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
+    "saving_throw_bonuses": {"strength":3,"dexterity":1,"constitution":4,"intelligence":1,"wisdom":1,"charisma":0},
+    "damage_immunities":["fire","poison"],
+    "condition_immunities":["poisoned"],
+    "source_trait_names":["Fire Aura","Illumination"],
+    "visual":{"armor":"plate","main_hand":"burning-hammer","off_hand":null,"body_style":"azer"},
+    "source":"SRD 5.2.1 p. 261"
+  },
+  {
+    "schema_version":1,"id":"srd-hezrou","name":"Hezrou","archetype":"source-certified demonic bruiser","challenge_rating":"8","kind":"monster","size":"large","armor_class":18,"max_hp":157,"speed_ft":30,
+    "movement_modes":{"walk_ft":30,"fly_ft":0,"climb_ft":0,"swim_ft":0,"burrow_ft":0,"hover":false},"initiative_bonus":6,
+    "attacks":[{"id":"srd-hezrou-rend","name":"Rend","weapon_id":"srd-hezrou-rend-weapon","attack_kind":"melee","attack_bonus":7,"damage":{"count":1,"size":4,"bonus":4},"damage_type":"slashing","animation":"claw","reach_ft":5,"effects":[{"kind":"damage","source":"Poison","dice":{"count":2,"size":8,"bonus":0},"damage_type":"poison"}]}],
+    "primary_attack_id":"srd-hezrou-rend","unarmed_opportunity_attack":{"attack_bonus":7,"damage":5},
+    "attack_action":{"id":"srd-hezrou-multiattack","name":"Multiattack","is_attack_action":true,"slots":[{"attack_ids":["srd-hezrou-rend"]},{"attack_ids":["srd-hezrou-rend"]},{"attack_ids":["srd-hezrou-rend"]}]},
+    "saving_throw_bonuses":{"strength":7,"dexterity":3,"constitution":8,"intelligence":-3,"wisdom":4,"charisma":1},"damage_resistances":["cold","fire","lightning"],"damage_immunities":["poison"],"condition_immunities":["poisoned"],
+    "source_trait_names":["Demonic Restoration","Magic Resistance","Stench"],"source_bonus_action_names":["Leap"],"visual":{"armor":"hide","main_hand":"claws","off_hand":null,"body_style":"hezrou"},"source":"SRD 5.2.1 p. 298"
+  },
+  {
+    "schema_version":1,"id":"srd-hobgoblin-captain","name":"Hobgoblin Captain","archetype":"source-certified authority commander","challenge_rating":"3","kind":"monster","size":"medium","armor_class":17,"max_hp":58,"speed_ft":30,
+    "movement_modes":{"walk_ft":30,"fly_ft":0,"climb_ft":0,"swim_ft":0,"burrow_ft":0,"hover":false},"initiative_bonus":4,
+    "attacks":[
+      {"id":"srd-hobgoblin-captain-greatsword","name":"Greatsword","weapon_id":"srd-hobgoblin-captain-greatsword-weapon","attack_kind":"melee","attack_bonus":4,"damage":{"count":2,"size":6,"bonus":2},"damage_type":"slashing","animation":"heavy-strike","reach_ft":5,"effects":[{"kind":"damage","source":"Poison","dice":{"count":1,"size":6,"bonus":0},"damage_type":"poison"}]},
+      {"id":"srd-hobgoblin-captain-longbow","name":"Longbow","weapon_id":"srd-hobgoblin-captain-longbow-weapon","attack_kind":"ranged","attack_bonus":4,"damage":{"count":1,"size":8,"bonus":2},"damage_type":"piercing","animation":"projectile","reach_ft":5,"normal_range_ft":150,"long_range_ft":600,"projectile":"arrow","effects":[{"kind":"damage","source":"Poison","dice":{"count":2,"size":4,"bonus":0},"damage_type":"poison"}]}
+    ],
+    "primary_attack_id":"srd-hobgoblin-captain-greatsword","unarmed_opportunity_attack":{"attack_bonus":4,"damage":3},
+    "attack_action":{"id":"srd-hobgoblin-captain-multiattack","name":"Multiattack","is_attack_action":true,"slots":[{"attack_ids":["srd-hobgoblin-captain-greatsword","srd-hobgoblin-captain-longbow"]},{"attack_ids":["srd-hobgoblin-captain-greatsword","srd-hobgoblin-captain-longbow"]}]},
+    "saving_throw_bonuses":{"strength":2,"dexterity":2,"constitution":2,"intelligence":1,"wisdom":0,"charisma":1},"source_trait_names":["Aura of Authority"],"visual":{"armor":"half-plate","main_hand":"greatsword","off_hand":null,"body_style":"goblinoid"},"source":"SRD 5.2.1 p. 299"
+  },
+  {
+    "schema_version":1,"id":"srd-shadow","name":"Shadow","archetype":"source-certified ability draining undead","challenge_rating":"1/2","kind":"monster","size":"medium","armor_class":12,"max_hp":27,"speed_ft":40,
+    "movement_modes":{"walk_ft":40,"fly_ft":0,"climb_ft":0,"swim_ft":0,"burrow_ft":0,"hover":false},"initiative_bonus":2,
+    "attacks":[{"id":"srd-shadow-draining-swipe","name":"Draining Swipe","weapon_id":"srd-shadow-draining-swipe-weapon","attack_kind":"melee","attack_bonus":4,"damage":{"count":1,"size":6,"bonus":2},"damage_type":"necrotic","animation":"claw","reach_ft":5,"attack_ability":"dexterity","attack_ability_modifier":2,"effects":[{"kind":"ability-score-reduction","ability":"strength","dice_count":1,"dice_size":4,"minimum_score":0,"dies_at_minimum":true}]}],
+    "primary_attack_id":"srd-shadow-draining-swipe","unarmed_opportunity_attack":{"attack_bonus":0,"damage":0},"saving_throw_bonuses":{"strength":-2,"dexterity":2,"constitution":1,"intelligence":-2,"wisdom":0,"charisma":-1},
+    "damage_resistances":["acid","cold","fire","lightning","thunder"],"damage_vulnerabilities":["radiant"],"damage_immunities":["necrotic","poison"],"condition_immunities":["exhaustion","frightened","grappled","paralyzed","petrified","poisoned","prone","restrained","unconscious"],
+    "source_trait_names":["Amorphous","Sunlight Weakness"],"source_bonus_action_names":["Shadow Stealth"],"visual":{"armor":"none","main_hand":"draining-claw","off_hand":null,"body_style":"shadow"},"source":"SRD 5.2.1 p. 322"
+  },
+  {
+    "schema_version":1,"id":"srd-troll-limb","name":"Troll Limb","archetype":"source-certified regenerative severed limb","challenge_rating":"1/2","kind":"monster","size":"small","armor_class":13,"max_hp":14,"speed_ft":20,
+    "movement_modes":{"walk_ft":20,"fly_ft":0,"climb_ft":0,"swim_ft":0,"burrow_ft":0,"hover":false},"initiative_bonus":1,
+    "attacks":[{"id":"srd-troll-limb-rend","name":"Rend","weapon_id":"srd-troll-limb-rend-weapon","attack_kind":"melee","attack_bonus":6,"damage":{"count":2,"size":4,"bonus":4},"damage_type":"slashing","animation":"claw","reach_ft":5,"attack_ability":"strength","attack_ability_modifier":4}],
+    "primary_attack_id":"srd-troll-limb-rend","unarmed_opportunity_attack":{"attack_bonus":6,"damage":5},"saving_throw_bonuses":{"strength":4,"dexterity":1,"constitution":0,"intelligence":-5,"wisdom":-1,"charisma":-5},
+    "source_trait_names":["Regeneration","Troll Spawn"],"visual":{"armor":"none","main_hand":"claw","off_hand":null,"body_style":"troll-limb"},"source":"SRD 5.2.1 p. 333"
+  },
+  {
+    "schema_version":1,"id":"srd-satyr","name":"Satyr","archetype":"source-certified magical skirmisher","challenge_rating":"1/2","kind":"monster","size":"medium","armor_class":13,"max_hp":31,"speed_ft":40,
+    "movement_modes":{"walk_ft":40,"fly_ft":0,"climb_ft":0,"swim_ft":0,"burrow_ft":0,"hover":false},"initiative_bonus":3,
+    "attacks":[{"id":"srd-satyr-hooves","name":"Hooves","weapon_id":"srd-satyr-hooves-weapon","attack_kind":"melee","attack_bonus":5,"damage":{"count":1,"size":4,"bonus":3},"damage_type":"bludgeoning","animation":"strike","reach_ft":5,"attack_ability":"dexterity","attack_ability_modifier":3,"push_target_away_ft":10,"push_target_max_size":"medium"}],
+    "primary_attack_id":"srd-satyr-hooves","unarmed_opportunity_attack":{"attack_bonus":3,"damage":2},
+    "save_actions":[{"id":"srd-satyr-mockery","name":"Mockery","save_ability":"wisdom","dc":12,"range_ft":90,"damage":{"count":1,"size":6,"bonus":2},"damage_type":"psychic","success_damage":"none","animation":"mockery"}],
+    "saving_throw_bonuses":{"strength":1,"dexterity":3,"constitution":0,"intelligence":1,"wisdom":0,"charisma":2},
+    "source_trait_names":["Magic Resistance"],"visual":{"armor":"none","main_hand":"hooves","off_hand":null,"body_style":"satyr"},"source":"SRD 5.2.1 p. 321"
+  }
+]

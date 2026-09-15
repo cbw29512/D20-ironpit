@@ -10,6 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-condition-rules.js", "browser-action-economy.js", "browser-rolls.js",
   "browser-tactical-mind.js", "browser-grapple.js", "browser-action-surge.js",
+  "browser-progression-recovery.js",
 ]) load(file);
 
 const E = window.IRON_PIT_ACTION_ECONOMY;

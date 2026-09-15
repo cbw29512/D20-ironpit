@@ -7,6 +7,15 @@ from app.domain.models import CombatantState, WeaponAttack
 logger = logging.getLogger(__name__)
 
 
+def attack_available_for_source(attack: WeaponAttack, attacker: CombatantState) -> bool:
+    try:
+        relation = attacker.attachment
+        return relation is None or attack.id not in relation.forbids_source_attack_ids
+    except Exception as exc:
+        logger.exception("Failed to evaluate source legality for attack %s.", attack.id)
+        raise RuntimeError("Attack source legality could not be evaluated.") from exc
+
+
 def attack_allowed_against(
     attack: WeaponAttack,
     attacker_event_id: str,

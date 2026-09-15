@@ -32,6 +32,7 @@ class BattleEvent(BaseModel):
     target_ac: int | None = Field(default=None, ge=0)
     attack_roll: DiceRoll | None = None
     saving_throw_roll: DiceRoll | None = None
+    resource_roll: DiceRoll | None = None
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1)
     save_succeeded: bool | None = None
@@ -51,6 +52,8 @@ class BattleEvent(BaseModel):
     turn_termination_reason: str | None = None
     hp_before: int | None = None
     hp_after: int | None = None
+    max_hp_before: int | None = Field(default=None, ge=0)
+    max_hp_after: int | None = Field(default=None, ge=0)
     temporary_hp_before: int | None = Field(default=None, ge=0)
     temporary_hp_after: int | None = Field(default=None, ge=0)
     death_save_successes_before: int | None = Field(default=None, ge=0, le=3)

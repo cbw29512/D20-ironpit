@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.attack_roll_modifiers import next_attack_disadvantage_sources
 from app.combat.dice import FixedDiceProvider
 from app.combat.modifier_stack import add_modifier, next_attack_against_advantage_sources
 from app.combat.sap import SAP_EFFECT_IDS, WEAPON_SAP_EFFECT_ID
@@ -57,6 +58,15 @@ def _study(caster: EncounterCombatant, target: EncounterCombatant) -> None:
     ))
 
 
+def _next_disadvantage(caster: EncounterCombatant) -> None:
+    add_modifier(caster.state, CombatModifier(
+        id="next-attack-disadvantage",
+        source_id="enemy",
+        source_effect_id="generic-rider",
+        kind=ModifierKind.NEXT_ATTACK_DISADVANTAGE,
+    ))
+
+
 def _sap(caster: EncounterCombatant) -> None:
     caster.state.timed_effects.append(TimedEffect(
         effect_id=WEAPON_SAP_EFFECT_ID,
@@ -80,6 +90,20 @@ def test_spell_attack_consumes_target_scoped_next_attack_advantage() -> None:
     assert event.attack_roll is not None and event.attack_roll.mode.value == "advantage"
     assert event.hit is True
     assert next_attack_against_advantage_sources(caster.state, target.combatant_id) == 0
+
+
+def test_spell_attack_consumes_source_neutral_next_attack_disadvantage() -> None:
+    caster, target, setup = _setup(target_ac=30)
+    _next_disadvantage(caster)
+
+    event = resolve_spell_attack(
+        1, 1, caster, target, _spell(), setup, "1:caster",
+        FixedDiceProvider([18, 2]),
+    )
+
+    assert event.attack_roll is not None and event.attack_roll.mode.value == "disadvantage"
+    assert event.attack_roll.selected_roll == 2
+    assert next_attack_disadvantage_sources(caster.state) == 0
 
 
 def test_spell_attack_gets_advantage_against_reckless_target() -> None:

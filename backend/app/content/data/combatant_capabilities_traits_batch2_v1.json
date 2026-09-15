@@ -1,0 +1,30 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-earth-elemental",
+    "name": "Earth Elemental",
+    "archetype": "source-certified elemental artillery bruiser",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 17,
+    "max_hp": 147,
+    "speed_ft": 30,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 0, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 30, "hover": false},
+    "initiative_bonus": -1,
+    "attacks": [
+      {"id": "srd-earth-elemental-slam", "name": "Slam", "weapon_id": "srd-earth-elemental-slam-weapon", "attack_kind": "melee", "attack_bonus": 8, "damage": {"count": 2, "size": 8, "bonus": 5}, "damage_type": "bludgeoning", "animation": "slam", "reach_ft": 10, "attack_ability": "strength", "attack_ability_modifier": 5},
+      {"id": "srd-earth-elemental-rock-launch", "name": "Rock Launch", "weapon_id": "srd-earth-elemental-rock-launch-weapon", "attack_kind": "ranged", "attack_bonus": 8, "damage": {"count": 1, "size": 6, "bonus": 5}, "damage_type": "bludgeoning", "animation": "projectile", "reach_ft": 5, "normal_range_ft": 60, "long_range_ft": 60, "projectile": "rock", "attack_ability": "strength", "attack_ability_modifier": 5, "effects": [{"kind": "prone", "max_target_size": "large"}]}
+    ],
+    "primary_attack_id": "srd-earth-elemental-slam",
+    "unarmed_opportunity_attack": {"attack_bonus": 8, "damage": 6},
+    "attack_action": {"id": "srd-earth-elemental-multiattack", "name": "Multiattack", "is_attack_action": true, "slots": [{"attack_ids": ["srd-earth-elemental-slam", "srd-earth-elemental-rock-launch"]}, {"attack_ids": ["srd-earth-elemental-slam", "srd-earth-elemental-rock-launch"]}]},
+    "saving_throw_bonuses": {"strength": 5, "dexterity": -1, "constitution": 5, "intelligence": -3, "wisdom": 0, "charisma": -3},
+    "damage_vulnerabilities": ["thunder"],
+    "damage_immunities": ["poison"],
+    "condition_immunities": ["exhaustion", "paralyzed", "petrified", "poisoned", "unconscious"],
+    "source_trait_names": ["Earth Glide", "Siege Monster"],
+    "visual": {"armor": "stone", "main_hand": "stone-fist", "off_hand": "rock", "body_style": "earth-elemental"},
+    "source": "SRD 5.2.1 p. 282"
+  }
+]

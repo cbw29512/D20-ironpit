@@ -7,6 +7,7 @@ from app.content.level_resources import (
     barbarian_rage_uses,
     orc_adrenaline_rush_uses,
 )
+from app.domain.character_builds import AbilityScores
 from app.domain.models import (
     CombatantTemplate,
     DamageType,
@@ -73,6 +74,10 @@ def build_rokhan_stonefury() -> CombatantTemplate:
         archetype=hero.class_name,
         level=level,
         kind="character",
+        ability_scores=AbilityScores(
+            strength=17, dexterity=13, constitution=15,
+            intelligence=10, wisdom=10, charisma=10,
+        ),
         armor_class=13,
         max_hp=14,
         speed_ft=30,

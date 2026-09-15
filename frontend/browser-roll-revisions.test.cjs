@@ -49,6 +49,7 @@ load("browser-rolls.js");
 window.IRON_PIT_BROWSER_ROLLS = {
   modeFromSources: () => "normal",
   d20: () => ({ notation: "1d20", rolls: [2], modifier: 0, selected_roll: 2, mode: "normal", total: 2 }),
+  bloodiedSaveAdvantage: () => 0,
 };
 window.IRON_PIT_BROWSER_MODIFIERS = { applyD20Bonus: (_state, _kind, roll) => roll };
 window.IRON_PIT_BROWSER_BARBARIAN2 = { dangerSenseAdvantage: () => 0 };

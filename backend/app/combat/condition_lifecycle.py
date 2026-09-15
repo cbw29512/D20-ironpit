@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import logging
-
 from app.combat.modifier_stack import expire_target_turn_modifiers
+from app.combat.periodic_damage import periodic_damage_due, resolve_periodic_damage
+from app.combat.repeat_save_transition import resolve_repeat_save_transition
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
+from app.combat.timed_effect_recovery import automatic_success_due, resolve_automatic_success
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-
 logger = logging.getLogger(__name__)
 
 
@@ -19,11 +20,12 @@ def _condition_name(effect_id: str) -> str:
 def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool:
     if effect.repeat_save_timing != timing:
         return False
-    return not (
-        effect.effect_id == "poisoned"
-        and effect.applied_round is not None
-        and round_number <= effect.applied_round
-    )
+    eligible_round = effect.repeat_save_eligible_round
+    return eligible_round is None or round_number >= eligible_round
+
+
+def _expiry_due(effect, round_number: int, timing: ConditionTiming) -> bool:
+    return effect.expiry_timing == timing and (effect.expires_round is None or round_number >= effect.expires_round)
 
 
 def resolve_target_condition_timing(
@@ -33,20 +35,26 @@ def resolve_target_condition_timing(
     timing: ConditionTiming,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve expiry and one repeat save per grouped source effect on the affected creature's turn."""
+    """Resolve periodic damage, expiry, and repeat saves on the affected creature's turn."""
     try:
         events: list[BattleEvent] = []
         for effect in list(target.state.timed_effects):
             if effect not in target.state.timed_effects:
                 continue
+            if periodic_damage_due(effect, timing):
+                events.append(resolve_periodic_damage(sequence, round_number, target, effect, dice))
+                sequence += 1
+                if target.state.is_dead:
+                    continue
+            if automatic_success_due(effect, round_number, timing):
+                events.append(resolve_automatic_success(sequence, round_number, target, effect))
+                sequence += 1
+                continue
             if _repeat_save_due(effect, round_number, timing):
                 roll, succeeded = resolve_saving_throw(
-                    target.state,
-                    effect.repeat_save_ability,
-                    effect.repeat_save_dc,
-                    dice,
+                    target.state, effect.repeat_save_ability, effect.repeat_save_dc, dice,
                 )
-                removed = remove_effect_group(target.state, effect) if succeeded else []
+                removed, escalated = resolve_repeat_save_transition(target.state, effect, succeeded, round_number)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
@@ -59,6 +67,7 @@ def resolve_target_condition_timing(
                     save_ability=effect.repeat_save_ability,
                     save_dc=effect.repeat_save_dc,
                     save_succeeded=succeeded,
+                    applied_condition_ids=escalated,
                     removed_condition_ids=removed,
                     feature_id=effect.source_effect_id or "condition-repeat-save",
                     animation="condition-save",
@@ -69,9 +78,9 @@ def resolve_target_condition_timing(
                     ),
                 ))
                 sequence += 1
-                if succeeded:
+                if succeeded or escalated:
                     continue
-            if effect.expiry_timing == timing:
+            if _expiry_due(effect, round_number, timing):
                 removed = remove_effect_group(target.state, effect)
                 if removed:
                     events.append(BattleEvent(
@@ -111,7 +120,7 @@ def resolve_source_condition_timing(
         for target in [*setup.heroes, *setup.monsters]:
             expiring = [
                 effect for effect in target.state.timed_effects
-                if effect.source_id == source.combatant_id and effect.expiry_timing == timing
+                if effect.source_id == source.combatant_id and _expiry_due(effect, round_number, timing)
             ]
             for effect in expiring:
                 if effect not in target.state.timed_effects:

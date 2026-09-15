@@ -2,10 +2,14 @@ from __future__ import annotations
 
 from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
+from app.combat.aura_modifiers import attack_advantage_sources, saving_throw_advantage_sources
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
+from app.combat.encounter_targeting import combatant_distance
+from app.combat.forced_movement import apply_attack_pull, apply_attack_push
 from app.combat.frenzy import mark_reckless_use_while_raging
+from app.combat.frightened import frightened_d20_disadvantage
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -43,21 +47,44 @@ def resolve_encounter_attack(
         close_enemy = False if setup is not None else True
     affected_states = [member.state for member in [*setup.heroes, *setup.monsters]] if setup is not None else None
     sneak_ally = setup is not None and bool(active_allies(attacker, setup))
+    fear_disadvantage = frightened_d20_disadvantage(attacker.state, setup) if setup is not None else 0
+    aura_advantage = attack_advantage_sources(attacker, setup)
+    save_target = redirect if redirect is not None else target
+    save_aura_advantage = saving_throw_advantage_sources(save_target, setup)
     event = resolve_attack(
         sequence, round_number, attacker.state, target.state, attack, distance_ft, dice,
         actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
-        spend_action=spend_action, advantage_sources=advantage_sources,
-        other_disadvantage_sources=other_disadvantage_sources, feature_id=feature_id,
+        spend_action=spend_action, advantage_sources=advantage_sources + aura_advantage,
+        other_disadvantage_sources=other_disadvantage_sources + fear_disadvantage, feature_id=feature_id,
         turn_key=turn_key, bonus_damage=bonus_damage, close_enemy_active=close_enemy,
         redirect_target=redirect.state if redirect is not None else None,
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
         affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
-        off_turn=off_turn,
+        off_turn=off_turn, saving_throw_advantage_sources=save_aura_advantage,
     )
     if reckless_started:
         event.description += f" {attacker.state.template.name} uses Reckless Attack."
         if event.feature_id is None:
             event.feature_id = "reckless-attack"
+    actual_target = target
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
+        actual_target = redirect
+    movement_kind = None
+    moved_ft = 0
+    if event.hit and attack.push_target_away_ft > 0:
+        movement_kind = "pushed"
+        moved_ft = apply_attack_push(attacker, actual_target, attack, hit=True)
+    elif event.hit and attack.pull_target_toward_ft > 0:
+        movement_kind = "pulled"
+        moved_ft = apply_attack_pull(attacker, actual_target, attack, hit=True)
+    if moved_ft:
+        before = event.distance_after_ft if event.distance_after_ft is not None else distance_ft
+        after = combatant_distance(attacker, actual_target)
+        event.distance_before_ft = before
+        event.distance_after_ft = after
+        event.description += (
+            f" {actual_target.state.template.name} is {movement_kind} {moved_ft} feet."
+            f" Target is {movement_kind} {moved_ft} ft. ({before} ft. to {after} ft.)."
+        )
     return apply_critical_closing_move(attacker, setup, event)

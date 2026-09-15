@@ -7,29 +7,27 @@
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
-  const D = () => window.IRON_PIT_DICE;
-  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
-    available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
-  };
+  const RES = () => window.IRON_PIT_BROWSER_RESOURCES, RC = () => window.IRON_PIT_BROWSER_RECHARGE, RA = () => window.IRON_PIT_BROWSER_RECHARGE_ACTION;
+  const SW = () => window.IRON_PIT_BROWSER_SWALLOW, AU = () => window.IRON_PIT_BROWSER_AURAS, D = () => window.IRON_PIT_DICE;
+  const PR = () => window.IRON_PIT_BROWSER_PROGRESSION_RECOVERY;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
-
   function enablePitRangePolicy() {
     const rolls = window.IRON_PIT_BROWSER_ROLLS;
     if (!rolls || rolls.fixedFormationActive) return;
     const rawAttackMode = rolls.attackMode;
-    rolls.attackMode = (attack, distance, advantage = 0, disadvantage = 0) =>
-      rawAttackMode(attack, distance, advantage, disadvantage, false);
+    rolls.attackMode = (attack, distance, advantage = 0, disadvantage = 0) => rawAttackMode(attack, distance, advantage, disadvantage, false);
     rolls.fixedFormationActive = true;
   }
-
   function deathSave(sequence, round, member) {
-    const state = member.state, natural = D().roll(20);
+    const state = member.state, rolled = PR().deathSaveRoll(state, D()), natural = rolled.selected;
     const successesBefore = state.death_save_successes, failuresBefore = state.death_save_failures;
     let result = "failure";
-    if (natural === 20) {
+    if (natural >= rolled.recoveryMinimum) {
       state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false;
-      state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP";
+      state.death_save_successes = 0; state.death_save_failures = 0;
+      result = natural === 20 ? "natural 20; regains 1 HP" : `${natural}; regains 1 HP`;
     } else if (natural === 1) {
       state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures";
     } else if (natural >= 10) {
@@ -44,34 +42,41 @@
     }
     return {
       sequence, round_number: round, event_type: "death_save", actor_id: member.combatant_id, actor_name: state.template.name,
-      death_save_roll: { notation: "1d20", rolls: [natural], selected_roll: natural, modifier: 0, mode: "normal", total: natural },
+      death_save_roll: { notation: rolled.mode === "advantage" ? "2d20kh1" : "1d20", rolls: rolled.rolls, selected_roll: natural, modifier: 0, mode: rolled.mode, total: natural },
       hp_after: state.current_hp, death_save_successes_before: successesBefore, death_save_failures_before: failuresBefore,
       death_save_successes: state.death_save_successes, death_save_failures: state.death_save_failures,
       is_stable: state.is_stable, is_dead: state.is_dead, animation: "death-save",
       description: `${state.template.name} makes a Death Save: ${result}.`,
     };
   }
-
-  function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
-    const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
-    if (surge) { events.push(...surge.events); sequence = surge.sequence; }
-    const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
-    return { events, sequence: rage?.sequence ?? sequence };
-  }
-
-  function saveChoice(member, setup) {
+  function saveChoice(member, setup, actionCost = "action") {
+    if (!E().available(member.state, actionCost)) return null;
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
+        if ((action.actionCost || "action") !== actionCost) continue;
+        if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
         const distance = F().saveDistance(member, target, action.range);
-        if (V().legalAction(action, target, distance)) return { target, action, distance };
+        if (V().legalAction(action, target, distance, member)) return { target, action, distance };
       }
     }
     return null;
   }
-
+  function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
+    const bonus = saveChoice(member, setup, "bonus_action");
+    if (bonus) events.push(V().resolveAction(sequence++, round, member, bonus.target, bonus.action, bonus.distance, { setup }));
+    const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
+    if (surge) { events.push(...surge.events); sequence = surge.sequence; }
+    const swallowed = SW()?.turnEnd(sequence, round, member, setup);
+    if (swallowed) { events.push(...swallowed.events); sequence = swallowed.sequence; }
+    const aura = AU()?.turnEnd(sequence, round, member, setup); if (aura) { events.push(...aura.events); sequence = aura.sequence; }
+    const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
+    return { events, sequence: rage?.sequence ?? sequence };
+  }
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const events = []; H().cleanup(setup); S().beginTurn(member.state); PR().startTurnHealing(member.state);
+    const recharge = RC()?.resolveStartTurn(sequence, round, member);
+    if (recharge) { events.push(...recharge.events); sequence = recharge.sequence; }
     const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member));
@@ -86,40 +91,35 @@
       const shift = T()?.resolve(sequence, round, member, setup); if (shift) { events.push(shift); sequence += 1; }
     }
     if (H().shouldEscape(member.state)) {
-      events.push(H().escape(sequence++, round, member));
+      events.push(H().escape(sequence++, round, member, setup));
       return finalize(events, sequence, round, member, setup, turnKey);
     }
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
-    const spell = L()?.resolve(sequence, round, member, setup, turnKey);
-    if (spell) { events.push(...spell.events); sequence = spell.sequence; }
+    const readyRecharge = RA()?.resolve(sequence, round, member, setup, turnKey);
+    if (readyRecharge?.handled) { events.push(...readyRecharge.events); return finalize(events, readyRecharge.sequence, round, member, setup, turnKey); }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-
     const targets = F().targetOrder(member, setup);
     if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
     const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
-    if (charged?.handled) {
-      events.push(...charged.events);
-      return finalize(events, charged.sequence, round, member, setup, turnKey);
-    }
-
+    if (charged?.handled) { events.push(...charged.events); return finalize(events, charged.sequence, round, member, setup, turnKey); }
     const movement = OM()?.move(sequence, round, member, setup, turnKey);
     if (movement) { events.push(...movement.events); sequence = movement.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-
+    const rechargeAction = RA()?.resolve(sequence, round, member, setup, turnKey);
+    if (rechargeAction?.handled) { events.push(...rechargeAction.events); return finalize(events, rechargeAction.sequence, round, member, setup, turnKey); }
     const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey);
     if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-
+    const swallow = SW()?.resolve(sequence, round, member, setup);
+    if (swallow?.handled) { events.push(...swallow.events); return finalize(events, swallow.sequence, round, member, setup, turnKey); }
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup);
       events.push(...multi.events); sequence = multi.sequence;
-      if (multi.events.length || !E().available(member.state, "action")) {
-        return finalize(events, sequence, round, member, setup, turnKey);
-      }
+      if (multi.events.length || !E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
     }
     const saved = saveChoice(member, setup);
     if (saved && E().available(member.state, "action")) {
-      events.push(V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance));
+      events.push(V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance, { setup }));
       return finalize(events, sequence, round, member, setup, turnKey);
     }
     const choice = F().chooseStandardAttack(member, setup);
@@ -129,11 +129,8 @@
         advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null),
       });
       events.push(...standard.events); sequence = standard.sequence;
-    } else if (E().available(member.state, "action")) {
-      events.push(DG().take(sequence++, round, member));
-    }
+    } else if (E().available(member.state, "action")) events.push(DG().take(sequence++, round, member));
     return finalize(events, sequence, round, member, setup, turnKey);
   }
-
   window.IRON_PIT_BROWSER_TURN = { deathSave, resolveTurn };
 })();

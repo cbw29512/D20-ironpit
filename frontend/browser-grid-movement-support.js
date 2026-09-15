@@ -37,7 +37,9 @@
 
   function canPassThrough(mover, occupant) {
     try {
-      if (mover.combatant_id === occupant.combatant_id || mover.side === occupant.side) return true;
+      if (mover.combatant_id === occupant.combatant_id) return true;
+      if (mover.state.template.movement_modes?.pass_through_creatures_as_difficult_terrain) return true;
+      if (mover.side === occupant.side) return true;
       if (conditionRules().incapacitated(occupant.state) || occupant.state.template.size === "tiny") return true;
       return Math.abs(SIZE_RANK[mover.state.template.size] - SIZE_RANK[occupant.state.template.size]) >= 2;
     } catch (error) {
@@ -52,7 +54,9 @@
 
   function creatureSpaceIsDifficult(mover, occupant) {
     try {
-      if (mover.combatant_id === occupant.combatant_id || mover.side === occupant.side) return false;
+      if (mover.combatant_id === occupant.combatant_id) return false;
+      if (mover.state.template.movement_modes?.pass_through_creatures_as_difficult_terrain) return true;
+      if (mover.side === occupant.side) return false;
       return occupant.state.template.size !== "tiny";
     } catch (error) {
       console.error("Failed to evaluate creature-space movement cost", { error });

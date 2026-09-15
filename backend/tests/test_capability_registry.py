@@ -36,4 +36,5 @@ def test_migrated_data_definitions_still_pass_full_srd_source_audit() -> None:
     runtime = {template.id: template for template in build_arena_roster().monsters}
     rows = {str(row["name"]): row for row in load_monster_rows()}
     for template_id, source_name in MIGRATED.items():
-        assert audit_monster_source(runtime[template_id], rows[source_name]) == []
+        issues = audit_monster_source(runtime[template_id], rows[source_name])
+        assert issues == [], f"{source_name}: {issues}"

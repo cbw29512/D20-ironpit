@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
+from app.combat.forced_movement_actions import legal_targets as forced_movement_targets
 from app.combat.pit_policy import (
     allied_frontline_active,
     choose_attack,
@@ -13,12 +14,25 @@ from app.combat.pit_policy import (
     save_distance,
     target_order,
 )
+from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
 from app.domain.actions import AttackActionSlot
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttackKind
 
 logger = logging.getLogger(__name__)
+
+
+def forced_movement_choice(attacker: EncounterCombatant, setup: EncounterSetup, slot: AttackActionSlot):
+    try:
+        allowed = set(slot.forced_movement_action_ids)
+        return next((
+            action for action in attacker.state.template.forced_movement_actions
+            if action.id in allowed and forced_movement_targets(attacker, setup, action)
+        ), None)
+    except Exception:
+        logger.exception("Failed to choose forced-movement slot for %s.", attacker.combatant_id)
+        raise
 
 
 def save_choice(
@@ -32,8 +46,10 @@ def save_choice(
             for action in attacker.state.template.saving_throw_actions:
                 if action.id not in allowed:
                     continue
+                if not resource_available(attacker.state, action.resource_id, action.resource_cost):
+                    continue
                 distance = save_distance(attacker, target, action.range_ft)
-                if legal_save_action(action, target, distance):
+                if legal_save_action(action, target, distance, attacker):
                     return target, action, distance
         return None
     except Exception:
@@ -75,7 +91,11 @@ def slot_has_legal_choice(
     slot: AttackActionSlot,
 ) -> bool:
     try:
-        return attack_choice(attacker, setup, slot) is not None or save_choice(attacker, setup, slot) is not None
+        return (
+            attack_choice(attacker, setup, slot) is not None
+            or save_choice(attacker, setup, slot) is not None
+            or forced_movement_choice(attacker, setup, slot) is not None
+        )
     except Exception:
         logger.exception("Failed to prove legal Attack/Multiattack slot for %s.", attacker.combatant_id)
         raise

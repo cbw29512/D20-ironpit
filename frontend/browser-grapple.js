@@ -5,11 +5,18 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
+  const F = () => window.IRON_PIT_BROWSER_FRIGHTENED;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
   };
 
+  function dropOrphanedLinked(state, removed) {
+    const remaining = new Set(state.grapple_sources.flatMap((source) => source.linked_conditions || []));
+    const timed = new Set((state.timed_effects || []).map((effect) => effect.effect_id));
+    state.active_effect_ids = state.active_effect_ids.filter((id) => !removed.has(id) || remaining.has(id) || timed.has(id));
+  }
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
     const restrained = state.grapple_sources.some((source) => source.restrains);
@@ -19,19 +26,27 @@
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
     }
     if (restrained) state.active_effect_ids.push("restrained");
+    for (const condition of new Set(state.grapple_sources.flatMap((source) => source.linked_conditions || []))) {
+      if (!state.active_effect_ids.includes(condition)) state.active_effect_ids.push(condition);
+    }
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, linkedConditions = []) {
     if (I().immune(state, "grappled")) return [];
+    const replaced = state.grapple_sources.filter((source) => source.source_id === sourceId);
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained");
-    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains });
+    const linked = linkedConditions.filter((condition) => !I().immune(state, condition));
+    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains, linked_conditions: linked });
+    dropOrphanedLinked(state, new Set(replaced.flatMap((source) => source.linked_conditions || [])));
     sync(state);
-    return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
+    return ["grappled", ...(effectiveRestrains ? ["restrained"] : []), ...linked];
   }
 
   function release(state, sourceId) {
+    const removed = state.grapple_sources.filter((source) => source.source_id === sourceId);
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
+    dropOrphanedLinked(state, new Set(removed.flatMap((source) => source.linked_conditions || [])));
     sync(state);
   }
 
@@ -44,17 +59,21 @@
   function cleanup(setup) {
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     for (const target of members.values()) {
+      const removed = new Set();
       target.state.grapple_sources = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
-        if (!grappler || grappler.state.is_dead || grappler.state.is_unconscious) return false;
-        return Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft;
+        const keep = Boolean(grappler && !grappler.state.is_dead && !grappler.state.is_unconscious
+          && Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft);
+        if (!keep) for (const condition of source.linked_conditions || []) removed.add(condition);
+        return keep;
       });
+      dropOrphanedLinked(target.state, removed);
       sync(target.state);
     }
   }
 
   const shouldEscape = (state) => E().available(state, "action") && state.grapple_sources.some((source) => source.restrains);
-  function escape(sequence, round, member) {
+  function escape(sequence, round, member, setup = null) {
     const state = member.state;
     if (!E().available(state, "action")) throw new Error("Action is unavailable to escape grapple.");
     const source = state.grapple_sources.find((item) => item.restrains) || state.grapple_sources[0];
@@ -64,8 +83,10 @@
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
+    let disadvantage = state.active_effect_ids.includes("poisoned") ? 1 : 0;
+    if (state.active_effect_ids.includes("frightened")) { if (!setup || !F()) throw new Error("Frightened grapple check requires encounter context."); disadvantage += F().d20Disadvantage(state, setup); }
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
+    if (M()) roll = M().applyD20Bonus(state, "ability-check-bonus-die", roll);
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {
       tactical = T().apply(state, roll, source.escape_dc);

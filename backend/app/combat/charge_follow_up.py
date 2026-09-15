@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.charge_profiles import ChargeProfile
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
+from app.domain.charge import ChargeProfile
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
 

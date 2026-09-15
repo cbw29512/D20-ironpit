@@ -7,46 +7,48 @@
   const O = () => window.IRON_PIT_BROWSER_OFFENSIVE_RANGES;
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const compare = (a, b) => a.priority - b.priority || a.executionRank - b.executionRank
+    || b.expectedValue - a.expectedValue || a.cost - b.cost || a.distance - b.distance
+    || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family)
+    || b.preferredRange - a.preferredRange;
 
   function chooseIntent(member, setup, turnKey) {
     try {
       if (!E().available(member.state, "action") || !setup.map_definition) return null;
       if (!member.state.position) throw new Error("Grid offensive movement requires an authoritative attacker position.");
-      const members = [...setup.heroes, ...setup.monsters];
-      const candidates = [];
-      let legalNow = false;
+      const members = [...setup.heroes, ...setup.monsters], actionable = [], partial = [];
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
-        for (const option of O().rangesForTarget(member, target, turnKey)) {
-          if (distance <= option.range) {
-            legalNow = true;
+        for (const option of O().rangesForTarget(member, target, turnKey, setup)) {
+          const maxRange = Number.isFinite(option.maxRange) ? option.maxRange : option.range;
+          const preferredRange = Number.isFinite(option.preferredRange) ? option.preferredRange : maxRange;
+          const base = {
+            priority: Number.isFinite(option.priority) ? option.priority : 1,
+            executionRank: Number.isFinite(option.executionRank) ? option.executionRank : 99,
+            expectedValue: Number.isFinite(option.expectedValue) ? option.expectedValue : 0,
+            distance, targetId: target.combatant_id, family: option.family, preferredRange,
+          };
+          if (distance <= preferredRange) { actionable.push({ ...base, cost: 0 }); continue; }
+          const plan = G().planToward(
+            setup.map_definition, member, target, members, preferredRange, member.state.movement_remaining_ft,
+          );
+          if (plan.path.length && plan.final_distance_ft <= preferredRange) {
+            actionable.push({ ...base, cost: plan.movement_cost_ft });
             continue;
           }
-          const plan = G().planToward(
-            setup.map_definition,
-            member,
-            target,
-            members,
-            option.range,
-            member.state.movement_remaining_ft,
-          );
-          if (!plan.goal_reachable || !plan.path.length) continue;
-          if (plan.final_distance_ft >= distance) continue;
-          candidates.push({
-            cost: plan.movement_cost_ft,
-            distance,
-            targetId: target.combatant_id,
-            family: option.family,
-            range: option.range,
-          });
+          if (distance <= maxRange) { actionable.push({ ...base, cost: 0 }); continue; }
+          if (plan.goal_reachable && plan.path.length && plan.final_distance_ft < distance) {
+            partial.push({ ...base, cost: plan.movement_cost_ft });
+          }
         }
       }
-      if (legalNow || !candidates.length) return null;
-      candidates.sort((a, b) => a.cost - b.cost || a.distance - b.distance
-        || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family) || b.range - a.range);
+      const candidates = actionable.length ? actionable : partial;
+      if (!candidates.length) return null;
+      candidates.sort(compare);
       const best = candidates[0];
-      return { targetId: best.targetId, desiredDistanceFt: best.range, family: best.family };
+      if (best.cost === 0) return null;
+      return { targetId: best.targetId, desiredDistanceFt: best.preferredRange, family: best.family };
     } catch (error) {
       console.error("Failed browser offensive movement intent", { member: member.combatant_id, error });
       throw error;

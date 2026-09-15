@@ -66,10 +66,21 @@ def effective_armor_class(state: CombatantState) -> int:
     ))
 
 
+def _active_speed_multiplier(state: CombatantState) -> float:
+    multipliers = [
+        effect.speed_multiplier
+        for effect in state.timed_effects
+        if effect.speed_multiplier != 1.0
+        and (effect.requires_active_effect_id is None or effect.requires_active_effect_id in state.active_effect_ids)
+    ]
+    return min(multipliers, default=1.0)
+
+
 def effective_speed(state: CombatantState) -> int:
-    return max(0, state.template.speed_ft + sum(
+    base = state.template.speed_ft + sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED
-    ))
+    )
+    return max(0, int(base * _active_speed_multiplier(state)))
 
 
 def attacks_against_advantage_sources(state: CombatantState) -> int:
@@ -102,7 +113,12 @@ def consume_next_attack_against_advantage(state: CombatantState, target_id: str)
 
 
 def _die_modifiers(state: CombatantState, kind: ModifierKind) -> list[CombatModifier]:
-    if kind not in {ModifierKind.ATTACK_ROLL_BONUS_DIE, ModifierKind.SAVING_THROW_BONUS_DIE}:
+    supported = {
+        ModifierKind.ATTACK_ROLL_BONUS_DIE,
+        ModifierKind.SAVING_THROW_BONUS_DIE,
+        ModifierKind.ABILITY_CHECK_BONUS_DIE,
+    }
+    if kind not in supported:
         raise ValueError(f"{kind.value} is not a D20 bonus-die modifier.")
     return [item for item in state.active_modifiers if item.kind is kind]
 

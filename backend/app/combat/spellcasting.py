@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.resources import action_resource_available, resolved_resource_id
 from app.domain.models import CombatantState
 
 logger = logging.getLogger(__name__)
@@ -18,6 +19,36 @@ def slot_spell_available(state: CombatantState, turn_key: str) -> bool:
     except Exception as exc:
         logger.exception("Failed to evaluate spell-slot turn gate for %s.", state.template.id)
         raise RuntimeError("Spell-slot turn legality could not be evaluated.") from exc
+
+
+def spell_action_resource_available(
+    state: CombatantState,
+    *,
+    level: int,
+    resource_id: str | None,
+    resource_cost: int,
+    turn_key: str,
+) -> bool:
+    """Mirror resolver resource legality for attack, save, and automatic spells."""
+    try:
+        if level < 0:
+            raise ValueError("Spell level cannot be negative.")
+        fallback_id = f"spell-slot-{level}" if level > 0 else None
+        resolved = resolved_resource_id(resource_id, fallback_id)
+        uses_spell_slot = bool(resolved and resolved.startswith("spell-slot-"))
+        if uses_spell_slot and not slot_spell_available(state, turn_key):
+            return False
+        return action_resource_available(
+            state,
+            resource_id,
+            resource_cost,
+            fallback_resource_id=fallback_id,
+        )
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed spell resource legality check for %s.", state.template.id)
+        raise RuntimeError("Spell resource legality could not be evaluated.") from exc
 
 
 def mark_slot_spell_cast(state: CombatantState, turn_key: str) -> None:

@@ -12,12 +12,15 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
   assert.match(html, /<script src="browser-barbarian3\.js"><\/script>/, `${htmlPath} must load Barbarian 3 runtime rules`);
 }
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
+  "browser-heroes.js", "browser-monsters-generated.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js",
   "browser-rage.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js",
   "browser-formation.js", "browser-multiattack.js",
 ]) load(file);
+
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Barbarian regressions must use the canonical generated monster roster");
+assert.ok(window.IRON_PIT_BROWSER_MONSTERS["srd-bandit"], "Bandit must exist in the generated certified roster");
 
 function queuedDice(values, fallback = 10) {
   const queue = [...values];
@@ -178,5 +181,5 @@ function rage(hero) {
   assert.ok(noTurn.damage_components.every((part) => part.source !== "Frenzy"), "Frenzy must fail closed without own-turn identity");
 }
 
-console.log("Browser Barbarian 3-5 Frenzy/Extra Attack regressions passed.");
+console.log("Canonical generated Barbarian 3-5 Frenzy/Extra Attack regressions passed.");
 require("./browser-barbarian6.test.cjs");

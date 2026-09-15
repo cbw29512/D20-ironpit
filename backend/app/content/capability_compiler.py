@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.basic_condition_actions import WAKE_SLEEPER_ID, wake_sleeper_action
 from app.content.capability_attack_compiler import UnsupportedCapabilityError, compile_attack
 from app.domain.actions import AttackActionDefinition, AttackActionSlot, SavingThrowAction
 from app.domain.capabilities import CombatantDefinition, SaveCapabilityDefinition
@@ -11,39 +12,69 @@ logger = logging.getLogger(__name__)
 
 
 def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
-    damage = definition.damage
-    grapple = definition.grapple
-    return SavingThrowAction(
-        id=definition.id,
-        name=definition.name,
-        save_ability=definition.save_ability,
-        dc=definition.dc,
-        range_ft=definition.range_ft,
-        target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
-        damage_dice_count=damage.count if damage else 0,
-        damage_dice_size=damage.size if damage else 6,
-        damage_bonus=damage.bonus if damage else 0,
-        damage_type=definition.damage_type.value if definition.damage_type else None,
-        success_damage=definition.success_damage,
-        grapple_escape_dc=grapple.escape_dc if grapple else None,
-        restrains_while_grappled=grapple.restrains if grapple else False,
-        animation=definition.animation,
-    )
+    try:
+        damage = definition.damage
+        grapple = definition.grapple
+        return SavingThrowAction(
+            id=definition.id,
+            name=definition.name,
+            action_cost=definition.action_cost,
+            save_ability=definition.save_ability,
+            dc=definition.dc,
+            range_ft=definition.range_ft,
+            target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
+            required_target_condition=definition.required_target_condition,
+            required_target_grappled_by_self=definition.required_target_grappled_by_self,
+            area=definition.area,
+            damage_dice_count=damage.count if damage else 0,
+            damage_dice_size=damage.size if damage else 6,
+            damage_bonus=damage.bonus if damage else 0,
+            damage_type=definition.damage_type.value if definition.damage_type else None,
+            success_damage=definition.success_damage,
+            failure_effects=list(definition.failure_effects),
+            forbid_target_affected_by_action=definition.forbid_target_affected_by_action,
+            push_target_away_ft=definition.push_target_away_ft,
+            push_target_max_size=definition.push_target_max_size,
+            grapple_escape_dc=grapple.escape_dc if grapple else None,
+            restrains_while_grappled=grapple.restrains if grapple else False,
+            resource_id=definition.resource_id,
+            resource_cost=definition.resource_cost,
+            magical_effect=definition.magical_effect,
+            animation=definition.animation,
+        )
+    except Exception as exc:
+        logger.exception("Failed to compile save capability %s.", definition.id)
+        raise RuntimeError(f"Save capability {definition.id} could not be compiled.") from exc
 
 
 def _compile_attack_action(definition: CombatantDefinition) -> AttackActionDefinition | None:
-    action = definition.attack_action
-    if action is None:
-        return None
-    return AttackActionDefinition(
-        id=action.id,
-        name=action.name,
-        is_attack_action=action.is_attack_action,
-        slots=[
-            AttackActionSlot(attack_ids=slot.attack_ids, save_action_ids=slot.save_action_ids)
-            for slot in action.slots
-        ],
-    )
+    try:
+        action = definition.attack_action
+        if action is None:
+            return None
+        return AttackActionDefinition(
+            id=action.id,
+            name=action.name,
+            is_attack_action=action.is_attack_action,
+            slots=[
+                AttackActionSlot(
+                    attack_ids=slot.attack_ids,
+                    save_action_ids=slot.save_action_ids,
+                    forced_movement_action_ids=slot.forced_movement_action_ids,
+                )
+                for slot in action.slots
+            ],
+        )
+    except Exception as exc:
+        logger.exception("Failed to compile attack action for %s.", definition.id)
+        raise RuntimeError(f"Attack action for {definition.id} could not be compiled.") from exc
+
+
+def _condition_removal_actions(definition: CombatantDefinition) -> list:
+    actions = list(definition.condition_removal_actions)
+    if all(action.id != WAKE_SLEEPER_ID for action in actions):
+        actions.append(wake_sleeper_action())
+    return actions
 
 
 def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
@@ -58,7 +89,8 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
         primary = attack_by_id[definition.primary_attack_id]
         kwargs = definition.model_dump(exclude={
             "schema_version", "attacks", "primary_attack_id", "attack_action", "save_actions",
-            "unsupported_capabilities", "movement_modes",
+            "unsupported_capabilities", "movement_modes", "forced_movement_actions", "swallow_actions",
+            "condition_removal_actions",
         })
         if definition.movement_modes is not None:
             kwargs["movement_modes"] = definition.movement_modes
@@ -68,6 +100,9 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
             alternate_weapon_attacks=[attack for attack in attacks if attack.id != primary.id],
             attack_action=_compile_attack_action(definition),
             saving_throw_actions=[_compile_save(item) for item in definition.save_actions],
+            forced_movement_actions=list(definition.forced_movement_actions),
+            swallow_actions=list(definition.swallow_actions),
+            condition_removal_actions=_condition_removal_actions(definition),
         )
     except UnsupportedCapabilityError:
         raise

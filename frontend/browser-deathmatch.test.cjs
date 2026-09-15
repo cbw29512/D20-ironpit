@@ -8,8 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-monsters-batch3.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-weapon-mastery.js",
   "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
@@ -20,7 +19,7 @@ for (const file of [
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
-  "browser-turn.js", "browser-initiative.js", "browser-engine.js",
+  "browser-progression-recovery.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const maxDice = { roll: (sides) => sides, rollMany: (count, sides) => Array(count).fill(sides) };
@@ -35,6 +34,9 @@ const A = window.IRON_PIT_BROWSER_ATTACK;
 const T = window.IRON_PIT_BROWSER_TURN;
 const heroes = window.IRON_PIT_BROWSER_HEROES;
 const monsters = window.IRON_PIT_BROWSER_MONSTERS;
+
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "deathmatch regressions must use the canonical generated roster");
+for (const id of ["srd-commoner", "srd-scout", "srd-ogre"]) assert.ok(monsters[id], `${id} must be generated and certified`);
 
 function downedHero() {
   const member = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
@@ -140,4 +142,4 @@ function scoutAtFive() {
     "a Scout at legal opening range uses its ranged Multiattack instead of teleporting into melee");
 }
 
-console.log("Browser melee deathmatch and live-grid ranged regressions passed.");
+console.log("Canonical generated melee deathmatch and live-grid ranged regressions passed.");

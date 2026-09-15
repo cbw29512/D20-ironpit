@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.attachments import apply_attachment
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import attacks_have_advantage_against, has_condition
 from app.combat.dodge import DODGE_EFFECT_ID, dodge_benefits_active
@@ -16,7 +17,6 @@ from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
 BLINDED_EFFECT_ID = "blinded"
-FRIGHTENED_EFFECT_ID = "frightened"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
 
@@ -27,12 +27,10 @@ def attack_roll_condition_sources(
     distance_ft: int,
     target_id: str | None = None,
 ) -> tuple[int, int]:
-    """Return Advantage and Disadvantage sources from supported conditions."""
+    """Return context-free Advantage and Disadvantage sources from supported conditions."""
     advantage = 0
     disadvantage = 0
     if has_condition(attacker, BLINDED_EFFECT_ID):
-        disadvantage += 1
-    if has_condition(attacker, FRIGHTENED_EFFECT_ID):
         disadvantage += 1
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
@@ -62,12 +60,19 @@ def apply_hit_conditions(
     source_id: str,
     round_number: int | None = None,
     affected_states: list[CombatantState] | None = None,
+    source_state: CombatantState | None = None,
+    target_id: str | None = None,
 ) -> list[str]:
     """Apply certified automatic conditions and modifiers from a successful weapon hit."""
     if defender.is_dead or not defender.is_alive:
         return []
     apply_hit_modifier_effects(defender, source_id, attack)
     applied: list[str] = []
+    if attack.attachment_on_hit is not None:
+        if source_state is None or target_id is None or round_number is None:
+            raise ValueError("Attachment hits require source state, target id, and round number.")
+        if apply_attachment(source_state, source_id, target_id, attack, round_number):
+            applied.append("attached")
     maximum = attack.knocks_prone_max_size
     if (
         maximum is not None
@@ -86,6 +91,7 @@ def apply_hit_conditions(
                 control.grapple_escape_dc,
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
+                linked_conditions=list(control.conditions_while_grappled),
             ))
     if control is not None and control.condition_id is not None:
         timed = apply_timed_condition(
@@ -99,6 +105,7 @@ def apply_hit_conditions(
             repeat_save_ability=control.repeat_save_ability,
             repeat_save_dc=control.repeat_save_dc,
             repeat_save_timing=control.repeat_save_timing,
+            repeat_save_delay_rounds=control.repeat_save_delay_rounds,
             allowed_removal_action_ids=control.allowed_removal_action_ids,
             affected_states=affected_states,
         )

@@ -12,3 +12,4 @@ class MovementModes(BaseModel):
     swim_ft: int = Field(default=0, ge=0)
     burrow_ft: int = Field(default=0, ge=0)
     hover: bool = False
+    pass_through_creatures_as_difficult_terrain: bool = False

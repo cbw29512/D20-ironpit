@@ -12,14 +12,13 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
   assert.match(html, /<script src="browser-barbarian2\.js"><\/script>/, `${htmlPath} must load Barbarian 2 runtime rules`);
 }
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-attack.js",
   "browser-healing.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js",
   "browser-condition-lifecycle.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
   "browser-standard-attack-action.js", "browser-multiattack.js", "browser-spellcasting.js",
-  "browser-condition-removal.js", "browser-support.js", "browser-turn.js", "browser-formation.js", "browser-initiative.js", "browser-engine.js",
+  "browser-condition-removal.js", "browser-support.js", "browser-progression-recovery.js", "browser-turn.js", "browser-formation.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
@@ -27,6 +26,9 @@ function queuedDice(values, fallback = 10) {
   const roll = (sides) => ((queue.length ? queue.shift() : fallback) - 1) % sides + 1;
   return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
 }
+
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Rage regressions must use the canonical generated monster roster");
+assert.ok(window.IRON_PIT_BROWSER_MONSTERS["srd-bandit"], "Bandit must exist in the generated certified roster");
 
 {
   const barbarian = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l1"]);
@@ -178,4 +180,4 @@ function queuedDice(values, fallback = 10) {
   assert.deepEqual(cancelled.roll.rolls, [10]);
 }
 
-console.log("Browser Rage and Barbarian 2 regressions passed.");
+console.log("Canonical generated Rage and Barbarian 2 regressions passed.");

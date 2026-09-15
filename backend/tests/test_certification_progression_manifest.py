@@ -58,33 +58,65 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["public_ready_status"] == "ready"
 
 
-def test_fighter_level_twelve_is_public_and_level_thirteen_remains_blocked() -> None:
+def test_fighter_levels_eighteen_through_twenty_are_public() -> None:
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
-    level_twelve = next(level for level in fighter["levels"] if level["level"] == 12)
-    level_thirteen = next(level for level in fighter["levels"] if level["level"] == 13)
+    level_seventeen = next(level for level in fighter["levels"] if level["level"] == 17)
+    level_eighteen = next(level for level in fighter["levels"] if level["level"] == 18)
+    level_nineteen = next(level for level in fighter["levels"] if level["level"] == 19)
+    level_twenty = next(level for level in fighter["levels"] if level["level"] == 20)
     counted_ready = sum(
         1
         for hero in manifest["heroes"]
         for level in hero["levels"]
         if level["public_ready_status"] == "ready"
     )
-    required = {
-        "heroic-warrior", "indomitable", "tactical-master",
-        "great-weapon-fighting", "multiattack-or-extra-attack",
+    level_seventeen_required = {
+        "heroic-warrior", "indomitable", "tactical-master", "studied-attacks",
+        "expanded-critical-range", "great-weapon-fighting", "multiattack-or-extra-attack",
     }
+    level_eighteen_required = {
+        *level_seventeen_required,
+        "survivor-defy-death",
+        "survivor-heroic-rally",
+    }
+    level_nineteen_required = {*level_eighteen_required, "boon-combat-prowess"}
+    # The certification manifest intentionally uses the stable universal mechanic
+    # name "multiattack-or-extra-attack" for every Extra Attack tier. Fighter 20's
+    # exact four-attack cardinality is verified by its canonical runtime/profile
+    # regressions, not by inventing a level-specific manifest mechanic name.
+    level_twenty_required = set(level_nineteen_required)
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 23
-    assert level_twelve["runtime_template_id"] == "karnok-stoneward-l12"
-    assert required <= set(level_twelve["expected_combat_features"])
-    assert required <= set(level_twelve["supported_mechanics"])
-    assert level_twelve["unsupported_mechanics"] == []
-    assert level_twelve["blockers"] == []
-    assert level_twelve["public_ready_status"] == "ready"
-    assert "karnok-stoneward-l12" in browser
+    assert manifest["summary"]["public_ready"] == counted_ready == 34
+    assert level_seventeen["runtime_template_id"] == "karnok-stoneward-l17"
+    assert level_seventeen_required <= set(level_seventeen["expected_combat_features"])
+    assert level_seventeen_required <= set(level_seventeen["supported_mechanics"])
+    assert level_seventeen["unsupported_mechanics"] == []
+    assert level_seventeen["blockers"] == []
+    assert level_seventeen["public_ready_status"] == "ready"
+    assert "karnok-stoneward-l17" in browser
 
-    assert level_thirteen["runtime_template_id"] is None
-    assert level_thirteen["public_ready_status"] == "blocked"
-    assert "hero-level-not-certified" in level_thirteen["blockers"]
-    assert "karnok-stoneward-l13" not in browser
+    assert level_eighteen["runtime_template_id"] == "karnok-stoneward-l18"
+    assert level_eighteen_required <= set(level_eighteen["expected_combat_features"])
+    assert level_eighteen_required <= set(level_eighteen["supported_mechanics"])
+    assert level_eighteen["unsupported_mechanics"] == []
+    assert level_eighteen["blockers"] == []
+    assert level_eighteen["public_ready_status"] == "ready"
+    assert "karnok-stoneward-l18" in browser
+
+    assert level_nineteen["runtime_template_id"] == "karnok-stoneward-l19"
+    assert level_nineteen_required <= set(level_nineteen["expected_combat_features"])
+    assert level_nineteen_required <= set(level_nineteen["supported_mechanics"])
+    assert level_nineteen["unsupported_mechanics"] == []
+    assert level_nineteen["blockers"] == []
+    assert level_nineteen["public_ready_status"] == "ready"
+    assert "karnok-stoneward-l19" in browser
+
+    assert level_twenty["runtime_template_id"] == "karnok-stoneward-l20"
+    assert level_twenty_required <= set(level_twenty["expected_combat_features"])
+    assert level_twenty_required <= set(level_twenty["supported_mechanics"])
+    assert level_twenty["unsupported_mechanics"] == []
+    assert level_twenty["blockers"] == []
+    assert level_twenty["public_ready_status"] == "ready"
+    assert "karnok-stoneward-l20" in browser
