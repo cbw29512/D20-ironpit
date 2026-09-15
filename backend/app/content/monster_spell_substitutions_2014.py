@@ -7,11 +7,23 @@ from app.domain.spells import SpellSaveAction
 # These source spells keep their source identity but execute a simpler damaging
 # spell profile of the same slot level when their printed mechanics require a
 # dedicated battlefield, summon, persistent-zone, or object subsystem.
-ARENA_DAMAGE_SUBSTITUTIONS_2014 = frozenset({
-    "blade-barrier", "cloudkill", "confusion", "flaming-sphere", "fog-cloud",
-    "guardian-of-faith", "harm", "heat-metal", "ice-storm", "insect-plague",
-    "levitate", "ray-of-enfeeblement", "spirit-guardians", "wall-of-fire",
-})
+ARENA_DAMAGE_SUBSTITUTION_LEVELS_2014 = {
+    "fog-cloud": 1,
+    "flaming-sphere": 2,
+    "heat-metal": 2,
+    "levitate": 2,
+    "ray-of-enfeeblement": 2,
+    "spirit-guardians": 3,
+    "confusion": 4,
+    "guardian-of-faith": 4,
+    "ice-storm": 4,
+    "wall-of-fire": 4,
+    "cloudkill": 5,
+    "insect-plague": 5,
+    "blade-barrier": 6,
+    "harm": 6,
+}
+ARENA_DAMAGE_SUBSTITUTIONS_2014 = frozenset(ARENA_DAMAGE_SUBSTITUTION_LEVELS_2014)
 
 
 def build_arena_damage_substitute(
