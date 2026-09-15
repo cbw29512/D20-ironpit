@@ -1,5 +1,6 @@
 from __future__ import annotations
 from app.combat.action_economy import is_available, spend
+from app.combat.persistent_spells import initial_spell_cast_allowed, lock_concentration_for_turn
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_casting_resources import spell_cast_resource_text, spend_spell_cast_resource
@@ -60,10 +61,14 @@ def resolve_spell(
     if spell.action_cost == "reaction": raise ValueError("Reaction spells require their own trigger window.")
     if choice.slot_level != spell.level: raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     if not is_available(caster.state, spell.action_cost): raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
+    if not initial_spell_cast_allowed(caster.state, spell.id, concentration=spell.concentration):
+        raise ValueError(f"{spell.name} cannot be cast while its spell-state gate is active.")
     remaining = spend_spell_cast_resource(caster, choice, turn_key); spend(caster.state, spell.action_cost)
     members = [*setup.heroes, *setup.monsters]; by_id = {member.combatant_id: member for member in members}
     affected_states = [member.state for member in members]
     start_save_spell_concentration(caster.state, caster.combatant_id, spell, round_number, affected_states)
+    if spell.concentration:
+        lock_concentration_for_turn(caster.state)
     placement = choice.placement
     detail = "" if placement is None else f" Area covers {len(placement.enemy_ids)} enemies and {len(placement.friendly_ids)} unprotected allies."
     cast_text = spell_cast_resource_text(choice)
