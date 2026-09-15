@@ -12,7 +12,7 @@ const load = (name) => vm.runInThisContext(
 );
 
 // The playtest must start from generated 2014 data only. Do not load any of
-// the production srd-* browser monster fixture files in this test.
+// the production srd-* browser monster fixture files or 2024 mastery runtime.
 load("browser-heroes.js");
 load("browser-monsters-generated.js");
 
@@ -34,15 +34,11 @@ for (const monster of Object.values(window.IRON_PIT_BROWSER_MONSTERS)) {
   assert.ok(!String(monster.id).startsWith("srd-"), `2024 fixture leaked: ${monster.id}`);
 }
 
-// Keep this dependency list aligned with the production page ordering for the
-// shared combat modules used by the generated 2014 harness. In particular,
-// Topple delegates its activation check to the weapon-mastery runtime even
-// when a 2014 attack has no mastery property, so weapon mastery must load first.
 for (const file of [
   "browser-condition-immunity.js", "browser-source-effect-immunity.js",
   "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
   "browser-restraints.js", "browser-timed-conditions.js", "browser-damage-triggered-effects.js",
-  "browser-save-control-effects.js", "browser-weapon-mastery.js", "browser-source-bound-effects.js",
+  "browser-save-control-effects.js", "browser-source-bound-effects.js",
   "browser-ongoing-spell-control.js", "browser-modifiers.js", "browser-state.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-attack-advantage.js",
   "browser-damage-absorption.js", "browser-attack.js", "browser-start-turn-damage.js",
@@ -66,6 +62,8 @@ for (const file of [
   "browser-offensive-movement.js", "browser-grid-placement.js", "browser-initiative.js",
   "browser-engine.js",
 ]) load(file);
+
+assert.equal(window.IRON_PIT_BROWSER_WEAPON_MASTERY, undefined);
 
 function deterministicDice(seed = 2014) {
   let state = seed >>> 0;
@@ -91,4 +89,4 @@ assert.ok(battle.events.some((event) => event.event_type === "attack"));
 assert.equal(battle.setup.heroes[0].state.template.source.includes("2024"), false);
 assert.equal(battle.setup.monsters[0].state.template.source.includes("2024"), false);
 
-console.log("Pure 2014 generated browser fight smoke passed.");
+console.log("Pure 2014 generated browser fight smoke passed without weapon mastery runtime.");
