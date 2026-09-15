@@ -85,6 +85,29 @@ def parse_swallow_action(paragraph: str) -> dict | None:
     }
 
 
+def parse_grappled_target_swallow_attack(paragraph: str) -> dict | None:
+    """Parse an attack that swallows on hit only when the target is already grappled by the attacker."""
+    heading = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S)
+    if heading is None:
+        return None
+    name = _plain(heading.group(1)).rstrip(".")
+    if name.lower() == "swallow":
+        return None
+    text = _plain(paragraph)
+    rider = re.search(
+        r"If the target is a (Tiny|Small|Medium|Large|Huge) or smaller creature grappled by the [A-Za-z' -]+, "
+        r"(?:that creature|the target|it) is swallowed, and the grapple ends",
+        text, re.I,
+    )
+    shared = _shared_swallow_data(text)
+    if rider is None or shared is None:
+        return None
+    return {
+        "id": "swallow", "name": "Swallow", "attack_id": _slug(name),
+        "max_target_size": rider.group(1).lower(), "requires_existing_grapple": True, **shared,
+    }
+
+
 def parse_on_hit_swallow_attack(paragraph: str) -> dict | None:
     """Parse an ordinary attack whose hit rider swallows on a failed saving throw."""
     heading = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S)
