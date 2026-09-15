@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 import re
 
+from import_2014_multiattack_bindings import parse_multiattack_binding
 from import_2014_multiattack_policy import parse_policy_multiattack
 from import_2014_multiattack_variants import (
     alternatives,
@@ -139,5 +140,8 @@ def parse_multiattack(source_actions: str | None, attacks: list[dict]) -> dict |
         slots = apply_any_replacement(text, slots, attacks, _ids_for_label)
         if slots:
             return {"id": "multiattack", "name": "Multiattack", "slots": slots}
+        binding = parse_multiattack_binding(text, attacks, _ids_for_label)
+        if binding:
+            return {"id": "multiattack", "name": "Multiattack", "binding": binding}
         return None
     return None
