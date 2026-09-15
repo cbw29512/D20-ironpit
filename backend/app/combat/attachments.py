@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.death_triggers import append_after_event
+from app.combat.death_lifecycle import append_after_event
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.ongoing_damage import encounter_members, resolve_ongoing_damage
