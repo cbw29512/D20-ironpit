@@ -35,24 +35,67 @@ jobs:
           grep -q 'IRON_PIT_BROWSER_MONSTERS' frontend/browser-monsters-generated.js
           grep -q 'ruleset: "2014"' frontend/browser-catalog.js
       - name: Certify Python engine
+        id: pytest
+        continue-on-error: true
         working-directory: backend
-        run: pytest -q
+        shell: bash
+        run: |
+          set -o pipefail
+          pytest -q 2>&1 | tee ../playtest-pytest.log
       - name: Validate browser JavaScript syntax
+        id: js_syntax
+        continue-on-error: true
+        shell: bash
         run: |
-          for file in frontend/*.js; do node --check "$file"; done
+          set -o pipefail
+          {
+            set -e
+            for file in frontend/*.js; do node --check "$file"; done
+          } 2>&1 | tee playtest-js-syntax.log
       - name: Run complete browser regression suite
+        id: browser_tests
+        continue-on-error: true
+        shell: bash
         run: |
-          set -e
-          count=0
-          for test_file in frontend/*.test.cjs; do
-            echo "==> $test_file"
-            node "$test_file"
-            count=$((count + 1))
-          done
-          test "$count" -gt 0
-          echo "Completed $count browser regression files."
+          set -o pipefail
+          {
+            set -e
+            count=0
+            for test_file in frontend/*.test.cjs; do
+              echo "==> $test_file"
+              node "$test_file"
+              count=$((count + 1))
+            done
+            test "$count" -gt 0
+            echo "Completed $count browser regression files."
+          } 2>&1 | tee playtest-browser.log
       - name: Verify 2014 playtest safety gate
+        id: safety_gate
+        continue-on-error: true
         run: |
           grep -q 'D&D 5e 2014 Playtest' frontend/browser-catalog.js
           grep -q 'uncertified 2014 monsters are hidden' frontend/browser-catalog.js
           grep -q 'certified_monsters' frontend/browser-catalog.js
+      - name: Upload playtest diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2014-playtest-diagnostics-${{ github.sha }}
+          path: |
+            playtest-pytest.log
+            playtest-js-syntax.log
+            playtest-browser.log
+          if-no-files-found: warn
+          retention-days: 2
+      - name: Enforce playtest validation result
+        if: always()
+        shell: bash
+        run: |
+          echo "Python: ${{ steps.pytest.outcome }}"
+          echo "JavaScript syntax: ${{ steps.js_syntax.outcome }}"
+          echo "Browser regressions: ${{ steps.browser_tests.outcome }}"
+          echo "Safety gate: ${{ steps.safety_gate.outcome }}"
+          test "${{ steps.pytest.outcome }}" = "success"
+          test "${{ steps.js_syntax.outcome }}" = "success"
+          test "${{ steps.browser_tests.outcome }}" = "success"
+          test "${{ steps.safety_gate.outcome }}" = "success"
