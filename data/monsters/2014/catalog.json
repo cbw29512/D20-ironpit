@@ -33882,6 +33882,29 @@
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
     "multiattack_binding": null,
+    "healing_actions": [
+      {
+        "id": "healing-touch",
+        "name": "Healing Touch",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "other",
+        "dice_count": 6,
+        "dice_size": 8,
+        "healing_bonus": 3,
+        "removable_conditions": [
+          "poisoned",
+          "blinded",
+          "deafened"
+        ],
+        "resource_id": "healing-touch",
+        "resource_cost": 1,
+        "animation": "healing"
+      }
+    ],
+    "limited_action_uses": {
+      "healing-touch": 4
+    },
     "spellcasting": null
   },
   {
