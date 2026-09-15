@@ -15,6 +15,7 @@ from app.domain.encounters import EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
+from app.domain.spell_damage import SpellDamageComponent
 
 
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
@@ -29,13 +30,44 @@ def _damage_rolls(action: SavingThrowAction, dice: DiceProvider, shared_damage_r
     return list(shared_damage_rolls)
 
 
-def _damage_components(state: CombatantState, action: SavingThrowAction, dice: DiceProvider, succeeded: bool, shared_damage_rolls: list[int] | None = None) -> list[DamageRollComponent]:
-    if action.damage_dice_count == 0 or (succeeded and action.success_damage == "none"): return []
-    if action.damage_type is None: raise ValueError(f"{action.name} has damage dice but no damage type.")
-    rolls = _damage_rolls(action, dice, shared_damage_rolls)
-    total = save_damage_total(state, action, succeeded, sum(rolls) + action.damage_bonus)
-    return [DamageRollComponent(source=action.name, notation=f"{action.damage_dice_count}d{action.damage_dice_size}+{action.damage_bonus}", rolls=rolls,
-                                modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total))]
+def _component_rolls(
+    name: str, component: SpellDamageComponent, dice: DiceProvider, shared: list[int] | None,
+) -> list[int]:
+    if shared is None: return [dice.roll(component.dice_size) for _ in range(component.dice_count)]
+    if len(shared) != component.dice_count: raise ValueError(f"{name} shared component roll count does not match its damage dice.")
+    if any(not 1 <= roll <= component.dice_size for roll in shared): raise ValueError(f"{name} shared component rolls contain an invalid die result.")
+    return list(shared)
+
+
+def _damage_components(
+    state: CombatantState, action: SavingThrowAction, dice: DiceProvider, succeeded: bool,
+    shared_damage_rolls: list[int] | None = None,
+    additional_damage_components: list[SpellDamageComponent] | None = None,
+    shared_additional_damage_rolls: list[list[int]] | None = None,
+) -> list[DamageRollComponent]:
+    if succeeded and action.success_damage == "none": return []
+    components: list[DamageRollComponent] = []
+    if action.damage_dice_count:
+        if action.damage_type is None: raise ValueError(f"{action.name} has damage dice but no damage type.")
+        rolls = _damage_rolls(action, dice, shared_damage_rolls)
+        total = save_damage_total(state, action, succeeded, sum(rolls) + action.damage_bonus)
+        components.append(DamageRollComponent(
+            source=action.name,
+            notation=f"{action.damage_dice_count}d{action.damage_dice_size}+{action.damage_bonus}",
+            rolls=rolls, modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total),
+        ))
+    extras = additional_damage_components or []
+    shared_extras = shared_additional_damage_rolls or [None] * len(extras)
+    if len(shared_extras) != len(extras): raise ValueError(f"{action.name} shared additional damage roll groups do not match its components.")
+    for component, shared in zip(extras, shared_extras):
+        rolls = _component_rolls(action.name, component, dice, shared)
+        total = save_damage_total(state, action, succeeded, sum(rolls) + component.damage_bonus)
+        components.append(DamageRollComponent(
+            source=action.name,
+            notation=f"{component.dice_count}d{component.dice_size}+{component.damage_bonus}",
+            rolls=rolls, modifier=component.damage_bonus, damage_type=DamageType(component.damage_type), total=max(0, total),
+        ))
+    return components
 
 
 def resolve_save_action(
@@ -43,6 +75,8 @@ def resolve_save_action(
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
     check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | None = None,
+    additional_damage_components: list[SpellDamageComponent] | None = None,
+    shared_additional_damage_rolls: list[list[int]] | None = None,
     affected_states: list[CombatantState] | None = None,
     setup: EncounterSetup | None = None,
     precomputed_save: tuple[DiceRoll | None, bool] | None = None,
@@ -60,7 +94,10 @@ def resolve_save_action(
     concentration_before = target.state.concentration.effect_id if target.state.concentration else None
     grid_before = target.state.position.model_copy(deep=True) if target.state.position else None
     evasion_used = evasion_applies(target.state, action)
-    rolled_components = _damage_components(target.state, action, dice, succeeded, shared_damage_rolls)
+    rolled_components = _damage_components(
+        target.state, action, dice, succeeded, shared_damage_rolls,
+        additional_damage_components, shared_additional_damage_rolls,
+    )
     applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)
     damage_roll = None; damage_outcome = None
     if rolled_components:
