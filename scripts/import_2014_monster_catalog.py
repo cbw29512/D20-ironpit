@@ -38,6 +38,8 @@ _FIXED_DAMAGE = re.compile(r"Hit:\s*(\d+)\s+([A-Za-z]+) damage", re.I)
 _ALT_DAMAGE = rf"(\d+)\s*\((\d+)d(\d+)(?:\s*({_SIGN})\s*(\d+))?\)\s*([A-Za-z]+) damage"
 _TWO_HANDED = re.compile(r"(?:or\s+)?" + _ALT_DAMAGE + r"\s+(?:if|when) (?:used|wielded) with two hands(?: to make a melee attack)?", re.I)
 _MELEE_RANGE = re.compile(r"in melee or\s+" + _ALT_DAMAGE + r"\s+at range", re.I)
+_HIT_CLAUSE = re.compile(r"\bHit:\s*", re.I)
+_ZERO_DAMAGE = {"average": 0, "dice_count": 0, "dice_size": 6, "bonus": 0, "type": None}
 
 
 def _slug(value: str) -> str:
@@ -109,18 +111,31 @@ def _primary_damage(text: str) -> tuple[re.Match[str], dict] | None:
 
 
 def _attack(paragraph: str) -> dict | None:
-    text = _plain(paragraph); name_match = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S); hit = re.search(r"([+-]\d+) to hit", text, re.I); primary = _primary_damage(text)
-    if not name_match or not hit or primary is None: return None
-    damage_match, damage = primary; dual_mode = bool(re.search(r"Melee or Ranged (?:Weapon|Spell) Attack:", text, re.I))
+    text = _plain(paragraph)
+    name_match = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S)
+    hit = re.search(r"([+-]\d+) to hit", text, re.I)
+    primary = _primary_damage(text)
+    if not name_match or not hit: return None
+    dual_mode = bool(re.search(r"Melee or Ranged (?:Weapon|Spell) Attack:", text, re.I))
     if re.search(r"Ranged (?:Weapon|Spell) Attack:", text, re.I) and not dual_mode: kind = "ranged"
     elif re.search(r"Melee(?: or Ranged)? (?:Weapon|Spell) Attack:", text, re.I): kind = "melee"
     else: return None
     name = _plain(name_match.group(1)).rstrip(".")
-    extras, residual = parse_secondary_damage(text[damage_match.end():].strip(" ."))
+    if primary is not None:
+        damage_match, damage = primary
+        residual = text[damage_match.end():].strip(" .")
+    else:
+        hit_clause = _HIT_CLAUSE.search(text)
+        if hit_clause is None: return None
+        damage = dict(_ZERO_DAMAGE)
+        residual = text[hit_clause.end():].strip(" .")
+    extras, residual = parse_secondary_damage(residual)
     conditional, residual = parse_conditional_replacement_damage(residual)
     save_effect, residual = parse_on_hit_save_condition(residual)
     control, forbid_grappled, residual = parse_on_hit_control(residual)
     residual = strip_noncombat_attack_residual(residual)
+    if primary is None and not (extras or conditional or save_effect or control):
+        return None
     result = {"id": _slug(name), "name": name, "kind": kind, "attack_bonus": int(hit.group(1)), "damage": damage, "conditional_damage": conditional, "on_hit_damage": extras, "on_hit_save_effect": save_effect, "control_effect": control, "forbid_target_grappled_by_self": forbid_grappled, "source_complete": not dual_mode and not residual, "unsupported_text": residual or ("dual-mode attack requires split" if dual_mode else None)}
     reach = re.search(r"reach (\d+) ft", text, re.I); ranges = re.search(r"range (\d+)(?:\s*ft\.)?\s*/\s*(\d+) ft", text, re.I)
     if reach: result["reach_ft"] = int(reach.group(1))
