@@ -104,6 +104,8 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified
     if legendary_certified:
         certified.add("Legendary Resistance")
+    if template.death_trigger_effects and "Death Burst" in expected:
+        certified.add("Death Burst")
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
