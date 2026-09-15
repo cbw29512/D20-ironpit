@@ -9,6 +9,8 @@ from app.content.monster_spell_substitutions_2014 import ARENA_DAMAGE_SUBSTITUTI
 # Explicit roster-loading scope: preserve every printed spell in source data, but
 # non-damaging spells do not block the damage-first monster milestone. Complex
 # combat spells may execute a documented simpler arena damage substitution.
+# Keep spells with a separate unresolved combat credential (for example,
+# Telekinesis on Cloud Giant exposing a no-save-DC Fog Cloud substitution) explicit.
 SCOPED_OUT_NON_DAMAGE_SPELLS_2014 = frozenset({
     "animal-messenger", "animate-dead", "banishment", "barkskin", "bestow-curse",
     "bless", "blur", "calm-emotions", "charm-person", "clairvoyance", "command",
