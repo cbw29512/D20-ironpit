@@ -34909,6 +34909,9 @@
         "on_hit_save_effect": {
           "save_ability": "constitution",
           "dc": 10,
+          "condition_id": "poisoned",
+          "duration_rounds": 10,
+          "repeat_save_timing": "target_turn_end",
           "damage_dice_count": 2,
           "damage_dice_size": 4,
           "damage_bonus": 0,
@@ -34917,8 +34920,8 @@
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "and become poisoned for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
