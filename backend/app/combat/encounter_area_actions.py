@@ -4,6 +4,7 @@ import logging
 
 from app.combat.area_save_actions import resolve_area_save_action
 from app.combat.area_save_targeting import legal_area_save_placements
+from app.combat.grapple_queries import source_has_active_grapple
 from app.combat.resources import action_resource_available, resource_definition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -17,6 +18,13 @@ def _is_recharge_action(attacker: EncounterCombatant, action) -> bool:
     return definition is not None and definition.recharge is not None
 
 
+def _action_is_legal(attacker: EncounterCombatant, setup: EncounterSetup, action) -> bool:
+    return not (
+        action.requires_no_active_grapple
+        and source_has_active_grapple(setup, attacker.combatant_id)
+    )
+
+
 def area_save_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
@@ -28,6 +36,8 @@ def area_save_choice(
         choices = []
         for action in attacker.state.template.saving_throw_actions:
             if action.area is None or not action_resource_available(attacker.state, action):
+                continue
+            if not _action_is_legal(attacker, setup, action):
                 continue
             if recharge_only and not _is_recharge_action(attacker, action):
                 continue
