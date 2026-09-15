@@ -142,6 +142,6 @@ def parse_multiattack(source_actions: str | None, attacks: list[dict]) -> dict |
             return {"id": "multiattack", "name": "Multiattack", "slots": slots}
         binding = parse_multiattack_binding(text, attacks, _ids_for_label)
         if binding:
-            return {"id": "multiattack", "name": "Multiattack", "binding": binding}
+            return {"id": "multiattack", "name": "Multiattack", "slots": [], "binding": binding}
         return None
     return None
