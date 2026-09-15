@@ -121,4 +121,32 @@ const L = window.IRON_PIT_BATTLE_LOG;
   assert.match(text, /AUTO FAIL vs DC 15 — FAILURE/); assert.match(text, /gains Restrained/);
 }
 
+{
+  const text = L.format({
+    event_type: "attack", actor_name: "Veteran", target_name: "Flesh Golem", attack_name: "Heavy Crossbow",
+    target_ac: 9, hit: true, critical: false,
+    attack_roll: { selected_roll: 11, rolls: [11], modifier: 3, total: 14, mode: "normal" },
+    damage_roll: { total: 0 }, damage_components: [{ total: 10, applied_total: 0, damage_type: "piercing" }],
+    hp_before: 93, hp_after: 93, applied_condition_ids: [], is_dead: false,
+  });
+  assert.match(text, /Damage: 0 piercing \(10 before defenses → 0 after defenses\)/);
+  assert.doesNotMatch(text, /HP: Flesh Golem 93 →/);
+}
+
+{
+  const events = [
+    ...Array.from({ length: 6 }, (_, index) => ({
+      sequence: index + 1, round_number: 1, event_type: "movement", actor_id: "golem-1", actor_name: "Flesh Golem",
+      movement_ft: 5, movement_cost_ft: 5, description: "Flesh Golem moves 5 feet.",
+    })),
+    { sequence: 7, round_number: 1, event_type: "feature", actor_id: "golem-1", actor_name: "Flesh Golem", description: "Flesh Golem takes the Dodge action." },
+  ];
+  const compact = L.compactEvents(events);
+  assert.equal(compact.length, 2);
+  assert.equal(compact[0].movement_ft, 30);
+  assert.equal(compact[0].movement_cost_ft, 30);
+  assert.equal(compact[0].description, "Flesh Golem moves 30 feet.");
+  assert.equal(compact[1].event_type, "feature");
+}
+
 console.log("Readable 2014 battle log regressions passed.");
