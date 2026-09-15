@@ -31,6 +31,7 @@ def main() -> int:
             [sys.executable, "scripts/enrich_2014_opening_initiative.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_max_hp_reduction.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_save_actions.py", str(source), "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_multiattack_bindings.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_breakable_restraints.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_healing_actions.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_swallow_actions.py", str(source), "--catalog", str(OUTPUT)],
