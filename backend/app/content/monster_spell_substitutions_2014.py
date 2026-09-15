@@ -38,7 +38,7 @@ def build_arena_damage_substitute(
         level=level,
         range_ft=60,
         dc=save_dc,
-        success_damage="half",
+        success_damage="none" if level >= 6 else "half",
         source=f"Iron Pit arena substitution for {source_name}",
     )
     if level <= 1:
@@ -71,5 +71,5 @@ def build_arena_damage_substitute(
     return SpellSaveAction(
         **common, name=f"{source_name} → Disintegrate", save_ability="dexterity",
         damage_dice_count=10, damage_dice_size=6, damage_bonus=40, damage_type="force",
-        success_damage="none", animation="disintegrate",
+        animation="disintegrate",
     )
