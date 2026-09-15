@@ -37720,6 +37720,25 @@
       "follow_up_max_target_size": "medium",
       "follow_up_grapple_escape_dc": 14
     },
+    "swallow_actions": [
+      {
+        "id": "slam",
+        "name": "Slam",
+        "attack_id": null,
+        "max_target_size": "medium",
+        "requires_existing_grapple": true,
+        "damage_dice_count": 2,
+        "damage_dice_size": 8,
+        "damage_bonus": 4,
+        "damage_type": "bludgeoning",
+        "max_swallowed": 1,
+        "start_turn_save_dc": 14,
+        "start_turn_save_ability": "constitution",
+        "source_death_release": "immediate",
+        "exit_movement_ft": 0,
+        "exit_prone": false
+      }
+    ],
     "spellcasting": null
   },
   {
