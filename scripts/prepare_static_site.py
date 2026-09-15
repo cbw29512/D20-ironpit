@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from export_browser_heroes import main as export_browser_heroes
+from export_browser_heroes_2014_playtest import main as export_browser_heroes
 from export_browser_monsters_2014 import main as export_browser_monsters
 from export_browser_spell_effects import main as export_browser_spell_effects
 from export_figure_profiles import main as export_figure_profiles
