@@ -55,6 +55,18 @@ def _target_visible_to(attacker: EncounterCombatant, target: EncounterCombatant)
     return True
 
 
+def _berserk_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
+    profile = attacker.state.template.berserk
+    if profile is None or profile.effect_id not in attacker.state.active_effect_ids:
+        return None
+    candidates = [
+        member for member in [*setup.heroes, *setup.monsters]
+        if member is not attacker and _target_visible_to(attacker, member)
+        and member.state.is_alive and not member.state.is_dead
+    ]
+    return min(candidates, key=lambda target: combatant_distance(attacker, target), default=None)
+
+
 def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
     """Pit visibility is unobstructed except for total cover created by Swallow."""
     return any(
@@ -95,6 +107,9 @@ def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> lis
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
     """Within the current target class, finish a held target, fight a grappler, then engage nearest."""
     try:
+        berserk = _berserk_target(attacker, setup)
+        if berserk is not None:
+            return berserk
         opponents = living_opponents(attacker, setup)
         if not opponents:
             return None
