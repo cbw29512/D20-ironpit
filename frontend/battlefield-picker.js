@@ -20,6 +20,8 @@
   function populateHero(state, existing) {
     const heroSelect = el("picker-class"), levelSelect = el("picker-level");
     heroSelect.replaceChildren(); levelSelect.replaceChildren();
+    const levelLabel = levelSelect.closest("label");
+    if (levelLabel) levelLabel.hidden = true;
     const fallback = existing || state.catalog.heroes.find(ready) || state.catalog.heroes[0];
     P().classOptions(state.catalog.heroes).forEach((item) => heroSelect.append(option(item.id, item.name, item.id === fallback.class_id)));
     P().LEVELS.forEach((level) => levelSelect.append(option(level, level, level === Number(fallback.level))));
@@ -27,10 +29,10 @@
     function refresh() {
       const chosen = chosenHero(state);
       el("picker-note").textContent = ready(chosen)
-        ? `${chosen.name} · ${chosen.class_name} ${chosen.level} is RAW-certified for automated combat.`
-        : `${chosen?.name || "This hero"} level ${levelSelect.value} is not RAW-certified yet.`;
+        ? `${chosen.name} is a ledger-certified D&D 5e 2014 SRD stat block exposed on the hero side for engine testing. It is not a final player pregen.`
+        : "This 2014 test-harness role is not certified.";
       el("confirm-card").disabled = !ready(chosen);
-      el("confirm-card").textContent = ready(chosen) ? "Add to Slot" : "Certification Pending";
+      el("confirm-card").textContent = ready(chosen) ? "Add Test Card" : "Certification Pending";
     }
     heroSelect.value = fallback.class_id; levelSelect.value = String(fallback.level);
     heroSelect.onchange = refresh; levelSelect.onchange = refresh; refresh();
@@ -38,9 +40,9 @@
 
   function monsterNote(rows, chosen) {
     const certified = rows.filter(ready).length;
-    if (!rows.length) return "No SRD monsters exist at this Challenge Rating.";
-    if (chosen && !ready(chosen)) return `${chosen.name} is in the SRD catalog, but its outcome-changing combat mechanics are still being RAW-certified.`;
-    return `${rows.length} SRD monster${rows.length === 1 ? "" : "s"} shown · ${certified} RAW-ready for automated combat.`;
+    if (!rows.length) return "No certified 2014 SRD monsters exist at this Challenge Rating.";
+    if (chosen && !ready(chosen)) return `${chosen.name} is not certified for this 2014 playtest.`;
+    return `${rows.length} certified 2014 SRD monster${rows.length === 1 ? "" : "s"} shown.`;
   }
 
   function populateMonster(state, existing) {
@@ -57,7 +59,7 @@
     function refreshMonsters() {
       const rows = P().sortedMonsters(all, crSelect.value); monsterSelect.replaceChildren();
       rows.forEach((monster) => monsterSelect.append(option(
-        monster.id, `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? " · RAW READY" : " · certification pending"}`,
+        monster.id, `CR ${monster.challenge_rating} · ${monster.name} · 2014 READY`,
         monster.id === existing?.id,
       )));
       const existingShown = existing && rows.some((monster) => monster.id === existing.id), firstReady = rows.find(ready);
@@ -81,8 +83,8 @@
   function open(state, side, index, onConfirm, onRemove) {
     active = { side, index, onConfirm, onRemove };
     const existing = (side === "heroes" ? state.heroSlots : state.monsterSlots)[index];
-    el("picker-kicker").textContent = `${side === "heroes" ? "HERO" : "MONSTER"} SLOT ${index + 1}`;
-    el("picker-title").textContent = existing ? `Change ${existing.name}` : side === "heroes" ? "Choose a hero" : "Choose a monster";
+    el("picker-kicker").textContent = `${side === "heroes" ? "2014 TEST" : "MONSTER"} SLOT ${index + 1}`;
+    el("picker-title").textContent = existing ? `Change ${existing.name}` : side === "heroes" ? "Choose a 2014 test role" : "Choose a monster";
     el("hero-picker-fields").hidden = side !== "heroes"; el("monster-picker-fields").hidden = side !== "monsters";
     el("remove-card").hidden = !existing; el("confirm-card").textContent = "Add to Slot";
     if (side === "heroes") populateHero(state, existing); else populateMonster(state, existing);
