@@ -1,8 +1,8 @@
 {
-  "blocked_count": 57,
+  "blocked_count": 56,
   "blocker_families": {
     "action": 47,
-    "attack-detail": 27,
+    "attack-detail": 26,
     "compile": 1,
     "defense": 1,
     "legendary": 24,
@@ -56,7 +56,6 @@
     "attack-detail:Bite. (Bat or Vampire Form Only)": 1,
     "attack-detail:Claws": 2,
     "attack-detail:Crush": 1,
-    "attack-detail:Glaive": 1,
     "attack-detail:Javelin": 1,
     "attack-detail:Longbow": 1,
     "attack-detail:Longsword": 1,
@@ -1775,11 +1774,9 @@
     {
       "id": "oni",
       "name": "Oni",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "attack-detail:Glaive"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "orc",
@@ -2624,7 +2621,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 270,
+  "ready_count": 271,
   "ruleset": "2014",
   "schema_version": 1
 }

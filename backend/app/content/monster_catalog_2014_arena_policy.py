@@ -31,6 +31,12 @@ _CREATURE_EFFECT = re.compile(
     r"blinded|stunned|prone|frightened|paralyzed|unconscious|swallowed)\b",
     re.I,
 )
+_FORM_ONLY_ALTERNATE_DAMAGE = re.compile(
+    r"^\s*or\s+\d+(?:\s*\([^)]*\))?\s+[a-z]+\s+damage\s+in\s+"
+    r"(?:Tiny|Small|Medium|Large|Huge|Gargantuan)"
+    r"(?:\s+or\s+(?:Tiny|Small|Medium|Large|Huge|Gargantuan))*\s+form\b",
+    re.I,
+)
 _WEAPON_QUALIFIED_DEFENSE = re.compile(
     r"\b(?:nonmagical attacks?|magic(?:al)? weapons?|silvered|adamantine|wielded by .* creatures?)\b",
     re.I,
@@ -94,10 +100,12 @@ def is_arena_disabled_action_2014(name: str) -> bool:
 
 
 def is_arena_disabled_attack_detail_2014(text: str | None) -> bool:
-    """Ignore only residual attack text whose remaining effect is equipment degradation."""
+    """Ignore residual attack text that cannot execute under the arena's fixed-form/equipment policy."""
     try:
         if not text:
             return False
+        if _FORM_ONLY_ALTERNATE_DAMAGE.search(text):
+            return True
         return bool(
             _EQUIPMENT_REFERENCE.search(text)
             and _EQUIPMENT_DEGRADATION.search(text)
