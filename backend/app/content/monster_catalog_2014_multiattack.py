@@ -11,10 +11,17 @@ def binding_executable_2014(source: CatalogMonster2014) -> bool:
     binding = source.multiattack_binding
     if binding is None:
         return bool(source.multiattack_slots)
-    if binding.repeat_count_source is not None or any(slot.optional or slot.requirement for slot in binding.slots):
+    if binding.repeat_count_source is not None:
         return False
-    attack_ids = {attack.id for attack in source.attacks}
-    if any(any(action_id not in attack_ids for action_id in slot.action_ids) for slot in binding.slots):
+    if any(slot.requirement not in {None, "action_available"} for slot in binding.slots):
+        return False
+    if any(slot.optional and slot.requirement != "action_available" for slot in binding.slots):
+        return False
+    executable_ids = {
+        *(attack.id for attack in source.attacks),
+        *(action.id for action in source.saving_throw_actions),
+    }
+    if any(any(action_id not in executable_ids for action_id in slot.action_ids) for slot in binding.slots):
         return False
     if binding.follow_up_action_id is None:
         return True
