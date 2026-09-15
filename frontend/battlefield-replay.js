@@ -5,7 +5,7 @@
   const nodes = new Map();
   const SELF_BUFFS = new Set(["rage", "dodge"]);
   const DEBUFF_MODIFIERS = new Set(["attacks-against-advantage"]);
-  const TRANSIENT_FX = ["fx-move", "fx-melee", "fx-ranged", "fx-cast", "fx-hit"];
+  const FX = () => window.IRON_PIT_BATTLEFIELD_FX;
   const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, reduced() ? Math.min(ms, 70) : ms));
   const cleanLabel = (id) => String(id || "").replace(/^weapon-mastery-/, "").replace(/^tactical-master-/, "").replaceAll("_", " ").replaceAll("-", " ").toUpperCase();
@@ -27,14 +27,6 @@
     if (state.concentration?.effect_id) buffs.delete(state.concentration.effect_id);
     for (const id of debuffs) buffs.delete(id);
     return { buffs: [...buffs].sort(), debuffs: [...debuffs].sort() };
-  }
-
-  function syncConditionPose(node, ids) {
-    if (!node) return;
-    const set = ids instanceof Set ? ids : new Set(ids || []);
-    node.classList.toggle("condition-prone", set.has("prone"));
-    node.classList.toggle("condition-restrained", set.has("restrained") || set.has("grappled"));
-    node.classList.toggle("condition-stunned", set.has("stunned") || set.has("paralyzed"));
   }
 
   function bindBattle(battle, slotMap) {
@@ -82,7 +74,7 @@
     renderLane(node, ".card-debuffs", lanes.debuffs, "debuff");
     node.classList.toggle("has-buff", lanes.buffs.length > 0 || Boolean(state.concentration));
     node.classList.toggle("has-debuff", lanes.debuffs.length > 0); node.classList.toggle("has-condition", lanes.debuffs.length > 0);
-    syncConditionPose(node, lanes.debuffs);
+    FX()?.syncConditionPose(node, lanes.debuffs);
   }
 
   function conditions(node, added = [], removed = []) {
@@ -90,35 +82,11 @@
     const set = new Set((node.dataset.conditions || "").split(",").filter(Boolean));
     removed.forEach((id) => set.delete(id)); added.forEach((id) => set.add(id));
     node.dataset.conditions = [...set].join(","); renderLane(node, ".card-debuffs", [...set].sort(), "debuff");
-    node.classList.toggle("has-debuff", set.size > 0); node.classList.toggle("has-condition", set.size > 0); syncConditionPose(node, set);
+    node.classList.toggle("has-debuff", set.size > 0); node.classList.toggle("has-condition", set.size > 0); FX()?.syncConditionPose(node, set);
   }
 
   function dead(node) {
     if (!node) return; node.classList.add("battle-dead"); node.classList.remove("battle-down");
-  }
-
-  function clearTransientFx(...targets) {
-    for (const node of targets) if (node) TRANSIENT_FX.forEach((name) => node.classList.remove(name));
-  }
-
-  function isRangedEvent(event) {
-    const animation = String(event.animation || "").toLowerCase();
-    return Boolean(event.projectile) || /projectile|arrow|bolt|ray|ranged|shot/.test(animation);
-  }
-
-  async function combatFx(event, actor, target) {
-    if (reduced()) return;
-    clearTransientFx(actor, target);
-    if (event.event_type === "movement" && actor) actor.classList.add("fx-move");
-    else if (event.event_type === "attack" && actor) {
-      actor.classList.add(isRangedEvent(event) ? "fx-ranged" : "fx-melee");
-      if (target && event.hit) target.classList.add("fx-hit");
-    } else if (["saving_throw", "spell", "healing"].includes(event.event_type) && actor) {
-      actor.classList.add("fx-cast");
-      if (target && event.hp_before != null && event.hp_after != null && Number(event.hp_after) < Number(event.hp_before)) target.classList.add("fx-hit");
-    }
-    await sleep(event.event_type === "movement" ? 130 : 190);
-    clearTransientFx(actor, target);
   }
 
   async function critFx(event) {
@@ -137,7 +105,7 @@
     el("pit-round").textContent = `ROUND ${event.round_number}`;
     const actor = nodes.get(event.actor_id), target = nodes.get(event.target_id);
     if (actor) actor.classList.add("turn-active");
-    await fumbleFx(event, actor); await critFx(event); await combatFx(event, actor, target);
+    await fumbleFx(event, actor); await critFx(event); await FX()?.combat(event, actor, target);
     if (target && event.hp_after != null) hp(target, event.hp_after);
     if (actor && event.event_type === "healing" && event.hp_after != null) hp(actor, event.hp_after);
     if (actor && event.event_type === "death_save" && event.hp_after != null) hp(actor, event.hp_after);
@@ -161,11 +129,8 @@
 
   async function play(battle, slotMap, options = {}) {
     bindBattle(battle, slotMap);
-    if (!options.instant) {
-      for (const event of battle.events || []) await eventStep(event);
-    } else {
-      el("pit-round").textContent = `ROUND ${battle.rounds}`;
-    }
+    if (!options.instant) for (const event of battle.events || []) await eventStep(event);
+    else el("pit-round").textContent = `ROUND ${battle.rounds}`;
     syncFinal(battle); return battle;
   }
 
