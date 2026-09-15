@@ -1,4 +1,4 @@
-from app.content.monster_catalog_2014 import load_catalog_2014, unsupported_mechanics_2014
+from app.content.monster_catalog_2014 import compile_monster_2014, load_catalog_2014, unsupported_mechanics_2014
 from app.content.monster_catalog_2014_arena_policy import (
     is_arena_disabled_action_2014,
     is_arena_disabled_attack_detail_2014,
@@ -43,13 +43,17 @@ def test_rust_monster_equipment_mechanics_no_longer_block() -> None:
         raise AssertionError("Rust Monster still has arena-disabled equipment blockers.") from exc
 
 
-def test_ooze_equipment_residuals_are_narrowly_removed() -> None:
+def test_ooze_equipment_residuals_are_removed_without_losing_creature_reactive_damage() -> None:
     try:
         gray = unsupported_mechanics_2014(_monster("Gray Ooze"))
-        black = unsupported_mechanics_2014(_monster("Black Pudding"))
+        black_source = _monster("Black Pudding")
+        black = unsupported_mechanics_2014(black_source)
         assert "trait:Corrode Metal" not in gray
         assert "attack-detail:Pseudopod" not in gray
         assert "attack-detail:Pseudopod" not in black
-        assert "trait:Corrosive Form" in black
+        assert "trait:Corrosive Form" not in black
+
+        compiled = compile_monster_2014(black_source)
+        assert any(rule.id == "corrosive-form" for rule in compiled.melee_hit_reactive_damage)
     except Exception as exc:
-        raise AssertionError("Ooze equipment policy did not preserve creature-affecting mechanics.") from exc
+        raise AssertionError("Ooze equipment policy lost or re-blocked creature-affecting mechanics.") from exc
