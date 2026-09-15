@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field, model_validator
+
+from app.domain.size import CreatureSize
 
 
 class AttackActionPolicy(BaseModel):
@@ -13,6 +17,10 @@ class AttackActionPolicy(BaseModel):
     requires_previous_hit_slots: list[int] = Field(default_factory=list)
     same_target_as_previous_slots: list[int] = Field(default_factory=list)
     same_attack_as_previous_slots: list[int] = Field(default_factory=list)
+    follow_up_action_id: str | None = None
+    follow_up_condition: Literal["all_attacks_hit_same_target"] | None = None
+    follow_up_grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
+    follow_up_max_target_size: CreatureSize | None = None
 
     @model_validator(mode="after")
     def validate_repeat(self) -> "AttackActionPolicy":
@@ -26,4 +34,11 @@ class AttackActionPolicy(BaseModel):
         grouped = [attack_id for group in self.exclusive_attack_groups for attack_id in group]
         if any(not group for group in self.exclusive_attack_groups) or len(grouped) != len(set(grouped)):
             raise ValueError("Exclusive Multiattack groups must be nonempty and non-overlapping.")
+        follow = (self.follow_up_action_id, self.follow_up_condition)
+        if any(value is not None for value in follow) and not all(value is not None for value in follow):
+            raise ValueError("Multiattack follow-up action and trigger must be declared together.")
+        if self.follow_up_grapple_escape_dc is not None and self.follow_up_action_id is None:
+            raise ValueError("Follow-up grapple data requires a follow-up action.")
+        if self.follow_up_max_target_size is not None and self.follow_up_action_id is None:
+            raise ValueError("Follow-up size data requires a follow-up action.")
         return self
