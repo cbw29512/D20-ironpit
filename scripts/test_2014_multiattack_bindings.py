@@ -79,6 +79,8 @@ def main() -> int:
         "slots": [{"action_ids": ["slam"]}, {"action_ids": ["slam"]}],
         "follow_up_action_id": "engulf",
         "follow_up_condition": "all_attacks_hit_same_target",
+        "follow_up_max_target_size": "medium",
+        "follow_up_grapple_escape_dc": 14,
     }
 
     print("2014 generic Multiattack binding regressions passed.")
