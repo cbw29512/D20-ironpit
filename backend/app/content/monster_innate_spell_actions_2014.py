@@ -1,11 +1,18 @@
 from __future__ import annotations
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.content.monster_spell_actions_2014 import _save_spell
 from app.content.shared_spell_actions_2014 import build_faerie_fire
 from app.domain.actions import HitControlEffect, SavingThrowAction
 from app.domain.spells import SpellSaveAction
 
-SUPPORTED_INNATE_ACTION_SPELLS_2014 = frozenset({"blindness-deafness", "faerie-fire"})
+_INNATE_SAVE_LEVELS_2014 = {
+    "cone-of-cold": 5,
+    "thunderwave": 1,
+}
+SUPPORTED_INNATE_ACTION_SPELLS_2014 = frozenset({
+    "blindness-deafness", "faerie-fire", *_INNATE_SAVE_LEVELS_2014,
+})
 
 
 def innate_spell_save_actions_2014(source: CatalogMonster2014) -> list[SpellSaveAction]:
@@ -13,9 +20,14 @@ def innate_spell_save_actions_2014(source: CatalogMonster2014) -> list[SpellSave
     if profile is None: return []
     actions: list[SpellSaveAction] = []
     for spell in profile.spells:
-        if spell.id != "faerie-fire": continue
-        if profile.save_dc is None: raise ValueError("Faerie Fire requires an innate spell save DC.")
-        actions.append(build_faerie_fire(profile.save_dc))
+        if spell.id == "faerie-fire":
+            if profile.save_dc is None: raise ValueError("Faerie Fire requires an innate spell save DC.")
+            actions.append(build_faerie_fire(profile.save_dc))
+            continue
+        level = _INNATE_SAVE_LEVELS_2014.get(spell.id)
+        if level is None: continue
+        if profile.save_dc is None: raise ValueError(f"{spell.name} requires an innate spell save DC.")
+        actions.append(_save_spell(spell.id, level, profile.save_dc, 1))
     return actions
 
 
