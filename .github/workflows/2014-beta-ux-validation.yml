@@ -1,0 +1,57 @@
+name: 2014 Beta UX Validation
+
+on:
+  push:
+    branches:
+      - feat/2014-beta-ux-polish
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 2014-beta-ux-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  validate-beta-ux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Iron Pit rules engine
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Build pure 2014 browser package
+        run: |
+          python scripts/prepare_static_site.py
+          grep -q 'IRON_PIT_RULESET = "2014"' frontend/browser-monsters-generated.js
+          grep -q 'IRON_PIT_HERO_RULESET = "2014"' frontend/browser-heroes.js
+      - name: Validate changed JavaScript syntax
+        run: |
+          node --check frontend/app.js
+          node --check frontend/battlefield-view.js
+          node --check frontend/battle-log-format.js
+      - name: Prove readable battle transcript
+        run: node frontend/battle-log-format.test.cjs
+      - name: Run dedicated 2014 browser regressions
+        shell: bash
+        run: |
+          set -e
+          count=0
+          for test_file in frontend/browser-2014-*.test.cjs; do
+            echo "==> $test_file"
+            node "$test_file"
+            count=$((count + 1))
+          done
+          test "$count" -gt 0
+          echo "Completed $count dedicated 2014 browser regression files."
+      - name: Confirm beta copy and test controls
+        run: |
+          grep -q 'D&D 5e 2014 · SRD PLAYTEST' frontend/app.js
+          grep -q 'PLAYTEST LOOP' frontend/app.js
+          grep -q 'COPY LOG' frontend/app.js
+          grep -q '2014 TEST HEROES' frontend/app.js
+          grep -q 'Condition: .* resists' frontend/battle-log-format.js
