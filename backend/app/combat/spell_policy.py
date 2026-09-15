@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available
 from app.combat.area_targeting import AreaPlacement as GridAreaPlacement, legal_area_placements
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
+from app.combat.persistent_spells import initial_spell_cast_allowed
 from app.combat.spell_area import AreaPlacement as LegacyAreaPlacement, best_area_placement
 from app.combat.spell_immunity import spell_affects_target
 from app.combat.spellcasting import slot_spell_available
@@ -78,7 +79,7 @@ def choose_spell(
     for index, action in enumerate(caster.state.template.spell_save_actions):
         if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             continue
-        if action.concentration and caster.state.concentration is not None and caster.state.concentration.effect_id == action.id:
+        if not initial_spell_cast_allowed(caster.state, action.id, concentration=action.concentration):
             continue
         access = _cast_access(caster, action, turn_key)
         if access is None:
