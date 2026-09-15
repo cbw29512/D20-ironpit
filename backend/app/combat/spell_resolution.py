@@ -77,6 +77,7 @@ def resolve_spell(
     save_action = _save_action(choice)
     reflectable = spell.area is None and spell.area_radius_ft is None and len(choice.target_ids) == 1
     shared_damage_rolls: list[int] | None = None
+    shared_additional_rolls: list[list[int]] | None = None
     for target_id in choice.target_ids:
         target = by_id[target_id]
         if not _spell_affects(spell, target): continue
@@ -98,6 +99,8 @@ def resolve_spell(
             sequence, round_number, caster, target, save_action,
             0 if placement is not None or reflected_from is not None else abs(caster.position_ft - target.position_ft),
             dice, spend_action=False, shared_damage_rolls=damage_rolls,
+            additional_damage_components=spell.additional_damage_components,
+            shared_additional_damage_rolls=shared_additional_rolls,
             affected_states=affected_states, setup=setup, precomputed_save=precomputed,
         )
         if event.save_succeeded is False and spell.failure_modifier_effects:
@@ -107,5 +110,7 @@ def resolve_spell(
         events.append(event)
         if maximized_rolls is None and shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)
+            if spell.additional_damage_components:
+                shared_additional_rolls = [list(part.rolls) for part in event.damage_components[1:]]
         sequence += 1
     return events, sequence
