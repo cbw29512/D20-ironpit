@@ -4,6 +4,7 @@ import logging
 
 from app.combat.aura_activation import expire_active_auras
 from app.combat.auras import resolve_start_turn_auras
+from app.combat.berserk import resolve_start_turn_berserk
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
@@ -90,6 +91,9 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
+                berserk_event = resolve_start_turn_berserk(sequence, round_number, member.combatant_id, member.state, dice)
+                if berserk_event is not None:
+                    events.append(berserk_event); sequence += 1
                 refresh_legendary_actions(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
                 aura_expiry_events, sequence = expire_active_auras(sequence, round_number, member)
