@@ -106,21 +106,20 @@ def test_shared_traits_are_data_driven_and_neutral_traits_do_not_block() -> None
     assert template.combat_traits == [CombatTrait.PACK_TACTICS]
 
 
-def test_damage_first_spell_scope_skips_non_damage_spells() -> None:
-    scoped = {"enlarge-reduce", "goodberry", "protection-from-poison", "telekinesis"}
+def test_damage_first_spell_scope_skips_safe_non_damage_spells() -> None:
+    scoped = {"enlarge-reduce", "goodberry", "protection-from-poison"}
     assert scoped <= SCOPED_OUT_NON_DAMAGE_SPELLS_2014
     catalog = {monster.id: monster for monster in load_catalog_2014()}
     expected = {
-        "cloud-giant": "spell:telekinesis",
         "couatl": "spell:protection from poison",
         "dryad": "spell:goodberry",
         "efreeti": "spell:enlarge/reduce",
     }
     for monster_id, old_blocker in expected.items():
         assert old_blocker not in unsupported_mechanics_2014(catalog[monster_id])
-    for monster_id in ("cloud-giant", "efreeti"):
-        assert unsupported_mechanics_2014(catalog[monster_id]) == []
-        assert compile_monster_2014(catalog[monster_id]).ruleset == "2014"
+    assert "spell:telekinesis" in unsupported_mechanics_2014(catalog["cloud-giant"])
+    assert unsupported_mechanics_2014(catalog["efreeti"]) == []
+    assert compile_monster_2014(catalog["efreeti"]).ruleset == "2014"
 
 
 def test_blood_frenzy_binds_existing_target_wounded_advantage() -> None:
