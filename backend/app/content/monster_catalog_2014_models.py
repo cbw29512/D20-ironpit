@@ -16,6 +16,7 @@ from app.domain.size import CreatureSize
 from app.domain.swallow import SwallowAction
 from app.domain.weapons import ConditionalAttackAdvantage, ConditionalDamage, DamageType
 from app.domain.zero_hp_prevention import ZeroHpPrevention
+from app.content.monster_catalog_2014_multiattack_models import CatalogMultiattackBinding2014
 
 class CatalogDamage2014(BaseModel):
     average: int = Field(ge=0)
@@ -125,6 +126,7 @@ class CatalogMonster2014(BaseModel):
     spellcasting: CatalogSpellcasting2014 | None = None
     multiattack_slots: list[list[str]] = Field(default_factory=list)
     multiattack_policy: AttackActionPolicy | None = None
+    multiattack_binding: CatalogMultiattackBinding2014 | None = None
     zero_hp_prevention: ZeroHpPrevention | None = None
     regeneration: RegenerationProfile | None = None
     legendary_action_uses: int = Field(default=0, ge=0, le=10)
