@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.instant_death import apply_instant_death
 from app.combat.spell_immunity import spell_affects_target
 from app.combat.spell_slot_selection import lowest_available_spell_slot
 from app.combat.spellcasting import mark_slot_spell_cast
@@ -35,40 +36,51 @@ def resolve_automatic_damage_spell(
     slot_level, resource = slot
     if not spell_affects_target(target.state, slot_level):
         raise ValueError(f"{action.name} cannot affect this target at slot level {slot_level}.")
-    projectile_count = action.projectile_count(slot_level)
-    rolled: list[DamageRollComponent] = []
-    all_rolls: list[int] = []
-    damage_type = DamageType(action.damage_type)
-    for index in range(projectile_count):
-        rolls = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count_per_projectile)]
-        all_rolls.extend(rolls)
-        total = sum(rolls) + action.damage_bonus_per_projectile
-        rolled.append(DamageRollComponent(
-            source=f"{action.name} projectile {index + 1}",
-            notation=f"{action.damage_dice_count_per_projectile}d{action.damage_dice_size}+{action.damage_bonus_per_projectile}",
-            rolls=rolls, modifier=action.damage_bonus_per_projectile,
-            damage_type=damage_type, total=total,
-        ))
     hp_before = target.state.current_hp
     temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes
     death_failure_before = target.state.death_save_failures
     concentration_before = target.state.concentration.effect_id if target.state.concentration else None
-    applied_total, components = apply_damage_defenses(target.state, rolled)
     affected = [member.state for member in [*setup.heroes, *setup.monsters]]
-    apply_damage(
-        target.state, applied_total, damage_types={damage_type} if applied_total else set(),
-        dice=dice, affected_states=affected,
-    )
+    rolled: list[DamageRollComponent] = []
+    components: list[DamageRollComponent] = []
+    damage_roll = None
+    if action.instant_death_hp_threshold is not None:
+        threshold = action.instant_death_hp_threshold
+        if target.state.current_hp > threshold:
+            raise ValueError(f"{action.name} target exceeds its {threshold} HP threshold.")
+        apply_instant_death(target.state, affected)
+        detail = f"{target.state.template.name} has {hp_before} HP and dies immediately."
+    else:
+        if action.damage_type is None:
+            raise ValueError(f"{action.name} damage type is missing.")
+        projectile_count = action.projectile_count(slot_level)
+        all_rolls: list[int] = []
+        damage_type = DamageType(action.damage_type)
+        for index in range(projectile_count):
+            rolls = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count_per_projectile)]
+            all_rolls.extend(rolls)
+            total = sum(rolls) + action.damage_bonus_per_projectile
+            rolled.append(DamageRollComponent(
+                source=f"{action.name} projectile {index + 1}",
+                notation=f"{action.damage_dice_count_per_projectile}d{action.damage_dice_size}+{action.damage_bonus_per_projectile}",
+                rolls=rolls, modifier=action.damage_bonus_per_projectile,
+                damage_type=damage_type, total=total,
+            ))
+        applied_total, components = apply_damage_defenses(target.state, rolled)
+        apply_damage(
+            target.state, applied_total, damage_types={damage_type} if applied_total else set(),
+            dice=dice, affected_states=affected,
+        )
+        damage_roll = DiceRoll(
+            notation=" + ".join(component.notation for component in rolled),
+            rolls=all_rolls, modifier=projectile_count * action.damage_bonus_per_projectile,
+            total=applied_total,
+        )
+        detail = f"{projectile_count} projectiles automatically hit {target.state.template.name}."
     mark_slot_spell_cast(caster.state, turn_key)
     resource.current_uses -= 1
     spend(caster.state, action.action_cost)
-    damage_roll = DiceRoll(
-        notation=" + ".join(component.notation for component in rolled),
-        rolls=all_rolls,
-        modifier=projectile_count * action.damage_bonus_per_projectile,
-        total=applied_total,
-    )
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="feature",
         actor_id=caster.combatant_id, actor_name=caster.state.template.name,
@@ -82,6 +94,5 @@ def resolve_automatic_damage_spell(
         feature_id=action.id, resource_remaining=resource.current_uses,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
         animation=action.animation,
-        description=(f"{caster.state.template.name} casts {action.name} at slot level {slot_level}; "
-                     f"{projectile_count} projectiles automatically hit {target.state.template.name}."),
+        description=f"{caster.state.template.name} casts {action.name} using a level {slot_level} slot. {detail}",
     )
