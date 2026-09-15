@@ -56,6 +56,40 @@ def _certified_monsters():
         raise
 
 
+def _defense_row(rule) -> dict:
+    return {
+        "damageTypes": [item.value for item in rule.damage_types],
+        "nonmagicalAttackOnly": rule.nonmagical_attack_only,
+        "bypassIfSilvered": rule.bypass_if_silvered,
+        "bypassIfAdamantine": rule.bypass_if_adamantine,
+    }
+
+
+def _attach_qualified_defenses(row: dict, template) -> None:
+    if template.conditional_damage_resistances:
+        row["conditional_damage_resistances"] = [
+            _defense_row(rule) for rule in template.conditional_damage_resistances
+        ]
+    if template.conditional_damage_immunities:
+        row["conditional_damage_immunities"] = [
+            _defense_row(rule) for rule in template.conditional_damage_immunities
+        ]
+    attack_by_id = {
+        attack.id: attack
+        for attack in [template.weapon_attack, *template.alternate_weapon_attacks]
+    }
+    for attack_row in row.get("attacks", []):
+        attack = attack_by_id.get(attack_row.get("id"))
+        if attack is None:
+            continue
+        if attack.weapon.magical:
+            attack_row["magical"] = True
+        if attack.weapon.silvered:
+            attack_row["silvered"] = True
+        if attack.weapon.adamantine:
+            attack_row["adamantine"] = True
+
+
 def render() -> str:
     try:
         rows = []
@@ -64,6 +98,7 @@ def render() -> str:
             row["creature_type"] = template.creature_type
             _attach_source_fingerprint(row, template)
             _attach_monster_actions(row, template)
+            _attach_qualified_defenses(row, template)
             rows.append(row)
         ids = {row["id"] for row in rows}
         if len(ids) != len(rows):

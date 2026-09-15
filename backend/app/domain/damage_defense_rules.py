@@ -14,6 +14,15 @@ class ConditionalDamageResistance(BaseModel):
     bypass_if_adamantine: bool = False
 
 
+class ConditionalDamageImmunity(BaseModel):
+    """Immunity that applies only when declarative attack-source qualifiers match."""
+
+    damage_types: list[DamageType] = Field(min_length=1)
+    nonmagical_attack_only: bool = False
+    bypass_if_silvered: bool = False
+    bypass_if_adamantine: bool = False
+
+
 class DamageAbsorption(BaseModel):
     """Replace incoming typed damage with healing from the raw damage amount."""
 
