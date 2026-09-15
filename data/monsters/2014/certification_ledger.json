@@ -4,7 +4,7 @@
     "action": 47,
     "attack-detail": 27,
     "legendary": 25,
-    "spell": 34,
+    "spell": 33,
     "trait": 38
   },
   "blocker_yield": {
@@ -94,7 +94,6 @@
     "spell:confusion": 1,
     "spell:enlarge/reduce": 1,
     "spell:feather fall": 2,
-    "spell:finger of death": 1,
     "spell:flame strike": 3,
     "spell:flaming sphere": 1,
     "spell:fog cloud": 2,
@@ -1583,14 +1582,13 @@
     {
       "id": "lich",
       "name": "Lich",
-      "remaining_blocker_count": 8,
+      "remaining_blocker_count": 7,
       "remaining_blockers": [
         "legendary:Cantrip",
         "legendary:Disrupt Life",
         "legendary:Frightening Gaze",
         "spell:acid arrow",
         "spell:cloudkill",
-        "spell:finger of death",
         "spell:power word kill",
         "trait:Turn Resistance"
       ],
