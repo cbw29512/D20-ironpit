@@ -34,11 +34,15 @@ for (const monster of Object.values(window.IRON_PIT_BROWSER_MONSTERS)) {
   assert.ok(!String(monster.id).startsWith("srd-"), `2024 fixture leaked: ${monster.id}`);
 }
 
+// Keep this dependency list aligned with the production page ordering for the
+// shared combat modules used by the generated 2014 harness. In particular,
+// Topple delegates its activation check to the weapon-mastery runtime even
+// when a 2014 attack has no mastery property, so weapon mastery must load first.
 for (const file of [
   "browser-condition-immunity.js", "browser-source-effect-immunity.js",
   "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
   "browser-restraints.js", "browser-timed-conditions.js", "browser-damage-triggered-effects.js",
-  "browser-save-control-effects.js", "browser-source-bound-effects.js",
+  "browser-save-control-effects.js", "browser-weapon-mastery.js", "browser-source-bound-effects.js",
   "browser-ongoing-spell-control.js", "browser-modifiers.js", "browser-state.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-attack-advantage.js",
   "browser-damage-absorption.js", "browser-attack.js", "browser-start-turn-damage.js",
