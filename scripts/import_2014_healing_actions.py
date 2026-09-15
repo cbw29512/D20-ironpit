@@ -15,17 +15,33 @@ def _slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text).strip("-")
 
 
+def _daily_uses(heading: str, text: str) -> tuple[str, int] | None:
+    """Accept X/Day printed either inside the heading or immediately after it."""
+    heading_usage = re.search(r"\((\d+)/Day\)$", heading, re.I)
+    if heading_usage is not None:
+        name = re.sub(r"\s*\(\d+/Day\)$", "", heading, flags=re.I).strip()
+        return name, int(heading_usage.group(1))
+    external_usage = re.match(
+        rf"{re.escape(heading)}\.?\s*\((\d+)/Day\)\.?\s*",
+        text,
+        re.I,
+    )
+    if external_usage is None:
+        return None
+    return heading, int(external_usage.group(1))
+
+
 def parse_limited_healing_action(paragraph: str) -> tuple[dict, int] | None:
     """Parse printed X/Day healing actions into the shared HealingAction schema."""
     heading_match = re.search(r"<strong>(.*?)</strong>", paragraph, re.I | re.S)
     if heading_match is None:
         return None
     heading = _plain(heading_match.group(1)).rstrip(".")
-    usage = re.search(r"\((\d+)/Day\)$", heading, re.I)
+    text = _plain(paragraph)
+    usage = _daily_uses(heading, text)
     if usage is None:
         return None
-    name = re.sub(r"\s*\(\d+/Day\)$", "", heading, flags=re.I).strip()
-    text = _plain(paragraph)
+    name, uses = usage
     healing = re.search(
         r"regains\s+\d+\s*\((\d+)d(\d+)\s*([+-]\s*\d+)?\)\s*hit points",
         text, re.I,
@@ -46,4 +62,4 @@ def parse_limited_healing_action(paragraph: str) -> tuple[dict, int] | None:
         "healing_bonus": int((bonus or "0").replace(" ", "")),
         "removable_conditions": removable, "resource_id": action_id, "resource_cost": 1,
         "animation": "healing",
-    }, int(usage.group(1)))
+    }, uses)
