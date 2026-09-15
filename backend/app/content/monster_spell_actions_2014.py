@@ -1,5 +1,6 @@
 from __future__ import annotations
 from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.content.monster_spell_substitutions_2014 import ARENA_DAMAGE_SUBSTITUTIONS_2014, build_arena_damage_substitute
 from app.content.persistent_spell_actions_2014 import build_spiritual_weapon
 from app.content.shared_spell_actions_2014 import build_faerie_fire
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
@@ -125,6 +126,10 @@ def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[list[SpellAtt
     automatic_ids = {"magic-missile", "power-word-kill"}
     if profile is not None:
         for spell in profile.spells:
+            if spell.id in ARENA_DAMAGE_SUBSTITUTIONS_2014:
+                if profile.save_dc is not None:
+                    save_actions.append(build_arena_damage_substitute(spell.id, spell.name, spell.level, profile.save_dc))
+                continue
             if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014: continue
             if spell.id in automatic_ids: automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
             if spell.id in save_ids:
