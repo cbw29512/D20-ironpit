@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
 from app.domain.reactive_damage import MeleeHitReactiveDamage
+from app.domain.spell_damage import SpellDamageComponent
 from app.domain.targeting import AreaTargeting
 
 SpellModifierKind = Literal[
@@ -126,6 +127,7 @@ class SpellSaveAction(BaseModel):
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    additional_damage_components: list[SpellDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
     failure_push_ft: int = Field(default=0, ge=0, le=120)
     upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
