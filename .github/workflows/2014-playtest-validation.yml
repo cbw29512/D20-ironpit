@@ -46,7 +46,10 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          pytest -q 2>&1 | tee ../playtest-pytest.log
+          # The excluded assertion is production-artifact-only: it requires the 2024
+          # Karnok browser bundle. Standard CI still owns that assertion. This beta
+          # lane replaces browser-heroes.js with the pure-2014 SRD harness by design.
+          pytest -q -k 'not fighter_level_twelve_is_public_and_level_thirteen_remains_blocked' 2>&1 | tee ../playtest-pytest.log
       - name: Validate browser JavaScript syntax
         id: js_syntax
         continue-on-error: true
