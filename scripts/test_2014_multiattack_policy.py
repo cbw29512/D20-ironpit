@@ -1,4 +1,5 @@
 from import_2014_multiattack import parse_multiattack
+from test_2014_multiattack_bindings import main as test_binding_main
 
 
 def attack(attack_id: str, name: str, kind: str = "melee", average: int = 0) -> dict:
@@ -125,6 +126,7 @@ def main() -> int:
         ],
     }
 
+    test_binding_main()
     print("2014 Multiattack policy regressions passed.")
     return 0
 
