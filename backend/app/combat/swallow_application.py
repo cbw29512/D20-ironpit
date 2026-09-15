@@ -20,7 +20,7 @@ def _action_for_attack(attacker: EncounterCombatant, attack: WeaponAttack) -> Sw
     )
 
 
-def _capacity_available(attacker: EncounterCombatant, setup: EncounterSetup, action: SwallowAction) -> bool:
+def capacity_available(attacker: EncounterCombatant, setup: EncounterSetup, action: SwallowAction) -> bool:
     if action.max_swallowed is None:
         return True
     swallowed = sum(
@@ -38,6 +38,8 @@ def apply_swallowed(
         source_id=attacker.combatant_id, source_effect_id=action.id,
         damage_dice_count=action.damage_dice_count, damage_dice_size=action.damage_dice_size,
         damage_bonus=action.damage_bonus, damage_type=action.damage_type,
+        start_turn_save_ability=action.start_turn_save_ability, start_turn_save_dc=action.start_turn_save_dc,
+        source_death_release=action.source_death_release,
         regurgitation_damage_threshold=action.regurgitation_damage_threshold,
         regurgitation_save_ability=action.regurgitation_save_ability,
         regurgitation_save_dc=action.regurgitation_save_dc,
@@ -48,7 +50,7 @@ def apply_swallowed(
         *event.applied_condition_ids, "blinded", "restrained", "swallowed",
     ]))
     event.feature_id = action.id
-    event.description += f" {target.state.template.name} is swallowed."
+    event.description += f" {target.state.template.name} is contained by {attacker.state.template.name}."
 
 
 def resolve_on_hit_swallow(
@@ -62,5 +64,5 @@ def resolve_on_hit_swallow(
         return
     if not size_at_most(target.state.template.size, action.max_target_size):
         return
-    if _capacity_available(attacker, setup, action):
+    if capacity_available(attacker, setup, action):
         apply_swallowed(attacker, target, action, event)
