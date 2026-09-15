@@ -12,6 +12,11 @@ _AUTO_HIT_OWN_GRAPPLE = re.compile(
     r"and (?:the\s+)?[A-Za-z' -]+ can(?:not|'t|’t) make [A-Za-z' -]+ attacks against other targets",
     re.I,
 )
+_OWN_GRAPPLE_ONLY = re.compile(
+    r"Until this grapple ends,\s*(?:the\s+)?[A-Za-z'’ -]+\s+can\s+[A-Za-z'’ -]+?\s+only the grappled creature\s+"
+    r"and has advantage on attack rolls to do so",
+    re.I,
+)
 _OWN_GRAPPLE_ADVANTAGE = re.compile(
     r"(?:the\s+)?[A-Za-z'’ -]+ has advantage on attack rolls "
     r"(?:to do so|against (?:the|a) (?:target|creature) it is grappling)",
@@ -31,17 +36,26 @@ def parse_grapple_attack_policy(text: str) -> tuple[str | None, str]:
         raise RuntimeError("Grapple attack policy parsing failed.") from exc
 
 
-def _bind_own_grapple_only(attack: dict, text: str) -> tuple[bool, str]:
-    if not attack.get("forbid_target_grappled_by_self"):
-        return False, text
-    match = _OWN_GRAPPLE_ADVANTAGE.search(text)
-    if match is None:
-        return False, text
+def _set_own_grapple_only(attack: dict) -> None:
     attack["forbid_target_grappled_by_self"] = False
     attack["grapple_target_policy"] = "own_grapple_only"
     advantages = attack.setdefault("conditional_attack_advantage", [])
     if not any(item.get("trigger") == "target_grappled_by_self" for item in advantages):
         advantages.append({"trigger": "target_grappled_by_self"})
+
+
+def _bind_own_grapple_only(attack: dict, text: str) -> tuple[bool, str]:
+    match = _OWN_GRAPPLE_ONLY.search(text)
+    if match is not None:
+        _set_own_grapple_only(attack)
+        residual = f"{text[:match.start()]} {text[match.end():]}".strip(" .,;")
+        return True, residual
+    if not attack.get("forbid_target_grappled_by_self"):
+        return False, text
+    match = _OWN_GRAPPLE_ADVANTAGE.search(text)
+    if match is None:
+        return False, text
+    _set_own_grapple_only(attack)
     residual = f"{text[:match.start()]} {text[match.end():]}".strip(" .,;")
     return True, residual
 
