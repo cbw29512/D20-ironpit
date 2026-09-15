@@ -7,7 +7,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, forced_movement_choice, save_choice, slot_has_legal_choice, use_ranged_split
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
-from app.combat.death_triggers import append_after_event
+from app.combat.death_lifecycle import append_after_event
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import close_ranged_threat_exists
