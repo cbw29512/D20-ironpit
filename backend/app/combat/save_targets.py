@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.death_triggers import append_after_event
+from app.combat.death_lifecycle import append_after_event
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
