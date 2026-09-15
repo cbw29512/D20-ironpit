@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import logging
 
 from app.combat.action_economy import is_available, spend
@@ -33,7 +32,6 @@ from app.domain.modifiers import ModifierKind
 from app.domain.spells import SpellAttackAction
 
 logger = logging.getLogger(__name__)
-
 
 def _slot_resource(caster: EncounterCombatant, spell: SpellAttackAction, turn_key: str):
     if spell.level == 0 or not slot_spell_available(caster.state, turn_key):
