@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.shared_spell_actions_2014 import build_faerie_fire
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
@@ -19,7 +18,6 @@ SPELL_TARGET_RULES_2014 = {
         "maximize_damage_creature_types": ["plant"],
     },
 }
-
 
 def _cantrip_dice(caster_level: int) -> int:
     return 1 + int(caster_level >= 5) + int(caster_level >= 11) + int(caster_level >= 17)
