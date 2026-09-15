@@ -89,7 +89,6 @@
 
   function formatSaveLines(event, context = {}) {
     const result = event.save_succeeded ? "SUCCESS" : "FAILURE";
-    const ability = String(event.save_ability || "save").toUpperCase();
     const source = event.feature_id ? sourceLabel(event.feature_id) : "effect";
     const lines = [`${event.actor_name} uses ${source} on ${event.target_name}.`, `Save: ${event.target_name} rolls ${rollLabel(event.saving_throw_roll)} vs DC ${event.save_dc} — ${result}.`];
     const damage = damageLabel(event); if (damage) lines.push(`Damage: ${damage}.`);
@@ -122,6 +121,27 @@
     return lines;
   }
 
+  function compactEvents(events = []) {
+    const compacted = [];
+    for (const event of events) {
+      const previous = compacted[compacted.length - 1];
+      const mergeMovement = event.event_type === "movement" && previous?.event_type === "movement"
+        && previous.actor_id === event.actor_id && previous.round_number === event.round_number;
+      if (!mergeMovement) {
+        compacted.push({ ...event });
+        continue;
+      }
+      const movement = Number(previous.movement_ft || 0) + Number(event.movement_ft || 0);
+      const cost = Number(previous.movement_cost_ft || 0) + Number(event.movement_cost_ft || 0);
+      const merged = { ...previous, ...event, movement_ft: movement };
+      if (previous.movement_cost_ft != null || event.movement_cost_ft != null) merged.movement_cost_ft = cost;
+      if (previous.grid_path || event.grid_path) merged.grid_path = [...(previous.grid_path || []), ...(event.grid_path || [])];
+      merged.description = `${event.actor_name || previous.actor_name || "Combatant"} moves ${movement} feet.`;
+      compacted[compacted.length - 1] = merged;
+    }
+    return compacted;
+  }
+
   function formatLines(event, context = {}) {
     if (event.event_type === "initiative") return formatInitiativeLines(event);
     if (event.event_type === "attack") return formatAttackLines(event, context);
@@ -134,7 +154,7 @@
   function format(event, context = {}) { return formatLines(event, context).join(" · "); }
 
   window.IRON_PIT_BATTLE_LOG = {
-    format, formatLines,
+    compactEvents, format, formatLines,
     formatAttack: (event, context = {}) => formatAttackLines(event, context).join(" · "),
     formatDeathSave: (event) => formatDeathSaveLines(event).join(" · "),
     formatInitiative: (event) => formatInitiativeLines(event).join(" · "),
