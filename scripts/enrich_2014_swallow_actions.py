@@ -8,6 +8,7 @@ from pathlib import Path
 
 from import_2014_swallow_actions import (
     parse_grapple_containment_action,
+    parse_grappled_target_swallow_attack,
     parse_on_hit_swallow_attack,
     parse_swallow_action,
 )
@@ -25,33 +26,47 @@ def _parse_swallow_from_actions(actions: str) -> dict | None:
         if index + 1 < len(paragraphs):
             candidates.append(f"{paragraph} {paragraphs[index + 1]}")
         for candidate in candidates:
-            parsed = parse_swallow_action(candidate) or parse_on_hit_swallow_attack(candidate)
+            parsed = (
+                parse_swallow_action(candidate)
+                or parse_grappled_target_swallow_attack(candidate)
+                or parse_on_hit_swallow_attack(candidate)
+            )
             if parsed is not None:
                 return parsed
     return None
 
 
-def _bind_on_hit_swallow(row: dict, parsed: dict) -> dict:
-    ability = parsed.pop("on_hit_save_ability", None)
-    dc = parsed.pop("on_hit_save_dc", None)
-    if ability is None and dc is None:
-        return parsed
-    if ability is None or dc is None:
-        raise ValueError(f"Incomplete save-triggered Swallow data for {row['name']}.")
-    attack_id = parsed.get("attack_id")
-    if attack_id is None:
-        raise ValueError(f"Save-triggered Swallow is missing an attack id for {row['name']}.")
+def _attack(row: dict, attack_id: str) -> dict:
     attack = next((item for item in row.get("attacks", []) if item.get("id") == attack_id), None)
     if attack is None:
         raise ValueError(f"Swallow attack {attack_id!r} is missing for {row['name']}.")
-    if attack.get("on_hit_save_effect") is not None:
-        raise ValueError(f"Swallow attack {attack_id!r} already has a save rider for {row['name']}.")
-    attack["on_hit_save_effect"] = {
-        "save_ability": ability, "dc": dc,
-        "max_target_size": parsed["max_target_size"], "swallow_on_failure": True,
-    }
-    attack["source_complete"] = True
-    attack["unsupported_text"] = None
+    return attack
+
+
+def _bind_on_hit_swallow(row: dict, parsed: dict) -> dict:
+    ability = parsed.pop("on_hit_save_ability", None)
+    dc = parsed.pop("on_hit_save_dc", None)
+    attack_id = parsed.get("attack_id")
+    if attack_id is None:
+        if ability is not None or dc is not None:
+            raise ValueError(f"Save-triggered Swallow is missing an attack id for {row['name']}.")
+        return parsed
+    attack = _attack(row, attack_id)
+    if ability is not None or dc is not None:
+        if ability is None or dc is None:
+            raise ValueError(f"Incomplete save-triggered Swallow data for {row['name']}.")
+        if attack.get("on_hit_save_effect") is not None:
+            raise ValueError(f"Swallow attack {attack_id!r} already has a save rider for {row['name']}.")
+        attack["on_hit_save_effect"] = {
+            "save_ability": ability, "dc": dc,
+            "max_target_size": parsed["max_target_size"], "swallow_on_failure": True,
+        }
+        attack["source_complete"] = True
+        attack["unsupported_text"] = None
+        return parsed
+    if parsed.get("requires_existing_grapple") and attack.get("unsupported_text"):
+        attack["source_complete"] = True
+        attack["unsupported_text"] = None
     return parsed
 
 
