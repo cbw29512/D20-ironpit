@@ -54,8 +54,9 @@ class FixedDiceProvider:
 
     def __init__(self, rolls: list[int]) -> None:
         try:
-            if not rolls:
-                raise ValueError("At least one fixed roll is required.")
+            # An empty sequence is valid for tests whose save/damage rolls are
+            # supplied through precomputed or shared-roll paths.  Calling roll()
+            # still fails loudly if no fixed value is available.
             self._rolls: deque[int] = deque(rolls)
         except Exception:
             logger.exception("Failed to initialize fixed dice provider.")

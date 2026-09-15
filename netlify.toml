@@ -2,5 +2,7 @@
   command = "python3 -m pip install -e ./backend && python3 scripts/prepare_static_site.py"
   publish = "frontend"
   # Netlify ignore commands return 0 to skip a build and 1 to continue.
-  # Only the production deploy context may run a Netlify build.
-  ignore = 'test "$CONTEXT" != "production"'
+  # Production remains allowed. Deploy previews build only when the preview
+  # head is the frozen beta branch used by PR #99; feature PRs are skipped so
+  # iterative development does not consume extra Netlify build credits.
+  ignore = 'test "$CONTEXT" != "production" && { test "$CONTEXT" != "deploy-preview" || test "$HEAD" != "beta/2014-playtest"; }'

@@ -16,12 +16,15 @@ def _attacker(*, mastered: bool = True, level: int = 1, modifier: int | None = 3
         update={"level": level, "weapon_masteries": ["battleaxe"] if mastered else [], "combat_traits": []},
         deep=True,
     )
-    state = build_combatant_state(template)
-    attack = state.template.weapon_attack.model_copy(
+    attack = template.weapon_attack.model_copy(
         update={"id": "topple-battleaxe", "weapon": build_weapon("battleaxe"), "attack_ability_modifier": modifier},
         deep=True,
     )
-    return state, attack
+    # Ownership is part of the mastery contract: the mastered Battleaxe must be
+    # on the combatant template before runtime state is created.
+    template = template.model_copy(update={"weapon_attack": attack}, deep=True)
+    state = build_combatant_state(template)
+    return state, state.template.weapon_attack
 
 
 def _target(*, immune: bool = False, size: CreatureSize = CreatureSize.MEDIUM):

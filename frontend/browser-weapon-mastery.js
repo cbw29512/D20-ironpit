@@ -3,14 +3,29 @@
 
   const CLEAVE_FEATURE_ID = "weapon-mastery-cleave";
 
+  function ownsWeapon(state, attack) {
+    const weaponId = attack?.weaponId;
+    return Boolean(weaponId)
+      && (state?.template?.attacks || []).some((candidate) => candidate?.weaponId === weaponId);
+  }
+
+  function masteryRulesetEnabled(state) {
+    const ruleset = state?.template?.ruleset;
+    // Older generated 2024 browser fixtures predate the explicit ruleset field.
+    // 2014 is always an explicit hard stop; current/future 2024 rows are explicit.
+    return ruleset == null || ruleset === "2024";
+  }
+
   function mastered(state, attack) {
-    return Boolean(attack?.weaponId)
+    return masteryRulesetEnabled(state)
+      && ownsWeapon(state, attack)
       && (state?.template?.weapon_masteries || []).includes(attack.weaponId);
   }
 
   function active(state, attack, masteryProperty) {
+    if (attack?.masteryProperty !== masteryProperty || !mastered(state, attack)) return false;
     const replaced = window.IRON_PIT_BROWSER_TACTICAL_MASTER?.selected?.(state, attack) || false;
-    return attack?.masteryProperty === masteryProperty && mastered(state, attack) && !replaced;
+    return !replaced;
   }
 
   function cleaveAttack(attack) {
@@ -68,6 +83,7 @@
   }
 
   window.IRON_PIT_BROWSER_WEAPON_MASTERY = {
-    active, mastered, cleaveAttack, cleaveTarget, resolveCleave, CLEAVE_FEATURE_ID,
+    active, mastered, ownsWeapon, masteryRulesetEnabled,
+    cleaveAttack, cleaveTarget, resolveCleave, CLEAVE_FEATURE_ID,
   };
 })();

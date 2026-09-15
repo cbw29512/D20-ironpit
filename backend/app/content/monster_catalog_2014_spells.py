@@ -9,6 +9,8 @@ from app.content.monster_spell_substitutions_2014 import ARENA_DAMAGE_SUBSTITUTI
 # Explicit roster-loading scope: preserve every printed spell in source data, but
 # non-damaging spells do not block the damage-first monster milestone. Complex
 # combat spells may execute a documented simpler arena damage substitution.
+# Keep spells with a separate unresolved combat credential (for example,
+# Telekinesis on Cloud Giant exposing a no-save-DC Fog Cloud substitution) explicit.
 SCOPED_OUT_NON_DAMAGE_SPELLS_2014 = frozenset({
     "animal-messenger", "animate-dead", "banishment", "barkskin", "bestow-curse",
     "bless", "blur", "calm-emotions", "charm-person", "clairvoyance", "command",
@@ -16,16 +18,17 @@ SCOPED_OUT_NON_DAMAGE_SPELLS_2014 = frozenset({
     "create-food-and-water", "creation", "cure-wounds", "dancing-lights", "darkness",
     "detect-evil-and-good", "detect-magic", "detect-thoughts", "dimension-door", "disguise-self",
     "dispel-evil-and-good", "dispel-magic", "divination", "dominate-monster", "dominate-person",
-    "dream", "druidcraft", "entangle", "feather-fall", "fly", "freedom-of-movement", "gaseous-form", "geas",
-    "globe-of-invulnerability", "greater-invisibility", "greater-restoration", "heroes-feast",
-    "hold-person", "identify", "invisibility", "legend-lore", "lesser-restoration", "light",
-    "locate-object", "longstrider", "mage-armor", "mage-hand", "major-image", "mending",
-    "mind-blank", "minor-illusion", "mirror-image", "misty-step", "nondetection",
-    "pass-without-trace", "plane-shift", "polymorph", "power-word-stun", "prestidigitation",
-    "raise-dead", "remove-curse", "resurrection", "sanctuary", "scrying", "shield",
-    "shield-of-faith", "shillelagh", "silence", "sleep", "speak-with-animals", "spare-the-dying",
-    "stoneskin", "suggestion", "thaumaturgy", "time-stop", "tongues", "teleport", "true-seeing",
-    "wall-of-force", "water-breathing", "wind-walk", "zone-of-truth",
+    "dream", "druidcraft", "enlarge-reduce", "entangle", "feather-fall", "fly", "freedom-of-movement",
+    "gaseous-form", "geas", "globe-of-invulnerability", "goodberry", "greater-invisibility",
+    "greater-restoration", "heroes-feast", "hold-person", "identify", "invisibility", "legend-lore",
+    "lesser-restoration", "light", "locate-object", "longstrider", "mage-armor", "mage-hand",
+    "major-image", "mending", "mind-blank", "minor-illusion", "mirror-image", "misty-step",
+    "nondetection", "pass-without-trace", "plane-shift", "polymorph", "power-word-stun",
+    "prestidigitation", "protection-from-poison", "raise-dead", "remove-curse", "resurrection",
+    "sanctuary", "scrying", "shield", "shield-of-faith", "shillelagh", "silence", "sleep",
+    "speak-with-animals", "spare-the-dying", "stoneskin", "suggestion", "thaumaturgy",
+    "time-stop", "tongues", "teleport", "true-seeing", "wall-of-force", "water-breathing", "wind-walk",
+    "zone-of-truth",
 })
 
 
