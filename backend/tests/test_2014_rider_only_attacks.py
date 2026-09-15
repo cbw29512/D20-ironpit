@@ -3,6 +3,11 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from app.combat.attacks import resolve_attack
+from app.combat.dice import FixedDiceProvider
+from app.combat.state import build_combatant_state
+from app.content.monster_catalog_2014 import monster_by_id_2014
+
 SCRIPTS = Path(__file__).resolve().parents[2] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
@@ -48,3 +53,27 @@ def test_rider_only_parser_does_not_accept_unmodeled_hit_text() -> None:
     )
 
     assert _attack(paragraph) is None
+
+
+def test_guardian_naga_spit_poison_resolves_through_shared_attack_engine() -> None:
+    naga = build_combatant_state(monster_by_id_2014("guardian-naga"))
+    veteran = build_combatant_state(monster_by_id_2014("veteran"))
+    attacks = (naga.template.weapon_attack, *naga.template.alternate_weapon_attacks)
+    spit = next(attack for attack in attacks if attack.id == "spit-poison")
+    hp_before = veteran.current_hp
+
+    event = resolve_attack(
+        1, 1, naga, veteran, spit, 15,
+        FixedDiceProvider([9, 1, *([1] * 10)]),
+        spend_action=False,
+    )
+
+    assert event.hit is True
+    assert event.attack_roll is not None and event.attack_roll.total == 17
+    assert event.save_ability == "constitution"
+    assert event.save_dc == 15
+    assert event.save_succeeded is False
+    assert event.damage_roll is not None and event.damage_roll.total == 10
+    assert event.hp_after == hp_before - 10
+    assert len(event.damage_components) == 1
+    assert event.damage_components[0].damage_type.value == "poison"
