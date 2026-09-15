@@ -106,6 +106,7 @@ class CombatantState(BaseModel):
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
     active_buff_effect_ids: list[str] = Field(default_factory=list)
+    active_self_buff_expiry_rounds: dict[str, int] = Field(default_factory=dict)
     active_auras: list[ActiveAuraState] = Field(default_factory=list)
     opening_buff_spell_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
