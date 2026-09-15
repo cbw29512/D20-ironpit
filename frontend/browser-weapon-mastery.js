@@ -1,6 +1,9 @@
 (() => {
   "use strict";
 
+  // Shared capability contract: actor kind is intentionally irrelevant.
+  // A 2024 character or monster gets mastery only from owned weapon data plus
+  // an explicit mastery assignment for that weapon.
   const CLEAVE_FEATURE_ID = "weapon-mastery-cleave";
 
   function ownsWeapon(state, attack) {

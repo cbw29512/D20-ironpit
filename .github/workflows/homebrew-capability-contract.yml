@@ -1,0 +1,29 @@
+name: Homebrew Capability Contract
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homebrew-capability-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  weapon-mastery-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Iron Pit rules engine
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Prove Python mastery is data-driven, not actor-kind-driven
+        working-directory: backend
+        run: pytest -q tests/test_weapon_mastery.py
+      - name: Prove browser mastery is data-driven, not actor-kind-driven
+        run: node frontend/browser-homebrew-mastery.test.cjs
