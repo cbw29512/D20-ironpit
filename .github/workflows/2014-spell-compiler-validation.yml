@@ -1,0 +1,45 @@
+name: 2014 Spell Compiler Validation
+
+on:
+  push:
+    paths:
+      - 'backend/app/content/monster_catalog_2014_spells.py'
+      - 'backend/app/content/monster_innate_spell_actions_2014.py'
+      - 'backend/app/content/monster_spell_actions_2014.py'
+      - 'backend/app/content/monster_spell_substitutions_2014.py'
+      - 'backend/tests/test_2014_innate_substitution_credentials.py'
+      - '.github/workflows/2014-spell-compiler-validation.yml'
+  pull_request:
+    paths:
+      - 'backend/app/content/monster_catalog_2014_spells.py'
+      - 'backend/app/content/monster_innate_spell_actions_2014.py'
+      - 'backend/app/content/monster_spell_actions_2014.py'
+      - 'backend/app/content/monster_spell_substitutions_2014.py'
+      - 'backend/tests/test_2014_innate_substitution_credentials.py'
+      - '.github/workflows/2014-spell-compiler-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 2014-spell-compiler-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-spell-compiler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Iron Pit rules engine
+        run: pip install -e 'backend[dev]'
+      - name: Prove substitution credentials are explicit
+        working-directory: backend
+        run: pytest -q tests/test_2014_innate_substitution_credentials.py
+      - name: Verify all 327 normalized records
+        run: python scripts/verify_2014_full_catalog.py
+      - name: Report current 2014 blocker yield
+        run: python scripts/report_2014_monster_progress.py
