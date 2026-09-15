@@ -101,6 +101,8 @@ class SpellAttackAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
+    concentration: bool = False
+    persistent_duration_rounds: int | None = Field(default=None, ge=1, le=600)
     animation: str = "spell-attack"
     source: str | None = None
 
@@ -108,6 +110,8 @@ class SpellAttackAction(BaseModel):
     def validate_attack_spell(self) -> "SpellAttackAction":
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spell attacks require a damage type.")
+        if self.persistent_duration_rounds is not None and self.level == 0:
+            raise ValueError("Persistent spell attacks must expend a spell slot on initial cast.")
         return self
 
 
