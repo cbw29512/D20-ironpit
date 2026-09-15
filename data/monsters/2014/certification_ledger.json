@@ -4,7 +4,7 @@
     "action": 47,
     "attack-detail": 27,
     "legendary": 25,
-    "spell": 28,
+    "spell": 27,
     "trait": 38
   },
   "blocker_yield": {
@@ -102,7 +102,6 @@
     "spell:ice storm": 1,
     "spell:insect plague": 2,
     "spell:levitate": 1,
-    "spell:power word kill": 1,
     "spell:protection from poison": 1,
     "spell:ray of enfeeblement": 1,
     "spell:spirit guardians": 1,
@@ -1577,14 +1576,13 @@
     {
       "id": "lich",
       "name": "Lich",
-      "remaining_blocker_count": 7,
+      "remaining_blocker_count": 6,
       "remaining_blockers": [
         "legendary:Cantrip",
         "legendary:Disrupt Life",
         "legendary:Frightening Gaze",
         "spell:acid arrow",
         "spell:cloudkill",
-        "spell:power word kill",
         "trait:Turn Resistance"
       ],
       "status": "blocked"
