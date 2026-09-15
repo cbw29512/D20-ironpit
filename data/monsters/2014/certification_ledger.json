@@ -1,9 +1,10 @@
 {
-  "blocked_count": 58,
+  "blocked_count": 60,
   "blocker_families": {
     "action": 47,
     "attack-detail": 27,
     "compile": 1,
+    "defense": 2,
     "legendary": 25,
     "spell": 7,
     "trait": 38
@@ -71,6 +72,8 @@
     "attack-detail:War Pick": 1,
     "attack-detail:Whip": 1,
     "compile:universal-runtime": 1,
+    "defense:piercing and slashing from nonmagical attacks that aren't adamantine": 1,
+    "defense:piercing from magic weapons wielded by good creatures": 1,
     "legendary:Attack": 2,
     "legendary:Blasphemous Word": 1,
     "legendary:Blinding Dust": 1,
@@ -1937,9 +1940,11 @@
     {
       "id": "rakshasa",
       "name": "Rakshasa",
-      "remaining_blocker_count": 0,
-      "remaining_blockers": [],
-      "status": "ready"
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "defense:piercing from magic weapons wielded by good creatures"
+      ],
+      "status": "blocked"
     },
     {
       "id": "rat",
@@ -2540,9 +2545,11 @@
     {
       "id": "xorn",
       "name": "Xorn",
-      "remaining_blocker_count": 0,
-      "remaining_blockers": [],
-      "status": "ready"
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "defense:piercing and slashing from nonmagical attacks that aren't adamantine"
+      ],
+      "status": "blocked"
     },
     {
       "id": "yeti",
@@ -2629,7 +2636,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 269,
+  "ready_count": 267,
   "ruleset": "2014",
   "schema_version": 1
 }
