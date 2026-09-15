@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName
@@ -10,7 +12,7 @@ from app.domain.weapons import DamageType
 class SwallowAction(BaseModel):
     id: str = "swallow"
     name: str = "Swallow"
-    attack_id: str
+    attack_id: str | None = None
     max_target_size: CreatureSize
     damage_dice_count: int = Field(ge=1, le=40)
     damage_dice_size: int = Field(ge=2, le=100)
@@ -18,6 +20,9 @@ class SwallowAction(BaseModel):
     damage_type: DamageType = DamageType.ACID
     max_swallowed: int | None = Field(default=1, ge=1, le=8)
     requires_existing_grapple: bool = True
+    start_turn_save_ability: AbilityName | None = None
+    start_turn_save_dc: int | None = Field(default=None, ge=1, le=40)
+    source_death_release: Literal["corpse_escape", "immediate"] = "corpse_escape"
     regurgitation_damage_threshold: int | None = Field(default=None, ge=1, le=1000)
     regurgitation_save_ability: AbilityName | None = None
     regurgitation_save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -33,6 +38,9 @@ class SwallowAction(BaseModel):
         )
         if any(item is not None for item in regurgitation) and not all(item is not None for item in regurgitation):
             raise ValueError("Swallow regurgitation requires threshold, save ability, DC, and release range.")
+        start_save = (self.start_turn_save_ability, self.start_turn_save_dc)
+        if any(item is not None for item in start_save) and not all(item is not None for item in start_save):
+            raise ValueError("Containment start-turn damage save requires ability and DC together.")
         return self
 
 
@@ -43,6 +51,9 @@ class SwallowedState(BaseModel):
     damage_dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageType = DamageType.ACID
+    start_turn_save_ability: AbilityName | None = None
+    start_turn_save_dc: int | None = Field(default=None, ge=1, le=40)
+    source_death_release: Literal["corpse_escape", "immediate"] = "corpse_escape"
     regurgitation_damage_threshold: int | None = Field(default=None, ge=1, le=1000)
     regurgitation_save_ability: AbilityName | None = None
     regurgitation_save_dc: int | None = Field(default=None, ge=1, le=40)
