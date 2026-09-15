@@ -6514,10 +6514,16 @@
           "max_target_size": "large"
         },
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "Until this grapple ends, the ankheg can bite only the grappled creature and has advantage on attack rolls to do so",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "grapple_target_policy": "own_grapple_only",
+        "conditional_attack_advantage": [
+          {
+            "trigger": "target_grappled_by_self"
+          }
+        ]
       }
     ],
     "multiattack_slots": [],
