@@ -5,6 +5,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const O = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
+  const B = () => window.IRON_PIT_BROWSER_BERSERK;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
   const resourceAvailable = (state, attack) => {
@@ -41,7 +42,15 @@
     return pool.filter((target) => target.state.template.kind === "character"
       && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
   }
+  function berserkTargets(member, setup) {
+    if (!B()?.active(member.state)) return null;
+    return [...setup.heroes, ...setup.monsters]
+      .filter((target) => target !== member && target.state.is_alive && !target.state.is_dead)
+      .sort((left, right) => S().distance(member, left) - S().distance(member, right));
+  }
   function targetOrder(member, setup, preferBackline = false) {
+    const berserk = berserkTargets(member, setup);
+    if (berserk) return berserk;
     const targets = livingTargets(member, setup);
     const front = targets.filter((target) => !isBackline(target));
     const back = targets.filter(isBackline);
