@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.death_triggers import append_after_event
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -50,13 +51,16 @@ def resolve_save_targets(
     *,
     skip_range_check: bool = False,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve independent saves while sharing one damage roll across every target."""
+    """Resolve independent saves, shared damage, and immediate lethal-event lifecycle."""
     try:
         targets = validate_save_targets(actor, setup, action, target_ids, skip_range_check)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         events: list[BattleEvent] = []
+        resolved_deaths: set[str] = set()
         shared_damage_rolls: list[int] | None = None
         for target in targets:
+            if actor.state.is_dead or actor.state.is_unconscious or actor.state.turn_terminated:
+                break
             capture = [] if shared_damage_rolls is None and action.damage_dice_count else None
             event = resolve_save_action(
                 sequence,
@@ -72,12 +76,14 @@ def resolve_save_targets(
                 capture_shared_damage_rolls=capture,
                 affected_states=affected_states,
             )
-            events.append(event)
+            sequence += 1
+            sequence = append_after_event(
+                events, sequence, round_number, event, setup, dice, resolved_deaths,
+            )
             if capture is not None:
                 if len(capture) != action.damage_dice_count:
                     raise RuntimeError("Shared damage roll was not established for every damage die.")
                 shared_damage_rolls = capture
-            sequence += 1
         return events, sequence
     except Exception:
         logger.exception("Failed multi-target save resolution for %s.", action.id)
