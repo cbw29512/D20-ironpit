@@ -5,6 +5,7 @@
   const nodes = new Map();
   const SELF_BUFFS = new Set(["rage", "dodge"]);
   const DEBUFF_MODIFIERS = new Set(["attacks-against-advantage"]);
+  const FX = () => window.IRON_PIT_BATTLEFIELD_FX;
   const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, reduced() ? Math.min(ms, 70) : ms));
   const cleanLabel = (id) => String(id || "").replace(/^weapon-mastery-/, "").replace(/^tactical-master-/, "").replaceAll("_", " ").replaceAll("-", " ").toUpperCase();
@@ -73,6 +74,7 @@
     renderLane(node, ".card-debuffs", lanes.debuffs, "debuff");
     node.classList.toggle("has-buff", lanes.buffs.length > 0 || Boolean(state.concentration));
     node.classList.toggle("has-debuff", lanes.debuffs.length > 0); node.classList.toggle("has-condition", lanes.debuffs.length > 0);
+    FX()?.syncConditionPose(node, lanes.debuffs);
   }
 
   function conditions(node, added = [], removed = []) {
@@ -80,7 +82,7 @@
     const set = new Set((node.dataset.conditions || "").split(",").filter(Boolean));
     removed.forEach((id) => set.delete(id)); added.forEach((id) => set.add(id));
     node.dataset.conditions = [...set].join(","); renderLane(node, ".card-debuffs", [...set].sort(), "debuff");
-    node.classList.toggle("has-debuff", set.size > 0); node.classList.toggle("has-condition", set.size > 0);
+    node.classList.toggle("has-debuff", set.size > 0); node.classList.toggle("has-condition", set.size > 0); FX()?.syncConditionPose(node, set);
   }
 
   function dead(node) {
@@ -103,7 +105,7 @@
     el("pit-round").textContent = `ROUND ${event.round_number}`;
     const actor = nodes.get(event.actor_id), target = nodes.get(event.target_id);
     if (actor) actor.classList.add("turn-active");
-    await fumbleFx(event, actor); await critFx(event);
+    await fumbleFx(event, actor); await critFx(event); await FX()?.combat(event, actor, target);
     if (target && event.hp_after != null) hp(target, event.hp_after);
     if (actor && event.event_type === "healing" && event.hp_after != null) hp(actor, event.hp_after);
     if (actor && event.event_type === "death_save" && event.hp_after != null) hp(actor, event.hp_after);
@@ -112,7 +114,7 @@
     conditions(target, event.applied_condition_ids || [], event.removed_condition_ids || []);
     if (event.feature_id === "escape-grapple" && event.check_succeeded) conditions(actor, [], ["grappled", "restrained"]);
     if (target && event.is_dead) dead(target); if (actor && event.event_type === "death_save" && event.is_dead) dead(actor);
-    await sleep(event.event_type === "initiative" ? 90 : 230);
+    await sleep(event.event_type === "initiative" ? 90 : 150);
     if (actor) actor.classList.remove("turn-active");
   }
 
@@ -127,11 +129,8 @@
 
   async function play(battle, slotMap, options = {}) {
     bindBattle(battle, slotMap);
-    if (!options.instant) {
-      for (const event of battle.events || []) await eventStep(event);
-    } else {
-      el("pit-round").textContent = `ROUND ${battle.rounds}`;
-    }
+    if (!options.instant) for (const event of battle.events || []) await eventStep(event);
+    else el("pit-round").textContent = `ROUND ${battle.rounds}`;
     syncFinal(battle); return battle;
   }
 

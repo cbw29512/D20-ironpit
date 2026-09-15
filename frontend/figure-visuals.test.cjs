@@ -83,4 +83,16 @@ assert.equal(hero.weapon, "longsword");
 assert.equal(hero.offHand, "shield");
 assert.equal(hero.role, "paladin");
 
-console.log("Reviewed monster and hero figure identity regressions passed.");
+const arenaCss = fs.readFileSync(path.join(__dirname, "battlefield.css"), "utf8");
+const arenaFx = fs.readFileSync(path.join(__dirname, "battlefield-fx.js"), "utf8");
+const arenaReplay = fs.readFileSync(path.join(__dirname, "battlefield-replay.js"), "utf8");
+const arenaHtml = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+assert.match(arenaCss, /fx-melee/);
+assert.match(arenaCss, /condition-prone/);
+assert.match(arenaCss, /prefers-reduced-motion:reduce/);
+assert.match(arenaFx, /IRON_PIT_BATTLEFIELD_FX/);
+assert.match(arenaReplay, /IRON_PIT_BATTLEFIELD_FX/);
+assert.ok(arenaHtml.indexOf("battlefield-fx.js") >= 0, "Live arena must load the battlefield FX module.");
+assert.ok(arenaHtml.indexOf("battlefield-fx.js") < arenaHtml.indexOf("battlefield-replay.js"), "Battlefield FX must load before replay.");
+
+console.log("Reviewed monster, hero figure, and Iron Pit arena motion regressions passed.");

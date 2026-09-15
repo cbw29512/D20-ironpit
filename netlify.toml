@@ -2,7 +2,7 @@
   command = "python3 -m pip install -e ./backend && python3 scripts/prepare_static_site.py"
   publish = "frontend"
   # Netlify ignore commands return 0 to skip a build and 1 to continue.
-  # Allow the PR Deploy Preview for the validated 2014 beta while keeping
-  # ordinary branch deploys skipped. Continued development stays off this
-  # frozen beta branch so the preview is not rebuilt on every monster change.
-  ignore = 'test "$CONTEXT" != "production" && test "$CONTEXT" != "deploy-preview"'
+  # Production remains allowed. Deploy previews build only when the preview
+  # head is the frozen beta branch used by PR #99; feature PRs are skipped so
+  # iterative development does not consume extra Netlify build credits.
+  ignore = 'test "$CONTEXT" != "production" && { test "$CONTEXT" != "deploy-preview" || test "$HEAD" != "beta/2014-playtest"; }'
