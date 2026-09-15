@@ -19,7 +19,7 @@
   function clearResult(message = "Cards loaded. Press FIGHT when both sides are ready.") {
     el("result-panel").hidden = true; el("pit-round").textContent = "";
     el("battle-log").replaceChildren(Object.assign(document.createElement("li"), { textContent: message }));
-    el("lab-summary").textContent = "Production combat path · secure Web Crypto dice.";
+    el("lab-summary").textContent = "2014 playtest combat path · secure Web Crypto dice.";
   }
 
   function invalidateRun() {
@@ -51,9 +51,9 @@
   }
 
   function validate(cards, side) {
-    if (!cards.length) return `${side === "heroes" ? "Hero" : "Monster"} side needs at least one card.`;
+    if (!cards.length) return `${side === "heroes" ? "Test" : "Monster"} side needs at least one card.`;
     const blocked = cards.find((card) => card.coverage_status !== "raw_ready" || !card.runnable_template_id);
-    return blocked ? `${blocked.name} is not RAW-certified for automated combat yet.` : null;
+    return blocked ? `${blocked.name} is not certified for this 2014 playtest.` : null;
   }
 
   function matchup() {
@@ -75,25 +75,26 @@
 
   function loadSample() {
     if (state.fighting || (state.session && !state.session.complete) || !state.catalog) return;
-    const heroes = [cardByTemplate("heroes", "karnok-stoneward-l1"), cardByTemplate("heroes", "seraphine-dawnshield-l1")];
-    const monsters = [cardByTemplate("monsters", "srd-goblin-warrior"), cardByTemplate("monsters", "srd-wolf")];
-    if ([...heroes, ...monsters].some((card) => !card)) { el("status").textContent = "Sample matchup could not find its certified cards."; return; }
+    const heroes = [cardByTemplate("heroes", "2014-veteran"), cardByTemplate("heroes", "2014-acolyte")];
+    const monsters = [cardByTemplate("monsters", "2014-goblin"), cardByTemplate("monsters", "2014-wolf")];
+    if ([...heroes, ...monsters].some((card) => !card)) { el("status").textContent = "2014 sample matchup could not find its certified cards."; return; }
     state.heroSlots.fill(null); state.monsterSlots.fill(null);
     heroes.forEach((card, index) => { state.heroSlots[index] = card; }); monsters.forEach((card, index) => { state.monsterSlots[index] = card; });
-    invalidateRun(); clearResult("Sample loaded: Karnok + Seraphine vs Goblin Warrior + Wolf."); render();
-    el("status").textContent = "Sample loaded. Choose FIGHT, STEP FIGHT, or TURBO.";
+    invalidateRun(); clearResult("2014 sample loaded: Veteran + Acolyte vs Goblin + Wolf."); render();
+    el("status").textContent = "2014 sample loaded. Choose FIGHT, STEP FIGHT, or TURBO.";
   }
 
   async function boot() {
     try {
-      if (window.IRON_PIT_CANONICAL_MONSTERS_READY !== true) throw new Error("Canonical RAW-certified monster bundle did not load.");
+      if (window.IRON_PIT_CANONICAL_MONSTERS_READY !== true) throw new Error("Certified 2014 monster bundle did not load.");
+      if (window.IRON_PIT_RULESET !== "2014" || window.IRON_PIT_HERO_RULESET !== "2014") throw new Error("Pure 2014 playtest data did not load.");
       const required = [window.IRON_PIT_BROWSER_ENGINE, window.IRON_PIT_BROWSER_CATALOG, window.IRON_PIT_ENCOUNTER_PICKER, view(), picker(), window.IRON_PIT_EXECUTION, actions()];
       if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
       state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(); picker().bind(() => state);
       actions().install({ state, matchup, render, updateControls, clearResult }); render();
-      el("status").textContent = "Iron Pit ready. Choose cards or load the sample matchup.";
+      el("status").textContent = "2014 Iron Pit playtest ready. Choose test cards or load the sample matchup.";
     } catch (error) {
-      console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize.";
+      console.error("Iron Pit initialization failed", error); el("status").textContent = "The 2014 Iron Pit playtest failed to initialize.";
     }
   }
 
