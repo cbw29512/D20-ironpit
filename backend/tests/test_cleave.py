@@ -15,15 +15,21 @@ def _attacker(*, mastered: bool = True, position: int = 0):
         update={"weapon_masteries": ["greataxe"] if mastered else [], "combat_traits": []},
         deep=True,
     )
-    state = build_combatant_state(template)
-    attack = state.template.weapon_attack.model_copy(
+    attack = template.weapon_attack.model_copy(
         update={
             "id": "cleave-greataxe", "weapon": build_weapon("greataxe"),
             "attack_ability_modifier": 3, "damage_bonus": 3,
         },
         deep=True,
     )
-    return EncounterCombatant(combatant_id="hero-1", side="heroes", position_ft=position, state=state), attack
+    # Ownership is part of the mastery contract: the mastered Greataxe must be
+    # on the combatant template before runtime state is created.
+    template = template.model_copy(update={"weapon_attack": attack}, deep=True)
+    state = build_combatant_state(template)
+    return (
+        EncounterCombatant(combatant_id="hero-1", side="heroes", position_ft=position, state=state),
+        state.template.weapon_attack,
+    )
 
 
 def _target(target_id: str, position: int) -> EncounterCombatant:
