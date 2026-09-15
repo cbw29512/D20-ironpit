@@ -110,15 +110,20 @@ def _automatic_spell(spell_id: str, level: int) -> AutomaticDamageSpellAction:
 
 
 def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[list[SpellAttackAction], list[SpellSaveAction], list[AutomaticDamageSpellAction]]:
+    attack_actions: list[SpellAttackAction] = []
+    save_actions: list[SpellSaveAction] = []
+    automatic_actions: list[AutomaticDamageSpellAction] = []
     profile = source.spellcasting
-    if profile is None: return [], [], []
-    attack_actions: list[SpellAttackAction] = []; save_actions: list[SpellSaveAction] = []; automatic_actions: list[AutomaticDamageSpellAction] = []
     save_ids = {"blight", "sacred-flame", "fireball", "disintegrate", "cone-of-cold", "lightning-bolt", "thunderwave", "faerie-fire"}
-    for spell in profile.spells:
-        if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014: continue
-        if spell.id == "magic-missile": automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
-        if spell.id in save_ids:
-            if profile.save_dc is not None: save_actions.append(_save_spell(spell.id, spell.level, profile.save_dc, profile.caster_level))
-            continue
-        if profile.attack_bonus is not None: attack_actions.append(_attack_spell(spell.id, spell.level, profile.attack_bonus, profile.caster_level))
+    if profile is not None:
+        for spell in profile.spells:
+            if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014: continue
+            if spell.id == "magic-missile": automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
+            if spell.id in save_ids:
+                if profile.save_dc is not None: save_actions.append(_save_spell(spell.id, spell.level, profile.save_dc, profile.caster_level))
+                continue
+            if profile.attack_bonus is not None: attack_actions.append(_attack_spell(spell.id, spell.level, profile.attack_bonus, profile.caster_level))
+    innate = source.innate_spellcasting
+    if innate is not None and any(spell.id == "magic-missile" for spell in innate.spells):
+        automatic_actions.append(_automatic_spell("magic-missile", 1))
     return attack_actions, save_actions, automatic_actions
