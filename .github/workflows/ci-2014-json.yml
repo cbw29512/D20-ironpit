@@ -8,14 +8,19 @@ on:
       - 'backend/app/content/monster_catalog_2014_traits.py'
       - 'backend/app/content/monster_catalog_2014_spellcasting.py'
       - 'backend/app/content/monster_catalog_2014_defenses.py'
+      - 'backend/app/content/monster_catalog_2014_arena_policy.py'
       - 'backend/app/content/monster_catalog_2014_compile_support.py'
       - 'backend/app/content/monster_catalog_2014_action_support.py'
       - 'backend/app/content/monster_catalog_2014_multiattack.py'
+      - 'backend/app/content/monster_catalog_2014_damage_triggers.py'
+      - 'backend/app/content/monster_catalog_2014_reactive_damage.py'
       - 'backend/app/domain/attack_action_policy.py'
       - 'backend/app/domain/zero_hp_prevention.py'
       - 'backend/app/domain/regeneration.py'
+      - 'backend/app/domain/reactive_damage.py'
       - 'backend/app/domain/charge_profiles.py'
       - 'backend/app/domain/on_hit_saves.py'
+      - 'backend/app/domain/damage_triggers.py'
       - 'backend/app/domain/weapons.py'
       - 'backend/app/domain/targeting.py'
       - 'backend/app/domain/combatants.py'
@@ -23,15 +28,19 @@ on:
       - 'backend/app/domain/actions.py'
       - 'backend/app/combat/state.py'
       - 'backend/app/combat/attacks.py'
+      - 'backend/app/combat/reactive_damage.py'
       - 'backend/app/combat/zero_hp.py'
       - 'backend/app/combat/zero_hp_prevention.py'
       - 'backend/app/combat/regeneration.py'
+      - 'backend/app/combat/damage_triggered_effects.py'
+      - 'backend/app/combat/timed_roll_effects.py'
       - 'backend/app/combat/parry.py'
       - 'backend/app/combat/grapple.py'
       - 'backend/app/combat/resources.py'
       - 'backend/app/combat/saving_throws.py'
       - 'backend/app/combat/save_targets.py'
       - 'backend/app/combat/save_control_effects.py'
+      - 'backend/app/combat/save_failure_margin.py'
       - 'backend/app/combat/source_effect_immunity.py'
       - 'backend/app/combat/source_bound_effects.py'
       - 'backend/app/combat/condition_removal.py'
@@ -47,6 +56,7 @@ on:
       - 'backend/app/combat/encounter_offense_priority.py'
       - 'backend/app/combat/encounter_turn_support.py'
       - 'backend/app/combat/encounter_combat_turn.py'
+      - 'backend/app/combat/encounter_attacks.py'
       - 'backend/app/combat/timed_conditions.py'
       - 'backend/app/combat/timed_effect_rules.py'
       - 'backend/app/combat/condition_lifecycle.py'
@@ -62,10 +72,13 @@ on:
       - 'frontend/index.html'
       - 'frontend/browser-state.js'
       - 'frontend/browser-attack.js'
+      - 'frontend/browser-reactive-damage.js'
       - 'frontend/browser-zero-hp.js'
       - 'frontend/browser-regeneration.js'
       - 'frontend/browser-reactions.js'
       - 'frontend/browser-saves.js'
+      - 'frontend/browser-on-hit-save-conditions.js'
+      - 'frontend/browser-on-hit-saves.js'
       - 'frontend/browser-save-control-effects.js'
       - 'frontend/browser-source-effect-immunity.js'
       - 'frontend/browser-source-bound-effects.js'
@@ -82,6 +95,7 @@ on:
       - 'frontend/browser-spell-resolution.js'
       - 'frontend/browser-grapple.js'
       - 'frontend/browser-timed-conditions.js'
+      - 'frontend/browser-damage-triggered-effects.js'
       - 'frontend/browser-condition-lifecycle.js'
       - 'frontend/browser-2014-grapple.test.cjs'
       - 'frontend/browser-2014-poison.test.cjs'
@@ -95,6 +109,9 @@ on:
       - 'frontend/browser-2014-sleep-breath.test.cjs'
       - 'frontend/browser-2014-slowing-breath.test.cjs'
       - 'frontend/browser-2014-regeneration.test.cjs'
+      - 'frontend/browser-2014-fear-of-fire.test.cjs'
+      - 'frontend/browser-2014-heated-body.test.cjs'
+      - 'frontend/browser-save-failure-margin.test.cjs'
       - 'backend/tests/test_parry.py'
       - 'backend/tests/test_2014_json_catalog.py'
       - 'backend/tests/test_2014_poison_timing.py'
@@ -106,10 +123,14 @@ on:
       - 'backend/tests/test_2014_frightful_presence.py'
       - 'backend/tests/test_2014_legendary_resistance.py'
       - 'backend/tests/test_2014_on_hit_save.py'
+      - 'backend/tests/test_save_failure_margin.py'
+      - 'backend/tests/test_2014_heated_body.py'
+      - 'backend/tests/test_2014_weapon_defense_policy.py'
       - 'backend/tests/test_2014_relentless.py'
       - 'backend/tests/test_2014_sleep_breath.py'
       - 'backend/tests/test_2014_slowing_breath.py'
       - 'backend/tests/test_2014_regeneration.py'
+      - 'backend/tests/test_2014_fear_of_fire.py'
       - 'backend/tests/test_magic_resistance.py'
       - 'backend/tests/test_conditional_damage_defenses.py'
       - 'data/monsters/2014/**'
@@ -125,8 +146,10 @@ on:
       - 'scripts/import_2014_zero_hp_prevention.py'
       - 'scripts/import_2014_regeneration.py'
       - 'scripts/enrich_2014_save_actions.py'
+      - 'scripts/enrich_2014_failure_margin_saves.py'
       - 'scripts/enrich_2014_spellcasting.py'
       - 'scripts/test_2014_save_actions.py'
+      - 'scripts/test_2014_failure_margin_saves.py'
       - 'scripts/test_2014_spellcasting.py'
       - 'scripts/import_2014_multiattack.py'
       - 'scripts/import_2014_multiattack_policy.py'
@@ -158,6 +181,8 @@ jobs:
         run: git ls-files --error-unmatch data/monsters/2014/catalog.json
       - name: Prove 2014 save/control/AoE source parser
         run: python scripts/test_2014_save_actions.py
+      - name: Prove 2014 failure-margin save parser
+        run: python scripts/test_2014_failure_margin_saves.py
       - name: Prove 2014 regular spellcasting parser
         run: python scripts/test_2014_spellcasting.py
       - name: Prove 2014 Multiattack policy parser
@@ -222,10 +247,14 @@ jobs:
           tests/test_2014_frightful_presence.py
           tests/test_2014_legendary_resistance.py
           tests/test_2014_on_hit_save.py
+          tests/test_save_failure_margin.py
+          tests/test_2014_heated_body.py
+          tests/test_2014_weapon_defense_policy.py
           tests/test_2014_relentless.py
           tests/test_2014_sleep_breath.py
           tests/test_2014_slowing_breath.py
           tests/test_2014_regeneration.py
+          tests/test_2014_fear_of_fire.py
           tests/test_magic_resistance.py
           tests/test_conditional_damage_defenses.py
       - name: Prove 2014 browser rules parity
@@ -242,3 +271,6 @@ jobs:
           node frontend/browser-2014-sleep-breath.test.cjs
           node frontend/browser-2014-slowing-breath.test.cjs
           node frontend/browser-2014-regeneration.test.cjs
+          node frontend/browser-2014-fear-of-fire.test.cjs
+          node frontend/browser-save-failure-margin.test.cjs
+          node frontend/browser-2014-heated-body.test.cjs

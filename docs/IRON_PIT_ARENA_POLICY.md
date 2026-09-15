@@ -24,6 +24,8 @@ These mechanics do not function in Iron Pit and must not block certification:
 - Teleportation, Misty Step-style relocation, Dimension Door-style relocation, Plane Shift, planar travel, ethereal escape, phasing through arena boundaries, Banishment-style removal, and other supernatural travel that relocates a combatant outside normal arena movement.
 - Fleeing, surrender, morale retreat, or escape from the arena.
 - Siege/object-damage mechanics and destructible terrain. Nothing in the Iron Pit is destructible unless a later explicit arena rule adds such an object.
+- Worn or carried equipment is indestructible and cannot be permanently degraded. Rust, corrosion, sunder, permanent AC loss, weapon/shield degradation, and similar equipment-only riders do not function. Direct HP damage and creature-affecting conditions from the same source still resolve normally.
+- Weapon-material, weapon-magic, or wielder-alignment qualifications on monster defenses are ignored. Iron Pit does not currently distinguish silvered, adamantine, magical/nonmagical, or alignment-qualified weapons for these defenses; weapon attacks deal normal damage unless a simple supported damage-type resistance, immunity, or vulnerability applies.
 - Delayed consequences whose first meaningful mechanical effect occurs after combat, including delayed disease, infection, aging, curses, or transformations. All combatants are restored after the match.
 - Long-duration ritual or noncombat casting that cannot complete meaningfully during an Iron Pit fight.
 - Subjective social/deception/illusion behavior that requires adventuring judgment rather than deterministic combat resolution.

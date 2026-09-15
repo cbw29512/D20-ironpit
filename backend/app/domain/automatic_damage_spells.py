@@ -6,7 +6,7 @@ from app.domain.actions import ActionCost, DamageTypeName
 
 
 class AutomaticDamageSpellAction(BaseModel):
-    """A spell that deals damage without an attack roll or saving throw."""
+    """A spell with no attack roll or saving throw."""
 
     id: str
     name: str
@@ -15,20 +15,28 @@ class AutomaticDamageSpellAction(BaseModel):
     range_ft: int = Field(ge=0)
     base_projectiles: int = Field(default=1, ge=1, le=40)
     projectiles_per_slot_above: int = Field(default=0, ge=0, le=20)
-    damage_dice_count_per_projectile: int = Field(default=1, ge=1, le=10)
-    damage_dice_size: int = Field(ge=2, le=100)
+    damage_dice_count_per_projectile: int = Field(default=0, ge=0, le=10)
+    damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus_per_projectile: int = 0
-    damage_type: DamageTypeName
+    damage_type: DamageTypeName | None = None
+    instant_death_hp_threshold: int | None = Field(default=None, ge=1)
     animation: str = "automatic-damage-spell"
     source: str | None = None
 
     @model_validator(mode="after")
-    def validate_projectiles(self) -> "AutomaticDamageSpellAction":
+    def validate_effect(self) -> "AutomaticDamageSpellAction":
+        has_damage = self.damage_dice_count_per_projectile > 0 or self.damage_bonus_per_projectile > 0
+        if has_damage and self.damage_type is None:
+            raise ValueError("Automatic spell damage requires a damage type.")
+        if not has_damage and self.instant_death_hp_threshold is None:
+            raise ValueError("Automatic spell requires damage or an instant-death threshold.")
+        if self.instant_death_hp_threshold is not None and has_damage:
+            raise ValueError("Instant-death threshold spells do not also deal damage.")
         if self.projectiles_per_slot_above and self.level >= 9:
             raise ValueError("A level 9 spell cannot scale through higher spell slots.")
         return self
 
     def projectile_count(self, slot_level: int) -> int:
-        if slot_level < self.level:
-            raise ValueError(f"{self.name} requires at least a level {self.level} slot.")
-        return self.base_projectiles + (slot_level - self.level) * self.projectiles_per_slot_above
+        if slot_level != self.level:
+            raise ValueError("Spell upcasting is not certified; use the printed slot level.")
+        return self.base_projectiles

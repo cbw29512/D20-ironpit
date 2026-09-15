@@ -1,14 +1,15 @@
 from __future__ import annotations
-
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_validator
-
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
+from app.domain.reactive_damage import MeleeHitReactiveDamage
+from app.domain.spell_damage import SpellDamageComponent
+from app.domain.targeting import AreaTargeting
 
 SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die",
-    "attacks-against-advantage", "bonus-damage", "speed",
+    "attacks-against-advantage", "bonus-damage", "speed", "invisibility-suppressed",
+    "adjacent-melee-hit-reactive-damage",
 ]
 SpellTargetPolicy = Literal["self", "friendly"]
 SpellAttackKind = Literal["melee", "ranged"]
@@ -16,36 +17,38 @@ SpellAttackKind = Literal["melee", "ranged"]
 
 class SpellModifierEffect(BaseModel):
     """Source-neutral modifier data converted to a runtime CombatModifier when a spell resolves."""
-
     kind: SpellModifierKind
     flat_bonus: int = 0
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
     damage_type: DamageTypeName | None = None
     consume_on_attack_against: bool = False
+    expires_at_start_of_source_turn: bool = False
     expires_after_source_turns: int | None = Field(default=None, ge=1, le=20)
 
     @model_validator(mode="after")
     def validate_payload(self) -> "SpellModifierEffect":
-        die_kind = self.kind in {"attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"}
+        damage_kinds = {"bonus-damage", "adjacent-melee-hit-reactive-damage"}
+        die_kind = self.kind in {"attack-roll-bonus-die", "saving-throw-bonus-die", *damage_kinds}
         if die_kind and (self.dice_count < 1 or self.dice_size < 2):
             raise ValueError(f"{self.kind} requires certified dice.")
         if not die_kind and (self.dice_count or self.dice_size):
             raise ValueError(f"{self.kind} does not accept dice.")
-        if self.kind == "bonus-damage" and self.damage_type is None:
-            raise ValueError("Bonus damage requires a damage type.")
-        if self.kind != "bonus-damage" and self.damage_type is not None:
+        if self.kind in damage_kinds and self.damage_type is None:
+            raise ValueError(f"{self.kind} requires a damage type.")
+        if self.kind not in damage_kinds and self.damage_type is not None:
             raise ValueError(f"{self.kind} does not accept a damage type.")
         if self.kind == "attacks-against-advantage" and self.flat_bonus:
             raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
         if self.consume_on_attack_against and self.kind != "attacks-against-advantage":
             raise ValueError("Only attack-advantage spell modifiers can be consumed by the next attack.")
+        if self.expires_at_start_of_source_turn and self.expires_after_source_turns is not None:
+            raise ValueError("Spell modifier expiry must use one source-turn mode.")
         return self
 
 
 class DefensiveSpellAction(BaseModel):
     """A certified precombat defensive/buff spell with deterministic arena targeting."""
-
     id: str
     name: str
     level: int = Field(ge=1, le=9)
@@ -60,6 +63,7 @@ class DefensiveSpellAction(BaseModel):
     max_hp_increase: int = Field(default=0, ge=0)
     current_hp_increase: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
+    melee_hit_reactive_damage: list[MeleeHitReactiveDamage] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
     priority: int = 0
@@ -69,9 +73,9 @@ class DefensiveSpellAction(BaseModel):
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
-        if not direct_hp and not self.damage_resistances and not self.modifier_effects:
+        if not direct_hp and not self.damage_resistances and not self.melee_hit_reactive_damage and not self.modifier_effects:
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
-        if self.concentration and (direct_hp or self.damage_resistances):
+        if self.concentration and (direct_hp or self.damage_resistances or self.melee_hit_reactive_damage):
             raise ValueError("Concentration defenses require source-owned modifier effects.")
         if self.target_policy == "self" and (self.target_count != 1 or self.target_count_per_slot_above):
             raise ValueError("Self-target policy supports exactly one target.")
@@ -80,7 +84,6 @@ class DefensiveSpellAction(BaseModel):
 
 class SpellAttackAction(BaseModel):
     """A spell resolved with an attack roll rather than a saving throw."""
-
     id: str
     name: str
     level: int = Field(ge=0, le=9)
@@ -93,6 +96,8 @@ class SpellAttackAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
+    concentration: bool = False
+    persistent_duration_rounds: int | None = Field(default=None, ge=1, le=600)
     animation: str = "spell-attack"
     source: str | None = None
 
@@ -100,33 +105,46 @@ class SpellAttackAction(BaseModel):
     def validate_attack_spell(self) -> "SpellAttackAction":
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spell attacks require a damage type.")
+        if self.persistent_duration_rounds is not None and self.level == 0:
+            raise ValueError("Persistent spell attacks must expend a spell slot on initial cast.")
         return self
 
 
 class SpellSaveAction(BaseModel):
     """A spell whose certified combat resolution is a saving throw and optional damage."""
-
     id: str
     name: str
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
     range_ft: int = Field(ge=0)
     area_radius_ft: int | None = Field(default=None, ge=5)
+    area: AreaTargeting | None = None
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    additional_damage_components: list[SpellDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
+    failure_push_ft: int = Field(default=0, ge=0, le=120)
     upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
+    excluded_creature_types: list[str] = Field(default_factory=list)
+    save_disadvantage_creature_types: list[str] = Field(default_factory=list)
+    maximize_damage_creature_types: list[str] = Field(default_factory=list)
+    failure_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
+    duration_minutes: int | None = Field(default=None, ge=1)
     animation: str = "spell-save"
 
     @model_validator(mode="after")
     def validate_spell(self) -> "SpellSaveAction":
         if self.area_radius_ft is not None and self.area_radius_ft % 5:
             raise ValueError("Iron Pit area spell radii must use 5-foot increments.")
+        if self.area_radius_ft is not None and self.area is not None:
+            raise ValueError("Spell saves must use legacy radius or universal area targeting, not both.")
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spells require a damage type.")
+        if self.concentration and self.failure_modifier_effects and self.duration_minutes is None:
+            raise ValueError("Concentration save modifiers require a duration.")
         return self

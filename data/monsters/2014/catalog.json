@@ -146,12 +146,19 @@
         "kind": "ability_check",
         "check_ability": "wisdom",
         "check_skill": "perception"
+      },
+      {
+        "id": "tail-swipe",
+        "name": "Tail Swipe",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
       }
     ],
     "unsupported_legendary_action_names": [
-      "Tail Swipe",
       "Psychic Drain"
     ],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -247,6 +254,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 1,
       "ability": "wisdom",
@@ -424,9 +433,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -559,6 +565,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -694,9 +701,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -828,6 +832,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -956,9 +961,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -1117,6 +1119,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -1244,9 +1247,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -1399,6 +1399,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -1526,9 +1527,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -1690,6 +1688,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -1818,9 +1817,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -1980,6 +1976,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -2120,9 +2117,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -2254,6 +2248,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -2389,9 +2384,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -2522,6 +2514,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -2649,9 +2642,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -2809,6 +2799,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -2945,9 +2936,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -3079,6 +3067,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -3201,6 +3190,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -3325,6 +3315,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -3460,9 +3452,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -3595,6 +3584,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -3730,9 +3720,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -3864,6 +3851,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -3992,9 +3980,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -4154,6 +4139,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -4281,9 +4267,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -4436,6 +4419,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -4563,9 +4547,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -4728,6 +4709,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -4856,9 +4838,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -5018,6 +4997,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -5158,9 +5138,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -5292,6 +5269,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -5427,9 +5405,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -5560,6 +5535,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -5687,9 +5663,6 @@
       }
     ],
     "multiattack_slots": [
-      [
-        "frightful-presence"
-      ],
       [
         "bite"
       ],
@@ -5847,6 +5820,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -5983,9 +5957,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -6117,6 +6088,7 @@
       }
     ],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -6244,12 +6216,20 @@
     "regeneration": null,
     "multiattack_policy": null,
     "legendary_action_uses": 3,
-    "legendary_actions": [],
-    "unsupported_legendary_action_names": [
-      "Claw Attack",
-      "Teleport (Costs 2 Actions)",
-      "Cast a Spell (Costs 3 Actions)"
+    "legendary_actions": [
+      {
+        "id": "claw-attack",
+        "name": "Claw Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "claw"
+      }
     ],
+    "unsupported_legendary_action_names": [
+      "Teleport",
+      "Cast a Spell"
+    ],
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 12,
       "ability": "wisdom",
@@ -6457,6 +6437,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -6533,10 +6514,16 @@
           "max_target_size": "large"
         },
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "Until this grapple ends, the ankheg can bite only the grappled creature and has advantage on attack rolls to do so",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "grapple_target_policy": "own_grapple_only",
+        "conditional_attack_advantage": [
+          {
+            "trigger": "target_grappled_by_self"
+          }
+        ]
       }
     ],
     "multiattack_slots": [],
@@ -6557,13 +6544,37 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/161/315/315/636252759871983921.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "acid-spray",
+        "name": "Acid Spray",
+        "save_ability": "dexterity",
+        "dc": 13,
+        "range_ft": 30,
+        "area": {
+          "shape": "line",
+          "origin": "self",
+          "length_ft": 30,
+          "width_ft": 5
+        },
+        "damage_dice_count": 3,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "acid",
+        "success_damage": "half",
+        "resource_id": "acid-spray",
+        "resource_cost": 1,
+        "requires_no_active_grapple": true
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -6660,6 +6671,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -6788,6 +6801,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -6914,6 +6928,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 18,
       "ability": "intelligence",
@@ -7213,6 +7229,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -7310,6 +7327,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -7408,6 +7427,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -7499,6 +7520,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -7639,6 +7662,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -7733,6 +7758,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -7826,6 +7853,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -7987,6 +8016,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -8102,6 +8132,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -8266,6 +8298,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -8386,6 +8419,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -8553,6 +8588,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -8654,6 +8690,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -8748,6 +8786,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -8843,13 +8883,33 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 12,
+          "excluded_creature_types": [
+            "undead",
+            "construct"
+          ],
+          "gates_ongoing_damage": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature other than an undead or a construct, it must succeed on a DC 12 Constitution saving throw or lose 5 (1d10) hit points at the start of each of its turns due to an infernal wound. Each time the devil hits the wounded target with this attack, the damage dealt by the wound increases by 5 (1d10). Any creature can take an action to stanch the wound with a successful DC 12 Wisdom (Medicine) check. The wound also closes if the target receives magical healing",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "ongoing_damage_effect": {
+          "id": "infernal-wound",
+          "name": "Infernal Wound",
+          "dice_count": 1,
+          "dice_size": 10,
+          "apply_on": "failed_on_hit_save",
+          "stacks_on_reapply": true,
+          "ends_on_magical_healing": true,
+          "removal_ability": "wisdom",
+          "removal_skill": "medicine",
+          "removal_dc": 12
+        }
       }
     ],
     "multiattack_slots": [
@@ -8888,6 +8948,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9032,6 +9093,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9125,6 +9187,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9253,6 +9317,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9389,6 +9454,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9507,6 +9574,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9606,6 +9675,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9703,6 +9774,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9838,6 +9911,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -9947,6 +10022,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -10107,6 +10184,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -10260,6 +10338,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -10407,6 +10487,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -10535,6 +10617,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -10596,7 +10679,16 @@
           "bonus": 2,
           "type": "piercing"
         },
-        "conditional_damage": [],
+        "conditional_damage": [
+          {
+            "trigger": "round1_initiative_lead",
+            "mode": "add",
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10617,7 +10709,16 @@
           "bonus": 2,
           "type": "piercing"
         },
-        "conditional_damage": [],
+        "conditional_damage": [
+          {
+            "trigger": "round1_initiative_lead",
+            "mode": "add",
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10640,7 +10741,16 @@
           "bonus": 2,
           "type": "piercing"
         },
-        "conditional_damage": [],
+        "conditional_damage": [
+          {
+            "trigger": "round1_initiative_lead",
+            "mode": "add",
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10671,6 +10781,9 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/221/1000/1000/636252765234633232.jpeg",
+    "data_bound_trait_names": [
+      "Surprise Attack"
+    ],
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
@@ -10678,6 +10791,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -10775,6 +10890,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -10865,6 +10982,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -10961,6 +11080,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -11125,6 +11246,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -11204,10 +11326,20 @@
           "restrains_while_grappled": true
         },
         "forbid_target_grappled_by_self": true,
-        "source_complete": false,
-        "unsupported_text": "and takes 7 (2d6) piercing damage at the start of each of its turns",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "ongoing_damage_effect": {
+          "id": "grapple-start-turn-damage",
+          "name": "Chain grapple",
+          "dice_count": 2,
+          "dice_size": 6,
+          "damage_bonus": 0,
+          "damage_type": "piercing",
+          "apply_on": "hit",
+          "ends_when_grapple_source_ends": true
+        }
       }
     ],
     "multiattack_slots": [
@@ -11247,6 +11379,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -11422,6 +11555,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -11525,9 +11659,31 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": {
+      "slots": [
+        {
+          "action_ids": [
+            "pincer"
+          ]
+        },
+        {
+          "action_ids": [
+            "pincer"
+          ]
+        },
+        {
+          "action_ids": [
+            "tentacles"
+          ],
+          "optional": true,
+          "requirement": "source_has_grappled_target"
+        }
+      ]
+    },
     "spellcasting": null
   },
   {
@@ -11601,11 +11757,16 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 15,
+          "max_hp_reduction_equals_damage_taken": true,
+          "zero_max_hp_kills": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature, it must succeed on a DC 15 Constitution saving throw or have its hit point maximum reduced by an amount equal to the damage taken. The target dies if this attack reduces its hit point maximum to 0. The reduction lasts until removed by the greater restoration spell or other magic",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       }
@@ -11650,6 +11811,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -11782,6 +11944,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -11996,6 +12159,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -12094,6 +12258,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -12184,6 +12350,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -12300,6 +12468,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -12456,6 +12626,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -12701,6 +12873,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -12796,6 +12970,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -12895,6 +13071,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -13028,6 +13206,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 4,
       "ability": "wisdom",
@@ -13177,6 +13356,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -13303,6 +13484,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -13370,7 +13552,7 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "the darkmantle attaches to the target. If the target is Medium or smaller and the darkmantle has advantage on the attack roll, it attaches by engulfing the target's head, and the target is also blinded and unable to breathe while the darkmantle is attached in this way",
+        "unsupported_text": "the darkmantle attaches to the target. If the target is Medium or smaller and the darkmantle has advantage on the attack roll, it attaches by engulfing the target's head, and the target is also blinded and unable to breathe while the darkmantle is attached in this way. While attached to the target, the darkmantle can attack no other creature except the target but has advantage on its attack rolls. The darkmantle's speed also becomes 0, it can't benefit from any bonus to its speed, and it moves with the target. A creature can detach the darkmantle by making a successful DC 13 Strength check as an action. On its turn, the darkmantle can detach itself from the target by using 5 feet of movement",
         "reach_ft": 5,
         "attack_ability": "strength"
       }
@@ -13401,6 +13583,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -13509,6 +13693,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -13676,6 +13861,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -13767,6 +13954,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -13927,6 +14116,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "healing_actions": [
       {
         "id": "healing-touch",
@@ -14052,6 +14242,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -14271,6 +14463,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -14334,7 +14527,16 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
-        "conditional_damage": [],
+        "conditional_damage": [
+          {
+            "trigger": "round1_initiative_lead",
+            "mode": "add",
+            "dice_count": 3,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "bludgeoning"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14342,6 +14544,11 @@
         "source_complete": true,
         "unsupported_text": null,
         "reach_ft": 5,
+        "conditional_attack_advantage": [
+          {
+            "trigger": "round1_initiative_lead"
+          }
+        ],
         "attack_ability": "dexterity"
       }
     ],
@@ -14373,6 +14580,10 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/289/315/315/636252770983164351.jpeg",
+    "data_bound_trait_names": [
+      "Surprise Attack",
+      "Ambusher"
+    ],
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
@@ -14381,6 +14592,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -14472,6 +14684,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -14658,6 +14872,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -14788,6 +15003,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -15021,6 +15237,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -15106,11 +15323,26 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 13,
+          "condition_id": "poisoned",
+          "duration_rounds": 600,
+          "failure_margin_escalation": {
+            "margin": 5,
+            "additional_condition_ids": [
+              "unconscious"
+            ],
+            "ends_on_damage": true,
+            "allowed_removal_action_ids": [
+              "wake-sleeper"
+            ]
+          }
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the target must succeed on a DC 13 Constitution saving throw or be poisoned for 1 hour. If the saving throw fails by 5 or more, the target is also unconscious while poisoned in this way. The target wakes up if it takes damage or if another creature takes an action to shake it awake",
+        "source_complete": true,
+        "unsupported_text": null,
         "normal_range_ft": 30,
         "long_range_ft": 120,
         "attack_ability": "dexterity"
@@ -15175,6 +15407,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -15242,10 +15476,53 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "4 (1d8) bludgeoning damage if wielded with two hands, or 6 (1d8 + 2) bludgeoning damage with shillelagh",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
+      },
+      {
+        "id": "quarterstaff-two-handed",
+        "name": "Quarterstaff",
+        "kind": "melee",
+        "attack_bonus": 2,
+        "damage": {
+          "average": 4,
+          "dice_count": 1,
+          "dice_size": 8,
+          "bonus": 0,
+          "type": "bludgeoning"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5,
+        "attack_ability": "strength"
+      },
+      {
+        "id": "quarterstaff-shillelagh",
+        "name": "Quarterstaff",
+        "kind": "melee",
+        "attack_bonus": 4,
+        "damage": {
+          "average": 6,
+          "dice_count": 1,
+          "dice_size": 8,
+          "bonus": 2,
+          "type": "bludgeoning"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5
       }
     ],
     "multiattack_slots": [],
@@ -15272,6 +15549,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 4,
       "ability": "wisdom",
@@ -15396,10 +15675,31 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 8 (1d8 + 4) bludgeoning damage with shillelagh",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
+      },
+      {
+        "id": "club-shillelagh",
+        "name": "Club",
+        "kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "average": 8,
+          "dice_count": 1,
+          "dice_size": 8,
+          "bonus": 4,
+          "type": "bludgeoning"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5
       }
     ],
     "multiattack_slots": [],
@@ -15486,6 +15786,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -15609,6 +15911,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -15732,6 +16036,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -15828,6 +16134,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -15944,6 +16252,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -16165,6 +16474,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -16287,6 +16597,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -16414,6 +16726,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -16613,6 +16927,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -16800,6 +17115,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -16928,6 +17244,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -17005,10 +17322,22 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature or a flammable object, it ignites. Until a creature takes an action to douse the fire, the target takes 5 (1d10) fire damage at the start of each of its turns",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
-        "attack_ability": "dexterity"
+        "attack_ability": "dexterity",
+        "ongoing_damage_effect": {
+          "id": "ignited",
+          "name": "Burning",
+          "dice_count": 1,
+          "dice_size": 10,
+          "damage_bonus": 0,
+          "damage_type": "fire",
+          "apply_on": "hit",
+          "tick_timing": "target_turn_start",
+          "action_removable": true,
+          "action_removal_range_ft": 5
+        }
       }
     ],
     "multiattack_slots": [
@@ -17046,6 +17375,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -17179,6 +17509,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -17300,6 +17631,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 5,
       "ability": "intelligence",
@@ -17463,6 +17795,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -17565,6 +17898,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -17673,6 +18008,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -17746,6 +18083,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -17879,6 +18218,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18013,6 +18353,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18114,6 +18455,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18247,6 +18590,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18367,6 +18712,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18499,6 +18846,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18627,6 +18976,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18753,6 +19103,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18848,6 +19199,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -18957,6 +19310,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -19063,6 +19418,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -19183,6 +19540,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -19282,6 +19641,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -19418,6 +19779,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -19544,6 +19906,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -19673,6 +20036,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -19766,6 +20131,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -19867,17 +20234,24 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "swallow_actions": [
       {
         "id": "swallow",
         "name": "Swallow",
         "attack_id": "bite",
         "max_target_size": "small",
+        "requires_existing_grapple": true,
         "damage_dice_count": 2,
         "damage_dice_size": 4,
         "damage_bonus": 0,
         "damage_type": "acid",
         "max_swallowed": 1,
+        "regurgitation_damage_threshold": null,
+        "regurgitation_save_ability": null,
+        "regurgitation_save_dc": null,
+        "regurgitation_range_ft": null,
         "exit_movement_ft": 5,
         "exit_prone": true
       }
@@ -19987,6 +20361,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20082,6 +20458,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20174,6 +20552,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20277,6 +20657,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20375,6 +20757,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20477,6 +20861,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20571,6 +20957,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20708,6 +21096,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20814,6 +21203,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -20911,6 +21302,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -21065,6 +21458,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -21172,17 +21567,24 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "swallow_actions": [
       {
         "id": "swallow",
         "name": "Swallow",
         "attack_id": "bite",
         "max_target_size": "medium",
+        "requires_existing_grapple": true,
         "damage_dice_count": 3,
         "damage_dice_size": 6,
         "damage_bonus": 0,
         "damage_type": "acid",
         "max_swallowed": 1,
+        "regurgitation_damage_threshold": null,
+        "regurgitation_save_ability": null,
+        "regurgitation_save_dc": null,
+        "regurgitation_range_ft": null,
         "exit_movement_ft": 5,
         "exit_prone": true
       }
@@ -21316,6 +21718,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -21422,6 +21825,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -21518,6 +21923,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -21631,6 +22038,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -21730,13 +22139,51 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/333/315/315/636252776252001529.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "blinding-spittle",
+        "name": "Blinding Spittle",
+        "save_ability": "dexterity",
+        "dc": 13,
+        "range_ft": 15,
+        "area": {
+          "shape": "radius",
+          "origin": "point",
+          "radius_ft": 5
+        },
+        "failure_control_effect": {
+          "condition_id": "blinded",
+          "expiry_timing": "source_turn_end",
+          "duration_rounds": 1
+        },
+        "resource_id": "blinding-spittle",
+        "resource_cost": 1,
+        "animation": "blinded"
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": {
+      "slots": [
+        {
+          "action_ids": [
+            "bite"
+          ]
+        },
+        {
+          "action_ids": [
+            "blinding-spittle"
+          ],
+          "optional": true,
+          "requirement": "action_available"
+        }
+      ]
+    },
     "spellcasting": null
   },
   {
@@ -21944,6 +22391,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -22087,12 +22535,12 @@
           "save_ability": "strength",
           "dc": 15,
           "condition_id": "prone",
-          "max_target_size": null
+          "max_target_size": "medium"
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a Medium or smaller creature",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       }
@@ -22145,6 +22593,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -22335,6 +22784,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -22440,6 +22891,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -22559,6 +23012,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -22713,6 +23168,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -22864,6 +23321,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -22981,6 +23440,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -23119,6 +23580,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -23253,6 +23716,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -23386,6 +23851,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -23514,6 +23980,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -23623,6 +24090,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -23763,6 +24232,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -23876,6 +24347,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 11,
       "ability": "wisdom",
@@ -24087,12 +24560,20 @@
     "regeneration": null,
     "multiattack_policy": null,
     "legendary_action_uses": 3,
-    "legendary_actions": [],
-    "unsupported_legendary_action_names": [
-      "Claw Attack",
-      "Teleport (Costs 2 Actions)",
-      "Cast a Spell (Costs 3 Actions)"
+    "legendary_actions": [
+      {
+        "id": "claw-attack",
+        "name": "Claw Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "claw"
+      }
     ],
+    "unsupported_legendary_action_names": [
+      "Teleport",
+      "Cast a Spell"
+    ],
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 9,
       "ability": "intelligence",
@@ -24386,6 +24867,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -24509,6 +24991,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -24604,6 +25087,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -24733,6 +25218,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -24876,6 +25363,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -25002,6 +25490,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -25130,6 +25619,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -25266,6 +25756,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -25332,11 +25824,25 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 10,
+          "condition_id": "poisoned",
+          "duration_rounds": 10,
+          "failure_margin_escalation": {
+            "margin": 5,
+            "additional_condition_ids": [
+              "unconscious"
+            ],
+            "replacement_duration_dice_count": 1,
+            "replacement_duration_dice_size": 10,
+            "replacement_duration_round_multiplier": 10
+          }
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the target must succeed on a DC 10 Constitution saving throw or be poisoned for 1 minute. If the saving throw fails by 5 or more, the target is instead poisoned for 5 (1d10) minutes and unconscious while poisoned in this way",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -25364,6 +25870,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -25461,13 +25969,33 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 17,
+          "excluded_creature_types": [
+            "undead",
+            "construct"
+          ],
+          "gates_ongoing_damage": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature other than an undead or a construct, it must succeed on a DC 17 Constitution saving throw or lose 10 (3d6) hit points at the start of each of its turns due to an infernal wound. Each time the devil hits the wounded target with this attack, the damage dealt by the wound increases by 10 (3d6). Any creature can take an action to stanch the wound with a successful DC 12 Wisdom (Medicine) check. The wound also closes if the target receives magical healing",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "ongoing_damage_effect": {
+          "id": "infernal-wound",
+          "name": "Infernal Wound",
+          "dice_count": 3,
+          "dice_size": 6,
+          "apply_on": "failed_on_hit_save",
+          "stacks_on_reapply": true,
+          "ends_on_magical_healing": true,
+          "removal_ability": "wisdom",
+          "removal_skill": "medicine",
+          "removal_dc": 12
+        }
       },
       {
         "id": "hurl-flame",
@@ -25532,6 +26060,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -25629,6 +26158,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -25726,9 +26257,21 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": {
+      "slots": [
+        {
+          "action_ids": [
+            "bite"
+          ]
+        }
+      ],
+      "repeat_slot_index": 0,
+      "repeat_count_source": "heads"
+    },
     "spellcasting": null
   },
   {
@@ -25824,6 +26367,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -26016,6 +26561,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -26170,6 +26716,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "death_trigger_actions": [
       {
         "id": "death-burst",
@@ -26268,11 +26816,19 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 11,
+          "damage_dice_count": 3,
+          "damage_dice_size": 6,
+          "damage_bonus": 0,
+          "damage_type": "poison",
+          "success_damage": "half"
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the target must make on a DC 11 Constitution saving throw, taking 10 (3d6) poison damage on a failed save, or half as much damage on a successful one",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
@@ -26304,6 +26860,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -26424,6 +26982,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -26590,6 +27149,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -26686,6 +27246,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -26784,6 +27346,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -26916,6 +27480,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -27034,6 +27599,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -27111,8 +27678,8 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a Large or smaller creature grappled by the kraken, that creature is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the kraken, and it takes 42 (12d6) acid damage at the start of each of the kraken's turns",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       },
@@ -27193,12 +27760,55 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 3,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [
       "Tentacle Attack or Fling",
-      "Lightning Storm (Costs 2 Actions)",
-      "Ink Cloud (Costs 3 Actions)"
+      "Lightning Storm",
+      "Ink Cloud"
+    ],
+    "multiattack_binding": {
+      "slots": [
+        {
+          "action_ids": [
+            "tentacle",
+            "fling"
+          ]
+        },
+        {
+          "action_ids": [
+            "tentacle",
+            "fling"
+          ]
+        },
+        {
+          "action_ids": [
+            "tentacle",
+            "fling"
+          ]
+        }
+      ]
+    },
+    "swallow_actions": [
+      {
+        "id": "swallow",
+        "name": "Swallow",
+        "attack_id": "bite",
+        "max_target_size": "large",
+        "requires_existing_grapple": true,
+        "damage_dice_count": 12,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "acid",
+        "max_swallowed": null,
+        "regurgitation_damage_threshold": 50,
+        "regurgitation_save_ability": "constitution",
+        "regurgitation_save_dc": 25,
+        "regurgitation_range_ft": 10,
+        "exit_movement_ft": 15,
+        "exit_prone": true
+      }
     ],
     "spellcasting": null
   },
@@ -27360,9 +27970,25 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": {
+      "slots": [
+        {
+          "action_ids": [
+            "claws"
+          ]
+        },
+        {
+          "action_ids": [
+            "dagger",
+            "intoxicating-touch"
+          ]
+        }
+      ]
+    },
     "spellcasting": null
   },
   {
@@ -27466,6 +28092,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -27594,13 +28222,22 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "legendary_action_uses": 3,
-    "legendary_actions": [],
+    "legendary_actions": [
+      {
+        "id": "paralyzing-touch",
+        "name": "Paralyzing Touch",
+        "cost": 2,
+        "kind": "attack",
+        "attack_id": "paralyzing-touch"
+      }
+    ],
     "unsupported_legendary_action_names": [
       "Cantrip",
-      "Paralyzing Touch (Costs 2 Actions)",
-      "Frightening Gaze (Costs 2 Actions)",
-      "Disrupt Life (Costs 3 Actions)"
+      "Frightening Gaze",
+      "Disrupt Life"
     ],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 18,
       "ability": "intelligence",
@@ -27879,6 +28516,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -27970,6 +28609,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -28180,6 +28821,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -28305,6 +28947,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 9,
       "ability": "intelligence",
@@ -28553,6 +29197,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "death_trigger_actions": [
       {
         "id": "death-burst",
@@ -28673,6 +29319,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "death_trigger_actions": [
       {
         "id": "death-burst",
@@ -28818,6 +29466,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -28971,6 +29621,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "limited_action_uses": {
       "tail-spike": 24
     },
@@ -29081,10 +29732,11 @@
           "max_target_size": "medium"
         },
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the marilith can automatically hit the target with its tail, and the marilith can't make tail attacks against other targets",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "grapple_target_policy": "auto_hit_own_grapple"
       }
     ],
     "multiattack_slots": [
@@ -29141,6 +29793,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -29241,6 +29894,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -29416,6 +30071,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -29562,6 +30218,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -29670,12 +30328,19 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a Huge or smaller creature, it must succeed on a Strength contest against the merrow or be pulled up to 20 feet toward the merrow",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
         "long_range_ft": 60,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "on_hit_contested_movement": {
+          "source_ability": "strength",
+          "target_ability": "strength",
+          "max_target_size": "huge",
+          "distance_ft": 20,
+          "direction": "toward_source"
+        }
       }
     ],
     "multiattack_slots": [
@@ -29714,6 +30379,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -29847,6 +30513,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -29976,6 +30644,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -30108,6 +30778,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -30202,6 +30874,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -30323,6 +30997,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -30462,10 +31137,11 @@
     "unsupported_legendary_action_names": [
       "Attack",
       "Blinding Dust",
-      "Blasphemous Word (Costs 2 Actions)",
-      "Channel Negative Energy (Costs 2 Actions)",
-      "Whirlwind of Sand (Costs 2 Actions)"
+      "Blasphemous Word",
+      "Channel Negative Energy",
+      "Whirlwind of Sand"
     ],
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 10,
       "ability": "wisdom",
@@ -30698,7 +31374,33 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/261/1000/1000/636252768396688147.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "horror-nimbus",
+        "name": "Horror Nimbus",
+        "save_ability": "wisdom",
+        "dc": 15,
+        "range_ft": 15,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 15
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 15,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "resource_id": "horror-nimbus",
+        "resource_cost": 1,
+        "animation": "fear"
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
@@ -30706,6 +31408,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -30863,6 +31566,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -30969,6 +31674,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -31066,6 +31773,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -31195,6 +31904,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -31312,6 +32022,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -31382,8 +32094,8 @@
           "restrains_while_grappled": false
         },
         "forbid_target_grappled_by_self": true,
-        "source_complete": false,
-        "unsupported_text": "Until this grapple ends",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -31414,6 +32126,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -31554,6 +32268,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -31653,6 +32369,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -31854,6 +32572,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -31998,6 +32717,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -32145,6 +32866,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -32242,6 +32964,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -32369,6 +33093,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -32494,6 +33219,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -32592,6 +33319,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -32703,6 +33432,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -32910,6 +33641,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -33119,6 +33851,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -33216,6 +33949,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -33315,6 +34050,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -33443,6 +34180,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -33534,6 +34272,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -33631,6 +34371,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 5,
       "ability": "wisdom",
@@ -33781,11 +34523,26 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 11,
+          "condition_id": "poisoned",
+          "duration_rounds": 600,
+          "failure_margin_escalation": {
+            "margin": 5,
+            "additional_condition_ids": [
+              "unconscious"
+            ],
+            "ends_on_damage": true,
+            "allowed_removal_action_ids": [
+              "wake-sleeper"
+            ]
+          }
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the target must succeed on a DC 11 Constitution saving throw or become poisoned for 1 hour. If the saving throw fails by 5 or more, the target falls unconscious for the same duration, or until it takes damage or another creature uses an action to shake it awake",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
@@ -33816,6 +34573,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -33910,6 +34669,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -33974,11 +34735,16 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "dexterity",
+          "dc": 19,
+          "max_target_size": "large",
+          "swallow_on_failure": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a Large or smaller creature, it must succeed on a DC 19 Dexterity saving throw or be swallowed by the worm. A swallowed creature is blinded and restrained, it has total cover against attacks and other effects outside the worm, and it takes 21 (6d6) acid damage at the start of each of the worm's turns",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
         "attack_ability": "strength"
       },
@@ -34047,6 +34813,27 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
+    "swallow_actions": [
+      {
+        "id": "swallow",
+        "name": "Swallow",
+        "attack_id": "bite",
+        "max_target_size": "large",
+        "requires_existing_grapple": false,
+        "damage_dice_count": 6,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "acid",
+        "max_swallowed": null,
+        "regurgitation_damage_threshold": 30,
+        "regurgitation_save_ability": "constitution",
+        "regurgitation_save_dc": 21,
+        "regurgitation_range_ft": 10,
+        "exit_movement_ft": 20,
+        "exit_prone": true
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -34122,6 +34909,9 @@
         "on_hit_save_effect": {
           "save_ability": "constitution",
           "dc": 10,
+          "condition_id": "poisoned",
+          "duration_rounds": 10,
+          "repeat_save_timing": "target_turn_end",
           "damage_dice_count": 2,
           "damage_dice_size": 4,
           "damage_bonus": 0,
@@ -34130,8 +34920,8 @@
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "and become poisoned for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
@@ -34163,6 +34953,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -34257,6 +35049,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -34478,6 +35272,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -34570,6 +35365,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -34665,6 +35462,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -34799,6 +35598,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -34896,6 +35697,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -35005,6 +35808,28 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
+    "swallow_actions": [
+      {
+        "id": "swallow",
+        "name": "Swallow",
+        "attack_id": "bite",
+        "max_target_size": "medium",
+        "requires_existing_grapple": true,
+        "damage_dice_count": 6,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "acid",
+        "max_swallowed": null,
+        "regurgitation_damage_threshold": 30,
+        "regurgitation_save_ability": "constitution",
+        "regurgitation_save_dc": 15,
+        "regurgitation_range_ft": 10,
+        "exit_movement_ft": 15,
+        "exit_prone": true
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -35109,6 +35934,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -35200,6 +36027,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -35336,6 +36165,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -35443,6 +36273,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -35526,6 +36357,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -35620,6 +36453,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -35744,6 +36579,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -35950,6 +36787,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -36126,10 +36964,11 @@
           "restrains_while_grappled": true
         },
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the salamander can automatically hit the target with its tail, and the salamander can't make tail attacks against other targets",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
-        "attack_ability": "strength"
+        "attack_ability": "strength",
+        "grapple_target_policy": "auto_hit_own_grapple"
       }
     ],
     "multiattack_slots": [
@@ -36169,6 +37008,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -36313,6 +37153,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -36411,6 +37253,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -36542,6 +37386,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -36639,6 +37484,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -36708,6 +37555,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -36827,6 +37676,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -36931,9 +37782,47 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": {
+      "slots": [
+        {
+          "action_ids": [
+            "slam"
+          ]
+        },
+        {
+          "action_ids": [
+            "slam"
+          ]
+        }
+      ],
+      "follow_up_action_id": "engulf",
+      "follow_up_condition": "all_attacks_hit_same_target",
+      "follow_up_max_target_size": "medium",
+      "follow_up_grapple_escape_dc": 14
+    },
+    "swallow_actions": [
+      {
+        "id": "engulf",
+        "name": "Engulf",
+        "attack_id": null,
+        "max_target_size": "medium",
+        "requires_existing_grapple": true,
+        "damage_dice_count": 2,
+        "damage_dice_size": 8,
+        "damage_bonus": 4,
+        "damage_type": "bludgeoning",
+        "max_swallowed": 1,
+        "start_turn_save_dc": 14,
+        "start_turn_save_ability": "constitution",
+        "source_death_release": "immediate",
+        "exit_movement_ft": 0,
+        "exit_prone": false
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -37053,6 +37942,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -37127,6 +38017,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -37277,6 +38169,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -37399,6 +38293,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -37634,9 +38530,10 @@
     "legendary_actions": [],
     "unsupported_legendary_action_names": [
       "Teleport",
-      "Searing Burst (Costs 2 Actions)",
-      "Blinding Gaze (Costs 3 Actions)"
+      "Searing Burst",
+      "Blinding Gaze"
     ],
+    "multiattack_binding": null,
     "healing_actions": [
       {
         "id": "healing-touch",
@@ -37760,6 +38657,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -37842,11 +38741,16 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 10,
+          "max_hp_reduction_equals_damage_taken": true,
+          "zero_max_hp_kills": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The target must succeed on a DC 10 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the creature finishes a long rest. The target dies if this effect reduces its hit point maximum to 0",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -37875,6 +38779,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -37980,6 +38886,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -38092,6 +39000,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": {
       "caster_level": 10,
       "ability": "intelligence",
@@ -38258,11 +39168,26 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 10,
+          "condition_id": "poisoned",
+          "duration_rounds": 10,
+          "failure_margin_escalation": {
+            "margin": 5,
+            "additional_condition_ids": [
+              "unconscious"
+            ],
+            "ends_on_damage": true,
+            "allowed_removal_action_ids": [
+              "wake-sleeper"
+            ]
+          }
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the target must succeed on a DC 10 Constitution saving throw or become poisoned for 1 minute. If its saving throw result is 5 or lower, the poisoned target falls unconscious for the same duration, or until it takes damage or another creature takes an action to shake it awake",
+        "source_complete": true,
+        "unsupported_text": null,
         "normal_range_ft": 40,
         "long_range_ft": 160
       }
@@ -38292,6 +39217,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -38427,6 +39354,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -38574,6 +39502,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "death_trigger_actions": [
       {
         "id": "death-burst",
@@ -38661,10 +39591,23 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "the stirge attaches to the target. While attached, the stirge doesn't attack. Instead, at the start of each of the stirge's turns, the target loses 5 (1d4 + 3) hit points due to blood loss",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
-        "attack_ability": "dexterity"
+        "attack_ability": "dexterity",
+        "ongoing_damage_effect": {
+          "id": "attached-blood-drain",
+          "name": "Blood Drain",
+          "dice_count": 1,
+          "dice_size": 4,
+          "damage_bonus": 3,
+          "tick_timing": "source_turn_start",
+          "blocks_source_attacks": true,
+          "action_removable": true,
+          "action_removal_range_ft": 5,
+          "source_detach_movement_ft": 5,
+          "auto_end_after_hp_loss": 10
+        }
       }
     ],
     "multiattack_slots": [],
@@ -38689,6 +39632,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -38820,6 +39765,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -38967,6 +39914,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -39113,9 +40061,9 @@
         "dc": 17,
         "range_ft": 500,
         "area": {
-          "shape": "emanation",
-          "origin": "self",
-          "radius_ft": 500
+          "shape": "radius",
+          "origin": "point",
+          "radius_ft": 10
         },
         "damage_dice_count": 12,
         "damage_dice_size": 8,
@@ -39189,6 +40137,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -39300,6 +40249,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -39417,6 +40368,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -39532,6 +40485,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -39655,6 +40610,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -39772,6 +40729,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -39888,6 +40847,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -40005,6 +40966,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -40161,9 +41124,6 @@
     ],
     "multiattack_slots": [
       [
-        "frightful-presence"
-      ],
-      [
         "bite"
       ],
       [
@@ -40242,7 +41202,28 @@
     "unsupported_legendary_action_names": [
       "Attack",
       "Move",
-      "Chomp (Costs 2 Actions)"
+      "Chomp"
+    ],
+    "multiattack_binding": null,
+    "swallow_actions": [
+      {
+        "id": "swallow",
+        "name": "Swallow",
+        "attack_id": "bite",
+        "max_target_size": "large",
+        "requires_existing_grapple": true,
+        "damage_dice_count": 16,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "acid",
+        "max_swallowed": null,
+        "regurgitation_damage_threshold": 60,
+        "regurgitation_save_ability": "constitution",
+        "regurgitation_save_dc": 20,
+        "regurgitation_range_ft": 10,
+        "exit_movement_ft": 30,
+        "exit_prone": true
+      }
     ],
     "spellcasting": null
   },
@@ -40372,6 +41353,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -40498,6 +41480,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -40631,6 +41615,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -40774,6 +41759,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -40896,6 +41883,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -41035,6 +42024,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -41135,6 +42125,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -41264,6 +42256,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -41469,12 +42462,20 @@
     "regeneration": null,
     "multiattack_policy": null,
     "legendary_action_uses": 3,
-    "legendary_actions": [],
-    "unsupported_legendary_action_names": [
-      "Hooves",
-      "Shimmering Shield (Costs 2 Actions)",
-      "Heal Self (Costs 3 Actions)"
+    "legendary_actions": [
+      {
+        "id": "hooves",
+        "name": "Hooves",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "hooves"
+      }
     ],
+    "unsupported_legendary_action_names": [
+      "Shimmering Shield",
+      "Heal Self"
+    ],
+    "multiattack_binding": null,
     "healing_actions": [
       {
         "id": "healing-touch",
@@ -41660,12 +42661,26 @@
       ]
     },
     "legendary_action_uses": 3,
-    "legendary_actions": [],
-    "unsupported_legendary_action_names": [
-      "Move",
-      "Unarmed Strike",
-      "Bite"
+    "legendary_actions": [
+      {
+        "id": "unarmed-strike",
+        "name": "Unarmed Strike",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "unarmed-strike-vampire-form-only"
+      },
+      {
+        "id": "bite",
+        "name": "Bite",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "bite-bat-or-vampire-form-only"
+      }
     ],
+    "unsupported_legendary_action_names": [
+      "Move"
+    ],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -41822,6 +42837,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -41999,6 +43015,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -42105,6 +43122,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -42249,6 +43267,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -42346,6 +43365,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -42444,6 +43465,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -42542,6 +43565,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -42664,6 +43689,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -42759,6 +43785,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -42919,6 +43947,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -43008,13 +44037,33 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a humanoid, it must succeed on a DC 12 Constitution saving throw or be cursed with wereboar lycanthropy",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
+        "charge_profile": {
+          "minimum_move_ft": 15,
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_type": "slashing",
+            "damage_bonus": 0
+          },
+          "prone_save_ability": "strength",
+          "prone_save_dc": 13
+        },
         "attack_ability": "strength"
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "maul-humanoid-or-hybrid-form-only",
+        "tusks-boar-or-hybrid-form-only"
+      ],
+      [
+        "maul-humanoid-or-hybrid-form-only",
+        "tusks-boar-or-hybrid-form-only"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -43043,9 +44092,15 @@
       "resulting_hp": 1
     },
     "regeneration": null,
+    "multiattack_policy": {
+      "at_most_once_attack_ids": [
+        "tusks-boar-or-hybrid-form-only"
+      ]
+    },
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -43209,6 +44264,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -43302,6 +44358,12 @@
         "source_complete": true,
         "unsupported_text": null,
         "reach_ft": 5,
+        "charge_profile": {
+          "minimum_move_ft": 15,
+          "prone_save_ability": "strength",
+          "prone_save_dc": 14,
+          "follow_up_attack_id": "bite-tiger-or-hybrid-form-only"
+        },
         "attack_ability": "strength"
       },
       {
@@ -43350,7 +44412,18 @@
         "attack_ability": "dexterity"
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "scimitar-humanoid-or-hybrid-form-only",
+        "longbow-humanoid-or-hybrid-form-only",
+        "claw-tiger-or-hybrid-form-only"
+      ],
+      [
+        "scimitar-humanoid-or-hybrid-form-only",
+        "longbow-humanoid-or-hybrid-form-only",
+        "claw-tiger-or-hybrid-form-only"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -43377,9 +44450,15 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": {
+      "same_attack_as_previous_slots": [
+        1
+      ]
+    },
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -43587,6 +44666,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -43722,6 +44802,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -43794,11 +44876,16 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 13,
+          "max_hp_reduction_equals_damage_taken": true,
+          "zero_max_hp_kills": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The target must succeed on a DC 13 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
@@ -43866,7 +44953,16 @@
         "long_range_ft": 600
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "life-drain",
+        "longbow"
+      ],
+      [
+        "longsword-two-handed",
+        "longbow"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -43890,9 +44986,11 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -44009,6 +45107,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -44137,6 +45237,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -44239,6 +45341,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -44339,6 +45443,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -44420,11 +45526,16 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 14,
+          "max_hp_reduction_equals_damage_taken": true,
+          "zero_max_hp_kills": true
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The target must succeed on a DC 14 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
@@ -44455,6 +45566,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -44612,6 +45725,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -44751,6 +45865,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -44890,6 +46005,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -45062,6 +46178,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -45232,6 +46349,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -45421,6 +46539,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -45604,6 +46723,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -45796,6 +46916,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -45987,6 +47108,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -46161,6 +47283,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -46330,6 +47453,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -46517,6 +47641,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -46689,6 +47814,7 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_binding": null,
     "spellcasting": null
   },
   {
@@ -46788,6 +47914,8 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "multiattack_policy": null,
+    "multiattack_binding": null,
     "spellcasting": null
   }
 ]

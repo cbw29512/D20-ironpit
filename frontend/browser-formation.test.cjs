@@ -13,7 +13,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-state.js", "browser-formation.js", "browser-standard-attack-action.js", "browser-turn.js",
+  "browser-grapple.js", "browser-state.js", "browser-berserk.js", "browser-formation.js", "browser-standard-attack-action.js", "browser-turn.js",
 ]) load(file);
 
 const F = window.IRON_PIT_BROWSER_FORMATION;
@@ -56,6 +56,12 @@ const setup = { heroes: [front, archer], monsters: [enemyFront, enemyBack] };
 assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-front", "monster-back"]);
 assert.equal(F.chooseStandardAttack(front, setup).attack.id, "blade", "frontline defaults to melee");
 assert.equal(F.chooseStandardAttack(archer, setup).attack.id, "bow", "protected backline stays ranged");
+
+enemyFront.state.template.berserk = { hpThreshold: 40, dieSize: 6, triggerRoll: 6, effectId: "berserk" };
+enemyFront.state.active_effect_ids.push("berserk");
+enemyBack.position_ft = 11; front.position_ft = 20;
+assert.equal(F.targetOrder(enemyFront, setup)[0].combatant_id, "monster-back", "berserk targets the nearest creature even when it is an ally");
+enemyFront.state.active_effect_ids = []; enemyBack.position_ft = 15; front.position_ft = 5;
 
 front.state.current_hp = 0; front.state.is_alive = false; front.state.is_dead = true;
 archer.position_ft = 5;

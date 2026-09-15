@@ -2,7 +2,7 @@
   "use strict";
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
-  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
+  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed", "invisibility-suppressed"]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE;
 
@@ -87,6 +87,7 @@
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
   const effectiveSpeed = (state) => Math.max(0, Math.trunc((state.template.speed_ft + flat(state, "speed")) * timedSpeedMultiplier(state)));
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
+  const invisibilitySuppressed = (state) => (state.active_modifiers || []).some((item) => item.kind === "invisibility-suppressed");
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
 
@@ -124,6 +125,6 @@
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
     consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
-    expireTargetTurn, nextAttackAgainstAdvantage, removeSource, validate,
+    expireTargetTurn, invisibilitySuppressed, nextAttackAgainstAdvantage, removeSource, validate,
   };
 })();

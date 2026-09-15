@@ -14,6 +14,7 @@ from app.combat.pit_policy import (
     save_distance,
     target_order,
 )
+from app.combat.resources import action_resource_available
 from app.combat.saving_throws import legal_save_action
 from app.domain.actions import AttackActionSlot
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -26,7 +27,7 @@ def area_save_choice(attacker: EncounterCombatant, setup: EncounterSetup, slot: 
     allowed = set(slot.save_action_ids)
     candidates = []
     for action in attacker.state.template.saving_throw_actions:
-        if action.id not in allowed or action.area is None:
+        if action.id not in allowed or action.area is None or not action_resource_available(attacker.state, action):
             continue
         placements = legal_area_save_placements(attacker, setup, action)
         if placements:
@@ -44,7 +45,7 @@ def save_choice(
         allowed = set(slot.save_action_ids)
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
-                if action.id not in allowed or action.area is not None:
+                if action.id not in allowed or action.area is not None or not action_resource_available(attacker.state, action):
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance):

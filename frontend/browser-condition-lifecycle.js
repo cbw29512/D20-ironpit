@@ -8,14 +8,15 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
 
-  const label = (id) => id.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
+  const label = (id) => id.replaceAll("_", " ").replaceAll("-", " ").replace(/\b\w/g, (char) => char.toUpperCase());
   function repeatSaveDue(effect, round, timing, state) {
     if (effect.repeat_save_timing !== timing) return false;
     const arenaPoison = effect.effect_id === "poisoned" && state.template.ruleset !== "2014";
     return !(arenaPoison && effect.applied_round != null && round <= effect.applied_round);
   }
-  const expiryDue = (effect, round, timing) => effect.expiry_timing === timing
-    && (effect.expires_round == null || round >= effect.expires_round);
+  const expiryDue = (effect, round, timing) => effect.expires_after_next_target_turn
+    ? timing === "target_turn_end" && effect.target_turn_started_since_applied
+    : effect.expiry_timing === timing && (effect.expires_round == null || round >= effect.expires_round);
   function grantEndImmunity(target, effect) {
     if (effect.source_effect_immunity_on_end && effect.source_effect_id) I().grant(target.state, effect.source_id, effect.source_effect_id);
   }
@@ -32,6 +33,7 @@
     const events = [];
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
+      if (timing === "target_turn_start" && effect.expires_after_next_target_turn) effect.target_turn_started_since_applied = true;
       if (repeatSaveDue(effect, round, timing, target.state)) {
         const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc, { againstCondition: effect.effect_id });
         const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];

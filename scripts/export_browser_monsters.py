@@ -37,6 +37,7 @@ def _policy_row(policy):
     return {
         "distinctAttackIds": policy.distinct_attack_ids,
         "atMostOnceAttackIds": list(policy.at_most_once_attack_ids),
+        "exclusiveAttackGroups": [list(group) for group in policy.exclusive_attack_groups],
         "repeatSlotIndex": policy.repeat_slot_index,
         "repeatDiceCount": policy.repeat_dice_count,
         "repeatDiceSize": policy.repeat_dice_size,
@@ -121,7 +122,7 @@ def _gaze_row(gaze):
 
 
 def _aura_row(aura):
-    return {
+    row = {
         "id": aura.id, "name": aura.name, "rangeFt": aura.range_ft,
         "saveAbility": aura.save_ability, "saveDc": aura.save_dc,
         "failureConditionId": aura.failure_condition_id,
@@ -130,6 +131,8 @@ def _aura_row(aura):
         "magicalEffect": aura.magical_effect,
         "successGrantsSourceImmunity": aura.success_grants_source_immunity,
     }
+    if aura.reaction_cost: row["reactionCost"] = True
+    return row
 
 
 def _relationship_damage_row(profile):
@@ -138,6 +141,46 @@ def _relationship_damage_row(profile):
         "diceCount": profile.dice_count, "diceSize": profile.dice_size,
         "damageBonus": profile.damage_bonus, "damageType": profile.damage_type.value,
     }
+
+
+def _failure_margin_row(spec):
+    if spec is None: return None
+    row = {
+        "margin": spec.margin,
+        "additionalConditionIds": list(spec.additional_condition_ids),
+        "replacementDurationDiceCount": spec.replacement_duration_dice_count,
+        "replacementDurationDiceSize": spec.replacement_duration_dice_size,
+        "replacementDurationRoundMultiplier": spec.replacement_duration_round_multiplier,
+    }
+    if spec.replacement_duration_rounds is not None: row["replacementDurationRounds"] = spec.replacement_duration_rounds
+    return row
+
+
+def _ongoing_damage_row(effect):
+    if effect is None: return None
+    row = {
+        "id": effect.id, "name": effect.name, "diceCount": effect.dice_count, "diceSize": effect.dice_size,
+        "damageBonus": effect.damage_bonus, "damageType": effect.damage_type, "applyOn": effect.apply_on,
+        "tickTiming": effect.tick_timing, "stacksOnReapply": effect.stacks_on_reapply,
+        "endsOnMagicalHealing": effect.ends_on_magical_healing,
+        "endsWhenGrappleSourceEnds": effect.ends_when_grapple_source_ends,
+        "blocksSourceAttacks": effect.blocks_source_attacks, "actionRemovable": effect.action_removable,
+        "actionRemovalRangeFt": effect.action_removal_range_ft,
+    }
+    if effect.source_detach_movement_ft is not None: row["sourceDetachMovementFt"] = effect.source_detach_movement_ft
+    if effect.auto_end_after_hp_loss is not None: row["autoEndAfterHpLoss"] = effect.auto_end_after_hp_loss
+    if effect.removal_ability: row.update(removalAbility=effect.removal_ability, removalSkill=effect.removal_skill, removalDc=effect.removal_dc)
+    return row
+
+
+def _contested_movement_row(effect):
+    if effect is None: return None
+    row = {
+        "sourceAbility": effect.source_ability, "targetAbility": effect.target_ability,
+        "distanceFt": effect.distance_ft, "direction": effect.direction,
+    }
+    if effect.max_target_size is not None: row["maxTargetSize"] = effect.max_target_size.value
+    return row
 
 
 def _attach_source_fingerprint(row, template) -> None:
@@ -152,11 +195,25 @@ def _attach_monster_actions(row, template) -> None:
     row["creature_subtypes"] = list(template.creature_subtypes)
     if template.damage_absorptions:
         row["damageAbsorptions"] = [{"damageType": rule.damage_type.value, "healingMultiplier": rule.healing_multiplier} for rule in template.damage_absorptions]
+    if template.damage_triggered_roll_penalties:
+        row["damageTriggeredRollPenalties"] = [
+            {"id": profile.id, "damageTypes": [item.value for item in profile.damage_types],
+             "attackRollDisadvantage": profile.attack_roll_disadvantage,
+             "abilityCheckDisadvantage": profile.ability_check_disadvantage,
+             "expiresAfterNextTargetTurn": profile.expires_after_next_target_turn}
+            for profile in template.damage_triggered_roll_penalties
+        ]
     gaze = _gaze_row(template.start_turn_gaze)
     if gaze: row["startTurnGaze"] = gaze
     if template.start_turn_auras: row["startTurnAuras"] = [_aura_row(aura) for aura in template.start_turn_auras]
     if template.start_turn_relationship_damage:
         row["startTurnRelationshipDamage"] = [_relationship_damage_row(profile) for profile in template.start_turn_relationship_damage]
+    if template.melee_hit_reactive_damage:
+        row["meleeHitReactiveDamage"] = [
+            {"id": rule.id, "rangeFt": rule.range_ft, "diceCount": rule.dice_count, "diceSize": rule.dice_size,
+             "damageBonus": rule.damage_bonus, "damageType": rule.damage_type.value}
+            for rule in template.melee_hit_reactive_damage
+        ]
     if template.ability_scores is not None:
         row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
     for definition in row.get("resource_definitions", []):
@@ -179,11 +236,19 @@ def _attach_monster_actions(row, template) -> None:
         if restraint: attack_row["breakableRestraint"] = restraint
         if attack.attack_ability is not None: attack_row["attackAbility"] = attack.attack_ability
         if attack.attack_ability_modifier is not None: attack_row["attackAbilityModifier"] = attack.attack_ability_modifier
+        ongoing = _ongoing_damage_row(attack.ongoing_damage_effect)
+        if ongoing: attack_row["ongoingDamageEffect"] = ongoing
+        contest = _contested_movement_row(attack.on_hit_contested_movement)
+        if contest: attack_row["onHitContestedMovement"] = contest
         if effect:
             rider = attack_row.setdefault("onHitSaveEffect", {})
             if effect.failure_push_ft: rider["failurePushFt"] = effect.failure_push_ft
             if effect.excluded_creature_types: rider["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes: rider["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
+            if effect.gates_ongoing_damage: rider["gatesOngoingDamage"] = True
+            if effect.swallow_on_failure: rider["swallowOnFailure"] = True
+            margin = _failure_margin_row(effect.failure_margin_escalation)
+            if margin: rider["failureMarginEscalation"] = margin
             if effect.zero_hp_stable:
                 rider["zeroHpStable"] = True; rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
     healing_rows = row.pop("healing_actions", [])
@@ -202,9 +267,17 @@ def _attach_monster_actions(row, template) -> None:
     if template.regeneration: row["regeneration"] = {"amount": template.regeneration.amount, "requiresPositiveHp": template.regeneration.requires_positive_hp, "suppressedByDamageTypes": [item.value for item in template.regeneration.suppressed_by_damage_types], "survivesZeroUntilTurn": template.regeneration.survives_zero_until_turn}
     if template.swallow_actions:
         action = template.swallow_actions[0]
-        row["swallowAction"] = {"id": action.id, "name": action.name, "attackId": action.attack_id, "maxTargetSize": action.max_target_size.value,
+        row["swallowAction"] = {
+            "id": action.id, "name": action.name, "attackId": action.attack_id, "maxTargetSize": action.max_target_size.value,
             "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
-            "damageType": action.damage_type.value, "maxSwallowed": action.max_swallowed, "exitMovementFt": action.exit_movement_ft, "exitProne": action.exit_prone}
+            "damageType": action.damage_type.value, "maxSwallowed": action.max_swallowed,
+            "requiresExistingGrapple": action.requires_existing_grapple,
+            "regurgitationDamageThreshold": action.regurgitation_damage_threshold,
+            "regurgitationSaveAbility": action.regurgitation_save_ability,
+            "regurgitationSaveDc": action.regurgitation_save_dc,
+            "regurgitationRangeFt": action.regurgitation_range_ft,
+            "exitMovementFt": action.exit_movement_ft, "exitProne": action.exit_prone,
+        }
 
 
 def render() -> str:
@@ -216,7 +289,14 @@ def render() -> str:
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids): raise RuntimeError("Certified browser monster export contains duplicate template IDs.")
         payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
-        return "/* GENERATED from canonical Python RAW-ready monster templates. Do not hand-edit. */\n(() => {\n  \"use strict\";\n" + f"  const monsters = {payload};\n" + "  window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));\n  window.IRON_PIT_CANONICAL_MONSTERS_READY = true;\n})();\n"
+        return (
+            "/* GENERATED from canonical Python RAW-ready monster templates. Do not hand-edit. */\n"
+            "(() => {\n  \"use strict\";\n"
+            f"  const monsters = {payload};\n"
+            "  window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));\n"
+            "  window.IRON_PIT_CANONICAL_MONSTERS_READY = true;\n"
+            "})();\n"
+        )
     except Exception:
         logger.exception("Certified browser monster rendering failed."); raise
 
@@ -227,4 +307,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO); main()
+    logging.basicConfig(level=logging.INFO)
+    main()

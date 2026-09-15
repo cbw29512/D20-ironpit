@@ -1,25 +1,30 @@
 from __future__ import annotations
-
 import json
 import logging
 from pathlib import Path
-
 from pydantic import TypeAdapter
-
-from app.content.monster_catalog_2014_absorption import damage_absorptions_2014
+from app.content.monster_catalog_2014_absorption import damage_absorptions_2014, unresolved_absorption_traits_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
-from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, usable_movement_speed_2014
-from app.content.monster_catalog_2014_auras import start_turn_auras_2014
-from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, resources_2014, saving_throw_bonuses_2014
+from app.content.monster_catalog_2014_arena_policy import is_arena_disabled_action_2014, is_arena_disabled_attack_detail_2014, usable_movement_speed_2014
+from app.content.monster_catalog_2014_auras import activated_start_turn_auras_2014, start_turn_auras_2014
+from app.content.monster_catalog_2014_berserk import berserk_profile_2014
+from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, reactive_melee_damage_2014, resources_2014, saving_throw_bonuses_2014
+from app.content.monster_catalog_2014_damage_triggers import damage_triggered_roll_penalties_2014
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_gaze import petrifying_gaze_2014
+from app.content.monster_catalog_2014_invisibility import invisibility_action_2014, starts_invisible_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
+from app.content.monster_catalog_2014_reactions import projectile_catch_reaction_2014, reaction_start_turn_auras_2014, spell_reflection_reaction_2014, supported_reaction_names_2014
 from app.content.monster_catalog_2014_save_auras import save_advantage_auras_2014
+from app.content.monster_catalog_2014_self_buffs import self_buff_actions_2014
+from app.content.monster_catalog_2014_sneak_attack import sneak_attack_d6_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_start_turn_damage import start_turn_relationship_damage_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.content.monster_catalog_2014_unarmed import attacks_with_unarmed_fallback_2014
+from app.content.monster_defensive_spell_actions_2014 import defensive_spell_actions_2014
+from app.content.monster_innate_spell_actions_2014 import innate_save_actions_2014, innate_spell_save_actions_2014
 from app.content.monster_spell_actions_2014 import damage_spell_actions_2014
 from app.domain.models import CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.movement import MovementModes
@@ -31,9 +36,6 @@ logger = logging.getLogger(__name__)
 CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014"
 MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
-_CHARGE_TRAITS = {"Charge", "Pounce", "Trampling Charge"}
-
-
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
     try:
         kind = WeaponAttackKind.MELEE if source.kind == "melee" else WeaponAttackKind.RANGED
@@ -57,22 +59,23 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
         raise RuntimeError(f"2014 attack {source.id} could not be compiled.") from exc
-
-
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
-        supported_reactions = {"Parry"} if source.parry_ac_bonus is not None else set()
+        supported_reactions = supported_reaction_names_2014(source)
         blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
-        blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
+        blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete and not is_arena_disabled_attack_detail_2014(attack.unsupported_text))
         blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names, source.data_bound_trait_names))
+        blockers.extend(f"trait:{name}" for name in unresolved_absorption_traits_2014(source.trait_names, source.source_traits))
         blockers.extend(f"spell:{name}" for name in unresolved_spells_2014(source))
         relentless = [name for name in source.trait_names if name.startswith("Relentless (Recharges after")]
         if relentless and source.zero_hp_prevention is None: blockers.extend(f"trait:{name}" for name in relentless)
         if "Regeneration" in source.trait_names and source.regeneration is None: blockers.append("trait:Regeneration")
-        if "Fire Absorption" in source.trait_names and not damage_absorptions_2014(source.source_traits): blockers.append("trait:Fire Absorption")
-        charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
-        if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
+        if "Berserk" in source.trait_names and berserk_profile_2014(source.source_traits) is None: blockers.append("trait:Berserk")
+        if "Fear of Fire" in source.trait_names and not damage_triggered_roll_penalties_2014(source.source_traits): blockers.append("trait:Fear of Fire")
+        reactive_ids = {item.id for item in reactive_melee_damage_2014(source.source_traits)}; blockers.extend(f"trait:{name}" for name in ("Heated Body", "Corrosive Form") if name in source.trait_names and name.lower().replace(" ", "-") not in reactive_ids)
+        charge_traits = [name for name in source.trait_names if CombatTrait.CHARGE in combat_traits_2014([name])]
+        if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in charge_traits)
         blockers.extend(f"reaction:{name}" for name in unresolved_reactions_2014(source, supported_reactions))
         blockers.extend(f"legendary:{name}" for name in source.unsupported_legendary_action_names if not is_arena_disabled_action_2014(name))
         if source.source_legendary_actions and source.legendary_action_uses <= 0: blockers.append("legendary:unparsed-resource-pool")
@@ -81,8 +84,6 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     except Exception as exc:
         logger.exception("Failed to inventory 2014 mechanics for %s.", source.id)
         raise RuntimeError(f"2014 monster {source.id} mechanics could not be inventoried.") from exc
-
-
 def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
     try:
         blockers = unsupported_mechanics_2014(source)
@@ -91,9 +92,8 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         attacks = attacks_with_unarmed_fallback_2014(source, bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks]))
         spell_attacks, spell_saves, automatic_spells = damage_spell_actions_2014(source)
         movement = MovementModes(
-            walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
-            climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0),
-            burrow_ft=usable_movement_speed_2014("burrow", source.speed.get("burrow", 0)),
+            walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0), climb_ft=source.speed.get("climb", 0),
+            swim_ft=source.speed.get("swim", 0), burrow_ft=usable_movement_speed_2014("burrow", source.speed.get("burrow", 0)),
         )
         dex = source.abilities["dex"]
         return CombatantTemplate(
@@ -101,32 +101,32 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             kind="monster", ruleset="2014", creature_type=source.creature_type, creature_subtypes=source.creature_subtypes,
             size=source.size, ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
-            progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
+            progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names, sneak_attack_d6=sneak_attack_d6_2014(source.source_traits)),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], start_turn_gaze=petrifying_gaze_2014(source.source_traits),
-            start_turn_auras=start_turn_auras_2014(source.source_traits),
+            start_turn_auras=[*start_turn_auras_2014(source.source_traits), *activated_start_turn_auras_2014(source.source_actions), *reaction_start_turn_auras_2014(source)],
             start_turn_relationship_damage=start_turn_relationship_damage_2014(source.source_traits),
-            save_advantage_auras=save_advantage_auras_2014(source.source_traits),
+            melee_hit_reactive_damage=reactive_melee_damage_2014(source.source_traits), save_advantage_auras=save_advantage_auras_2014(source.source_traits),
             attack_action=compile_multiattack_2014(source, attacks), swallow_actions=source.swallow_actions,
-            saving_throw_actions=source.saving_throw_actions, death_trigger_actions=source.death_trigger_actions,
-            healing_actions=source.healing_actions, spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
-            automatic_damage_spell_actions=automatic_spells,
+            saving_throw_actions=[*source.saving_throw_actions, *innate_save_actions_2014(source)], death_trigger_actions=source.death_trigger_actions,
+            healing_actions=source.healing_actions, self_buff_actions=self_buff_actions_2014(source.source_actions),
+            spell_attack_actions=spell_attacks, spell_save_actions=[*spell_saves, *innate_spell_save_actions_2014(source)],
+            automatic_damage_spell_actions=automatic_spells, defensive_spell_actions=defensive_spell_actions_2014(source),
+            starts_invisible=starts_invisible_2014(source), invisibility_action=invisibility_action_2014(source),
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
             source_trait_names=list(source.trait_names), source_legendary_action_names=list(source.legendary_action_names),
-            damage_resistances=source.damage_resistances,
-            conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
-            damage_absorptions=damage_absorptions_2014(source.source_traits),
+            damage_resistances=source.damage_resistances, conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
+            damage_absorptions=damage_absorptions_2014(source.source_traits), damage_triggered_roll_penalties=damage_triggered_roll_penalties_2014(source.source_traits),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
+            projectile_catch_reaction=projectile_catch_reaction_2014(source), spell_reflection_reaction=spell_reflection_reaction_2014(source),
             zero_hp_prevention=source.zero_hp_prevention, regeneration=source.regeneration,
-            visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
-            source=f"2014 JSON catalog: {source.id}")
+            berserk=berserk_profile_2014(source.source_traits),
+            visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type), source=f"2014 JSON catalog: {source.id}")
     except Exception as exc:
         logger.exception("Failed to compile 2014 monster %s.", source.id)
         raise RuntimeError(f"2014 monster {source.id} could not be compiled: {exc}") from exc
-
-
 def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     try:
         if path.is_file(): payload = json.loads(path.read_text(encoding="utf-8"))
@@ -138,8 +138,6 @@ def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     except Exception as exc:
         logger.exception("Failed to load 2014 monster catalog from %s.", path)
         raise RuntimeError(f"2014 monster catalog could not be loaded from {path}.") from exc
-
-
 def monster_by_id_2014(monster_id: str, path: Path = CATALOG_ROOT) -> CombatantTemplate:
     try:
         source = next(item for item in load_catalog_2014(path) if item.id == monster_id)

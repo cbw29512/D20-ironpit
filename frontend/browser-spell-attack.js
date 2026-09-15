@@ -9,6 +9,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
+  const REF = () => window.IRON_PIT_BROWSER_SPELL_ATTACK_REFLECTION;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
 
@@ -21,7 +22,8 @@
   function resolve(sequence, round, caster, target, spell, setup, turnKey) {
     if (spell.actionCost === "reaction" || !E().available(caster.state, spell.actionCost)) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
-    const distance = S().distance(caster, target);
+    if (!C().affectsTarget(target.state, spell.level)) throw new Error(`${spell.name} cannot affect this target.`);
+    let distance = S().distance(caster, target);
     if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
@@ -29,16 +31,25 @@
     const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
     const mode = R().modeFromSources(advantage, conditions.disadvantage + SAP().disadvantage(caster.state) + (closeThreat ? 1 : 0));
-    const targetAc = M().effectiveArmorClass(target.state);
+    let targetAc = M().effectiveArmorClass(target.state);
     const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus, mode), targetAc);
-    const attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll);
+    let attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll);
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
-    const natural = attackRoll.selected_roll;
-    const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
-    const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
+    let natural = attackRoll.selected_roll;
+    let hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
+    let critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
+    let reflectedFrom = null;
+    if (!hit && target.state.template.spell_reflection_reaction) {
+      const reflected = REF()?.reroll(caster, target, spell, setup);
+      if (reflected) {
+        reflectedFrom = target; target = reflected.target; attackRoll = reflected.attackRoll;
+        targetAc = reflected.targetAc; hit = reflected.hit; critical = reflected.critical; distance = reflected.distance;
+        if (!C().affectsTarget(target.state, spell.level)) { hit = false; critical = false; }
+      }
+    }
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
@@ -58,6 +69,7 @@
     }
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
+    if (reflectedFrom) description = `${reflectedFrom.state.template.name} uses Spell Reflection; ${spell.name} targets ${target.state.template.name} instead. ${description}`;
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
     return {
       sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,

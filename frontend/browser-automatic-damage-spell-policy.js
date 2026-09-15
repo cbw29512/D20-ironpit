@@ -39,7 +39,7 @@
       const mean = count * ((action.damageDiceCountPerProjectile || 1) * (action.damageDiceSize + 1) / 2 + (action.damageBonusPerProjectile || 0));
       for (const target of enemies) {
         if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0) continue;
-        if (S().distance(caster, target) > action.range) continue;
+        if (S().distance(caster, target) > action.range || !C().affectsTarget(target.state, slotLevel)) continue;
         choices.push({ action, target, slotLevel, expectedDamage: mean * factor(target, action.damageType) });
       }
     }

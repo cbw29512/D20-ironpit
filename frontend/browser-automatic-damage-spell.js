@@ -14,6 +14,7 @@
     const slot = P().slots(caster.state, action.level, turnKey)[0];
     if (!slot) throw new Error(`No legal spell slot remains for ${action.name}.`);
     const [slotLevel, resourceId] = slot;
+    if (!C().affectsTarget(target.state, slotLevel)) throw new Error(`${action.name} cannot affect this target at slot level ${slotLevel}.`);
     const projectileCount = P().projectileCount(action, slotLevel);
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;

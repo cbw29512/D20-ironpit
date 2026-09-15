@@ -28,13 +28,23 @@ def main() -> int:
     try:
         commands = [
             [sys.executable, "scripts/import_2014_monster_catalog.py", str(source), "--output", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_opening_initiative.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_max_hp_reduction.py", "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_save_actions.py", str(source), "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_multiattack_bindings.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_breakable_restraints.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_healing_actions.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_swallow_actions.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_attack_resources.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_death_triggers.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_staged_attack_saves.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_failure_margin_saves.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_plain_grapples.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_grapple_attack_policy.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_contested_movement.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_ongoing_damage.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_delayed_attack_aftermath.py", "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_legendary_actions.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_spellcasting.py", str(source), "--catalog", str(OUTPUT)],
         ]
         if any(_run(command) != 0 for command in commands): return 1

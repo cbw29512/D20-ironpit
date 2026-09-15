@@ -9,6 +9,7 @@
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
   const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
   const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
+  const K = () => window.IRON_PIT_BROWSER_BERSERK;
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
 
@@ -112,6 +113,8 @@
         B()?.cleanupDisabledSources(setup);
         window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
         S().refreshStartOfTurn(member.state);
+        const berserk = K()?.startTurn(sequence, round, member);
+        if (berserk) { events.push(berserk.event); sequence = berserk.sequence; }
         C()?.endIfExpired(member.state, round, states);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;

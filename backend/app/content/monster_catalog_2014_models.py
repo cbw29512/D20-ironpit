@@ -1,21 +1,20 @@
 from __future__ import annotations
-
 from typing import Literal
-
 from pydantic import BaseModel, Field, field_validator
-
 from app.domain.actions import AbilityName, ConditionName, HealingAction, HitControlEffect, SavingThrowAction
 from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.charge_profiles import ChargeProfileDefinition
+from app.domain.contested_movement import OnHitContestedMovement
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.on_hit_saves import OnHitSaveEffect
+from app.domain.ongoing_damage import OngoingDamageEffect
 from app.domain.regeneration import RegenerationProfile
 from app.domain.restraints import BreakableRestraint
 from app.domain.size import CreatureSize
 from app.domain.swallow import SwallowAction
-from app.domain.weapons import ConditionalDamage, DamageType
+from app.domain.weapons import ConditionalAttackAdvantage, ConditionalDamage, DamageType
 from app.domain.zero_hp_prevention import ZeroHpPrevention
-
+from app.content.monster_catalog_2014_multiattack_models import CatalogMultiattackBinding2014
 
 class CatalogDamage2014(BaseModel):
     average: int = Field(ge=0)
@@ -32,13 +31,17 @@ class CatalogAttack2014(BaseModel):
     attack_ability: AbilityName | None = None
     damage: CatalogDamage2014
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
+    conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
     on_hit_save_effect: OnHitSaveEffect | None = None
+    on_hit_contested_movement: OnHitContestedMovement | None = None
+    ongoing_damage_effect: OngoingDamageEffect | None = None
     control_effect: HitControlEffect | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     breakable_restraint: BreakableRestraint | None = None
     forbid_target_grappled_by_self: bool = False
+    grapple_target_policy: Literal["normal", "auto_hit_own_grapple", "own_grapple_only"] = "normal"
     charge_profile: ChargeProfileDefinition | None = None
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
@@ -54,7 +57,6 @@ class CatalogInnateSpell2014(BaseModel):
     shared_pool: bool = False
     qualifier: str | None = None
 
-
 class CatalogInnateSpellcasting2014(BaseModel):
     ability: AbilityName
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -63,12 +65,10 @@ class CatalogInnateSpellcasting2014(BaseModel):
     source_complete: bool = True
     unsupported_text: str | None = None
 
-
 class CatalogPreparedSpell2014(BaseModel):
     id: str
     name: str
     level: int = Field(ge=0, le=9)
-
 
 class CatalogSpellcasting2014(BaseModel):
     caster_level: int = Field(ge=1, le=20)
@@ -79,7 +79,6 @@ class CatalogSpellcasting2014(BaseModel):
     spells: list[CatalogPreparedSpell2014] = Field(default_factory=list)
     source_complete: bool = True
     unsupported_text: str | None = None
-
 
 class CatalogMonster2014(BaseModel):
     id: str
@@ -125,6 +124,7 @@ class CatalogMonster2014(BaseModel):
     spellcasting: CatalogSpellcasting2014 | None = None
     multiattack_slots: list[list[str]] = Field(default_factory=list)
     multiattack_policy: AttackActionPolicy | None = None
+    multiattack_binding: CatalogMultiattackBinding2014 | None = None
     zero_hp_prevention: ZeroHpPrevention | None = None
     regeneration: RegenerationProfile | None = None
     legendary_action_uses: int = Field(default=0, ge=0, le=10)

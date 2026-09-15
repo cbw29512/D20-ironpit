@@ -6,6 +6,7 @@ from app.content.monster_catalog_2014 import unsupported_mechanics_2014
 from app.content.monster_catalog_2014_action_support import unresolved_actions_2014, unresolved_reactions_2014
 from app.content.monster_catalog_2014_arena_policy import (
     ARENA_OUT_OF_SCOPE_TRAITS_2014,
+    ARENA_USABLE_MOVEMENT_TRAITS_2014,
     is_arena_disabled_action_2014,
     usable_movement_speed_2014,
 )
@@ -90,8 +91,10 @@ def test_burrow_is_disabled_without_changing_other_movement_modes() -> None:
 
 def test_explicit_arena_traits_are_preserved_as_nonblocking_provenance() -> None:
     try:
-        expected = {"Earth Glide", "Ethereal Jaunt", "Incorporeal Movement", "Siege Monster", "Spider Climb"}
-        assert expected <= ARENA_OUT_OF_SCOPE_TRAITS_2014
+        disabled = {"Earth Glide", "Ethereal Jaunt", "Incorporeal Movement", "Siege Monster"}
+        assert disabled <= ARENA_OUT_OF_SCOPE_TRAITS_2014
+        assert "Spider Climb" in ARENA_USABLE_MOVEMENT_TRAITS_2014
+        assert "Spider Climb" not in ARENA_OUT_OF_SCOPE_TRAITS_2014
         assert is_arena_disabled_action_2014("Summon Demon")
         assert not is_arena_disabled_action_2014("Multiattack")
     except Exception:

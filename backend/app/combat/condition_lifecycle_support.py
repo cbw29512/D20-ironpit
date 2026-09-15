@@ -5,7 +5,7 @@ from app.domain.actions import ConditionTiming
 
 
 def condition_name(effect_id: str) -> str:
-    return effect_id.replace("_", " ").title()
+    return effect_id.replace("_", " ").replace("-", " ").title()
 
 
 def repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool:
@@ -19,6 +19,8 @@ def repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool:
 
 
 def expiry_due(effect, round_number: int, timing: ConditionTiming) -> bool:
+    if effect.expires_after_next_target_turn:
+        return timing == "target_turn_end" and effect.target_turn_started_since_applied
     if effect.expiry_timing != timing:
         return False
     return effect.expires_round is None or round_number >= effect.expires_round

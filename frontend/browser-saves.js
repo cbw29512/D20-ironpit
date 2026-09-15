@@ -10,24 +10,25 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const T = () => window.IRON_PIT_BROWSER_TIMED || { strengthD20Disadvantage: () => 0 };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
-  const D = () => window.IRON_PIT_DICE;
+  const D = () => window.IRON_PIT_DICE, SB = () => window.IRON_PIT_BROWSER_SELF_BUFFS || { saveAdvantage: () => 0 };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
   };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
-  function saveMode(state, ability, magicalEffect = false, againstCondition = null, advantageSources = 0) {
-    const advantage = advantageSources + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
+  function saveMode(state, ability, magicalEffect = false, againstCondition = null, advantageSources = 0, disadvantageSources = 0) {
+    const mental = ["intelligence", "wisdom", "charisma"].includes(ability);
+    const advantage = advantageSources + SB().saveAdvantage(state, ability) + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
       + DG().dexSaveAdvantageSources(state, ability)
       + (magicalEffect && state.template.traits?.includes("magic-resistance") ? 1 : 0)
-      + ((["charmed", "frightened"].includes(againstCondition) && state.template.traits?.includes("dark-devotion")) || (["blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"].includes(againstCondition) && state.template.traits?.includes("two-headed")) ? 1 : 0);
-    const disadvantage = (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0)
+      + (magicalEffect && mental && state.template.traits?.includes("gnome-cunning") ? 1 : 0)
+      + ((["charmed", "frightened"].includes(againstCondition) && state.template.traits?.includes("dark-devotion")) || (againstCondition === "frightened" && state.template.traits?.includes("brave")) || (againstCondition === "charmed" && state.template.traits?.includes("fey-ancestry")) || (["blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"].includes(againstCondition) && state.template.traits?.includes("two-headed")) ? 1 : 0);
+    const disadvantage = disadvantageSources + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0)
       + (ability === "strength" ? T().strengthD20Disadvantage(state) : 0);
     return R().modeFromSources(advantage, disadvantage);
   }
-
   function indomitableRevision(original, replacement) {
     return {
       source_effect_id: "indomitable", kind: "full_reroll",
@@ -37,28 +38,23 @@
       original_total: original.total, replacement_total: replacement.total, accepted: "replacement", replaced_die_index: null,
     };
   }
-
   function useLegendaryResistance(state) {
     const uses = state.resources?.["legendary-resistance"] || 0;
     if (uses <= 0) return false;
     state.resources["legendary-resistance"] = uses - 1;
     return true;
   }
-
   function failedSaveResult(state, roll) {
     if (!useLegendaryResistance(state)) return { roll, succeeded: false, legendaryResistanceUsed: false };
-    return {
-      roll, succeeded: true, legendaryResistanceUsed: true,
-      legendaryResistanceRemaining: state.resources["legendary-resistance"],
-    };
+    return { roll, succeeded: true, legendaryResistanceUsed: true,
+      legendaryResistanceRemaining: state.resources["legendary-resistance"] };
   }
-
   function resolveSavingThrow(state, ability, dc, options = {}) {
-    const magicalEffect = typeof options === "boolean" ? options : Boolean(options.magicalEffect), againstCondition = typeof options === "object" ? options.againstCondition || null : null, advantageSources = typeof options === "object" ? options.advantageSources || 0 : 0;
+    const magicalEffect = typeof options === "boolean" ? options : Boolean(options.magicalEffect), againstCondition = typeof options === "object" ? options.againstCondition || null : null, advantageSources = typeof options === "object" ? options.advantageSources || 0 : 0, disadvantageSources = typeof options === "object" ? options.disadvantageSources || 0 : 0;
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return failedSaveResult(state, null);
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, magicalEffect, againstCondition, advantageSources)));
+    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, magicalEffect, againstCondition, advantageSources, disadvantageSources)));
     if (roll.total < dc) {
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
@@ -66,24 +62,24 @@
     if (roll.total >= dc) return { roll, succeeded: true, legendaryResistanceUsed: false };
     return failedSaveResult(state, roll);
   }
-
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
-
   function resourceAvailable(state, action) {
     if (!action.resourceId) return true;
     return (state.resources?.[action.resourceId] || 0) >= (action.resourceCost || 1);
   }
-
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
     if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
     return [...shared];
   }
-
+  function evasionApplies(state, action) {
+    if (!state.template.traits?.includes("evasion") || action.saveAbility !== "dexterity" || action.successDamage !== "half") return false;
+    return state.template.ruleset !== "2024" || !Q().incapacitated(state);
+  }
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false;
     const checkResource = options.checkResource !== false;
@@ -92,7 +88,7 @@
     if (checkResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} resource is unavailable.`);
     if (X().targetImmune(actor, target, action)) throw new Error(`${target.state.template.name} is immune to ${action.name} from this source.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, { magicalEffect: Boolean(action.magicalEffect), againstCondition: action.failureControlEffect?.conditionId || null });
+    const save = options.precomputedSave || resolveSavingThrow(target.state, action.saveAbility, action.dc, { magicalEffect: Boolean(action.magicalEffect), againstCondition: action.failureControlEffect?.conditionId || null });
     let actionResourceRemaining = options.resourceRemaining ?? null;
     if (action.resourceId && spendResource) {
       const cost = action.resourceCost || 1;
@@ -105,11 +101,13 @@
     const concentrationBefore = target.state.concentration?.effect_id || null, positionBefore = target.state.position ? { ...target.state.position } : null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
     const count = action.damageDiceCount || 0;
+    const evasionUsed = evasionApplies(target.state, action);
     if (count && !(save.succeeded && action.successDamage === "none")) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
-      if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
+      if (evasionUsed) total = save.succeeded ? 0 : Math.floor(total / 2);
+      else if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
       const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType, true, true);
       damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
         rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
@@ -127,6 +125,7 @@
     }
     appliedConditions = [...new Set(appliedConditions)];
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    if (evasionUsed) description += ` Evasion changes the save damage to ${save.succeeded ? "none" : "half"}.`;
     if (pushedFt) description += ` ${target.state.template.name} is pushed ${pushedFt} feet away.`;
     if (save.legendaryResistanceUsed) description += ` Legendary Resistance converts the failed save to a success; ${save.legendaryResistanceRemaining} use(s) remain.`;
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
@@ -145,6 +144,5 @@
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }
-
-  window.IRON_PIT_BROWSER_SAVES = { legalAction, resourceAvailable, resolveAction, resolveSavingThrow, saveMode };
+  window.IRON_PIT_BROWSER_SAVES = { evasionApplies, legalAction, resourceAvailable, resolveAction, resolveSavingThrow, saveMode };
 })();

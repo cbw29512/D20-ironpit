@@ -30,16 +30,31 @@ def _name_cost(heading: str) -> tuple[str, int]:
     return name, int(cost.group(1)) if cost else 1
 
 
+def _attack_aliases(attack: dict) -> set[str]:
+    raw = str(attack.get("name", "")).strip(" .")
+    base = re.sub(r"\s*\([^)]*\)\s*", "", raw).strip(" .")
+    return {value for value in (raw, base) if value}
+
+
 def _attack_id(name: str, text: str, attacks: list[dict]) -> str | None:
-    match = re.search(r"makes an? ([A-Za-z' -]+) attack", text, re.I)
-    if not match:
+    del name
+    action_clause = re.search(r"\b(?:makes|uses)\b[^.]*", text, re.I)
+    if action_clause and re.search(r"\bor\b", action_clause.group(0), re.I):
         return None
-    wanted = _slug(match.group(1))
-    by_id = {attack["id"]: attack for attack in attacks}
-    if wanted in by_id:
-        return wanted
-    candidates = [attack["id"] for attack in attacks if _slug(attack["name"]) == wanted]
-    return candidates[0] if len(candidates) == 1 else None
+
+    candidates: set[str] = set()
+    for attack in attacks:
+        for alias in _attack_aliases(attack):
+            escaped = re.escape(alias)
+            patterns = (
+                rf"\bmakes (?:an?|one) {escaped}(?: attack)?\b",
+                rf"\bmakes (?:an?|one) attack with (?:its|the) {escaped}\b",
+                rf"\buses (?:its|the) {escaped}\b",
+            )
+            if any(re.search(pattern, text, re.I) for pattern in patterns):
+                candidates.add(str(attack["id"]))
+                break
+    return next(iter(candidates)) if len(candidates) == 1 else None
 
 
 def _wing(name: str, cost: int, text: str) -> dict | None:
@@ -69,12 +84,12 @@ def parse_legendary_actions(source_html: str | None, attacks: list[dict]) -> tup
         return 0, [], ["legendary-action-uses"]
     options: list[dict] = []
     unsupported: list[str] = []
-    paragraphs = re.findall(r"<p>(.*?)</p>", raw, re.I | re.S)
-    for paragraph in paragraphs:
+    for paragraph in re.findall(r"<p>(.*?)</p>", raw, re.I | re.S):
         heading = _HEADING.search(paragraph)
         if heading is None:
             continue
-        name, cost = _name_cost(heading.group(1)); text = _plain(paragraph)
+        name, cost = _name_cost(heading.group(1))
+        text = _plain(paragraph)
         if name.lower() == "detect" and re.search(r"Wisdom \(Perception\) check", text, re.I):
             options.append({"id": "detect", "name": name, "cost": cost, "kind": "ability_check", "check_ability": "wisdom", "check_skill": "perception"})
             continue
@@ -84,6 +99,7 @@ def parse_legendary_actions(source_html: str | None, attacks: list[dict]) -> tup
             continue
         wing = _wing(name, cost, text)
         if wing is not None:
-            options.append(wing); continue
+            options.append(wing)
+            continue
         unsupported.append(name)
     return int(use_match.group(1)), options, unsupported

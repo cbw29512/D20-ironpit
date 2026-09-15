@@ -9,8 +9,18 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 logger = logging.getLogger(__name__)
 
 
+def _swallowed_together(attacker: EncounterCombatant, target: EncounterCombatant) -> bool:
+    swallowed = attacker.state.swallowed
+    if swallowed is not None and swallowed.source_id == target.combatant_id:
+        return True
+    swallowed = target.state.swallowed
+    return swallowed is not None and swallowed.source_id == attacker.combatant_id
+
+
 def combatant_distance(attacker: EncounterCombatant, target: EncounterCombatant) -> int:
     try:
+        if _swallowed_together(attacker, target):
+            return 0
         attacker_position = attacker.state.position
         target_position = target.state.position
         if attacker_position is not None or target_position is not None:
@@ -43,6 +53,18 @@ def _target_visible_to(attacker: EncounterCombatant, target: EncounterCombatant)
     if attacker.state.swallowed is not None:
         return attacker.state.swallowed.source_id == target.combatant_id
     return True
+
+
+def _berserk_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
+    profile = attacker.state.template.berserk
+    if profile is None or profile.effect_id not in attacker.state.active_effect_ids:
+        return None
+    candidates = [
+        member for member in [*setup.heroes, *setup.monsters]
+        if member is not attacker and _target_visible_to(attacker, member)
+        and member.state.is_alive and not member.state.is_dead
+    ]
+    return min(candidates, key=lambda target: combatant_distance(attacker, target), default=None)
 
 
 def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
@@ -85,6 +107,9 @@ def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> lis
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
     """Within the current target class, finish a held target, fight a grappler, then engage nearest."""
     try:
+        berserk = _berserk_target(attacker, setup)
+        if berserk is not None:
+            return berserk
         opponents = living_opponents(attacker, setup)
         if not opponents:
             return None

@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-AreaShape = Literal["radius", "cone", "line", "emanation"]
+AreaShape = Literal["radius", "cone", "line", "cube", "emanation"]
 AreaOrigin = Literal["point", "self"]
 
 
@@ -23,9 +23,9 @@ class AreaTargeting(BaseModel):
         if self.shape in {"radius", "emanation"}:
             if self.radius_ft is None or self.length_ft is not None or self.width_ft is not None:
                 raise ValueError(f"{self.shape} requires radius_ft only.")
-        elif self.shape == "cone":
+        elif self.shape in {"cone", "cube"}:
             if self.length_ft is None or self.radius_ft is not None or self.width_ft is not None:
-                raise ValueError("cone requires length_ft only.")
+                raise ValueError(f"{self.shape} requires length_ft only.")
         elif self.length_ft is None or self.width_ft is None or self.radius_ft is not None:
             raise ValueError("line requires length_ft and width_ft.")
         if self.shape in {"cone", "line", "emanation"} and self.origin != "self":

@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_validator
 from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.size import CreatureSize
@@ -15,9 +14,9 @@ ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_s
 DamageTypeName = Literal["acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic", "piercing", "poison", "psychic", "radiant", "slashing", "thunder"]
 ConditionName = Literal["blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled", "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone", "restrained", "stunned", "unconscious"]
 
-
 class GrappleSource(BaseModel):
     source_id: str
+    source_effect_id: str | None = None
     escape_dc: int = Field(ge=1, le=40)
     range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
@@ -128,6 +127,7 @@ class SavingThrowAction(BaseModel):
     source_effect_immunity_on_success: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
+    requires_no_active_grapple: bool = False
     magical_effect: bool = False
     animation: str = "save-effect"
 

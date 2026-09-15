@@ -63,6 +63,20 @@ def _charge(profile: Any) -> dict[str, Any]:
     return row
 
 
+def _failure_margin(spec: Any) -> dict[str, Any]:
+    row = {"margin": spec.margin, "additionalConditionIds": list(spec.additional_condition_ids)}
+    if spec.replacement_duration_rounds is not None: row["replacementDurationRounds"] = spec.replacement_duration_rounds
+    if spec.replacement_duration_dice_count:
+        row.update(
+            replacementDurationDiceCount=spec.replacement_duration_dice_count,
+            replacementDurationDiceSize=spec.replacement_duration_dice_size,
+            replacementDurationRoundMultiplier=spec.replacement_duration_round_multiplier,
+        )
+    if spec.ends_on_damage: row["endsOnDamage"] = True
+    if spec.allowed_removal_action_ids: row["allowedRemovalActionIds"] = list(spec.allowed_removal_action_ids)
+    return row
+
+
 def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
     try:
         weapon = attack.weapon
@@ -75,8 +89,10 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if weapon.normal_range_ft is not None: row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
         if attack.fixed_damage is not None: row["fixedDamage"] = attack.fixed_damage
         if attack.rage_eligible: row["rageEligible"] = True
+        if attack.sneak_attack_eligible: row["sneakAttackEligible"] = True
         if attack.knocks_prone_max_size is not None: row["proneMaxSize"] = attack.knocks_prone_max_size.value
         if attack.forbid_target_grappled_by_self: row["forbidSelfGrappledTarget"] = True
+        if attack.grapple_target_policy != "normal": row["grappleTargetPolicy"] = attack.grapple_target_policy
         if attack.conditional_attack_advantage: row["conditionalAttackAdvantage"] = [{"trigger": spec.trigger} for spec in attack.conditional_attack_advantage]
         if attack.on_hit_damage:
             row["onHitDamage"] = [{"source": part.source, "diceCount": part.dice_count, "diceSize": part.dice_size, "damageBonus": part.damage_bonus, "damageType": part.damage_type.value} for part in attack.on_hit_damage]
@@ -88,7 +104,10 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if effect.duration_rounds is not None: row["onHitSaveEffect"]["durationRounds"] = effect.duration_rounds
             if effect.repeat_save_timing is not None: row["onHitSaveEffect"]["repeatSaveTiming"] = effect.repeat_save_timing
             if effect.repeat_save_failure_condition_id is not None: row["onHitSaveEffect"]["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
+            if effect.failure_margin_escalation is not None: row["onHitSaveEffect"]["failureMarginEscalation"] = _failure_margin(effect.failure_margin_escalation)
             if effect.ends_on_damage: row["onHitSaveEffect"]["endsOnDamage"] = True
+            if effect.max_hp_reduction_equals_damage_taken: row["onHitSaveEffect"]["maxHpReductionEqualsDamageTaken"] = True
+            if effect.zero_max_hp_kills: row["onHitSaveEffect"]["zeroMaxHpKills"] = True
             if effect.damage_dice_count:
                 row["onHitSaveEffect"].update(
                     damageDiceCount=effect.damage_dice_count, damageDiceSize=effect.damage_dice_size,
@@ -128,12 +147,15 @@ def _save(action: Any) -> dict[str, Any]:
 def _spell(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost, "range": action.range_ft, "saveAbility": action.save_ability, "dc": action.dc, "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus, "damageType": action.damage_type, "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level, "concentration": action.concentration, "animation": action.animation}
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
+    if action.area is not None: row["area"] = action.area.model_dump(exclude_none=True)
+    if action.failure_push_ft: row["failurePushFt"] = action.failure_push_ft
     return row
 
 
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count, "diceSize": effect.dice_size, "damageType": effect.damage_type}
     if effect.consume_on_attack_against: row["consumeOnAttackAgainst"] = True
+    if effect.expires_at_start_of_source_turn: row["expiresAtStartOfSourceTurn"] = True
     if effect.expires_after_source_turns is not None: row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
     return row
 
@@ -162,12 +184,18 @@ def _removal(action: Any) -> dict[str, Any]:
     return row
 
 
+def _invisibility(action: Any) -> dict[str, Any]:
+    return {"id": action.id, "name": action.name, "actionCost": action.action_cost, "concentration": action.concentration,
+            "endsOnAttack": action.ends_on_attack, "endsOnSpell": action.ends_on_spell, "endsOnActionIds": list(action.ends_on_action_ids)}
+
+
 def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
     features = template.progression_features; row = {}
     if features.critical_hit_minimum != 20: row["critical_hit_minimum"] = features.critical_hit_minimum
     if features.initiative_advantage: row["initiative_advantage"] = True
     if features.athletics_advantage: row["athletics_advantage"] = True
     if features.reckless_attack: row["reckless_attack"] = True
+    if features.sneak_attack_d6: row["sneak_attack_d6"] = features.sneak_attack_d6
     if features.critical_move_fraction: row["critical_move_fraction"] = features.critical_move_fraction
     return row
 
@@ -185,8 +213,14 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
+        if template.projectile_catch_reaction:
+            row["projectile_catch_reaction"] = {"save_ability": template.projectile_catch_reaction.save_ability, "save_dc": template.projectile_catch_reaction.save_dc, "damage_type": template.projectile_catch_reaction.damage_type.value}
         if template.redirect_attack_reaction:
             row["redirect_attack_reaction"] = {"ally_range_ft": template.redirect_attack_reaction.ally_range_ft, "ally_max_size": template.redirect_attack_reaction.ally_max_size.value}
+        if template.spell_reflection_reaction:
+            row["spell_reflection_reaction"] = {"range_ft": template.spell_reflection_reaction.range_ft}
+        if template.berserk:
+            row["berserk"] = {"hpThreshold": template.berserk.hp_threshold, "dieSize": template.berserk.die_size, "triggerRoll": template.berserk.trigger_roll, "effectId": template.berserk.effect_id}
         if template.ruleset != "2024": row["ruleset"] = template.ruleset
         recharge_resources = [item for item in template.resources if item.recharge is not None]
         if recharge_resources:
@@ -198,6 +232,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.defensive_spell_actions: row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions: row["healing_actions"] = [_healing(item) for item in template.healing_actions]
         if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+        if template.starts_invisible: row["startsInvisible"] = True
+        if template.invisibility_action: row["invisibilityAction"] = _invisibility(template.invisibility_action)
         return row
     except Exception:
         logger.exception("Failed to serialize template %s.", template.id); raise

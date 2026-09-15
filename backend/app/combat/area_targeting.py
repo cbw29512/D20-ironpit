@@ -5,7 +5,7 @@ import logging
 from dataclasses import dataclass
 
 from app.combat.area_shapes import (
-    Direction, Point, cell_center_ft, cone_contains, emanation_contains,
+    Direction, Point, cell_center_ft, cone_contains, cube_contains, emanation_contains,
     line_contains, normalized, radius_contains,
 )
 from app.combat.grid_geometry import occupied_cells
@@ -21,6 +21,11 @@ class AreaPlacement:
     target_ids: tuple[str, ...]
     origin: Point
     direction: Direction | None = None
+    friendly_ids: tuple[str, ...] = ()
+
+    @property
+    def enemy_ids(self) -> tuple[str, ...]:
+        return self.target_ids
 
 
 def _points(member: EncounterCombatant, position: GridPosition | None = None) -> tuple[Point, ...]:
@@ -30,9 +35,15 @@ def _points(member: EncounterCombatant, position: GridPosition | None = None) ->
     return tuple(cell_center_ft(x, y) for x, y in occupied_cells(authoritative, member.state.template.size))
 
 
-def _living_opponents(actor: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
-    rows = setup.monsters if actor.side == "heroes" else setup.heroes
-    return [row for row in rows if row.state.is_alive and not row.state.is_dead and row.state.current_hp > 0]
+def _living_side(actor: EncounterCombatant, setup: EncounterSetup, *, opponents: bool) -> list[EncounterCombatant]:
+    if opponents:
+        rows = setup.monsters if actor.side == "heroes" else setup.heroes
+    else:
+        rows = setup.heroes if actor.side == "heroes" else setup.monsters
+    return [
+        row for row in rows
+        if row.combatant_id != actor.combatant_id and row.state.is_alive and not row.state.is_dead and row.state.current_hp > 0
+    ]
 
 
 def _directions(origins: tuple[Point, ...], enemies: list[EncounterCombatant]) -> tuple[Direction, ...]:
@@ -59,6 +70,7 @@ def _hits(area: AreaTargeting, origins: tuple[Point, ...], origin: Point, direct
     if area.shape == "emanation": return any(emanation_contains(origins, point, area.radius_ft or 0) for point in points)
     if direction is None: return False
     if area.shape == "cone": return any(cone_contains(origin, direction, point, area.length_ft or 0) for point in points)
+    if area.shape == "cube": return any(cube_contains(origin, direction, point, area.length_ft or 0) for point in points)
     return any(line_contains(origin, direction, point, area.length_ft or 0, area.width_ft or 0) for point in points)
 
 
@@ -74,19 +86,28 @@ def _point_origins(actor: EncounterCombatant, setup: EncounterSetup, range_ft: i
 
 
 def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area: AreaTargeting, range_ft: int, *, actor_position: GridPosition | None = None) -> list[AreaPlacement]:
-    """Return distinct enemy-only placements sorted to maximize affected targets."""
+    """Return distinct placements with enemy targets and explicit friendly exposure."""
     try:
-        enemies = _living_opponents(actor, setup)
+        enemies = _living_side(actor, setup, opponents=True)
         if not enemies: return []
+        friends = _living_side(actor, setup, opponents=False)
         actor_points = _points(actor, actor_position)
         origins = _point_origins(actor, setup, range_ft, actor_position) if area.origin == "point" else actor_points
-        directions = (None,) if area.shape in {"radius", "emanation"} else _directions(actor_points, enemies)
-        placements: dict[tuple[str, ...], AreaPlacement] = {}
+        direction_origins = origins if area.origin == "point" else actor_points
+        directions = (None,) if area.shape in {"radius", "emanation"} else _directions(direction_origins, enemies)
+        placements: dict[tuple[tuple[str, ...], tuple[str, ...]], AreaPlacement] = {}
         for origin in origins:
             for direction in directions:
                 target_ids = tuple(enemy.combatant_id for enemy in enemies if _hits(area, actor_points, origin, direction, enemy))
-                if target_ids and target_ids not in placements: placements[target_ids] = AreaPlacement(target_ids, origin, direction)
-        return sorted(placements.values(), key=lambda item: (-len(item.target_ids), item.target_ids, item.origin, item.direction or (0.0, 0.0)))
+                if not target_ids: continue
+                friendly_ids = tuple(friend.combatant_id for friend in friends if _hits(area, actor_points, origin, direction, friend))
+                key = (target_ids, friendly_ids)
+                if key not in placements:
+                    placements[key] = AreaPlacement(target_ids, origin, direction, friendly_ids)
+        return sorted(
+            placements.values(),
+            key=lambda item: (-len(item.target_ids), len(item.friendly_ids), item.target_ids, item.origin, item.direction or (0.0, 0.0)),
+        )
     except Exception:
         logger.exception("Failed universal area targeting for %s.", actor.combatant_id)
         raise

@@ -7,7 +7,9 @@
   const D = () => window.IRON_PIT_DICE;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
-  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const CM = () => window.IRON_PIT_BROWSER_CONTESTED_MOVEMENT;
+  const CND = () => window.IRON_PIT_BROWSER_ON_HIT_SAVE_CONDITIONS;
+  const OD = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
 
   function eligible(state, effect) {
     const type = String(state.template.creature_type || "").toLowerCase();
@@ -31,6 +33,17 @@
     const total = adjustedDamage(target.state, raw, effect.damageType);
     if (total > 0) Z().applyDamage(target.state, total, false, [effect.damageType], setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : []);
     return { total, component: { source: "on-hit save rider", notation: `${effect.damageDiceCount}d${effect.damageDiceSize}+${effect.damageBonus || 0}`, rolls, modifier: effect.damageBonus || 0, damage_type: effect.damageType, total: raw, applied_total: total } };
+  }
+
+  function reduceMaxHp(target, amount, killAtZero) {
+    const state = target.state, before = ST().effectiveMaxHp(state), reduction = Math.min(Math.max(0, amount), before);
+    state.max_hp_reduction = (state.max_hp_reduction || 0) + reduction;
+    const after = ST().effectiveMaxHp(state); state.current_hp = Math.min(state.current_hp, after);
+    if (killAtZero && after === 0) {
+      state.current_hp = 0; state.is_alive = false; state.is_unconscious = false; state.is_stable = false; state.is_dead = true;
+      state.death_save_successes = 0; state.death_save_failures = 0;
+    }
+    return { reduction, before, after };
   }
 
   function stableZeroHp(target, attack, effect, sourceId, round, damageTotal) {
@@ -58,37 +71,25 @@
     return FM().pushAway(source, target, effect.failurePushFt, setup);
   }
 
-  function resolve(target, attack, sourceId = null, round = null, setup = null) {
+  function resolve(target, attack, sourceId = null, round = null, setup = null, triggeringDamageTotal = 0) {
     const effect = attack.onHitSaveEffect;
-    if (!effect || !target.state.is_alive || target.state.is_dead || !eligible(target.state, effect)) return null;
+    if (sourceId && OD()?.shouldSkipSave(target.state, attack, sourceId)) { OD().applyOnHit(target.state, attack, sourceId, null); return null; }
+    if (!effect) { if (sourceId) OD()?.applyOnHit(target.state, attack, sourceId, null); return null; }
+    if (!target.state.is_alive || target.state.is_dead || !eligible(target.state, effect)) return null;
     if (effect.maxTargetSize && !ST().sizeAtMost(target, effect.maxTargetSize)) return null;
-    if (!S()) throw new Error("Browser saving-throw runtime is not loaded.");
+    if (!S() || !CND()) throw new Error("Browser on-hit save dependencies are not loaded.");
     const save = S().resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { againstCondition: effect.conditionId || null });
     const damage = saveDamage(target, effect, save.succeeded, setup);
     const appliedConditions = stableZeroHp(target, attack, effect, sourceId, round, damage.total);
-    let appliedCondition = null;
-    if (effect.conditionId && !save.succeeded && target.state.is_alive && !target.state.is_dead && !I().immune(target.state, effect.conditionId)) {
-      const timed = Boolean(effect.durationRounds || effect.repeatSaveTiming || effect.endsOnDamage);
-      if (timed) {
-        if (!sourceId || round === null || !T()) throw new Error("Timed on-hit save effect lacks browser source context.");
-        appliedCondition = T().apply(target.state, effect.conditionId, sourceId, {
-          sourceEffectId: attack.id, appliedRound: round,
-          expiresRound: effect.durationRounds ? round + effect.durationRounds : null,
-          repeatSaveAbility: effect.repeatSaveTiming ? effect.saveAbility : null,
-          repeatSaveDc: effect.repeatSaveTiming ? effect.dc : null,
-          repeatSaveTiming: effect.repeatSaveTiming || null,
-          repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
-          endsOnDamage: Boolean(effect.endsOnDamage),
-        });
-      } else {
-        if (!target.state.active_effect_ids.includes(effect.conditionId)) target.state.active_effect_ids.push(effect.conditionId);
-        appliedCondition = effect.conditionId;
-      }
-      if (appliedCondition) appliedConditions.push(appliedCondition);
-    }
+    const maxHp = effect.maxHpReductionEqualsDamageTaken && !save.succeeded && target.state.is_alive && !target.state.is_dead
+      ? reduceMaxHp(target, triggeringDamageTotal, Boolean(effect.zeroMaxHpKills)) : { reduction: 0, before: ST().effectiveMaxHp(target.state), after: ST().effectiveMaxHp(target.state) };
+    const failed = CND().applyFailure(target, attack, effect, save, sourceId, round);
+    appliedConditions.push(...failed.appliedConditions);
     const pushedFt = failedSavePush(target, effect, sourceId, save.succeeded, setup);
+    if (sourceId) OD()?.applyOnHit(target.state, attack, sourceId, save.succeeded);
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc, saveSucceeded: save.succeeded,
-      appliedCondition, appliedConditions: [...new Set(appliedConditions)], damageTotal: damage.total, damageComponent: damage.component, pushedFt };
+      appliedCondition: failed.appliedCondition, appliedConditions: [...new Set(appliedConditions)], damageTotal: damage.total, damageComponent: damage.component,
+      pushedFt, maxHpReduction: maxHp.reduction, maxHpBefore: maxHp.before, maxHpAfter: maxHp.after };
   }
 
   function actualTarget(target, setup, targetId) {
@@ -102,23 +103,32 @@
     const original = attackRuntime.resolveAttack;
     attackRuntime.resolveAttack = (...args) => {
       const event = original(...args), attack = args[4], extra = args[6] || {};
-      const target = actualTarget(args[3], extra.setup, event.target_id);
-      if (!event.hit || !attack.onHitSaveEffect) return event;
-      const result = resolve(target, attack, args[2].combatant_id, args[1], extra.setup);
+      const target = actualTarget(args[3], extra.setup, event.target_id), source = args[2];
+      CM()?.apply(event, source, target, attack, extra.setup);
+      if (!event.hit || (!attack.onHitSaveEffect && !attack.ongoingDamageEffect)) return event;
+      const triggeringDamageTotal = (event.damage_components || []).reduce((sum, part) => sum + (part.applied_total || 0), 0);
+      const result = resolve(target, attack, source.combatant_id, args[1], extra.setup, triggeringDamageTotal);
       if (!result) return event;
       event.saving_throw_roll = result.saveRoll; event.save_ability = result.saveAbility;
       event.save_dc = result.saveDc; event.save_succeeded = result.saveSucceeded;
+      event.max_hp_before = result.maxHpBefore; event.max_hp_after = result.maxHpAfter;
       if (result.damageComponent) {
         event.damage_components = [...(event.damage_components || []), result.damageComponent];
         if (event.damage_roll) event.damage_roll.total += result.damageTotal;
         event.hp_after = target.state.current_hp; event.is_stable = target.state.is_stable; event.is_dead = target.state.is_dead;
       }
+      if (result.maxHpReduction) { event.hp_after = target.state.current_hp; event.is_dead = target.state.is_dead; event.description += ` Maximum HP reduced by ${result.maxHpReduction}.`; }
       if (result.appliedConditions.length) {
         event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), ...result.appliedConditions])];
         for (const condition of result.appliedConditions) event.description += ` ${target.state.template.name} is ${condition}.`;
       }
       if (result.pushedFt) event.description += ` ${target.state.template.name} is pushed ${result.pushedFt} feet away.`;
       event.description += ` ${result.saveAbility} save DC ${result.saveDc}: ${target.state.template.name} ${result.saveSucceeded ? "succeeds" : "fails"}.`;
+      if (!result.saveSucceeded && attack.onHitSaveEffect?.swallowOnFailure) {
+        const swallow = window.IRON_PIT_BROWSER_SWALLOW;
+        if (!swallow?.applyOnHit) throw new Error("Browser Swallow runtime is not loaded.");
+        swallow.applyOnHit(source, target, attack, event, extra.setup);
+      }
       return event;
     };
     attackRuntime.onHitSaveWrapped = true;

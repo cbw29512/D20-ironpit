@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 import logging
-
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
@@ -13,16 +11,20 @@ from app.combat.encounter_offense_priority import resolve_post_movement_offense,
 from app.combat.encounter_turn_support import finish_turn, resolve_support_actions, save_choice
 from app.combat.gaze import resolve_start_turn_gazes
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
+from app.combat.invisibility import can_use_invisibility, resolve_invisibility_action
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
+from app.combat.persistent_spells import refresh_spell_turn_state
 from app.combat.pit_policy import choose_standard_attack
 from app.combat.policy import should_use_second_wind
+from app.combat.reactive import refresh_reactive_reactions
 from app.combat.regeneration import resolve_start_turn as resolve_regeneration
 from app.combat.resources import resolve_start_turn_recharges
 from app.combat.saving_throws import resolve_save_action
 from app.combat.standard_attack_action import resolve_standard_attack_action
+from app.combat.start_turn_damage import resolve_start_turn_ongoing_damage
 from app.combat.state import begin_turn
 from app.combat.swallow import cleanup_swallowed, resolve_start_turn_damage
 from app.combat.tactical_shift import resolve_tactical_shift
@@ -31,25 +33,24 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
-
-
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve one Iron Pit turn through shared legality, movement, and fallback policy."""
     try:
         events: list[BattleEvent] = []
-        cleanup_grapples(setup)
-        cleanup_swallowed(setup)
+        refresh_reactive_reactions(setup); cleanup_grapples(setup); cleanup_swallowed(setup)
         swallow_events, sequence = resolve_start_turn_damage(sequence, round_number, attacker, setup, dice)
         events.extend(swallow_events)
+        ongoing_events, sequence = resolve_start_turn_ongoing_damage(sequence, round_number, attacker, setup, dice); events.extend(ongoing_events)
         regen_event, regen_death = resolve_regeneration(sequence, round_number, attacker.combatant_id, attacker.state)
         if regen_event is not None:
             events.append(regen_event); sequence += 1
         if regen_death:
             return events, sequence
-        begin_turn(attacker.state); turn_key = f"{round_number}:{attacker.combatant_id}"
+        begin_turn(attacker.state)
+        refresh_spell_turn_state(attacker.state, round_number)
+        turn_key = f"{round_number}:{attacker.combatant_id}"
         gaze_events, sequence = resolve_start_turn_gazes(sequence, round_number, attacker, setup, dice); events.extend(gaze_events)
         if is_incapacitated(attacker.state): return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         recharge_events, sequence = resolve_start_turn_recharges(sequence, round_number, attacker.combatant_id, attacker.state, dice)
@@ -140,7 +141,7 @@ def resolve_combat_turn(
             )
             events.extend(more)
         elif is_available(attacker.state, "action"):
-            events.append(resolve_dodge_action(sequence, round_number, attacker)); sequence += 1
+            events.append(resolve_invisibility_action(sequence, round_number, attacker, setup) if can_use_invisibility(attacker.state) else resolve_dodge_action(sequence, round_number, attacker)); sequence += 1
         return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     except ValueError:
         raise

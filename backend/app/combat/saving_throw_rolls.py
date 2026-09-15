@@ -19,6 +19,7 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 _DARK_DEVOTION_CONDITIONS = {"charmed", "frightened"}
 _TWO_HEADED_CONDITIONS = {"blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"}
+_GNOME_CUNNING_ABILITIES = {"intelligence", "wisdom", "charisma"}
 
 
 def saving_throw_mode(
@@ -29,15 +30,25 @@ def saving_throw_mode(
     against_prone: bool = False,
     against_condition: str | None = None,
     advantage_sources: int = 0,
+    disadvantage_sources: int = 0,
 ) -> RollMode:
     try:
+        from app.combat.self_buffs import save_advantage_sources as self_buff_save_advantage
         advantage = (
             advantage_sources
+            + self_buff_save_advantage(state, ability)
             + int(ability == "strength" and rage_active(state))
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
             + int(magical_effect and CombatTrait.MAGIC_RESISTANCE in state.template.combat_traits)
+            + int(
+                magical_effect
+                and ability in _GNOME_CUNNING_ABILITIES
+                and CombatTrait.GNOME_CUNNING in state.template.combat_traits
+            )
             + int(against_condition in _DARK_DEVOTION_CONDITIONS and CombatTrait.DARK_DEVOTION in state.template.combat_traits)
+            + int(against_condition == "frightened" and CombatTrait.BRAVE in state.template.combat_traits)
+            + int(against_condition == "charmed" and CombatTrait.FEY_ANCESTRY in state.template.combat_traits)
             + int(against_condition in _TWO_HEADED_CONDITIONS and CombatTrait.TWO_HEADED in state.template.combat_traits)
             + int(
                 against_prone
@@ -46,11 +57,11 @@ def saving_throw_mode(
             )
         )
         disadvantage = (
-            int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
+            disadvantage_sources
+            + int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
             + int(ability == "strength") * strength_d20_disadvantage(state)
         )
-        if (advantage > 0) == (disadvantage > 0):
-            return RollMode.NORMAL
+        if (advantage > 0) == (disadvantage > 0): return RollMode.NORMAL
         return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
     except Exception as exc:
         logger.exception("Failed to resolve saving-throw mode for %s.", state.template.name)
@@ -60,17 +71,11 @@ def saving_throw_mode(
 def _indomitable_revision(original: DiceRoll, replacement: DiceRoll) -> RollRevision:
     try:
         return RollRevision(
-            source_effect_id="indomitable",
-            kind="full_reroll",
-            original_rolls=list(original.rolls),
-            replacement_rolls=list(replacement.rolls),
-            original_modifier=original.modifier,
-            replacement_modifier=replacement.modifier,
-            original_selected=original.selected_roll,
-            replacement_selected=replacement.selected_roll,
-            original_total=original.total,
-            replacement_total=replacement.total,
-            accepted="replacement",
+            source_effect_id="indomitable", kind="full_reroll",
+            original_rolls=list(original.rolls), replacement_rolls=list(replacement.rolls),
+            original_modifier=original.modifier, replacement_modifier=replacement.modifier,
+            original_selected=original.selected_roll, replacement_selected=replacement.selected_roll,
+            original_total=original.total, replacement_total=replacement.total, accepted="replacement",
         )
     except Exception as exc:
         logger.exception("Failed to build Indomitable revision evidence.")
@@ -78,47 +83,35 @@ def _indomitable_revision(original: DiceRoll, replacement: DiceRoll) -> RollRevi
 
 
 def resolve_saving_throw(
-    state: CombatantState,
-    ability: str,
-    dc: int,
-    dice: DiceProvider,
-    *,
-    magical_effect: bool = False,
-    against_prone: bool = False,
-    against_condition: str | None = None,
-    advantage_sources: int = 0,
+    state: CombatantState, ability: str, dc: int, dice: DiceProvider, *, magical_effect: bool = False,
+    against_prone: bool = False, against_condition: str | None = None,
+    advantage_sources: int = 0, disadvantage_sources: int = 0,
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
-            if use_legendary_resistance_on_failure(state):
-                return None, True
+            if use_legendary_resistance_on_failure(state): return None, True
             return None, False
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
         roll = apply_d20_bonus_dice(
-            state,
-            ModifierKind.SAVING_THROW_BONUS_DIE,
+            state, ModifierKind.SAVING_THROW_BONUS_DIE,
             roll_d20(
-                dice,
-                state.template.saving_throw_bonuses[ability],
+                dice, state.template.saving_throw_bonuses[ability],
                 saving_throw_mode(
                     state, ability, magical_effect=magical_effect, against_prone=against_prone,
                     against_condition=against_condition, advantage_sources=advantage_sources,
+                    disadvantage_sources=disadvantage_sources,
                 ),
-            ),
-            dice,
+            ), dice,
         )
         if roll.total < dc:
             from app.combat.indomitable import use_indomitable
-
             reroll = use_indomitable(state, ability, dice)
             if reroll is not None:
                 revision = _indomitable_revision(roll, reroll)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
-        if roll.total >= dc:
-            return roll, True
-        if use_legendary_resistance_on_failure(state):
-            return roll, True
+        if roll.total >= dc: return roll, True
+        if use_legendary_resistance_on_failure(state): return roll, True
         return roll, False
     except ValueError:
         raise

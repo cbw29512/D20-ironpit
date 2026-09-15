@@ -6,9 +6,9 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
-  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, R = () => window.IRON_PIT_BROWSER_REGENERATION;
-  const RP = () => window.IRON_PIT_BROWSER_RAMPAGE, W = () => window.IRON_PIT_BROWSER_SWALLOW;
-  const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
+  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, R = () => window.IRON_PIT_BROWSER_REGENERATION, RX = () => window.IRON_PIT_BROWSER_REACTIONS;
+  const RP = () => window.IRON_PIT_BROWSER_RAMPAGE, W = () => window.IRON_PIT_BROWSER_SWALLOW, STD = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
+  const DG = () => window.IRON_PIT_BROWSER_DODGE, INV = () => window.IRON_PIT_BROWSER_INVISIBILITY, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const GZ = () => window.IRON_PIT_BROWSER_GAZE, D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
@@ -38,7 +38,7 @@
     if (state.death_save_failures >= 3) {
       state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false;
     } else if (state.death_save_successes >= 3) {
-      state.is_stable = true; state.is_unconscious = true; state.death_save_successes = 0; state.death_save_failures = 0;
+      state.is_stable = true; state.is_unconscious = true; state.is_stable = true; state.death_save_successes = 0; state.death_save_failures = 0;
       result = "third success; becomes Stable";
     }
     return {
@@ -55,15 +55,17 @@
     if (rampage) { events.push(...rampage.events); sequence = rampage.sequence; }
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
+    const buff = window.IRON_PIT_BROWSER_SELF_BUFFS?.finish(sequence, round, member, setup, turnKey); if (buff) { events.push(...buff.events); sequence = buff.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
   }
 
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); W()?.cleanup(setup);
+    const events = []; RX()?.refreshReactive(setup); H().cleanup(setup); W()?.cleanup(setup);
     const swallowed = W()?.startTurn(sequence, round, member, setup);
     if (swallowed) { events.push(...swallowed.events); sequence = swallowed.sequence; }
+    const ongoing = STD()?.ongoingStartTurn(sequence, round, member, setup); if (ongoing) { events.push(...ongoing.events); sequence = ongoing.sequence; }
     const regen = R()?.startTurn(sequence, round, member);
     if (regen?.event) { events.push(regen.event); sequence += 1; }
     if (regen?.died) return { events, sequence };
@@ -78,7 +80,7 @@
       return finalize(events, sequence, round, member, setup, turnKey, false);
     }
     const support = P()?.resolve(sequence, round, member, setup, turnKey);
-    if (support) { events.push(...support.events); sequence = support.sequence; }
+    if (support) { events.push(...support.events); sequence = support.sequence; } if (support?.handled) return finalize(events, sequence, round, member, setup, turnKey);
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = P()?.secondWind(sequence, round, member);
     if (wind) {
@@ -139,7 +141,7 @@
         advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null),
       });
       events.push(...standard.events); sequence = standard.sequence;
-    } else if (E().available(member.state, "action")) events.push(DG().take(sequence++, round, member));
+    } else if (E().available(member.state, "action")) events.push(INV()?.canUse(member.state) ? INV().take(sequence++, round, member, setup) : DG().take(sequence++, round, member));
     return finalize(events, sequence, round, member, setup, turnKey);
   }
 

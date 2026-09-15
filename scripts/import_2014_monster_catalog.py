@@ -20,6 +20,7 @@ from import_2014_identity import parse_identity
 from import_2014_multiattack import parse_multiattack
 from import_2014_reactions import parse_parry_ac_bonus
 from import_2014_recharge import parse_action_recharges, parse_rest_recharge_actions
+from import_2014_weapon_enhancements import parse_named_weapon_enhancement
 
 logger = logging.getLogger(__name__)
 DAMAGE_TYPES = {
@@ -35,7 +36,7 @@ _SIGN = r"[+\-‐‑‒–—−]"
 _ROLLED_DAMAGE = re.compile(rf"Hit:\s*(\d+)\s*\((\d+)d(\d+)(?:\s*({_SIGN})\s*(\d+))?\)\s*([A-Za-z]+) damage", re.I)
 _FIXED_DAMAGE = re.compile(r"Hit:\s*(\d+)\s+([A-Za-z]+) damage", re.I)
 _ALT_DAMAGE = rf"(\d+)\s*\((\d+)d(\d+)(?:\s*({_SIGN})\s*(\d+))?\)\s*([A-Za-z]+) damage"
-_TWO_HANDED = re.compile(r"or\s+" + _ALT_DAMAGE + r"\s+if used with two hands(?: to make a melee attack)?", re.I)
+_TWO_HANDED = re.compile(r"(?:or\s+)?" + _ALT_DAMAGE + r"\s+(?:if|when) (?:used|wielded) with two hands(?: to make a melee attack)?", re.I)
 _MELEE_RANGE = re.compile(r"in melee or\s+" + _ALT_DAMAGE + r"\s+at range", re.I)
 
 
@@ -55,6 +56,17 @@ def _integer(value: object) -> int:
 
 def _names(value: str | None) -> list[str]:
     return [_plain(item).rstrip(".") for item in re.findall(r"<strong>(.*?)</strong>", value or "", re.I | re.S)]
+
+
+def _action_paragraphs(value: str | None) -> list[str]:
+    """Keep unnamed continuation paragraphs with the preceding named action."""
+    grouped: list[str] = []
+    for paragraph in re.findall(r"<p>(.*?)</p>", value or "", re.I | re.S):
+        if re.search(r"<strong>.*?</strong>", paragraph, re.I | re.S):
+            grouped.append(paragraph)
+        elif grouped:
+            grouped[-1] = f"{grouped[-1]} {paragraph}"
+    return grouped
 
 
 def _speed(value: str | None) -> dict[str, int]:
@@ -123,23 +135,37 @@ def _clean_residual(value: str) -> str:
 def _attacks(paragraph: str) -> list[dict]:
     attack = _attack(paragraph)
     if attack is None: return []
-    residual = attack.get("unsupported_text") or ""; base_id = attack["id"]
-    two_handed = _TWO_HANDED.search(residual)
+    residual = attack.get("unsupported_text") or ""; base_id = attack["id"]; text = _plain(paragraph)
+    enhancement, work_residual = parse_named_weapon_enhancement(text, residual)
+    enhancement_damage = _damage(enhancement["damage_groups"]) if enhancement is not None else None
+    if enhancement is None or enhancement_damage is None:
+        enhancement = None; enhancement_damage = None; work_residual = residual
+    variant_rows: list[dict] = []
+    two_handed = _TWO_HANDED.search(work_residual)
     if two_handed:
-        alt = _damage(two_handed.groups()); remainder = _clean_residual(_TWO_HANDED.sub("", residual))
-        if alt and not remainder:
-            base = {**attack, "source_complete": True, "unsupported_text": None}
-            rows = [base]
-            if "normal_range_ft" in base: rows.append({**base, "id": f"{base_id}-ranged", "kind": "ranged"})
-            rows.append({**base, "id": f"{base_id}-two-handed", "kind": "melee", "damage": alt})
-            return rows
+        alt = _damage(two_handed.groups())
+        if alt is not None:
+            variant_rows.append({**attack, "id": f"{base_id}-two-handed", "kind": "melee", "damage": alt})
+            work_residual = _TWO_HANDED.sub("", work_residual, count=1)
+    if enhancement is not None and enhancement_damage is not None:
+        variant_rows.append({
+            **attack,
+            "id": f"{base_id}-{enhancement['id_suffix']}",
+            "attack_bonus": enhancement["attack_bonus"],
+            "damage": enhancement_damage,
+        })
+    if variant_rows and not _clean_residual(work_residual):
+        base = {**attack, "source_complete": True, "unsupported_text": None}
+        rows = [base]
+        if "normal_range_ft" in base: rows.append({**base, "id": f"{base_id}-ranged", "kind": "ranged"})
+        rows.extend({**row, "source_complete": True, "unsupported_text": None} for row in variant_rows)
+        return rows
     melee_range = _MELEE_RANGE.search(residual)
     if melee_range and "normal_range_ft" in attack:
         alt = _damage(melee_range.groups()); remainder = _clean_residual(_MELEE_RANGE.sub("", residual))
         if alt and not remainder:
             base = {**attack, "source_complete": True, "unsupported_text": None}
             return [{**base, "id": f"{base_id}-melee", "kind": "melee"}, {**base, "id": f"{base_id}-ranged", "kind": "ranged", "damage": alt}]
-    text = _plain(paragraph)
     if not re.search(r"Melee or Ranged (?:Weapon|Spell) Attack:", text, re.I) or "normal_range_ft" not in attack: return [attack]
     primary = _primary_damage(text)
     if primary is None: return [attack]
@@ -156,7 +182,7 @@ def _attacks(paragraph: str) -> list[dict]:
 
 def _record(source: dict) -> dict:
     meta = source.get("meta", ""); size, _, _ = meta.partition(" "); creature_type, creature_type_text, creature_subtypes, alignment = parse_identity(meta); hp = source.get("Hit Points", ""); hit_dice = re.search(r"\(([^)]+)\)", hp); action_text = source.get("Actions", ""); reactions_text = source.get("Reactions", ""); challenge_text = source.get("Challenge")
-    attacks = [attack for paragraph in re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S) for attack in _attacks(paragraph)]
+    attacks = [attack for paragraph in _action_paragraphs(action_text) for attack in _attacks(paragraph)]
     for attack_id, profile in parse_charge_profiles(source.get("Traits"), attacks).items(): next(item for item in attacks if item["id"] == attack_id)["charge_profile"] = profile
     multiattack = parse_multiattack(action_text, attacks); resist, bad_resist = _simple_values(source.get("Damage Resistances"), DAMAGE_TYPES); immune, bad_immune = _simple_values(source.get("Damage Immunities"), DAMAGE_TYPES); vulnerable, bad_vulnerable = _simple_values(source.get("Damage Vulnerabilities"), DAMAGE_TYPES); condition_immune, bad_condition = _simple_values(source.get("Condition Immunities"), CONDITIONS)
     return {

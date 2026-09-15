@@ -6,19 +6,19 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const GEOM = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
-  const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
+  const effectiveMaxHp = (state) => Math.max(0, state.template.max_hp + (state.max_hp_bonus || 0) - (state.max_hp_reduction || 0));
 
   function buildState(template) {
     return {
-      template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, position: null,
+      template, current_hp: template.max_hp, max_hp_bonus: 0, max_hp_reduction: 0, temporary_hp: 0, position: null,
       initiative_roll: null, initiative_total: null, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false,
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
-      active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
-      grapple_sources: [], swallowed: null, timed_effects: [], active_modifiers: [], concentration: null,
+      active_effect_ids: template.startsInvisible ? ["invisible"] : [], active_buff_effect_ids: [], opening_buff_spell_id: null,
+      grapple_sources: [], swallowed: null, timed_effects: [], ongoing_damage_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], wielded_attack_id: template.primary_attack_id || template.attacks?.[0]?.id || null,
       rage_expires_round: null, rage_max_round: null,

@@ -5,6 +5,7 @@ from typing import Literal
 
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.damage_triggered_effects import apply_damage_triggered_effects
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
@@ -77,6 +78,18 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
     return healed
 
 
+def apply_hit_point_loss(state: CombatantState, amount: int) -> ZeroHpOutcome:
+    """Apply RAW hit-point loss without treating it as damage or consuming temporary HP."""
+    if amount < 0: raise ValueError("Hit-point loss cannot be negative.")
+    if amount == 0 or state.is_dead or state.current_hp == 0: return "unchanged"
+    before = state.current_hp; state.current_hp = max(0, before - amount)
+    if state.current_hp > 0: return "damaged"
+    if holds_at_zero(state): return _hold_for_regeneration(state)
+    if state.template.kind == "monster": return _mark_dead(state)
+    if use_relentless_endurance(state, max(0, amount - before)): return "relentless_endurance"
+    return _mark_unconscious(state)
+
+
 def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
     if holds_at_zero(state): return _hold_for_regeneration(state)
     if state.template.kind == "monster" or incoming >= effective_max_hp(state): return _mark_dead(state)
@@ -93,7 +106,9 @@ def apply_damage(
     try:
         if amount < 0: raise ValueError("Damage cannot be negative.")
         if amount == 0 or state.is_dead: return "unchanged"
-        incoming = amount; types = damage_types or set(); amount = _after_temporary_hp(state, amount)
+        incoming = amount; types = damage_types or set()
+        apply_damage_triggered_effects(state, incoming, types)
+        amount = _after_temporary_hp(state, amount)
         if amount > 0: note_suppression(state, types)
         if state.current_hp == 0:
             return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)

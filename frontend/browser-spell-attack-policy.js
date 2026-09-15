@@ -19,7 +19,7 @@
       if (spell.actionCost === "reaction" || !E().available(member.state, spell.actionCost)) continue;
       if (!slotAvailable(member, spell, turnKey)) continue;
       for (const target of enemies) {
-        if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0 || S().distance(member, target) > spell.range) continue;
+        if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0 || S().distance(member, target) > spell.range || !C().affectsTarget(target.state, spell.level)) continue;
         candidates.push({ spell, target, index, score: O().spellAttack(member, target, spell, setup) });
       }
     }

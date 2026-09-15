@@ -13,5 +13,9 @@
     state.spell_slot_expended_turn_key = turnKey;
   }
 
-  window.IRON_PIT_BROWSER_SPELLCASTING = { markSlotSpellCast, slotSpellAvailable };
+  function affectsTarget(state, castLevel) {
+    return !((state.template.traits || []).includes("limited-magic-immunity") && castLevel <= 6);
+  }
+
+  window.IRON_PIT_BROWSER_SPELLCASTING = { affectsTarget, markSlotSpellCast, slotSpellAvailable };
 })();

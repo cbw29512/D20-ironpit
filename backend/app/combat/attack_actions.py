@@ -13,6 +13,7 @@ from app.combat.death_triggers import append_pending_death_triggers
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
+from app.combat.multiattack_follow_up import resolve_multiattack_follow_up
 from app.combat.opening_burst import opening_feature_id
 from app.combat.pit_policy import flexible_slot_has_both
 from app.combat.saving_throws import resolve_save_action
@@ -37,6 +38,7 @@ def resolve_attack_action(
             return [], sequence
         spend(attacker.state, "action")
         events: list[BattleEvent] = []
+        slot_attack_events: list[BattleEvent] = []
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None
@@ -70,7 +72,7 @@ def resolve_attack_action(
                     spend_action=False, advantage_sources=1 if pack else 0,
                     feature_id=feature_id, turn_key=turn_key, allow_reckless=True, close_enemy_active=False,
                 )
-                events.append(event); previous_event = event; previous_attack_id = attack.id
+                events.append(event); slot_attack_events.append(event); previous_event = event; previous_attack_id = attack.id
                 used_attack_ids.add(attack.id); attacks_made += 1; sequence += 1
                 sequence = append_pending_death_triggers(events, sequence, round_number, setup, dice)
                 if attacker.state.is_dead or attacker.state.turn_terminated:
@@ -100,6 +102,10 @@ def resolve_attack_action(
                                             spend_action=False, affected_states=affected_states, setup=setup)
                 events.append(event); previous_event = event; sequence += 1
                 sequence = append_pending_death_triggers(events, sequence, round_number, setup, dice)
+        follow_up, sequence = resolve_multiattack_follow_up(
+            sequence, round_number, attacker, setup, definition, slot_attack_events,
+        )
+        events.extend(follow_up)
         if definition.is_attack_action and light_trigger is not None and not attacker.state.turn_terminated and not attacker.state.is_dead and (attack_limit is None or attacks_made < attack_limit):
             more, sequence = resolve_light_extra_attack(sequence, round_number, attacker, setup, dice, light_trigger, turn_key)
             events.extend(more)

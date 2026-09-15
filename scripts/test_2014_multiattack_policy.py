@@ -1,8 +1,9 @@
 from import_2014_multiattack import parse_multiattack
+from test_2014_multiattack_bindings import main as test_binding_main
 
 
-def attack(attack_id: str, name: str, kind: str = "melee") -> dict:
-    return {"id": attack_id, "name": name, "kind": kind}
+def attack(attack_id: str, name: str, kind: str = "melee", average: int = 0) -> dict:
+    return {"id": attack_id, "name": name, "kind": kind, "damage": {"average": average}}
 
 
 def main() -> int:
@@ -51,6 +52,21 @@ def main() -> int:
         "id": "multiattack", "name": "Multiattack",
         "slots": [["claws", "bite"], ["claws", "bite"]],
         "policy": {"at_most_once_attack_ids": ["bite"]},
+    }
+
+    wight = (
+        "<p><strong>Multiattack.</strong> The wight makes two longsword attacks or two longbow attacks. "
+        "It can use its Life Drain in place of one longsword attack.</p>"
+    )
+    parsed = parse_multiattack(wight, [
+        attack("life-drain", "Life Drain", average=5),
+        attack("longsword", "Longsword", average=6),
+        attack("longsword-two-handed", "Longsword", average=7),
+        attack("longbow", "Longbow", "ranged", average=6),
+    ])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [["life-drain", "longbow"], ["longsword-two-handed", "longbow"]],
     }
 
     veteran = (
@@ -110,6 +126,7 @@ def main() -> int:
         ],
     }
 
+    test_binding_main()
     print("2014 Multiattack policy regressions passed.")
     return 0
 

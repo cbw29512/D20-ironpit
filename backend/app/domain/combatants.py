@@ -7,15 +7,20 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.auras import StartTurnAura
 from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
+from app.domain.berserk import BerserkProfile
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_defense_rules import ConditionalDamageResistance, DamageAbsorption
+from app.domain.damage_triggers import DamageTriggeredRollPenalty
 from app.domain.gaze import StartTurnGaze
+from app.domain.invisibility import InvisibilityAction
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.reactions import ParryReaction, ProjectileCatchReaction, RedirectAttackReaction, SpellReflectionReaction
+from app.domain.reactive_damage import MeleeHitReactiveDamage
 from app.domain.regeneration import RegenerationProfile
 from app.domain.save_auras import SaveAdvantageAura
+from app.domain.self_buffs import SelfBuffAction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.start_turn_damage import StartTurnRelationshipDamage
@@ -77,6 +82,9 @@ class CombatantTemplate(BaseModel):
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
+    self_buff_actions: list[SelfBuffAction] = Field(default_factory=list)
+    starts_invisible: bool = False
+    invisibility_action: InvisibilityAction | None = None
     legendary_action_uses: int = Field(default=0, ge=0, le=10)
     legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
@@ -85,6 +93,7 @@ class CombatantTemplate(BaseModel):
     start_turn_gaze: StartTurnGaze | None = None
     start_turn_auras: list[StartTurnAura] = Field(default_factory=list)
     start_turn_relationship_damage: list[StartTurnRelationshipDamage] = Field(default_factory=list)
+    melee_hit_reactive_damage: list[MeleeHitReactiveDamage] = Field(default_factory=list)
     save_advantage_auras: list[SaveAdvantageAura] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
@@ -93,15 +102,19 @@ class CombatantTemplate(BaseModel):
     source_legendary_action_names: list[str] = Field(default_factory=list)
     source_spellcasting_fingerprint: str | None = None
     parry_reaction: ParryReaction | None = None
+    projectile_catch_reaction: ProjectileCatchReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
+    spell_reflection_reaction: SpellReflectionReaction | None = None
     zero_hp_prevention: ZeroHpPrevention | None = None
     regeneration: RegenerationProfile | None = None
+    berserk: BerserkProfile | None = None
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     conditional_damage_resistances: list[ConditionalDamageResistance] = Field(default_factory=list)
     damage_absorptions: list[DamageAbsorption] = Field(default_factory=list)
+    damage_triggered_roll_penalties: list[DamageTriggeredRollPenalty] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)

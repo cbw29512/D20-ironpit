@@ -12,11 +12,13 @@ from app.combat.grapple import (
 from app.combat.hit_modifiers import apply_hit_modifier_effects
 from app.combat.modifier_stack import effective_speed
 from app.combat.timed_conditions import apply_timed_condition
+from app.combat.timed_roll_effects import attack_roll_disadvantage
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
 BLINDED_EFFECT_ID = "blinded"
 FRIGHTENED_EFFECT_ID = "frightened"
+INVISIBLE_EFFECT_ID = "invisible"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
 
@@ -29,11 +31,13 @@ def attack_roll_condition_sources(
 ) -> tuple[int, int]:
     """Return Advantage and Disadvantage sources from supported conditions."""
     advantage = 0
-    disadvantage = 0
+    disadvantage = attack_roll_disadvantage(attacker)
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
         disadvantage += 1
+    if has_condition(attacker, INVISIBLE_EFFECT_ID):
+        advantage += 1
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
     if RESTRAINED_EFFECT_ID in attacker.active_effect_ids:
@@ -43,6 +47,8 @@ def attack_roll_condition_sources(
     if target_id is not None:
         disadvantage += grapple_attack_disadvantage(attacker, target_id)
     if dodge_benefits_active(defender) and not attacks_have_advantage_against(defender):
+        disadvantage += 1
+    if has_condition(defender, INVISIBLE_EFFECT_ID):
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1
@@ -86,6 +92,7 @@ def apply_hit_conditions(
                 control.grapple_escape_dc,
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
+                source_effect_id=attack.id,
             ))
     if control is not None and control.condition_id is not None:
         timed = apply_timed_condition(

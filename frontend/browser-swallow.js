@@ -13,10 +13,32 @@
   function flush(events, sequence, round, setup) {
     const result = DT().resolvePending(sequence, round, setup); events.push(...result.events); return result.sequence;
   }
+  function capacityAvailable(member, setup, action) {
+    return action.maxSwallowed == null || swallowedBy(member, setup).length < action.maxSwallowed;
+  }
+  function applySwallowed(member, victim, action, event) {
+    G().release(victim.state, member.combatant_id);
+    victim.state.swallowed = {
+      source_id: member.combatant_id, source_effect_id: action.id,
+      damageDiceCount: action.damageDiceCount, damageDiceSize: action.damageDiceSize,
+      damageBonus: action.damageBonus || 0, damageType: action.damageType,
+      regurgitationDamageThreshold: action.regurgitationDamageThreshold ?? null,
+      regurgitationSaveAbility: action.regurgitationSaveAbility || null,
+      regurgitationSaveDc: action.regurgitationSaveDc ?? null,
+      regurgitationRangeFt: action.regurgitationRangeFt ?? null,
+      exitMovementFt: action.exitMovementFt || 0, exitProne: action.exitProne !== false,
+      sourceDead: false,
+    };
+    event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), "blinded", "restrained", "swallowed"])];
+    event.feature_id = action.id;
+    event.description += ` ${victim.state.template.name} is swallowed.`;
+  }
 
   function target(member, setup) {
     const action = member.state.template.swallowAction;
-    if (!action || swallowedBy(member, setup).length >= (action.maxSwallowed || 1)) return null;
+    const attack = action ? attackById(member, action.attackId) : null;
+    if (!action || action.requiresExistingGrapple === false || attack?.onHitSaveEffect?.swallowOnFailure) return null;
+    if (!capacityAvailable(member, setup, action)) return null;
     return opponents(member, setup).find((candidate) =>
       candidate.state.current_hp > 0 && !candidate.state.is_dead
       && candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id)
@@ -32,19 +54,18 @@
     const events = [event];
     sequence = flush(events, sequence, round, setup);
     if (member.state.is_dead || member.state.turn_terminated) return { events, sequence };
-    if (event.hit && victim.state.current_hp > 0 && !victim.state.is_dead) {
-      G().release(victim.state, member.combatant_id);
-      victim.state.swallowed = {
-        source_id: member.combatant_id, source_effect_id: action.id,
-        damageDiceCount: action.damageDiceCount, damageDiceSize: action.damageDiceSize,
-        damageBonus: action.damageBonus || 0, damageType: action.damageType,
-        exitMovementFt: action.exitMovementFt || 0, exitProne: action.exitProne !== false,
-      };
-      event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), "blinded", "restrained", "swallowed"])];
-      event.feature_id = action.id;
-      event.description += ` ${victim.state.template.name} is swallowed.`;
-    }
+    if (event.hit && victim.state.current_hp > 0 && !victim.state.is_dead) applySwallowed(member, victim, action, event);
     return { events, sequence };
+  }
+
+  function applyOnHit(member, victim, attack, event, setup) {
+    const action = member.state.template.swallowAction, effect = attack.onHitSaveEffect;
+    if (!setup || !action || action.attackId !== attack.id || !effect?.swallowOnFailure) return false;
+    if (action.requiresExistingGrapple !== false || event.save_succeeded !== false) return false;
+    if (!event.hit || victim.state.current_hp <= 0 || victim.state.is_dead || victim.state.swallowed) return false;
+    if (!S().sizeAtMost(victim, action.maxTargetSize) || !capacityAvailable(member, setup, action)) return false;
+    applySwallowed(member, victim, action, event);
+    return true;
   }
 
   function cleanup(setup) {
@@ -84,5 +105,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_SWALLOW = { cleanup, resolve, startTurn, target };
+  window.IRON_PIT_BROWSER_SWALLOW = { applyOnHit, cleanup, resolve, startTurn, target };
 })();

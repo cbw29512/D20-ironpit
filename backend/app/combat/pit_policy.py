@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.attack_legality import attack_allowed_against
-from app.combat.encounter_targeting import combatant_distance, living_opponents
+from app.combat.encounter_targeting import combatant_distance, living_opponents, select_nearest_target
 from app.combat.formation import uses_backline
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.resources import action_resource_available
@@ -24,6 +24,9 @@ def target_order(
     prefer_backline: bool = False,
 ) -> list[EncounterCombatant]:
     """Return active Pit targets by formation role without using movement distance as priority."""
+    profile = attacker.state.template.berserk
+    if profile is not None and profile.effect_id in attacker.state.active_effect_ids:
+        target = select_nearest_target(attacker, setup); return [target] if target is not None else []
     opponents = living_opponents(attacker, setup)
     front = [target for target in opponents if not is_backline(target)]
     back = [target for target in opponents if is_backline(target)]
@@ -104,13 +107,17 @@ def choose_attack(
     """Choose an actually legal attack at the combatants' current battlefield positions."""
     try:
         profiles = _attack_profiles(attacker, allowed_ids, kind)
+        opponents = living_opponents(attacker, setup)
+        opponent_states = [target.state for target in opponents]
         targets = target_order(attacker, setup, prefer_backline=prefer_backline)
         if required_target_id is not None:
             targets = [target for target in targets if target.combatant_id == required_target_id]
         for target in targets:
             distance = combatant_distance(attacker, target)
             for attack in profiles:
-                if attack_allowed_against(attack, attacker.combatant_id, target.state) and _attack_in_range(attack, distance):
+                if attack_allowed_against(
+                    attack, attacker.combatant_id, target.state, opponent_states,
+                ) and _attack_in_range(attack, distance):
                     return target, attack, distance
         return None
     except Exception as exc:
