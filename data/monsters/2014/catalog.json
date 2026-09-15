@@ -22127,7 +22127,28 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/333/315/315/636252776252001529.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "blinding-spittle",
+        "name": "Blinding Spittle",
+        "save_ability": "dexterity",
+        "dc": 13,
+        "range_ft": 15,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 15
+        },
+        "failure_control_effect": {
+          "condition_id": "blinded",
+          "expiry_timing": "source_turn_end",
+          "duration_rounds": 1
+        },
+        "resource_id": "blinding-spittle",
+        "resource_cost": 1,
+        "animation": "blinded"
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
