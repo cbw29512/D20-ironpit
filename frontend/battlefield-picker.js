@@ -41,8 +41,9 @@
   function monsterNote(rows, chosen) {
     const certified = rows.filter(ready).length;
     if (!rows.length) return "No certified 2014 SRD monsters exist at this Challenge Rating.";
-    if (chosen && !ready(chosen)) return `${chosen.name} is not certified for this 2014 playtest.`;
-    return `${rows.length} certified 2014 SRD monster${rows.length === 1 ? "" : "s"} shown.`;
+    if (chosen && !ready(chosen)) return `Selected: ${chosen.name} · not certified for this 2014 playtest.`;
+    if (chosen) return `Selected: ${chosen.name} · CR ${chosen.challenge_rating} · 2014 READY. ${certified} certified monster${certified === 1 ? "" : "s"} in this view.`;
+    return `${certified} certified 2014 SRD monster${certified === 1 ? "" : "s"} shown.`;
   }
 
   function populateMonster(state, existing) {
