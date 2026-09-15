@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 199,
-    "blocked": 131
+    "public_ready": 200,
+    "blocked": 130
   },
   "monsters": [
     {
@@ -3001,8 +3001,7 @@
         "spellcasting",
         "trait",
         "uncertified-limited-use:actions-sleep-1-day",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:death-burst"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -5250,8 +5249,7 @@
         "spellcasting",
         "trait",
         "uncertified-limited-use:actions-fog-cloud-1-day",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:death-burst"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -5754,23 +5752,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "saving-throw-action"
-      ],
-      "unsupported_mechanics": [
         "limited-use",
         "save-or-complex-action",
+        "saving-throw-action",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "trait",
-        "uncertified-trait:death-burst"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-magmin",
@@ -5799,8 +5791,7 @@
       "blockers": [
         "bonus-action",
         "trait",
-        "uncertified-bonus-action:ignited-illumination",
-        "uncertified-trait:death-burst"
+        "uncertified-bonus-action:ignited-illumination"
       ]
     },
     {
@@ -8108,7 +8099,6 @@
         "save-or-complex-action",
         "trait",
         "uncertified-trait:blurred-form",
-        "uncertified-trait:death-burst",
         "unsupported-action-rider"
       ]
     },
