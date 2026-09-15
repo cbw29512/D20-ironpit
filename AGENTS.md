@@ -1,5 +1,20 @@
 # D20 Iron Pit repository instructions
 
+## Mandatory startup gate
+
+**Read this file before doing any Iron Pit analysis, coding, refactoring, certification, or progress reporting.** Do this on every new access/session. Do not rely on chat memory, a previous assistant summary, or an old ready-count as the operating contract.
+
+Before changing combat code:
+
+1. confirm the exact repository branch/commit being worked;
+2. read the authority files below in order;
+3. identify the active ruleset/profile (2014 or 2024) and never borrow source data from the other edition;
+4. inspect the current source/runtime/tests before proposing a new mechanic;
+5. use fresh generated certification/ledger output from the exact current commit for progress claims;
+6. if another worker may be changing the same branch, refresh the affected files before writing so current repository truth wins.
+
+Any durable clarification from Chris that changes combat behavior, architecture, source mapping, logging, certification, or operating process must be written into the appropriate repository authority before implementation continues.
+
 ## Authority order
 
 Before changing combat code, read:
@@ -10,7 +25,7 @@ Before changing combat code, read:
 4. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
 5. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
 6. current source/runtime code and permanent tests.
-7. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+7. generated certification state in `data/hero_certification_manifest.json`, `data/monster_certification_manifest.json`, and any ruleset-specific generated ledger/certification artifacts used by the active branch.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
@@ -30,6 +45,21 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 - Production combat is browser-only/backend-free.
 - Do not weaken a valid test to make CI green. Replace an obsolete assertion only when an explicit contract change supersedes it, with equally strong coverage for the new rule.
 - Keep production source modules at or below the repository source-size limit. Split modules rather than growing monoliths.
+
+## Universal mechanic/data/effect/source ownership rule
+
+This separation is mandatory for every attack, aura, spell, save action, recharge action, condition rider, movement effect, resource, and future combat capability:
+
+1. **Engine mechanic owns behavior.** The shared engine defines how an attack roll, saving throw, aura geometry, line/cone/radius, damage application, condition lifecycle, recharge check, resource spend, movement, or other primitive resolves.
+2. **Creature/hero ability data owns values and configuration.** Real source data supplies the actual ability name, damage dice/type, attack/save modifiers, save ability, DC, range, reach, radius/shape/size, duration, target count, uses/day, Recharge threshold, resource cost, and configured success/failure payload. The engine must not invent or silently default an outcome-changing source value.
+3. **Effects own consequences/state.** Poisoned, Frightened, damage-over-time, reaction blocking, action-economy restrictions, speed changes, buffs/debuffs, and other consequences use shared effect/condition/timed-state machinery rather than source-name handlers.
+4. **Runtime source identity owns attribution/logging.** Every mechanically relevant event must retain the actual source combatant identity and actual source ability display name so logs can say what creature caused what ability/effect. Source/ability names are audit/display facts, never rule-dispatch switches.
+
+Equivalent source abilities with different names or numbers must reuse the same mechanic when the same primitive/configuration can represent them. A new monster name is never a reason for a new resolver.
+
+Example: an Aura primitive understands radius/emanation geometry, start-turn/enter triggers, configured saving throws, duration/lifecycle, and effect dispatch. A Dretch record supplies `Fetid Cloud`, its real radius, real duration, real use limit, real save ability/DC, and real failure effect. The Poisoned/economy restrictions are shared effects. The log attributes activation and saves to `Dretch — Fetid Cloud`. Nothing in the Aura resolver checks for `Dretch`.
+
+If source data is missing, malformed, or imported incorrectly, fix the importer/catalog/schema or keep the combatant blocked. Never fill the gap with guessed values, fake placeholders, or monster-specific runtime code.
 
 ## Mandatory uncertainty and clarification gate
 
@@ -60,24 +90,38 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 
 When a card exposes a missing combat mechanic:
 
-1. identify the smallest reusable mechanic/capability;
-2. define/extend schema, immutable parameters, mutable state, timing, expiry, and reset semantics;
-3. implement the Python oracle;
-4. implement browser-runtime parity;
-5. add permanent regression/parity tests and audit evidence;
-6. regenerate native generated artifacts;
-7. rerun capability/source analysis across the full 330-monster roster and canonical hero progressions;
-8. allow generated certification to promote every newly unblocked card.
+1. classify it first: existing primitive + new configuration/trigger, or genuinely new primitive;
+2. identify the smallest reusable mechanic/capability;
+3. define/extend schema, immutable parameters, mutable state, timing, expiry, and reset semantics;
+4. bind only real ruleset-correct source values; if the source/import is incomplete, fix that layer first;
+5. implement the Python oracle;
+6. implement browser-runtime parity;
+7. add permanent regression/parity tests and audit evidence, including actual source combatant + ability attribution in logs;
+8. regenerate native generated artifacts;
+9. rerun capability/source analysis across the full active roster and canonical hero progressions;
+10. allow generated certification to promote every newly unblocked card.
 
 Specific source wording beats generic behavior. Resolve each subevent fully and update state before resolving the next.
+
+## Monster roster momentum rule
+
+Roster completion is the priority during monster-certification work.
+
+- Clear a monster, regenerate/re-audit, then immediately move to the next blocker.
+- Do not spend an extended tranche polishing one monster-specific edge case when the reusable mechanic cannot yet be completed cleanly.
+- If one monster becomes blocked by an uncertain source interpretation, large unrelated dependency, or disproportionate implementation cost, report the exact blocker to Chris, explicitly park that monster, and continue with another blocker that can advance the roster.
+- Parking a monster does not permit approximating or weakening its rules. It stays blocked until the universal capability/source issue is solved correctly.
+- A shared capability should be evaluated for all monsters it can unlock, not only the monster that exposed it.
+- Never inflate progress. A ready/certified count moves only when the exact current generated ledger/manifest proves promotion.
 
 ## Monsters
 
 - Canonical 2024 SRD 5.2.1 roster: exactly 330 monsters.
+- Ruleset-specific projects/branches use their own authoritative source catalog and generated ledger count. In particular, do not substitute the 2024 count or source records while certifying the 2014 roster.
 - Promotion path: source -> detected mechanics -> universal capability data -> runtime -> Python/browser behavior -> generated assets -> certification -> exact-head CI.
 - A monster is runnable only when every outcome-changing printed mechanic is supported or explicitly proven irrelevant under the permanent arena contract.
 - Never implement a mechanic by checking a monster name when a reusable schema/capability can represent it.
-- After a shared capability changes, re-audit all 330; never hand-pick only the motivating monster.
+- After a shared capability changes, re-audit the entire active ruleset roster; never hand-pick only the motivating monster.
 
 ## Generated artifacts: never hand-edit
 
@@ -148,10 +192,13 @@ for file in frontend/*.js; do node --check "$file"; done
 
 Run the complete permanent browser regression command list and production wiring/backend-free checks exactly as defined by `.github/workflows/ci.yml`; that workflow is the canonical complete CI command set. Final certification requires the exact intended commit to pass GitHub Actions CI.
 
+For a ruleset-specific branch such as the 2014 roster, also run that branch's own ledger/export/source-fidelity checks. Do not treat the generic 2024 manifest commands above as proof of 2014 readiness.
+
 ## Task isolation and source hygiene
 
 - One tranche/PR should address one coherent universal mechanic or contract change. Do not mix environment refactoring, unrelated monster traits, pregens, UI polish, and deployment work in one tranche.
 - Finish or explicitly park the current tranche before opening an unrelated one.
 - Do not use stale generated counts from memory. Recompute/report from the exact current commit.
+- Never use a different ruleset's monster/spell/feature text as a substitute for the active ruleset. Cross-edition text may be compared for research, but only the active ruleset source can populate its runtime data.
 - Do not copy outdated uploaded specs or registry dumps into the repo. If external material conflicts with current repository authority, stop and reconcile the conflict explicitly.
 - Keep Netlify for deliberate production checkpoints; routine verification belongs in repository CI/local-static checks.

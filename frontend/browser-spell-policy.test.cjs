@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-offense-value.js", "browser-spellcasting.js", "browser-spell-area.js",
-  "browser-spell-policy.js", "browser-spell-resolution.js",
+  "browser-grid-geometry.js", "browser-area-shapes.js", "browser-area-targeting.js", "browser-spell-policy.js", "browser-spell-resolution.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 1) => {
@@ -32,6 +32,9 @@ const spell = (id, level, areaRadius = null, range = 150) => ({
 const member = (id, side, position, template = base) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
+const gridMember = (id, side, x, y, template = base) => {
+  const result = member(id, side, x * 5, template); result.state.position = { x, y }; return result;
+};
 function caster(spells, slots) {
   const template = structuredClone(base);
   template.spell_save_actions = spells;
@@ -43,9 +46,7 @@ function caster(spells, slots) {
   const c = caster([spell("fireball", 3, 20), spell("lower-bolt", 2)], { 3: 1, 2: 2 });
   const monsters = Array.from({ length: 4 }, (_, i) => member(`monster-${i}`, "monsters", 30));
   const choice = P.choose(c, { heroes: [c], monsters }, "1:caster");
-  assert.equal(choice.action.id, "fireball");
-  assert.equal(choice.slotLevel, 3);
-  assert.equal(choice.targetIds.length, 4);
+  assert.equal(choice.action.id, "fireball"); assert.equal(choice.slotLevel, 3); assert.equal(choice.targetIds.length, 4);
 }
 
 {
@@ -53,8 +54,7 @@ function caster(spells, slots) {
   const ally = member("ally", "heroes", 0);
   const monsters = [member("monster-0", "monsters", 5), member("monster-1", "monsters", 5)];
   const choice = P.choose(c, { heroes: [c, ally], monsters }, "1:caster");
-  assert.equal(choice.action.id, "fireball");
-  assert.equal(choice.placement.friendlyIds.length, 0);
+  assert.equal(choice.action.id, "fireball"); assert.equal(choice.placement.friendlyIds.length, 0);
 }
 
 {
@@ -75,8 +75,7 @@ function caster(spells, slots) {
   assert.equal(result.events.length, 4);
   assert.match(result.events[0].description, /3 enemies and 0 unprotected allies/);
   assert.deepEqual(new Set(result.events.slice(1).map((event) => event.target_id)), new Set(["monster-0", "monster-1", "monster-2"]));
-  assert.equal(c.state.resources["spell-slot-3"], 0);
-  assert.equal(c.state.action_available, false);
+  assert.equal(c.state.resources["spell-slot-3"], 0); assert.equal(c.state.action_available, false);
 }
 
 {
@@ -84,9 +83,42 @@ function caster(spells, slots) {
   const monsters = Array.from({ length: 3 }, (_, i) => member(`monster-${i}`, "monsters", 30));
   const setup = { heroes: [c], monsters };
   const choice = P.choose(c, setup, "1:caster");
-  assert.equal(choice.action.id, "spark");
-  assert.equal(choice.slotLevel, 0);
-  assert.equal(c.state.resources["spell-slot-4"], 1);
+  assert.equal(choice.action.id, "spark"); assert.equal(choice.slotLevel, 0); assert.equal(c.state.resources["spell-slot-4"], 1);
 }
 
-console.log("Browser spell priority, ally-safe AoE, and printed-level slot regressions passed.");
+{
+  const line = {
+    ...spell("lightning-bolt", 3, null, 0),
+    damageDiceCount: 8, damageType: "lightning",
+    area: { shape: "line", origin: "self", length_ft: 100, width_ft: 5 },
+  };
+  const template = structuredClone(base); template.spell_save_actions = [line]; template.resources = { "spell-slot-3": 1 };
+  const c = gridMember("caster", "heroes", 1, 1, template);
+  const ally = gridMember("ally", "heroes", 2, 1);
+  const enemy = gridMember("enemy", "monsters", 3, 1);
+  const setup = { heroes: [c, ally], monsters: [enemy], map_definition: { id: "grid", width_squares: 12, height_squares: 8 } };
+  const choice = P.choose(c, setup, "1:caster");
+  assert.equal(choice.action.id, "lightning-bolt");
+  assert.deepEqual(choice.placement.enemyIds, ["enemy"]); assert.deepEqual(choice.placement.friendlyIds, ["ally"]);
+  assert.deepEqual(new Set(choice.targetIds), new Set(["enemy", "ally"]));
+}
+
+{
+  const cube = {
+    ...spell("thunderwave", 1, null, 0),
+    saveAbility: "constitution", damageDiceCount: 2, damageDiceSize: 8,
+    damageType: "thunder", failurePushFt: 10,
+    area: { shape: "cube", origin: "self", length_ft: 15 },
+  };
+  const template = structuredClone(base); template.spell_save_actions = [cube]; template.resources = { "spell-slot-1": 1 };
+  const c = gridMember("caster", "heroes", 1, 1, template);
+  const first = gridMember("first", "monsters", 2, 1);
+  const second = gridMember("second", "monsters", 2, 2);
+  const setup = { heroes: [c], monsters: [first, second], map_definition: { id: "grid", width_squares: 8, height_squares: 8 } };
+  const choice = P.choose(c, setup, "1:caster");
+  assert.equal(choice.action.id, "thunderwave");
+  assert.deepEqual(new Set(choice.placement.enemyIds), new Set(["first", "second"]));
+  assert.equal(X.saveAction(choice).failurePushFt, 10);
+}
+
+console.log("Browser spell priority, ally-aware AoE, universal line/cube targeting, and printed-level slot regressions passed.");

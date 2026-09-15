@@ -42,13 +42,15 @@
     }
   }
 
-  function saveActionRanges(member, target) {
+  function saveActionRanges(member, target, rechargeOnly = false) {
     try {
       const ranges = [];
       for (const action of member.state.template.saving_throw_actions || []) {
         if (action.targetMaxSize && !S().sizeAtMost(target, action.targetMaxSize)) continue;
         if (!resourceAvailable(member, action.resourceId, action.resourceCost || 1)) continue;
-        ranges.push({ family: "ability", range: action.range || 0 });
+        const recharge = E().rechargeAction?.(member.state, action) || false;
+        if (rechargeOnly && !recharge) continue;
+        ranges.push({ family: recharge ? "recharge" : "ability", range: action.range || 0 });
       }
       return ranges;
     } catch (error) {
@@ -78,6 +80,8 @@
 
   function rangesForTarget(member, target, turnKey) {
     try {
+      const recharge = saveActionRanges(member, target, true);
+      if (recharge.length) return recharge;
       return [...weaponRanges(member, target), ...spellRanges(member, turnKey), ...saveActionRanges(member, target)];
     } catch (error) {
       console.error("Failed browser offensive-range inventory", { member: member.combatant_id, target: target.combatant_id, error });

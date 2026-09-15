@@ -1,0 +1,54 @@
+name: 2014 Monster Ledger
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: 2014-monster-ledger-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  full-roster-rescan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Iron Pit rules engine
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Regenerate pinned 2014 catalog
+        run: python scripts/sync_2014_monster_catalog.py
+      - name: Rescan all 2014 monsters
+        run: python scripts/export_2014_monster_ledger.py
+      - name: Print blocker yield
+        run: python scripts/report_2014_monster_progress.py
+      - name: Upload full monster ledger
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2014-monster-certification-ledger-${{ github.sha }}
+          path: data/monsters/2014/certification_ledger.json
+          retention-days: 7
+      - name: Persist refreshed catalog and ledger
+        if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          if ! git diff --quiet -- data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json || \
+             test -n "$(git status --porcelain --untracked-files=all -- data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json)"; then
+            git config user.name "iron-pit-certification-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json
+            git commit -m "certification: refresh 2014 catalog and monster ledger"
+            TARGET_BRANCH="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+            git push origin "HEAD:${TARGET_BRANCH}"
+          fi
+      - name: Enforce refreshed catalog and ledger parity
+        run: |
+          git diff --exit-code -- data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json
+          test -z "$(git status --porcelain --untracked-files=all -- data/monsters/2014/catalog.json data/monsters/2014/certification_ledger.json)"

@@ -1,11 +1,8 @@
 (() => {
   "use strict";
 
-  const CLASS_ORDER = [
-    "barbarian", "bard", "cleric", "druid", "fighter", "monk",
-    "paladin", "ranger", "rogue", "sorcerer", "warlock", "wizard",
-  ];
-  const LEVELS = Array.from({ length: 20 }, (_, index) => index + 1);
+  const CLASS_ORDER = ["fighter", "ranger", "cleric", "wizard"];
+  const LEVELS = [1];
 
   function crNumber(value) {
     const text = String(value ?? "0").trim();
@@ -19,10 +16,12 @@
     heroes.forEach((hero) => {
       if (!byClass.has(hero.class_id)) byClass.set(hero.class_id, hero);
     });
-    return CLASS_ORDER.map((id) => {
-      const hero = byClass.get(id);
-      return { id, name: hero ? `${hero.name} — ${hero.class_name}` : id };
-    });
+    return CLASS_ORDER
+      .filter((id) => byClass.has(id))
+      .map((id) => {
+        const hero = byClass.get(id);
+        return { id, name: `${hero.name} — ${hero.class_name}` };
+      });
   }
 
   function heroBuilds(heroes, classId, level) {

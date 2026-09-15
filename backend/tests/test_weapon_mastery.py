@@ -1,24 +1,57 @@
 from app.combat.state import build_combatant_state
-from app.combat.weapon_mastery import weapon_is_mastered, weapon_mastery_active
+from app.combat.weapon_mastery import weapon_is_mastered, weapon_is_owned, weapon_mastery_active
 from app.content.audited_fighter import build_karnok_stoneward
 
 
-def test_mastery_requires_both_weapon_property_and_combatant_selection() -> None:
-    template = build_karnok_stoneward().model_copy(deep=True)
+def _fighter():
+    return build_karnok_stoneward().model_copy(deep=True)
+
+
+def test_2024_mastery_requires_owned_weapon_and_selection() -> None:
+    template = _fighter()
     attack = template.weapon_attack
     template.weapon_masteries = [attack.weapon.id]
     state = build_combatant_state(template)
 
+    assert template.ruleset == "2024"
     assert attack.weapon.mastery_property == "Graze"
+    assert weapon_is_owned(state, attack) is True
     assert weapon_is_mastered(state, attack) is True
     assert weapon_mastery_active(state, attack, "Graze") is True
     assert weapon_mastery_active(state, attack, "Sap") is False
 
 
-def test_unselected_weapon_skips_its_mastery() -> None:
-    template = build_karnok_stoneward().model_copy(deep=True)
+def test_unselected_owned_weapon_skips_mastery() -> None:
+    template = _fighter()
     template.weapon_masteries = []
     state = build_combatant_state(template)
 
+    assert weapon_is_owned(state, template.weapon_attack) is True
     assert weapon_is_mastered(state, template.weapon_attack) is False
     assert weapon_mastery_active(state, template.weapon_attack, "Graze") is False
+
+
+def test_mastery_selection_cannot_authorize_unowned_weapon() -> None:
+    template = _fighter()
+    foreign_attack = template.weapon_attack.model_copy(deep=True)
+    foreign_attack.weapon = foreign_attack.weapon.model_copy(
+        update={"id": "foreign-weapon"},
+    )
+    template.weapon_masteries = [foreign_attack.weapon.id]
+    state = build_combatant_state(template)
+
+    assert weapon_is_owned(state, foreign_attack) is False
+    assert weapon_is_mastered(state, foreign_attack) is False
+    assert weapon_mastery_active(state, foreign_attack, "Graze") is False
+
+
+def test_2014_never_activates_2024_weapon_mastery() -> None:
+    template = _fighter()
+    attack = template.weapon_attack
+    template.ruleset = "2014"
+    template.weapon_masteries = [attack.weapon.id]
+    state = build_combatant_state(template)
+
+    assert weapon_is_owned(state, attack) is True
+    assert weapon_is_mastered(state, attack) is False
+    assert weapon_mastery_active(state, attack, "Graze") is False

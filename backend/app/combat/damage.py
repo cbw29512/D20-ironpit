@@ -7,7 +7,7 @@ from app.combat.conditional_damage import active_replacement_damage, conditional
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
-from app.combat.sneak_attack import sneak_attack_bonus_damage
+from app.combat.sneak_attack import martial_advantage_bonus_damage, sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -28,11 +28,8 @@ def roll_damage_component(
         rolls = [dice.roll(dice_size) for _ in range(count)]
         return DamageRollComponent(
             source=source,
-            notation=f"{count}d{dice_size}+{modifier}",
-            rolls=rolls,
-            modifier=modifier,
-            damage_type=damage_type,
-            total=sum(rolls) + modifier,
+            notation=f"{count}d{dice_size}+{modifier}", rolls=rolls,
+            modifier=modifier, damage_type=damage_type, total=sum(rolls) + modifier,
         )
     except Exception as exc:
         logger.exception("Failed to roll damage component %s.", source)
@@ -41,12 +38,8 @@ def roll_damage_component(
 
 def fixed_damage_component(source: str, amount: int, damage_type: DamageType) -> DamageRollComponent:
     return DamageRollComponent(
-        source=source,
-        notation=str(amount),
-        rolls=[],
-        modifier=0,
-        damage_type=damage_type,
-        total=amount,
+        source=source, notation=str(amount), rolls=[], modifier=0,
+        damage_type=damage_type, total=amount,
     )
 
 
@@ -69,16 +62,21 @@ def resolve_weapon_damage(
     bonus_damage: BonusDamageSpec | None = None,
     target: CombatantState | None = None,
     sneak_attack_ally_available: bool = False,
+    round_number: int | None = None,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
         weapon = attack.weapon
-        replacement = active_replacement_damage(attacker, target, attack, attack_mode)
+        replacement = active_replacement_damage(attacker, target, attack, attack_mode, round_number)
         if replacement is not None:
             components = [roll_damage_component(
                 dice, weapon.name, replacement.dice_count, replacement.dice_size,
                 replacement.damage_bonus, replacement.damage_type, critical,
             )]
+        elif weapon.damage_type is None and weapon.dice_count == 0:
+            if attack.fixed_damage not in (None, 0):
+                raise ValueError("A typeless attack cannot deal fixed weapon damage.")
+            components = []
         elif attack.fixed_damage is not None:
             components = [fixed_damage_component(weapon.name, attack.fixed_damage, weapon.damage_type)]
         else:
@@ -99,23 +97,26 @@ def resolve_weapon_damage(
             ))
 
         for conditional in attack.conditional_damage:
-            if conditional.mode != "add" or not conditional_damage_active(conditional, attacker, target, attack_mode):
+            if conditional.mode != "add" or not conditional_damage_active(
+                conditional, attacker, target, attack_mode, round_number
+            ):
                 continue
             components.append(roll_damage_component(
-                dice=dice,
-                source="Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage",
-                dice_count=conditional.dice_count,
-                dice_size=conditional.dice_size,
-                modifier=conditional.damage_bonus,
-                damage_type=conditional.damage_type,
-                critical=critical,
+                dice=dice, source="Opening initiative bonus damage" if conditional.trigger == "round1_initiative_lead" else "Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage",
+                dice_count=conditional.dice_count, dice_size=conditional.dice_size,
+                modifier=conditional.damage_bonus, damage_type=conditional.damage_type, critical=critical,
             ))
 
-        sneak_damage = sneak_attack_bonus_damage(
-            attacker, attack, attack_mode, turn_key, sneak_attack_ally_available,
-        )
+        sneak_damage = sneak_attack_bonus_damage(attacker, attack, attack_mode, turn_key, sneak_attack_ally_available)
         if sneak_damage is not None:
             source, dice_count, dice_size, damage_type = sneak_damage
+            components.append(roll_damage_component(
+                dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
+                modifier=0, damage_type=damage_type, critical=critical,
+            ))
+        martial_damage = martial_advantage_bonus_damage(attacker, attack, turn_key, sneak_attack_ally_available)
+        if martial_damage is not None:
+            source, dice_count, dice_size, damage_type = martial_damage
             components.append(roll_damage_component(
                 dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
                 modifier=0, damage_type=damage_type, critical=critical,
@@ -132,13 +133,8 @@ def resolve_weapon_damage(
         if bonus_damage is not None:
             source, dice_count, dice_size, damage_type = bonus_damage
             components.append(roll_damage_component(
-                dice=dice,
-                source=source,
-                dice_count=dice_count,
-                dice_size=dice_size,
-                modifier=0,
-                damage_type=damage_type,
-                critical=critical,
+                dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
+                modifier=0, damage_type=damage_type, critical=critical,
             ))
 
         return aggregate_damage_components(components), components

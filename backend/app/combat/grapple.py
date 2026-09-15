@@ -3,10 +3,13 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import condition_speed_is_zero, has_condition
+from app.combat.condition_rules import condition_speed_is_zero, has_condition, is_incapacitated
+from app.combat.d20_effects import strength_d20_disadvantage
 from app.combat.dice import DiceProvider
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
+from app.combat.timed_roll_effects import ability_check_disadvantage
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
 FRIGHTENED_EFFECT_ID = "frightened"
@@ -31,14 +34,24 @@ def _sync_effect_ids(state: CombatantState) -> None:
 
 
 def apply_grapple(
-    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *, restrains: bool = False,
+    state: CombatantState,
+    source_id: str,
+    escape_dc: int,
+    range_ft: int,
+    *,
+    restrains: bool = False,
+    source_effect_id: str | None = None,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
     state.grapple_sources.append(GrappleSource(
-        source_id=source_id, escape_dc=escape_dc, range_ft=range_ft, restrains=restrains,
+        source_id=source_id,
+        source_effect_id=source_effect_id,
+        escape_dc=escape_dc,
+        range_ft=range_ft,
+        restrains=restrains,
     ))
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
@@ -54,7 +67,8 @@ def speed_is_zero(state: CombatantState) -> bool:
 
 
 def grapple_attack_disadvantage(state: CombatantState, target_id: str) -> int:
-    if not state.grapple_sources:
+    """2024 Grappled penalizes attacks against targets other than the grappler; 2014 does not."""
+    if state.template.ruleset == "2014" or not state.grapple_sources:
         return 0
     return 0 if any(source.source_id == target_id for source in state.grapple_sources) else 1
 
@@ -65,9 +79,9 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
         retained: list[GrappleSource] = []
         for source in target.state.grapple_sources:
             grappler = members.get(source.source_id)
-            if grappler is None or grappler.state.is_dead or grappler.state.is_unconscious:
+            if grappler is None or grappler.state.is_dead or is_incapacitated(grappler.state):
                 continue
-            if abs(grappler.position_ft - target.position_ft) > source.range_ft:
+            if combatant_distance(grappler, target) > source.range_ft:
                 continue
             retained.append(source)
         target.state.grapple_sources = retained
@@ -82,7 +96,12 @@ def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     advantage = strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
     )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
+    disadvantage = (
+        has_condition(state, POISONED_EFFECT_ID)
+        or has_condition(state, FRIGHTENED_EFFECT_ID)
+        or bool(ability_check_disadvantage(state))
+        or (strength_check and bool(strength_d20_disadvantage(state)))
+    )
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE

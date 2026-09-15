@@ -1,0 +1,115 @@
+name: 2014 Playtest Validation
+
+on:
+  push:
+    branches:
+      - beta/2014-playtest
+  pull_request:
+    branches:
+      - beta/2014-playtest
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 2014-playtest-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  validate-playtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Iron Pit rules engine
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Verify certified 2014 ledger
+        run: |
+          python scripts/export_2014_monster_ledger.py --check
+          python scripts/report_2014_monster_progress.py
+      - name: Build pure 2014 browser playtest package
+        run: |
+          python scripts/prepare_static_site.py
+          test -s frontend/browser-monsters-generated.js
+          test -s frontend/browser-heroes.js
+          grep -q 'IRON_PIT_BROWSER_MONSTERS' frontend/browser-monsters-generated.js
+          grep -q 'IRON_PIT_RULESET = "2014"' frontend/browser-monsters-generated.js
+          grep -q 'IRON_PIT_HERO_RULESET = "2014"' frontend/browser-heroes.js
+          grep -q 'IRON_PIT_HERO_SCOPE = "srd-test-harness"' frontend/browser-heroes.js
+          ! grep -q 'Basic Rules 2024' frontend/browser-heroes.js
+          ! grep -q 'SRD 5.2.1' frontend/browser-heroes.js
+      - name: Certify Python engine
+        id: pytest
+        continue-on-error: true
+        working-directory: backend
+        shell: bash
+        run: |
+          set -o pipefail
+          # The excluded assertion is production-artifact-only: it requires the 2024
+          # Karnok browser bundle. Standard CI still owns that assertion. This beta
+          # lane replaces browser-heroes.js with the pure-2014 SRD harness by design.
+          pytest -q -k 'not fighter_level_twelve_is_public_and_level_thirteen_remains_blocked' 2>&1 | tee ../playtest-pytest.log
+      - name: Validate browser JavaScript syntax
+        id: js_syntax
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          {
+            set -e
+            for file in frontend/*.js; do node --check "$file"; done
+          } 2>&1 | tee playtest-js-syntax.log
+      - name: Run 2014 browser regression suite
+        id: browser_tests
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          {
+            set -e
+            node frontend/arena-visuals.test.cjs
+            count=0
+            for test_file in frontend/browser-2014-*.test.cjs; do
+              echo "==> $test_file"
+              node "$test_file"
+              count=$((count + 1))
+            done
+            test "$count" -gt 0
+            echo "Completed Iron Pit arena visual contract plus $count dedicated 2014 browser regression files."
+          } 2>&1 | tee playtest-browser.log
+      - name: Verify 2014 playtest safety gate
+        id: safety_gate
+        continue-on-error: true
+        run: |
+          grep -q 'D&D 5e 2014 Playtest' frontend/browser-catalog.js
+          grep -q 'uncertified 2014 monsters are hidden' frontend/browser-catalog.js
+          grep -q 'four ledger-certified 2014 SRD NPC stat blocks' frontend/browser-catalog.js
+          grep -q 'final_pregens: false' frontend/browser-catalog.js
+          grep -q 'IRON_PIT_HERO_RULESET = "2014"' frontend/browser-heroes.js
+      - name: Upload playtest diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2014-playtest-diagnostics-${{ github.sha }}
+          path: |
+            playtest-pytest.log
+            playtest-js-syntax.log
+            playtest-browser.log
+          if-no-files-found: warn
+          retention-days: 2
+      - name: Enforce playtest validation result
+        if: always()
+        shell: bash
+        run: |
+          echo "Python: ${{ steps.pytest.outcome }}"
+          echo "JavaScript syntax: ${{ steps.js_syntax.outcome }}"
+          echo "2014 browser regressions: ${{ steps.browser_tests.outcome }}"
+          echo "Safety gate: ${{ steps.safety_gate.outcome }}"
+          test "${{ steps.pytest.outcome }}" = "success"
+          test "${{ steps.js_syntax.outcome }}" = "success"
+          test "${{ steps.browser_tests.outcome }}" = "success"
+          test "${{ steps.safety_gate.outcome }}" = "success"

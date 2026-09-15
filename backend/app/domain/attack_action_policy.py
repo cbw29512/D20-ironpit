@@ -1,0 +1,44 @@
+from __future__ import annotations
+
+from typing import Literal
+
+from pydantic import BaseModel, Field, model_validator
+
+from app.domain.size import CreatureSize
+
+
+class AttackActionPolicy(BaseModel):
+    distinct_attack_ids: bool = False
+    at_most_once_attack_ids: list[str] = Field(default_factory=list)
+    exclusive_attack_groups: list[list[str]] = Field(default_factory=list)
+    repeat_slot_index: int | None = Field(default=None, ge=0, le=7)
+    repeat_dice_count: int = Field(default=0, ge=0, le=4)
+    repeat_dice_size: int = Field(default=0, ge=0, le=20)
+    requires_previous_hit_slots: list[int] = Field(default_factory=list)
+    same_target_as_previous_slots: list[int] = Field(default_factory=list)
+    same_attack_as_previous_slots: list[int] = Field(default_factory=list)
+    follow_up_action_id: str | None = None
+    follow_up_condition: Literal["all_attacks_hit_same_target"] | None = None
+    follow_up_grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
+    follow_up_max_target_size: CreatureSize | None = None
+
+    @model_validator(mode="after")
+    def validate_repeat(self) -> "AttackActionPolicy":
+        values = (self.repeat_slot_index, self.repeat_dice_count, self.repeat_dice_size)
+        if any(value not in {None, 0} for value in values) and not (
+            self.repeat_slot_index is not None and self.repeat_dice_count > 0 and self.repeat_dice_size > 0
+        ):
+            raise ValueError("Random Multiattack repetition requires slot index and complete dice expression.")
+        if len(self.at_most_once_attack_ids) != len(set(self.at_most_once_attack_ids)):
+            raise ValueError("Per-attack Multiattack caps must not contain duplicate ids.")
+        grouped = [attack_id for group in self.exclusive_attack_groups for attack_id in group]
+        if any(not group for group in self.exclusive_attack_groups) or len(grouped) != len(set(grouped)):
+            raise ValueError("Exclusive Multiattack groups must be nonempty and non-overlapping.")
+        follow = (self.follow_up_action_id, self.follow_up_condition)
+        if any(value is not None for value in follow) and not all(value is not None for value in follow):
+            raise ValueError("Multiattack follow-up action and trigger must be declared together.")
+        if self.follow_up_grapple_escape_dc is not None and self.follow_up_action_id is None:
+            raise ValueError("Follow-up grapple data requires a follow-up action.")
+        if self.follow_up_max_target_size is not None and self.follow_up_action_id is None:
+            raise ValueError("Follow-up size data requires a follow-up action.")
+        return self

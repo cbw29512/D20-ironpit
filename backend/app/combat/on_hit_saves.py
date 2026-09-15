@@ -1,0 +1,132 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+from app.combat.condition_immunity import condition_is_immune
+from app.combat.damage_defenses import apply_damage_defenses
+from app.combat.dice import DiceProvider
+from app.combat.max_hp import reduce_max_hp
+from app.combat.save_failure_margin import failure_margin_conditions_and_duration
+from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.start_turn_damage import apply_on_hit_ongoing_damage, should_skip_on_hit_save
+from app.combat.timed_conditions import apply_timed_condition
+from app.combat.zero_hp import apply_damage
+from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, WeaponAttack
+from app.domain.size import size_at_most
+
+
+@dataclass(frozen=True)
+class OnHitSaveResolution:
+    save_roll: DiceRoll | None = None
+    save_ability: str | None = None
+    save_dc: int | None = None
+    save_succeeded: bool | None = None
+    applied_condition: str | None = None
+    damage_components: list[DamageRollComponent] = field(default_factory=list)
+    damage_total: int = 0
+    applied_conditions: list[str] = field(default_factory=list)
+    max_hp_reduction: int = 0
+
+
+def _eligible(defender: CombatantState, effect) -> bool:
+    creature_type = (defender.template.creature_type or "").lower()
+    subtypes = {item.lower() for item in defender.template.creature_subtypes}
+    return creature_type not in effect.excluded_creature_types and not subtypes.intersection(effect.excluded_creature_subtypes)
+
+
+def _save_damage(defender, attack, dice, succeeded, affected_states):
+    effect = attack.on_hit_save_effect
+    if effect is None or effect.damage_dice_count == 0 or effect.damage_type is None: return [], 0
+    rolls = [dice.roll(effect.damage_dice_size) for _ in range(effect.damage_dice_count)]
+    total = max(0, sum(rolls) + effect.damage_bonus)
+    if succeeded: total = total // 2 if effect.success_damage == "half" else 0
+    component = DamageRollComponent(source=f"{attack.weapon.name} save rider", notation=f"{effect.damage_dice_count}d{effect.damage_dice_size}+{effect.damage_bonus}", rolls=rolls, modifier=effect.damage_bonus, damage_type=DamageType(effect.damage_type), total=total)
+    applied_total, adjusted = apply_damage_defenses(defender, [component], attack=attack)
+    if applied_total:
+        apply_damage(defender, applied_total, critical=False, damage_types={DamageType(effect.damage_type)}, dice=dice, affected_states=affected_states)
+    return adjusted, applied_total
+
+
+def _apply_stable_zero_hp(defender, attack, source_id, round_number, affected_states) -> list[str]:
+    effect = attack.on_hit_save_effect
+    if effect is None or not effect.zero_hp_stable or defender.current_hp != 0: return []
+    if source_id is None or round_number is None: raise ValueError("Stable zero-HP rider requires source and round context.")
+    defender.is_alive = True; defender.is_dead = False; defender.is_unconscious = True; defender.is_stable = True
+    defender.death_save_successes = 0; defender.death_save_failures = 0
+    applied: list[str] = []
+    for condition_id in effect.zero_hp_condition_ids:
+        result = apply_timed_condition(
+            defender, condition_id, source_id, source_effect_id=attack.id,
+            applied_round=round_number, expires_round=round_number + effect.zero_hp_duration_rounds,
+            expiry_timing="source_turn_start", affected_states=affected_states,
+        )
+        if result: applied.append(result)
+    return applied
+
+
+def _apply_failed_condition(
+    defender, condition_id, attack, effect, source_id, round_number, duration_rounds, *,
+    repeat=False, affected_states=None, ends_on_damage=False, allowed_removal_action_ids=None,
+):
+    if condition_is_immune(defender, condition_id): return None
+    removable = list(allowed_removal_action_ids or [])
+    timed = duration_rounds is not None or (repeat and effect.repeat_save_timing is not None) or ends_on_damage or bool(removable)
+    if timed:
+        if source_id is None or round_number is None: raise ValueError("Timed on-hit save effects require source_id and round_number.")
+        return apply_timed_condition(
+            defender, condition_id, source_id, source_effect_id=attack.id, applied_round=round_number,
+            expires_round=round_number + duration_rounds if duration_rounds is not None else None,
+            repeat_save_ability=effect.save_ability if repeat and effect.repeat_save_timing is not None else None,
+            repeat_save_dc=effect.dc if repeat and effect.repeat_save_timing is not None else None,
+            repeat_save_timing=effect.repeat_save_timing if repeat else None,
+            repeat_save_failure_condition_id=effect.repeat_save_failure_condition_id if repeat else None,
+            affected_states=affected_states, ends_on_damage=ends_on_damage,
+            allowed_removal_action_ids=removable,
+        )
+    if condition_id not in defender.active_effect_ids: defender.active_effect_ids.append(condition_id)
+    return condition_id
+
+
+def resolve_on_hit_save(
+    defender: CombatantState, attack: WeaponAttack, dice: DiceProvider, *, source_id: str | None = None,
+    round_number: int | None = None, affected_states: list[CombatantState] | None = None,
+    triggering_damage_total: int = 0,
+) -> OnHitSaveResolution:
+    effect = attack.on_hit_save_effect
+    if source_id is not None and should_skip_on_hit_save(defender, attack, source_id):
+        apply_on_hit_ongoing_damage(defender, attack, source_id, None); return OnHitSaveResolution()
+    if effect is None:
+        if source_id is not None: apply_on_hit_ongoing_damage(defender, attack, source_id, None)
+        return OnHitSaveResolution()
+    if defender.is_dead or not defender.is_alive or not _eligible(defender, effect): return OnHitSaveResolution()
+    if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size): return OnHitSaveResolution()
+    roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice, against_condition=effect.condition_id)
+    margin_conditions, duration_rounds = failure_margin_conditions_and_duration(effect, roll, succeeded, dice)
+    damage_components, damage_total = _save_damage(defender, attack, dice, succeeded, affected_states)
+    zero_hp_conditions = _apply_stable_zero_hp(defender, attack, source_id, round_number, affected_states) if damage_total else []
+    max_hp_reduction = 0
+    if effect.max_hp_reduction_equals_damage_taken and not succeeded and defender.is_alive and not defender.is_dead:
+        max_hp_reduction = reduce_max_hp(defender, triggering_damage_total, kill_at_zero=effect.zero_max_hp_kills)
+    applied = None; escalated: list[str] = []
+    if effect.condition_id is not None and not succeeded and defender.is_alive and not defender.is_dead:
+        applied = _apply_failed_condition(
+            defender, effect.condition_id, attack, effect, source_id, round_number, duration_rounds,
+            repeat=True, affected_states=affected_states, ends_on_damage=effect.ends_on_damage,
+        )
+        if applied:
+            escalation = effect.failure_margin_escalation
+            for condition_id in margin_conditions:
+                result = _apply_failed_condition(
+                    defender, condition_id, attack, effect, source_id, round_number, duration_rounds,
+                    affected_states=affected_states,
+                    ends_on_damage=bool(escalation and escalation.ends_on_damage),
+                    allowed_removal_action_ids=escalation.allowed_removal_action_ids if escalation else [],
+                )
+                if result: escalated.append(result)
+    if source_id is not None: apply_on_hit_ongoing_damage(defender, attack, source_id, succeeded)
+    all_conditions = [*zero_hp_conditions, *([applied] if applied else []), *escalated]
+    return OnHitSaveResolution(
+        save_roll=roll, save_ability=effect.save_ability, save_dc=effect.dc, save_succeeded=succeeded,
+        applied_condition=applied, damage_components=damage_components, damage_total=damage_total,
+        applied_conditions=list(dict.fromkeys(all_conditions)), max_hp_reduction=max_hp_reduction,
+    )

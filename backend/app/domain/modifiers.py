@@ -15,6 +15,7 @@ class ModifierKind(StrEnum):
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
+    INVISIBILITY_SUPPRESSED = "invisibility-suppressed"
 
 
 class CombatModifier(BaseModel):

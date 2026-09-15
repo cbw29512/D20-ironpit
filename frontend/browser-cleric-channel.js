@@ -10,11 +10,24 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
   const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", SPARK = "divine-spark", PRESERVE = "preserve-life";
+  const SAVE_AURA_PROFILES = { "Turning Defiance": { effectId: TURN, range: 30, includesSource: true, beneficiaryArchetypes: ["Ghoul"] } };
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const living = (m) => m.state.is_alive && !m.state.is_dead;
   const side = (m, setup, allies) => allies === (m.side === "heroes") ? setup.heroes : setup.monsters;
   const baseType = (m) => String(m.state.template.creature_type || "").split(" (")[0].toLowerCase();
   const capacity = (m) => Math.max(0, Math.floor(S().effectiveMaxHp(m.state) / 2) - m.state.current_hp);
+
+  function saveAuraAdvantage(target, setup, effectId) {
+    let count = 0;
+    for (const source of [...setup.heroes, ...setup.monsters]) {
+      if (!living(source) || source.state.current_hp <= 0) continue;
+      for (const trait of source.state.template.source_trait_names || []) {
+        const aura = SAVE_AURA_PROFILES[trait]; if (!aura || aura.effectId !== effectId || S().distance(target, source) > aura.range) continue;
+        if ((aura.includesSource && source.combatant_id === target.combatant_id) || aura.beneficiaryArchetypes.includes(target.state.template.archetype)) count += 1;
+      }
+    }
+    return count;
+  }
 
   function saveDc(cleric) {
     const dcs = [...new Set((cleric.state.template.spell_save_actions || []).map((a) => a.dc))];
@@ -91,7 +104,7 @@
     if (!targets.length || targets.some((t) => distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
     const dc = saveDc(cleric), remaining = spend(cleric), events = [];
     for (const target of targets) {
-      const save = V().resolveSavingThrow(target.state, "wisdom", dc);
+      const save = V().resolveSavingThrow(target.state, "wisdom", dc, { advantageSources: saveAuraAdvantage(target, setup, TURN) });
       const applied = save.succeeded ? [] : turnEffects(cleric, target, round);
       events.push({ sequence: sequence++, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id,
         actor_name: cleric.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,

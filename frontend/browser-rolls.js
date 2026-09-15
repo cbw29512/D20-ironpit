@@ -3,6 +3,13 @@
 
   const dice = () => window.IRON_PIT_DICE;
   const bloodied = (state) => state.current_hp * 2 <= state.template.max_hp;
+  const roundFromTurnKey = (turnKey) => {
+    const value = Number.parseInt(String(turnKey || "").split(":", 1)[0], 10);
+    return Number.isInteger(value) ? value : null;
+  };
+  const round1InitiativeLead = (attacker, target, round) => round === 1
+    && Number.isFinite(attacker?.initiative_total) && Number.isFinite(target?.initiative_total)
+    && attacker.initiative_total > target.initiative_total;
 
   function modeFromSources(advantage = 0, disadvantage = 0) {
     if ((advantage > 0) === (disadvantage > 0)) return "normal";
@@ -23,6 +30,7 @@
       if (distance > attack.normal) disadvantage += 1;
       if (closeCombatThreat) disadvantage += 1;
     }
+    if (attack.disadvantageBeyondFt && distance > attack.disadvantageBeyondFt) disadvantage += 1;
     return modeFromSources(advantage, disadvantage);
   }
 
@@ -63,10 +71,14 @@
     return damageComponent({ ...spec, damageBonus: 0 }, critical);
   }
 
-  function conditionalActive(spec, attacker, target, mode) {
+  function conditionalActive(spec, attacker, target, mode, round) {
     if (!spec) return false;
     if (spec.trigger === "attack_advantage") return mode === "advantage";
     if (spec.trigger === "attacker_bloodied") return bloodied(attacker);
+    if (spec.trigger === "round1_initiative_lead") {
+      if (!target) throw new Error("Target state is required for opening initiative damage.");
+      return round1InitiativeLead(attacker, target, round);
+    }
     if (spec.trigger === "target_bloodied") {
       if (!target) throw new Error("Target state is required for target-Bloodied conditional damage.");
       return bloodied(target);
@@ -86,15 +98,14 @@
   }
 
   function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false) {
-    const conditional = attack.conditionalDamage || null;
-    const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode)
+    const conditional = attack.conditionalDamage || null, round = roundFromTurnKey(turnKey);
+    const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode, round)
       ? conditional : null;
     let rolled;
-    if (replacement) {
-      rolled = candidate(replacement, critical);
-    } else if (attack.fixedDamage != null) {
-      rolled = fixedCandidate(attack);
-    } else {
+    if (replacement) rolled = candidate(replacement, critical);
+    else if (!attack.damageType && attack.diceCount === 0 && (attack.fixedDamage == null || attack.fixedDamage === 0)) rolled = null;
+    else if (attack.fixedDamage != null) rolled = fixedCandidate(attack);
+    else {
       const rageBonus = window.IRON_PIT_BROWSER_RAGE?.damageBonus(attacker, attack) || 0;
       const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus };
       rolled = candidate(effective, critical);
@@ -105,35 +116,28 @@
         attacker.feature_last_turn_keys["savage-attacker"] = turnKey;
       }
     }
-    const components = [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }];
+    const components = rolled ? [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }] : [];
     for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
     if (mode === "advantage" && attack.conditionalAdvantage) {
       const [baseCount, sides] = attack.conditionalAdvantage;
       const count = baseCount * (critical ? 2 : 1);
       const rolls = dice().rollMany(count, sides);
-      components.push({
-        source: "Advantage bonus damage", damage_type: attack.damageType,
-        notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0),
-      });
+      components.push({ source: "Advantage bonus damage", damage_type: attack.damageType,
+        notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0) });
     }
-    if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
-      components.push(damageComponent({ ...conditional, source: "Conditional bonus damage" }, critical));
+    if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode, round)) {
+      components.push(damageComponent({ ...conditional, source: conditional.trigger === "round1_initiative_lead" ? "Opening initiative bonus damage" : "Conditional bonus damage" }, critical));
     }
     const sneak = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.bonusDamage(attacker, attack, mode, turnKey, sneakAllyAvailable);
     if (sneak) components.push(bonusComponent(sneak, critical));
+    const martial = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.martialAdvantage?.(attacker, attack, turnKey, sneakAllyAvailable);
+    if (martial) components.push(bonusComponent(martial, critical));
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
     const total = components.reduce((sum, item) => sum + item.total, 0);
-    return {
-      roll: {
-        notation: components.map((item) => item.notation).join(" + "),
-        rolls: components.flatMap((item) => item.rolls),
-        modifier: components.reduce((sum, item) => sum + item.modifier, 0),
-        total,
-      },
-      components,
-    };
+    return { roll: { notation: components.map((item) => item.notation).join(" + ") || "0", rolls: components.flatMap((item) => item.rolls),
+      modifier: components.reduce((sum, item) => sum + item.modifier, 0), total }, components };
   }
 
   window.IRON_PIT_BROWSER_ROLLS = { attackMode, d20, modeFromSources, weaponDamage };

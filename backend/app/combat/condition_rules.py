@@ -1,18 +1,34 @@
 from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.modifier_stack import invisibility_suppressed
 from app.domain.models import CombatantState
 
 BLINDED = "blinded"
 INCAPACITATED = "incapacitated"
+INVISIBLE = "invisible"
 PARALYZED = "paralyzed"
 PETRIFIED = "petrified"
 RESTRAINED = "restrained"
 STUNNED = "stunned"
 
 
+def _swallowed_condition(state: CombatantState, condition_id: str) -> bool:
+    swallowed = state.swallowed
+    if swallowed is None:
+        return False
+    if condition_id == BLINDED:
+        return True
+    if condition_id == RESTRAINED:
+        return not swallowed.source_dead
+    return False
+
+
 def has_condition(state: CombatantState, condition_id: str) -> bool:
-    return condition_id in state.active_effect_ids and not condition_is_immune(state, condition_id)
+    present = _swallowed_condition(state, condition_id) or condition_id in state.active_effect_ids
+    if condition_id == INVISIBLE and invisibility_suppressed(state):
+        return False
+    return present and not condition_is_immune(state, condition_id)
 
 
 def is_incapacitated(state: CombatantState) -> bool:

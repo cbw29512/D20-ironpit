@@ -2,11 +2,14 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const creatureType = (target) => (target.state.template.creature_type || "").toLowerCase();
+  const rule = (action, field) => action[field] || window.IRON_PIT_BROWSER_SPELL_TARGET_RULES?.[action.id]?.[field] || [];
 
   function d20Distribution(mode) {
     const rows = [];
@@ -65,6 +68,7 @@
   }
 
   function spellAttack(caster, target, spell, setup) {
+    if (!C().affectsTarget(target.state, spell.level)) return 0;
     const distance = S().distance(caster, target);
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const closeThreat = A().rangedCloseThreat(caster, target, distance, setup);
@@ -82,7 +86,8 @@
     if ((action.saveAbility === "strength" || action.saveAbility === "dexterity") && Q().autoFailStrDex(target.state)) return 0;
     const bonus = target.state.template.saving_throw_bonuses?.[action.saveAbility];
     if (bonus == null) throw new Error(`${target.state.template.name} lacks a certified ${action.saveAbility} save.`);
-    const mode = V().saveMode(target.state, action.saveAbility);
+    const disadvantage = rule(action, "saveDisadvantageCreatureTypes").includes(creatureType(target)) ? 1 : 0;
+    const mode = V().saveMode(target.state, action.saveAbility, true, null, 0, disadvantage);
     const bonuses = bonusDistribution(target.state, "saving-throw-bonus-die");
     let success = 0;
     for (const [natural, naturalProbability] of d20Distribution(mode)) {
@@ -94,10 +99,14 @@
   }
 
   function saveSpell(target, action) {
-    if (!(action.damageDiceCount > 0) || !action.damageType) return 0;
-    const success = saveSuccess(target, action);
-    const full = meanDamage(action.damageDiceCount, action.damageDiceSize, action.damageBonus || 0) * damageFactor(target.state, action.damageType);
-    const onSuccess = action.successDamage === "half" ? full * 0.5 : 0;
+    if (!(action.damageDiceCount > 0) || !action.damageType || !C().affectsTarget(target.state, action.level)) return 0;
+    const type = creatureType(target);
+    if (rule(action, "excludedCreatureTypes").includes(type)) return 0;
+    const success = saveSuccess(target, action), factor = damageFactor(target.state, action.damageType);
+    const base = rule(action, "maximizeDamageCreatureTypes").includes(type)
+      ? action.damageDiceCount * action.damageDiceSize + (action.damageBonus || 0)
+      : meanDamage(action.damageDiceCount, action.damageDiceSize, action.damageBonus || 0);
+    const full = base * factor, onSuccess = action.successDamage === "half" ? full * 0.5 : 0;
     return Math.max(0, (1 - success) * full + success * onSuccess);
   }
 

@@ -9,14 +9,17 @@ from app.domain.models import ConditionRemovalAction
 
 logger = logging.getLogger(__name__)
 
-# Lower is more urgent. This is deterministic Iron Pit AI policy, not a RAW rule.
 CONDITION_PRIORITY = {
-    "paralyzed": 0, "stunned": 0, "incapacitated": 0, "petrified": 0,
+    "paralyzed": 0, "stunned": 0, "incapacitated": 0, "petrified": 0, "unconscious": 0,
     "blinded": 1, "restrained": 1,
     "poisoned": 2, "frightened": 2, "charmed": 2,
     "deafened": 3, "grappled": 3,
     "prone": 4, "exhaustion": 4,
 }
+WAKE_SLEEPER = ConditionRemovalAction(
+    id="wake-sleeper", name="Wake Sleeper", action_cost="action", range_ft=5,
+    target_mode="ally", removable_conditions=["unconscious"], animation="condition-removal",
+)
 
 
 def distance(a: EncounterCombatant, b: EncounterCombatant) -> int:
@@ -28,10 +31,8 @@ def target_allowed(remover: EncounterCombatant, target: EncounterCombatant, acti
         return False
     if distance(remover, target) > action.range_ft:
         return False
-    if action.target_mode == "self":
-        return target.combatant_id == remover.combatant_id
-    if action.target_mode == "ally":
-        return target.combatant_id != remover.combatant_id
+    if action.target_mode == "self": return target.combatant_id == remover.combatant_id
+    if action.target_mode == "ally": return target.combatant_id != remover.combatant_id
     return True
 
 
@@ -55,6 +56,8 @@ def resources_available(member: EncounterCombatant, action: ConditionRemovalActi
 
 def _effect_allows_removal(target: EncounterCombatant, condition_id: str, action_id: str) -> bool:
     effects = [effect for effect in target.state.timed_effects if effect.effect_id == condition_id]
+    if action_id == WAKE_SLEEPER.id:
+        return bool(effects) and all(action_id in effect.allowed_removal_action_ids for effect in effects)
     return all(
         not effect.allowed_removal_action_ids or action_id in effect.allowed_removal_action_ids
         for effect in effects
@@ -64,18 +67,14 @@ def _effect_allows_removal(target: EncounterCombatant, condition_id: str, action
 def removable(target: EncounterCombatant, action: ConditionRemovalAction) -> list[str]:
     allowed = set(action.removable_conditions)
     return sorted(
-        (
-            effect for effect in target.state.active_effect_ids
-            if effect in allowed and _effect_allows_removal(target, effect, action.id)
-        ),
+        (effect for effect in target.state.active_effect_ids if effect in allowed and _effect_allows_removal(target, effect, action.id)),
         key=lambda effect: (CONDITION_PRIORITY.get(effect, 9), effect),
     )
 
 
 def affordable_conditions(remover: EncounterCombatant, target: EncounterCombatant, action: ConditionRemovalAction) -> list[str]:
     result = removable(target, action)[: action.max_conditions_per_use]
-    while result and not resources_available(remover, action, len(result)):
-        result.pop()
+    while result and not resources_available(remover, action, len(result)): result.pop()
     return result
 
 
@@ -84,30 +83,24 @@ def choose_condition_removal_action(
     setup: EncounterSetup,
     turn_key: str,
 ) -> tuple[ConditionRemovalAction, EncounterCombatant, list[str]] | None:
-    """Choose a legal on-turn removal. Reaction removals require their trigger hook."""
     try:
         allies = setup.heroes if remover.side == "heroes" else setup.monsters
+        actions = [*remover.state.template.condition_removal_actions, WAKE_SLEEPER]
         choices: list[tuple[ConditionRemovalAction, EncounterCombatant, list[str]]] = []
-        for action in remover.state.template.condition_removal_actions:
-            if action.action_cost == "reaction" or not is_available(remover.state, action.action_cost):
-                continue
-            if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
-                continue
+        for action in actions:
+            if action.action_cost == "reaction" or not is_available(remover.state, action.action_cost): continue
+            if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key): continue
             for target in allies:
-                if not target_allowed(remover, target, action):
-                    continue
+                if not target_allowed(remover, target, action): continue
                 conditions = affordable_conditions(remover, target, action)
-                if conditions:
-                    choices.append((action, target, conditions))
-        if not choices:
-            return None
+                if conditions: choices.append((action, target, conditions))
+        if not choices: return None
         return min(
             choices,
             key=lambda choice: (
                 CONDITION_PRIORITY.get(choice[2][0], 9),
                 0 if choice[0].action_cost == "bonus_action" else 1,
-                -len(choice[2]),
-                distance(remover, choice[1]),
+                -len(choice[2]), distance(remover, choice[1]),
             ),
         )
     except Exception as exc:

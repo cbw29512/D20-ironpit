@@ -5,7 +5,18 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
+  const SV = () => window.IRON_PIT_BROWSER_SAVES;
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
+
+  function refreshReactive(setup) {
+    let refreshed = 0;
+    for (const member of [...setup.heroes, ...setup.monsters]) {
+      if (member.state.is_alive && !member.state.is_dead && member.state.template.traits?.includes("reactive")) {
+        member.state.reaction_available = true; refreshed += 1;
+      }
+    }
+    return refreshed;
+  }
 
   function unarmedOpportunityAttack(template) {
     const profile = template.unarmed_opportunity_attack || window.IRON_PIT_UNARMED_OPPORTUNITY?.[template.id];
@@ -27,13 +38,38 @@
     return unarmed && before <= 5 && after > 5 ? unarmed : null;
   }
 
-  function parryHit(defender, attack, attackRoll, hit, effectiveAc = defender.template.armor_class) {
+  function parryHit(defender, attackerOrAttack, attackOrRoll, rollOrHit, hitOrAc, maybeAc) {
+    let attacker, attack, attackRoll, hit, effectiveAc;
+    if (arguments.length >= 6) {
+      attacker = attackerOrAttack; attack = attackOrRoll; attackRoll = rollOrHit; hit = hitOrAc; effectiveAc = maybeAc;
+    } else {
+      attacker = { active_effect_ids: [], template: {} };
+      attack = attackerOrAttack; attackRoll = attackOrRoll; hit = rollOrHit;
+      effectiveAc = typeof hitOrAc === "number" ? hitOrAc : defender.template.armor_class;
+    }
     const parry = defender.template.parry_reaction;
     if (!hit || !parry || attack.kind !== "melee" || attackRoll.selected_roll === 20) return { hit, used: false };
+    if (Q()?.has(defender, "blinded") || Q()?.has(attacker, "invisible")) return { hit, used: false };
+    const wieldedId = defender.wielded_attack_id || defender.template.primary_attack_id;
+    const wielded = (defender.template.attacks || []).find((item) => item.id === wieldedId);
+    if (!wielded || wielded.kind !== "melee") return { hit, used: false };
     if (!E().available(defender, "reaction")) return { hit, used: false };
     if (attackRoll.total >= effectiveAc + parry.ac_bonus) return { hit, used: false };
     E().spend(defender, "reaction");
     return { hit: false, used: true };
+  }
+
+  function projectileCatch(defender, attack, components) {
+    const profile = defender.template.projectile_catch_reaction;
+    if (!profile || attack.kind !== "ranged" || !E().available(defender, "reaction")) return { components, succeeded: null, roll: null };
+    if (!components.some((part) => part.damage_type === profile.damage_type && (part.applied_total || 0) > 0)) return { components, succeeded: null, roll: null };
+    E().spend(defender, "reaction");
+    const save = SV().resolveSavingThrow(defender, profile.save_ability, profile.save_dc);
+    if (!save.succeeded) return { components, succeeded: false, roll: save.roll };
+    return {
+      components: components.map((part) => part.damage_type === profile.damage_type ? { ...part, applied_total: 0 } : part),
+      succeeded: true, roll: save.roll,
+    };
   }
 
   function swapWouldProvoke(defender, ally, setup) {
@@ -69,5 +105,5 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack };
+  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, projectileCatch, redirectAttack, refreshReactive, resolveOpportunityAttack };
 })();

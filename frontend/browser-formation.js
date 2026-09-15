@@ -3,8 +3,16 @@
 
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const O = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
+  const B = () => window.IRON_PIT_BROWSER_BERSERK;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
+  const resourceAvailable = (state, attack) => {
+    if (!attack?.resourceId) return true;
+    if (E()?.resourceAvailable) return E().resourceAvailable(state, attack);
+    return (state.resources?.[attack.resourceId] || 0) >= (attack.resourceCost || 1);
+  };
 
   function hasRangedWeaponOffense(template) {
     return attacks(template).some((attack) => attack.kind === "ranged" && Number.isFinite(attack.long) && attack.long > 5);
@@ -34,7 +42,15 @@
     return pool.filter((target) => target.state.template.kind === "character"
       && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
   }
+  function berserkTargets(member, setup) {
+    if (!B()?.active(member.state)) return null;
+    return [...setup.heroes, ...setup.monsters]
+      .filter((target) => target !== member && target.state.is_alive && !target.state.is_dead)
+      .sort((left, right) => S().distance(member, left) - S().distance(member, right));
+  }
   function targetOrder(member, setup, preferBackline = false) {
+    const berserk = berserkTargets(member, setup);
+    if (berserk) return berserk;
     const targets = livingTargets(member, setup);
     const front = targets.filter((target) => !isBackline(target));
     const back = targets.filter(isBackline);
@@ -46,42 +62,46 @@
     const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
     return allies.some((ally) => ally !== member && alive(ally) && !isBackline(ally));
   }
-  function targetAllowed(member, target, attack) {
-    if (!attack.forbidSelfGrappledTarget) return true;
-    return !target.state.grapple_sources.some((source) => source.source_id === member.combatant_id);
+  const heldByAttack = (member, target, attack) => (target.state.grapple_sources || []).some(
+    (source) => source.source_id === member.combatant_id && source.source_effect_id === attack.id,
+  );
+  function targetAllowed(member, target, attack, opponents = null) {
+    const restraint = attack.breakableRestraint;
+    if (restraint) {
+      if (restraint.maxTargetSize && !S().sizeAtMost(target, restraint.maxTargetSize)) return false;
+      if ((target.state.restraint_sources || []).some((source) => source.source_id === member.combatant_id && source.source_effect_id === attack.id)) return false;
+    }
+    if (attack.forbidSelfGrappledTarget && (target.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id)) return false;
+    const restrictToHeld = ["auto_hit_own_grapple", "own_grapple_only"].includes(attack.grappleTargetPolicy);
+    if (!restrictToHeld || !opponents) return true;
+    return !opponents.some((candidate) => heldByAttack(member, candidate, attack)) || heldByAttack(member, target, attack);
   }
   function attackDistance(member, target) {
-    try {
-      return S().distance(member, target);
-    } catch (error) {
-      console.error("Failed browser attack distance", { member: member.combatant_id, target: target.combatant_id, error });
-      throw error;
-    }
+    try { return S().distance(member, target); }
+    catch (error) { console.error("Failed browser attack distance", { member: member.combatant_id, target: target.combatant_id, error }); throw error; }
   }
   function saveDistance(member, target, range) {
     try {
       if (range < 0) throw new Error("Save-action range cannot be negative.");
       return S().distance(member, target);
     } catch (error) {
-      console.error("Failed browser save-action distance", { member: member.combatant_id, target: target.combatant_id, error });
-      throw error;
+      console.error("Failed browser save-action distance", { member: member.combatant_id, target: target.combatant_id, error }); throw error;
     }
   }
   function attackInRange(attack, distance) {
-    try {
-      if (attack.kind === "melee") return distance <= (attack.reach || 5);
-      return Number.isFinite(attack.long) && distance <= attack.long;
-    } catch (error) {
-      console.error("Failed browser attack-range legality", { attack: attack.id, error });
-      throw error;
-    }
+    if (attack.kind === "melee") return distance <= (attack.reach || 5);
+    return Number.isFinite(attack.long) && distance <= attack.long;
   }
-  function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
+  function chooseAttack(member, setup, ids, kind = null, preferBackline = false, requiredTargetId = null) {
+    if (O()?.sourceAttacksBlocked(member.combatant_id, enemies(member, setup))) return null;
     const allowed = new Set(ids);
-    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
-    for (const target of targetOrder(member, setup, preferBackline)) {
+    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id)
+      && (!kind || attack.kind === kind) && resourceAvailable(member.state, attack));
+    const opponents = livingTargets(member, setup); let targets = targetOrder(member, setup, preferBackline);
+    if (requiredTargetId) targets = targets.filter((target) => target.combatant_id === requiredTargetId);
+    for (const target of targets) {
       const distance = attackDistance(member, target);
-      const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
+      const attack = profiles.find((profile) => targetAllowed(member, target, profile, opponents) && attackInRange(profile, distance));
       if (attack) return { target, attack, distance };
     }
     return null;
@@ -95,7 +115,8 @@
     return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
   }
   function flexibleSlotHasBoth(member, ids) {
-    const allowed = new Set(ids), kinds = new Set(attacks(member.state.template).filter((a) => allowed.has(a.id)).map((a) => a.kind));
+    const allowed = new Set(ids), kinds = new Set(attacks(member.state.template)
+      .filter((attack) => allowed.has(attack.id) && resourceAvailable(member.state, attack)).map((attack) => attack.kind));
     return kinds.has("melee") && kinds.has("ranged");
   }
   function backlineHoldsPosition(member, setup) {

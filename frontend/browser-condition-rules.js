@@ -2,7 +2,12 @@
   "use strict";
 
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  const has = (state, id) => state.active_effect_ids.includes(id) && !I().immune(state, id);
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { invisibilitySuppressed: () => false };
+  const has = (state, id) => {
+    const swallowed = state.swallowed && ["blinded", "restrained"].includes(id);
+    const present = Boolean(swallowed || state.active_effect_ids.includes(id)) && !I().immune(state, id);
+    return id === "invisible" && M().invisibilitySuppressed(state) ? false : present;
+  };
 
   function incapacitated(state) {
     if (I().immune(state, "incapacitated")) return false;

@@ -3,7 +3,9 @@
 
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
+  const O = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
+  const B = () => window.IRON_PIT_BROWSER_SELF_BUFFS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -14,6 +16,8 @@
     if (healing?.target.state.current_hp === 0) {
       events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
     }
+    const attachment = O()?.chooseRemoval(member, setup);
+    if (attachment) events.push(O().resolveRemoval(sequence++, round, member, attachment.target, attachment.ongoing));
     const removal = C()?.chooseAction(member, setup, turnKey);
     if (removal) {
       events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
@@ -22,7 +26,9 @@
     if (healing) events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
     const channel = K()?.resolve(sequence, round, member, setup);
     if (channel) { events.push(...channel.events); sequence = channel.sequence; }
-    return { events, sequence };
+    const buff = B()?.activateReady(sequence, round, member);
+    if (buff) return { events: [...events, ...buff.events], sequence: buff.sequence, handled: true };
+    return { events, sequence, handled: false };
   }
 
   function secondWind(sequence, round, member) {

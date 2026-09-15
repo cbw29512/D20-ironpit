@@ -78,7 +78,7 @@
   function resolve(sequence, member, targets, spell, slotLevel, states = [member.state]) {
     if (slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     const directHp = (spell.temporaryHp || 0) || (spell.maxHpIncrease || 0) || (spell.currentHpIncrease || 0);
-    if (spell.concentration && (directHp || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
+    if (spell.concentration && (directHp || spell.damageResistances?.length || spell.meleeHitReactiveDamage?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
     if (!targets.length) throw new Error(`${spell.name} has no legal precombat targets.`);
     if (member.state.opening_buff_spell_id) throw new Error(`${member.state.template.name} already committed its one opening buff this battle.`);
     if (spell.concentration && member.state.concentration) throw new Error(`${member.state.template.name} is already concentrating and will not replace the active buff automatically.`);
@@ -98,6 +98,9 @@
       target.state.max_hp_bonus += spell.maxHpIncrease || 0;
       target.state.current_hp += spell.currentHpIncrease || 0;
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
+      target.state.temporary_melee_hit_reactive_damage ||= [];
+      const existing = new Set(target.state.temporary_melee_hit_reactive_damage.map((rule) => rule.id));
+      target.state.temporary_melee_hit_reactive_damage.push(...(spell.meleeHitReactiveDamage || []).filter((rule) => !existing.has(rule.id)));
       if (!spell.concentration && !target.state.active_buff_effect_ids.includes(spell.id)) target.state.active_buff_effect_ids.push(spell.id);
     }
     if (spell.concentration || spell.modifierEffects?.length) {
@@ -108,6 +111,7 @@
     if (spell.maxHpIncrease) details.push(`+${spell.maxHpIncrease} Hit Point maximum`);
     if (spell.currentHpIncrease) details.push(`+${spell.currentHpIncrease} current Hit Points`);
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
+    details.push(...(spell.meleeHitReactiveDamage || []).map((rule) => `${rule.diceCount}d${rule.diceSize} ${rule.damageType} melee retaliation`));
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     if (spell.concentration) details.push("Concentration");
     const single = targets.length === 1 ? targets[0] : null;

@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import spell_attack_expected_damage
+from app.combat.persistent_spells import initial_spell_cast_allowed, persistent_spell_active
+from app.combat.spell_immunity import spell_affects_target
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellAttackAction
@@ -17,7 +19,11 @@ class SpellAttackChoice:
     expected_damage: float
 
 
-def _slot_available(caster: EncounterCombatant, action: SpellAttackAction, turn_key: str) -> bool:
+def _spell_available(caster: EncounterCombatant, action: SpellAttackAction, turn_key: str) -> bool:
+    if action.persistent_duration_rounds is not None and persistent_spell_active(caster.state, action.id):
+        return True
+    if not initial_spell_cast_allowed(caster.state, action.id, concentration=action.concentration):
+        return False
     if action.level == 0:
         return True
     if not slot_spell_available(caster.state, turn_key):
@@ -38,12 +44,13 @@ def choose_spell_attack(
     for index, action in enumerate(caster.state.template.spell_attack_actions):
         if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             continue
-        if not _slot_available(caster, action, turn_key):
+        if not _spell_available(caster, action, turn_key):
             continue
         for target in enemies:
             if (
                 not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0
                 or combatant_distance(caster, target) > action.range_ft
+                or not spell_affects_target(target.state, action.level)
             ):
                 continue
             score = spell_attack_expected_damage(caster, target, action, setup)

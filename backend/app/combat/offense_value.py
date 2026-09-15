@@ -6,6 +6,7 @@ from app.combat.encounter_targeting import close_ranged_threat_exists, combatant
 from app.combat.modifier_stack import attacks_against_advantage_sources, effective_armor_class
 from app.combat.rolls import resolve_roll_mode
 from app.combat.saving_throw_rolls import saving_throw_mode
+from app.combat.spell_immunity import spell_affects_target
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import RollMode
@@ -70,6 +71,8 @@ def _attack_probabilities(state, bonus: int, armor_class: int, mode: RollMode, c
 def spell_attack_expected_damage(
     caster: EncounterCombatant, target: EncounterCombatant, spell: SpellAttackAction, setup: EncounterSetup,
 ) -> float:
+    if not spell_affects_target(target.state, spell.level):
+        return 0.0
     distance = combatant_distance(caster, target)
     advantage, disadvantage = attack_roll_condition_sources(caster.state, target.state, distance, target.combatant_id)
     advantage += attacks_against_advantage_sources(target.state)
@@ -88,7 +91,11 @@ def _save_success_probability(target, action: SpellSaveAction) -> float:
     if action.save_ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(target.state):
         return 0.0
     bonus = target.state.template.saving_throw_bonuses[action.save_ability]
-    mode = saving_throw_mode(target.state, action.save_ability)
+    creature_type = (target.state.template.creature_type or "").lower()
+    mode = saving_throw_mode(
+        target.state, action.save_ability, magical_effect=True,
+        disadvantage_sources=int(creature_type in action.save_disadvantage_creature_types),
+    )
     bonus_distribution = _bonus_distribution(target.state, ModifierKind.SAVING_THROW_BONUS_DIE)
     success = 0.0
     for natural, natural_probability in _d20_distribution(mode).items():
@@ -99,10 +106,14 @@ def _save_success_probability(target, action: SpellSaveAction) -> float:
 
 
 def save_spell_expected_damage(target: EncounterCombatant, action: SpellSaveAction) -> float:
-    if not action.damage_dice_count or not action.damage_type:
+    if not action.damage_dice_count or not action.damage_type or not spell_affects_target(target.state, action.level):
+        return 0.0
+    creature_type = (target.state.template.creature_type or "").lower()
+    if creature_type in action.excluded_creature_types:
         return 0.0
     success = _save_success_probability(target, action)
     factor = _damage_factor(target.state, DamageType(action.damage_type))
-    full = _mean_damage(action.damage_dice_count, action.damage_dice_size, action.damage_bonus) * factor
+    base = action.damage_dice_count * action.damage_dice_size + action.damage_bonus if creature_type in action.maximize_damage_creature_types else _mean_damage(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
+    full = base * factor
     on_success = full * 0.5 if action.success_damage == "half" else 0.0
     return max(0.0, (1 - success) * full + success * on_success)

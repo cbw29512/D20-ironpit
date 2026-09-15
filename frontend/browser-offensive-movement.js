@@ -4,41 +4,42 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const G = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const O = () => window.IRON_PIT_BROWSER_OFFENSIVE_RANGES;
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+
+  function bonusMovementFeature(member) {
+    if (!E().available(member.state, "bonus_action")) return null;
+    const traits = member.state.template.traits || [];
+    if (traits.includes("cunning-action")) return "cunning-action";
+    if (traits.includes("aggressive")) return "aggressive";
+    return null;
+  }
+
+  function movementBudget(member) {
+    const base = member.state.movement_remaining_ft, bonusFeature = bonusMovementFeature(member);
+    return { base, max: base + (bonusFeature ? M().effectiveSpeed(member.state) : 0), bonusFeature };
+  }
 
   function chooseIntent(member, setup, turnKey) {
     try {
       if (!E().available(member.state, "action") || !setup.map_definition) return null;
       if (!member.state.position) throw new Error("Grid offensive movement requires an authoritative attacker position.");
       const members = [...setup.heroes, ...setup.monsters];
-      const candidates = [];
+      const budget = movementBudget(member), candidates = [];
       let legalNow = false;
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
         for (const option of O().rangesForTarget(member, target, turnKey)) {
-          if (distance <= option.range) {
-            legalNow = true;
-            continue;
-          }
-          const plan = G().planToward(
-            setup.map_definition,
-            member,
-            target,
-            members,
-            option.range,
-            member.state.movement_remaining_ft,
-          );
-          if (!plan.goal_reachable || !plan.path.length) continue;
-          if (plan.final_distance_ft >= distance) continue;
+          if (distance <= option.range) { legalNow = true; continue; }
+          const plan = G().planToward(setup.map_definition, member, target, members, option.range, budget.max);
+          if (!plan.goal_reachable || !plan.path.length || plan.final_distance_ft >= distance) continue;
           candidates.push({
-            cost: plan.movement_cost_ft,
-            distance,
-            targetId: target.combatant_id,
-            family: option.family,
-            range: option.range,
+            cost: plan.movement_cost_ft, distance, targetId: target.combatant_id,
+            family: option.family, range: option.range,
+            usesBonusActionMovement: Boolean(budget.bonusFeature) && plan.movement_cost_ft > budget.base,
           });
         }
       }
@@ -46,7 +47,8 @@
       candidates.sort((a, b) => a.cost - b.cost || a.distance - b.distance
         || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family) || b.range - a.range);
       const best = candidates[0];
-      return { targetId: best.targetId, desiredDistanceFt: best.range, family: best.family };
+      return { targetId: best.targetId, desiredDistanceFt: best.range, family: best.family,
+        usesBonusActionMovement: best.usesBonusActionMovement };
     } catch (error) {
       console.error("Failed browser offensive movement intent", { member: member.combatant_id, error });
       throw error;
@@ -58,13 +60,22 @@
       if (!setup.map_definition) return { events: [], sequence };
       const intent = chooseIntent(member, setup, turnKey);
       if (!intent) return { events: [], sequence };
-      const target = [...setup.heroes, ...setup.monsters]
-        .find((candidate) => candidate.combatant_id === intent.targetId);
+      const target = [...setup.heroes, ...setup.monsters].find((candidate) => candidate.combatant_id === intent.targetId);
       if (!target) throw new Error(`Missing offensive movement target ${intent.targetId}.`);
-      const result = R().moveToward(
-        sequence, round, member, target, setup, intent.desiredDistanceFt, "speed", { turnKey },
-      );
-      return { events: result.events, sequence: result.sequence };
+      const events = [];
+      if (intent.usesBonusActionMovement) {
+        const feature = bonusMovementFeature(member);
+        if (!feature) throw new Error("Bonus-action movement intent lost its legal movement feature.");
+        const speed = M().effectiveSpeed(member.state);
+        E().spend(member.state, "bonus_action"); member.state.movement_remaining_ft += speed;
+        const label = feature === "cunning-action" ? "Cunning Action to Dash" : "Aggressive";
+        events.push({ sequence: sequence++, round_number: round, event_type: "feature",
+          actor_id: member.combatant_id, actor_name: member.state.template.name,
+          feature_id: feature, movement_ft: speed, animation: "advance",
+          description: `${member.state.template.name} uses ${label} toward a usable offensive position.` });
+      }
+      const result = R().moveToward(sequence, round, member, target, setup, intent.desiredDistanceFt, "speed", { turnKey });
+      return { events: [...events, ...result.events], sequence: result.sequence };
     } catch (error) {
       console.error("Failed browser movement-to-offense execution", { member: member.combatant_id, error });
       throw error;

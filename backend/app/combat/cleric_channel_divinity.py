@@ -6,6 +6,7 @@ from app.combat.cleric_divine_spark import resolve_divine_spark
 from app.combat.cleric_preserve_life import resolve_preserve_life
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
+from app.combat.save_advantage_auras import advantage_sources
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition
 from app.content.monster_creature_types import is_creature_type
@@ -86,7 +87,8 @@ def resolve_turn_undead(
     remaining = _spend_channel(cleric)
     events: list[BattleEvent] = []
     for target in targets:
-        roll, succeeded = resolve_saving_throw(target.state, "wisdom", dc, dice)
+        aura_advantage = advantage_sources(target, setup, TURN_UNDEAD)
+        roll, succeeded = resolve_saving_throw(target.state, "wisdom", dc, dice, advantage_sources=aura_advantage)
         applied = [] if succeeded else _apply_turn_effects(cleric, target, setup, round_number)
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="saving_throw",

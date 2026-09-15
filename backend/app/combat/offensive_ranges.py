@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.resources import resource_definition
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
@@ -38,26 +39,33 @@ def _spell_level_available(member: EncounterCombatant, level: int, turn_key: str
         raise
 
 
-def _weapon_ranges(attacker: EncounterCombatant, target: EncounterCombatant) -> list[OffensiveRange]:
+def _weapon_ranges(attacker: EncounterCombatant, target: EncounterCombatant, recharge_only: bool = False) -> list[OffensiveRange]:
     try:
         ranges: list[OffensiveRange] = []
         attacks = [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
         for attack in attacks:
             if not attack_allowed_against(attack, attacker.combatant_id, target.state):
                 continue
+            if not _resource_available(attacker, attack.resource_id, attack.resource_cost):
+                continue
+            definition = resource_definition(attacker.state, attack.resource_id) if attack.resource_id else None
+            recharge = definition is not None and definition.recharge is not None
+            if recharge_only and not recharge:
+                continue
+            family = "recharge" if recharge else ("melee" if attack.weapon.attack_kind is WeaponAttackKind.MELEE else "ranged")
             if attack.weapon.attack_kind is WeaponAttackKind.MELEE:
-                ranges.append(("melee", attack.weapon.reach_ft))
+                ranges.append((family, attack.weapon.reach_ft))
             else:
                 maximum = attack.weapon.long_range_ft or attack.weapon.normal_range_ft
                 if maximum is not None:
-                    ranges.append(("ranged", maximum))
+                    ranges.append((family, maximum))
         return ranges
     except Exception:
         logger.exception("Failed weapon offensive-range probe for %s.", attacker.combatant_id)
         raise
 
 
-def _save_action_ranges(attacker: EncounterCombatant, target: EncounterCombatant) -> list[OffensiveRange]:
+def _save_action_ranges(attacker: EncounterCombatant, target: EncounterCombatant, recharge_only: bool = False) -> list[OffensiveRange]:
     try:
         ranges: list[OffensiveRange] = []
         for action in attacker.state.template.saving_throw_actions:
@@ -65,7 +73,10 @@ def _save_action_ranges(attacker: EncounterCombatant, target: EncounterCombatant
                 continue
             if not _resource_available(attacker, action.resource_id, action.resource_cost):
                 continue
-            ranges.append(("ability", action.range_ft))
+            definition = resource_definition(attacker.state, action.resource_id) if action.resource_id else None
+            if recharge_only and (definition is None or definition.recharge is None):
+                continue
+            ranges.append(("recharge" if definition and definition.recharge else "ability", action.range_ft))
         return ranges
     except Exception:
         logger.exception("Failed save-action offensive-range probe for %s.", attacker.combatant_id)
@@ -99,6 +110,9 @@ def offensive_ranges_for_target(
     turn_key: str,
 ) -> list[OffensiveRange]:
     try:
+        recharge_ranges = [*_weapon_ranges(attacker, target, True), *_save_action_ranges(attacker, target, True)]
+        if recharge_ranges:
+            return recharge_ranges
         return [
             *_weapon_ranges(attacker, target),
             *_spell_ranges(attacker, turn_key),

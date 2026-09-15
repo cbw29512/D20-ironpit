@@ -1,0 +1,2630 @@
+{
+  "blocked_count": 57,
+  "blocker_families": {
+    "action": 47,
+    "attack-detail": 27,
+    "compile": 1,
+    "defense": 1,
+    "legendary": 24,
+    "spell": 4,
+    "trait": 38
+  },
+  "blocker_yield": {
+    "action:Blinding Breath (Recharge 6)": 1,
+    "action:Charm": 2,
+    "action:Create Whirlwind": 1,
+    "action:Darkness Aura (1/Day)": 1,
+    "action:Deadly Leap": 1,
+    "action:Death Glare": 1,
+    "action:Draining Kiss": 1,
+    "action:Dreadful Glare": 2,
+    "action:Engulf": 1,
+    "action:Enlarge (Recharges after a Short or Long Rest)": 1,
+    "action:Eye Rays": 1,
+    "action:Fey Charm": 1,
+    "action:First Roar": 1,
+    "action:Fling": 1,
+    "action:Flying Sword": 1,
+    "action:Healing Touch": 1,
+    "action:Horrifying Visage": 2,
+    "action:Intoxicating Touch": 1,
+    "action:Invisibility (Recharges after a Short or Long Rest)": 1,
+    "action:Invisible Passage": 1,
+    "action:Leadership (Recharges after a Short or Long Rest)": 1,
+    "action:Lightning Breath (Recharge 5\u20136)": 1,
+    "action:Luring Song": 1,
+    "action:Moan": 1,
+    "action:Multiattack": 4,
+    "action:Reel": 1,
+    "action:Roar (3/Day)": 1,
+    "action:Scare (1/Day)": 1,
+    "action:Second Roar": 1,
+    "action:Smother": 1,
+    "action:Spit Poison": 1,
+    "action:Spores (Recharge 6)": 1,
+    "action:Stunning Screech (1/Day)": 1,
+    "action:Swallow": 1,
+    "action:Tendril": 1,
+    "action:Tentacle Slam": 1,
+    "action:Tentacles": 1,
+    "action:Third Roar": 1,
+    "action:Wail (1/Day)": 1,
+    "action:Whelm (Recharge 4\u20136)": 1,
+    "action:Whirlwind (Recharge 4\u20136)": 1,
+    "attack-detail:Beard": 1,
+    "attack-detail:Bite": 4,
+    "attack-detail:Bite. (Bat or Vampire Form Only)": 1,
+    "attack-detail:Claws": 2,
+    "attack-detail:Crush": 1,
+    "attack-detail:Glaive": 1,
+    "attack-detail:Javelin": 1,
+    "attack-detail:Longbow": 1,
+    "attack-detail:Longsword": 1,
+    "attack-detail:Pincer": 1,
+    "attack-detail:Pseudopod": 1,
+    "attack-detail:Rotting Fist": 2,
+    "attack-detail:Scimitar": 1,
+    "attack-detail:Slaying Longbow": 1,
+    "attack-detail:Strength Drain": 1,
+    "attack-detail:Tentacle": 3,
+    "attack-detail:Touch": 1,
+    "attack-detail:Unarmed Strike (Vampire Form Only)": 1,
+    "attack-detail:War Pick": 1,
+    "attack-detail:Whip": 1,
+    "compile:universal-runtime": 1,
+    "defense:piercing from magic weapons wielded by good creatures": 1,
+    "legendary:Attack": 2,
+    "legendary:Blasphemous Word": 1,
+    "legendary:Blinding Dust": 1,
+    "legendary:Blinding Gaze": 1,
+    "legendary:Cantrip": 1,
+    "legendary:Cast a Spell": 1,
+    "legendary:Channel Negative Energy": 1,
+    "legendary:Chomp": 1,
+    "legendary:Disrupt Life": 1,
+    "legendary:Frightening Gaze": 1,
+    "legendary:Heal Self": 1,
+    "legendary:Lightning Storm": 1,
+    "legendary:Move": 2,
+    "legendary:Psychic Drain": 1,
+    "legendary:Searing Burst": 1,
+    "legendary:Shimmering Shield": 1,
+    "legendary:Tentacle Attack or Fling": 1,
+    "legendary:Whirlwind of Sand": 1,
+    "legendary:no-parsed-options": 4,
+    "spell:acid arrow": 1,
+    "spell:telekinesis": 1,
+    "spell:unparsed-innate-spellcasting": 1,
+    "spell:vicious mockery": 1,
+    "trait:Aberrant Ground": 1,
+    "trait:Air Form": 1,
+    "trait:Bound": 1,
+    "trait:Consume Life": 1,
+    "trait:Damage Transfer": 2,
+    "trait:Death Burst": 1,
+    "trait:Death Throes": 1,
+    "trait:Divine Eminence": 1,
+    "trait:Duergar Resilience": 1,
+    "trait:Ephemeral": 1,
+    "trait:Ethereal Sight": 1,
+    "trait:Fear Aura": 1,
+    "trait:Fire Aura": 1,
+    "trait:Fire Form": 1,
+    "trait:Freedom of Movement": 1,
+    "trait:Freeze": 1,
+    "trait:Gibbering": 1,
+    "trait:Grappler": 1,
+    "trait:Grasping Tendrils": 1,
+    "trait:Hellish Weapons": 1,
+    "trait:Horrific Appearance": 1,
+    "trait:Ignited Illumination": 1,
+    "trait:Light Sensitivity": 1,
+    "trait:Multiple Heads": 1,
+    "trait:Ooze Cube": 1,
+    "trait:Reactive Heads": 1,
+    "trait:Reflective Carapace": 1,
+    "trait:Shadow Stealth": 1,
+    "trait:Spell Storing": 1,
+    "trait:Steadfast": 1,
+    "trait:Transparent": 1,
+    "trait:Turn Resistance": 1,
+    "trait:Vampire Weaknesses": 2,
+    "trait:Variable Illumination": 1,
+    "trait:Water Form": 1,
+    "trait:Water Susceptibility": 1
+  },
+  "catalog_count": 327,
+  "monsters": [
+    {
+      "id": "aboleth",
+      "name": "Aboleth",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "attack-detail:Tentacle",
+        "legendary:Psychic Drain"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "acolyte",
+      "name": "Acolyte",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-black-dragon",
+      "name": "Adult Black Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-blue-dragon",
+      "name": "Adult Blue Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-brass-dragon",
+      "name": "Adult Brass Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-bronze-dragon",
+      "name": "Adult Bronze Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-copper-dragon",
+      "name": "Adult Copper Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-gold-dragon",
+      "name": "Adult Gold Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-green-dragon",
+      "name": "Adult Green Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-red-dragon",
+      "name": "Adult Red Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-silver-dragon",
+      "name": "Adult Silver Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "adult-white-dragon",
+      "name": "Adult White Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "air-elemental",
+      "name": "Air Elemental",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Whirlwind (Recharge 4\u20136)",
+        "trait:Air Form"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "allosaurus",
+      "name": "Allosaurus",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-black-dragon",
+      "name": "Ancient Black Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-blue-dragon",
+      "name": "Ancient Blue Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-brass-dragon",
+      "name": "Ancient Brass Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-bronze-dragon",
+      "name": "Ancient Bronze Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-copper-dragon",
+      "name": "Ancient Copper Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-gold-dragon",
+      "name": "Ancient Gold Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-green-dragon",
+      "name": "Ancient Green Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-red-dragon",
+      "name": "Ancient Red Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-silver-dragon",
+      "name": "Ancient Silver Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ancient-white-dragon",
+      "name": "Ancient White Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "androsphinx",
+      "name": "Androsphinx",
+      "remaining_blocker_count": 5,
+      "remaining_blockers": [
+        "action:First Roar",
+        "action:Roar (3/Day)",
+        "action:Second Roar",
+        "action:Third Roar",
+        "legendary:Cast a Spell"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "animated-armor",
+      "name": "Animated Armor",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ankheg",
+      "name": "Ankheg",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ankylosaurus",
+      "name": "Ankylosaurus",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ape",
+      "name": "Ape",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "archmage",
+      "name": "Archmage",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "assassin",
+      "name": "Assassin",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "awakened-shrub",
+      "name": "Awakened Shrub",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "awakened-tree",
+      "name": "Awakened Tree",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "axe-beak",
+      "name": "Axe Beak",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "azer",
+      "name": "Azer",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "baboon",
+      "name": "Baboon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "badger",
+      "name": "Badger",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "balor",
+      "name": "Balor",
+      "remaining_blocker_count": 4,
+      "remaining_blockers": [
+        "attack-detail:Longsword",
+        "attack-detail:Whip",
+        "trait:Death Throes",
+        "trait:Fire Aura"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "bandit",
+      "name": "Bandit",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "bandit-captain",
+      "name": "Bandit Captain",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "banshee",
+      "name": "Banshee",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Horrifying Visage",
+        "action:Wail (1/Day)"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "barbed-devil",
+      "name": "Barbed Devil",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "basilisk",
+      "name": "Basilisk",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "bat",
+      "name": "Bat",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "bearded-devil",
+      "name": "Bearded Devil",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "attack-detail:Beard",
+        "trait:Steadfast"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "behir",
+      "name": "Behir",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Lightning Breath (Recharge 5\u20136)",
+        "action:Swallow"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "berserker",
+      "name": "Berserker",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "black-bear",
+      "name": "Black Bear",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "black-dragon-wyrmling",
+      "name": "Black Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "black-pudding",
+      "name": "Black Pudding",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "blink-dog",
+      "name": "Blink Dog",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "blood-hawk",
+      "name": "Blood Hawk",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "blue-dragon-wyrmling",
+      "name": "Blue Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "boar",
+      "name": "Boar",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "bone-devil",
+      "name": "Bone Devil",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "brass-dragon-wyrmling",
+      "name": "Brass Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "bronze-dragon-wyrmling",
+      "name": "Bronze Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "brown-bear",
+      "name": "Brown Bear",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "bugbear",
+      "name": "Bugbear",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "bulette",
+      "name": "Bulette",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "action:Deadly Leap"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "camel",
+      "name": "Camel",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "cat",
+      "name": "Cat",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "centaur",
+      "name": "Centaur",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "chain-devil",
+      "name": "Chain Devil",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "chimera",
+      "name": "Chimera",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "chuul",
+      "name": "Chuul",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "action:Multiattack",
+        "action:Tentacles",
+        "attack-detail:Pincer"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "clay-golem",
+      "name": "Clay Golem",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "cloaker",
+      "name": "Cloaker",
+      "remaining_blocker_count": 4,
+      "remaining_blockers": [
+        "action:Moan",
+        "attack-detail:Bite",
+        "trait:Damage Transfer",
+        "trait:Light Sensitivity"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "cloud-giant",
+      "name": "Cloud Giant",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "spell:telekinesis"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "cockatrice",
+      "name": "Cockatrice",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "commoner",
+      "name": "Commoner",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "constrictor-snake",
+      "name": "Constrictor Snake",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "copper-dragon-wyrmling",
+      "name": "Copper Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "couatl",
+      "name": "Couatl",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "attack-detail:Bite"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "crab",
+      "name": "Crab",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "crocodile",
+      "name": "Crocodile",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "cult-fanatic",
+      "name": "Cult Fanatic",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "cultist",
+      "name": "Cultist",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "cyclops",
+      "name": "Cyclops",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "darkmantle",
+      "name": "Darkmantle",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Darkness Aura (1/Day)",
+        "attack-detail:Crush"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "death-dog",
+      "name": "Death Dog",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "deep-gnome-svirfneblin",
+      "name": "Deep Gnome (Svirfneblin)",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "deer",
+      "name": "Deer",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "deva",
+      "name": "Deva",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "dire-wolf",
+      "name": "Dire Wolf",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "djinni",
+      "name": "Djinni",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Create Whirlwind",
+        "attack-detail:Scimitar"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "doppelganger",
+      "name": "Doppelganger",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "draft-horse",
+      "name": "Draft Horse",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "dragon-turtle",
+      "name": "Dragon Turtle",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "dretch",
+      "name": "Dretch",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "drider",
+      "name": "Drider",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "drow",
+      "name": "Drow",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "druid",
+      "name": "Druid",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "dryad",
+      "name": "Dryad",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "action:Fey Charm"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "duergar",
+      "name": "Duergar",
+      "remaining_blocker_count": 5,
+      "remaining_blockers": [
+        "action:Enlarge (Recharges after a Short or Long Rest)",
+        "action:Invisibility (Recharges after a Short or Long Rest)",
+        "attack-detail:Javelin",
+        "attack-detail:War Pick",
+        "trait:Duergar Resilience"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "dust-mephit",
+      "name": "Dust Mephit",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Blinding Breath (Recharge 6)",
+        "trait:Death Burst"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "eagle",
+      "name": "Eagle",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "earth-elemental",
+      "name": "Earth Elemental",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "efreeti",
+      "name": "Efreeti",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "elephant",
+      "name": "Elephant",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "elk",
+      "name": "Elk",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "erinyes",
+      "name": "Erinyes",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "attack-detail:Longbow",
+        "trait:Hellish Weapons"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "ettercap",
+      "name": "Ettercap",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ettin",
+      "name": "Ettin",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "fire-elemental",
+      "name": "Fire Elemental",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "trait:Fire Form",
+        "trait:Water Susceptibility"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "fire-giant",
+      "name": "Fire Giant",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "flameskull",
+      "name": "Flameskull",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "flesh-golem",
+      "name": "Flesh Golem",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "flying-snake",
+      "name": "Flying Snake",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "flying-sword",
+      "name": "Flying Sword",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "frog",
+      "name": "Frog",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "frost-giant",
+      "name": "Frost Giant",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "gargoyle",
+      "name": "Gargoyle",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "gelatinous-cube",
+      "name": "Gelatinous Cube",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "action:Engulf",
+        "trait:Ooze Cube",
+        "trait:Transparent"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "ghast",
+      "name": "Ghast",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ghost",
+      "name": "Ghost",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Horrifying Visage",
+        "trait:Ethereal Sight"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "ghoul",
+      "name": "Ghoul",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-ape",
+      "name": "Giant Ape",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-badger",
+      "name": "Giant Badger",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-bat",
+      "name": "Giant Bat",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-boar",
+      "name": "Giant Boar",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-centipede",
+      "name": "Giant Centipede",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-constrictor-snake",
+      "name": "Giant Constrictor Snake",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-crab",
+      "name": "Giant Crab",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-crocodile",
+      "name": "Giant Crocodile",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-eagle",
+      "name": "Giant Eagle",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-elk",
+      "name": "Giant Elk",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-fire-beetle",
+      "name": "Giant Fire Beetle",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-frog",
+      "name": "Giant Frog",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-goat",
+      "name": "Giant Goat",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-hyena",
+      "name": "Giant Hyena",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-lizard",
+      "name": "Giant Lizard",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-octopus",
+      "name": "Giant Octopus",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-owl",
+      "name": "Giant Owl",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-poisonous-snake",
+      "name": "Giant Poisonous Snake",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-rat",
+      "name": "Giant Rat",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-scorpion",
+      "name": "Giant Scorpion",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-sea-horse",
+      "name": "Giant Sea Horse",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-shark",
+      "name": "Giant Shark",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-spider",
+      "name": "Giant Spider",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-toad",
+      "name": "Giant Toad",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-vulture",
+      "name": "Giant Vulture",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-wasp",
+      "name": "Giant Wasp",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-weasel",
+      "name": "Giant Weasel",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "giant-wolf-spider",
+      "name": "Giant Wolf Spider",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "gibbering-mouther",
+      "name": "Gibbering Mouther",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "trait:Aberrant Ground",
+        "trait:Gibbering"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "glabrezu",
+      "name": "Glabrezu",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "gladiator",
+      "name": "Gladiator",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "gnoll",
+      "name": "Gnoll",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "goat",
+      "name": "Goat",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "goblin",
+      "name": "Goblin",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "gold-dragon-wyrmling",
+      "name": "Gold Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "gorgon",
+      "name": "Gorgon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "gray-ooze",
+      "name": "Gray Ooze",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "green-dragon-wyrmling",
+      "name": "Green Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "green-hag",
+      "name": "Green Hag",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Invisible Passage",
+        "spell:vicious mockery"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "grick",
+      "name": "Grick",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "griffon",
+      "name": "Griffon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "grimlock",
+      "name": "Grimlock",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "guard",
+      "name": "Guard",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "guardian-naga",
+      "name": "Guardian Naga",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "action:Spit Poison"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "gynosphinx",
+      "name": "Gynosphinx",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "half-red-dragon-veteran",
+      "name": "Half-Red Dragon Veteran",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "harpy",
+      "name": "Harpy",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "action:Luring Song"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "hawk",
+      "name": "Hawk",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "hell-hound",
+      "name": "Hell Hound",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "hezrou",
+      "name": "Hezrou",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "hill-giant",
+      "name": "Hill Giant",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "hippogriff",
+      "name": "Hippogriff",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "hobgoblin",
+      "name": "Hobgoblin",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "homunculus",
+      "name": "Homunculus",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "horned-devil",
+      "name": "Horned Devil",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "hunter-shark",
+      "name": "Hunter Shark",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "hydra",
+      "name": "Hydra",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "action:Multiattack",
+        "trait:Multiple Heads",
+        "trait:Reactive Heads"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "hyena",
+      "name": "Hyena",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ice-devil",
+      "name": "Ice Devil",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ice-mephit",
+      "name": "Ice Mephit",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "compile:universal-runtime"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "imp",
+      "name": "Imp",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "invisible-stalker",
+      "name": "Invisible Stalker",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "iron-golem",
+      "name": "Iron Golem",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "jackal",
+      "name": "Jackal",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "killer-whale",
+      "name": "Killer Whale",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "knight",
+      "name": "Knight",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "action:Leadership (Recharges after a Short or Long Rest)"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "kobold",
+      "name": "Kobold",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "kraken",
+      "name": "Kraken",
+      "remaining_blocker_count": 7,
+      "remaining_blockers": [
+        "action:Fling",
+        "action:Multiattack",
+        "attack-detail:Tentacle",
+        "legendary:Lightning Storm",
+        "legendary:Tentacle Attack or Fling",
+        "legendary:no-parsed-options",
+        "trait:Freedom of Movement"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "lamia",
+      "name": "Lamia",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "action:Intoxicating Touch",
+        "action:Multiattack",
+        "attack-detail:Claws"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "lemure",
+      "name": "Lemure",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "lich",
+      "name": "Lich",
+      "remaining_blocker_count": 5,
+      "remaining_blockers": [
+        "legendary:Cantrip",
+        "legendary:Disrupt Life",
+        "legendary:Frightening Gaze",
+        "spell:acid arrow",
+        "trait:Turn Resistance"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "lion",
+      "name": "Lion",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "lizard",
+      "name": "Lizard",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "lizardfolk",
+      "name": "Lizardfolk",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "magma-mephit",
+      "name": "Magma Mephit",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "magmin",
+      "name": "Magmin",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "attack-detail:Touch",
+        "trait:Ignited Illumination"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "mammoth",
+      "name": "Mammoth",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "manticore",
+      "name": "Manticore",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "marilith",
+      "name": "Marilith",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "mastiff",
+      "name": "Mastiff",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "medusa",
+      "name": "Medusa",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "merfolk",
+      "name": "Merfolk",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "merrow",
+      "name": "Merrow",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "mimic",
+      "name": "Mimic",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "attack-detail:Pseudopod",
+        "trait:Grappler"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "minotaur",
+      "name": "Minotaur",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "minotaur-skeleton",
+      "name": "Minotaur Skeleton",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "mule",
+      "name": "Mule",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "mummy",
+      "name": "Mummy",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Dreadful Glare",
+        "attack-detail:Rotting Fist"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "mummy-lord",
+      "name": "Mummy Lord",
+      "remaining_blocker_count": 8,
+      "remaining_blockers": [
+        "action:Dreadful Glare",
+        "attack-detail:Rotting Fist",
+        "legendary:Attack",
+        "legendary:Blasphemous Word",
+        "legendary:Blinding Dust",
+        "legendary:Channel Negative Energy",
+        "legendary:Whirlwind of Sand",
+        "legendary:no-parsed-options"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "nalfeshnee",
+      "name": "Nalfeshnee",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "night-hag",
+      "name": "Night Hag",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "nightmare",
+      "name": "Nightmare",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "noble",
+      "name": "Noble",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "nothic",
+      "name": "Nothic",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ochre-jelly",
+      "name": "Ochre Jelly",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "octopus",
+      "name": "Octopus",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ogre",
+      "name": "Ogre",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "ogre-zombie",
+      "name": "Ogre Zombie",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "oni",
+      "name": "Oni",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "attack-detail:Glaive"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "orc",
+      "name": "Orc",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "otyugh",
+      "name": "Otyugh",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Tentacle Slam",
+        "attack-detail:Tentacle"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "owl",
+      "name": "Owl",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "owlbear",
+      "name": "Owlbear",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "panther",
+      "name": "Panther",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "pegasus",
+      "name": "Pegasus",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "phase-spider",
+      "name": "Phase Spider",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "pit-fiend",
+      "name": "Pit Fiend",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "attack-detail:Bite",
+        "spell:unparsed-innate-spellcasting",
+        "trait:Fear Aura"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "planetar",
+      "name": "Planetar",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "action:Healing Touch"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "plesiosaurus",
+      "name": "Plesiosaurus",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "poisonous-snake",
+      "name": "Poisonous Snake",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "polar-bear",
+      "name": "Polar Bear",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "pony",
+      "name": "Pony",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "priest",
+      "name": "Priest",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "trait:Divine Eminence"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "pseudodragon",
+      "name": "Pseudodragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "pteranodon",
+      "name": "Pteranodon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "purple-worm",
+      "name": "Purple Worm",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "quasit",
+      "name": "Quasit",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "action:Scare (1/Day)"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "quipper",
+      "name": "Quipper",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "rakshasa",
+      "name": "Rakshasa",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "defense:piercing from magic weapons wielded by good creatures"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "rat",
+      "name": "Rat",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "raven",
+      "name": "Raven",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "red-dragon-wyrmling",
+      "name": "Red Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "reef-shark",
+      "name": "Reef Shark",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "remorhaz",
+      "name": "Remorhaz",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "rhinoceros",
+      "name": "Rhinoceros",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "riding-horse",
+      "name": "Riding Horse",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "roc",
+      "name": "Roc",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "roper",
+      "name": "Roper",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "action:Reel",
+        "action:Tendril",
+        "trait:Grasping Tendrils"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "rug-of-smothering",
+      "name": "Rug of Smothering",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Smother",
+        "trait:Damage Transfer"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "rust-monster",
+      "name": "Rust Monster",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "saber-toothed-tiger",
+      "name": "Saber-Toothed Tiger",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "sahuagin",
+      "name": "Sahuagin",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "salamander",
+      "name": "Salamander",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "satyr",
+      "name": "Satyr",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "scorpion",
+      "name": "Scorpion",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "scout",
+      "name": "Scout",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "sea-hag",
+      "name": "Sea Hag",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Death Glare",
+        "trait:Horrific Appearance"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "sea-horse",
+      "name": "Sea Horse",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "shadow",
+      "name": "Shadow",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "attack-detail:Strength Drain",
+        "trait:Shadow Stealth"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "shambling-mound",
+      "name": "Shambling Mound",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "shield-guardian",
+      "name": "Shield Guardian",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "trait:Bound",
+        "trait:Spell Storing"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "shrieker",
+      "name": "Shrieker",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "silver-dragon-wyrmling",
+      "name": "Silver Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "solar",
+      "name": "Solar",
+      "remaining_blocker_count": 5,
+      "remaining_blockers": [
+        "action:Flying Sword",
+        "attack-detail:Slaying Longbow",
+        "legendary:Blinding Gaze",
+        "legendary:Searing Burst",
+        "legendary:no-parsed-options"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "spectator",
+      "name": "Spectator",
+      "remaining_blocker_count": 1,
+      "remaining_blockers": [
+        "action:Eye Rays"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "specter",
+      "name": "Specter",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "spider",
+      "name": "Spider",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "spirit-naga",
+      "name": "Spirit Naga",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "sprite",
+      "name": "Sprite",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "spy",
+      "name": "Spy",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "steam-mephit",
+      "name": "Steam Mephit",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "stirge",
+      "name": "Stirge",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "stone-giant",
+      "name": "Stone Giant",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "stone-golem",
+      "name": "Stone Golem",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "storm-giant",
+      "name": "Storm Giant",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "succubus-incubus",
+      "name": "Succubus/Incubus",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Charm",
+        "action:Draining Kiss"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "swarm-of-bats",
+      "name": "Swarm of Bats",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "swarm-of-insects",
+      "name": "Swarm of Insects",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "swarm-of-poisonous-snakes",
+      "name": "Swarm of Poisonous Snakes",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "swarm-of-quippers",
+      "name": "Swarm of Quippers",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "swarm-of-rats",
+      "name": "Swarm of Rats",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "swarm-of-ravens",
+      "name": "Swarm of Ravens",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "tarrasque",
+      "name": "Tarrasque",
+      "remaining_blocker_count": 5,
+      "remaining_blockers": [
+        "legendary:Attack",
+        "legendary:Chomp",
+        "legendary:Move",
+        "legendary:no-parsed-options",
+        "trait:Reflective Carapace"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "thug",
+      "name": "Thug",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "tiger",
+      "name": "Tiger",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "treant",
+      "name": "Treant",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "tribal-warrior",
+      "name": "Tribal Warrior",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "triceratops",
+      "name": "Triceratops",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "troll",
+      "name": "Troll",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "twig-blight",
+      "name": "Twig Blight",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "tyrannosaurus-rex",
+      "name": "Tyrannosaurus Rex",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "unicorn",
+      "name": "Unicorn",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "legendary:Heal Self",
+        "legendary:Shimmering Shield"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "vampire",
+      "name": "Vampire",
+      "remaining_blocker_count": 5,
+      "remaining_blockers": [
+        "action:Charm",
+        "attack-detail:Bite. (Bat or Vampire Form Only)",
+        "attack-detail:Unarmed Strike (Vampire Form Only)",
+        "legendary:Move",
+        "trait:Vampire Weaknesses"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "vampire-spawn",
+      "name": "Vampire Spawn",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "attack-detail:Bite",
+        "attack-detail:Claws",
+        "trait:Vampire Weaknesses"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "veteran",
+      "name": "Veteran",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "violet-fungus",
+      "name": "Violet Fungus",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "vrock",
+      "name": "Vrock",
+      "remaining_blocker_count": 2,
+      "remaining_blockers": [
+        "action:Spores (Recharge 6)",
+        "action:Stunning Screech (1/Day)"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "vulture",
+      "name": "Vulture",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "warhorse",
+      "name": "Warhorse",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "warhorse-skeleton",
+      "name": "Warhorse Skeleton",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "water-elemental",
+      "name": "Water Elemental",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "action:Whelm (Recharge 4\u20136)",
+        "trait:Freeze",
+        "trait:Water Form"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "weasel",
+      "name": "Weasel",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "werebear",
+      "name": "Werebear",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "wereboar",
+      "name": "Wereboar",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "wererat",
+      "name": "Wererat",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "weretiger",
+      "name": "Weretiger",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "werewolf",
+      "name": "Werewolf",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "white-dragon-wyrmling",
+      "name": "White Dragon Wyrmling",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "wight",
+      "name": "Wight",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "will-o-wisp",
+      "name": "Will-o'-Wisp",
+      "remaining_blocker_count": 3,
+      "remaining_blockers": [
+        "trait:Consume Life",
+        "trait:Ephemeral",
+        "trait:Variable Illumination"
+      ],
+      "status": "blocked"
+    },
+    {
+      "id": "winter-wolf",
+      "name": "Winter Wolf",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "wolf",
+      "name": "Wolf",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "worg",
+      "name": "Worg",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "wraith",
+      "name": "Wraith",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "wyvern",
+      "name": "Wyvern",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "xorn",
+      "name": "Xorn",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "yeti",
+      "name": "Yeti",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-black-dragon",
+      "name": "Young Black Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-blue-dragon",
+      "name": "Young Blue Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-brass-dragon",
+      "name": "Young Brass Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-bronze-dragon",
+      "name": "Young Bronze Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-copper-dragon",
+      "name": "Young Copper Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-gold-dragon",
+      "name": "Young Gold Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-green-dragon",
+      "name": "Young Green Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-red-dragon",
+      "name": "Young Red Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-silver-dragon",
+      "name": "Young Silver Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "young-white-dragon",
+      "name": "Young White Dragon",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    },
+    {
+      "id": "zombie",
+      "name": "Zombie",
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
+    }
+  ],
+  "ready_count": 270,
+  "ruleset": "2014",
+  "schema_version": 1
+}

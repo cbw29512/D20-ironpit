@@ -61,6 +61,10 @@ def resolve_defensive_spell(
             typed = DamageType(damage_type)
             if typed not in target.state.temporary_damage_resistances:
                 target.state.temporary_damage_resistances.append(typed)
+        existing = {rule.id for rule in target.state.temporary_melee_hit_reactive_damage}
+        target.state.temporary_melee_hit_reactive_damage.extend(
+            rule for rule in spell.melee_hit_reactive_damage if rule.id not in existing
+        )
         if not spell.concentration and spell.id not in target.state.active_buff_effect_ids:
             target.state.active_buff_effect_ids.append(spell.id)
     apply_spell_modifiers(
@@ -75,6 +79,10 @@ def resolve_defensive_spell(
         details.append(f"+{spell.current_hp_increase} current Hit Points")
     if spell.damage_resistances:
         details.append("resistance to " + ", ".join(spell.damage_resistances))
+    details.extend(
+        f"{rule.dice_count}d{rule.dice_size} {rule.damage_type.value} melee retaliation"
+        for rule in spell.melee_hit_reactive_damage
+    )
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
     if spell.concentration:
         details.append("Concentration")

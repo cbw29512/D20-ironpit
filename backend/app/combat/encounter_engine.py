@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.aura_activation import expire_active_auras
+from app.combat.auras import resolve_start_turn_auras
+from app.combat.berserk import resolve_start_turn_berserk
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
@@ -13,7 +16,9 @@ from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
+from app.combat.legendary_actions import refresh_legendary_actions, resolve_end_turn_legendary_actions
 from app.combat.modifier_stack import expire_source_turn_modifiers
+from app.combat.persistent_spells import refresh_spell_turn_state
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.state import refresh_start_of_turn
@@ -57,6 +62,10 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         member.combatant_id,
         round_number,
     )
+    legendary_events, sequence = resolve_end_turn_legendary_actions(
+        sequence, round_number, member, setup, dice,
+    )
+    events.extend(legendary_events)
     return events, sequence
 
 
@@ -83,7 +92,14 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
+                berserk_event = resolve_start_turn_berserk(sequence, round_number, member.combatant_id, member.state, dice)
+                if berserk_event is not None:
+                    events.append(berserk_event); sequence += 1
+                refresh_legendary_actions(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
+                refresh_spell_turn_state(member.state, round_number)
+                aura_expiry_events, sequence = expire_active_auras(sequence, round_number, member)
+                events.extend(aura_expiry_events)
                 expiry_events, sequence = expire_start_of_turn_conditions(
                     sequence, round_number, member, setup,
                 )
@@ -92,6 +108,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, "target_turn_start", dice,
                 )
                 events.extend(lifecycle_events)
+                aura_events, sequence = resolve_start_turn_auras(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(aura_events)
 
                 death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
                 if death_event is not None:

@@ -4,10 +4,14 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
+from app.domain.actions import AbilityName, ConditionName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
+from app.domain.ongoing_damage import OngoingDamageState
+from app.domain.reactive_damage import MeleeHitReactiveDamage
+from app.domain.restraints import RestraintState
+from app.domain.swallow import SwallowedState
 
 TimedTurnBehavior = Literal["normal", "forced_retreat"]
 
@@ -17,6 +21,12 @@ class ResourceState(BaseModel):
     name: str
     current_uses: int = Field(ge=0)
     max_uses: int = Field(ge=0)
+
+
+class ActiveAuraState(BaseModel):
+    aura_id: str
+    activated_round: int = Field(ge=1)
+    expires_round: int = Field(ge=2)
 
 
 class TimedEffect(BaseModel):
@@ -30,17 +40,30 @@ class TimedEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
+    source_effect_immunity_on_end: bool = False
+    speed_multiplier: float = Field(default=1.0, gt=0, le=1.0)
+    blocks_reactions: bool = False
+    action_bonus_exclusive: bool = False
+    max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
+    disadvantage_strength_d20_tests: bool = False
+    disadvantage_attack_rolls: bool = False
+    disadvantage_ability_checks: bool = False
+    expires_after_next_target_turn: bool = False
+    target_turn_started_since_applied: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
+        if self.repeat_save_failure_condition_id is not None and not all(item is not None for item in repeat_fields):
+            raise ValueError("Timed effect escalation requires a complete repeat-save lifecycle.")
         if self.expires_round is not None and self.applied_round is not None and self.expires_round <= self.applied_round:
             raise ValueError("Timed effect expiry round must follow its applied round.")
         if self.expiry_timing is not None:
@@ -62,6 +85,7 @@ class CombatantState(BaseModel):
     template: CombatantTemplate
     current_hp: int
     max_hp_bonus: int = Field(default=0, ge=0)
+    max_hp_reduction: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     position: GridPosition | None = None
     initiative_roll: int | None = None
@@ -82,20 +106,31 @@ class CombatantState(BaseModel):
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
     active_buff_effect_ids: list[str] = Field(default_factory=list)
+    active_self_buff_expiry_rounds: dict[str, int] = Field(default_factory=dict)
+    active_persistent_spell_expiry_rounds: dict[str, int] = Field(default_factory=dict)
+    spell_turn_active_ids: list[str] = Field(default_factory=list)
+    spell_turn_concentration_locked: bool = False
+    active_auras: list[ActiveAuraState] = Field(default_factory=list)
     opening_buff_spell_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
+    restraint_sources: list[RestraintState] = Field(default_factory=list)
+    swallowed: SwallowedState | None = None
     timed_effects: list[TimedEffect] = Field(default_factory=list)
+    ongoing_damage_effects: list[OngoingDamageState] = Field(default_factory=list)
+    source_effect_immunities: list[str] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
+    temporary_melee_hit_reactive_damage: list[MeleeHitReactiveDamage] = Field(default_factory=list)
+    regeneration_suppressed: bool = False
+    wielded_attack_id: str | None = None
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
 
 
 class BattlefieldState(BaseModel):
     map_definition: BattleMapDefinition | None = None
-    # Migration-only scalar distance fields. Remove after all canonical paths consume grid positions.
     starting_distance_ft: int = Field(default=5, ge=0)
     distance_ft: int = Field(default=5, ge=0)

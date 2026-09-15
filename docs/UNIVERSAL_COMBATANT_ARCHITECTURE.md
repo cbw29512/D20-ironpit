@@ -72,6 +72,97 @@ Permanent tests for a new trigger must prove that it contributes to the existing
 
 If it is not completely clear whether source wording represents a genuinely new primitive or only another trigger/configuration for an existing one, stop and ask Chris before coding. Record the answer in the appropriate authoritative repository document before implementation.
 
+## Mechanic, ability data, effect, and source ownership
+
+Every combat ability must be decomposed into four layers. This is the default architecture for monsters, heroes, spells, weapons, auras, hazards, and future capabilities.
+
+### 1. Engine mechanic owns behavior
+
+The engine owns the reusable procedure, not a creature's printed numbers. Examples include:
+
+- Attack: roll, Advantage/Disadvantage, compare to AC, hit/miss/critical sequencing.
+- Saving Throw: choose configured ability, roll shared save math, compare to configured DC, resolve success/failure payload.
+- Aura/area geometry: interpret configured radius/emanation/cone/line/shape over authoritative positions and footprints, evaluate configured triggers, and dispatch configured effects.
+- Damage: roll configured components and apply damage defenses/state in canonical order.
+- Condition/timed effect: apply, track source, enforce shared consequences, expire/repeat-save at configured timing.
+- Recharge/resource: check configured availability/recharge timing and spend/restore shared resources.
+- Movement: determine legal positions/path/cost/reactions using shared grid state.
+
+A mechanic should answer **how this kind of thing resolves**. It should not answer **what numbers this particular creature has**.
+
+### 2. Creature/hero ability data owns source values
+
+The finished combatant or source ability supplies the ruleset-correct values/configuration required by the mechanic, including when applicable:
+
+- source ability id and display name;
+- attack modifier or save ability/DC;
+- reach/range;
+- radius, cone, line, emanation, target count, or other area dimensions;
+- damage dice, modifiers, damage type, and qualifiers;
+- success/failure payload;
+- condition/effect configuration;
+- duration and repeat-save timing;
+- uses/day, Recharge threshold, charges, spell slot/resource cost;
+- action cost/timing and legal target restrictions;
+- any source-specific ordering or exception required by RAW.
+
+The engine may validate these values, but must not invent, guess, silently default, or replace an outcome-changing value merely to make a card runnable. If the import/catalog cannot provide a required value from real source data, fix the source/import/schema layer or keep the card blocked.
+
+### 3. Shared effects own consequences
+
+Conditions and other consequences are shared state/rule implementations. A source ability configures them; it does not get its own duplicate condition engine.
+
+Examples:
+
+- Poisoned uses one Poisoned implementation regardless of whether the source is a Dretch cloud, venom, spell, or other legal source.
+- Reaction blocking is one shared consequence flag/rule.
+- Action-versus-Bonus-Action exclusivity is one shared action-economy consequence.
+- Speed multipliers, ongoing damage, repeat saves, forced retreat, temporary immunities, and similar effects use reusable state/lifecycle machinery.
+
+Multiple sources may configure the same shared effect with different DCs, durations, damage, timing, or removal rules because those values belong to source data/configuration.
+
+### 4. Runtime source identity owns attribution and audit logging
+
+Every mechanically relevant event must retain enough source identity to say **who did what** without using names to drive mechanics.
+
+At minimum, preserve where applicable:
+
+- source combatant runtime id;
+- source combatant display name;
+- source ability id;
+- source ability display name;
+- target combatant id/name;
+- mechanic/result evidence.
+
+Logs should therefore produce source-aware evidence such as:
+
+`Goblin fails DC 11 Constitution save against Dretch — Fetid Cloud and becomes Poisoned.`
+
+The strings `Dretch` and `Fetid Cloud` are audit/display attribution. They are not dispatch keys. The Aura/Saving Throw/Poisoned/action-economy engines resolve the event from structured data.
+
+### Same mechanic, different source abilities
+
+Different abilities can and should reuse one mechanic whenever structured configuration fully expresses their behavior.
+
+For example, the Aura primitive can support different named abilities by reading each source's configured:
+
+- activation/passive state;
+- radius/shape;
+- trigger timing;
+- duration;
+- save ability/DC;
+- success/failure payload;
+- resource/use limit;
+- effect lifecycle.
+
+A 2014 Dretch's Fetid Cloud is therefore not a `Dretch` resolver. It is source data that configures reusable aura, saving-throw, resource, Poisoned, timed-effect, and action-economy primitives. The log still names the actual Dretch and Fetid Cloud because source attribution is preserved independently of resolution behavior.
+
+This ownership rule applies equally to attacks, breath weapons, spells, grapples, ongoing damage, healing, reactions, recharge abilities, Multiattack components, and future mechanics.
+
+### Ruleset isolation remains part of source ownership
+
+Shared mechanics may serve multiple rulesets, but each ability's values and wording must come from that combatant's active ruleset source. Never populate a 2014 ability from 2024 text or vice versa merely because the names look similar. Edition differences belong in explicit data/profile configuration around the shared primitive.
+
 ## Arena movement policy
 
 Movement mechanics and movement policy are separate.
@@ -259,14 +350,16 @@ Arena-out-of-scope is a deliberate product-scope classification, never a substit
 For any new combat mechanic:
 
 1. identify the minimum facts that prove the creature has it;
-2. store those facts in character/monster data;
-3. add one small generic predicate/handler;
-4. call it from the natural shared resolution point;
-5. test Python and browser parity;
-6. make CI execute that regression permanently;
-7. re-audit all heroes and monsters that now meet the same conditions.
+2. classify which facts belong to the engine primitive versus source ability configuration versus shared effect state;
+3. store source-specific values in character/monster data;
+4. add one small generic predicate/handler only if the existing primitive cannot already express the behavior;
+5. call it from the natural shared resolution point;
+6. preserve source combatant + ability attribution in audit events without using those names for dispatch;
+7. test Python and browser parity;
+8. make CI execute that regression permanently;
+9. re-audit all heroes and monsters that now meet the same conditions.
 
-Do not begin with class-specific turn logic.
+Do not begin with class-specific or monster-specific turn logic.
 
 ## Monsters
 
@@ -274,7 +367,7 @@ Monsters follow the same model:
 
 `stat block -> declarative combatant -> shared runtime`
 
-If a monster already uses supported mechanics, adding it should mostly be data and certification. A genuinely new outcome-changing trait justifies one new shared handler.
+If a monster already uses supported mechanics, adding it should mostly be data and certification. A genuinely new outcome-changing primitive justifies one new shared handler. A differently named/configured use of an existing primitive does not.
 
 ## Certification
 
@@ -316,8 +409,11 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 
 - KISS: specialization is mostly data.
 - Characters and monsters are the source of combat truth.
+- Engine mechanics own behavior; source ability records own numbers/configuration; shared effects own consequences; runtime source identity owns attribution/logging.
 - Names are not rule switches.
 - The same mechanic is implemented once.
+- Never invent an outcome-changing creature value to satisfy a generic mechanic; fix source/import/schema or keep the card blocked.
+- Ruleset-specific values come only from the active ruleset's source data.
 - Weapon mastery requires both the weapon mastery property and the combatant's mastery of that weapon.
 - Casters receive only spells legal for their level/build.
 - Noncombat rules do not bloat the arena engine.
