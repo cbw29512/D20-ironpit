@@ -44,10 +44,22 @@ def _area(text: str) -> dict | None:
             "shape": "line", "origin": "self",
             "length_ft": int(line.group(1)), "width_ft": int(line.group(2)),
         }
+    point = re.search(r"\bpoint\b.*?\bwithin\s+(\d+)\s+feet", text, re.I)
+    point_radius = re.search(r"\b(?:each|every)\s+creature\s+within\s+(\d+)\s+feet\s+of\s+(?:the|that)\s+(?:flash|point|spot|location|impact)", text, re.I)
+    if point is not None and point_radius is not None:
+        return {"shape": "radius", "origin": "point", "radius_ft": int(point_radius.group(1))}
     radius = re.search(r"within\s+(\d+)\s+feet\s+of\s+(?:it|the [A-Za-z' -]+)", text, re.I)
     if radius:
         return {"shape": "emanation", "origin": "self", "radius_ft": int(radius.group(1))}
     return None
+
+
+def _range_ft(text: str, area: dict) -> int:
+    if area.get("origin") == "point":
+        point = re.search(r"\bpoint\b.*?\bwithin\s+(\d+)\s+feet", text, re.I)
+        if point is not None:
+            return int(point.group(1))
+    return int(area.get("length_ft", area.get("radius_ft", 0)))
 
 
 def _save(text: str) -> tuple[str, int] | None:
@@ -149,7 +161,7 @@ def parse_save_actions(source_actions: str | None, recharges: dict[str, int]) ->
         requires_no_active_grapple = bool(re.search(r"provided that (?:it|the [A-Za-z' -]+) has no creature grappled", text, re.I))
         row = {
             "id": action_id, "name": heading.split("(Recharge", 1)[0].strip(),
-            "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", area.get("radius_ft", 0)),
+            "save_ability": ability, "dc": dc, "range_ft": _range_ft(text, area),
             "area": area, "damage_dice_count": count, "damage_dice_size": size,
             "damage_bonus": bonus, "damage_type": damage_type, "success_damage": success_damage,
             "resource_id": resource_id, "resource_cost": 1,
