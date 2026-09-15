@@ -60,7 +60,7 @@ def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
     action_keys = {action_key_2014(name) for name in source.action_names}
     if "invisibility" in action_keys:
         supported.add("invisibility")
-    if source.multiattack_slots:
+    if source.multiattack_slots or source.multiattack_binding is not None:
         supported.add("multiattack")
     return supported
 
