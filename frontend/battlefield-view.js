@@ -129,7 +129,8 @@
 
   function writeLog(battle) {
     const root = el("battle-log"); root.replaceChildren();
-    battle.events.forEach((event) => {
+    const events = L()?.compactEvents?.(battle.events) || battle.events;
+    events.forEach((event) => {
       const li = document.createElement("li"), header = document.createElement("div"), body = document.createElement("div");
       header.className = "battle-log-event-heading"; header.textContent = `ROUND ${event.round_number} · ${String(event.event_type || "event").replaceAll("_", " ").toUpperCase()}`;
       body.className = "battle-log-event-body";
