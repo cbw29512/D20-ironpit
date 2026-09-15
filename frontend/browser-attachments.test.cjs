@@ -38,10 +38,15 @@ assert.equal(window.IRON_PIT_BROWSER_ATTACHMENTS.apply(stirgeMember.state, "stir
 assert.equal(window.IRON_PIT_BROWSER_ATTACHMENTS.attackAvailable(stirgeMember.state, attack), false);
 assert.equal(stirgeMember.state.attachment.detachable_by_source_movement_ft, 5);
 
+let settledEvent = null;
+window.IRON_PIT_BROWSER_DEATH_TRIGGERS = {
+  afterEvent: (sequence, round, event) => { settledEvent = event; return { events: [], sequence }; },
+};
 window.IRON_PIT_DICE = { roll: () => 4 };
 const tick = window.IRON_PIT_BROWSER_ATTACHMENTS.startTurn(1, 2, stirgeMember, setup);
 assert.equal(tick.events[0].damage_roll.total, 8);
 assert.equal(target.state.current_hp, 22);
+assert.equal(settledEvent, tick.events[0], "attachment damage must enter the universal post-event death lifecycle");
 
 window.IRON_PIT_BROWSER_STATE.beginTurn(enemy.state);
 assert.equal(window.IRON_PIT_BROWSER_ATTACHMENTS.detachAction(2, 2, enemy, setup), null, "AI must not spend an Action detaching an opponent's attachment");

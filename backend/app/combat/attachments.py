@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.death_triggers import append_after_event
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.ongoing_damage import encounter_members, resolve_ongoing_damage
@@ -124,9 +125,12 @@ def resolve_attachment_start_turn(
             damage_bonus=relation.periodic_damage_bonus, damage_type=relation.periodic_damage_type,
             animation="attachment-damage",
         )
+        events: list[BattleEvent] = []
+        sequence += 1
+        sequence = append_after_event(events, sequence, round_number, event, setup, dice, set())
         if target.state.is_dead:
             source.state.attachment = None
-        return [event], sequence + 1
+        return events, sequence
     except Exception as exc:
         logger.exception("Failed attachment start-turn resolution for %s.", source.combatant_id)
         raise RuntimeError("Attachment start-turn effect could not be resolved.") from exc

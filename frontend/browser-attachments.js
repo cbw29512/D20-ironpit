@@ -2,6 +2,7 @@
   "use strict";
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const O = () => window.IRON_PIT_BROWSER_ONGOING_DAMAGE;
+  const D = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const members = (setup) => [...setup.heroes, ...setup.monsters];
 
@@ -53,20 +54,29 @@
   }
 
   function startTurn(sequence, round, source, setup) {
-    const relation = source.state.attachment;
-    if (!relation) return { events: [], sequence };
-    const target = members(setup).find((member) => member.combatant_id === relation.target_id);
-    if (!target || source.state.is_dead || !source.state.is_alive || target.state.is_dead) {
-      source.state.attachment = null; return { events: [], sequence };
+    try {
+      const relation = source.state.attachment;
+      if (!relation) return { events: [], sequence };
+      const target = members(setup).find((member) => member.combatant_id === relation.target_id);
+      if (!target || source.state.is_dead || !source.state.is_alive || target.state.is_dead) {
+        source.state.attachment = null; return { events: [], sequence };
+      }
+      const event = O().resolve(sequence, round, source, target, setup, {
+        featureId: relation.source_effect_id, featureName: "attached effect",
+        diceCount: relation.periodic_damage_count, diceSize: relation.periodic_damage_size,
+        damageBonus: relation.periodic_damage_bonus, damageType: relation.periodic_damage_type,
+        animation: "attachment-damage",
+      });
+      const events = [event];
+      sequence += 1;
+      const triggered = D().afterEvent(sequence, round, event, setup, new Set());
+      events.push(...triggered.events); sequence = triggered.sequence;
+      if (target.state.is_dead) source.state.attachment = null;
+      return { events, sequence };
+    } catch (error) {
+      console.error("Browser attachment start-turn resolution failed", { source: source.combatant_id, error });
+      throw error;
     }
-    const event = O().resolve(sequence, round, source, target, setup, {
-      featureId: relation.source_effect_id, featureName: "attached effect",
-      diceCount: relation.periodic_damage_count, diceSize: relation.periodic_damage_size,
-      damageBonus: relation.periodic_damage_bonus, damageType: relation.periodic_damage_type,
-      animation: "attachment-damage",
-    });
-    if (target.state.is_dead) source.state.attachment = null;
-    return { events: [event], sequence: sequence + 1 };
   }
 
   window.IRON_PIT_BROWSER_ATTACHMENTS = { apply, attackAvailable, detachAction, detachBySourceMovement, sourceFor, startTurn };
