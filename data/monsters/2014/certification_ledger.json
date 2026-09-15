@@ -1,10 +1,10 @@
 {
-  "blocked_count": 60,
+  "blocked_count": 59,
   "blocker_families": {
     "action": 47,
     "attack-detail": 27,
     "compile": 1,
-    "defense": 2,
+    "defense": 1,
     "legendary": 25,
     "spell": 7,
     "trait": 38
@@ -72,7 +72,6 @@
     "attack-detail:War Pick": 1,
     "attack-detail:Whip": 1,
     "compile:universal-runtime": 1,
-    "defense:piercing and slashing from nonmagical attacks that aren't adamantine": 1,
     "defense:piercing from magic weapons wielded by good creatures": 1,
     "legendary:Attack": 2,
     "legendary:Blasphemous Word": 1,
@@ -2545,11 +2544,9 @@
     {
       "id": "xorn",
       "name": "Xorn",
-      "remaining_blocker_count": 1,
-      "remaining_blockers": [
-        "defense:piercing and slashing from nonmagical attacks that aren't adamantine"
-      ],
-      "status": "blocked"
+      "remaining_blocker_count": 0,
+      "remaining_blockers": [],
+      "status": "ready"
     },
     {
       "id": "yeti",
@@ -2636,7 +2633,7 @@
       "status": "ready"
     }
   ],
-  "ready_count": 267,
+  "ready_count": 268,
   "ruleset": "2014",
   "schema_version": 1
 }
