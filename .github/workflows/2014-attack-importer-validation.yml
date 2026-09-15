@@ -1,0 +1,47 @@
+name: 2014 Attack Importer Validation
+
+on:
+  push:
+    paths:
+      - 'scripts/import_2014_monster_catalog.py'
+      - 'scripts/import_2014_attack_details.py'
+      - 'backend/tests/test_2014_rider_only_attacks.py'
+      - 'data/monsters/2014/catalog.json'
+      - 'data/monsters/2014/certification_ledger.json'
+      - '.github/workflows/2014-attack-importer-validation.yml'
+  pull_request:
+    paths:
+      - 'scripts/import_2014_monster_catalog.py'
+      - 'scripts/import_2014_attack_details.py'
+      - 'backend/tests/test_2014_rider_only_attacks.py'
+      - 'data/monsters/2014/catalog.json'
+      - 'data/monsters/2014/certification_ledger.json'
+      - '.github/workflows/2014-attack-importer-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 2014-attack-importer-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-attack-importer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Iron Pit rules engine
+        run: pip install -e 'backend[dev]'
+      - name: Prove rider-only attack import and runtime
+        working-directory: backend
+        run: pytest -q tests/test_2014_rider_only_attacks.py
+      - name: Verify all 327 normalized records
+        run: python scripts/verify_2014_full_catalog.py
+      - name: Enforce committed certification ledger parity
+        run: python scripts/export_2014_monster_ledger.py --check
+      - name: Report current 2014 blocker yield
+        run: python scripts/report_2014_monster_progress.py
