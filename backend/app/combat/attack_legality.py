@@ -45,7 +45,8 @@ def attack_allowed_against(
             source.source_id == attacker_event_id for source in defender.grapple_sources
         ):
             return False
-        if attack.grapple_target_policy != "auto_hit_own_grapple" or opponent_states is None:
+        restrict_to_held = attack.grapple_target_policy in {"auto_hit_own_grapple", "own_grapple_only"}
+        if not restrict_to_held or opponent_states is None:
             return True
         held_any = any(_held_by_attack(attack, attacker_event_id, state) for state in opponent_states)
         return not held_any or _held_by_attack(attack, attacker_event_id, defender)
