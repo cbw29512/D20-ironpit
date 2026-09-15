@@ -24,7 +24,7 @@ SCOPED_OUT_NON_DAMAGE_SPELLS_2014 = frozenset({
     "nondetection", "pass-without-trace", "plane-shift", "polymorph", "power-word-stun",
     "prestidigitation", "protection-from-poison", "raise-dead", "remove-curse", "resurrection",
     "sanctuary", "scrying", "shield", "shield-of-faith", "shillelagh", "silence", "sleep",
-    "speak-with-animals", "spare-the-dying", "stoneskin", "suggestion", "telekinesis", "thaumaturgy",
+    "speak-with-animals", "spare-the-dying", "stoneskin", "suggestion", "thaumaturgy",
     "time-stop", "tongues", "teleport", "true-seeing", "wall-of-force", "water-breathing", "wind-walk",
     "zone-of-truth",
 })
@@ -43,7 +43,7 @@ def _regular_unresolved(source: CatalogMonster2014) -> list[str]:
     return [spell.name for spell in profile.spells if spell.id not in supported]
 
 
-def _innate_unresolved(source: CatalogMonster2014) -> list[str]:
+def _innate_unresolved(source: CatalogMonster2012014) -> list[str]:
     profile = source.innate_spellcasting
     if profile is None or not profile.source_complete or not profile.spells:
         return ["unparsed-innate-spellcasting"]
