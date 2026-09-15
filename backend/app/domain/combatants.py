@@ -20,6 +20,7 @@ from app.domain.reactions import ParryReaction, ProjectileCatchReaction, Redirec
 from app.domain.reactive_damage import MeleeHitReactiveDamage
 from app.domain.regeneration import RegenerationProfile
 from app.domain.save_auras import SaveAdvantageAura
+from app.domain.self_buffs import SelfBuffAction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.start_turn_damage import StartTurnRelationshipDamage
@@ -81,6 +82,7 @@ class CombatantTemplate(BaseModel):
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
+    self_buff_actions: list[SelfBuffAction] = Field(default_factory=list)
     starts_invisible: bool = False
     invisibility_action: InvisibilityAction | None = None
     legendary_action_uses: int = Field(default=0, ge=0, le=10)
