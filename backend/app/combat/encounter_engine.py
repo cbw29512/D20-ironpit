@@ -18,6 +18,7 @@ from app.combat.encounter_targeting import select_nearest_target
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.legendary_actions import refresh_legendary_actions, resolve_end_turn_legendary_actions
 from app.combat.modifier_stack import expire_source_turn_modifiers
+from app.combat.persistent_spells import refresh_spell_turn_state
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.state import refresh_start_of_turn
@@ -96,6 +97,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     events.append(berserk_event); sequence += 1
                 refresh_legendary_actions(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
+                refresh_spell_turn_state(member.state, round_number)
                 aura_expiry_events, sequence = expire_active_auras(sequence, round_number, member)
                 events.extend(aura_expiry_events)
                 expiry_events, sequence = expire_start_of_turn_conditions(
