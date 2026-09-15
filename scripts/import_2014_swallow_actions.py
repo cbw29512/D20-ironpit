@@ -104,7 +104,8 @@ def parse_grappled_target_swallow_attack(paragraph: str) -> dict | None:
         return None
     return {
         "id": "swallow", "name": "Swallow", "attack_id": _slug(name),
-        "max_target_size": rider.group(1).lower(), "requires_existing_grapple": True, **shared,
+        "max_target_size": rider.group(1).lower(), "requires_existing_grapple": True,
+        "_inline_attack": True, **shared,
     }
 
 
