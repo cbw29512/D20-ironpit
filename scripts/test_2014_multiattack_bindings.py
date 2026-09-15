@@ -8,7 +8,7 @@ def attack(attack_id: str, name: str) -> dict:
 def binding(text: str, attacks: list[dict]) -> dict:
     parsed = parse_multiattack(f"<p><strong>Multiattack.</strong> {text}</p>", attacks)
     assert parsed is not None
-    assert "slots" not in parsed
+    assert parsed["slots"] == []
     return parsed["binding"]
 
 
