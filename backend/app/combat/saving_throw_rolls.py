@@ -12,6 +12,7 @@ from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.legendary_resistance import use_legendary_resistance_on_failure
 from app.combat.modifier_stack import apply_d20_bonus_dice
 from app.combat.rolls import roll_d20
+from app.combat.self_buffs import save_advantage_sources as self_buff_save_advantage
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 from app.domain.modifiers import ModifierKind
 from app.domain.traits import CombatTrait
@@ -35,6 +36,7 @@ def saving_throw_mode(
     try:
         advantage = (
             advantage_sources
+            + self_buff_save_advantage(state, ability)
             + int(ability == "strength" and rage_active(state))
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
