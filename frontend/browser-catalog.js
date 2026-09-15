@@ -26,16 +26,16 @@
   function buildHeroes() {
     const cards = [], readyHeroes = readyHeroIndex();
     for (const [classId, className, heroName, subclassId, subclassName] of HERO_ROWS) {
-      for (let level = 1; level <= 20; level += 1) {
+      for (let level = 1; level <= 10; level += 1) {
         const runtime = readyHeroes.get(`${classId}:${level}`) || null;
         cards.push({
-          id: `hero-2024-${classId}-l${level}`,
+          id: `hero-playtest-${classId}-l${level}`,
           name: heroName,
           class_id: classId,
           class_name: className,
           level,
           build_id: "canonical",
-          build_name: "Canonical RAW Progression",
+          build_name: "Certified Test Pregen",
           subclass_id: level >= 3 ? subclassId : null,
           subclass_name: level >= 3 ? subclassName : null,
           coverage_status: runtime ? "raw_ready" : "blocked",
@@ -49,35 +49,44 @@
 
   function readyMonsterCards() {
     return Object.values(window.IRON_PIT_BROWSER_MONSTERS).map((monster) => ({
-      id: `catalog-${monster.id}`, name: monster.name, challenge_rating: monster.challenge_rating,
-      monster_type: monster.archetype, coverage_status: "raw_ready", runnable_template_id: monster.id, blockers: [],
+      id: `catalog-${monster.id}`,
+      name: monster.name,
+      challenge_rating: monster.challenge_rating,
+      monster_type: monster.creature_type || monster.archetype,
+      coverage_status: "raw_ready",
+      runnable_template_id: monster.id,
+      blockers: [],
     }));
   }
 
+  function mark2014Playtest(monsterCount) {
+    document.title = "The Iron Pit — D&D 5e 2014 Playtest";
+    const hero = document.querySelector("header.compact-hero");
+    const rulesNotes = hero ? hero.querySelectorAll(".rules-note") : [];
+    const eyebrow = hero ? hero.querySelector("p.eyebrow") : null;
+    const intro = hero ? hero.querySelector("p:not(.eyebrow):not(.rules-note)") : null;
+    if (eyebrow) eyebrow.textContent = "D&D 5e 2014 · SRD PLAYTEST";
+    if (intro) intro.textContent = `${monsterCount} ledger-certified 2014 SRD monsters are enabled for live testing.`;
+    if (rulesNotes[0]) rulesNotes[0].textContent = "Beta safety gate: uncertified 2014 monsters are hidden and cannot enter combat.";
+    if (rulesNotes[1]) rulesNotes[1].textContent = "Hero side uses the currently integrated certified test pregens while dedicated 2014 pregen work continues.";
+    const logNote = document.querySelector(".log-panel .rules-note");
+    if (logNote) logNote.textContent = "D&D 5e 2014 · certified roster playtest · expandable rules audit";
+  }
+
   async function buildMonsters() {
-    const ready = new Map(Object.values(window.IRON_PIT_BROWSER_MONSTERS).map((monster) => [monster.name, monster.id]));
-    try {
-      const response = await fetch("data/srd_5_2_1_monsters.json", { cache: "no-cache" });
-      if (!response.ok) throw new Error(`Monster catalog returned ${response.status}`);
-      const rows = await response.json();
-      if (!Array.isArray(rows) || rows.length !== 330) throw new Error("Expected 330 SRD monsters.");
-      return rows.map((row) => {
-        const templateId = ready.get(row.name) || null;
-        return {
-          id: row.id, name: row.name, challenge_rating: String(row.challenge).split(" ")[0], monster_type: row.type,
-          armor_class: row.armorClass, hit_points: row.hitPoints, speed: row.speed,
-          coverage_status: templateId ? "raw_ready" : "blocked", runnable_template_id: templateId,
-          blockers: templateId ? [] : ["monster-combat-mechanics-not-certified"],
-        };
-      });
-    } catch (error) {
-      console.warn("Full static monster catalog unavailable; using certified runtime subset.", error);
-      return readyMonsterCards();
-    }
+    const monsters = readyMonsterCards();
+    if (!monsters.length) throw new Error("No certified 2014 monsters were exported for the playtest.");
+    return monsters;
   }
 
   async function buildCatalog() {
     const heroes = buildHeroes(), monsters = await buildMonsters();
+    mark2014Playtest(monsters.length);
+    window.IRON_PIT_PLAYTEST = {
+      ruleset: "2014",
+      certified_monsters: monsters.length,
+      hero_scope: "currently integrated certified test pregens, levels 1-10",
+    };
     return { heroes, monsters, hero_count: heroes.length, monster_count: monsters.length };
   }
 
