@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
   const O = () => window.IRON_PIT_BROWSER_START_TURN_DAMAGE;
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
+  const B = () => window.IRON_PIT_BROWSER_SELF_BUFFS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -25,7 +26,9 @@
     if (healing) events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
     const channel = K()?.resolve(sequence, round, member, setup);
     if (channel) { events.push(...channel.events); sequence = channel.sequence; }
-    return { events, sequence };
+    const buff = B()?.activateReady(sequence, round, member);
+    if (buff) return { events: [...events, ...buff.events], sequence: buff.sequence, handled: true };
+    return { events, sequence, handled: false };
   }
 
   function secondWind(sequence, round, member) {
