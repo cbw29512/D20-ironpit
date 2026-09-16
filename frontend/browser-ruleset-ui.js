@@ -25,7 +25,7 @@
   function summary(state) {
     if (!state.catalog) return "";
     if (state.ruleset === "2014") {
-      return `${state.catalog.monster_ready_count}/4 certified 2014 monsters · test lane · monster-vs-monster until 2014 pregens are certified.`;
+      return `${state.catalog.monster_ready_count}/${state.catalog.monster_count} certified 2014 monsters · test lane · monster-vs-monster until 2014 pregens are certified.`;
     }
     return `${state.catalog.hero_ready_count}/${state.catalog.hero_count} certified hero levels · ${state.catalog.monster_ready_count}/${state.catalog.monster_count} certified monsters.`;
   }
@@ -39,7 +39,7 @@
       ? "<strong>D&D 5e (2014) test combat lane.</strong> Pick certified 2014 monsters for both teams and run them through the shared Iron Pit engine."
       : "<strong>D&D 5e (2024) compatible combat simulation system.</strong> Load the cards, roll initiative, and watch a rules-driven fight play out.";
     if (headerNotes[0]) headerNotes[0].textContent = is2014
-      ? "2014 is isolated from 2024. This test lane currently exposes only the four certified MVP monsters."
+      ? "2014 is isolated from 2024. This test lane exposes the currently certified 2014 monster subset."
       : "2024 production lane. Only explicitly certified hero levels and monsters can enter automated combat.";
     const auditNote = document.querySelector(".log-panel .rules-note");
     if (auditNote) auditNote.textContent = is2014 ? "D&D 2014 / SRD 5.1 test lane · expandable rules audit" : "D&D 2024 / SRD 5.2.1 · expandable rules audit";
