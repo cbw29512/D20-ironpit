@@ -38,6 +38,8 @@
           build_name: "Canonical RAW Progression",
           subclass_id: level >= 3 ? subclassId : null,
           subclass_name: level >= 3 ? subclassName : null,
+          ruleset: "2024",
+          kind: "character",
           coverage_status: runtime ? "raw_ready" : "blocked",
           runnable_template_id: runtime?.id || null,
           blockers: runtime ? [] : ["hero-level-not-certified", "combat-feature-coverage-not-certified"],
@@ -50,7 +52,9 @@
   function readyMonsterCards(registry = window.IRON_PIT_BROWSER_MONSTERS) {
     return Object.values(registry || {}).map((monster) => ({
       id: `catalog-${monster.id}`, name: monster.name, challenge_rating: monster.challenge_rating,
-      monster_type: monster.archetype, coverage_status: "raw_ready", runnable_template_id: monster.id, blockers: [],
+      monster_type: monster.archetype, armor_class: monster.armor_class, hit_points: monster.max_hp,
+      ruleset: monster.ruleset, kind: "monster", coverage_status: "raw_ready",
+      runnable_template_id: monster.id, blockers: [],
     }));
   }
 
@@ -65,7 +69,7 @@
         const templateId = ready.get(row.name) || null;
         return {
           id: row.id, name: row.name, challenge_rating: String(row.challenge).split(" ")[0], monster_type: row.type,
-          armor_class: row.armorClass, hit_points: row.hitPoints, speed: row.speed,
+          armor_class: row.armorClass, hit_points: row.hitPoints, speed: row.speed, ruleset: "2024", kind: "monster",
           coverage_status: templateId ? "raw_ready" : "blocked", runnable_template_id: templateId,
           blockers: templateId ? [] : ["monster-combat-mechanics-not-certified"],
         };
@@ -80,6 +84,7 @@
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 MVP browser bundle did not load.");
     const cards = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
     if (cards.length !== 4) throw new Error(`Expected 4 certified 2014 test monsters; found ${cards.length}.`);
+    if (cards.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 test catalog crossed the ruleset boundary.");
     return {
       heroes: cards.map((card) => ({ ...card })),
       monsters: cards.map((card) => ({ ...card })),
