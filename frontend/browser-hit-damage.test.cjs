@@ -152,13 +152,20 @@ assert.equal(event.hp_before - event.hp_after, event.damage_roll.total, "attack 
 
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
-assert.equal(Object.keys(roster).length, 83);
-for (const id of ["giant-poisonous-snake", "giant-scorpion", "poisonous-snake", "scorpion", "wyvern"]) {
+assert.equal(Object.keys(roster).length, 85);
+for (const id of [
+  "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp", "poisonous-snake", "scorpion", "wyvern",
+]) {
   const monster = roster[`2014-${id}`];
   assert.ok(monster, `${id} must be in the certified 2014 browser roster`);
   assert.ok(monster.attacks.some((item) => item.onHitSaveDamage), `${id} must carry save damage into the browser`);
 }
-assert.equal(roster["2014-giant-centipede"], undefined);
-assert.equal(roster["2014-giant-wasp"], undefined);
+for (const id of ["giant-centipede", "giant-wasp"]) {
+  const rider = roster[`2014-${id}`].attacks.find((item) => item.onHitSaveDamage?.zeroHpRider)?.onHitSaveDamage.zeroHpRider;
+  assert.ok(rider, `${id} must carry the zero-HP save rider through generated browser serialization`);
+  assert.equal(rider.stable, true);
+  assert.deepEqual(rider.conditionIds.sort(), ["paralyzed", "poisoned"]);
+  assert.equal(rider.durationRounds, 600);
+}
 
-console.log("Browser save-dependent hit damage remains certified in the 83-monster 2014 tranche.");
+console.log("Browser save-dependent hit damage is certified in the 85-monster 2014 tranche.");
