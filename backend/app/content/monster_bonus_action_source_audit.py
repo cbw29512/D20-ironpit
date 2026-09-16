@@ -4,24 +4,23 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.arena_neutral_bonus_actions import (
+    ARENA_NEUTRAL_BONUS_ACTIONS,
+    bonus_action_base_name,
+    is_arena_neutral_bonus_action,
+)
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
-# These actions only Hide/Disengage or alter pre-contact movement under the
-# documented flat, no-Hide, no-kiting, initiative-opener arena abstraction.
-_ARENA_NEUTRAL_BONUS_ACTIONS = frozenset({
-    "Aquatic Charge", "Charge", "Leap", "Nimble Escape", "Shadow Stealth",
-})
-
-
-def _base_name(name: str) -> str:
-    return re.sub(r"\s*\([^)]*\)$", "", name).strip()
+# Compatibility aliases for the reporting script while callers migrate to the shared policy module.
+_ARENA_NEUTRAL_BONUS_ACTIONS = ARENA_NEUTRAL_BONUS_ACTIONS
+_base_name = bonus_action_base_name
 
 
 def _slug(name: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "-", _base_name(name).lower()).strip("-")
+    return re.sub(r"[^a-z0-9]+", "-", bonus_action_base_name(name).lower()).strip("-")
 
 
 def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
@@ -35,7 +34,7 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
     if template.source_bonus_action_names != expected:
         issues.append("source-bonus-action-fingerprint-mismatch")
     for name in expected:
-        if _base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS:
+        if not is_arena_neutral_bonus_action(name):
             issues.append(f"uncertified-bonus-action:{_slug(name)}")
     return issues
 
