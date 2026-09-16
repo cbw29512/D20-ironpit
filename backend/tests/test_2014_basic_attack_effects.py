@@ -3,6 +3,7 @@ from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
+from app.domain.traits import CombatTrait
 
 
 _ATTACK_EFFECT_IDS = {
@@ -18,6 +19,7 @@ _SAVE_DAMAGE_IDS = {
 }
 _CHARGE_IDS = {"elk", "giant-elk", "giant-sea-horse", "minotaur-skeleton", "rhinoceros"}
 _SURE_FOOTED_IDS = {"goat", "giant-goat"}
+_SWARM_IDS = {"swarm-of-insects", "swarm-of-poisonous-snakes", "swarm-of-rats", "swarm-of-ravens"}
 
 
 def _attack_id(monster_id: str, attack_id: str) -> str:
@@ -33,11 +35,14 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_87_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_91_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 87
-    expected = _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS | _SURE_FOOTED_IDS
+    assert len(ready) == 91
+    expected = (
+        _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS |
+        _SURE_FOOTED_IDS | _SWARM_IDS
+    )
     assert expected <= {monster.id for monster in ready}
     for monster in ready:
         template = compile_combatant(adapt_basic_monster_2014(monster))
@@ -125,6 +130,27 @@ def test_charge_profiles_preserve_exact_pinned_source_semantics():
             ability = expected.get("prone_save_ability")
             assert (_enum_value(actual.prone_save_ability) if actual.prone_save_ability else None) == ability
             assert actual.prone_save_dc == expected.get("prone_save_dc")
+
+
+def test_swarm_conditional_damage_uses_shared_runtime_semantics():
+    source = {monster.id: monster for monster in load_monster_source_2014()}
+    for monster_id in _SWARM_IDS:
+        monster = source[monster_id]
+        assert basic_blockers_2014(monster) == ()
+        template = compile_combatant(adapt_basic_monster_2014(monster))
+        assert CombatTrait.SWARM in template.combat_traits
+        runtime_attacks = _runtime_attacks(template)
+        for source_attack in monster.attacks:
+            expected_rows = source_attack.conditional_damage
+            actual_rows = runtime_attacks[_attack_id(monster.id, source_attack.id)].conditional_damage
+            assert len(actual_rows) == len(expected_rows)
+            for expected, actual in zip(expected_rows, actual_rows, strict=True):
+                assert actual.trigger == expected["trigger"]
+                assert actual.mode == expected["mode"]
+                assert actual.dice_count == expected["dice_count"]
+                assert actual.dice_size == expected["dice_size"]
+                assert actual.damage_bonus == expected.get("damage_bonus", 0)
+                assert _enum_value(actual.damage_type) == expected["damage_type"]
 
 
 def test_special_zero_hp_poison_riders_are_source_bound_and_certified():
