@@ -8,7 +8,8 @@ from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
 from app.combat.policy import should_use_second_wind
 from app.combat.rolls import roll_d20
-from app.combat.state import begin_turn, build_combatant_state
+from app.combat.start_turn import begin_turn_with_events
+from app.combat.state import build_combatant_state
 from app.combat.turns import prepare_attack
 from app.domain.models import BattleEvent, BattlefieldState, BattleResult, CombatantTemplate
 
@@ -60,7 +61,10 @@ def run_duel(
                 if attacker.current_hp <= 0 or defender.current_hp <= 0:
                     continue
 
-                begin_turn(attacker)
+                start_events, sequence = begin_turn_with_events(
+                    sequence, round_number, attacker.template.id, attacker, dice,
+                )
+                events.extend(start_events)
                 if attacker is fighter and should_use_second_wind(fighter):
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
                     sequence += 1
