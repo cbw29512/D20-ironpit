@@ -12,7 +12,7 @@ from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
 _DATA_PATH = Path(__file__).with_name("data") / "combatant_capabilities_2014_mvp_v1.json"
-_EXPECTED_IDS = {"2014-bandit", "2014-skeleton"}
+_EXPECTED_IDS = {"2014-bandit", "2014-skeleton", "2014-brown-bear"}
 
 
 @lru_cache(maxsize=1)
@@ -22,7 +22,7 @@ def load_2014_mvp_definitions() -> dict[str, CombatantDefinition]:
             json.loads(_DATA_PATH.read_text(encoding="utf-8"))
         )
         if set(definitions) != _EXPECTED_IDS:
-            raise ValueError("2014 MVP capability slice must contain only Bandit and Skeleton.")
+            raise ValueError("2014 MVP capability slice contains an unexpected monster set.")
         if any(item.kind != "monster" or item.ruleset != "2014" for item in definitions.values()):
             raise ValueError("2014 MVP capability slice must contain only 2014 monsters.")
         return definitions
