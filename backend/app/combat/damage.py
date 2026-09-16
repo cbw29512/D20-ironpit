@@ -7,6 +7,7 @@ from app.combat.conditional_damage import active_replacement_damage, conditional
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
+from app.combat.savage_attacks import savage_attacks_bonus_die
 from app.combat.sneak_attack import sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
@@ -89,6 +90,13 @@ def resolve_weapon_damage(
                 modifier=weapon_modifier, damage_type=weapon.damage_type,
                 critical=critical, turn_key=turn_key, damage_die_minimum=attack.damage_die_minimum,
             )]
+
+        savage_attacks = savage_attacks_bonus_die(attacker, attack, critical)
+        if savage_attacks is not None:
+            dice_size, damage_type = savage_attacks
+            components.append(roll_damage_component(
+                dice, "Savage Attacks", 1, dice_size, 0, DamageType(damage_type), False,
+            ))
 
         for extra in attack.on_hit_damage:
             if extra.dice_count == 0:
