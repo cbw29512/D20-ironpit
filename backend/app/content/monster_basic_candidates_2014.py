@@ -11,6 +11,7 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Hold Breath",
     "Keen Hearing",
     "Keen Hearing and Smell",
+    "Keen Hearing and Sight",
     "Keen Sight",
     "Keen Sight and Smell",
     "Keen Smell",
@@ -26,8 +27,6 @@ def _attack_blockers(monster: SourceMonster2014) -> list[str]:
             blockers.append("attack:incomplete")
         if attack.damage.type not in _DAMAGE_TYPES:
             blockers.append("attack:damage-type")
-        if attack.damage.dice_count < 1:
-            blockers.append("attack:damage-shape")
         if any((
             attack.conditional_damage,
             attack.conditional_attack_advantage,
