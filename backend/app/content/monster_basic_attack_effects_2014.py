@@ -20,6 +20,11 @@ from app.domain.weapons import DamageType
 
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _DAMAGE_KEYS = frozenset({"average", "bonus", "dice_count", "dice_size", "type"})
+_CONDITIONAL_DAMAGE_KEYS = frozenset({
+    "trigger", "mode", "dice_count", "dice_size", "damage_bonus", "damage_type",
+})
+_CONDITIONAL_TRIGGERS = frozenset({"attack_advantage", "attacker_bloodied", "target_bloodied"})
+_CONDITIONAL_MODES = frozenset({"add", "replace_weapon"})
 _CONTROL_KEYS = frozenset({"grapple_escape_dc", "max_target_size", "restrains_while_grappled"})
 _SAVE_CONDITION_KEYS = frozenset({"condition_id", "dc", "max_target_size", "save_ability"})
 _SAVE_DAMAGE_KEYS = frozenset({
@@ -36,6 +41,19 @@ def _supported_damage_row(value: object) -> bool:
         isinstance(value.get("dice_count"), int) and int(value["dice_count"]) > 0
         and isinstance(value.get("dice_size"), int) and int(value["dice_size"]) >= 2
         and isinstance(value.get("bonus", 0), int) and damage_type in _DAMAGE_TYPES
+    )
+
+
+def _supported_conditional_damage(value: object) -> bool:
+    if not isinstance(value, dict) or not set(value) <= _CONDITIONAL_DAMAGE_KEYS:
+        return False
+    return (
+        str(value.get("trigger", "")) in _CONDITIONAL_TRIGGERS
+        and str(value.get("mode", "add")) in _CONDITIONAL_MODES
+        and isinstance(value.get("dice_count"), int) and int(value["dice_count"]) > 0
+        and isinstance(value.get("dice_size"), int) and int(value["dice_size"]) >= 2
+        and isinstance(value.get("damage_bonus", 0), int)
+        and str(value.get("damage_type", "")).lower() in _DAMAGE_TYPES
     )
 
 
@@ -80,7 +98,9 @@ def _supported_save_damage(value: object) -> bool:
 
 
 def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
-    if attack.conditional_damage or attack.conditional_attack_advantage:
+    if attack.conditional_attack_advantage:
+        return False
+    if attack.conditional_damage and not all(_supported_conditional_damage(row) for row in attack.conditional_damage):
         return False
     if attack.on_hit_save_effect is not None and not (
         _supported_save_condition(attack.on_hit_save_effect) or _supported_save_damage(attack.on_hit_save_effect)
@@ -107,6 +127,14 @@ def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefi
     if not supports_basic_attack_effects_2014(attack):
         raise ValueError(f"{attack.id} has unsupported 2014 attack effects")
     effects: list[AttackEffectDefinition] = []
+    for row in attack.conditional_damage:
+        assert isinstance(row, dict)
+        effects.append(DamageEffectDefinition(
+            source=attack.name,
+            dice=DiceSpec(count=int(row["dice_count"]), size=int(row["dice_size"]), bonus=int(row.get("damage_bonus", 0))),
+            damage_type=DamageType(str(row["damage_type"]).lower()),
+            trigger=str(row["trigger"]), mode=str(row.get("mode", "add")),
+        ))
     for row in attack.on_hit_damage:
         assert isinstance(row, dict)
         effects.append(DamageEffectDefinition(
