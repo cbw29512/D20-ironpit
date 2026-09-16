@@ -70,7 +70,7 @@ class Weapon(BaseModel):
     name: str
     attack_kind: WeaponAttackKind
     dice_count: int = Field(ge=0, le=20)
-    dice_size: int = Field(default=6, ge=2, le=100)
+    dice_size: int = Field(ge=2, le=100)
     damage_type: DamageType
     animation: str
     reach_ft: int = Field(default=5, ge=0)
