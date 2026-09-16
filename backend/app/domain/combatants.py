@@ -9,19 +9,12 @@ from app.domain.character_builds import AbilityScores
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.recharge import RechargeRule
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
-from app.domain.weapons import (
-    ConditionalAttackAdvantage,
-    ConditionalDamage,
-    DamageType,
-    OnHitDamage,
-    Weapon,
-    WeaponAttack,
-    WeaponAttackKind,
-)
+from app.domain.weapons import ConditionalAttackAdvantage, ConditionalDamage, DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
 
 
 class VisualLoadout(BaseModel):
@@ -85,6 +78,7 @@ class CombatantTemplate(BaseModel):
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
+    recharge_rules: list[RechargeRule] = Field(default_factory=list)
     source: str
 
     @model_validator(mode="before")
