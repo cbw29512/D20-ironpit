@@ -112,6 +112,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 source=effect.source, save_ability=effect.save_ability, dc=effect.dc,
                 dice_count=effect.dice.count, dice_size=effect.dice.size, damage_bonus=effect.dice.bonus,
                 damage_type=effect.damage_type, success_damage=effect.success_damage,
+                zero_hp_rider=effect.zero_hp_rider,
             )
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
