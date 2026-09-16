@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.class_loadouts import MeleeLoadoutKind
+from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 
 AbilityName = Literal[
     "strength",
@@ -55,6 +56,7 @@ class CharacterBuildProfile(BaseModel):
     class_id: str
     class_name: str
     level: int = Field(ge=1, le=20)
+    ruleset: RulesetId = DEFAULT_RULESET
     subclass_id: str | None = None
     subclass_name: str | None = None
     build_id: str | None = None
@@ -62,11 +64,12 @@ class CharacterBuildProfile(BaseModel):
     species_name: str
     background_id: str
     background_name: str
-    origin_feat_id: str
-    origin_feat_name: str
+    origin_feat_id: str | None = None
+    origin_feat_name: str | None = None
     base_ability_scores: AbilityScores
-    background_allowed_abilities: list[AbilityName] = Field(min_length=3, max_length=3)
-    background_increases: list[AbilityIncrease] = Field(min_length=2, max_length=3)
+    background_allowed_abilities: list[AbilityName] = Field(default_factory=list, max_length=3)
+    background_increases: list[AbilityIncrease] = Field(default_factory=list, max_length=3)
+    species_increases: list[AbilityIncrease] = Field(default_factory=list, max_length=3)
     advancement_increases: list[AbilityIncrease] = Field(default_factory=list)
     final_ability_scores: AbilityScores
     class_equipment_option: EquipmentOption
@@ -94,3 +97,23 @@ class CharacterBuildProfile(BaseModel):
         elif styles and not style:
             normalized["fighting_style"] = styles[0]
         return normalized
+
+    @model_validator(mode="after")
+    def validate_edition_fields(self) -> CharacterBuildProfile:
+        if self.ruleset == "2024":
+            if not self.origin_feat_id or not self.origin_feat_name:
+                raise ValueError("2024 character builds require an origin feat.")
+            if len(set(self.background_allowed_abilities)) != 3:
+                raise ValueError("2024 character builds require three background ability choices.")
+            if len(self.background_increases) not in {2, 3}:
+                raise ValueError("2024 character builds require background ability increases.")
+            if self.species_increases:
+                raise ValueError("2024 character builds cannot use 2014-style species ability increases.")
+        else:
+            if self.origin_feat_id or self.origin_feat_name:
+                raise ValueError("2014 character builds cannot declare a 2024 origin feat.")
+            if self.background_allowed_abilities or self.background_increases:
+                raise ValueError("2014 character builds cannot use 2024 background ability increases.")
+            if self.weapon_masteries:
+                raise ValueError("2014 character builds cannot use 2024 Weapon Mastery.")
+        return self
