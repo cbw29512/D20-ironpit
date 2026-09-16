@@ -12,7 +12,7 @@
   };
   const centipede = {
     id: "srd-giant-centipede", name: "Giant Centipede", archetype: "Giant Centipede",
-    challenge_rating: "1/4", kind: "monster", size: "small", armor_class: 14,
+    challenge_rating: "1/4", kind: "monster", ruleset: "2024", size: "small", armor_class: 14,
     max_hp: 9, speed_ft: 30, initiative_bonus: 2, attacks: [bite],
     primary_attack_id: bite.id, traits: [], resources: {},
     saving_throw_bonuses: { strength: -3, dexterity: 2, constitution: 1, intelligence: -5, wisdom: -2, charisma: -4 },
