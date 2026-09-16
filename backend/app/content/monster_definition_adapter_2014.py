@@ -61,11 +61,18 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "name": attack.name,
         "attack_kind": attack.kind,
         "attack_bonus": attack.attack_bonus,
-        "damage": DiceSpec(count=attack.damage.dice_count, size=attack.damage.dice_size, bonus=attack.damage.bonus),
         "damage_type": str(attack.damage.type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
         "reach_ft": attack.reach_ft,
     }
+    if attack.damage.dice_count:
+        kwargs["damage"] = DiceSpec(
+            count=attack.damage.dice_count,
+            size=attack.damage.dice_size,
+            bonus=attack.damage.bonus,
+        )
+    else:
+        kwargs["fixed_damage"] = attack.damage.average
     if attack.kind == "ranged":
         kwargs["normal_range_ft"] = attack.normal_range_ft
         kwargs["long_range_ft"] = attack.long_range_ft
