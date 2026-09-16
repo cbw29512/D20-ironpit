@@ -12,7 +12,7 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 4);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 32);
 
 window.IRON_PIT_DICE = deterministicDice();
 const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
@@ -36,4 +36,4 @@ assert.throws(
   /Unknown certified Team B combatant for 2014/,
 );
 
-console.log("Certified 2014 browser MVP fight lane passed.");
+console.log("Expanded certified 2014 browser fight lane passed.");
