@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 
 from app.content.certified_heroes_2014 import build_certified_hero_entries_2014
-from scripts.export_browser_heroes import _template
+from export_browser_heroes import _template
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
