@@ -10,7 +10,8 @@ from app.domain.capability_effects import (
     SaveConditionEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
-from app.domain.models import ConditionalDamage, OnHitConditionSave, OnHitDamage, Weapon, WeaponAttack
+from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
+from app.domain.weapons import OnHitConditionSave
 
 
 class UnsupportedCapabilityError(ValueError):
