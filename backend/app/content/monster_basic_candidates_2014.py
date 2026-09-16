@@ -46,7 +46,7 @@ def _attack_blockers(monster: SourceMonster2014) -> list[str]:
         if attack.charge_profile is not None and not supports_charge_profile_2014(profile):
             blockers.append("attack:complex")
             continue
-        if not supports_basic_attack_effects_2014(attack, charge_profile_override=profile):
+        if not supports_basic_attack_effects_2014(attack):
             blockers.append("attack:complex")
         if attack.kind == "ranged" and (
             attack.normal_range_ft is None or attack.long_range_ft is None
