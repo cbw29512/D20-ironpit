@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.actions import AbilityName, ConditionName, HitControlEffect
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
@@ -58,12 +58,19 @@ class OnHitDamage(BaseModel):
         return self
 
 
+class OnHitConditionSave(BaseModel):
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    condition_id: ConditionName
+    max_target_size: CreatureSize | None = None
+
+
 class Weapon(BaseModel):
     id: str
     name: str
     attack_kind: WeaponAttackKind
     dice_count: int = Field(ge=0, le=20)
-    dice_size: int = Field(ge=2, le=100)
+    dice_size: int = Field(default=6, ge=2, le=100)
     damage_type: DamageType
     animation: str
     reach_ft: int = Field(default=5, ge=0)
@@ -90,6 +97,7 @@ class WeaponAttack(BaseModel):
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
+    on_hit_condition_save: OnHitConditionSave | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     rage_eligible: bool = False
     sneak_attack_eligible: bool = False
