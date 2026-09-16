@@ -21,7 +21,7 @@ from app.combat.policy import should_use_second_wind
 from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
-from app.combat.state import begin_turn
+from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -38,7 +38,10 @@ def resolve_combat_turn(
     try:
         events: list[BattleEvent] = []
         cleanup_grapples(setup)
-        begin_turn(attacker.state)
+        start_events, sequence = begin_turn_with_events(
+            sequence, round_number, attacker.combatant_id, attacker.state, dice,
+        )
+        events.extend(start_events)
         turn_key = f"{round_number}:{attacker.combatant_id}"
         if forced_retreat_active(attacker.state):
             events.append(build_forced_retreat_event(sequence, round_number, attacker.combatant_id, attacker.state))
