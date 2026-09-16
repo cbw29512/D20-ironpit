@@ -21,6 +21,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Gorgon": _p("quadruped", "gorgon"),
     "Homunculus": _p("winged", "homunculus"),
     "Horned Devil": _p("humanoid", "horned-devil"),
+    "Magma Mephit": _p("winged", "magma-mephit"),
     "Mammoth": _p("quadruped", "mammoth"),
     "Medusa": _p("humanoid", "medusa"),
     "Minotaur of Baphomet": _p("brute", "minotaur"),
