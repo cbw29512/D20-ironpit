@@ -50,6 +50,25 @@
     }));
   }
 
+  function readyHeroes2014() {
+    const registry = window.IRON_PIT_BROWSER_HEROES_2014 || {};
+    const fighterRow = HERO_ROWS.find(([classId]) => classId === "fighter");
+    if (!fighterRow) throw new Error("Canonical Fighter catalog row is missing.");
+    const [, className, heroName, subclassId, subclassName] = fighterRow;
+    const rows = Object.values(registry).sort((left, right) => left.level - right.level);
+    if (rows.length !== 10 || rows.some((hero, index) => hero.level !== index + 1)) {
+      throw new Error(`Expected certified 2014 Champion Fighter levels 1-10; found ${rows.length} entries.`);
+    }
+    return rows.map((runtime) => ({
+      id: `hero-2014-fighter-l${runtime.level}`, name: heroName, class_id: "fighter", class_name: className,
+      level: runtime.level, build_id: "canonical-2014", build_name: "Canonical 2014 RAW Progression",
+      subclass_id: runtime.level >= 3 ? subclassId : null,
+      subclass_name: runtime.level >= 3 ? subclassName : null,
+      ruleset: "2014", kind: "character", coverage_status: "raw_ready",
+      runnable_template_id: runtime.id, blockers: [],
+    }));
+  }
+
   async function buildMonsters2024() {
     const ready = new Map(Object.values(window.IRON_PIT_BROWSER_MONSTERS).map((monster) => [monster.name, monster.id]));
     try {
@@ -73,14 +92,16 @@
   }
 
   function build2014() {
-    if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
-    const cards = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (cards.length !== 39) throw new Error(`Expected 39 certified 2014 test monsters; found ${cards.length}.`);
-    if (cards.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 test catalog crossed the ruleset boundary.");
+    if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser monster bundle did not load.");
+    const heroes = readyHeroes2014();
+    const monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    if (monsters.length < 100) throw new Error(`2014 test lane requires at least 100 certified monsters; found ${monsters.length}.`);
+    if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 pregen catalog crossed the ruleset boundary.");
+    if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
-      heroes: cards.map((card) => ({ ...card })), monsters: cards.map((card) => ({ ...card })),
-      hero_count: cards.length, monster_count: 327, hero_ready_count: cards.length,
-      monster_ready_count: cards.length, ruleset: "2014", test_lane: true,
+      heroes, monsters,
+      hero_count: heroes.length, monster_count: 327, hero_ready_count: heroes.length,
+      monster_ready_count: monsters.length, ruleset: "2014", test_lane: true,
     };
   }
 
