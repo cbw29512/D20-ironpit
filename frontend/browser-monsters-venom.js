@@ -7,7 +7,7 @@
     onHitDamage: [{ source: "Venom", diceCount: poisonCount, diceSize: poisonSize, damageBonus: 0, damageType: "poison" }],
   });
   const monster = (id, name, cr, ac, hp, speed, initiative, attacks, saves, skills, bodyStyle) => ({
-    id, name, archetype: name, challenge_rating: cr, kind: "monster", size: "medium",
+    id, name, archetype: name, challenge_rating: cr, kind: "monster", ruleset: "2024", size: "medium",
     armor_class: ac, max_hp: hp, speed_ft: speed, initiative_bonus: initiative,
     attacks, primary_attack_id: attacks[0].id, traits: [], resources: {},
     saving_throw_bonuses: saves, skill_bonuses: skills,
