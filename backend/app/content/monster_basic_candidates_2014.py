@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+import logging
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
@@ -9,6 +10,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
 
+logger = logging.getLogger(__name__)
 _MODELED_2014_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
@@ -46,20 +48,27 @@ def _multiattack_blockers(monster: SourceMonster2014) -> list[str]:
     return []
 
 
+def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
+    try:
+        certified = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_2014_TRAITS)
+        return tuple(
+            name for name in monster.trait_names
+            if name not in certified and not is_arena_neutral_bonus_action(name)
+        )
+    except Exception:
+        logger.exception("Failed to identify unsupported 2014 traits for %s.", monster.name)
+        raise
+
+
 def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     allowed_actions = {attack.name.casefold() for attack in monster.attacks}
     if monster.multiattack_slots:
         allowed_actions.add("multiattack")
     extras = [name for name in monster.action_names if name.casefold() not in allowed_actions]
-    certified_traits = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_2014_TRAITS)
-    bad_traits = [
-        name for name in monster.trait_names
-        if name not in certified_traits and not is_arena_neutral_bonus_action(name)
-    ]
     blockers = []
     if extras:
         blockers.append("source:extra-action")
-    if bad_traits:
+    if unsupported_traits_2014(monster):
         blockers.append("source:trait")
     if monster.reaction_names or monster.parry_ac_bonus is not None:
         blockers.append("source:reaction")
