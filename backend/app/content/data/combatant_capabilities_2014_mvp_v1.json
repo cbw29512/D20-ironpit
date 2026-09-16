@@ -1,0 +1,271 @@
+[
+  {
+    "schema_version": 1,
+    "id": "2014-goblin",
+    "name": "Goblin",
+    "archetype": "2014 Goblin",
+    "challenge_rating": "1/4",
+    "kind": "monster",
+    "ruleset": "2014",
+    "size": "small",
+    "ability_scores": {
+      "strength": 8,
+      "dexterity": 14,
+      "constitution": 10,
+      "intelligence": 10,
+      "wisdom": 8,
+      "charisma": 8
+    },
+    "armor_class": 15,
+    "max_hp": 7,
+    "speed_ft": 30,
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "2014-goblin-scimitar",
+        "weapon_id": "2014-goblin-scimitar",
+        "name": "Scimitar",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "slashing",
+        "animation": "slash",
+        "reach_ft": 5
+      },
+      {
+        "id": "2014-goblin-shortbow",
+        "weapon_id": "2014-goblin-shortbow",
+        "name": "Shortbow",
+        "attack_kind": "ranged",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "projectile",
+        "normal_range_ft": 80,
+        "long_range_ft": 320,
+        "projectile": "arrow"
+      }
+    ],
+    "primary_attack_id": "2014-goblin-scimitar",
+    "saving_throw_bonuses": {
+      "strength": -1,
+      "dexterity": 2,
+      "constitution": 0,
+      "intelligence": 0,
+      "wisdom": -1,
+      "charisma": -1
+    },
+    "skill_bonuses": {"stealth": 6},
+    "source_trait_names": ["Nimble Escape"],
+    "visual": {
+      "armor": "leather",
+      "main_hand": "scimitar",
+      "body_style": "goblinoid"
+    },
+    "source": "SRD 5.1 (2014) Goblin"
+  },
+  {
+    "schema_version": 1,
+    "id": "2014-bandit",
+    "name": "Bandit",
+    "archetype": "2014 Bandit",
+    "challenge_rating": "1/8",
+    "kind": "monster",
+    "ruleset": "2014",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 11,
+      "dexterity": 12,
+      "constitution": 12,
+      "intelligence": 10,
+      "wisdom": 10,
+      "charisma": 10
+    },
+    "armor_class": 12,
+    "max_hp": 11,
+    "speed_ft": 30,
+    "initiative_bonus": 1,
+    "attacks": [
+      {
+        "id": "2014-bandit-scimitar",
+        "weapon_id": "2014-scimitar",
+        "name": "Scimitar",
+        "attack_kind": "melee",
+        "attack_bonus": 3,
+        "damage": {"count": 1, "size": 6, "bonus": 1},
+        "damage_type": "slashing",
+        "animation": "slash",
+        "reach_ft": 5
+      },
+      {
+        "id": "2014-bandit-light-crossbow",
+        "weapon_id": "2014-light-crossbow",
+        "name": "Light Crossbow",
+        "attack_kind": "ranged",
+        "attack_bonus": 3,
+        "damage": {"count": 1, "size": 8, "bonus": 1},
+        "damage_type": "piercing",
+        "animation": "projectile",
+        "normal_range_ft": 80,
+        "long_range_ft": 320,
+        "projectile": "bolt"
+      }
+    ],
+    "primary_attack_id": "2014-bandit-scimitar",
+    "saving_throw_bonuses": {
+      "strength": 0,
+      "dexterity": 1,
+      "constitution": 1,
+      "intelligence": 0,
+      "wisdom": 0,
+      "charisma": 0
+    },
+    "visual": {
+      "armor": "leather",
+      "main_hand": "scimitar",
+      "body_style": "humanoid"
+    },
+    "source": "SRD 5.1 (2014) Bandit"
+  },
+  {
+    "schema_version": 1,
+    "id": "2014-skeleton",
+    "name": "Skeleton",
+    "archetype": "2014 Skeleton",
+    "challenge_rating": "1/4",
+    "kind": "monster",
+    "ruleset": "2014",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 10,
+      "dexterity": 14,
+      "constitution": 15,
+      "intelligence": 6,
+      "wisdom": 8,
+      "charisma": 5
+    },
+    "armor_class": 13,
+    "max_hp": 13,
+    "speed_ft": 30,
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "2014-skeleton-shortsword",
+        "weapon_id": "2014-shortsword",
+        "name": "Shortsword",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "slash",
+        "reach_ft": 5
+      },
+      {
+        "id": "2014-skeleton-shortbow",
+        "weapon_id": "2014-shortbow",
+        "name": "Shortbow",
+        "attack_kind": "ranged",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "projectile",
+        "normal_range_ft": 80,
+        "long_range_ft": 320,
+        "projectile": "arrow"
+      }
+    ],
+    "primary_attack_id": "2014-skeleton-shortsword",
+    "saving_throw_bonuses": {
+      "strength": 0,
+      "dexterity": 2,
+      "constitution": 2,
+      "intelligence": -2,
+      "wisdom": -1,
+      "charisma": -3
+    },
+    "damage_vulnerabilities": ["bludgeoning"],
+    "damage_immunities": ["poison"],
+    "condition_immunities": ["exhaustion", "poisoned"],
+    "visual": {
+      "armor": "armor scraps",
+      "main_hand": "shortsword",
+      "body_style": "skeleton"
+    },
+    "source": "SRD 5.1 (2014) Skeleton"
+  },
+  {
+    "schema_version": 1,
+    "id": "2014-brown-bear",
+    "name": "Brown Bear",
+    "archetype": "2014 Brown Bear",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "ruleset": "2014",
+    "size": "large",
+    "ability_scores": {
+      "strength": 19,
+      "dexterity": 10,
+      "constitution": 16,
+      "intelligence": 2,
+      "wisdom": 13,
+      "charisma": 7
+    },
+    "armor_class": 11,
+    "max_hp": 34,
+    "speed_ft": 40,
+    "movement_modes": {
+      "walk_ft": 40,
+      "climb_ft": 30
+    },
+    "initiative_bonus": 0,
+    "attacks": [
+      {
+        "id": "2014-brown-bear-bite",
+        "weapon_id": "2014-brown-bear-bite",
+        "name": "Bite",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {"count": 1, "size": 8, "bonus": 4},
+        "damage_type": "piercing",
+        "animation": "bite",
+        "reach_ft": 5
+      },
+      {
+        "id": "2014-brown-bear-claws",
+        "weapon_id": "2014-brown-bear-claws",
+        "name": "Claws",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {"count": 2, "size": 6, "bonus": 4},
+        "damage_type": "slashing",
+        "animation": "heavy-slash",
+        "reach_ft": 5
+      }
+    ],
+    "primary_attack_id": "2014-brown-bear-bite",
+    "attack_action": {
+      "id": "2014-brown-bear-multiattack",
+      "name": "Multiattack",
+      "slots": [
+        {"attack_ids": ["2014-brown-bear-bite"]},
+        {"attack_ids": ["2014-brown-bear-claws"]}
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 0,
+      "constitution": 3,
+      "intelligence": -4,
+      "wisdom": 1,
+      "charisma": -2
+    },
+    "skill_bonuses": {"perception": 3},
+    "source_trait_names": ["Keen Smell"],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "bite",
+      "body_style": "bear"
+    },
+    "source": "SRD 5.1 (2014) Brown Bear"
+  }
+]

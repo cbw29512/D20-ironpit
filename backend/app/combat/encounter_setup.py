@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from fractions import Fraction
 
+from app.combat.encounter_ruleset import resolve_encounter_ruleset
 from app.combat.formation import starting_position_ft
 from app.combat.grid_placement import apply_placement, pack_deployment_zone
 from app.combat.state import build_combatant_state
@@ -105,7 +106,7 @@ def _apply_standard_grid_placement(
 
 def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
     try:
-        roster = build_arena_roster()
+        roster = build_arena_roster(selection.ruleset)
         heroes = _index_templates(roster.characters)
         monsters = _index_templates(roster.monsters)
         hero_states = [
@@ -116,12 +117,19 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
             _member(card_id, index, "monsters", monsters)
             for index, card_id in enumerate(selection.monster_ids, start=1)
         ]
+        ruleset = resolve_encounter_ruleset([
+            *[member.state.template for member in hero_states],
+            *[member.state.template for member in monster_states],
+        ])
+        if ruleset != selection.ruleset:
+            raise ValueError(f"Selected ruleset {selection.ruleset} does not match resolved combatant ruleset {ruleset}.")
         battle_map = _apply_standard_grid_placement(hero_states, monster_states)
         return EncounterSetup(
             heroes=hero_states,
             monsters=monster_states,
             hero_total_levels=_hero_level_total(hero_states),
             monster_total_cr=_monster_cr_total(monster_states),
+            ruleset=ruleset,
             map_definition=battle_map,
         )
     except ValueError:

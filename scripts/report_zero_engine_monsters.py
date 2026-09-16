@@ -4,11 +4,8 @@ import json
 import logging
 import re
 
-from app.content.monster_bonus_action_source_audit import (
-    _ARENA_NEUTRAL_BONUS_ACTIONS,
-    _base_name,
-    parse_bonus_action_names,
-)
+from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
+from app.content.monster_bonus_action_source_audit import parse_bonus_action_names
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
@@ -84,7 +81,7 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
         blockers.append("reaction-parse")
     try:
         bonus = parse_bonus_action_names(row.get("bonusActions", ""))
-        if any(_base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS for name in bonus):
+        if any(not is_arena_neutral_bonus_action(name) for name in bonus):
             blockers.append("bonus-action")
     except ValueError:
         blockers.append("bonus-action-parse")

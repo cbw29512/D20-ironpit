@@ -4,7 +4,6 @@ import logging
 from dataclasses import dataclass
 
 from app.combat.dice import DiceProvider
-from app.domain.recharge import RechargeRule
 from app.domain.runtime import CombatantState, ResourceState
 
 logger = logging.getLogger(__name__)

@@ -72,4 +72,5 @@ def build_encounter_result(
         setup=setup,
         initiative=initiative,
         events=events,
+        ruleset=setup.ruleset,
     )

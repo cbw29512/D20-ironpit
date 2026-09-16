@@ -9,11 +9,31 @@
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
   const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
   const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
-  const heroes = () => window.IRON_PIT_BROWSER_HEROES;
-  const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
-
   function cloneTemplate(template) { return structuredClone(template); }
-
+  function selectedRuleset(selection) {
+    try {
+      const ruleset = selection.ruleset || "2024";
+      if (!new Set(["2014", "2024"]).has(ruleset)) throw new Error(`Unsupported browser ruleset: ${ruleset}.`);
+      return ruleset;
+    } catch (error) { console.error("Failed to select browser ruleset", { error }); throw error; }
+  }
+  function rosters(ruleset) {
+    if (ruleset === "2014") {
+      const monsters = window.IRON_PIT_BROWSER_MONSTERS_2014;
+      if (window.IRON_PIT_2014_MVP_READY !== true || !monsters) throw new Error("Certified 2014 browser roster is not loaded.");
+      return { heroes: monsters, monsters };
+    }
+    return { heroes: window.IRON_PIT_BROWSER_HEROES, monsters: window.IRON_PIT_BROWSER_MONSTERS };
+  }
+  function resolveRuleset(members) {
+    try {
+      const rulesets = new Set(members.map((member) => member.state.template.ruleset));
+      if (rulesets.has(undefined) || rulesets.has(null)) throw new Error("Every combatant requires explicit ruleset identity.");
+      if (!rulesets.size) throw new Error("Encounter requires at least one combatant ruleset.");
+      if (rulesets.size !== 1) throw new Error(`Mixed rulesets are not allowed in one Iron Pit fight: ${[...rulesets].sort().join(", ")}.`);
+      return [...rulesets][0];
+    } catch (error) { console.error("Failed to resolve browser encounter ruleset", { error }); throw error; }
+  }
   function placeStandardGrid(heroMembers, monsterMembers) {
     try {
       if (!M()?.buildStandardMap || !M()?.buildHeroDeploymentZone || !M()?.buildMonsterDeploymentZone || !G()?.packZone || !G()?.apply) {
@@ -23,58 +43,51 @@
       G().apply(heroMembers, G().packZone(mapDefinition, M().buildHeroDeploymentZone(), heroMembers));
       G().apply(monsterMembers, G().packZone(mapDefinition, M().buildMonsterDeploymentZone(), monsterMembers));
       return mapDefinition;
-    } catch (error) {
-      console.error("Failed to apply browser Iron Pit grid deployment", { error });
-      throw error;
-    }
+    } catch (error) { console.error("Failed to apply browser Iron Pit grid deployment", { error }); throw error; }
   }
-
   function buildSetup(selection) {
     try {
+      const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
       const heroMembers = selection.hero_ids.map((id, index) => {
-        if (!heroes()[id]) throw new Error(`Unknown certified hero: ${id}`);
-        const template = cloneTemplate(heroes()[id]);
+        if (!registry.heroes[id]) throw new Error(`Unknown certified Team A combatant for ${requestedRuleset}: ${id}`);
+        const template = cloneTemplate(registry.heroes[id]);
         return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", position_ft: F().startingPosition(template, "heroes"), state: S().buildState(template) };
       });
       const monsterMembers = selection.monster_ids.map((id, index) => {
-        if (!monsters()[id]) throw new Error(`Unknown certified monster: ${id}`);
-        const template = cloneTemplate(monsters()[id]);
+        if (!registry.monsters[id]) throw new Error(`Unknown certified Team B combatant for ${requestedRuleset}: ${id}`);
+        const template = cloneTemplate(registry.monsters[id]);
         return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: F().startingPosition(template, "monsters"), state: S().buildState(template) };
       });
+      const ruleset = resolveRuleset([...heroMembers, ...monsterMembers]);
+      if (ruleset !== requestedRuleset) throw new Error(`Selected ruleset ${requestedRuleset} does not match combatant ruleset ${ruleset}.`);
       const mapDefinition = placeStandardGrid(heroMembers, monsterMembers);
       return {
         heroes: heroMembers,
         monsters: monsterMembers,
-        hero_total_levels: heroMembers.reduce((sum, item) => sum + item.state.template.level, 0),
+        hero_total_levels: heroMembers.reduce((sum, item) => sum + Number(item.state.template.level || 0), 0),
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
+        ruleset,
         map_definition: mapDefinition,
       };
-    } catch (error) {
-      console.error("Failed to build browser encounter setup", { selection, error });
-      throw error;
-    }
+    } catch (error) { console.error("Failed to build browser encounter setup", { selection, error }); throw error; }
   }
-
   function crNumber(value) {
     const text = String(value || "0");
     if (!text.includes("/")) return Number(text) || 0;
     const [a, b] = text.split("/").map(Number);
     return a / b;
   }
-
   function totalCr(values) {
     const quarters = Math.round(values.reduce((sum, value) => sum + crNumber(value), 0) * 4);
     if (quarters % 4 === 0) return String(quarters / 4);
     const divisor = quarters % 2 === 0 ? 2 : 4;
     return `${quarters / (4 / divisor)}/${divisor}`;
   }
-
   function defeatedMember(member) {
     const state = member.state;
     if (state.template.kind === "character") return state.is_dead || !state.is_alive;
     return state.current_hp <= 0 || state.is_dead || !state.is_alive;
   }
-
   function outcome(setup) {
     const defeated = (side) => side.every(defeatedMember);
     const heroesDead = defeated(setup.heroes), monstersDead = defeated(setup.monsters);
@@ -83,7 +96,6 @@
     if (heroesDead) return "monsters_win";
     return "active";
   }
-
   function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
     const target = L().resolveTargetTiming(sequence, round, member, targetTiming);
     const source = L().resolveSourceTiming(target.sequence, round, member, setup, sourceTiming);
@@ -93,7 +105,6 @@
     }
     return { events: [...target.events, ...source.events], sequence: source.sequence };
   }
-
   function runEncounter(selection) {
     if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");
     const setup = buildSetup(selection);
@@ -128,11 +139,11 @@
     }
     return finish(setup, init, events, "draw", resolvedRound, sequence);
   }
-
   function finish(setup, init, events, result, round, sequence) {
-    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
-    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit grid deathmatch subset" };
+    const teamA = setup.ruleset === "2014" ? "Team A" : "Heroes";
+    const teamB = setup.ruleset === "2014" ? "Team B" : "Monsters";
+    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? `${teamA} wins the deathmatch.` : result === "monsters_win" ? `${teamB} wins the deathmatch.` : "The fight reaches the arena round limit and ends in a draw." });
+    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: setup.ruleset };
   }
-
-  window.IRON_PIT_BROWSER_ENGINE = { runEncounter };
+  window.IRON_PIT_BROWSER_ENGINE = { runEncounter, resolveRuleset, selectedRuleset };
 })();

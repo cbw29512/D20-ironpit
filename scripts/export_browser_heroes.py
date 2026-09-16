@@ -179,7 +179,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     progression = template.progression_features
     row: dict[str, Any] = {
         "id": template.id, "class_id": class_id, "build_id": build_id, "name": template.name,
-        "archetype": template.archetype, "level": template.level, "kind": template.kind, "size": template.size.value,
+        "archetype": template.archetype, "level": template.level, "kind": template.kind,
+        "ruleset": template.ruleset, "size": template.size.value,
         "armor_class": template.armor_class, "max_hp": template.max_hp, "speed_ft": template.speed_ft,
         "initiative_bonus": template.initiative_bonus, "saving_throw_bonuses": template.saving_throw_bonuses,
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],

@@ -10,6 +10,7 @@
 
   function runtimeTemplate(card, side) {
     if (!card?.runnable_template_id) return null;
+    if (card.ruleset === "2014") return window.IRON_PIT_BROWSER_MONSTERS_2014?.[card.runnable_template_id] || null;
     return side === "heroes" ? window.IRON_PIT_BROWSER_HEROES[card.runnable_template_id]
       : window.IRON_PIT_BROWSER_MONSTERS[card.runnable_template_id];
   }
@@ -26,33 +27,35 @@
     }
   }
 
-  function emptySlot(side, index, onOpen) {
+  function emptySlot(side, index, onOpen, ruleset) {
     const node = document.createElement("button");
+    const addLabel = ruleset === "2014" || side === "monsters" ? "ADD MONSTER" : "ADD PREGEN";
     node.type = "button"; node.className = `battle-card empty-slot ${side}`; node.dataset.slotIndex = String(index);
-    node.innerHTML = `<span class="slot-number">${index + 1}</span><b>＋</b><strong>${side === "heroes" ? "ADD PREGEN" : "ADD MONSTER"}</strong><small>Click to choose a card</small>`;
+    node.innerHTML = `<span class="slot-number">${index + 1}</span><b>＋</b><strong>${addLabel}</strong><small>Click to choose a card</small>`;
     node.addEventListener("click", () => onOpen(side, index)); return node;
   }
 
   function occupiedSlot(side, index, card, onOpen) {
     const template = runtimeTemplate(card, side), node = document.createElement("button");
+    const monsterCard = card.kind === "monster" || card.ruleset === "2014";
     node.type = "button"; node.className = `battle-card occupied ${side}`; node.dataset.slotIndex = String(index);
     node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
-    node.querySelector(".card-meta").textContent = side === "heroes" ? `${card.class_name} · Level ${card.level} · ${card.build_name}` : `${card.monster_type} · CR ${card.challenge_rating}`;
+    node.querySelector(".card-meta").textContent = monsterCard ? `${card.monster_type} · CR ${card.challenge_rating}` : `${card.class_name} · Level ${card.level} · ${card.build_name}`;
     const hp = Number(template?.max_hp || card.hit_points || 0);
     node.dataset.maxHp = String(hp); node.dataset.currentHp = String(hp); node.querySelector(".hp-text").textContent = `${hp} / ${hp} HP`;
     node.querySelector(".card-hp span").style.width = "100%"; if (template) V()?.decorate(node, template);
     node.addEventListener("click", () => onOpen(side, index)); return node;
   }
 
-  function renderSide(side, slots, onOpen) {
+  function renderSide(side, slots, onOpen, ruleset) {
     const root = el(side === "heroes" ? "hero-slots" : "monster-slots"), nodes = [];
-    for (let index = 0; index < MAX_SLOTS; index += 1) nodes.push(slots[index] ? occupiedSlot(side, index, slots[index], onOpen) : emptySlot(side, index, onOpen));
+    for (let index = 0; index < MAX_SLOTS; index += 1) nodes.push(slots[index] ? occupiedSlot(side, index, slots[index], onOpen) : emptySlot(side, index, onOpen, ruleset));
     root.replaceChildren(...nodes);
   }
 
   function render(state, onOpen) {
-    renderSide("heroes", state.heroSlots, onOpen); renderSide("monsters", state.monsterSlots, onOpen);
+    renderSide("heroes", state.heroSlots, onOpen, state.ruleset); renderSide("monsters", state.monsterSlots, onOpen, state.ruleset);
     const heroes = state.heroSlots.filter(Boolean).length, monsters = state.monsterSlots.filter(Boolean).length;
     el("hero-summary").textContent = `${heroes} / 6`; el("monster-summary").textContent = `${monsters} / 6`;
     const disabled = heroes === 0 || monsters === 0 || state.fighting;
@@ -62,7 +65,8 @@
   function showResult(battle) {
     const combatants = [...battle.setup.heroes, ...battle.setup.monsters];
     const names = new Map(combatants.map((c) => [c.combatant_id, c.state.template.name]));
-    const winner = battle.outcome === "heroes_win" ? "HEROES WIN" : battle.outcome === "monsters_win" ? "MONSTERS WIN" : "DRAW";
+    const teamA = battle.ruleset === "2014" ? "TEAM A" : "HEROES", teamB = battle.ruleset === "2014" ? "TEAM B" : "MONSTERS";
+    const winner = battle.outcome === "heroes_win" ? `${teamA} WIN` : battle.outcome === "monsters_win" ? `${teamB} WIN` : "DRAW";
     el("result-title").textContent = winner; el("round-count").textContent = `${battle.rounds} round${battle.rounds === 1 ? "" : "s"}`;
     const initiative = el("initiative-list"); initiative.replaceChildren();
     battle.initiative.turn_order.forEach((id) => { const li = document.createElement("li"); li.textContent = names.get(id) || id; initiative.append(li); });

@@ -18,20 +18,24 @@ _HERO_ONLY_PROGRESSION_FIELDS = {
 
 
 def render_registry() -> str:
-    monsters = build_legacy_monster_templates()
-    definitions = [definition_from_template(monster) for monster in monsters]
-    ids = [definition.id for definition in definitions]
-    if len(ids) != len(set(ids)):
-        raise RuntimeError("Legacy runtime monster ids must be unique before capability export.")
-    payload = [
-        definition.model_dump(
-            mode="json",
-            exclude_none=True,
-            exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
-        )
-        for definition in definitions
-    ]
-    return json.dumps(payload, indent=2, sort_keys=False) + "\n"
+    try:
+        monsters = build_legacy_monster_templates(include_capability_migrated=False)
+        definitions = [definition_from_template(monster) for monster in monsters]
+        ids = [definition.id for definition in definitions]
+        if len(ids) != len(set(ids)):
+            raise RuntimeError("Legacy runtime monster ids must be unique before capability export.")
+        payload = [
+            definition.model_dump(
+                mode="json",
+                exclude_none=True,
+                exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
+            )
+            for definition in definitions
+        ]
+        return json.dumps(payload, indent=2, sort_keys=False) + "\n"
+    except Exception:
+        logger.exception("Failed to render runtime monster capability registry.")
+        raise
 
 
 def main() -> None:

@@ -12,6 +12,7 @@ def _definition(**updates) -> CombatantDefinition:
         "name": "Contract Combatant",
         "archetype": "contract",
         "kind": "monster",
+        "ruleset": "2024",
         "armor_class": 12,
         "max_hp": 20,
         "speed_ft": 30,
@@ -40,6 +41,7 @@ def _definition(**updates) -> CombatantDefinition:
 
 def test_compiler_maps_composable_attack_effects() -> None:
     template = compile_combatant(_definition())
+    assert template.ruleset == "2024"
     assert template.weapon_attack.attack_bonus == 4
     assert template.weapon_attack.damage_bonus == 2
     assert template.weapon_attack.knocks_prone_max_size == CreatureSize.MEDIUM
