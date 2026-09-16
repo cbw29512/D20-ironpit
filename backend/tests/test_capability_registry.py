@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 from app.content.capability_registry import build_combatant_from_capabilities, get_capability_definition, parse_capability_definitions
 from app.content.monster_catalog import load_monster_rows
@@ -18,12 +19,21 @@ def test_data_registry_compiles_representative_capabilities() -> None:
     wolf = build_combatant_from_capabilities("srd-wolf")
     dire = build_combatant_from_capabilities("srd-dire-wolf")
     snake = build_combatant_from_capabilities("srd-giant-constrictor-snake")
+    assert wolf.ruleset == "2024"
     assert wolf.combat_traits == [CombatTrait.PACK_TACTICS]
     assert wolf.weapon_attack.knocks_prone_max_size == CreatureSize.MEDIUM
     assert dire.weapon_attack.knocks_prone_max_size == CreatureSize.LARGE
     assert snake.attack_action is not None and len(snake.attack_action.slots) == 2
     assert snake.saving_throw_actions[0].grapple_escape_dc == 14
     assert snake.saving_throw_actions[0].damage_dice_size == 8
+
+
+def test_capability_definitions_require_explicit_ruleset_identity() -> None:
+    row = get_capability_definition("srd-wolf").model_dump(mode="json")
+    assert row["ruleset"] == "2024"
+    row.pop("ruleset")
+    with pytest.raises(ValidationError):
+        parse_capability_definitions([row])
 
 
 def test_registry_rejects_duplicate_ids() -> None:
