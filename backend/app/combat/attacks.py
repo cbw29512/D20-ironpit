@@ -17,6 +17,7 @@ from app.combat.modifier_stack import (
     apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage,
     consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
 )
+from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
@@ -83,7 +84,7 @@ def resolve_attack(
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
-        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None
+        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None; on_hit_save = None
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
@@ -95,6 +96,8 @@ def resolve_attack(
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
+            on_hit_save = resolve_on_hit_condition_save(actual_defender, attack, dice)
+            if on_hit_save.applied_condition and on_hit_save.applied_condition not in applied_conditions: applied_conditions.append(on_hit_save.applied_condition)
             topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
             weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
@@ -119,6 +122,7 @@ def resolve_attack(
         if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
         if tactical_sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
         if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
+        if on_hit_save and on_hit_save.save_dc is not None: description += f" {on_hit_save.save_ability.title()} save DC {on_hit_save.save_dc}: {actual_defender.template.name} {'succeeds' if on_hit_save.save_succeeded else 'fails'}."
         if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
@@ -126,10 +130,13 @@ def resolve_attack(
         if "grappled" in applied_conditions: description += f" {actual_defender.template.name} is Grappled."
         if "restrained" in applied_conditions: description += f" {actual_defender.template.name} is Restrained while Grappled."
         if "poisoned" in applied_conditions: description += f" {actual_defender.template.name} is Poisoned."
+        save_roll = on_hit_save.save_roll if on_hit_save and on_hit_save.save_dc is not None else (topple.save_roll if topple else None)
+        save_ability = on_hit_save.save_ability if on_hit_save and on_hit_save.save_dc is not None else ("constitution" if topple and topple.save_dc is not None else None)
+        save_dc = on_hit_save.save_dc if on_hit_save and on_hit_save.save_dc is not None else (topple.save_dc if topple else None); save_succeeded = on_hit_save.save_succeeded if on_hit_save and on_hit_save.save_dc is not None else (topple.save_succeeded if topple else None)
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
-            attack_roll=attack_roll, saving_throw_roll=topple.save_roll if topple else None, save_ability="constitution" if topple and topple.save_dc is not None else None, save_dc=topple.save_dc if topple else None, save_succeeded=topple.save_succeeded if topple else None,
+            attack_roll=attack_roll, saving_throw_roll=save_roll, save_ability=save_ability, save_dc=save_dc, save_succeeded=save_succeeded,
             damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
             hit=hit, critical=critical, turn_terminated=natural_1_ends_turn,
             turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
