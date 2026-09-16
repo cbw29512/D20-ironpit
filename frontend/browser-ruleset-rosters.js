@@ -38,4 +38,5 @@
   }
 
   window.IRON_PIT_BROWSER_RULESET_ROSTERS = { selectedRuleset, rosters };
+  window.IRON_PIT_RULESET_ROSTERS_READY = true;
 })();
