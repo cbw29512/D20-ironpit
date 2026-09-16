@@ -11,7 +11,9 @@ const deterministicDice = (seed = 2014) => {
   return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
 };
 
-assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
+assert.equal(window.IRON_PIT_2014_HEROES_READY, true, "2014 certified hero roster must be loaded");
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_HEROES_2014).length, 10);
+assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test monster roster must be loaded");
 assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 100);
 for (const id of [
   "2014-giant-centipede", "2014-giant-poisonous-snake", "2014-giant-scorpion", "2014-giant-wasp",
@@ -32,14 +34,21 @@ for (const id of [
   assert.equal(swarm.attacks[0].conditionalDamage.mode, "replace_weapon");
 }
 
+const fighter = window.IRON_PIT_BROWSER_HEROES_2014["karnok-stoneward-2014-l5"];
+assert.ok(fighter, "2014 Karnok level 5 must be in the certified hero lane");
+assert.equal(fighter.kind, "character");
+assert.equal(fighter.ruleset, "2014");
+assert.equal(fighter.attack_action.slots.length, 2, "level 5 Fighter must make two attacks with Extra Attack");
+
 window.IRON_PIT_DICE = deterministicDice();
 const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
   ruleset: "2014",
-  hero_ids: ["2014-dire-wolf", "2014-bandit"],
+  hero_ids: ["karnok-stoneward-2014-l5"],
   monster_ids: ["2014-wolf", "2014-goblin"],
 });
 
 assert.equal(battle.ruleset, "2014");
+assert.equal(battle.setup.heroes[0].state.template.kind, "character");
 assert.notEqual(battle.outcome, "active");
 assert.ok(battle.events.some((event) => event.event_type === "attack"));
 for (const member of [...battle.setup.heroes, ...battle.setup.monsters]) {
@@ -48,10 +57,18 @@ for (const member of [...battle.setup.heroes, ...battle.setup.monsters]) {
 assert.throws(
   () => window.IRON_PIT_BROWSER_ENGINE.runEncounter({
     ruleset: "2014",
-    hero_ids: ["2014-bandit"],
+    hero_ids: ["karnok-stoneward-2014-l5"],
     monster_ids: ["srd-wolf"],
   }),
   /Unknown certified Team B combatant for 2014/,
 );
+assert.throws(
+  () => window.IRON_PIT_BROWSER_ENGINE.runEncounter({
+    ruleset: "2014",
+    hero_ids: ["karnok-stoneward-l5"],
+    monster_ids: ["2014-wolf"],
+  }),
+  /Unknown certified Team A combatant for 2014/,
+);
 
-console.log("Expanded certified 2014 browser fight lane passed.");
+console.log("Certified 2014 Fighter-versus-monster browser lane passed.");
