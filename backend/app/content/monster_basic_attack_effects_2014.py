@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from app.content.monster_source_2014 import SourceAttack2014
-from app.domain.actions import AbilityName
 from app.domain.capability_effects import (
     AttackEffectDefinition,
     DamageEffectDefinition,
@@ -93,7 +92,7 @@ def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefi
         assert isinstance(row, dict)
         max_size = row.get("max_target_size")
         effects.append(SaveConditionEffectDefinition(
-            save_ability=AbilityName(str(row["save_ability"]).lower()), dc=int(row["dc"]), condition="prone",
+            save_ability=str(row["save_ability"]).lower(), dc=int(row["dc"]), condition="prone",
             max_target_size=CreatureSize(str(max_size).lower()) if max_size is not None else None,
         ))
     if attack.control_effect is not None:
