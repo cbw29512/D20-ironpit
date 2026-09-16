@@ -13,7 +13,10 @@ _MODELED_2014_TRAITS = {
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Amphibious",
+    "False Appearance",
+    "Flyby",
     "Hold Breath",
+    "Illumination",
     "Keen Hearing",
     "Keen Hearing and Smell",
     "Keen Hearing and Sight",
@@ -21,6 +24,7 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Keen Sight and Smell",
     "Keen Smell",
     "Mimicry",
+    "Sunlight Sensitivity",
     "Water Breathing",
 })
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
