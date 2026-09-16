@@ -4,18 +4,40 @@ import json
 import logging
 from pathlib import Path
 
+from app.combat.charge_profiles import charge_profile_for_attack
 from app.content.monster_roster_2014 import build_basic_2014_monsters
 from browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-monsters-2014.js"
-_EXPECTED_COUNT = 92
+_EXPECTED_COUNT = 100
+
+
+def _add_charge_follow_up_metadata(template, row: dict[str, object]) -> None:
+    browser_attacks = {attack["id"]: attack for attack in row["attacks"]}
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    for attack in attacks:
+        profile = charge_profile_for_attack(attack)
+        if profile is None or profile.follow_up_attack_id is None:
+            continue
+        charge = browser_attacks[attack.id].get("charge")
+        if not isinstance(charge, dict):
+            raise RuntimeError(f"Charge follow-up metadata requires serialized Charge profile for {attack.id}.")
+        if profile.follow_up_required_target_condition is not None:
+            charge["followUpRequiredTargetCondition"] = profile.follow_up_required_target_condition
+        if profile.follow_up_action_cost != "free":
+            charge["followUpActionCost"] = profile.follow_up_action_cost
 
 
 def render() -> str:
     try:
-        rows = [template_row(template) for template in build_basic_2014_monsters()]
+        templates = build_basic_2014_monsters()
+        rows = []
+        for template in templates:
+            row = template_row(template)
+            _add_charge_follow_up_metadata(template, row)
+            rows.append(row)
         ids = {row["id"] for row in rows}
         if len(rows) != _EXPECTED_COUNT or len(rows) != len(ids):
             raise RuntimeError(f"2014 browser export expected {_EXPECTED_COUNT} unique certified monsters; found {len(rows)}.")
