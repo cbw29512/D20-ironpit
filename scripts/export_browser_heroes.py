@@ -202,7 +202,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "mindless_rage": progression.mindless_rage,
         "instinctive_pounce_fraction": progression.instinctive_pounce_fraction,
         "great_weapon_fighting": progression.great_weapon_fighting,
-        "indomitable_reroll": progression.indomitable_reroll,
         "sneak_attack_d6": progression.sneak_attack_d6,
         "critical_move_fraction": progression.critical_move_fraction,
         "tactical_shift_fraction": progression.tactical_shift_fraction,
