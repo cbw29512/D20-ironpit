@@ -17,6 +17,7 @@ _SAVE_DAMAGE_IDS = {
     "poisonous-snake", "scorpion", "wyvern",
 }
 _CHARGE_IDS = {"elk", "giant-elk", "giant-sea-horse", "minotaur-skeleton", "rhinoceros"}
+_SURE_FOOTED_IDS = {"goat", "giant-goat"}
 
 
 def _attack_id(monster_id: str, attack_id: str) -> str:
@@ -32,11 +33,12 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_85_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_87_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 85
-    assert _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS <= {monster.id for monster in ready}
+    assert len(ready) == 87
+    expected = _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS | _SURE_FOOTED_IDS
+    assert expected <= {monster.id for monster in ready}
     for monster in ready:
         template = compile_combatant(adapt_basic_monster_2014(monster))
         assert template.ruleset == "2014"
