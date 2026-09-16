@@ -19,9 +19,11 @@
   }
   function rosters(ruleset) {
     if (ruleset === "2014") {
+      const heroes = window.IRON_PIT_BROWSER_HEROES_2014;
       const monsters = window.IRON_PIT_BROWSER_MONSTERS_2014;
-      if (window.IRON_PIT_2014_MVP_READY !== true || !monsters) throw new Error("Certified 2014 browser roster is not loaded.");
-      return { heroes: monsters, monsters };
+      if (window.IRON_PIT_2014_HEROES_READY !== true || !heroes) throw new Error("Certified 2014 browser hero roster is not loaded.");
+      if (window.IRON_PIT_2014_MVP_READY !== true || !monsters) throw new Error("Certified 2014 browser monster roster is not loaded.");
+      return { heroes, monsters };
     }
     return { heroes: window.IRON_PIT_BROWSER_HEROES, monsters: window.IRON_PIT_BROWSER_MONSTERS };
   }
