@@ -32,10 +32,19 @@
     return !maximum || window.IRON_PIT_BROWSER_STATE.canProne(target, maximum);
   }
   function chargedAttack(attack, profile) {
-    if (!profile.replacementDamage) return attack;
-    return { ...attack, fixedDamage: null,
-      diceCount: profile.replacementDamage.diceCount, diceSize: profile.replacementDamage.diceSize,
-      damageBonus: profile.replacementDamage.damageBonus || 0, damageType: profile.replacementDamage.damageType };
+    let charged = attack;
+    if (profile.replacementDamage) {
+      charged = { ...charged, fixedDamage: null,
+        diceCount: profile.replacementDamage.diceCount, diceSize: profile.replacementDamage.diceSize,
+        damageBonus: profile.replacementDamage.damageBonus || 0, damageType: profile.replacementDamage.damageType };
+    }
+    if (profile.proneSaveAbility && Number.isInteger(profile.proneSaveDc)) {
+      charged = { ...charged, onHitConditionSave: {
+        saveAbility: profile.proneSaveAbility, dc: profile.proneSaveDc,
+        conditionId: "prone", maxTargetSize: profile.proneMaxSize || null,
+      }};
+    }
+    return charged;
   }
   function resolveClosing(sequence, round, member, target, setup = null) {
     if (!openingEligible(round, member, setup)) return { events: [], sequence, handled: false };
@@ -47,7 +56,8 @@
     if ((member.state.template.speed_ft || 0) < (profile.minimumMove || 0)) {
       return { events: [], sequence, handled: false };
     }
-    const options = { featureId: "charge", proneMaxSize: profile.proneMaxSize, setup, ignoreCloseThreat: true };
+    const options = { featureId: "charge", setup, ignoreCloseThreat: true };
+    if (!profile.proneSaveAbility && profile.proneMaxSize) options.proneMaxSize = profile.proneMaxSize;
     if (Number.isInteger(profile.diceCount) && Number.isInteger(profile.diceSize) && profile.damageType) {
       options.bonusDamage = { source: "Charge", diceCount: profile.diceCount,
         diceSize: profile.diceSize, damageType: profile.damageType };
