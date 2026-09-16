@@ -27,6 +27,37 @@ A 2024 fight may use only 2024-profile rules and options, including 2024 monster
 - Certification is ruleset-specific.
 - Until a ruleset profile and its required content are implemented and certified, do not claim that profile is production-ready.
 
+## Official pregen legality contract
+
+Official pregens are ruleset-specific legal player-character builds, not approximate combat cards.
+
+- Every 2014 pregen must be a legal 2014 character at the exact represented level using only 2014 class progression, subclass progression, Ability Score Improvements/feats, equipment, spells, Fighting Styles, resources, action economy, and other combat-relevant rules.
+- Every 2024 pregen must be a legal 2024 character at the exact represented level using only 2024 class progression, subclass progression, feats, equipment, spells, Fighting Styles, Weapon Mastery, resources, action economy, and other combat-relevant rules.
+- A same-named class/subclass in both editions is two separately sourced and separately certified progressions. Never force feature, level, equipment, spell, or damage parity between editions.
+- 2024 Weapon Mastery and other 2024-only systems never leak into 2014. Likewise, 2014-only class/subclass behavior never leaks into 2024.
+- Ruleset differences must be represented through explicit edition profile data and reusable universal capabilities, not class-name or hero-name branches in the combat resolver.
+- Pregen legality must be validated before combat. A malformed or cross-edition build fails closed and is not exposed as certified/selectable.
+- Pregen certification requires source/build validation plus Python/browser behavioral parity for every combat-relevant feature the build can use at that level.
+- Level progressions are cumulative only where RAW is cumulative. Each level 1-10 card must resolve exactly the legal feature/resource/loadout state for that level, including features gained, replaced, improved, or unavailable at that level.
+- The canonical pregen roster is: Berserker Barbarian, Lore Bard, Life Cleric, Land Druid, Champion Fighter, Open Hand Monk, Devotion Paladin, Hunter Ranger, Thief Rogue, Draconic Sorcerer, Fiend Warlock, and Evoker Wizard. Each is independently certifiable for 2014 and 2024.
+
+## Official monster legality contract
+
+Official monsters follow the same edition gate as pregens.
+
+- 2014 monsters must preserve 2014 source statistics, actions, traits, spellcasting, resources, timing, and combat-relevant rules.
+- 2024 monsters must preserve 2024 source statistics, actions, traits, spellcasting, resources, timing, and combat-relevant rules.
+- Same-named monsters across editions are separate source definitions and are never assumed mechanically identical.
+- Source content binds into universal capabilities through edition-specific adapters/data. Unsupported outcome-changing behavior fails closed rather than being approximated.
+
+## Content ingestion invariant
+
+The same rule-governed ingestion model applies to monsters and pregens:
+
+`edition source -> edition validation/adapter -> universal combat capabilities -> ruleset-specific certification -> browser/runtime parity -> selectable combatant`
+
+A content entry is not ready merely because it renders, imports, or has plausible final numbers. It must be legal in its edition and every combat-relevant rule it can exercise must resolve correctly in the Iron Pit engine.
+
 ## Ruleset-specific homebrew builders
 
 Provide distinct 2014 and 2024 homebrew creation surfaces.
