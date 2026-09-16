@@ -7,6 +7,8 @@ on:
       - audit/raw-combat-log-figures-20260830
       - reconcile/2014-ruleset-isolation
       - "feat/2014-*"
+      - "feat/2024-*"
+      - "feat/paired-*"
 
 permissions:
   contents: write
