@@ -1,0 +1,25 @@
+name: Critical Browser Regressions
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: critical-browser-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  movement-and-turbo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Validate critical browser regressions
+        run: |
+          node frontend/browser-dodge.test.cjs
+          node frontend/browser-grid-dodge-fallback.test.cjs
+          node frontend/browser-turbo.test.cjs

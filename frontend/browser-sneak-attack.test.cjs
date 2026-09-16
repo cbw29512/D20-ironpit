@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 
 for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname, "..", "index.html")]) {
   const html = fs.readFileSync(htmlPath, "utf8");
-  assert.match(html, /<script src="browser-sneak-attack\.js"><\/script>/, `${htmlPath} must load shared Rogue Sneak Attack rules`);
+  assert.match(html, /<script\b[^>]*\bsrc="browser-sneak-attack\.js"[^>]*><\/script>/, `${htmlPath} must load shared Rogue Sneak Attack rules`);
   assert.ok(html.indexOf("browser-sneak-attack.js") < html.indexOf("browser-rolls.js"), "Sneak Attack must load before damage rolls");
 }
 
