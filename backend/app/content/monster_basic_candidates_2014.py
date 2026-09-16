@@ -4,6 +4,7 @@ from collections import Counter
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
+from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
@@ -68,10 +69,16 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
 
 
 def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
-    return [
+    traits = [
         runtime_trait for source_name, runtime_trait in _MODELED_2014_TRAITS.items()
         if source_name in monster.trait_names
     ]
+    if any(
+        attack.charge_profile is not None and supports_charge_profile_2014(attack.charge_profile)
+        for attack in monster.attacks
+    ):
+        traits.append(CombatTrait.CHARGE)
+    return traits
 
 
 def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
