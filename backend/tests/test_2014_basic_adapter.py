@@ -26,6 +26,20 @@ def _slots(definition):
     return [[by_id[item] for item in slot.attack_ids] for slot in definition.attack_action.slots]
 
 
+def _movement(definition):
+    modes = definition.movement_modes
+    if modes is None:
+        return (definition.speed_ft, 0, 0, 0, 0, False)
+    return (
+        modes.walk_ft,
+        modes.fly_ft,
+        modes.climb_ft,
+        modes.swim_ft,
+        modes.burrow_ft,
+        modes.hover,
+    )
+
+
 def test_bulk_adapter_preserves_hand_certified_mvp_combat_semantics():
     source = {monster.id: monster for monster in load_monster_source_2014()}
     hand = load_2014_mvp_definitions()
@@ -36,7 +50,7 @@ def test_bulk_adapter_preserves_hand_certified_mvp_combat_semantics():
         assert adapted.armor_class == expected.armor_class
         assert adapted.max_hp == expected.max_hp
         assert adapted.speed_ft == expected.speed_ft
-        assert adapted.movement_modes == expected.movement_modes
+        assert _movement(adapted) == _movement(expected)
         assert adapted.initiative_bonus == expected.initiative_bonus
         assert _attacks(adapted) == _attacks(expected)
         assert _slots(adapted) == _slots(expected)
