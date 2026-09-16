@@ -26,6 +26,7 @@ _FIELDS = (
     "forbid_target_grappled_by_self",
     "grapple_target_policy",
 )
+_EXPECTED_ATTACK_ONLY = 27
 
 
 def _active(value: object, field: str) -> bool:
@@ -55,8 +56,10 @@ def main() -> None:
                     "attack": attack.name,
                     "shape": shape,
                 }, sort_keys=True, default=str))
-    if len(candidates) != 25:
-        raise RuntimeError(f"Expected 25 attack-complex-only monsters, found {len(candidates)}")
+    if len(candidates) != _EXPECTED_ATTACK_ONLY:
+        raise RuntimeError(
+            f"Expected {_EXPECTED_ATTACK_ONLY} attack-complex-only monsters, found {len(candidates)}"
+        )
 
 
 if __name__ == "__main__":
