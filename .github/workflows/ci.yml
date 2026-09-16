@@ -158,6 +158,9 @@ jobs:
           node frontend/figure-portraits.test.cjs
           node frontend/encounter-picker.test.cjs
           node frontend/encounter-wiring.test.cjs
+          node frontend/browser-dodge.test.cjs
+          node frontend/browser-grid-dodge-fallback.test.cjs
+          node frontend/browser-turbo.test.cjs
       - name: Prove production fight path is backend-free
         run: |
           ! grep -R -q 'IRON_PIT_API_BASE' frontend scripts
