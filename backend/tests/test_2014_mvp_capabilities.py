@@ -4,9 +4,11 @@ from app.combat.attacks import resolve_attack
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
+from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_capabilities_2014 import (
     build_2014_mvp_monsters,
     load_2014_mvp_definitions,
+    source_behavior_is_certified_2014,
 )
 from app.content.roster import build_arena_roster
 from app.domain.models import DamageType
@@ -18,8 +20,15 @@ def _monsters():
 
 def test_2014_mvp_source_facts_compile_through_universal_schema() -> None:
     definitions = load_2014_mvp_definitions()
-    assert set(definitions) == {"2014-bandit", "2014-skeleton", "2014-brown-bear"}
+    assert set(definitions) == {
+        "2014-goblin", "2014-bandit", "2014-skeleton", "2014-brown-bear",
+    }
     assert all(item.ruleset == "2014" and item.kind == "monster" for item in definitions.values())
+
+    goblin = definitions["2014-goblin"]
+    assert (goblin.armor_class, goblin.max_hp, goblin.speed_ft, goblin.challenge_rating) == (15, 7, 30, "1/4")
+    assert goblin.skill_bonuses == {"stealth": 6}
+    assert goblin.source_trait_names == ["Nimble Escape"]
 
     bandit = definitions["2014-bandit"]
     assert (bandit.armor_class, bandit.max_hp, bandit.speed_ft, bandit.challenge_rating) == (12, 11, 30, "1/8")
@@ -35,6 +44,26 @@ def test_2014_mvp_source_facts_compile_through_universal_schema() -> None:
     assert (bear.armor_class, bear.max_hp, bear.speed_ft, bear.challenge_rating) == (11, 34, 40, "1")
     assert bear.movement_modes is not None and bear.movement_modes.climb_ft == 30
     assert bear.source_trait_names == ["Keen Smell"]
+
+
+def test_2014_goblin_nimble_escape_reuses_shared_arena_policy() -> None:
+    definition = load_2014_mvp_definitions()["2014-goblin"]
+    goblin = _monsters()["2014-goblin"]
+    assert is_arena_neutral_bonus_action("Nimble Escape") is True
+    assert source_behavior_is_certified_2014(definition) is True
+    assert goblin.source_trait_names == ["Nimble Escape"]
+    assert goblin.combat_traits == []
+    assert goblin.weapon_masteries == []
+
+
+def test_2014_source_behavior_fails_closed_for_unknown_mechanics() -> None:
+    goblin = load_2014_mvp_definitions()["2014-goblin"]
+    unknown_trait = goblin.model_copy(update={"source_trait_names": ["Teleport Ambush"]})
+    reaction = goblin.model_copy(update={"source_reaction_names": ["Parry"]})
+    spellcasting = goblin.model_copy(update={"source_spellcasting_fingerprint": "unknown-spells"})
+    assert source_behavior_is_certified_2014(unknown_trait) is False
+    assert source_behavior_is_certified_2014(reaction) is False
+    assert source_behavior_is_certified_2014(spellcasting) is False
 
 
 def test_2014_bandit_ranged_attack_uses_universal_attack_resolver() -> None:
