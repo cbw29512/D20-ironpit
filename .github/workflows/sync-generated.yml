@@ -6,8 +6,7 @@ on:
       - main
       - audit/raw-combat-log-figures-20260830
       - reconcile/2014-ruleset-isolation
-      - feat/2014-bulk-basic-roster-v2
-      - feat/2014-trait-throughput
+      - "feat/2014-*"
 
 permissions:
   contents: write
