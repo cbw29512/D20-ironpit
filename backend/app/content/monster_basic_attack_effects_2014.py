@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_source_2014 import SourceAttack2014
+from app.content.monster_zero_hp_save_rider_2014 import (
+    ZERO_HP_SAVE_RIDER_KEYS_2014,
+    supports_zero_hp_save_rider_2014,
+    zero_hp_save_rider_2014,
+)
 from app.domain.capability_effects import (
     AttackEffectDefinition,
     DamageEffectDefinition,
@@ -19,7 +24,7 @@ _CONTROL_KEYS = frozenset({"grapple_escape_dc", "max_target_size", "restrains_wh
 _SAVE_CONDITION_KEYS = frozenset({"condition_id", "dc", "max_target_size", "save_ability"})
 _SAVE_DAMAGE_KEYS = frozenset({
     "damage_bonus", "damage_dice_count", "damage_dice_size", "damage_type", "dc", "save_ability", "success_damage",
-})
+}) | ZERO_HP_SAVE_RIDER_KEYS_2014
 _ABILITIES = frozenset({"strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"})
 
 
@@ -70,6 +75,7 @@ def _supported_save_damage(value: object) -> bool:
         and isinstance(value["dc"], int) and 0 < int(value["dc"]) <= 40
         and str(value["save_ability"]).lower() in _ABILITIES
         and value["success_damage"] in {"none", "half"}
+        and supports_zero_hp_save_rider_2014(value)
     )
 
 
@@ -122,6 +128,7 @@ def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefi
                 source=attack.name, save_ability=str(row["save_ability"]).lower(), dc=int(row["dc"]),
                 dice=DiceSpec(count=int(row["damage_dice_count"]), size=int(row["damage_dice_size"]), bonus=int(row.get("damage_bonus", 0))),
                 damage_type=DamageType(str(row["damage_type"]).lower()), success_damage=str(row["success_damage"]),
+                zero_hp_rider=zero_hp_save_rider_2014(row),
             ))
     if attack.control_effect is not None:
         row = attack.control_effect

@@ -8,6 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
+from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
 
 
 class DiceSpec(BaseModel):
@@ -33,6 +34,7 @@ class SaveDamageEffectDefinition(BaseModel):
     dice: DiceSpec
     damage_type: DamageType
     success_damage: Literal["none", "half"] = "half"
+    zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
 class ProneEffectDefinition(BaseModel):

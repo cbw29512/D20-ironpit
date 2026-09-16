@@ -13,7 +13,8 @@ _SAVE_PRONE_IDS = {
     "ankylosaurus", "dire-wolf", "giant-crocodile", "mastiff", "wolf", "worg",
 }
 _SAVE_DAMAGE_IDS = {
-    "giant-poisonous-snake", "giant-scorpion", "poisonous-snake", "scorpion", "wyvern",
+    "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp",
+    "poisonous-snake", "scorpion", "wyvern",
 }
 _CHARGE_IDS = {"elk", "giant-elk", "giant-sea-horse", "minotaur-skeleton", "rhinoceros"}
 
@@ -31,10 +32,10 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_83_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_85_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 83
+    assert len(ready) == 85
     assert _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS <= {monster.id for monster in ready}
     for monster in ready:
         template = compile_combatant(adapt_basic_monster_2014(monster))
@@ -124,13 +125,20 @@ def test_charge_profiles_preserve_exact_pinned_source_semantics():
             assert actual.prone_save_dc == expected.get("prone_save_dc")
 
 
-def test_special_zero_hp_poison_riders_still_fail_closed():
+def test_special_zero_hp_poison_riders_are_source_bound_and_certified():
     source = {monster.id: monster for monster in load_monster_source_2014()}
-    centipede = source["giant-centipede"].attacks[0]
-    wasp = source["giant-wasp"].attacks[0]
-    assert "zero_hp_condition_ids" in centipede.on_hit_save_effect
-    assert "zero_hp_condition_ids" in wasp.on_hit_save_effect
-    assert supports_basic_attack_effects_2014(centipede) is False
-    assert supports_basic_attack_effects_2014(wasp) is False
-    assert basic_blockers_2014(source["giant-centipede"]) == ("attack:complex",)
-    assert basic_blockers_2014(source["giant-wasp"]) == ("attack:complex",)
+    for monster_id in ("giant-centipede", "giant-wasp"):
+        monster = source[monster_id]
+        source_attack = monster.attacks[0]
+        expected = source_attack.on_hit_save_effect
+        assert expected is not None
+        assert supports_basic_attack_effects_2014(source_attack) is True
+        assert basic_blockers_2014(monster) == ()
+        runtime = _runtime_attacks(compile_combatant(adapt_basic_monster_2014(monster)))[
+            _attack_id(monster.id, source_attack.id)
+        ].on_hit_save_damage
+        assert runtime is not None and runtime.zero_hp_rider is not None
+        rider = runtime.zero_hp_rider
+        assert rider.stable is True
+        assert list(rider.condition_ids) == expected["zero_hp_condition_ids"]
+        assert rider.duration_rounds == expected["zero_hp_duration_rounds"]

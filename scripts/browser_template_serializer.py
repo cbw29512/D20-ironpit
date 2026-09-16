@@ -83,12 +83,20 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             ]
         if attack.on_hit_save_damage:
             effect = attack.on_hit_save_damage
-            row["onHitSaveDamage"] = {
+            save_damage = {
                 "source": effect.source, "saveAbility": _value(effect.save_ability), "dc": effect.dc,
                 "diceCount": effect.dice_count, "diceSize": effect.dice_size,
                 "damageBonus": effect.damage_bonus, "damageType": effect.damage_type.value,
                 "successDamage": effect.success_damage,
             }
+            if effect.zero_hp_rider:
+                rider = effect.zero_hp_rider
+                save_damage["zeroHpRider"] = {
+                    "stable": rider.stable,
+                    "conditionIds": [_value(item) for item in rider.condition_ids],
+                    "durationRounds": rider.duration_rounds,
+                }
+            row["onHitSaveDamage"] = save_damage
         if attack.on_hit_condition_save:
             effect = attack.on_hit_condition_save
             row["onHitConditionSave"] = {

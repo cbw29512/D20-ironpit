@@ -7,6 +7,7 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.on_hit_save_damage import OnHitSaveDamageResolution, resolve_on_hit_save_damage
 from app.combat.zero_hp import apply_damage
+from app.combat.zero_hp_save_damage_rider import apply_zero_hp_save_damage_rider, save_damage_caused_zero
 from app.domain.models import CombatantState, DamageRollComponent, DiceRoll, RollMode, WeaponAttack
 
 
@@ -31,12 +32,14 @@ def resolve_attack_hit_damage(
     affected_states: list[CombatantState] | None,
     sneak_attack_ally_available: bool,
 ) -> AttackHitDamageResolution:
+    hp_buffer_before = defender.current_hp + defender.temporary_hp
     damage_roll, rolled_components = resolve_weapon_damage(
         attacker, attack, dice, critical, attack_mode, turn_key, bonus_damage=bonus_damage,
         target=defender, sneak_attack_ally_available=sneak_attack_ally_available,
     )
     save_damage = resolve_on_hit_save_damage(defender, attack, dice)
-    if save_damage.component is not None:
+    save_component_present = save_damage.component is not None
+    if save_component_present:
         rolled_components.append(save_damage.component)
         damage_roll = aggregate_damage_components(rolled_components)
     applied_total, components = apply_damage_defenses(defender, rolled_components)
@@ -46,4 +49,11 @@ def resolve_attack_hit_damage(
         defender, applied_total, critical=critical, damage_types=applied_types,
         dice=dice, affected_states=affected_states,
     )
+    effect = attack.on_hit_save_damage
+    if defender.current_hp == 0 and save_damage_caused_zero(
+        hp_buffer_before, applied_total, components, effect, save_component_present=save_component_present,
+    ):
+        assert effect is not None
+        apply_zero_hp_save_damage_rider(defender, effect, turn_key, affected_states)
+        outcome = "unconscious"
     return AttackHitDamageResolution(damage_roll, components, outcome, applied_total, save_damage)

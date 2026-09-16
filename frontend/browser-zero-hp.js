@@ -29,12 +29,29 @@
 
   function endDodge(state) { state.active_effect_ids = state.active_effect_ids.filter((id) => id !== DODGE); }
 
+  function applyProne(state) {
+    if (!I().immune(state, PRONE) && !state.active_effect_ids.includes(PRONE)) state.active_effect_ids.push(PRONE);
+  }
+
   function markUnconscious(state) {
     state.is_alive = true;
     state.is_unconscious = true;
     state.is_stable = false;
     endDodge(state);
-    if (!I().immune(state, PRONE) && !state.active_effect_ids.includes(PRONE)) state.active_effect_ids.push(PRONE);
+    applyProne(state);
+  }
+
+  function stabilizeAtZero(state) {
+    state.current_hp = 0;
+    state.is_alive = true;
+    state.is_dead = false;
+    state.is_unconscious = true;
+    state.is_stable = true;
+    state.death_save_successes = 0;
+    state.death_save_failures = 0;
+    endDodge(state);
+    applyProne(state);
+    return "unconscious";
   }
 
   function markDead(state) {
@@ -82,5 +99,5 @@
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, stabilizeAtZero };
 })();

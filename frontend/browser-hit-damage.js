@@ -5,6 +5,8 @@
   const S = () => window.IRON_PIT_BROWSER_SAVES;
   const D = () => window.IRON_PIT_DICE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
 
   function resolveSaveDamage(defender, attack) {
     const effect = attack.onHitSaveDamage;
@@ -27,6 +29,38 @@
     return result;
   }
 
+  function saveDamageCausedZero(hpBufferBefore, appliedTotal, components, effect, saveComponentPresent) {
+    if (!effect?.zeroHpRider || !saveComponentPresent || !components.length) return false;
+    const saveApplied = components[components.length - 1].applied_total;
+    const nonSaveApplied = appliedTotal - saveApplied;
+    return saveApplied > 0 && hpBufferBefore > nonSaveApplied && hpBufferBefore <= appliedTotal;
+  }
+
+  function applyZeroHpSaveDamageRider(defender, effect, turnKey) {
+    const rider = effect.zeroHpRider;
+    if (!rider) return;
+    const separator = turnKey.indexOf(":");
+    if (separator < 1 || separator === turnKey.length - 1) {
+      throw new Error("Zero-HP save-damage riders require a round:source turn key.");
+    }
+    const roundNumber = Number.parseInt(turnKey.slice(0, separator), 10);
+    const sourceId = turnKey.slice(separator + 1);
+    if (!Number.isInteger(roundNumber)) throw new Error("Zero-HP save-damage rider round must be an integer.");
+    if (!Z()?.stabilizeAtZero) throw new Error("Browser zero-HP stabilization runtime is not loaded.");
+    if (!T()?.apply) throw new Error("Browser timed-condition runtime is not loaded.");
+    Z().stabilizeAtZero(defender);
+    const sourceEffectId = `${effect.source}:zero-hp-save-damage`;
+    for (const conditionId of rider.conditionIds || []) {
+      T().apply(defender, conditionId, sourceId, {
+        sourceEffectId,
+        appliedRound: roundNumber,
+        expiresRound: roundNumber + rider.durationRounds,
+        expiryTiming: "target_turn_start",
+        useDefaultPoisonRecovery: false,
+      });
+    }
+  }
+
   function aggregate(components) {
     return {
       notation: components.map((part) => part.notation).join(" + "),
@@ -37,13 +71,15 @@
   }
 
   function resolve(attacker, defender, attack, critical, mode, turnKey, options = {}) {
+    const hpBufferBefore = defender.current_hp + defender.temporary_hp;
     const base = R().weaponDamage(
       attacker, attack, critical, mode, turnKey, options.bonusDamage || null,
       defender, Boolean(options.sneakAttackAllyAvailable),
     );
     const saveDamage = resolveSaveDamage(defender, attack);
+    const saveComponentPresent = Boolean(saveDamage.component);
     const rolled = [...base.components];
-    if (saveDamage.component) rolled.push(saveDamage.component);
+    if (saveComponentPresent) rolled.push(saveDamage.component);
     const damageComponents = rolled.map((part) => ({
       ...part,
       applied_total: A().adjustedDamage(defender, part.total, part.damage_type),
@@ -53,11 +89,20 @@
     const appliedTypes = [...new Set(
       damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
     )];
-    const damageOutcome = A().applyDamage(
+    let damageOutcome = A().applyDamage(
       defender, appliedTotal, critical, appliedTypes, options.affectedStates || [],
     );
+    const effect = attack.onHitSaveDamage;
+    if (defender.current_hp === 0 && saveDamageCausedZero(
+      hpBufferBefore, appliedTotal, damageComponents, effect, saveComponentPresent,
+    )) {
+      applyZeroHpSaveDamageRider(defender, effect, turnKey);
+      damageOutcome = "unconscious";
+    }
     return { damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage };
   }
 
-  window.IRON_PIT_BROWSER_HIT_DAMAGE = { aggregate, resolve, resolveSaveDamage };
+  window.IRON_PIT_BROWSER_HIT_DAMAGE = {
+    aggregate, applyZeroHpSaveDamageRider, resolve, resolveSaveDamage, saveDamageCausedZero,
+  };
 })();
