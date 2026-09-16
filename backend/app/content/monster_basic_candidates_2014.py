@@ -13,6 +13,7 @@ from app.domain.weapons import DamageType
 logger = logging.getLogger(__name__)
 _MODELED_2014_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
+    "Sure-Footed": CombatTrait.SURE_FOOTED,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
