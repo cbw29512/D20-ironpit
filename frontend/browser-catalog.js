@@ -72,15 +72,45 @@
     }
   }
 
+  function build2014Heroes() {
+    const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES_2014 || {});
+    if (heroes.length !== 10) throw new Error(`Expected 10 certified 2014 Fighter levels; found ${heroes.length}.`);
+    if (heroes.some((hero) => hero.ruleset !== "2014" || hero.kind !== "character")) {
+      throw new Error("2014 hero catalog crossed the ruleset boundary.");
+    }
+    return heroes.map((hero) => ({
+      id: `hero-2014-fighter-l${hero.level}`,
+      name: hero.name,
+      class_id: hero.class_id,
+      class_name: "Fighter",
+      level: hero.level,
+      build_id: hero.build_id,
+      build_name: "Canonical 2014 RAW Progression",
+      subclass_id: hero.level >= 3 ? "champion" : null,
+      subclass_name: hero.level >= 3 ? "Champion" : null,
+      ruleset: "2014",
+      kind: "character",
+      coverage_status: "raw_ready",
+      runnable_template_id: hero.id,
+      blockers: [],
+    }));
+  }
+
   function build2014() {
-    if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
-    const cards = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (cards.length !== 100) throw new Error(`Expected 100 certified 2014 test monsters; found ${cards.length}.`);
-    if (cards.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 test catalog crossed the ruleset boundary.");
+    if (window.IRON_PIT_2014_MVP_READY !== true || window.IRON_PIT_2014_HEROES_READY !== true) {
+      throw new Error("Certified 2014 browser bundles did not load.");
+    }
+    const heroes = build2014Heroes();
+    const monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    if (monsters.length !== 100) throw new Error(`Expected 100 certified 2014 test monsters; found ${monsters.length}.`);
+    if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) {
+      throw new Error("2014 monster catalog crossed the ruleset boundary.");
+    }
     return {
-      heroes: cards.map((card) => ({ ...card })), monsters: cards.map((card) => ({ ...card })),
-      hero_count: cards.length, monster_count: 327, hero_ready_count: cards.length,
-      monster_ready_count: cards.length, ruleset: "2014", test_lane: true,
+      heroes, monsters,
+      hero_count: heroes.length, monster_count: 327,
+      hero_ready_count: heroes.length, monster_ready_count: monsters.length,
+      ruleset: "2014", test_lane: true,
     };
   }
 
