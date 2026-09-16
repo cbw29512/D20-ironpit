@@ -50,7 +50,8 @@ def _target(hp: int):
 
 
 def _resolve(target, dice_values: list[int]):
-    attacker = build_combatant_state(build_karnok_stoneward())
+    attacker_template = build_karnok_stoneward().model_copy(update={"combat_traits": []}, deep=True)
+    attacker = build_combatant_state(attacker_template)
     return resolve_attack_hit_damage(
         attacker,
         target,
