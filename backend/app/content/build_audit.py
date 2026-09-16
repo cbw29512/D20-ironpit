@@ -12,16 +12,23 @@ _ABILITIES: tuple[AbilityName, ...] = (
     "wisdom",
     "charisma",
 )
-_REQUIRED_AUDIT_CATEGORIES = {"class", "species", "feat", "equipment"}
 
 
-def _audit_background_increases(profile: CharacterBuildProfile) -> list[str]:
+def _required_audit_categories(profile: CharacterBuildProfile) -> set[str]:
+    required = {"class", "species", "equipment"}
+    if profile.ruleset == "2024":
+        required.add("feat")
+    return required
+
+
+def _audit_2024_background_increases(profile: CharacterBuildProfile) -> list[str]:
+    if profile.ruleset != "2024":
+        return []
     issues: list[str] = []
     allowed = set(profile.background_allowed_abilities)
     increases = profile.background_increases
     used = [increase.ability for increase in increases]
     amounts = sorted(increase.amount for increase in increases)
-
     if len(allowed) != 3:
         issues.append("background-must-list-three-distinct-abilities")
     if len(set(used)) != len(used):
@@ -35,14 +42,16 @@ def _audit_background_increases(profile: CharacterBuildProfile) -> list[str]:
 
 def _total_increases(profile: CharacterBuildProfile) -> dict[AbilityName, int]:
     totals: dict[AbilityName, int] = {ability: 0 for ability in _ABILITIES}
-    for increase in [*profile.background_increases, *profile.advancement_increases]:
+    origin_increases = profile.background_increases if profile.ruleset == "2024" else profile.species_increases
+    for increase in [*origin_increases, *profile.advancement_increases]:
         totals[increase.ability] += increase.amount
     return totals
 
 
 def _audit_final_scores(profile: CharacterBuildProfile) -> list[str]:
     increases = _total_increases(profile)
-    mismatch_source = "declared-increases" if profile.advancement_increases else "background-increases"
+    source = "background" if profile.ruleset == "2024" else "species"
+    mismatch_source = "declared-increases" if profile.advancement_increases else f"{source}-increases"
     issues: list[str] = []
     for ability in _ABILITIES:
         expected = profile.base_ability_scores.score(ability) + increases[ability]
@@ -54,18 +63,15 @@ def _audit_final_scores(profile: CharacterBuildProfile) -> list[str]:
     return issues
 
 
-def _audit_features(
-    profile: CharacterBuildProfile,
-    template: CombatantTemplate,
-) -> list[str]:
+def _audit_features(profile: CharacterBuildProfile, template: CombatantTemplate) -> list[str]:
     issues: list[str] = []
     feature_ids = [audit.feature_id for audit in profile.feature_audits]
     if len(feature_ids) != len(set(feature_ids)):
         issues.append("feature-audit-ids-must-be-unique")
     categories = {audit.category for audit in profile.feature_audits}
-    for category in sorted(_REQUIRED_AUDIT_CATEGORIES - categories):
+    for category in sorted(_required_audit_categories(profile) - categories):
         issues.append(f"missing-{category}-feature-audit")
-    if profile.origin_feat_id not in feature_ids:
+    if profile.ruleset == "2024" and profile.origin_feat_id not in feature_ids:
         issues.append("origin-feat-missing-from-feature-audit")
 
     runtime_weapon_ids = {
@@ -81,14 +87,13 @@ def _audit_features(
     return issues
 
 
-def audit_character_build(
-    profile: CharacterBuildProfile,
-    template: CombatantTemplate,
-) -> list[str]:
+def audit_character_build(profile: CharacterBuildProfile, template: CombatantTemplate) -> list[str]:
     """Return fail-closed blockers for a legal build's combat-relevant runtime state."""
     issues: list[str] = []
     if template.kind != "character":
         issues.append("runtime-template-is-not-character")
+    if template.ruleset != profile.ruleset:
+        issues.append("runtime-ruleset-mismatch")
     if template.id != profile.template_id:
         issues.append("runtime-template-id-mismatch")
     if template.level != profile.level:
@@ -102,7 +107,7 @@ def audit_character_build(
     if template.fighting_styles != profile.fighting_styles:
         issues.append("runtime-fighting-styles-mismatch")
 
-    issues.extend(_audit_background_increases(profile))
+    issues.extend(_audit_2024_background_increases(profile))
     issues.extend(_audit_final_scores(profile))
     issues.extend(_audit_features(profile, template))
     if not profile.source_references or any(not ref.strip() for ref in profile.source_references):
@@ -110,10 +115,7 @@ def audit_character_build(
     return issues
 
 
-def assert_character_build_raw_ready(
-    profile: CharacterBuildProfile,
-    template: CombatantTemplate,
-) -> None:
+def assert_character_build_raw_ready(profile: CharacterBuildProfile, template: CombatantTemplate) -> None:
     issues = audit_character_build(profile, template)
     if issues:
         raise ValueError("Character build is not RAW-ready: " + ", ".join(issues))
