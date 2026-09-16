@@ -64,6 +64,12 @@ class OnHitConditionSave(BaseModel):
     condition_id: ConditionName
     max_target_size: CreatureSize | None = None
 
+    @model_validator(mode="after")
+    def _require_supported_condition(self) -> "OnHitConditionSave":
+        if self.condition_id != "prone":
+            raise ValueError("Current on-hit condition saves support Prone only.")
+        return self
+
 
 class Weapon(BaseModel):
     id: str
