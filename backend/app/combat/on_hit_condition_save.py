@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
 
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.models import CombatantState, DiceRoll, WeaponAttack
+from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -23,16 +27,26 @@ def resolve_on_hit_condition_save(
     attack: WeaponAttack,
     dice: DiceProvider,
 ) -> OnHitConditionSaveResolution:
-    effect = attack.on_hit_condition_save
-    if effect is None or defender.is_dead or not defender.is_alive:
-        return OnHitConditionSaveResolution()
-    if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size):
-        return OnHitConditionSaveResolution()
-    if condition_is_immune(defender, effect.condition_id):
-        return OnHitConditionSaveResolution()
-    save_roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice)
-    applied = None
-    if not succeeded and effect.condition_id not in defender.active_effect_ids:
-        defender.active_effect_ids.append(effect.condition_id)
-        applied = effect.condition_id
-    return OnHitConditionSaveResolution(save_roll, effect.save_ability, effect.dc, succeeded, applied)
+    try:
+        effect = attack.on_hit_condition_save
+        if effect is None or defender.is_dead or not defender.is_alive:
+            return OnHitConditionSaveResolution()
+        if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size):
+            return OnHitConditionSaveResolution()
+        if condition_is_immune(defender, effect.condition_id):
+            return OnHitConditionSaveResolution()
+        save_roll, succeeded = resolve_saving_throw(
+            defender,
+            effect.save_ability,
+            effect.dc,
+            dice,
+            SavingThrowContext(condition_id=effect.condition_id),
+        )
+        applied = None
+        if not succeeded and effect.condition_id not in defender.active_effect_ids:
+            defender.active_effect_ids.append(effect.condition_id)
+            applied = effect.condition_id
+        return OnHitConditionSaveResolution(save_roll, effect.save_ability, effect.dc, succeeded, applied)
+    except Exception:
+        logger.exception("Failed to resolve on-hit condition save for %s.", defender.template.name)
+        raise
