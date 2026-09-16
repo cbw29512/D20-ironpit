@@ -50,7 +50,8 @@ jobs:
       - name: Commit only generator-owned outputs
         run: |
           outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json"
-          if git diff --quiet -- $outputs; then
+          untracked="$(git ls-files --others --exclude-standard -- $outputs)"
+          if git diff --quiet -- $outputs && [ -z "$untracked" ]; then
             echo "Generated artifacts already current."
             exit 0
           fi
