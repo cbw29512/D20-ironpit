@@ -14,7 +14,7 @@
   };
   const monster = {
     id: "srd-giant-constrictor-snake", name: "Giant Constrictor Snake",
-    archetype: "Giant Constrictor Snake", challenge_rating: "2", kind: "monster", size: "huge",
+    archetype: "Giant Constrictor Snake", challenge_rating: "2", kind: "monster", ruleset: "2024", size: "huge",
     armor_class: 12, max_hp: 60, speed_ft: 30, initiative_bonus: 2,
     attacks: [bite], primary_attack_id: bite.id,
     saving_throw_actions: [constrict],
