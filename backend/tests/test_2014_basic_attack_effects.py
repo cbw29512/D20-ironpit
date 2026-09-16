@@ -1,0 +1,88 @@
+from app.content.capability_compiler import compile_combatant
+from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_source_2014 import load_monster_source_2014
+
+
+_ATTACK_EFFECT_IDS = {
+    "constrictor-snake",
+    "crocodile",
+    "flying-snake",
+    "giant-constrictor-snake",
+    "giant-crab",
+    "roc",
+    "tyrannosaurus-rex",
+}
+
+
+def _attack_id(monster_id: str, attack_id: str) -> str:
+    return f"2014-{monster_id}-{attack_id}".replace("--", "-")
+
+
+def _runtime_attacks(template):
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    return {attack.id: attack for attack in attacks}
+
+
+def _enum_value(value):
+    return value.value if hasattr(value, "value") else value
+
+
+def test_basic_attack_effect_tranche_is_exactly_67_and_ruleset_isolated():
+    source = load_monster_source_2014()
+    ready = [monster for monster in source if not basic_blockers_2014(monster)]
+    assert len(ready) == 67
+    assert _ATTACK_EFFECT_IDS <= {monster.id for monster in ready}
+    for monster in ready:
+        template = compile_combatant(adapt_basic_monster_2014(monster))
+        assert template.ruleset == "2014"
+        assert template.id == f"2014-{monster.id}"
+
+
+def test_basic_attack_effects_preserve_pinned_source_semantics():
+    source = {monster.id: monster for monster in load_monster_source_2014()}
+    for monster_id in _ATTACK_EFFECT_IDS:
+        monster = source[monster_id]
+        assert basic_blockers_2014(monster) == ()
+        template = compile_combatant(adapt_basic_monster_2014(monster))
+        runtime_attacks = _runtime_attacks(template)
+
+        for source_attack in monster.attacks:
+            runtime = runtime_attacks[_attack_id(monster.id, source_attack.id)]
+            expected_damage = source_attack.on_hit_damage
+            assert len(runtime.on_hit_damage) == len(expected_damage)
+            for expected, actual in zip(expected_damage, runtime.on_hit_damage, strict=True):
+                assert actual.source == source_attack.name
+                assert actual.dice_count == expected["dice_count"]
+                assert actual.dice_size == expected["dice_size"]
+                assert actual.damage_bonus == expected.get("bonus", 0)
+                assert _enum_value(actual.damage_type) == str(expected["type"]).lower()
+
+            expected_control = source_attack.control_effect
+            if expected_control is None:
+                assert runtime.control_effect is None
+            else:
+                assert runtime.control_effect is not None
+                assert runtime.control_effect.grapple_escape_dc == expected_control["grapple_escape_dc"]
+                assert runtime.control_effect.restrains_while_grappled == expected_control.get(
+                    "restrains_while_grappled", False
+                )
+                expected_size = expected_control.get("max_target_size")
+                actual_size = runtime.control_effect.max_target_size
+                assert (_enum_value(actual_size) if actual_size else None) == (
+                    str(expected_size).lower() if expected_size is not None else None
+                )
+            assert runtime.forbid_target_grappled_by_self == source_attack.forbid_target_grappled_by_self
+
+
+def test_unmodeled_save_and_charge_riders_still_fail_closed():
+    source = {monster.id: monster for monster in load_monster_source_2014()}
+    wolf_bite = source["wolf"].attacks[0]
+    elk_ram = source["elk"].attacks[0]
+    assert wolf_bite.on_hit_save_effect is not None
+    assert elk_ram.charge_profile is not None
+    assert supports_basic_attack_effects_2014(wolf_bite) is False
+    assert supports_basic_attack_effects_2014(elk_ram) is False
+    assert basic_blockers_2014(source["wolf"]) == ("attack:complex",)
+    assert basic_blockers_2014(source["elk"]) == ("attack:complex",)

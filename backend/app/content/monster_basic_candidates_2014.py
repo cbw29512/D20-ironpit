@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
+from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
@@ -12,20 +13,9 @@ _MODELED_2014_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
-    "Amphibious",
-    "False Appearance",
-    "Flyby",
-    "Hold Breath",
-    "Illumination",
-    "Keen Hearing",
-    "Keen Hearing and Smell",
-    "Keen Hearing and Sight",
-    "Keen Sight",
-    "Keen Sight and Smell",
-    "Keen Smell",
-    "Mimicry",
-    "Sunlight Sensitivity",
-    "Water Breathing",
+    "Amphibious", "False Appearance", "Flyby", "Hold Breath", "Illumination",
+    "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight", "Keen Sight",
+    "Keen Sight and Smell", "Keen Smell", "Mimicry", "Sunlight Sensitivity", "Water Breathing",
 })
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
@@ -37,20 +27,7 @@ def _attack_blockers(monster: SourceMonster2014) -> list[str]:
             blockers.append("attack:incomplete")
         if attack.damage.type not in _DAMAGE_TYPES:
             blockers.append("attack:damage-type")
-        if any((
-            attack.conditional_damage,
-            attack.conditional_attack_advantage,
-            attack.on_hit_damage,
-            attack.on_hit_save_effect,
-            attack.on_hit_contested_movement,
-            attack.ongoing_damage_effect,
-            attack.control_effect,
-            attack.resource_id,
-            attack.breakable_restraint,
-            attack.charge_profile,
-            attack.forbid_target_grappled_by_self,
-            attack.grapple_target_policy != "normal",
-        )):
+        if not supports_basic_attack_effects_2014(attack):
             blockers.append("attack:complex")
         if attack.kind == "ranged" and (
             attack.normal_range_ft is None or attack.long_range_ft is None
