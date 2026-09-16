@@ -16,7 +16,6 @@ class ProgressionCombatFeatures(BaseModel):
     mindless_rage: bool = False
     instinctive_pounce_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     great_weapon_fighting: bool = False
-    indomitable_reroll: bool = False
     indomitable_bonus: int = Field(default=0, ge=0, le=20)
     tactical_master_sap_weapon_ids: list[str] = Field(default_factory=list)
     heroic_warrior: bool = False
