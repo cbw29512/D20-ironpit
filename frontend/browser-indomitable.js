@@ -6,8 +6,8 @@
   const S = () => window.IRON_PIT_BROWSER_SAVES;
 
   function use(state, ability) {
-    const enabled = state.template.indomitable_reroll === true;
     const bonus = state.template.indomitable_bonus || 0;
+    const enabled = state.template.indomitable_reroll === true || state.template.ruleset === "2014" || bonus > 0;
     const uses = state.resources?.indomitable || 0;
     const saveBonus = state.template.saving_throw_bonuses?.[ability];
     if (!enabled || !uses) return null;
