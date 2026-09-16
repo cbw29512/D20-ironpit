@@ -69,7 +69,7 @@ class CharacterBuildProfile(BaseModel):
     base_ability_scores: AbilityScores
     background_allowed_abilities: list[AbilityName] = Field(default_factory=list, max_length=3)
     background_increases: list[AbilityIncrease] = Field(default_factory=list, max_length=3)
-    species_increases: list[AbilityIncrease] = Field(default_factory=list, max_length=3)
+    species_increases: list[AbilityIncrease] = Field(default_factory=list, max_length=6)
     advancement_increases: list[AbilityIncrease] = Field(default_factory=list)
     final_ability_scores: AbilityScores
     class_equipment_option: EquipmentOption
