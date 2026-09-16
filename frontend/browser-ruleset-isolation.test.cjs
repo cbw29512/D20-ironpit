@@ -13,9 +13,11 @@ const member = (ruleset) => ({ state: { template: ruleset ? { ruleset } : {} } }
 
 assert.equal(selectedRuleset({}), "2024");
 assert.equal(selectedRuleset({ ruleset: "2024" }), "2024");
-assert.throws(() => selectedRuleset({ ruleset: "2014" }), /not admitted for browser combat/);
+assert.equal(selectedRuleset({ ruleset: "2014" }), "2014");
+assert.throws(() => selectedRuleset({ ruleset: "2013" }), /Unsupported browser ruleset/);
 assert.throws(() => resolveRuleset([member(), member("2024")]), /explicit ruleset identity/);
 assert.equal(resolveRuleset([member("2014"), member("2014")]), "2014");
+assert.equal(resolveRuleset([member("2024"), member("2024")]), "2024");
 assert.throws(
   () => resolveRuleset([member("2014"), member("2024")]),
   /Mixed rulesets are not allowed/,
