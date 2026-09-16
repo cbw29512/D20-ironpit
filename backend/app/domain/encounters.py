@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.domain.events import BattleEvent, DiceRoll
 from app.domain.grid import BattleMapDefinition
+from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.runtime import CombatantState
 
 
@@ -32,6 +33,7 @@ class EncounterSetup(BaseModel):
     monsters: list[EncounterCombatant] = Field(min_length=1, max_length=6)
     hero_total_levels: int = Field(ge=1, le=120)
     monster_total_cr: str
+    ruleset: RulesetId = DEFAULT_RULESET
     map_definition: BattleMapDefinition | None = None
 
 
@@ -59,4 +61,4 @@ class EncounterBattleResult(BaseModel):
     setup: EncounterSetup
     initiative: EncounterInitiative
     events: list[BattleEvent] = Field(default_factory=list)
-    ruleset: str = "SRD 5.2.1 combat subset"
+    ruleset: RulesetId = DEFAULT_RULESET
