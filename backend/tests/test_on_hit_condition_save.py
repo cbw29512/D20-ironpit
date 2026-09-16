@@ -37,7 +37,7 @@ def _hit(target, values):
 
 def test_failed_on_hit_save_applies_condition_and_records_audit_fields() -> None:
     target = _target()
-    event = _hit(target, [15, 4, 5])
+    event = _hit(target, [15, 4, 4, 5])
     assert event.hit is True
     assert event.save_ability == "strength"
     assert event.save_dc == 13
@@ -49,7 +49,7 @@ def test_failed_on_hit_save_applies_condition_and_records_audit_fields() -> None
 
 def test_successful_on_hit_save_does_not_apply_condition() -> None:
     target = _target()
-    event = _hit(target, [15, 4, 18])
+    event = _hit(target, [15, 4, 4, 18])
     assert event.save_succeeded is True
     assert "prone" not in target.active_effect_ids
     assert "prone" not in event.applied_condition_ids
@@ -58,7 +58,7 @@ def test_successful_on_hit_save_does_not_apply_condition() -> None:
 def test_on_hit_save_skips_oversized_and_immune_targets() -> None:
     huge = _target(size=CreatureSize.HUGE)
     immune = _target(immune=True)
-    huge_event = _hit(huge, [15, 4])
-    immune_event = _hit(immune, [15, 4])
+    huge_event = _hit(huge, [15, 4, 4])
+    immune_event = _hit(immune, [15, 4, 4])
     assert huge_event.save_dc is None and "prone" not in huge.active_effect_ids
     assert immune_event.save_dc is None and "prone" not in immune.active_effect_ids
