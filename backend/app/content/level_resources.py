@@ -87,6 +87,32 @@ def fighter_indomitable_uses(level: int) -> int:
     return 3
 
 
+def fighter_second_wind_uses_2014(level: int) -> int:
+    """2014 Fighter has one Second Wind use between short or long rests."""
+    _checked_level(level)
+    return 1
+
+
+def fighter_action_surge_uses_2014(level: int) -> int:
+    """2014 Fighter Action Surge uses; level 17 grants a second use."""
+    level = _checked_level(level)
+    if level < 2:
+        return 0
+    return 2 if level >= 17 else 1
+
+
+def fighter_indomitable_uses_2014(level: int) -> int:
+    """2014 Fighter Indomitable uses; 1/2/3 uses at levels 9/13/17."""
+    level = _checked_level(level)
+    if level < 9:
+        return 0
+    if level < 13:
+        return 1
+    if level < 17:
+        return 2
+    return 3
+
+
 def orc_adrenaline_rush_uses(level: int) -> int:
     """2024 Orc Adrenaline Rush uses equal the character's Proficiency Bonus."""
     return proficiency_bonus(level)
