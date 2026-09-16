@@ -10,9 +10,22 @@ if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))
 
 from app.content.capability_compiler import compile_combatant
-from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_basic_candidates_2014 import (
+    _ARENA_NEUTRAL_TRAITS,
+    basic_blockers_2014,
+)
+from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
+
+
+def _unsupported_traits(monsters):
+    return Counter(
+        trait
+        for monster in monsters
+        for trait in monster.trait_names
+        if trait not in _ARENA_NEUTRAL_TRAITS and not is_arena_neutral_bonus_action(trait)
+    )
 
 
 def main() -> None:
@@ -31,6 +44,9 @@ def main() -> None:
     print("Blockers:")
     for blocker, count in counts.most_common():
         print(f"  {blocker}: {count}")
+    print("Unsupported traits:")
+    for trait, count in _unsupported_traits(monsters).most_common():
+        print(f"  {count:3}  {trait}")
     if len(monsters) != 327:
         raise RuntimeError(f"Expected 327 source monsters, found {len(monsters)}")
     if len(ready) <= 4:
