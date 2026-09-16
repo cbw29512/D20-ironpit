@@ -6,6 +6,7 @@ import logging
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
+from app.content.monster_conditional_attack_advantage_2014 import ATTACK_MODELED_TRAITS_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
@@ -51,7 +52,7 @@ def _multiattack_blockers(monster: SourceMonster2014) -> list[str]:
 
 def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
-        certified = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_2014_TRAITS)
+        certified = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_2014_TRAITS) | set(ATTACK_MODELED_TRAITS_2014)
         return tuple(
             name for name in monster.trait_names
             if name not in certified and not is_arena_neutral_bonus_action(name)
