@@ -6,8 +6,11 @@ from app.content.level_resources import (
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
     fighter_action_surge_uses,
+    fighter_action_surge_uses_2014,
     fighter_indomitable_uses,
+    fighter_indomitable_uses_2014,
     fighter_second_wind_uses,
+    fighter_second_wind_uses_2014,
     orc_adrenaline_rush_uses,
 )
 from app.content.pregen_combat_profiles import PregenCombatProfile
@@ -17,9 +20,7 @@ from app.domain.models import CombatantTemplate
 
 ResourceRule = tuple[str, str, Callable[[int], int]]
 
-# A class must appear here, even with an empty tuple, before its level-scaling
-# resource rules are considered independently audited for RAW certification.
-_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
+_CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", barbarian_rage_uses),),
     "cleric": (("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),),
     "fighter": (
@@ -29,7 +30,14 @@ _CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     ),
     "rogue": (),
 }
-_SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
+_CLASS_RULES_2014: dict[str, tuple[ResourceRule, ...]] = {
+    "fighter": (
+        ("second-wind", "Second Wind", fighter_second_wind_uses_2014),
+        ("action-surge", "Action Surge", fighter_action_surge_uses_2014),
+        ("indomitable", "Indomitable", fighter_indomitable_uses_2014),
+    ),
+}
+_SPECIES_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     "orc": (
         ("adrenaline-rush", "Adrenaline Rush", orc_adrenaline_rush_uses),
         ("relentless-endurance", "Relentless Endurance", lambda _level: 1),
@@ -37,11 +45,17 @@ _SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
 }
 
 
+def _class_rules(profile: CharacterBuildProfile) -> dict[str, tuple[ResourceRule, ...]]:
+    return _CLASS_RULES_2014 if profile.ruleset == "2014" else _CLASS_RULES_2024
+
+
 def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
-    """Return every independently certified positive-use resource for this build."""
+    """Return every independently certified positive-use resource for this edition-specific build."""
+    class_rules = _class_rules(profile)
+    species_rules = {} if profile.ruleset == "2014" else _SPECIES_RULES_2024
     rules = [
-        *_CLASS_RULES.get(profile.class_id, ()),
-        *_SPECIES_RULES.get(profile.species_id, ()),
+        *class_rules.get(profile.class_id, ()),
+        *species_rules.get(profile.species_id, ()),
     ]
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
     if profile.class_id in FULL_CASTER_CLASSES:
@@ -54,9 +68,9 @@ def audit_character_resources(
     build_profile: CharacterBuildProfile,
     combat_profile: PregenCombatProfile,
 ) -> list[str]:
-    """Fail closed when runtime/profile resource counts disagree with level-derived RAW rules."""
+    """Fail closed when runtime/profile resource counts disagree with edition-derived RAW rules."""
     issues: list[str] = []
-    if build_profile.class_id not in _CLASS_RULES:
+    if build_profile.class_id not in _class_rules(build_profile):
         issues.append("class-level-resource-rules-not-certified")
     expected = expected_resources(build_profile)
     runtime = {item.id: item.max_uses for item in template.resources}
