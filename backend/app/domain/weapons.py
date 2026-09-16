@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionName, HitControlEffect
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
+from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
 
 
 class DamageType(StrEnum):
@@ -67,6 +68,7 @@ class OnHitSaveDamage(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageType
     success_damage: Literal["none", "half"] = "half"
+    zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
 class OnHitConditionSave(BaseModel):
