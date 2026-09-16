@@ -22,6 +22,7 @@ class AttackExpectation:
     style_attack_bonus: int = 0
     damage_die_minimum: int | None = None
     mastery_property: str | None = None
+    forbid_mastery_property: bool = False
     sneak_attack_eligible: bool = False
     conditional_damage: tuple[tuple[int, int, str], ...] = ()
 
