@@ -27,8 +27,8 @@
     function refresh() {
       const chosen = chosenHero(state);
       el("picker-note").textContent = ready(chosen)
-        ? `${chosen.name} · ${chosen.class_name} ${chosen.level} is RAW-certified for automated combat.`
-        : `${chosen?.name || "This hero"} level ${levelSelect.value} is not RAW-certified yet.`;
+        ? `${chosen.name} · ${chosen.class_name} ${chosen.level} is RAW-certified for ${state.ruleset} automated combat.`
+        : `${chosen?.name || "This hero"} level ${levelSelect.value} is not RAW-certified yet for ${state.ruleset}.`;
       el("confirm-card").disabled = !ready(chosen);
       el("confirm-card").textContent = ready(chosen) ? "Add to Slot" : "Certification Pending";
     }
@@ -40,7 +40,7 @@
     const certified = rows.filter(ready).length;
     if (!rows.length) return "No monsters exist at this Challenge Rating.";
     if (chosen && !ready(chosen)) return `${chosen.name} is in the catalog, but its outcome-changing combat mechanics are still being RAW-certified.`;
-    if (state.ruleset === "2014") return `${rows.length} certified 2014 test monster${rows.length === 1 ? "" : "s"} available in this lane.`;
+    if (state.ruleset === "2014") return `${rows.length} certified 2014 monster${rows.length === 1 ? "" : "s"} available.`;
     return `${rows.length} SRD monster${rows.length === 1 ? "" : "s"} shown · ${certified} RAW-ready for automated combat.`;
   }
 
@@ -75,9 +75,6 @@
 
   function selectedCard(state) {
     if (!active) return null;
-    if (state.ruleset === "2014") {
-      return state.catalog[active.side].find((monster) => monster.id === el("picker-monster").value) || null;
-    }
     if (active.side === "heroes") return chosenHero(state);
     return state.catalog.monsters.find((monster) => monster.id === el("picker-monster").value) || null;
   }
@@ -85,10 +82,10 @@
   function open(state, side, index, onConfirm, onRemove) {
     active = { side, index, onConfirm, onRemove };
     const existing = (side === "heroes" ? state.heroSlots : state.monsterSlots)[index];
-    const is2014 = state.ruleset === "2014", sideLabel = is2014 ? (side === "heroes" ? "TEAM A" : "TEAM B") : side === "heroes" ? "HERO" : "MONSTER";
+    const sideLabel = side === "heroes" ? "HERO" : "MONSTER";
     el("picker-kicker").textContent = `${sideLabel} SLOT ${index + 1}`;
-    el("picker-title").textContent = existing ? `Change ${existing.name}` : is2014 || side === "monsters" ? "Choose a monster" : "Choose a hero";
-    const useMonsterPicker = is2014 || side === "monsters";
+    el("picker-title").textContent = existing ? `Change ${existing.name}` : side === "monsters" ? "Choose a monster" : "Choose a hero";
+    const useMonsterPicker = side === "monsters";
     el("hero-picker-fields").hidden = useMonsterPicker; el("monster-picker-fields").hidden = !useMonsterPicker;
     el("remove-card").hidden = !existing; el("confirm-card").textContent = "Add to Slot";
     if (useMonsterPicker) populateMonster(state, existing, side); else populateHero(state, existing);
