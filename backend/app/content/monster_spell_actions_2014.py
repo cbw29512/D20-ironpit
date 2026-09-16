@@ -114,6 +114,7 @@ def _automatic_spell(spell_id: str, level: int) -> AutomaticDamageSpellAction:
     if spell_id != "magic-missile": raise ValueError(f"Unsupported automatic spell: {spell_id}")
     return AutomaticDamageSpellAction(
         id="magic-missile", name="Magic Missile", level=level, range_ft=120, base_projectiles=3,
+        projectiles_per_slot_above=1,
         damage_dice_count_per_projectile=1, damage_dice_size=4, damage_bonus_per_projectile=1, damage_type="force",
         animation="magic-missile", source="SRD 5.1 / 2014 monster spell",
     )

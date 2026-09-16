@@ -24570,8 +24570,7 @@
       }
     ],
     "unsupported_legendary_action_names": [
-      "Teleport",
-      "Cast a Spell"
+      "Teleport"
     ],
     "multiattack_binding": null,
     "spellcasting": {

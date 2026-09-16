@@ -36,7 +36,13 @@ class AutomaticDamageSpellAction(BaseModel):
             raise ValueError("A level 9 spell cannot scale through higher spell slots.")
         return self
 
+    @property
+    def supports_upcast(self) -> bool:
+        return self.projectiles_per_slot_above > 0
+
     def projectile_count(self, slot_level: int) -> int:
-        if slot_level != self.level:
-            raise ValueError("Spell upcasting is not certified; use the printed slot level.")
-        return self.base_projectiles
+        if slot_level < self.level:
+            raise ValueError("Spell slot level cannot be below the printed spell level.")
+        if slot_level > self.level and not self.supports_upcast:
+            raise ValueError("This automatic spell has no certified upcast mechanic.")
+        return self.base_projectiles + ((slot_level - self.level) * self.projectiles_per_slot_above)

@@ -11,12 +11,14 @@ def _blockers(name: str) -> list[str]:
         raise AssertionError(f"Could not inventory {name} blockers.") from exc
 
 
-def test_travel_and_creation_spells_are_nonblocking_but_damage_spells_remain() -> None:
+def test_travel_creation_and_supported_damage_spells_are_nonblocking_but_real_actions_remain() -> None:
     try:
         blockers = _blockers("Djinni")
         assert "spell:conjure elemental" not in blockers
         assert "spell:wind walk" not in blockers
-        assert "spell:thunderwave" in blockers
+        assert "spell:thunderwave" not in blockers
+        assert "action:Create Whirlwind" in blockers
+        assert "attack-detail:Scimitar" in blockers
     except Exception as exc:
         raise AssertionError("Arena-disabled spell scope was not applied narrowly.") from exc
 

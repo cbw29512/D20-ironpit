@@ -33,13 +33,21 @@ def _cast_access(caster: EncounterCombatant, action: SpellSaveAction, turn_key: 
     innate = _resource(caster, innate_id)
     if innate is not None:
         return (action.level, innate_id) if innate.current_uses > 0 else None
+
+    # Cantrips never consume a spell slot. Leveled save spells currently bind to
+    # their exact certified slot level; explicit upcasting is handled only by
+    # mechanics that model it directly rather than silently borrowing any
+    # higher-level slot.
+    if action.level == 0:
+        return 0, None
+
     slot_id = f"spell-slot-{action.level}"
     slot = _resource(caster, slot_id)
-    if slot is not None:
-        if not slot_spell_available(caster.state, turn_key) or slot.current_uses < 1:
-            return None
-        return action.level, slot_id
-    return action.level, None
+    if slot is None:
+        return None
+    if not slot_spell_available(caster.state, turn_key) or slot.current_uses < 1:
+        return None
+    return action.level, slot_id
 
 
 def _creature_type(target: EncounterCombatant) -> str:

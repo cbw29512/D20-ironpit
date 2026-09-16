@@ -125,6 +125,17 @@ If RAW requires a noncombat choice that cannot affect the arena, choose a legal 
 - Equipment changes only when a legal progression choice materially improves or is required by the canonical combat build.
 - Once a canonical subclass is selected for a compiled character track, progression remains on that subclass through level 20 unless the user explicitly changes the project architecture.
 
+### Iron Pit level 6+ magical-offense baseline
+
+This is an Iron Pit canonical-pregen convention, not a claim that the 2014 DMG guarantees every level-6 character a magic weapon.
+
+- A weapon-dependent canonical pregen at level 6 or higher must have at least one legal magical primary weapon or another reliable magical primary attack path that fits the authored build.
+- A level 6+ pregen may remain mundane-only only when its build metadata explicitly marks that limitation as intentional; certification must surface the limitation rather than silently granting a bypass.
+- Do not weaken or ignore a monster's resistance or immunity to nonmagical attacks to compensate for a weak pregen loadout. Fix the loadout or preserve the intentional matchup weakness.
+- A magic weapon must be represented as the actual legal item/effect. Do not make an ordinary weapon magical by changing only a runtime boolean. Any attack/damage bonus or other property granted by the item must flow through the same universal weapon and attack data used by the engine.
+- Casters and unarmed/natural-attack builds satisfy this requirement only when their normal primary offense is already magical under the applicable rules; do not add an irrelevant magic weapon merely to satisfy a checklist.
+- Certification for final public pregens must fail closed when a level 6+ weapon-dependent build has neither a qualifying magical offense nor an explicit intentional-mundane override.
+
 ## Universal Combat Capability rule
 
 Hero and monster combat behavior must reuse the same shared engine capability whenever RAW behavior is equivalent.

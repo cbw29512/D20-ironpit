@@ -10,7 +10,7 @@ from app.content.monster_catalog_2014_auras import activated_start_turn_auras_20
 from app.content.monster_catalog_2014_berserk import berserk_profile_2014
 from app.content.monster_catalog_2014_compile_support import ability_scores_2014, bind_attack_traits_2014, reactive_melee_damage_2014, resources_2014, saving_throw_bonuses_2014
 from app.content.monster_catalog_2014_damage_triggers import damage_triggered_roll_penalties_2014
-from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
+from app.content.monster_catalog_2014_defenses import conditional_immunities_2014, conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_gaze import petrifying_gaze_2014
 from app.content.monster_catalog_2014_invisibility import invisibility_action_2014, starts_invisible_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
@@ -62,7 +62,7 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
         supported_reactions = supported_reaction_names_2014(source)
-        blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
+        blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source)]
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete and not is_arena_disabled_attack_detail_2014(attack.unsupported_text))
         blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names, source.data_bound_trait_names))
@@ -115,7 +115,9 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
             source_trait_names=list(source.trait_names), source_legendary_action_names=list(source.legendary_action_names),
-            damage_resistances=source.damage_resistances, conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
+            damage_resistances=source.damage_resistances,
+            conditional_damage_resistances=conditional_resistances_2014(source.damage_resistances_text),
+            conditional_damage_immunities=conditional_immunities_2014(source.damage_immunities_text),
             damage_absorptions=damage_absorptions_2014(source.source_traits), damage_triggered_roll_penalties=damage_triggered_roll_penalties_2014(source.source_traits),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),

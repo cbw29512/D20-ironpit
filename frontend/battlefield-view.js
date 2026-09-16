@@ -26,20 +26,46 @@
     }
   }
 
+  function attacksFor(template) {
+    if (Array.isArray(template?.attacks)) return template.attacks;
+    return [template?.weapon_attack, ...(template?.alternate_weapon_attacks || [])].filter(Boolean);
+  }
+
+  function primaryAttack(template) {
+    const attacks = attacksFor(template);
+    return attacks.find((attack) => attack.id === template?.primary_attack_id) || attacks[0] || null;
+  }
+
+  function attackSummary(template) {
+    const attack = primaryAttack(template);
+    if (!attack) return "No standard attack";
+    const bonusValue = Number(attack.bonus ?? attack.attack_bonus ?? 0);
+    const bonus = `${bonusValue >= 0 ? "+" : ""}${bonusValue}`;
+    const count = Number(attack.diceCount ?? attack.dice_count ?? 0);
+    const size = Number(attack.diceSize ?? attack.dice_size ?? 0);
+    const damageBonus = Number(attack.damageBonus ?? attack.damage_bonus ?? 0);
+    const dice = count && size ? `${count}d${size}${damageBonus ? `${damageBonus > 0 ? "+" : ""}${damageBonus}` : ""}` : "effect";
+    return `${attack.name || "Attack"} ${bonus} · ${dice}${attack.damageType || attack.damage_type ? ` ${attack.damageType || attack.damage_type}` : ""}`;
+  }
+
   function emptySlot(side, index, onOpen) {
     const node = document.createElement("button");
     node.type = "button"; node.className = `battle-card empty-slot ${side}`; node.dataset.slotIndex = String(index);
-    node.innerHTML = `<span class="slot-number">${index + 1}</span><b>＋</b><strong>${side === "heroes" ? "ADD PREGEN" : "ADD MONSTER"}</strong><small>Click to choose a card</small>`;
+    node.innerHTML = `<span class="slot-number">${index + 1}</span><b>＋</b><strong>${side === "heroes" ? "ADD TEST HERO" : "ADD MONSTER"}</strong><small>Click to choose a card</small>`;
     node.addEventListener("click", () => onOpen(side, index)); return node;
   }
 
   function occupiedSlot(side, index, card, onOpen) {
     const template = runtimeTemplate(card, side), node = document.createElement("button");
     node.type = "button"; node.className = `battle-card occupied ${side}`; node.dataset.slotIndex = String(index);
-    node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
+    node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small><div class="card-core-stats"><span>AC <b class="stat-ac"></b></span><span>HP <b class="stat-hp"></b></span><span>MOVE <b class="stat-speed"></b></span></div><small class="card-primary-attack"></small>${figureMarkup(template)}<div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
-    node.querySelector(".card-meta").textContent = side === "heroes" ? `${card.class_name} · Level ${card.level} · ${card.build_name}` : `${card.monster_type} · CR ${card.challenge_rating}`;
-    const hp = Number(template?.max_hp || card.hit_points || 0);
+    node.querySelector(".card-meta").textContent = side === "heroes" ? `${card.class_name} · 2014 test harness` : `${card.monster_type} · CR ${card.challenge_rating}`;
+    const hp = Number(template?.max_hp || card.hit_points || 0), ac = Number(template?.armor_class || card.armor_class || 0), speed = Number(template?.speed_ft || 0);
+    node.querySelector(".stat-ac").textContent = ac || "—";
+    node.querySelector(".stat-hp").textContent = hp || "—";
+    node.querySelector(".stat-speed").textContent = speed ? `${speed}′` : "—";
+    node.querySelector(".card-primary-attack").textContent = attackSummary(template);
     node.dataset.maxHp = String(hp); node.dataset.currentHp = String(hp); node.querySelector(".hp-text").textContent = `${hp} / ${hp} HP`;
     node.querySelector(".card-hp span").style.width = "100%"; if (template) V()?.decorate(node, template);
     node.addEventListener("click", () => onOpen(side, index)); return node;
@@ -90,11 +116,27 @@
     details.append(heading, body); return details;
   }
 
+  function sourceAttack(battle, event) {
+    const member = [...battle.setup.heroes, ...battle.setup.monsters].find((item) => item.combatant_id === event.actor_id);
+    const attacks = attacksFor(member?.state?.template);
+    return attacks.find((attack) => attack.id === event.weapon_id || attack.id === event.attack_id || attack.name === event.attack_name) || null;
+  }
+
+  function logContext(battle, event) {
+    const attack = sourceAttack(battle, event), condition = attack?.onHitSaveEffect?.conditionId || attack?.on_hit_save_effect?.condition_id || null;
+    return { attemptedConditionIds: condition ? [condition] : [] };
+  }
+
   function writeLog(battle) {
     const root = el("battle-log"); root.replaceChildren();
-    battle.events.forEach((event) => {
-      const li = document.createElement("li"), summary = document.createElement("div");
-      summary.className = "battle-log-summary"; summary.textContent = `R${event.round_number}: ${L()?.format(event) || event.description}`; li.append(summary);
+    const events = L()?.compactEvents?.(battle.events) || battle.events;
+    events.forEach((event) => {
+      const li = document.createElement("li"), header = document.createElement("div"), body = document.createElement("div");
+      header.className = "battle-log-event-heading"; header.textContent = `ROUND ${event.round_number} · ${String(event.event_type || "event").replaceAll("_", " ").toUpperCase()}`;
+      body.className = "battle-log-event-body";
+      const lines = L()?.formatLines?.(event, logContext(battle, event)) || [L()?.format(event) || event.description];
+      lines.filter(Boolean).forEach((text) => { const row = document.createElement("div"); row.className = "battle-log-line"; row.textContent = text; body.append(row); });
+      li.append(header, body);
       const audit = auditDetails(event); if (audit) li.append(audit);
       if (event.critical) li.classList.add("log-critical");
       if (event.event_type === "attack" && event.attack_roll?.selected_roll === 1) li.classList.add("log-fumble");

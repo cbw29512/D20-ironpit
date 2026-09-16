@@ -17,7 +17,8 @@ for (const file of [
 const S = window.IRON_PIT_BROWSER_STATE;
 const P = window.IRON_PIT_BROWSER_AUTOMATIC_DAMAGE_SPELL_POLICY;
 const R = window.IRON_PIT_BROWSER_AUTOMATIC_DAMAGE_SPELL;
-const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
+const base = window.IRON_PIT_BROWSER_HEROES["2014-mage"] || window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
+assert.ok(base, "Magic Missile regression requires either the 2014 Mage harness or the production Fighter fixture.");
 const magicMissile = {
   id: "magic-missile", name: "Magic Missile", level: 1, actionCost: "action", range: 120,
   baseProjectiles: 3, projectilesPerSlotAbove: 1, damageDiceCountPerProjectile: 1,

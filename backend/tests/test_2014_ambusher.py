@@ -12,6 +12,9 @@ def _attack():
     attack = build_goblin_warrior().weapon_attack
     return attack.model_copy(update={
         "conditional_attack_advantage": [ConditionalAttackAdvantage(trigger="round1_initiative_lead")],
+        # This test isolates Ambusher roll mode from the 2024 Goblin Warrior's
+        # separate advantage-triggered bonus-damage rider.
+        "conditional_damage": [],
     })
 
 
