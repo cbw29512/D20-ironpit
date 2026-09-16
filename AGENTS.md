@@ -79,6 +79,18 @@ Specific source wording beats generic behavior. Resolve each subevent fully and 
 - Never implement a mechanic by checking a monster name when a reusable schema/capability can represent it.
 - After a shared capability changes, re-audit all 330; never hand-pick only the motivating monster.
 
+## Paired-edition monster certification
+
+- Keep 2014 and 2024 source data, rule text, parameters, and certification independent. A shared universal primitive may serve both editions, but one edition's values or behavior must never be copied into the other without matching source evidence.
+- Current operating priority is to catch the 2014 certified roster up to the 2024 certified count before pushing the 2024 count materially farther ahead.
+- During catch-up, prioritize monsters that exist in both editions where the 2024 version is already RAW READY and the 2014 version is blocked, starting with the fewest/highest-yield 2014 blocker families.
+- Once the 2014 certified count reaches the 2024 certified count, process same-named monsters as an edition pair whenever practical: inspect 2014 and 2024 source side by side, identify the common reusable mechanic, then bind each edition's own parameters and timing to that primitive.
+- When a 2014 monster is certified, immediately inspect the same 2024 monster before moving to an unrelated monster. When a 2024 monster is certified first, immediately inspect the 2014 counterpart.
+- If the two editions differ materially, preserve the difference through ruleset-specific declarative data or explicitly ruleset-scoped behavior; do not force artificial parity merely because the monster name matches.
+- A paired tranche may certify both editions only when they truly share the same mechanic family and both have full Python/browser/source evidence. If one edition still has unrelated blockers, certify the completed edition and record the remaining counterpart blockers without stalling the queue.
+- Re-run the paired-edition progress report plus both normal roster audits after every shared primitive. Use the report as the next-work queue rather than choosing monsters from memory.
+- Track the edition totals independently: 2014 has 327 source monsters; 2024 has 330. Edition-only or renamed monsters remain valid independent work and must not be force-matched.
+
 ## Generated artifacts: never hand-edit
 
 Generated files are outputs, not authoring surfaces. Change authoritative schema/data/runtime first, then run the repository exporter.
