@@ -9,8 +9,6 @@ from app.domain.actions import AbilityName, ConditionName, HitControlEffect
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
-
-
 class DamageType(StrEnum):
     ACID = "acid"
     BLUDGEONING = "bludgeoning"
