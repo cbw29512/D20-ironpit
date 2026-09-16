@@ -79,9 +79,9 @@ function state(name, kind, hp = 100) {
   assert.equal(event.hit, false); assert.equal(event.critical, false, "natural 19 is not an automatic hit");
 }
 
-window.IRON_PIT_BROWSER_HEROES = { champion: { name: "Karnok", kind: "character", level: 3, speed_ft: 30,
+window.IRON_PIT_BROWSER_HEROES = { champion: { name: "Karnok", kind: "character", ruleset: "2024", level: 3, speed_ft: 30,
   initiative_bonus: 1, initiative_advantage: true, size: "medium", attacks: [greatsword], primary_attack_id: "greatsword" } };
-window.IRON_PIT_BROWSER_MONSTERS = { target: { name: "Target", kind: "monster", challenge_rating: "0", speed_ft: 30,
+window.IRON_PIT_BROWSER_MONSTERS = { target: { name: "Target", kind: "monster", ruleset: "2024", challenge_rating: "0", speed_ft: 30,
   initiative_bonus: 0, size: "medium", attacks: [], primary_attack_id: null } };
 window.IRON_PIT_BROWSER_FORMATION = {
   startingPosition: (_template, side) => side === "heroes" ? 5 : 10,
