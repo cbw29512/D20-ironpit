@@ -1,0 +1,31 @@
+name: Paired Edition Monster Report
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/paired-*"
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: paired-edition-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Report paired-edition monster progress
+        run: python scripts/report_paired_monster_progress.py
