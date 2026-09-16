@@ -33,11 +33,14 @@ def build_karnok_stoneward_2014_combat_profile(level: int) -> PregenCombatProfil
         if row.indomitable_uses:
             resources.append(("indomitable", row.indomitable_uses))
         attacks = (
-            AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
+            AttackExpectation(
+                "greatsword", "strength", 2, 6, "slashing", forbid_mastery_property=True,
+            ),
             AttackExpectation(
                 "longbow", "dexterity", 1, 8, "piercing",
                 normal_range_ft=150, long_range_ft=600,
                 style_attack_bonus=2 if "Archery" in row.fighting_styles else 0,
+                forbid_mastery_property=True,
             ),
         )
         return PregenCombatProfile(
