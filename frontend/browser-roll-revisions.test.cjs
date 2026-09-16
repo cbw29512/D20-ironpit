@@ -71,3 +71,8 @@ load("browser-saves.js");
 }
 
 console.log("Browser roll-revision producers preserve original and accepted candidates.");
+require("node:child_process").execFileSync(
+  process.execPath,
+  [path.join(__dirname, "browser-hit-damage.test.cjs")],
+  { stdio: "inherit" },
+);
