@@ -7,6 +7,7 @@ from pathlib import Path
 from app.content.monster_catalog import load_monster_rows
 from export_browser_heroes import main as export_browser_heroes
 from export_browser_monsters import main as export_browser_monsters
+from export_browser_monsters_2014 import main as export_browser_monsters_2014
 from export_browser_spell_effects import main as export_browser_spell_effects
 from export_figure_profiles import main as export_figure_profiles
 
@@ -34,6 +35,7 @@ def main() -> None:
         _prepare_monster_catalog()
         export_browser_heroes()
         export_browser_monsters()
+        export_browser_monsters_2014()
         export_browser_spell_effects()
         export_figure_profiles()
         logger.info("Static Iron Pit content preparation completed.")
