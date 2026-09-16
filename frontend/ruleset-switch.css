@@ -1,0 +1,36 @@
+.ruleset-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.8rem 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 0.75rem;
+  background: rgba(0,0,0,0.22);
+}
+
+.ruleset-control label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.ruleset-control select {
+  min-width: 9rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 800;
+}
+
+.ruleset-control small {
+  flex: 1 1 18rem;
+  opacity: 0.88;
+}
+
+.ruleset-control[data-ruleset="2014"] {
+  outline: 2px solid rgba(255,255,255,0.12);
+}
