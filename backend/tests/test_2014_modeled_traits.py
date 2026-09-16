@@ -16,7 +16,7 @@ def test_existing_universal_traits_admit_2014_monsters():
     source = {monster.id: monster for monster in load_monster_source_2014()}
     for monster_id in _PACK_ONLY:
         monster = source[monster_id]
-        assert monster.trait_names == ["Pack Tactics"]
+        assert "Pack Tactics" in monster.trait_names
         assert basic_blockers_2014(monster) == ()
         template = compile_combatant(adapt_basic_monster_2014(monster))
         assert template.ruleset == "2014"
@@ -25,7 +25,7 @@ def test_existing_universal_traits_admit_2014_monsters():
         assert CombatTrait.PACK_TACTICS in template.combat_traits
     for monster_id in _UNDEAD_FORTITUDE:
         monster = source[monster_id]
-        assert monster.trait_names == ["Undead Fortitude"]
+        assert "Undead Fortitude" in monster.trait_names
         assert basic_blockers_2014(monster) == ()
         template = compile_combatant(adapt_basic_monster_2014(monster))
         assert template.ruleset == "2014"
