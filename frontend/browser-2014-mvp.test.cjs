@@ -13,6 +13,13 @@ const deterministicDice = (seed = 2014) => {
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
 assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 100);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_HEROES_2014).length, 10, "Champion Fighter levels 1-10 must be certified for 2014");
+for (let level = 1; level <= 10; level += 1) {
+  const fighter = window.IRON_PIT_BROWSER_HEROES_2014[`karnok-stoneward-2014-l${level}`];
+  assert.ok(fighter, `2014 Champion Fighter level ${level} must be in the certified browser lane`);
+  assert.equal(fighter.ruleset, "2014");
+  assert.deepEqual(fighter.weapon_masteries, [], "2014 pregens must not receive 2024 Weapon Mastery");
+}
 for (const id of [
   "2014-giant-centipede", "2014-giant-poisonous-snake", "2014-giant-scorpion", "2014-giant-wasp",
   "2014-poisonous-snake", "2014-scorpion", "2014-wyvern",
@@ -35,7 +42,7 @@ for (const id of [
 window.IRON_PIT_DICE = deterministicDice();
 const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
   ruleset: "2014",
-  hero_ids: ["2014-dire-wolf", "2014-bandit"],
+  hero_ids: ["karnok-stoneward-2014-l5"],
   monster_ids: ["2014-wolf", "2014-goblin"],
 });
 
@@ -48,10 +55,10 @@ for (const member of [...battle.setup.heroes, ...battle.setup.monsters]) {
 assert.throws(
   () => window.IRON_PIT_BROWSER_ENGINE.runEncounter({
     ruleset: "2014",
-    hero_ids: ["2014-bandit"],
+    hero_ids: ["karnok-stoneward-2014-l1"],
     monster_ids: ["srd-wolf"],
   }),
   /Unknown certified Team B combatant for 2014/,
 );
 
-console.log("Expanded certified 2014 browser fight lane passed.");
+console.log("Certified 2014 Champion Fighter 1-10 browser fight lane passed.");
