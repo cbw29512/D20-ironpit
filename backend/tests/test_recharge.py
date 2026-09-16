@@ -3,11 +3,27 @@ import pytest
 from app.combat.dice import FixedDiceProvider
 from app.combat.recharge import resolve_recharge_checks
 from app.combat.state import build_combatant_state
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.models import (
+    CombatantTemplate,
+    ResourceDefinition,
+    VisualLoadout,
+    Weapon,
+    WeaponAttack,
+    WeaponAttackKind,
+)
 from app.domain.recharge import RechargeRule
 
 
 def _state(minimum_roll: int = 5):
+    weapon = Weapon(
+        id="test-strike",
+        name="Test Strike",
+        attack_kind=WeaponAttackKind.MELEE,
+        dice_count=1,
+        dice_size=4,
+        damage_type="bludgeoning",
+        animation="melee",
+    )
     template = CombatantTemplate(
         id="test-recharge-creature",
         name="Recharge Test Creature",
@@ -18,12 +34,10 @@ def _state(minimum_roll: int = 5):
         speed_ft=30,
         initiative_bonus=0,
         weapon_attack=WeaponAttack(
-            name="Test Strike",
+            id="test-strike",
+            weapon=weapon,
             attack_bonus=0,
-            damage_dice_count=1,
-            damage_die_size=4,
-            damage_modifier=0,
-            damage_type="bludgeoning",
+            damage_bonus=0,
         ),
         visual=VisualLoadout(armor="none", main_hand="none"),
         resources=[ResourceDefinition(id="breath", name="Breath Weapon", max_uses=1)],
