@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.timed_conditions import apply_timed_condition
-from app.combat.zero_hp import stabilize_at_zero
+from app.combat.zero_hp_stabilization import stabilize_at_zero
 from app.domain.models import CombatantState, DamageRollComponent
 from app.domain.weapons import OnHitSaveDamage
 
