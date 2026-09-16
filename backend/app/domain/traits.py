@@ -4,6 +4,7 @@ from enum import StrEnum
 class CombatTrait(StrEnum):
     PACK_TACTICS = "pack-tactics"
     SAVAGE_ATTACKER = "savage-attacker"
+    SAVAGE_ATTACKS = "savage-attacks"
     ADRENALINE_RUSH = "adrenaline-rush"
     RELENTLESS_ENDURANCE = "relentless-endurance"
     CHARGE = "charge"
