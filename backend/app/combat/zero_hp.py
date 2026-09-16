@@ -46,6 +46,20 @@ def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     return "unconscious"
 
 
+def stabilize_at_zero(state: CombatantState) -> ZeroHpOutcome:
+    """Force a source-declared stable 0-HP state after ordinary damage resolution."""
+    state.current_hp = 0
+    state.is_alive = True
+    state.is_dead = False
+    state.is_unconscious = True
+    state.is_stable = True
+    reset_death_saves(state)
+    state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
+    if not condition_is_immune(state, PRONE_EFFECT_ID) and PRONE_EFFECT_ID not in state.active_effect_ids:
+        state.active_effect_ids.append(PRONE_EFFECT_ID)
+    return "unconscious"
+
+
 def _after_temporary_hp(state: CombatantState, amount: int) -> int:
     absorbed = min(state.temporary_hp, amount)
     state.temporary_hp -= absorbed
