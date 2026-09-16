@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 import logging
-
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
@@ -31,7 +29,6 @@ from app.combat.vex import apply_vex_mastery
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.modifiers import ModifierKind
-
 logger = logging.getLogger(__name__)
 
 
