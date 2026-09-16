@@ -79,6 +79,21 @@ Before expanding beyond the representative slice, prove all of the following:
 
 Any failure blocks further bulk admission until corrected.
 
+## Canonical pregen edition contract
+
+This section is mandatory for every Iron Pit pregen now and in future content tooling.
+
+- The persistent named hero and class/subclass concept may be shared across editions, but the actual 2014 and 2024 character builds are separate legal builds.
+- A 2014 pregen must be legal under 2014 RAW at every certified level. A 2024 pregen must be legal under 2024 RAW at every certified level.
+- Class progression, subclass timing, species/race traits, backgrounds, feats, Ability Score Improvements, spell choices/slots, equipment, weapon rules, resources, action economy, and derived combat statistics come only from the selected edition.
+- 2024-only systems such as Weapon Mastery, origin feats, Tactical Mind, Tactical Shift, and Tactical Master must never leak into a 2014 build.
+- 2014-only feature wording or parameters must never be grafted onto a 2024 build merely because the class/subclass name matches.
+- Shared engine primitives are reused only when the actual rules semantics match. Edition differences are expressed through ruleset-specific source data or policy parameters, not duplicated engines or class-name branches.
+- The canonical addition pipeline is: edition source rules -> edition-specific character/profile data -> universal combat primitives -> edition-specific certification -> generated browser artifact -> browser/reference parity tests.
+- A pregen is not READY because it parses, renders, or has plausible AC/HP/damage. Every combat-relevant feature through that level must be either correctly implemented and tested or explicitly proven arena-neutral; unsupported outcome-changing mechanics fail closed.
+- Certification must reject mixed-edition content, including a 2014 character carrying any 2024-only weapon mastery or feature and a 2024 character carrying legacy-only semantics where the 2024 rule changed.
+- The initial testing floor is one canonical class/subclass progression through levels 1-10 in each edition. Expansion continues toward all 12 canonical classes after the cross-edition fight lane is proven.
+
 ## Representative acceptance slice
 
 Use existing 2014 records to prove the architecture across mechanic families. The slice should include, at minimum:
