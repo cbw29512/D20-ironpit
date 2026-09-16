@@ -22,18 +22,19 @@ def _build_weapon(weapon_id: str) -> Weapon:
                 heavy=True,
                 two_handed=True,
             )
-        if weapon_id == "light-crossbow":
+        if weapon_id == "longbow":
             return Weapon(
-                id="light-crossbow",
-                name="Light Crossbow",
+                id="longbow",
+                name="Longbow",
                 attack_kind=WeaponAttackKind.RANGED,
                 dice_count=1,
                 dice_size=8,
                 damage_type=DamageType.PIERCING,
                 animation="projectile",
-                normal_range_ft=80,
-                long_range_ft=320,
-                projectile="bolt",
+                normal_range_ft=150,
+                long_range_ft=600,
+                projectile="arrow",
+                heavy=True,
                 two_handed=True,
             )
         raise ValueError(f"Unknown audited 2014 weapon: {weapon_id}.")
