@@ -18,17 +18,19 @@ def _state(monster_id: str):
     return build_combatant_state(compile_combatant(adapt_basic_monster_2014(monster)))
 
 
-def test_sure_footed_source_binding_unlocks_goats_but_not_mule() -> None:
+def test_sure_footed_source_binding_unlocks_goats_and_mule() -> None:
     source = _source_by_id()
-    for monster_id in ("goat", "giant-goat"):
+    for monster_id in ("goat", "giant-goat", "mule"):
         monster = source[monster_id]
         assert basic_blockers_2014(monster) == ()
         template = compile_combatant(adapt_basic_monster_2014(monster))
         assert CombatTrait.SURE_FOOTED in template.combat_traits
 
     mule = source["mule"]
-    assert unsupported_traits_2014(mule) == ("Beast of Burden",)
-    assert basic_blockers_2014(mule) == ("source:trait",)
+    assert "Beast of Burden" in mule.trait_names
+    assert unsupported_traits_2014(mule) == ()
+    mule_template = compile_combatant(adapt_basic_monster_2014(mule))
+    assert mule_template.combat_traits == [CombatTrait.SURE_FOOTED]
 
 
 def test_sure_footed_advantage_is_limited_to_prone_strength_dexterity_saves() -> None:
