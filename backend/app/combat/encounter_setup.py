@@ -106,7 +106,7 @@ def _apply_standard_grid_placement(
 
 def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
     try:
-        roster = build_arena_roster()
+        roster = build_arena_roster(selection.ruleset)
         heroes = _index_templates(roster.characters)
         monsters = _index_templates(roster.monsters)
         hero_states = [
@@ -121,6 +121,8 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
             *[member.state.template for member in hero_states],
             *[member.state.template for member in monster_states],
         ])
+        if ruleset != selection.ruleset:
+            raise ValueError(f"Selected ruleset {selection.ruleset} does not match resolved combatant ruleset {ruleset}.")
         battle_map = _apply_standard_grid_placement(hero_states, monster_states)
         return EncounterSetup(
             heroes=hero_states,
