@@ -7,9 +7,10 @@ from app.domain.capability_effects import (
     DamageEffectDefinition,
     GrappleEffectDefinition,
     ProneEffectDefinition,
+    SaveConditionEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
-from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
+from app.domain.models import ConditionalDamage, OnHitConditionSave, OnHitDamage, Weapon, WeaponAttack
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -61,6 +62,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     conditional: list[ConditionalDamage] = []
     prone_size = None
     control = None
+    on_hit_save = None
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -82,6 +84,11 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 ))
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
+        elif isinstance(effect, SaveConditionEffectDefinition):
+            on_hit_save = OnHitConditionSave(
+                save_ability=effect.save_ability, dc=effect.dc,
+                condition_id=effect.condition, max_target_size=effect.max_target_size,
+            )
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
         elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
@@ -100,6 +107,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         conditional_damage=conditional,
         conditional_attack_advantage=definition.conditional_attack_advantage,
         on_hit_damage=on_hit,
+        on_hit_condition_save=on_hit_save,
         on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,
         control_effect=control,
