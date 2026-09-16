@@ -19,3 +19,4 @@ assert.throws(
 );
 
 console.log("Browser ruleset-isolation regressions passed.");
+require("./browser-ruleset-data.test.cjs");
