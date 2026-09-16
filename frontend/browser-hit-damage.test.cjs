@@ -39,7 +39,20 @@ window.IRON_PIT_BROWSER_ZERO_HP = {
   applyDamage: (state, amount) => {
     state.current_hp = Math.max(0, state.current_hp - amount);
     state.is_dead = state.current_hp === 0; state.is_alive = !state.is_dead;
-    return null;
+    return state.is_dead ? "dead" : "damaged";
+  },
+  stabilizeAtZero: (state) => {
+    state.current_hp = 0; state.is_dead = false; state.is_alive = true;
+    state.is_unconscious = true; state.is_stable = true;
+    state.death_save_successes = 0; state.death_save_failures = 0;
+    return "unconscious";
+  },
+};
+window.IRON_PIT_BROWSER_TIMED = {
+  apply: (state, effectId, sourceId, options) => {
+    state.timed_effects.push({ effect_id: effectId, source_id: sourceId, ...options });
+    if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
+    return effectId;
   },
 };
 window.IRON_PIT_BROWSER_STATE = { canProne: () => false, terminateTurn: () => {}, sizeAtMost: () => true };
@@ -54,11 +67,19 @@ const attack = {
   onHitSaveDamage: { source: "Sting poison", saveAbility: "constitution", dc: 11,
     diceCount: 3, diceSize: 6, damageBonus: 0, damageType: "poison", successDamage: "half" },
 };
+const riderAttack = {
+  ...attack,
+  onHitSaveDamage: {
+    ...attack.onHitSaveDamage,
+    zeroHpRider: { stable: true, conditionIds: ["poisoned", "paralyzed"], durationRounds: 600 },
+  },
+};
 const state = (resist = [], immune = []) => ({
   template: { name: "Target", armor_class: 10, max_hp: 40, saving_throw_bonuses: { constitution: 0 },
     damage_resistances: resist, damage_vulnerabilities: [], damage_immunities: immune, traits: [] },
-  current_hp: 40, temporary_hp: 0, temporary_damage_resistances: [], active_effect_ids: [],
+  current_hp: 40, temporary_hp: 0, temporary_damage_resistances: [], active_effect_ids: [], timed_effects: [],
   death_save_successes: 0, death_save_failures: 0, is_stable: false, is_dead: false, is_alive: true,
+  is_unconscious: false,
 });
 const attackerState = { template: { name: "Wyvern", max_hp: 110, armor_class: 13, traits: [] }, current_hp: 110,
   active_effect_ids: [], feature_last_turn_keys: {}, action_available: true };
@@ -96,6 +117,27 @@ saveSucceeded = false; queueDice([6, 5, 4]);
 target = state([], ["poison"]);
 result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(attackerState, target, attack, false, "normal", "5:scorpion");
 assert.equal(result.damageComponents[1].applied_total, 0, "poison immunity applies to the save damage component");
+
+saveSucceeded = false; queueDice([6, 5, 4]);
+target = state(); target.current_hp = 10;
+result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(attackerState, target, riderAttack, false, "normal", "1:giant-wasp");
+assert.equal(result.damageOutcome, "unconscious");
+assert.equal(target.current_hp, 0); assert.equal(target.is_stable, true); assert.equal(target.is_dead, false);
+assert.deepEqual(target.active_effect_ids.sort(), ["paralyzed", "poisoned"]);
+assert.equal(target.timed_effects.length, 2);
+for (const effect of target.timed_effects) {
+  assert.equal(effect.source_id, "giant-wasp");
+  assert.equal(effect.sourceEffectId, "Sting poison:zero-hp-save-damage");
+  assert.equal(effect.appliedRound, 1); assert.equal(effect.expiresRound, 601);
+  assert.equal(effect.expiryTiming, "target_turn_start");
+  assert.equal(effect.useDefaultPoisonRecovery, false);
+}
+
+saveSucceeded = false; queueDice([6, 5, 4]);
+target = state(); target.current_hp = 4;
+result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(attackerState, target, riderAttack, false, "normal", "2:giant-wasp");
+assert.equal(target.is_dead, true, "rider must not fire when weapon damage alone caused 0 HP");
+assert.equal(target.timed_effects.length, 0);
 
 saveSucceeded = false; queueDice([6, 5, 4]);
 const defender = { combatant_id: "target", side: "monsters", state: state() };
