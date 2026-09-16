@@ -10,6 +10,9 @@
     if (effect.repeat_save_timing !== timing) return false;
     return !(effect.effect_id === "poisoned" && effect.applied_round != null && round <= effect.applied_round);
   }
+  function expiryDue(effect, round, timing) {
+    return effect.expiry_timing === timing && (effect.expires_round == null || round >= effect.expires_round);
+  }
 
   function resolveTargetTiming(sequence, round, target, timing) {
     const events = [];
@@ -30,7 +33,7 @@
         });
         if (save.succeeded) continue;
       }
-      if (effect.expiry_timing === timing) {
+      if (expiryDue(effect, round, timing)) {
         const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
@@ -49,7 +52,7 @@
     const events = [];
     for (const target of [...setup.heroes, ...setup.monsters]) {
       const expiring = target.state.timed_effects.filter((effect) =>
-        effect.source_id === source.combatant_id && effect.expiry_timing === timing,
+        effect.source_id === source.combatant_id && expiryDue(effect, round, timing),
       );
       for (const effect of expiring) {
         if (!target.state.timed_effects.includes(effect)) continue;
