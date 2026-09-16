@@ -130,6 +130,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             fighting_style=row.fighting_styles[0],
             fighting_styles=list(row.fighting_styles),
             weapon_masteries=[],
+            wearing_heavy_armor=True,
             visual=VisualLoadout(
                 armor="chain-mail",
                 main_hand="greatsword",
