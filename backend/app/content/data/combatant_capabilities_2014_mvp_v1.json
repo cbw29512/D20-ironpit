@@ -127,5 +127,80 @@
       "body_style": "skeleton"
     },
     "source": "SRD 5.1 (2014) Skeleton"
+  },
+  {
+    "schema_version": 1,
+    "id": "2014-brown-bear",
+    "name": "Brown Bear",
+    "archetype": "2014 Brown Bear",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "ruleset": "2014",
+    "size": "large",
+    "ability_scores": {
+      "strength": 19,
+      "dexterity": 10,
+      "constitution": 16,
+      "intelligence": 2,
+      "wisdom": 13,
+      "charisma": 7
+    },
+    "armor_class": 11,
+    "max_hp": 34,
+    "speed_ft": 40,
+    "movement_modes": {
+      "walk_ft": 40,
+      "climb_ft": 30
+    },
+    "initiative_bonus": 0,
+    "attacks": [
+      {
+        "id": "2014-brown-bear-bite",
+        "weapon_id": "2014-brown-bear-bite",
+        "name": "Bite",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {"count": 1, "size": 8, "bonus": 4},
+        "damage_type": "piercing",
+        "animation": "bite",
+        "reach_ft": 5
+      },
+      {
+        "id": "2014-brown-bear-claws",
+        "weapon_id": "2014-brown-bear-claws",
+        "name": "Claws",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {"count": 2, "size": 6, "bonus": 4},
+        "damage_type": "slashing",
+        "animation": "heavy-slash",
+        "reach_ft": 5
+      }
+    ],
+    "primary_attack_id": "2014-brown-bear-bite",
+    "attack_action": {
+      "id": "2014-brown-bear-multiattack",
+      "name": "Multiattack",
+      "slots": [
+        {"attack_ids": ["2014-brown-bear-bite"]},
+        {"attack_ids": ["2014-brown-bear-claws"]}
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 0,
+      "constitution": 3,
+      "intelligence": -4,
+      "wisdom": 1,
+      "charisma": -2
+    },
+    "skill_bonuses": {"perception": 3},
+    "source_trait_names": ["Keen Smell"],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "bite",
+      "body_style": "bear"
+    },
+    "source": "SRD 5.1 (2014) Brown Bear"
   }
 ]
