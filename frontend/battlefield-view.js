@@ -10,9 +10,9 @@
 
   function runtimeTemplate(card, side) {
     if (!card?.runnable_template_id) return null;
+    if (side === "heroes") return window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || null;
     if (card.ruleset === "2014") return window.IRON_PIT_BROWSER_MONSTERS_2014?.[card.runnable_template_id] || null;
-    return side === "heroes" ? window.IRON_PIT_BROWSER_HEROES[card.runnable_template_id]
-      : window.IRON_PIT_BROWSER_MONSTERS[card.runnable_template_id];
+    return window.IRON_PIT_BROWSER_MONSTERS?.[card.runnable_template_id] || null;
   }
 
   function figureMarkup(template) {
@@ -29,7 +29,7 @@
 
   function emptySlot(side, index, onOpen, ruleset) {
     const node = document.createElement("button");
-    const addLabel = ruleset === "2014" || side === "monsters" ? "ADD MONSTER" : "ADD PREGEN";
+    const addLabel = side === "monsters" ? "ADD MONSTER" : "ADD PREGEN";
     node.type = "button"; node.className = `battle-card empty-slot ${side}`; node.dataset.slotIndex = String(index);
     node.innerHTML = `<span class="slot-number">${index + 1}</span><b>＋</b><strong>${addLabel}</strong><small>Click to choose a card</small>`;
     node.addEventListener("click", () => onOpen(side, index)); return node;
@@ -37,7 +37,7 @@
 
   function occupiedSlot(side, index, card, onOpen) {
     const template = runtimeTemplate(card, side), node = document.createElement("button");
-    const monsterCard = card.kind === "monster" || card.ruleset === "2014";
+    const monsterCard = card.kind === "monster";
     node.type = "button"; node.className = `battle-card occupied ${side}`; node.dataset.slotIndex = String(index);
     node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
@@ -65,8 +65,7 @@
   function showResult(battle) {
     const combatants = [...battle.setup.heroes, ...battle.setup.monsters];
     const names = new Map(combatants.map((c) => [c.combatant_id, c.state.template.name]));
-    const teamA = battle.ruleset === "2014" ? "TEAM A" : "HEROES", teamB = battle.ruleset === "2014" ? "TEAM B" : "MONSTERS";
-    const winner = battle.outcome === "heroes_win" ? `${teamA} WIN` : battle.outcome === "monsters_win" ? `${teamB} WIN` : "DRAW";
+    const winner = battle.outcome === "heroes_win" ? "HEROES WIN" : battle.outcome === "monsters_win" ? "MONSTERS WIN" : "DRAW";
     el("result-title").textContent = winner; el("round-count").textContent = `${battle.rounds} round${battle.rounds === 1 ? "" : "s"}`;
     const initiative = el("initiative-list"); initiative.replaceChildren();
     battle.initiative.turn_order.forEach((id) => { const li = document.createElement("li"); li.textContent = names.get(id) || id; initiative.append(li); });
