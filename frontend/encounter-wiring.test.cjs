@@ -94,4 +94,3 @@ assert.ok(html.indexOf("browser-execution.js") < html.indexOf("battle-actions.js
 assert.ok(html.indexOf("battle-actions.js") < html.indexOf("app.js"));
 
 console.log("production-path battlefield + universal execution wiring regression passed");
-require("./browser-ruleset-isolation.test.cjs");
