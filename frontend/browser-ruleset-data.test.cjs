@@ -25,7 +25,7 @@ assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy b
 
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
-assert.equal(monsters2014.length, 87, "2014 browser roster must contain exactly 87 certified monsters");
+assert.equal(monsters2014.length, 91, "2014 browser roster must contain exactly 91 certified monsters");
 for (const id of [
   "2014-bandit", "2014-brown-bear", "2014-goblin", "2014-skeleton", "2014-fire-giant", "2014-owlbear",
   "2014-badger", "2014-cat", "2014-crab", "2014-hawk", "2014-lizard", "2014-rat", "2014-weasel",
@@ -39,8 +39,18 @@ for (const id of [
   "2014-poisonous-snake", "2014-scorpion", "2014-wyvern",
   "2014-elk", "2014-giant-elk", "2014-giant-sea-horse", "2014-minotaur-skeleton", "2014-rhinoceros",
   "2014-goat", "2014-giant-goat",
+  "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens",
 ]) {
   assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
+}
+for (const id of [
+  "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens",
+]) {
+  const swarm = monsters2014.find((monster) => monster.id === id);
+  assert.ok(swarm, `${id} must exist before source-shape assertions`);
+  assert.equal(swarm.traits.includes("swarm"), true);
+  assert.equal(swarm.attacks[0].conditionalDamage.trigger, "attacker_bloodied");
+  assert.equal(swarm.attacks[0].conditionalDamage.mode, "replace_weapon");
 }
 assertRuleset(monsters2014, "2014", "2014 browser monsters");
 assert.equal(window.IRON_PIT_2014_MVP_READY, true);
