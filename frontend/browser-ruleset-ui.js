@@ -22,11 +22,13 @@
     if (ruleset !== "2014") return Promise.resolve();
     const heroesReady = window.IRON_PIT_2014_HEROES_READY === true && window.IRON_PIT_BROWSER_HEROES_2014;
     const monstersReady = window.IRON_PIT_2014_MVP_READY === true && window.IRON_PIT_BROWSER_MONSTERS_2014;
-    if (heroesReady && monstersReady) return Promise.resolve();
+    const rostersReady = window.IRON_PIT_RULESET_ROSTERS_READY === true && window.IRON_PIT_BROWSER_RULESET_ROSTERS;
+    if (heroesReady && monstersReady && rostersReady) return Promise.resolve();
     if (bundlePromise) return bundlePromise;
     bundlePromise = Promise.all([
       heroesReady ? Promise.resolve() : loadScript("browser-heroes-2014.js", "IRON_PIT_2014_HEROES_READY"),
       monstersReady ? Promise.resolve() : loadScript("browser-monsters-2014.js", "IRON_PIT_2014_MVP_READY"),
+      rostersReady ? Promise.resolve() : loadScript("browser-ruleset-rosters.js", "IRON_PIT_RULESET_ROSTERS_READY"),
     ]).then(() => undefined);
     return bundlePromise;
   }
