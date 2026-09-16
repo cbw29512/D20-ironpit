@@ -3,14 +3,33 @@ import pytest
 from app.combat.dice import FixedDiceProvider
 from app.combat.recharge import resolve_recharge_checks
 from app.combat.state import build_combatant_state
-from app.content.monsters import build_goblin
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.recharge import RechargeRule
 
 
 def _state(minimum_roll: int = 5):
-    template = build_goblin().model_copy(deep=True)
-    template.resources = [{"id": "breath", "name": "Breath Weapon", "max_uses": 1}]
-    template.recharge_rules = [RechargeRule(resource_id="breath", minimum_roll=minimum_roll)]
+    template = CombatantTemplate(
+        id="test-recharge-creature",
+        name="Recharge Test Creature",
+        archetype="Test",
+        kind="monster",
+        armor_class=10,
+        max_hp=10,
+        speed_ft=30,
+        initiative_bonus=0,
+        weapon_attack=WeaponAttack(
+            name="Test Strike",
+            attack_bonus=0,
+            damage_dice_count=1,
+            damage_die_size=4,
+            damage_modifier=0,
+            damage_type="bludgeoning",
+        ),
+        visual=VisualLoadout(armor="none", main_hand="none"),
+        resources=[ResourceDefinition(id="breath", name="Breath Weapon", max_uses=1)],
+        recharge_rules=[RechargeRule(resource_id="breath", minimum_roll=minimum_roll)],
+        source="Iron Pit recharge regression fixture",
+    )
     return build_combatant_state(template)
 
 
