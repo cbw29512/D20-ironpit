@@ -17,6 +17,7 @@ EncounterOutcome = Literal["active", "heroes_win", "monsters_win", "draw"]
 class EncounterSelection(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    ruleset: RulesetId = DEFAULT_RULESET
     hero_ids: list[str] = Field(min_length=1, max_length=6)
     monster_ids: list[str] = Field(min_length=1, max_length=6)
 
