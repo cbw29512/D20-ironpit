@@ -9,6 +9,7 @@ from app.domain.character_builds import AbilityScores
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.traits import CombatTrait
@@ -44,6 +45,7 @@ class CombatantTemplate(BaseModel):
     level: int | None = Field(default=None, ge=1, le=20)
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
+    ruleset: RulesetId = DEFAULT_RULESET
     creature_type: str | None = None
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
