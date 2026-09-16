@@ -44,6 +44,8 @@ class SourceAttack2014(BaseModel):
     resource_id: str | None = None
     breakable_restraint: object | None = None
     charge_profile: object | None = None
+    forbid_target_grappled_by_self: bool = False
+    grapple_target_policy: str = "normal"
 
 
 class SourceMonster2014(BaseModel):
@@ -66,6 +68,7 @@ class SourceMonster2014(BaseModel):
     unsupported_defense_text: list[str] = Field(default_factory=list)
     challenge_rating: str | None = None
     attacks: list[SourceAttack2014] = Field(default_factory=list)
+    swallow_actions: list[object] = Field(default_factory=list)
     saving_throw_actions: list[object] = Field(default_factory=list)
     death_trigger_actions: list[object] = Field(default_factory=list)
     healing_actions: list[object] = Field(default_factory=list)
@@ -86,6 +89,7 @@ class SourceMonster2014(BaseModel):
     trait_names: list[str] = Field(default_factory=list)
     reaction_names: list[str] = Field(default_factory=list)
     legendary_action_names: list[str] = Field(default_factory=list)
+    parry_ac_bonus: int | None = None
 
 
 @lru_cache(maxsize=1)
