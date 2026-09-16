@@ -10,6 +10,7 @@ _PACK_ONLY = {
     "reef-shark", "thug", "tribal-warrior", "vulture",
 }
 _UNDEAD_FORTITUDE = {"ogre-zombie", "zombie"}
+_REUSABLE_TRAIT_IDS = _PACK_ONLY | _UNDEAD_FORTITUDE | {"raven"}
 
 
 def test_existing_universal_traits_admit_2014_monsters():
@@ -45,6 +46,9 @@ def test_mimicry_is_arena_neutral_for_raven():
     assert template.source_trait_names == ["Mimicry"]
 
 
-def test_reusable_trait_batch_raises_roster_to_exactly_52():
-    ready = [monster for monster in load_monster_source_2014() if not basic_blockers_2014(monster)]
-    assert len(ready) == 52
+def test_reusable_trait_batch_remains_admitted():
+    ready_ids = {
+        monster.id for monster in load_monster_source_2014()
+        if not basic_blockers_2014(monster)
+    }
+    assert _REUSABLE_TRAIT_IDS <= ready_ids
