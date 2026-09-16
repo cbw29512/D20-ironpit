@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014, modeled_combat_traits_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import (
@@ -106,6 +106,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=movement.walk_ft,
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
+        combat_traits=modeled_combat_traits_2014(monster),
         saving_throw_bonuses=_save_bonuses(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
