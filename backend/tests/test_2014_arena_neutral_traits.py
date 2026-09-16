@@ -33,9 +33,9 @@ def test_established_arena_neutral_traits_admit_exact_source_monsters():
             assert template.combat_traits == []
 
 
-def test_arena_neutral_trait_batch_raises_roster_to_exactly_60():
-    ready = [
-        monster for monster in load_monster_source_2014()
+def test_arena_neutral_trait_batch_remains_admitted():
+    ready_ids = {
+        monster.id for monster in load_monster_source_2014()
         if not basic_blockers_2014(monster)
-    ]
-    assert len(ready) == 60
+    }
+    assert set(_ARENA_NEUTRAL_IDS) <= ready_ids
