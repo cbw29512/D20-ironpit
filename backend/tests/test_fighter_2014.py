@@ -1,7 +1,7 @@
 from app.combat.dice import FixedDiceProvider
 from app.combat.indomitable import use_indomitable
 from app.combat.state import build_combatant_state
-from app.content.certified_heroes import build_certified_hero_registry
+from app.content.certified_heroes import build_certified_2014_hero_registry
 from app.content.fighter_2014 import build_karnok_stoneward_2014_level
 
 
@@ -11,6 +11,7 @@ def _resources(level: int) -> dict[str, int]:
 
 
 def test_2014_champion_is_contiguous_and_never_exports_weapon_mastery() -> None:
+    registry = build_certified_2014_hero_registry()
     for level in range(1, 11):
         template = build_karnok_stoneward_2014_level(level)
         assert template.ruleset == "2014"
@@ -18,7 +19,7 @@ def test_2014_champion_is_contiguous_and_never_exports_weapon_mastery() -> None:
         assert template.weapon_masteries == []
         assert template.weapon_attack.weapon.mastery_property is None
         assert all(attack.weapon.mastery_property is None for attack in template.alternate_weapon_attacks)
-        assert build_certified_hero_registry()[("fighter", level, "canonical-2014")] == (
+        assert registry[("fighter", level, "canonical-2014")] == (
             "Karnok Stoneward", f"fighter-2014-canonical-l{level}",
         )
 
