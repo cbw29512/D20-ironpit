@@ -5,9 +5,9 @@ from app.content.build_audit import audit_character_build
 from app.content.certified_heroes_2014 import build_certified_hero_entries_2014
 from app.content.character_resource_audit import audit_character_resources
 from app.content.fighter_2014 import build_karnok_stoneward_2014
+from app.content.fighter_2014_combat_profile import build_karnok_stoneward_2014_combat_profile
 from app.content.fighter_2014_profile import build_karnok_stoneward_2014_profile
 from app.content.pregen_combat_audit import audit_pregen_combat_stats
-from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 
 
 def test_2014_karnok_levels_one_through_ten_pass_every_certification_gate() -> None:
@@ -17,7 +17,7 @@ def test_2014_karnok_levels_one_through_ten_pass_every_certification_gate() -> N
     assert [template.level for _, template in entries] == list(range(1, 11))
     for key, template in entries:
         profile = build_karnok_stoneward_2014_profile(template.level)
-        fingerprint = build_pregen_combat_profiles()[template.id]
+        fingerprint = build_karnok_stoneward_2014_combat_profile(template.level)
         assert key == ("2014", "fighter", template.level, "canonical-2014")
         assert template.ruleset == "2014"
         assert audit_character_build(profile, template) == []
