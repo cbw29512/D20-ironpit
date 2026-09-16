@@ -24,6 +24,7 @@ def test_2014_karnok_levels_one_through_ten_pass_every_certification_gate() -> N
         assert audit_pregen_combat_stats(template, fingerprint) == []
         assert audit_character_resources(template, profile, fingerprint) == []
         assert template.weapon_masteries == []
+        assert template.wearing_heavy_armor is True
         assert all(attack.weapon.mastery_property is None for attack in [
             template.weapon_attack, *template.alternate_weapon_attacks,
         ])
