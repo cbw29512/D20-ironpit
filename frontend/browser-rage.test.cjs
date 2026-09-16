@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname, "..", "index.html")]) {
   const html = fs.readFileSync(htmlPath, "utf8");
-  assert.match(html, /<script src="browser-barbarian2\.js"><\/script>/, `${htmlPath} must load Barbarian 2 runtime rules`);
+  assert.match(html, /<script\b[^>]*\bsrc="browser-barbarian2\.js"[^>]*><\/script>/, `${htmlPath} must load Barbarian 2 runtime rules`);
 }
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
