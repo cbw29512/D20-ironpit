@@ -12,7 +12,7 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 39);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 52);
 
 window.IRON_PIT_DICE = deterministicDice();
 const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({

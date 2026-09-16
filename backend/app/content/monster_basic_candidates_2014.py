@@ -4,8 +4,13 @@ from collections import Counter
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_source_2014 import SourceMonster2014
+from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
 
+_MODELED_2014_TRAITS = {
+    "Pack Tactics": CombatTrait.PACK_TACTICS,
+    "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
+}
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Amphibious",
     "Hold Breath",
@@ -15,6 +20,7 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Keen Sight",
     "Keen Sight and Smell",
     "Keen Smell",
+    "Mimicry",
     "Water Breathing",
 })
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
@@ -63,9 +69,10 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     if monster.multiattack_slots:
         allowed_actions.add("multiattack")
     extras = [name for name in monster.action_names if name.casefold() not in allowed_actions]
+    certified_traits = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_2014_TRAITS)
     bad_traits = [
         name for name in monster.trait_names
-        if name not in _ARENA_NEUTRAL_TRAITS and not is_arena_neutral_bonus_action(name)
+        if name not in certified_traits and not is_arena_neutral_bonus_action(name)
     ]
     blockers = []
     if extras:
@@ -77,6 +84,13 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     if monster.legendary_action_names:
         blockers.append("source:legendary")
     return blockers
+
+
+def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
+    return [
+        runtime_trait for source_name, runtime_trait in _MODELED_2014_TRAITS.items()
+        if source_name in monster.trait_names
+    ]
 
 
 def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:

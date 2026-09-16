@@ -8,6 +8,7 @@ on:
       - "backend/app/content/data/srd_5_1_monsters_catalog.json"
       - "backend/app/content/data/srd_5_1_monsters_source_manifest.json"
       - "scripts/report_2014_basic_candidates.py"
+      - "scripts/report_2014_attack_riders.py"
       - ".github/workflows/2014-basic-roster.yml"
   pull_request:
     paths:
@@ -15,6 +16,8 @@ on:
       - "backend/app/content/monster_basic_candidates_2014.py"
       - "backend/app/content/data/srd_5_1_monsters_catalog.json"
       - "scripts/report_2014_basic_candidates.py"
+      - "scripts/report_2014_attack_riders.py"
+      - ".github/workflows/2014-basic-roster.yml"
 
 permissions:
   contents: read
@@ -32,3 +35,5 @@ jobs:
         run: pip install -e '.[dev]'
       - name: Report fail-closed 2014 basic roster
         run: python scripts/report_2014_basic_candidates.py
+      - name: Report exact attack rider blocker shapes
+        run: python scripts/report_2014_attack_riders.py
