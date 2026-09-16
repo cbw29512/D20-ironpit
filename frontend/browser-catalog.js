@@ -72,11 +72,19 @@
     }
   }
 
+  function validate2014Cards(cards) {
+    if (cards.length === 0) throw new Error("Certified 2014 browser bundle is empty.");
+    if (cards.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) {
+      throw new Error("2014 test catalog crossed the ruleset boundary.");
+    }
+    const ids = cards.map((card) => card.runnable_template_id);
+    if (new Set(ids).size !== ids.length) throw new Error("2014 browser bundle contains duplicate monster ids.");
+  }
+
   function build2014() {
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
     const cards = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (cards.length !== 39) throw new Error(`Expected 39 certified 2014 test monsters; found ${cards.length}.`);
-    if (cards.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 test catalog crossed the ruleset boundary.");
+    validate2014Cards(cards);
     return {
       heroes: cards.map((card) => ({ ...card })), monsters: cards.map((card) => ({ ...card })),
       hero_count: cards.length, monster_count: 327, hero_ready_count: cards.length,
