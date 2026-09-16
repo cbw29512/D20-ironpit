@@ -30,6 +30,14 @@ class ProneEffectDefinition(BaseModel):
     max_target_size: CreatureSize | None = None
 
 
+class SaveConditionEffectDefinition(BaseModel):
+    kind: Literal["save_condition"] = "save_condition"
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    condition: ConditionName
+    max_target_size: CreatureSize | None = None
+
+
 class GrappleEffectDefinition(BaseModel):
     kind: Literal["grapple"] = "grapple"
     escape_dc: int = Field(ge=1, le=40)
@@ -50,6 +58,7 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    DamageEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
+    GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
