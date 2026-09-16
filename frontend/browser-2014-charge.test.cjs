@@ -31,11 +31,18 @@ window.IRON_PIT_BROWSER_ATTACK.resolveAttack = (sequence, round, member, target,
 const elkAttack = roster["2014-elk"].attacks.find((attack) => attack.id === "2014-elk-ram");
 const member = {
   side: "heroes", combatant_id: "elk",
-  state: { action_available: true, initiative_total: 20, template: { speed_ft: 50, attacks: [elkAttack] } },
+  state: {
+    action_available: true, active_effect_ids: [], is_dead: false, is_unconscious: false,
+    initiative_total: 20, turn_terminated: false,
+    template: { speed_ft: 50, attacks: [elkAttack] },
+  },
 };
 const target = {
   side: "monsters", combatant_id: "target",
-  state: { initiative_total: 10, is_alive: true, is_dead: false, current_hp: 20, template: {} },
+  state: {
+    active_effect_ids: [], initiative_total: 10, is_alive: true, is_dead: false,
+    is_unconscious: false, current_hp: 20, template: {},
+  },
 };
 const result = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, member, target, { heroes: [member], monsters: [target] });
 window.IRON_PIT_BROWSER_ATTACK.resolveAttack = originalResolve;
