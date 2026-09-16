@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
+from app.content.monster_conditional_damage_2014 import (
+    conditional_damage_effect_2014,
+    supports_conditional_damage_2014,
+)
 from app.content.monster_source_2014 import SourceAttack2014
 from app.content.monster_zero_hp_save_rider_2014 import (
     ZERO_HP_SAVE_RIDER_KEYS_2014,
@@ -80,7 +84,9 @@ def _supported_save_damage(value: object) -> bool:
 
 
 def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
-    if attack.conditional_damage or attack.conditional_attack_advantage:
+    if attack.conditional_attack_advantage:
+        return False
+    if attack.conditional_damage and not all(supports_conditional_damage_2014(row) for row in attack.conditional_damage):
         return False
     if attack.on_hit_save_effect is not None and not (
         _supported_save_condition(attack.on_hit_save_effect) or _supported_save_damage(attack.on_hit_save_effect)
@@ -106,7 +112,9 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
 def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefinition]:
     if not supports_basic_attack_effects_2014(attack):
         raise ValueError(f"{attack.id} has unsupported 2014 attack effects")
-    effects: list[AttackEffectDefinition] = []
+    effects: list[AttackEffectDefinition] = [
+        conditional_damage_effect_2014(row, attack.name) for row in attack.conditional_damage
+    ]
     for row in attack.on_hit_damage:
         assert isinstance(row, dict)
         effects.append(DamageEffectDefinition(
