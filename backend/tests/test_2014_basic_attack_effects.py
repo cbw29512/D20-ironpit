@@ -18,7 +18,7 @@ _SAVE_DAMAGE_IDS = {
     "poisonous-snake", "scorpion", "wyvern",
 }
 _CHARGE_IDS = {"elk", "giant-elk", "giant-sea-horse", "minotaur-skeleton", "rhinoceros"}
-_SURE_FOOTED_IDS = {"goat", "giant-goat"}
+_SURE_FOOTED_IDS = {"goat", "giant-goat", "mule"}
 _SWARM_IDS = {"swarm-of-insects", "swarm-of-poisonous-snakes", "swarm-of-rats", "swarm-of-ravens"}
 
 
@@ -35,10 +35,10 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_91_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_92_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 91
+    assert len(ready) == 92
     expected = (
         _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS |
         _SURE_FOOTED_IDS | _SWARM_IDS
