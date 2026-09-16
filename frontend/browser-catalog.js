@@ -18,16 +18,16 @@
 
   function readyHeroIndex() {
     return new Map(Object.values(window.IRON_PIT_BROWSER_HEROES).map((hero) => [
-      `${hero.class_id}:${hero.level}`,
+      `${hero.ruleset}:${hero.class_id}:${hero.level}`,
       hero,
     ]));
   }
 
-  function buildHeroes() {
+  function buildHeroes2024() {
     const cards = [], readyHeroes = readyHeroIndex();
     for (const [classId, className, heroName, subclassId, subclassName] of HERO_ROWS) {
       for (let level = 1; level <= 20; level += 1) {
-        const runtime = readyHeroes.get(`${classId}:${level}`) || null;
+        const runtime = readyHeroes.get(`2024:${classId}:${level}`) || null;
         cards.push({
           id: `hero-2024-${classId}-l${level}`, name: heroName, class_id: classId, class_name: className,
           level, build_id: "canonical", build_name: "Canonical RAW Progression",
@@ -37,6 +37,22 @@
           blockers: runtime ? [] : ["hero-level-not-certified", "combat-feature-coverage-not-certified"],
         });
       }
+    }
+    return cards;
+  }
+
+  function buildHeroes2014() {
+    const readyHeroes = readyHeroIndex(), cards = [];
+    for (let level = 1; level <= 10; level += 1) {
+      const runtime = readyHeroes.get(`2014:fighter:${level}`) || null;
+      cards.push({
+        id: `hero-2014-fighter-l${level}`, name: "Karnok Stoneward", class_id: "fighter", class_name: "Fighter",
+        level, build_id: "canonical-2014", build_name: "2014 Canonical RAW Progression",
+        subclass_id: level >= 3 ? "champion" : null, subclass_name: level >= 3 ? "Champion" : null,
+        ruleset: "2014", kind: "character", coverage_status: runtime ? "raw_ready" : "blocked",
+        runnable_template_id: runtime?.id || null,
+        blockers: runtime ? [] : ["2014-hero-level-not-certified", "2014-combat-feature-coverage-not-certified"],
+      });
     }
     return cards;
   }
@@ -74,20 +90,23 @@
 
   function build2014() {
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
-    const cards = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (cards.length !== 39) throw new Error(`Expected 39 certified 2014 test monsters; found ${cards.length}.`);
-    if (cards.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 test catalog crossed the ruleset boundary.");
+    const heroes = buildHeroes2014();
+    const monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    if (monsters.length < 100) throw new Error(`Expected at least 100 certified 2014 monsters; found ${monsters.length}.`);
+    if (heroes.some((card) => card.coverage_status !== "raw_ready")) throw new Error("2014 Fighter levels 1-10 are not fully certified.");
+    if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 hero catalog crossed the ruleset boundary.");
+    if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
-      heroes: cards.map((card) => ({ ...card })), monsters: cards.map((card) => ({ ...card })),
-      hero_count: cards.length, monster_count: 327, hero_ready_count: cards.length,
-      monster_ready_count: cards.length, ruleset: "2014", test_lane: true,
+      heroes, monsters, hero_count: heroes.length, monster_count: 327,
+      hero_ready_count: heroes.length, monster_ready_count: monsters.length,
+      ruleset: "2014", test_lane: true,
     };
   }
 
   async function buildCatalog(ruleset = "2024") {
     if (ruleset === "2014") return build2014();
     if (ruleset !== "2024") throw new Error(`Unsupported browser ruleset: ${ruleset}`);
-    const heroes = buildHeroes(), monsters = await buildMonsters2024();
+    const heroes = buildHeroes2024(), monsters = await buildMonsters2024();
     return {
       heroes, monsters, hero_count: heroes.length, monster_count: monsters.length,
       hero_ready_count: heroes.filter((item) => item.coverage_status === "raw_ready").length,
