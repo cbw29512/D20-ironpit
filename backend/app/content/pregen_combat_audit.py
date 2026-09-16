@@ -41,8 +41,10 @@ def _attack_issues(template: CombatantTemplate, profile: PregenCombatProfile) ->
             issues.append(f"{prefix}:damage-bonus-mismatch")
         if attack.damage_die_minimum != expected.damage_die_minimum:
             issues.append(f"{prefix}:damage-die-minimum-mismatch")
-        if weapon.mastery_property != expected.mastery_property:
+        if expected.mastery_property is not None and weapon.mastery_property != expected.mastery_property:
             issues.append(f"{prefix}:mastery-property-mismatch")
+        if expected.forbid_mastery_property and weapon.mastery_property is not None:
+            issues.append(f"{prefix}:unexpected-mastery-property")
         if attack.sneak_attack_eligible != expected.sneak_attack_eligible:
             issues.append(f"{prefix}:sneak-attack-eligibility-mismatch")
         if weapon.reach_ft != expected.reach_ft:
