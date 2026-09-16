@@ -18,7 +18,7 @@ def _monsters():
 
 def test_2014_mvp_source_facts_compile_through_universal_schema() -> None:
     definitions = load_2014_mvp_definitions()
-    assert set(definitions) == {"2014-bandit", "2014-skeleton"}
+    assert set(definitions) == {"2014-bandit", "2014-skeleton", "2014-brown-bear"}
     assert all(item.ruleset == "2014" and item.kind == "monster" for item in definitions.values())
 
     bandit = definitions["2014-bandit"]
@@ -30,6 +30,11 @@ def test_2014_mvp_source_facts_compile_through_universal_schema() -> None:
     assert skeleton.damage_vulnerabilities == [DamageType.BLUDGEONING]
     assert skeleton.damage_immunities == [DamageType.POISON]
     assert skeleton.condition_immunities == ["exhaustion", "poisoned"]
+
+    bear = definitions["2014-brown-bear"]
+    assert (bear.armor_class, bear.max_hp, bear.speed_ft, bear.challenge_rating) == (11, 34, 40, "1")
+    assert bear.movement_modes is not None and bear.movement_modes.climb_ft == 30
+    assert bear.source_trait_names == ["Keen Smell"]
 
 
 def test_2014_bandit_ranged_attack_uses_universal_attack_resolver() -> None:
@@ -49,6 +54,20 @@ def test_2014_skeleton_defenses_use_shared_damage_engine() -> None:
     assert adjusted_damage_amount(5, DamageType.BLUDGEONING, skeleton) == 10
     assert adjusted_damage_amount(5, DamageType.POISON, skeleton) == 0
     assert adjusted_damage_amount(5, DamageType.PIERCING, skeleton) == 5
+
+
+def test_2014_brown_bear_uses_universal_ordered_multiattack() -> None:
+    bear = _monsters()["2014-brown-bear"]
+    assert bear.ruleset == "2014"
+    assert bear.attack_action is not None
+    assert [slot.attack_ids for slot in bear.attack_action.slots] == [
+        ["2014-brown-bear-bite"],
+        ["2014-brown-bear-claws"],
+    ]
+    assert bear.movement_modes.climb_ft == 30
+    assert bear.combat_traits == []
+    assert bear.weapon_masteries == []
+    assert bear.source_trait_names == ["Keen Smell"]
 
 
 def test_2014_mvp_slice_is_not_admitted_into_2024_production_roster() -> None:
