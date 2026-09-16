@@ -19,6 +19,13 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
 
+def unsupported_trait_names_2014(monster: SourceMonster2014) -> tuple[str, ...]:
+    return tuple(
+        name for name in monster.trait_names
+        if name not in _ARENA_NEUTRAL_TRAITS and not is_arena_neutral_bonus_action(name)
+    )
+
+
 def _attack_blockers(monster: SourceMonster2014) -> list[str]:
     blockers: list[str] = []
     for attack in monster.attacks:
@@ -64,14 +71,10 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     if monster.multiattack_slots:
         allowed_actions.add("multiattack")
     extras = [name for name in monster.action_names if name.casefold() not in allowed_actions]
-    bad_traits = [
-        name for name in monster.trait_names
-        if name not in _ARENA_NEUTRAL_TRAITS and not is_arena_neutral_bonus_action(name)
-    ]
     blockers = []
     if extras:
         blockers.append("source:extra-action")
-    if bad_traits:
+    if unsupported_trait_names_2014(monster):
         blockers.append("source:trait")
     if monster.reaction_names or monster.parry_ac_bonus is not None:
         blockers.append("source:reaction")
