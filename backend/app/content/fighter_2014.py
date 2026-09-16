@@ -75,10 +75,7 @@ def build_karnok_stoneward_2014_level(level: int) -> CombatantTemplate:
         "id": "extra-attack", "name": "Extra Attack", "is_attack_action": True,
         "slots": [{"attack_ids": [primary.id, ranged.id]} for _ in range(attack_count)],
     }
-    features = ProgressionCombatFeatures(
-        critical_hit_minimum=19 if level >= 3 else 20,
-        indomitable_reroll=level >= 9,
-    )
+    features = ProgressionCombatFeatures(critical_hit_minimum=19 if level >= 3 else 20)
     return CombatantTemplate(
         id=f"fighter-2014-canonical-l{level}", name="Karnok Stoneward",
         archetype="Fighter", level=level, kind="character", ruleset="2014",
