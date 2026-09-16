@@ -106,6 +106,12 @@
       }
     }
     const components = [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }];
+    if (critical && attack.kind === "melee" && attacker.template.traits?.includes("savage-attacks")) {
+      components.push(damageComponent({
+        source: "Savage Attacks", damageType: attack.damageType,
+        diceCount: 1, diceSize: attack.diceSize, damageBonus: 0,
+      }, false));
+    }
     for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
     if (mode === "advantage" && attack.conditionalAdvantage) {
       const [baseCount, sides] = attack.conditionalAdvantage;
