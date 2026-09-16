@@ -9,6 +9,7 @@ from app.domain.character_builds import AbilityScores
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.recharge import RechargeRule
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
@@ -87,6 +88,7 @@ class CombatantTemplate(BaseModel):
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
+    recharge_rules: list[RechargeRule] = Field(default_factory=list)
     source: str
 
     @model_validator(mode="before")
