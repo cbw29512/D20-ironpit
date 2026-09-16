@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import is_available, spend
 from app.combat.charge_profiles import ChargeProfile
+from app.combat.condition_rules import has_condition
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
@@ -28,6 +30,17 @@ def _event_target(
     )
 
 
+def _follow_up_legal(attacker: EncounterCombatant, target: EncounterCombatant, profile: ChargeProfile) -> bool:
+    condition = profile.follow_up_required_target_condition
+    if condition is not None and not has_condition(target.state, condition):
+        return False
+    if profile.follow_up_action_cost == "bonus_action":
+        return is_available(attacker.state, "bonus_action")
+    if profile.follow_up_action_cost != "free":
+        raise ValueError(f"Unsupported Charge follow-up action cost: {profile.follow_up_action_cost!r}")
+    return True
+
+
 def resolve_charge_follow_up(
     sequence: int,
     round_number: int,
@@ -44,11 +57,15 @@ def resolve_charge_follow_up(
         actual_target = _event_target(first_event, target, setup)
         if actual_target.state.current_hp <= 0 or actual_target.state.is_dead:
             return [], sequence
+        if not _follow_up_legal(attacker, actual_target, profile):
+            return [], sequence
         attack = _attack_by_id(attacker, profile.follow_up_attack_id)
         if attack is None:
             raise ValueError(
                 f"Charge follow-up attack {profile.follow_up_attack_id!r} is missing from {attacker.state.template.id}."
             )
+        if profile.follow_up_action_cost == "bonus_action":
+            spend(attacker.state, "bonus_action")
         event = resolve_encounter_attack(
             sequence, round_number, attacker, actual_target, attack,
             combatant_distance(attacker, actual_target), dice, setup,

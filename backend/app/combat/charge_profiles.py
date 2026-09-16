@@ -26,6 +26,8 @@ class ChargeProfile:
     bonus_damage: ChargeDamage | None = None
     replacement_damage: ChargeDamage | None = None
     follow_up_attack_id: str | None = None
+    follow_up_required_target_condition: str | None = None
+    follow_up_action_cost: str = "free"
 
 
 def _prone_charge(
@@ -100,4 +102,6 @@ def charge_profile_for_attack(attack: WeaponAttack) -> ChargeProfile | None:
         bonus_damage=damage(declared.bonus_damage),
         replacement_damage=damage(declared.replacement_damage),
         follow_up_attack_id=declared.follow_up_attack_id,
+        follow_up_required_target_condition=declared.follow_up_required_target_condition,
+        follow_up_action_cost=declared.follow_up_action_cost,
     )

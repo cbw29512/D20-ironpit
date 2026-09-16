@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, modeled_combat_traits_2014
 from app.content.monster_charge_profile_2014 import charge_profile_2014
+from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import (
@@ -57,6 +58,7 @@ def _attack_id(monster: SourceMonster2014, attack: SourceAttack2014) -> str:
 
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
+    charge_source = corrected_charge_profile_2014(monster, attack)
     kwargs = {
         "id": _attack_id(monster, attack),
         "weapon_id": _attack_id(monster, attack),
@@ -67,7 +69,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "animation": "projectile" if attack.kind == "ranged" else "slash",
         "reach_ft": attack.reach_ft,
         "effects": basic_attack_effects_2014(attack),
-        "charge_profile": charge_profile_2014(attack.charge_profile),
+        "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
         "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
     }
     if attack.damage.dice_count:

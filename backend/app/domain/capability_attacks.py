@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName
+from app.domain.actions import AbilityName, ConditionName
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
 from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind
@@ -26,11 +26,17 @@ class ChargeProfileDefinition(BaseModel):
     bonus_damage: ChargeDamageDefinition | None = None
     replacement_damage: ChargeDamageDefinition | None = None
     follow_up_attack_id: str | None = None
+    follow_up_required_target_condition: ConditionName | None = None
+    follow_up_action_cost: Literal["free", "bonus_action"] = "free"
 
     @model_validator(mode="after")
-    def validate_prone_save(self) -> "ChargeProfileDefinition":
+    def validate_shape(self) -> "ChargeProfileDefinition":
         if (self.prone_save_ability is None) != (self.prone_save_dc is None):
             raise ValueError("Charge Prone save ability and DC must be declared together.")
+        if self.follow_up_attack_id is None and (
+            self.follow_up_required_target_condition is not None or self.follow_up_action_cost != "free"
+        ):
+            raise ValueError("Charge follow-up requirements need a follow-up attack id.")
         return self
 
 

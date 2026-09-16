@@ -35,9 +35,26 @@ def _active(value: object, field: str) -> bool:
     return value not in (None, False, [], {})
 
 
+def _report_charge_profiles(monsters) -> None:
+    for monster in monsters:
+        for attack in monster.attacks:
+            if attack.charge_profile is None:
+                continue
+            print("CHARGE_PROFILE\t" + json.dumps({
+                "monster_id": monster.id,
+                "monster": monster.name,
+                "traits": monster.trait_names,
+                "attack_id": attack.id,
+                "attack": attack.name,
+                "profile": attack.charge_profile,
+                "blockers": basic_blockers_2014(monster),
+            }, sort_keys=True, default=str))
+
+
 def main() -> None:
+    monsters = load_monster_source_2014()
     candidates = [
-        monster for monster in load_monster_source_2014()
+        monster for monster in monsters
         if basic_blockers_2014(monster) == ("attack:complex",)
     ]
     print(f"2014 attack-complex-only: {len(candidates)}")
@@ -56,6 +73,7 @@ def main() -> None:
                     "attack": attack.name,
                     "shape": shape,
                 }, sort_keys=True, default=str))
+    _report_charge_profiles(monsters)
     if len(candidates) != _EXPECTED_ATTACK_ONLY:
         raise RuntimeError(
             f"Expected {_EXPECTED_ATTACK_ONLY} attack-complex-only monsters, found {len(candidates)}"

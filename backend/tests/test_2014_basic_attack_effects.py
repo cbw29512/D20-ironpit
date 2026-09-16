@@ -1,6 +1,7 @@
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.domain.traits import CombatTrait
@@ -17,7 +18,11 @@ _SAVE_DAMAGE_IDS = {
     "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp",
     "poisonous-snake", "scorpion", "wyvern",
 }
-_CHARGE_IDS = {"elk", "giant-elk", "giant-sea-horse", "minotaur-skeleton", "rhinoceros"}
+_CHARGE_IDS = {
+    "allosaurus", "elephant", "elk", "giant-elk", "giant-sea-horse", "mammoth",
+    "minotaur-skeleton", "panther", "rhinoceros", "saber-toothed-tiger", "tiger",
+    "triceratops", "warhorse",
+}
 _SURE_FOOTED_IDS = {"goat", "giant-goat", "mule"}
 _SWARM_IDS = {"swarm-of-insects", "swarm-of-poisonous-snakes", "swarm-of-rats", "swarm-of-ravens"}
 
@@ -35,10 +40,10 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_92_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_100_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 92
+    assert len(ready) == 100
     expected = (
         _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS |
         _SURE_FOOTED_IDS | _SWARM_IDS
@@ -117,19 +122,27 @@ def test_charge_profiles_preserve_exact_pinned_source_semantics():
         charge_attacks = [attack for attack in monster.attacks if attack.charge_profile is not None]
         assert charge_attacks
         for source_attack in charge_attacks:
-            expected = source_attack.charge_profile
+            expected = corrected_charge_profile_2014(monster, source_attack)
             actual = runtime_attacks[_attack_id(monster.id, source_attack.id)].charge_profile
-            assert expected is not None and actual is not None
+            assert isinstance(expected, dict) and actual is not None
             assert actual.minimum_move_ft == expected["minimum_move_ft"]
-            bonus = expected["bonus_damage"]
-            assert actual.bonus_damage is not None
-            assert actual.bonus_damage.dice_count == bonus["dice_count"]
-            assert actual.bonus_damage.dice_size == bonus["dice_size"]
-            assert actual.bonus_damage.damage_bonus == bonus["damage_bonus"]
-            assert _enum_value(actual.bonus_damage.damage_type) == bonus["damage_type"]
+            bonus = expected.get("bonus_damage")
+            if bonus is None:
+                assert actual.bonus_damage is None
+            else:
+                assert actual.bonus_damage is not None
+                assert actual.bonus_damage.dice_count == bonus["dice_count"]
+                assert actual.bonus_damage.dice_size == bonus["dice_size"]
+                assert actual.bonus_damage.damage_bonus == bonus["damage_bonus"]
+                assert _enum_value(actual.bonus_damage.damage_type) == bonus["damage_type"]
             ability = expected.get("prone_save_ability")
             assert (_enum_value(actual.prone_save_ability) if actual.prone_save_ability else None) == ability
             assert actual.prone_save_dc == expected.get("prone_save_dc")
+            follow_up = expected.get("follow_up_attack_id")
+            expected_runtime_id = _attack_id(monster.id, follow_up) if follow_up else None
+            assert actual.follow_up_attack_id == expected_runtime_id
+            assert actual.follow_up_required_target_condition == ("prone" if follow_up else None)
+            assert actual.follow_up_action_cost == ("bonus_action" if follow_up else "free")
 
 
 def test_swarm_conditional_damage_uses_shared_runtime_semantics():

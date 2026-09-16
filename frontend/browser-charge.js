@@ -2,7 +2,10 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
-  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available };
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
+    available: (s, cost) => cost === "bonus_action" ? Boolean(s.bonus_action_available) : Boolean(s.action_available),
+    spend: (s, cost) => { if (cost === "bonus_action") s.bonus_action_available = false; else s.action_available = false; },
+  };
 
   function openingEligible(round, member, setup) {
     if (round !== 1 || !setup || !Number.isInteger(member.state.initiative_total)) return false;
@@ -21,8 +24,14 @@
     if (!firstEvent.hit || !profile.followUpAttackId) return { events: [], sequence };
     const actualTarget = eventTarget(firstEvent, target, setup);
     if (!actualTarget.state.is_alive || actualTarget.state.is_dead || actualTarget.state.current_hp <= 0) return { events: [], sequence };
+    const condition = profile.followUpRequiredTargetCondition;
+    if (condition && !actualTarget.state.active_effect_ids?.includes(condition)) return { events: [], sequence };
+    const cost = profile.followUpActionCost || "free";
+    if (cost !== "free" && cost !== "bonus_action") throw new Error(`Unsupported Charge follow-up action cost: ${cost}`);
+    if (cost === "bonus_action" && !E().available(member.state, "bonus_action")) return { events: [], sequence };
     const attack = member.state.template.attacks.find((item) => item.id === profile.followUpAttackId);
     if (!attack) throw new Error(`Charge follow-up attack ${profile.followUpAttackId} is missing from ${member.state.template.id}.`);
+    if (cost === "bonus_action") E().spend(member.state, "bonus_action");
     return { events: [A().resolveAttack(sequence++, round, member, actualTarget, attack, attack.reach || 5, {
       spendAction: false, featureId: "charge-follow-up", setup, ignoreCloseThreat: true,
     })], sequence };

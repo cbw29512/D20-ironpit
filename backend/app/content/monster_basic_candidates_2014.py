@@ -6,6 +6,7 @@ import logging
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
+from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
@@ -17,12 +18,21 @@ _MODELED_2014_TRAITS = {
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
+_CHARGE_TRAIT_NAMES = frozenset({"Pounce", "Trampling Charge"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hold Breath", "Illumination",
     "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight", "Keen Sight",
     "Keen Sight and Smell", "Keen Smell", "Mimicry", "Sunlight Sensitivity", "Water Breathing",
 })
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
+
+
+def _supported_charge(monster: SourceMonster2014) -> bool:
+    return any(
+        attack.charge_profile is not None
+        and supports_charge_profile_2014(corrected_charge_profile_2014(monster, attack))
+        for attack in monster.attacks
+    )
 
 
 def _attack_blockers(monster: SourceMonster2014) -> list[str]:
@@ -32,6 +42,10 @@ def _attack_blockers(monster: SourceMonster2014) -> list[str]:
             blockers.append("attack:incomplete")
         if attack.damage.type not in _DAMAGE_TYPES:
             blockers.append("attack:damage-type")
+        profile = corrected_charge_profile_2014(monster, attack)
+        if attack.charge_profile is not None and not supports_charge_profile_2014(profile):
+            blockers.append("attack:complex")
+            continue
         if not supports_basic_attack_effects_2014(attack):
             blockers.append("attack:complex")
         if attack.kind == "ranged" and (
@@ -53,6 +67,8 @@ def _multiattack_blockers(monster: SourceMonster2014) -> list[str]:
 def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_2014_TRAITS)
+        if _supported_charge(monster):
+            certified.update(_CHARGE_TRAIT_NAMES)
         return tuple(
             name for name in monster.trait_names
             if name not in certified and not is_arena_neutral_bonus_action(name)
@@ -84,10 +100,7 @@ def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
         runtime_trait for source_name, runtime_trait in _MODELED_2014_TRAITS.items()
         if source_name in monster.trait_names
     ]
-    if any(
-        attack.charge_profile is not None and supports_charge_profile_2014(attack.charge_profile)
-        for attack in monster.attacks
-    ):
+    if _supported_charge(monster):
         traits.append(CombatTrait.CHARGE)
     return traits
 
