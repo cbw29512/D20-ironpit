@@ -27,6 +27,6 @@ def test_fixed_damage_only_batch_is_admitted_and_compiles():
             assert compiled_attack.fixed_damage == source_attack.damage.average
 
 
-def test_fixed_damage_batch_raises_roster_to_at_least_39():
+def test_fixed_damage_batch_raises_roster_to_exactly_39():
     ready = [monster for monster in load_monster_source_2014() if not basic_blockers_2014(monster)]
-    assert len(ready) >= 39
+    assert len(ready) == 39
