@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_source_2014 import SourceAttack2014
 from app.domain.capability_effects import (
     AttackEffectDefinition,
@@ -81,7 +82,9 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
         return False
     if attack.on_hit_contested_movement or attack.ongoing_damage_effect:
         return False
-    if attack.resource_id or attack.breakable_restraint or attack.charge_profile:
+    if attack.resource_id or attack.breakable_restraint:
+        return False
+    if attack.charge_profile is not None and not supports_charge_profile_2014(attack.charge_profile):
         return False
     if attack.grapple_target_policy != "normal":
         return False
