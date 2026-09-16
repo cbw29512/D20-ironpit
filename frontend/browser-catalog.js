@@ -16,14 +16,11 @@
     ["wizard", "Wizard", "Elian Starweaver", "evoker", "Evoker"],
   ];
 
-  function readyHeroIndex() {
-    return new Map(Object.values(window.IRON_PIT_BROWSER_HEROES).map((hero) => [
-      `${hero.class_id}:${hero.level}`,
-      hero,
-    ]));
+  function readyHeroIndex(registry = window.IRON_PIT_BROWSER_HEROES) {
+    return new Map(Object.values(registry || {}).map((hero) => [`${hero.class_id}:${hero.level}`, hero]));
   }
 
-  function buildHeroes() {
+  function buildHeroes2024() {
     const cards = [], readyHeroes = readyHeroIndex();
     for (const [classId, className, heroName, subclassId, subclassName] of HERO_ROWS) {
       for (let level = 1; level <= 20; level += 1) {
@@ -39,6 +36,21 @@
       }
     }
     return cards;
+  }
+
+  function buildHeroes2014() {
+    const readyHeroes = readyHeroIndex(window.IRON_PIT_BROWSER_HEROES_2014);
+    return Array.from({ length: 10 }, (_, index) => {
+      const level = index + 1, runtime = readyHeroes.get(`fighter:${level}`) || null;
+      return {
+        id: `hero-2014-fighter-l${level}`, name: "Karnok Stoneward", class_id: "fighter", class_name: "Fighter",
+        level, build_id: "canonical-2014", build_name: "Canonical 2014 RAW Progression",
+        subclass_id: level >= 3 ? "champion" : null, subclass_name: level >= 3 ? "Champion" : null,
+        ruleset: "2014", kind: "character", coverage_status: runtime ? "raw_ready" : "blocked",
+        runnable_template_id: runtime?.id || null,
+        blockers: runtime ? [] : ["hero-level-not-certified", "combat-feature-coverage-not-certified"],
+      };
+    });
   }
 
   function readyMonsterCards(registry = window.IRON_PIT_BROWSER_MONSTERS) {
@@ -73,21 +85,24 @@
   }
 
   function build2014() {
-    if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
-    const cards = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (cards.length !== 39) throw new Error(`Expected 39 certified 2014 test monsters; found ${cards.length}.`);
-    if (cards.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 test catalog crossed the ruleset boundary.");
+    if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser monster bundle did not load.");
+    if (!window.IRON_PIT_BROWSER_HEROES_2014) throw new Error("Certified 2014 browser pregen bundle did not load.");
+    const heroes = buildHeroes2014(), monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    const readyHeroes = heroes.filter((card) => card.coverage_status === "raw_ready");
+    if (monsters.length < 100) throw new Error(`2014 playtest requires at least 100 certified monsters; found ${monsters.length}.`);
+    if (readyHeroes.length !== 10) throw new Error(`2014 playtest requires Fighter levels 1-10; found ${readyHeroes.length}.`);
+    if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
-      heroes: cards.map((card) => ({ ...card })), monsters: cards.map((card) => ({ ...card })),
-      hero_count: cards.length, monster_count: 327, hero_ready_count: cards.length,
-      monster_ready_count: cards.length, ruleset: "2014", test_lane: true,
+      heroes, monsters,
+      hero_count: heroes.length, monster_count: 327, hero_ready_count: readyHeroes.length,
+      monster_ready_count: monsters.length, ruleset: "2014", test_lane: false,
     };
   }
 
   async function buildCatalog(ruleset = "2024") {
     if (ruleset === "2014") return build2014();
     if (ruleset !== "2024") throw new Error(`Unsupported browser ruleset: ${ruleset}`);
-    const heroes = buildHeroes(), monsters = await buildMonsters2024();
+    const heroes = buildHeroes2024(), monsters = await buildMonsters2024();
     return {
       heroes, monsters, hero_count: heroes.length, monster_count: monsters.length,
       hero_ready_count: heroes.filter((item) => item.coverage_status === "raw_ready").length,
