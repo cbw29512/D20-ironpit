@@ -14,6 +14,18 @@
 
   function cloneTemplate(template) { return structuredClone(template); }
 
+  function resolveRuleset(members) {
+    try {
+      const rulesets = new Set(members.map((member) => member.state.template.ruleset || "2024"));
+      if (!rulesets.size) throw new Error("Encounter requires at least one combatant ruleset.");
+      if (rulesets.size !== 1) throw new Error(`Mixed rulesets are not allowed in one Iron Pit fight: ${[...rulesets].sort().join(", ")}.`);
+      return [...rulesets][0];
+    } catch (error) {
+      console.error("Failed to resolve browser encounter ruleset", { error });
+      throw error;
+    }
+  }
+
   function placeStandardGrid(heroMembers, monsterMembers) {
     try {
       if (!M()?.buildStandardMap || !M()?.buildHeroDeploymentZone || !M()?.buildMonsterDeploymentZone || !G()?.packZone || !G()?.apply) {
@@ -41,12 +53,14 @@
         const template = cloneTemplate(monsters()[id]);
         return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: F().startingPosition(template, "monsters"), state: S().buildState(template) };
       });
+      const ruleset = resolveRuleset([...heroMembers, ...monsterMembers]);
       const mapDefinition = placeStandardGrid(heroMembers, monsterMembers);
       return {
         heroes: heroMembers,
         monsters: monsterMembers,
         hero_total_levels: heroMembers.reduce((sum, item) => sum + item.state.template.level, 0),
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
+        ruleset,
         map_definition: mapDefinition,
       };
     } catch (error) {
@@ -131,8 +145,8 @@
 
   function finish(setup, init, events, result, round, sequence) {
     events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
-    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit grid deathmatch subset" };
+    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: setup.ruleset };
   }
 
-  window.IRON_PIT_BROWSER_ENGINE = { runEncounter };
+  window.IRON_PIT_BROWSER_ENGINE = { runEncounter, resolveRuleset };
 })();
