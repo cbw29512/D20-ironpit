@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import re
+from collections import Counter
 
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
 from app.content.monster_bonus_action_source_audit import bonus_action_issues
@@ -22,7 +23,7 @@ _MELEE_ATTACK_ROLL = re.compile(r"\bMelee\s+Attack Roll:", re.IGNORECASE)
 _RANGED_ATTACK_ROLL = re.compile(r"\bRanged\s+Attack Roll:", re.IGNORECASE)
 _COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.IGNORECASE)
 _SAVING_THROW = re.compile(
-    r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:",
+    r"\b(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:\s*DC\s*(\d+)\b",
     re.IGNORECASE,
 )
 
@@ -57,11 +58,29 @@ def _source_attack_mode_count(actions: str) -> int:
     """Count legal attack modes; one combined melee/ranged action exposes two runtime modes."""
     combined = len(_COMBINED_ATTACK_ROLL.findall(actions))
     standalone = _COMBINED_ATTACK_ROLL.sub("", actions)
-    return (
-        len(_MELEE_ATTACK_ROLL.findall(standalone))
-        + len(_RANGED_ATTACK_ROLL.findall(standalone))
-        + 2 * combined
+    return len(_MELEE_ATTACK_ROLL.findall(standalone)) + len(_RANGED_ATTACK_ROLL.findall(standalone)) + 2 * combined
+
+
+def _source_save_signatures(actions: str) -> Counter[tuple[str, int]]:
+    """Return every explicit action save as an ability/DC multiset."""
+    return Counter((ability.lower(), int(dc)) for ability, dc in _SAVING_THROW.findall(actions))
+
+
+def _runtime_save_signatures(template: CombatantTemplate) -> Counter[tuple[str, int]]:
+    """Return saves owned by universal runtime primitives, regardless of which action family owns them."""
+    signatures: Counter[tuple[str, int]] = Counter(
+        (action.save_ability, action.dc) for action in template.saving_throw_actions
     )
+    for attack in [template.weapon_attack, *template.alternate_weapon_attacks]:
+        control = attack.control_effect
+        if control is not None and control.repeat_save_ability is not None and control.repeat_save_dc is not None:
+            signatures[(control.repeat_save_ability, control.repeat_save_dc)] += 1
+    return signatures
+
+
+def _save_ownership_matches(template: CombatantTemplate, actions: str) -> bool:
+    """Fail closed unless every explicit source save is represented exactly once by a runtime primitive."""
+    return _source_save_signatures(actions) == _runtime_save_signatures(template)
 
 
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
@@ -90,7 +109,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if _source_attack_mode_count(actions) != len(runtime_attacks):
             issues.append("source-attack-count-mismatch")
-        if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
+        if not _save_ownership_matches(template, actions):
             issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks:
             issues.extend(attack_issues(attack, actions))
