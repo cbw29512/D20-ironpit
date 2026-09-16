@@ -25,6 +25,16 @@ class DamageEffectDefinition(BaseModel):
     mode: Literal["add", "replace_weapon"] = "add"
 
 
+class SaveDamageEffectDefinition(BaseModel):
+    kind: Literal["save_damage"] = "save_damage"
+    source: str
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    dice: DiceSpec
+    damage_type: DamageType
+    success_damage: Literal["none", "half"] = "half"
+
+
 class ProneEffectDefinition(BaseModel):
     kind: Literal["prone"] = "prone"
     max_target_size: CreatureSize | None = None
@@ -58,7 +68,7 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
+    DamageEffectDefinition | SaveDamageEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
     GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
