@@ -18,7 +18,7 @@ _MODELED_2014_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
-    "Amphibious", "False Appearance", "Flyby", "Hold Breath", "Illumination",
+    "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hold Breath", "Illumination",
     "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight", "Keen Sight",
     "Keen Sight and Smell", "Keen Smell", "Mimicry", "Sunlight Sensitivity", "Water Breathing",
 })
