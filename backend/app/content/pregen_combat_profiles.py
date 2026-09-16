@@ -43,6 +43,7 @@ class PregenCombatProfile:
     fighting_style: str | None = None
     rage_damage_bonus: int = 0
     sneak_attack_d6: int = 0
+    initiative_bonus: int | None = None
 
 
 def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> AbilityScores:
@@ -140,11 +141,13 @@ def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
 
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
+    from app.content.fighter_2014_combat_profile import build_karnok_stoneward_2014_combat_profiles
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profile
     profiles = [
         *(_karnok_profile(level) for level in range(1, 13)),
         *(_rokhan_profile(level) for level in range(1, 7)),
         *(_seraphine_profile(level) for level in range(1, 5)),
+        *build_karnok_stoneward_2014_combat_profiles(),
         build_mara_quickstep_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
