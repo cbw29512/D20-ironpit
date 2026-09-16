@@ -44,7 +44,7 @@ def compile_progression_feature_fields(features: tuple[str, ...] | list[str], le
     for feature in features:
         fields.update(_STATIC_PROGRESSION_FIELDS.get(feature, {}))
     if "indomitable" in features:
-        fields["indomitable_bonus"] = level
+        fields.update(indomitable_reroll=True, indomitable_bonus=level)
     if "sneak-attack" in features:
         fields["sneak_attack_d6"] = (level + 1) // 2
     return fields
