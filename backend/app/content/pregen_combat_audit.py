@@ -41,7 +41,7 @@ def _attack_issues(template: CombatantTemplate, profile: PregenCombatProfile) ->
             issues.append(f"{prefix}:damage-bonus-mismatch")
         if attack.damage_die_minimum != expected.damage_die_minimum:
             issues.append(f"{prefix}:damage-die-minimum-mismatch")
-        if expected.mastery_property is not None and weapon.mastery_property != expected.mastery_property:
+        if weapon.mastery_property != expected.mastery_property:
             issues.append(f"{prefix}:mastery-property-mismatch")
         if attack.sneak_attack_eligible != expected.sneak_attack_eligible:
             issues.append(f"{prefix}:sneak-attack-eligibility-mismatch")
@@ -71,7 +71,12 @@ def audit_pregen_combat_stats(template: CombatantTemplate, profile: PregenCombat
         profile.armor_class, profile.max_hp, profile.speed_ft,
     ):
         issues.append("ac-hp-or-speed-mismatch")
-    if template.initiative_bonus != profile.abilities.modifier("dexterity"):
+    expected_initiative = (
+        profile.initiative_bonus
+        if profile.initiative_bonus is not None
+        else profile.abilities.modifier("dexterity")
+    )
+    if template.initiative_bonus != expected_initiative:
         issues.append("initiative-mismatch")
     if template.saving_throw_bonuses != _expected_saves(profile):
         issues.append("saving-throws-mismatch")
