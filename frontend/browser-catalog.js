@@ -29,18 +29,10 @@
       for (let level = 1; level <= 20; level += 1) {
         const runtime = readyHeroes.get(`${classId}:${level}`) || null;
         cards.push({
-          id: `hero-2024-${classId}-l${level}`,
-          name: heroName,
-          class_id: classId,
-          class_name: className,
-          level,
-          build_id: "canonical",
-          build_name: "Canonical RAW Progression",
-          subclass_id: level >= 3 ? subclassId : null,
-          subclass_name: level >= 3 ? subclassName : null,
-          ruleset: "2024",
-          kind: "character",
-          coverage_status: runtime ? "raw_ready" : "blocked",
+          id: `hero-2024-${classId}-l${level}`, name: heroName, class_id: classId, class_name: className,
+          level, build_id: "canonical", build_name: "Canonical RAW Progression",
+          subclass_id: level >= 3 ? subclassId : null, subclass_name: level >= 3 ? subclassName : null,
+          ruleset: "2024", kind: "character", coverage_status: runtime ? "raw_ready" : "blocked",
           runnable_template_id: runtime?.id || null,
           blockers: runtime ? [] : ["hero-level-not-certified", "combat-feature-coverage-not-certified"],
         });
@@ -81,19 +73,14 @@
   }
 
   function build2014() {
-    if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 MVP browser bundle did not load.");
+    if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
     const cards = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (cards.length !== 4) throw new Error(`Expected 4 certified 2014 test monsters; found ${cards.length}.`);
+    if (cards.length !== 32) throw new Error(`Expected 32 certified 2014 test monsters; found ${cards.length}.`);
     if (cards.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 test catalog crossed the ruleset boundary.");
     return {
-      heroes: cards.map((card) => ({ ...card })),
-      monsters: cards.map((card) => ({ ...card })),
-      hero_count: cards.length,
-      monster_count: cards.length,
-      hero_ready_count: cards.length,
-      monster_ready_count: cards.length,
-      ruleset: "2014",
-      test_lane: true,
+      heroes: cards.map((card) => ({ ...card })), monsters: cards.map((card) => ({ ...card })),
+      hero_count: cards.length, monster_count: 327, hero_ready_count: cards.length,
+      monster_ready_count: cards.length, ruleset: "2014", test_lane: true,
     };
   }
 
@@ -102,14 +89,10 @@
     if (ruleset !== "2024") throw new Error(`Unsupported browser ruleset: ${ruleset}`);
     const heroes = buildHeroes(), monsters = await buildMonsters2024();
     return {
-      heroes,
-      monsters,
-      hero_count: heroes.length,
-      monster_count: monsters.length,
+      heroes, monsters, hero_count: heroes.length, monster_count: monsters.length,
       hero_ready_count: heroes.filter((item) => item.coverage_status === "raw_ready").length,
       monster_ready_count: monsters.filter((item) => item.coverage_status === "raw_ready").length,
-      ruleset: "2024",
-      test_lane: false,
+      ruleset: "2024", test_lane: false,
     };
   }
 
