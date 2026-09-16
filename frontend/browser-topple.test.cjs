@@ -40,7 +40,7 @@ function member(id, side, options = {}) {
   Object.assign(template, { id: `template-${id}`, name: id, level: options.level ?? 1, armor_class: options.armorClass ?? 10,
     max_hp: 40, attacks: [structuredClone(toppleAttack)], primary_attack_id: toppleAttack.id,
     weapon_masteries: options.mastered === false ? [] : ["battleaxe"], traits: [], size: options.size || "medium",
-    condition_immunities: options.immune ? ["prone"] : [], saving_throw_bonuses: { ...template.saving_throw_bonuses, constitution: 0 } });
+    condition_immunities: options.immune ? ["prone"] : [], saving_throw_bonuses: { ...template.saving_throw_bonuses, constitution: 0, strength: 0 } });
   if (options.missingModifier) delete template.attacks[0].attackAbilityModifier;
   return { combatant_id: id, side, position_ft: options.position ?? 0, state: S.buildState(template) };
 }
@@ -93,4 +93,30 @@ function attack(attacker, target, values) {
   assert.throws(() => attack(fighter, target, [15, 4]), /explicit attack ability modifier/);
 }
 
-console.log("Browser Topple weapon mastery regressions passed.");
+{
+  const fighter = member("save-fighter", "heroes", { mastered: false }), target = member("save-target", "monsters", { position: 5 });
+  fighter.state.template.attacks[0].onHitConditionSave = { saveAbility: "strength", dc: 13, conditionId: "prone", maxTargetSize: "large" };
+  const event = attack(fighter, target, [15, 4, 5]);
+  assert.equal(event.save_ability, "strength"); assert.equal(event.save_dc, 13); assert.equal(event.save_succeeded, false);
+  assert.ok(event.applied_condition_ids.includes("prone")); assert.ok(target.state.active_effect_ids.includes("prone"));
+}
+
+{
+  const fighter = member("save-fighter", "heroes", { mastered: false }), target = member("save-target", "monsters", { position: 5 });
+  fighter.state.template.attacks[0].onHitConditionSave = { saveAbility: "strength", dc: 13, conditionId: "prone", maxTargetSize: "large" };
+  const event = attack(fighter, target, [15, 4, 18]);
+  assert.equal(event.save_succeeded, true); assert.ok(!target.state.active_effect_ids.includes("prone"));
+}
+
+{
+  const fighter = member("save-fighter", "heroes", { mastered: false });
+  fighter.state.template.attacks[0].onHitConditionSave = { saveAbility: "strength", dc: 13, conditionId: "prone", maxTargetSize: "large" };
+  const huge = member("huge", "monsters", { position: 5, size: "huge" });
+  const immune = member("immune-save", "monsters", { position: 5, immune: true });
+  assert.equal(attack(fighter, huge, [15, 4]).save_dc, null);
+  const second = member("save-fighter-2", "heroes", { mastered: false });
+  second.state.template.attacks[0].onHitConditionSave = structuredClone(fighter.state.template.attacks[0].onHitConditionSave);
+  assert.equal(attack(second, immune, [15, 4]).save_dc, null);
+}
+
+console.log("Browser Topple and universal on-hit condition-save regressions passed.");

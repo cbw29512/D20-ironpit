@@ -47,9 +47,11 @@ class AttackCapabilityDefinition(BaseModel):
             raise ValueError("Ranged attack requires normal and long range.")
         if self.attack_ability_modifier is not None and self.attack_ability is None:
             raise ValueError("Attack ability modifier requires an explicit attack ability.")
-        control_count = sum(effect.kind in {"grapple", "condition"} for effect in self.effects)
+        control_count = sum(effect.kind in {"grapple", "condition", "save_condition"} for effect in self.effects)
         if control_count > 1:
             raise ValueError("Current runtime supports one persistent control rider per attack.")
+        if self.mastery_property == "Topple" and any(effect.kind == "save_condition" for effect in self.effects):
+            raise ValueError("One attack cannot combine Topple with another on-hit condition save.")
         return self
 
 

@@ -5,6 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
@@ -45,6 +46,20 @@
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
     }
     return { roll, succeeded: roll.total >= dc };
+  }
+
+  function resolveOnHitConditionSave(target, attack) {
+    const effect = attack.onHitConditionSave;
+    if (!effect || target.state.is_dead || !target.state.is_alive) return null;
+    if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
+    if (I().immune(target.state, effect.conditionId)) return null;
+    const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc);
+    let appliedCondition = null;
+    if (!save.succeeded && !target.state.active_effect_ids.includes(effect.conditionId)) {
+      target.state.active_effect_ids.push(effect.conditionId); appliedCondition = effect.conditionId;
+    }
+    return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
+      saveSucceeded: save.succeeded, appliedCondition };
   }
 
   function legalAction(action, target, distance) {
@@ -105,5 +120,5 @@
       animation: action.animation || "save-effect", description };
   }
 
-  window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveSavingThrow, saveMode };
+  window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveOnHitConditionSave, resolveSavingThrow, saveMode };
 })();
