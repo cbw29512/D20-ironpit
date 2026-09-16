@@ -25,7 +25,7 @@ assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy b
 
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
-assert.equal(monsters2014.length, 78, "2014 browser roster must contain exactly 78 certified monsters");
+assert.equal(monsters2014.length, 83, "2014 browser roster must contain exactly 83 certified monsters");
 for (const id of [
   "2014-bandit", "2014-brown-bear", "2014-goblin", "2014-skeleton", "2014-fire-giant", "2014-owlbear",
   "2014-badger", "2014-cat", "2014-crab", "2014-hawk", "2014-lizard", "2014-rat", "2014-weasel",
@@ -36,6 +36,7 @@ for (const id of [
   "2014-giant-crab", "2014-roc", "2014-tyrannosaurus-rex",
   "2014-ankylosaurus", "2014-dire-wolf", "2014-giant-crocodile", "2014-mastiff", "2014-wolf", "2014-worg",
   "2014-giant-poisonous-snake", "2014-giant-scorpion", "2014-poisonous-snake", "2014-scorpion", "2014-wyvern",
+  "2014-elk", "2014-giant-elk", "2014-giant-sea-horse", "2014-minotaur-skeleton", "2014-rhinoceros",
 ]) {
   assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
 }
