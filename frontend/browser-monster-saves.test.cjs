@@ -27,12 +27,16 @@ for (const monster of monsters) {
 load("browser-monsters-2014.js");
 const goat = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-goat"];
 const giantGoat = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-giant-goat"];
+const mule = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-mule"];
 assert.ok(goat, "2014 Goat must be certified after Sure-Footed support");
 assert.ok(giantGoat, "2014 Giant Goat must be certified after Sure-Footed support");
+assert.ok(mule, "2014 Mule must be certified when Beast of Burden is arena-neutral");
 assert.ok(goat.traits.includes("sure-footed"));
 assert.ok(giantGoat.traits.includes("sure-footed"));
-assert.equal(window.IRON_PIT_BROWSER_MONSTERS_2014["2014-mule"], undefined,
-  "Mule must remain blocked by Beast of Burden after Sure-Footed support");
+assert.deepEqual(mule.traits, ["sure-footed"],
+  "Mule must retain combat-relevant Sure-Footed without modeling carrying capacity");
+assert.deepEqual(mule.source_trait_names, ["Beast of Burden", "Sure-Footed"],
+  "Mule must preserve its exact 2014 source trait fingerprint");
 
 window.IRON_PIT_BROWSER_ROLLS = {
   modeFromSources: (advantage = 0, disadvantage = 0) => {
