@@ -10,7 +10,7 @@ from browser_template_serializer import template_row
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-monsters-2014.js"
-_EXPECTED_COUNT = 73
+_EXPECTED_COUNT = 78
 
 
 def render() -> str:

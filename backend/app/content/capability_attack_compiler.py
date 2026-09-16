@@ -8,10 +8,11 @@ from app.domain.capability_effects import (
     GrappleEffectDefinition,
     ProneEffectDefinition,
     SaveConditionEffectDefinition,
+    SaveDamageEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import OnHitConditionSave
+from app.domain.weapons import OnHitConditionSave, OnHitSaveDamage
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -64,6 +65,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     prone_size = None
     control = None
     on_hit_save = None
+    on_hit_save_damage = None
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -83,6 +85,12 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                     damage_bonus=effect.dice.bonus,
                     damage_type=effect.damage_type,
                 ))
+        elif isinstance(effect, SaveDamageEffectDefinition):
+            on_hit_save_damage = OnHitSaveDamage(
+                source=effect.source, save_ability=effect.save_ability, dc=effect.dc,
+                dice_count=effect.dice.count, dice_size=effect.dice.size, damage_bonus=effect.dice.bonus,
+                damage_type=effect.damage_type, success_damage=effect.success_damage,
+            )
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
         elif isinstance(effect, SaveConditionEffectDefinition):
@@ -108,6 +116,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         conditional_damage=conditional,
         conditional_attack_advantage=definition.conditional_attack_advantage,
         on_hit_damage=on_hit,
+        on_hit_save_damage=on_hit_save_damage,
         on_hit_condition_save=on_hit_save,
         on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,

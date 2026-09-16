@@ -58,6 +58,17 @@ class OnHitDamage(BaseModel):
         return self
 
 
+class OnHitSaveDamage(BaseModel):
+    source: str
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    damage_bonus: int = 0
+    damage_type: DamageType
+    success_damage: Literal["none", "half"] = "half"
+
+
 class OnHitConditionSave(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
@@ -103,6 +114,7 @@ class WeaponAttack(BaseModel):
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
+    on_hit_save_damage: OnHitSaveDamage | None = None
     on_hit_condition_save: OnHitConditionSave | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     rage_eligible: bool = False

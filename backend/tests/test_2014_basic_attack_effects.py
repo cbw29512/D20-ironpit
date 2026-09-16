@@ -12,6 +12,9 @@ _ATTACK_EFFECT_IDS = {
 _SAVE_PRONE_IDS = {
     "ankylosaurus", "dire-wolf", "giant-crocodile", "mastiff", "wolf", "worg",
 }
+_SAVE_DAMAGE_IDS = {
+    "giant-poisonous-snake", "giant-scorpion", "poisonous-snake", "scorpion", "wyvern",
+}
 
 
 def _attack_id(monster_id: str, attack_id: str) -> str:
@@ -27,11 +30,11 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_73_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_78_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 73
-    assert _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS <= {monster.id for monster in ready}
+    assert len(ready) == 78
+    assert _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS <= {monster.id for monster in ready}
     for monster in ready:
         template = compile_combatant(adapt_basic_monster_2014(monster))
         assert template.ruleset == "2014"
@@ -91,13 +94,39 @@ def test_save_to_prone_riders_preserve_exact_pinned_source_semantics():
             )
 
 
-def test_unmodeled_poison_save_and_charge_riders_still_fail_closed():
+def test_save_damage_riders_preserve_exact_pinned_source_semantics():
     source = {monster.id: monster for monster in load_monster_source_2014()}
-    poison_bite = source["poisonous-snake"].attacks[0]
+    for monster_id in _SAVE_DAMAGE_IDS:
+        monster = source[monster_id]
+        assert basic_blockers_2014(monster) == ()
+        runtime_attacks = _runtime_attacks(compile_combatant(adapt_basic_monster_2014(monster)))
+        save_attacks = [attack for attack in monster.attacks if attack.on_hit_save_effect is not None]
+        assert save_attacks
+        for source_attack in save_attacks:
+            expected = source_attack.on_hit_save_effect
+            runtime = runtime_attacks[_attack_id(monster.id, source_attack.id)].on_hit_save_damage
+            assert expected is not None and runtime is not None
+            assert runtime.source == source_attack.name
+            assert _enum_value(runtime.save_ability) == str(expected["save_ability"]).lower()
+            assert runtime.dc == expected["dc"]
+            assert runtime.dice_count == expected["damage_dice_count"]
+            assert runtime.dice_size == expected["damage_dice_size"]
+            assert runtime.damage_bonus == expected.get("damage_bonus", 0)
+            assert _enum_value(runtime.damage_type) == str(expected["damage_type"]).lower()
+            assert runtime.success_damage == expected["success_damage"]
+
+
+def test_special_zero_hp_poison_and_charge_riders_still_fail_closed():
+    source = {monster.id: monster for monster in load_monster_source_2014()}
+    centipede = source["giant-centipede"].attacks[0]
+    wasp = source["giant-wasp"].attacks[0]
     elk_ram = source["elk"].attacks[0]
-    assert poison_bite.on_hit_save_effect is not None
+    assert "zero_hp_condition_ids" in centipede.on_hit_save_effect
+    assert "zero_hp_condition_ids" in wasp.on_hit_save_effect
     assert elk_ram.charge_profile is not None
-    assert supports_basic_attack_effects_2014(poison_bite) is False
+    assert supports_basic_attack_effects_2014(centipede) is False
+    assert supports_basic_attack_effects_2014(wasp) is False
     assert supports_basic_attack_effects_2014(elk_ram) is False
-    assert basic_blockers_2014(source["poisonous-snake"]) == ("attack:complex",)
+    assert basic_blockers_2014(source["giant-centipede"]) == ("attack:complex",)
+    assert basic_blockers_2014(source["giant-wasp"]) == ("attack:complex",)
     assert basic_blockers_2014(source["elk"]) == ("attack:complex",)
