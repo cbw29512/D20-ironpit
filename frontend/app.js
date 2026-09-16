@@ -51,8 +51,10 @@
     return { cards, indexes };
   }
   function validate(cards, side) {
-    const label = state.ruleset === "2014" ? (side === "heroes" ? "Team A" : "Team B") : side === "heroes" ? "Hero" : "Monster";
+    const label = side === "heroes" ? "Hero" : "Monster";
     if (!cards.length) return `${label} side needs at least one card.`;
+    const wrongEdition = cards.find((card) => card.ruleset !== state.ruleset);
+    if (wrongEdition) return `${wrongEdition.name} belongs to ${wrongEdition.ruleset}, not ${state.ruleset}.`;
     const blocked = cards.find((card) => card.coverage_status !== "raw_ready" || !card.runnable_template_id);
     return blocked ? `${blocked.name} is not RAW-certified for automated combat yet.` : null;
   }
@@ -74,12 +76,12 @@
   function loadSample() {
     if (state.fighting || (state.session && !state.session.complete) || !state.catalog) return;
     const is2014 = state.ruleset === "2014";
-    const heroes = is2014 ? [cardByTemplate("heroes", "2014-brown-bear"), cardByTemplate("heroes", "2014-bandit")] : [cardByTemplate("heroes", "karnok-stoneward-l1"), cardByTemplate("heroes", "seraphine-dawnshield-l1")];
+    const heroes = is2014 ? [cardByTemplate("heroes", "fighter-2014-canonical-l5")] : [cardByTemplate("heroes", "karnok-stoneward-l1"), cardByTemplate("heroes", "seraphine-dawnshield-l1")];
     const monsters = is2014 ? [cardByTemplate("monsters", "2014-skeleton"), cardByTemplate("monsters", "2014-goblin")] : [cardByTemplate("monsters", "srd-goblin-warrior"), cardByTemplate("monsters", "srd-wolf")];
     if ([...heroes, ...monsters].some((card) => !card)) { el("status").textContent = "Sample matchup could not find its certified cards."; return; }
     state.heroSlots.fill(null); state.monsterSlots.fill(null);
     heroes.forEach((card, index) => { state.heroSlots[index] = card; }); monsters.forEach((card, index) => { state.monsterSlots[index] = card; });
-    invalidateRun(); clearResult(is2014 ? "2014 sample loaded: Brown Bear + Bandit vs Skeleton + Goblin." : "2024 sample loaded: Karnok + Seraphine vs Goblin Warrior + Wolf."); render();
+    invalidateRun(); clearResult(is2014 ? "2014 sample loaded: Level 5 Champion Karnok vs Skeleton + Goblin." : "2024 sample loaded: Karnok + Seraphine vs Goblin Warrior + Wolf."); render();
     el("status").textContent = "Sample loaded. Choose FIGHT, STEP FIGHT, or TURBO.";
   }
 
@@ -92,7 +94,7 @@
       state.ruleset = nextRuleset; state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(nextRuleset);
       state.heroSlots.fill(null); state.monsterSlots.fill(null); invalidateRun();
       clearResult(`${nextRuleset} ruleset loaded. Previous matchup cleared to preserve edition isolation.`); rulesetUi().update(state); render();
-      el("status").textContent = nextRuleset === "2014" ? "2014 test lane ready. Choose certified monsters for Team A and Team B, or load the sample." : "2024 production lane ready. Choose cards or load the sample matchup.";
+      el("status").textContent = nextRuleset === "2014" ? "2014 test lane ready. Choose a certified pregen and certified monsters, or load the sample." : "2024 production lane ready. Choose cards or load the sample matchup.";
     } catch (error) {
       console.error("Ruleset switch failed", error); if (selector) selector.value = state.ruleset;
       el("status").textContent = `Could not load the ${nextRuleset} ruleset.`;
