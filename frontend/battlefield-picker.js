@@ -36,21 +36,22 @@
     heroSelect.onchange = refresh; levelSelect.onchange = refresh; refresh();
   }
 
-  function monsterNote(rows, chosen) {
+  function monsterNote(state, rows, chosen) {
     const certified = rows.filter(ready).length;
-    if (!rows.length) return "No SRD monsters exist at this Challenge Rating.";
-    if (chosen && !ready(chosen)) return `${chosen.name} is in the SRD catalog, but its outcome-changing combat mechanics are still being RAW-certified.`;
+    if (!rows.length) return "No monsters exist at this Challenge Rating.";
+    if (chosen && !ready(chosen)) return `${chosen.name} is in the catalog, but its outcome-changing combat mechanics are still being RAW-certified.`;
+    if (state.ruleset === "2014") return `${rows.length} certified 2014 test monster${rows.length === 1 ? "" : "s"} available in this lane.`;
     return `${rows.length} SRD monster${rows.length === 1 ? "" : "s"} shown · ${certified} RAW-ready for automated combat.`;
   }
 
-  function populateMonster(state, existing) {
-    const all = state.catalog.monsters, crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
+  function populateMonster(state, existing, side = "monsters") {
+    const all = state.catalog[side], crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
     crSelect.replaceChildren(option("all", `All CRs · ${all.length} monsters`, true));
     P().challengeRatings(all).forEach((cr) => crSelect.append(option(cr, `CR ${cr}`)));
 
     function refreshNote(rows) {
       const chosen = rows.find((monster) => monster.id === monsterSelect.value) || null;
-      el("picker-note").textContent = monsterNote(rows, chosen);
+      el("picker-note").textContent = monsterNote(state, rows, chosen);
       el("confirm-card").disabled = !ready(chosen);
       el("confirm-card").textContent = ready(chosen) ? "Add to Slot" : "Certification Pending";
     }
@@ -74,6 +75,9 @@
 
   function selectedCard(state) {
     if (!active) return null;
+    if (state.ruleset === "2014") {
+      return state.catalog[active.side].find((monster) => monster.id === el("picker-monster").value) || null;
+    }
     if (active.side === "heroes") return chosenHero(state);
     return state.catalog.monsters.find((monster) => monster.id === el("picker-monster").value) || null;
   }
@@ -81,11 +85,13 @@
   function open(state, side, index, onConfirm, onRemove) {
     active = { side, index, onConfirm, onRemove };
     const existing = (side === "heroes" ? state.heroSlots : state.monsterSlots)[index];
-    el("picker-kicker").textContent = `${side === "heroes" ? "HERO" : "MONSTER"} SLOT ${index + 1}`;
-    el("picker-title").textContent = existing ? `Change ${existing.name}` : side === "heroes" ? "Choose a hero" : "Choose a monster";
-    el("hero-picker-fields").hidden = side !== "heroes"; el("monster-picker-fields").hidden = side !== "monsters";
+    const is2014 = state.ruleset === "2014", sideLabel = is2014 ? (side === "heroes" ? "TEAM A" : "TEAM B") : side === "heroes" ? "HERO" : "MONSTER";
+    el("picker-kicker").textContent = `${sideLabel} SLOT ${index + 1}`;
+    el("picker-title").textContent = existing ? `Change ${existing.name}` : is2014 || side === "monsters" ? "Choose a monster" : "Choose a hero";
+    const useMonsterPicker = is2014 || side === "monsters";
+    el("hero-picker-fields").hidden = useMonsterPicker; el("monster-picker-fields").hidden = !useMonsterPicker;
     el("remove-card").hidden = !existing; el("confirm-card").textContent = "Add to Slot";
-    if (side === "heroes") populateHero(state, existing); else populateMonster(state, existing);
+    if (useMonsterPicker) populateMonster(state, existing, side); else populateHero(state, existing);
     el("card-picker").showModal();
   }
 
