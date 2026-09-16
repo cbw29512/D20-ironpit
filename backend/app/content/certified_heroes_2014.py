@@ -5,10 +5,10 @@ import logging
 from app.content.build_audit import assert_character_build_raw_ready
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.fighter_2014 import build_karnok_stoneward_2014
+from app.content.fighter_2014_combat_profile import build_karnok_stoneward_2014_combat_profile
 from app.content.fighter_2014_policy import assert_karnok_2014_profile_policy
 from app.content.fighter_2014_profile import build_karnok_stoneward_2014_profile
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
-from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.models import CombatantTemplate
 
@@ -22,11 +22,9 @@ def _validated(level: int) -> tuple[Hero2014BuildKey, CombatantTemplate]:
     try:
         profile = build_karnok_stoneward_2014_profile(level)
         template = build_karnok_stoneward_2014(level)
+        combat_profile = build_karnok_stoneward_2014_combat_profile(level)
         assert_karnok_2014_profile_policy(profile)
         assert_character_build_raw_ready(profile, template)
-        combat_profile = build_pregen_combat_profiles().get(template.id)
-        if combat_profile is None:
-            raise ValueError(f"Certified 2014 hero {template.id} lacks a combat fingerprint.")
         assert_pregen_combat_stats(template, combat_profile)
         assert_character_resources_raw_ready(template, profile, combat_profile)
         template = complete_unarmed_opportunity_profiles([template])[0]
