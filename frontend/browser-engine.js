@@ -19,9 +19,12 @@
   }
   function rosters(ruleset) {
     if (ruleset === "2014") {
+      const heroes = window.IRON_PIT_BROWSER_HEROES_2014;
       const monsters = window.IRON_PIT_BROWSER_MONSTERS_2014;
-      if (window.IRON_PIT_2014_MVP_READY !== true || !monsters) throw new Error("Certified 2014 browser roster is not loaded.");
-      return { heroes: monsters, monsters };
+      if (window.IRON_PIT_2014_MVP_READY !== true || !heroes || !monsters) {
+        throw new Error("Certified 2014 browser pregens and monster roster are not loaded.");
+      }
+      return { heroes, monsters };
     }
     return { heroes: window.IRON_PIT_BROWSER_HEROES, monsters: window.IRON_PIT_BROWSER_MONSTERS };
   }
@@ -140,8 +143,8 @@
     return finish(setup, init, events, "draw", resolvedRound, sequence);
   }
   function finish(setup, init, events, result, round, sequence) {
-    const teamA = setup.ruleset === "2014" ? "Team A" : "Heroes";
-    const teamB = setup.ruleset === "2014" ? "Team B" : "Monsters";
+    const teamA = setup.ruleset === "2014" ? "Heroes" : "Heroes";
+    const teamB = setup.ruleset === "2014" ? "Monsters" : "Monsters";
     events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? `${teamA} wins the deathmatch.` : result === "monsters_win" ? `${teamB} wins the deathmatch.` : "The fight reaches the arena round limit and ends in a draw." });
     return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: setup.ruleset };
   }
