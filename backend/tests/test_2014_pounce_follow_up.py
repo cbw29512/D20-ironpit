@@ -45,7 +45,7 @@ def test_2014_pounce_save_success_blocks_follow_up_bite() -> None:
 def test_2014_pounce_failed_save_grants_and_spends_bonus_action_bite() -> None:
     attacker, target, setup = _opening_pair()
     events, sequence, handled = resolve_charge_closing(
-        1, 1, attacker, target, FixedDiceProvider([15, 1, 1, 15, 1, 1]), setup,
+        1, 1, attacker, target, FixedDiceProvider([15, 1, 1, 15, 14, 1, 1]), setup,
     )
     assert handled is True and sequence == 3
     assert _attack_ids(events) == ["2014-allosaurus-claw", "2014-allosaurus-bite"]
