@@ -47,14 +47,14 @@
     return cards;
   }
 
-  function readyMonsterCards() {
-    return Object.values(window.IRON_PIT_BROWSER_MONSTERS).map((monster) => ({
+  function readyMonsterCards(registry = window.IRON_PIT_BROWSER_MONSTERS) {
+    return Object.values(registry || {}).map((monster) => ({
       id: `catalog-${monster.id}`, name: monster.name, challenge_rating: monster.challenge_rating,
       monster_type: monster.archetype, coverage_status: "raw_ready", runnable_template_id: monster.id, blockers: [],
     }));
   }
 
-  async function buildMonsters() {
+  async function buildMonsters2024() {
     const ready = new Map(Object.values(window.IRON_PIT_BROWSER_MONSTERS).map((monster) => [monster.name, monster.id]));
     try {
       const response = await fetch("data/srd_5_2_1_monsters.json", { cache: "no-cache" });
@@ -76,9 +76,36 @@
     }
   }
 
-  async function buildCatalog() {
-    const heroes = buildHeroes(), monsters = await buildMonsters();
-    return { heroes, monsters, hero_count: heroes.length, monster_count: monsters.length };
+  function build2014() {
+    if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 MVP browser bundle did not load.");
+    const cards = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    if (cards.length !== 4) throw new Error(`Expected 4 certified 2014 test monsters; found ${cards.length}.`);
+    return {
+      heroes: cards.map((card) => ({ ...card })),
+      monsters: cards.map((card) => ({ ...card })),
+      hero_count: cards.length,
+      monster_count: cards.length,
+      hero_ready_count: cards.length,
+      monster_ready_count: cards.length,
+      ruleset: "2014",
+      test_lane: true,
+    };
+  }
+
+  async function buildCatalog(ruleset = "2024") {
+    if (ruleset === "2014") return build2014();
+    if (ruleset !== "2024") throw new Error(`Unsupported browser ruleset: ${ruleset}`);
+    const heroes = buildHeroes(), monsters = await buildMonsters2024();
+    return {
+      heroes,
+      monsters,
+      hero_count: heroes.length,
+      monster_count: monsters.length,
+      hero_ready_count: heroes.filter((item) => item.coverage_status === "raw_ready").length,
+      monster_ready_count: monsters.filter((item) => item.coverage_status === "raw_ready").length,
+      ruleset: "2024",
+      test_lane: false,
+    };
   }
 
   window.IRON_PIT_BROWSER_CATALOG = { buildCatalog };
