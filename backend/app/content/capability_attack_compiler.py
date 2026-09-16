@@ -12,7 +12,7 @@ from app.domain.capability_effects import (
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import OnHitConditionSave, OnHitSaveDamage
+from app.domain.weapons import AttackChargeProfile, ChargeDamage, OnHitConditionSave, OnHitSaveDamage
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -35,6 +35,28 @@ def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition
         repeat_save_dc=effect.repeat_save_dc,
         repeat_save_timing=effect.repeat_save_timing,
         allowed_removal_action_ids=effect.allowed_removal_action_ids,
+    )
+
+
+def _compile_charge(definition) -> AttackChargeProfile | None:
+    if definition is None:
+        return None
+    def damage(value):
+        if value is None:
+            return None
+        return ChargeDamage(
+            dice_count=value.dice_count, dice_size=value.dice_size,
+            damage_type=value.damage_type, damage_bonus=value.damage_bonus,
+        )
+    return AttackChargeProfile(
+        minimum_move_ft=definition.minimum_move_ft,
+        max_target_size=definition.max_target_size,
+        prone_max_target_size=definition.prone_max_target_size,
+        prone_save_ability=definition.prone_save_ability,
+        prone_save_dc=definition.prone_save_dc,
+        bonus_damage=damage(definition.bonus_damage),
+        replacement_damage=damage(definition.replacement_damage),
+        follow_up_attack_id=definition.follow_up_attack_id,
     )
 
 
@@ -119,6 +141,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_save_damage=on_hit_save_damage,
         on_hit_condition_save=on_hit_save,
         on_hit_modifier_effects=on_hit_modifiers,
+        charge_profile=_compile_charge(definition.charge_profile),
         knocks_prone_max_size=prone_size,
         control_effect=control,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,

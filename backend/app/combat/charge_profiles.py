@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from app.domain.models import DamageType
 from app.domain.size import CreatureSize
+from app.domain.weapons import WeaponAttack
 
 
 @dataclass(frozen=True)
@@ -20,6 +21,8 @@ class ChargeProfile:
     minimum_move_ft: int
     max_target_size: CreatureSize | None = None
     prone_max_target_size: CreatureSize | None = None
+    prone_save_ability: str | None = None
+    prone_save_dc: int | None = None
     bonus_damage: ChargeDamage | None = None
     replacement_damage: ChargeDamage | None = None
     follow_up_attack_id: str | None = None
@@ -77,3 +80,24 @@ _PROFILES = {
 
 def charge_profile_for_attack_id(attack_id: str) -> ChargeProfile | None:
     return _PROFILES.get(attack_id)
+
+
+def charge_profile_for_attack(attack: WeaponAttack) -> ChargeProfile | None:
+    declared = attack.charge_profile
+    if declared is None:
+        return charge_profile_for_attack_id(attack.id)
+    def damage(value):
+        if value is None:
+            return None
+        return ChargeDamage(value.dice_count, value.dice_size, value.damage_type, value.damage_bonus)
+    return ChargeProfile(
+        attack_id=attack.id,
+        minimum_move_ft=declared.minimum_move_ft,
+        max_target_size=declared.max_target_size,
+        prone_max_target_size=declared.prone_max_target_size,
+        prone_save_ability=declared.prone_save_ability,
+        prone_save_dc=declared.prone_save_dc,
+        bonus_damage=damage(declared.bonus_damage),
+        replacement_damage=damage(declared.replacement_damage),
+        follow_up_attack_id=declared.follow_up_attack_id,
+    )

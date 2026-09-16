@@ -110,7 +110,7 @@ assert.equal(event.hp_before - event.hp_after, event.damage_roll.total, "attack 
 
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
-assert.equal(Object.keys(roster).length, 78);
+assert.equal(Object.keys(roster).length, 83);
 for (const id of ["giant-poisonous-snake", "giant-scorpion", "poisonous-snake", "scorpion", "wyvern"]) {
   const monster = roster[`2014-${id}`];
   assert.ok(monster, `${id} must be in the certified 2014 browser roster`);
@@ -119,4 +119,4 @@ for (const id of ["giant-poisonous-snake", "giant-scorpion", "poisonous-snake", 
 assert.equal(roster["2014-giant-centipede"], undefined);
 assert.equal(roster["2014-giant-wasp"], undefined);
 
-console.log("Browser save-dependent hit damage matches the certified 78-monster 2014 tranche.");
+console.log("Browser save-dependent hit damage remains certified in the 83-monster 2014 tranche.");

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from app.combat.charge import charge_profile_for_attack_id
+from app.combat.charge_profiles import charge_profile_for_attack
 from app.domain.models import CombatantTemplate, WeaponAttack
 from app.domain.traits import CombatTrait
 
@@ -118,11 +118,14 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if control:
             row["controlEffect"] = control
         if CombatTrait.CHARGE.value in traits:
-            profile = charge_profile_for_attack_id(attack.id)
+            profile = charge_profile_for_attack(attack)
             if profile:
                 charge: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
                 if profile.prone_max_target_size is not None:
                     charge["proneMaxSize"] = profile.prone_max_target_size.value
+                if profile.prone_save_ability is not None:
+                    charge["proneSaveAbility"] = _value(profile.prone_save_ability)
+                    charge["proneSaveDc"] = profile.prone_save_dc
                 if profile.max_target_size is not None and profile.max_target_size != profile.prone_max_target_size:
                     charge["targetMaxSize"] = profile.max_target_size.value
                 if profile.bonus_damage is not None:
@@ -131,6 +134,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                         diceSize=profile.bonus_damage.dice_size,
                         damageType=profile.bonus_damage.damage_type.value,
                     )
+                    if profile.bonus_damage.damage_bonus:
+                        charge["damageBonus"] = profile.bonus_damage.damage_bonus
                 if profile.replacement_damage is not None:
                     replacement = profile.replacement_damage
                     charge["replacementDamage"] = {

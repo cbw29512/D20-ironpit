@@ -82,6 +82,30 @@ class OnHitConditionSave(BaseModel):
         return self
 
 
+class ChargeDamage(BaseModel):
+    dice_count: int = Field(ge=1, le=20)
+    dice_size: int = Field(ge=2, le=100)
+    damage_type: DamageType
+    damage_bonus: int = 0
+
+
+class AttackChargeProfile(BaseModel):
+    minimum_move_ft: int = Field(ge=0)
+    max_target_size: CreatureSize | None = None
+    prone_max_target_size: CreatureSize | None = None
+    prone_save_ability: AbilityName | None = None
+    prone_save_dc: int | None = Field(default=None, ge=1, le=40)
+    bonus_damage: ChargeDamage | None = None
+    replacement_damage: ChargeDamage | None = None
+    follow_up_attack_id: str | None = None
+
+    @model_validator(mode="after")
+    def _save_fields_match(self) -> "AttackChargeProfile":
+        if (self.prone_save_ability is None) != (self.prone_save_dc is None):
+            raise ValueError("Charge Prone save ability and DC must be declared together.")
+        return self
+
+
 class Weapon(BaseModel):
     id: str
     name: str
@@ -117,6 +141,7 @@ class WeaponAttack(BaseModel):
     on_hit_save_damage: OnHitSaveDamage | None = None
     on_hit_condition_save: OnHitConditionSave | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
+    charge_profile: AttackChargeProfile | None = None
     rage_eligible: bool = False
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None

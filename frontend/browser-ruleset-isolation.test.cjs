@@ -44,3 +44,4 @@ assert.throws(
 console.log("Browser ruleset-isolation regressions passed.");
 require("./browser-ruleset-data.test.cjs");
 require("./browser-2014-mvp.test.cjs");
+require("./browser-2014-charge.test.cjs");

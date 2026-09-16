@@ -12,9 +12,10 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 78);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 83);
 for (const id of [
   "2014-giant-poisonous-snake", "2014-giant-scorpion", "2014-poisonous-snake", "2014-scorpion", "2014-wyvern",
+  "2014-elk", "2014-giant-elk", "2014-giant-sea-horse", "2014-minotaur-skeleton", "2014-rhinoceros",
 ]) assert.ok(window.IRON_PIT_BROWSER_MONSTERS_2014[id], `${id} must be in the certified 2014 browser lane`);
 
 window.IRON_PIT_DICE = deterministicDice();

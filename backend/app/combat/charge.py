@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available
 from app.combat.charge_follow_up import resolve_charge_follow_up
-from app.combat.charge_profiles import ChargeProfile, charge_profile_for_attack_id
+from app.combat.charge_profiles import ChargeProfile, charge_profile_for_attack, charge_profile_for_attack_id
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.opening_burst import opening_burst_available
@@ -10,11 +10,12 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 from app.domain.traits import CombatTrait
+from app.domain.weapons import OnHitConditionSave
 
 
 def _charge_attack(attacker: CombatantState) -> WeaponAttack | None:
     attacks = [attacker.template.weapon_attack, *attacker.template.alternate_weapon_attacks]
-    return next((attack for attack in attacks if charge_profile_for_attack_id(attack.id) is not None), None)
+    return next((attack for attack in attacks if charge_profile_for_attack(attack) is not None), None)
 
 
 def _target_size_allowed(defender: CombatantState, profile: ChargeProfile) -> bool:
@@ -26,7 +27,7 @@ def charge_profile(
 ) -> ChargeProfile | None:
     if CombatTrait.CHARGE not in attacker.template.combat_traits:
         return None
-    profile = charge_profile_for_attack_id(attack.id)
+    profile = charge_profile_for_attack(attack)
     if profile is None or movement_ft < profile.minimum_move_ft or not _target_size_allowed(defender, profile):
         return None
     return profile
@@ -36,7 +37,7 @@ def charge_can_close(
     attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, distance_ft: int,
     *, assume_precontact_runup: bool = False,
 ) -> bool:
-    profile = charge_profile_for_attack_id(attack.id)
+    profile = charge_profile_for_attack(attack)
     if not is_available(attacker, "action") or CombatTrait.CHARGE not in attacker.template.combat_traits or profile is None:
         return False
     enough_runup = assume_precontact_runup or distance_ft >= profile.minimum_move_ft
@@ -52,7 +53,14 @@ def _bonus_damage(profile: ChargeProfile):
 
 def _charged_attack(attack: WeaponAttack, profile: ChargeProfile) -> WeaponAttack:
     updates: dict[str, object] = {}
-    if profile.prone_max_target_size is not None:
+    if profile.prone_save_ability is not None and profile.prone_save_dc is not None:
+        updates["on_hit_condition_save"] = OnHitConditionSave(
+            save_ability=profile.prone_save_ability,
+            dc=profile.prone_save_dc,
+            condition_id="prone",
+            max_target_size=profile.prone_max_target_size,
+        )
+    elif profile.prone_max_target_size is not None:
         updates["knocks_prone_max_size"] = profile.prone_max_target_size
     replacement = profile.replacement_damage
     if replacement is not None:
@@ -78,7 +86,7 @@ def resolve_charge_closing(
     attack = _charge_attack(attacker.state)
     if attack is None or not opening_burst_available(round_number, attacker, setup):
         return [], sequence, False
-    profile = charge_profile_for_attack_id(attack.id)
+    profile = charge_profile_for_attack(attack)
     if profile is None or not charge_can_close(
         attacker.state, target.state, attack, profile.minimum_move_ft,
         assume_precontact_runup=True,
