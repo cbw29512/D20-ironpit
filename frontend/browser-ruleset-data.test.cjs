@@ -38,6 +38,11 @@ assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy b
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
 assert.equal(monsters2014.length, 4, "2014 MVP browser roster must contain exactly four certified monsters");
+assert.deepEqual(
+  monsters2014.map((monster) => monster.id).sort(),
+  ["2014-bandit", "2014-brown-bear", "2014-goblin", "2014-skeleton"],
+  "2014 browser test lane must expose only the certified MVP identities",
+);
 assertRuleset(monsters2014, "2014", "2014 MVP browser monsters");
 assert.equal(window.IRON_PIT_2014_MVP_READY, true);
 
