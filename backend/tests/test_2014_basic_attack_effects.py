@@ -6,13 +6,11 @@ from app.content.monster_source_2014 import load_monster_source_2014
 
 
 _ATTACK_EFFECT_IDS = {
-    "constrictor-snake",
-    "crocodile",
-    "flying-snake",
-    "giant-constrictor-snake",
-    "giant-crab",
-    "roc",
-    "tyrannosaurus-rex",
+    "constrictor-snake", "crocodile", "flying-snake", "giant-constrictor-snake",
+    "giant-crab", "roc", "tyrannosaurus-rex",
+}
+_SAVE_PRONE_IDS = {
+    "ankylosaurus", "dire-wolf", "giant-crocodile", "mastiff", "wolf", "worg",
 }
 
 
@@ -29,11 +27,11 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_67_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_73_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 67
-    assert _ATTACK_EFFECT_IDS <= {monster.id for monster in ready}
+    assert len(ready) == 73
+    assert _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS <= {monster.id for monster in ready}
     for monster in ready:
         template = compile_combatant(adapt_basic_monster_2014(monster))
         assert template.ruleset == "2014"
@@ -47,7 +45,6 @@ def test_basic_attack_effects_preserve_pinned_source_semantics():
         assert basic_blockers_2014(monster) == ()
         template = compile_combatant(adapt_basic_monster_2014(monster))
         runtime_attacks = _runtime_attacks(template)
-
         for source_attack in monster.attacks:
             runtime = runtime_attacks[_attack_id(monster.id, source_attack.id)]
             expected_damage = source_attack.on_hit_damage
@@ -58,16 +55,13 @@ def test_basic_attack_effects_preserve_pinned_source_semantics():
                 assert actual.dice_size == expected["dice_size"]
                 assert actual.damage_bonus == expected.get("bonus", 0)
                 assert _enum_value(actual.damage_type) == str(expected["type"]).lower()
-
             expected_control = source_attack.control_effect
             if expected_control is None:
                 assert runtime.control_effect is None
             else:
                 assert runtime.control_effect is not None
                 assert runtime.control_effect.grapple_escape_dc == expected_control["grapple_escape_dc"]
-                assert runtime.control_effect.restrains_while_grappled == expected_control.get(
-                    "restrains_while_grappled", False
-                )
+                assert runtime.control_effect.restrains_while_grappled == expected_control.get("restrains_while_grappled", False)
                 expected_size = expected_control.get("max_target_size")
                 actual_size = runtime.control_effect.max_target_size
                 assert (_enum_value(actual_size) if actual_size else None) == (
@@ -76,13 +70,34 @@ def test_basic_attack_effects_preserve_pinned_source_semantics():
             assert runtime.forbid_target_grappled_by_self == source_attack.forbid_target_grappled_by_self
 
 
-def test_unmodeled_save_and_charge_riders_still_fail_closed():
+def test_save_to_prone_riders_preserve_exact_pinned_source_semantics():
     source = {monster.id: monster for monster in load_monster_source_2014()}
-    wolf_bite = source["wolf"].attacks[0]
+    for monster_id in _SAVE_PRONE_IDS:
+        monster = source[monster_id]
+        assert basic_blockers_2014(monster) == ()
+        runtime_attacks = _runtime_attacks(compile_combatant(adapt_basic_monster_2014(monster)))
+        save_attacks = [attack for attack in monster.attacks if attack.on_hit_save_effect is not None]
+        assert save_attacks
+        for source_attack in save_attacks:
+            expected = source_attack.on_hit_save_effect
+            runtime = runtime_attacks[_attack_id(monster.id, source_attack.id)].on_hit_condition_save
+            assert expected is not None and runtime is not None
+            assert _enum_value(runtime.save_ability) == str(expected["save_ability"]).lower()
+            assert runtime.dc == expected["dc"]
+            assert runtime.condition_id == "prone"
+            expected_size = expected.get("max_target_size")
+            assert (_enum_value(runtime.max_target_size) if runtime.max_target_size else None) == (
+                str(expected_size).lower() if expected_size is not None else None
+            )
+
+
+def test_unmodeled_poison_save_and_charge_riders_still_fail_closed():
+    source = {monster.id: monster for monster in load_monster_source_2014()}
+    poison_bite = source["poisonous-snake"].attacks[0]
     elk_ram = source["elk"].attacks[0]
-    assert wolf_bite.on_hit_save_effect is not None
+    assert poison_bite.on_hit_save_effect is not None
     assert elk_ram.charge_profile is not None
-    assert supports_basic_attack_effects_2014(wolf_bite) is False
+    assert supports_basic_attack_effects_2014(poison_bite) is False
     assert supports_basic_attack_effects_2014(elk_ram) is False
-    assert basic_blockers_2014(source["wolf"]) == ("attack:complex",)
+    assert basic_blockers_2014(source["poisonous-snake"]) == ("attack:complex",)
     assert basic_blockers_2014(source["elk"]) == ("attack:complex",)
