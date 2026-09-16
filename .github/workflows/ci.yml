@@ -66,6 +66,7 @@ jobs:
           python scripts/prepare_static_site.py
           test -s frontend/data/srd_5_2_1_monsters.json
           test -s frontend/browser-monsters-generated.js
+          test -s frontend/browser-monsters-2014.js
           test -s frontend/browser-spell-effects.js
           grep -q '"id":"bless"' frontend/browser-spell-effects.js
       - name: Upload canonical static artifacts
@@ -75,13 +76,14 @@ jobs:
           path: |
             frontend/browser-heroes.js
             frontend/browser-monsters-generated.js
+            frontend/browser-monsters-2014.js
             frontend/browser-spell-effects.js
             frontend/data/srd_5_2_1_monsters.json
           retention-days: 1
       - name: Enforce generated static parity
         run: |
-          git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json
-          test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
+          git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json
+          test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
       - name: Certify Python rules reference
         working-directory: backend
         run: pytest -q
@@ -96,6 +98,7 @@ jobs:
           node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-dice-recording.test.cjs
           node frontend/browser-engine.test.cjs
+          node frontend/browser-ruleset-isolation.test.cjs
           node frontend/browser-formation.test.cjs
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-swarm.test.cjs
