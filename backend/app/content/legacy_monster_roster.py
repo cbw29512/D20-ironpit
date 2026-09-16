@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from app.content.arena_eligibility import filter_standard_arena_eligible
 from app.content.demo import build_goblin_warrior
+from app.content.legacy_migrated_monsters import (
+    build_legacy_dire_wolf,
+    build_legacy_giant_constrictor_snake,
+    build_legacy_wolf,
+)
 from app.content.monster_blood_hawk import build_blood_hawk
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_giant_crocodile import build_giant_crocodile
@@ -44,9 +49,17 @@ from app.domain.models import CombatantTemplate
 
 
 def build_legacy_monster_templates(*, include_capability_migrated: bool = True) -> list[CombatantTemplate]:
-    """Build migration/parity monsters; exporter may omit already capability-backed entries."""
-    wolf_entries = [build_wolf(), build_dire_wolf()] if include_capability_migrated else []
-    snake_entries = [build_giant_constrictor_snake()] if include_capability_migrated else []
+    """Build migration/parity monsters without making generated data an authoring input."""
+    wolf_entries = (
+        [build_wolf(), build_dire_wolf()]
+        if include_capability_migrated
+        else [build_legacy_wolf(), build_legacy_dire_wolf()]
+    )
+    snake_entries = (
+        [build_giant_constrictor_snake()]
+        if include_capability_migrated
+        else [build_legacy_giant_constrictor_snake()]
+    )
     monsters = [
         build_goblin_warrior(), build_goblin_minion(), build_hobgoblin_warrior(), build_kobold_warrior(), build_goblin_boss(),
         build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(), build_blood_hawk(),
