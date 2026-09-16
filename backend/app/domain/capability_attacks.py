@@ -10,6 +10,30 @@ from app.domain.size import CreatureSize
 from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind
 
 
+class ChargeDamageDefinition(BaseModel):
+    dice_count: int = Field(ge=1, le=20)
+    dice_size: int = Field(ge=2, le=100)
+    damage_type: DamageType
+    damage_bonus: int = 0
+
+
+class ChargeProfileDefinition(BaseModel):
+    minimum_move_ft: int = Field(ge=0)
+    max_target_size: CreatureSize | None = None
+    prone_max_target_size: CreatureSize | None = None
+    prone_save_ability: AbilityName | None = None
+    prone_save_dc: int | None = Field(default=None, ge=1, le=40)
+    bonus_damage: ChargeDamageDefinition | None = None
+    replacement_damage: ChargeDamageDefinition | None = None
+    follow_up_attack_id: str | None = None
+
+    @model_validator(mode="after")
+    def validate_prone_save(self) -> "ChargeProfileDefinition":
+        if (self.prone_save_ability is None) != (self.prone_save_dc is None):
+            raise ValueError("Charge Prone save ability and DC must be declared together.")
+        return self
+
+
 class AttackCapabilityDefinition(BaseModel):
     id: str
     name: str
@@ -35,6 +59,7 @@ class AttackCapabilityDefinition(BaseModel):
     rage_eligible: bool = False
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
+    charge_profile: ChargeProfileDefinition | None = None
     forbid_target_grappled_by_self: bool = False
 
     @model_validator(mode="after")
