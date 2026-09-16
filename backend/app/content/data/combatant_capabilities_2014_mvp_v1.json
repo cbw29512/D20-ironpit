@@ -1,6 +1,71 @@
 [
   {
     "schema_version": 1,
+    "id": "2014-goblin",
+    "name": "Goblin",
+    "archetype": "2014 Goblin",
+    "challenge_rating": "1/4",
+    "kind": "monster",
+    "ruleset": "2014",
+    "size": "small",
+    "ability_scores": {
+      "strength": 8,
+      "dexterity": 14,
+      "constitution": 10,
+      "intelligence": 10,
+      "wisdom": 8,
+      "charisma": 8
+    },
+    "armor_class": 15,
+    "max_hp": 7,
+    "speed_ft": 30,
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "2014-goblin-scimitar",
+        "weapon_id": "2014-goblin-scimitar",
+        "name": "Scimitar",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "slashing",
+        "animation": "slash",
+        "reach_ft": 5
+      },
+      {
+        "id": "2014-goblin-shortbow",
+        "weapon_id": "2014-goblin-shortbow",
+        "name": "Shortbow",
+        "attack_kind": "ranged",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "projectile",
+        "normal_range_ft": 80,
+        "long_range_ft": 320,
+        "projectile": "arrow"
+      }
+    ],
+    "primary_attack_id": "2014-goblin-scimitar",
+    "saving_throw_bonuses": {
+      "strength": -1,
+      "dexterity": 2,
+      "constitution": 0,
+      "intelligence": 0,
+      "wisdom": -1,
+      "charisma": -1
+    },
+    "skill_bonuses": {"stealth": 6},
+    "source_trait_names": ["Nimble Escape"],
+    "visual": {
+      "armor": "leather",
+      "main_hand": "scimitar",
+      "body_style": "goblinoid"
+    },
+    "source": "SRD 5.1 (2014) Goblin"
+  },
+  {
+    "schema_version": 1,
     "id": "2014-bandit",
     "name": "Bandit",
     "archetype": "2014 Bandit",
