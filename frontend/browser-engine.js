@@ -9,7 +9,6 @@
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
   const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
   const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
-  function cloneTemplate(template) { return structuredClone(template); }
   function selectedRuleset(selection) {
     try {
       const ruleset = selection.ruleset || "2024";
@@ -53,12 +52,12 @@
       const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
       const heroMembers = selection.hero_ids.map((id, index) => {
         if (!registry.heroes[id]) throw new Error(`Unknown certified Team A combatant for ${requestedRuleset}: ${id}`);
-        const template = cloneTemplate(registry.heroes[id]);
+        const template = structuredClone(registry.heroes[id]);
         return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", position_ft: F().startingPosition(template, "heroes"), state: S().buildState(template) };
       });
       const monsterMembers = selection.monster_ids.map((id, index) => {
         if (!registry.monsters[id]) throw new Error(`Unknown certified Team B combatant for ${requestedRuleset}: ${id}`);
-        const template = cloneTemplate(registry.monsters[id]);
+        const template = structuredClone(registry.monsters[id]);
         return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: F().startingPosition(template, "monsters"), state: S().buildState(template) };
       });
       const ruleset = resolveRuleset([...heroMembers, ...monsterMembers]);
@@ -143,9 +142,7 @@
     return finish(setup, init, events, "draw", resolvedRound, sequence);
   }
   function finish(setup, init, events, result, round, sequence) {
-    const teamA = setup.ruleset === "2014" ? "Heroes" : "Heroes";
-    const teamB = setup.ruleset === "2014" ? "Monsters" : "Monsters";
-    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? `${teamA} wins the deathmatch.` : result === "monsters_win" ? `${teamB} wins the deathmatch.` : "The fight reaches the arena round limit and ends in a draw." });
+    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes wins the deathmatch." : result === "monsters_win" ? "Monsters wins the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
     return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: setup.ruleset };
   }
   window.IRON_PIT_BROWSER_ENGINE = { runEncounter, resolveRuleset, selectedRuleset };
