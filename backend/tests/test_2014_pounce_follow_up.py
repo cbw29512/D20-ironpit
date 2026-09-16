@@ -15,8 +15,8 @@ def _opening_pair():
         state=build_combatant_state(_template("2014-allosaurus")),
     )
     target = EncounterCombatant(
-        combatant_id="hero:commoner", side="heroes", position_ft=0,
-        state=build_combatant_state(_template("2014-commoner")),
+        combatant_id="hero:bandit", side="heroes", position_ft=0,
+        state=build_combatant_state(_template("2014-bandit")),
     )
     attacker.state.initiative_total = 20
     target.state.initiative_total = 10
