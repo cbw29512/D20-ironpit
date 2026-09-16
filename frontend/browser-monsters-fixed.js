@@ -7,7 +7,7 @@
   });
 
   const monster = (id, name, size, ac, hp, speed, initiative, attack, page, extra = {}) => ({
-    id, name, archetype: name, challenge_rating: "0", kind: "monster", size,
+    id, name, archetype: name, challenge_rating: "0", kind: "monster", ruleset: "2024", size,
     armor_class: ac, max_hp: hp, speed_ft: speed, initiative_bonus: initiative,
     attacks: [attack], primary_attack_id: attack.id, traits: [], resources: {},
     source: `SRD 5.2.1 ${name} p. ${page}`, ...extra,
