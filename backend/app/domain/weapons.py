@@ -1,33 +1,15 @@
 from __future__ import annotations
 
-from enum import StrEnum
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ConditionName, HitControlEffect
+from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.charge import AttackChargeProfile, ChargeDamage
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
+from app.domain.weapons_base import DamageType, WeaponAttackKind
 from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
-class DamageType(StrEnum):
-    ACID = "acid"
-    BLUDGEONING = "bludgeoning"
-    COLD = "cold"
-    FIRE = "fire"
-    FORCE = "force"
-    LIGHTNING = "lightning"
-    NECROTIC = "necrotic"
-    PIERCING = "piercing"
-    POISON = "poison"
-    PSYCHIC = "psychic"
-    RADIANT = "radiant"
-    SLASHING = "slashing"
-    THUNDER = "thunder"
-
-
-class WeaponAttackKind(StrEnum):
-    MELEE = "melee"
-    RANGED = "ranged"
 
 
 class ConditionalDamage(BaseModel):
@@ -72,38 +54,8 @@ class OnHitSaveDamage(BaseModel):
 class OnHitConditionSave(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
-    condition_id: ConditionName
+    condition_id: Literal["prone"]
     max_target_size: CreatureSize | None = None
-
-    @model_validator(mode="after")
-    def _require_supported_condition(self) -> "OnHitConditionSave":
-        if self.condition_id != "prone":
-            raise ValueError("Current on-hit condition saves support Prone only.")
-        return self
-
-
-class ChargeDamage(BaseModel):
-    dice_count: int = Field(ge=1, le=20)
-    dice_size: int = Field(ge=2, le=100)
-    damage_type: DamageType
-    damage_bonus: int = 0
-
-
-class AttackChargeProfile(BaseModel):
-    minimum_move_ft: int = Field(ge=0)
-    max_target_size: CreatureSize | None = None
-    prone_max_target_size: CreatureSize | None = None
-    prone_save_ability: AbilityName | None = None
-    prone_save_dc: int | None = Field(default=None, ge=1, le=40)
-    bonus_damage: ChargeDamage | None = None
-    replacement_damage: ChargeDamage | None = None
-    follow_up_attack_id: str | None = None
-
-    @model_validator(mode="after")
-    def _save_fields_match(self) -> "AttackChargeProfile":
-        if (self.prone_save_ability is None) != (self.prone_save_dc is None):
-            raise ValueError("Charge Prone save ability and DC must be declared together.")
-        return self
 
 
 class Weapon(BaseModel):
