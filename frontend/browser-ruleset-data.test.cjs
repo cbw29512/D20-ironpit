@@ -23,6 +23,31 @@ for (const fixture of [
 ]) load(fixture);
 assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy browser monster fixtures");
 
+load("browser-heroes-2014.js");
+const heroes2014 = Object.values(window.IRON_PIT_BROWSER_HEROES_2014);
+assert.equal(heroes2014.length, 10, "2014 browser hero roster must contain Karnok levels 1 through 10");
+assertRuleset(heroes2014, "2014", "2014 browser heroes");
+assert.equal(window.IRON_PIT_2014_HEROES_READY, true);
+assert.deepEqual(heroes2014.map((hero) => hero.level).sort((a, b) => a - b), [1,2,3,4,5,6,7,8,9,10]);
+for (const hero of heroes2014) {
+  assert.equal(hero.kind, "character", `${hero.id} must remain a character`);
+  assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not leak 2024 Weapon Mastery`);
+  for (const attack of hero.attacks) {
+    assert.equal(Object.hasOwn(attack, "masteryProperty"), false, `${hero.id}:${attack.id} must not contain mastery metadata`);
+  }
+}
+const karnok3 = window.IRON_PIT_BROWSER_HEROES_2014["karnok-stoneward-2014-l3"];
+const karnok5 = window.IRON_PIT_BROWSER_HEROES_2014["karnok-stoneward-2014-l5"];
+const karnok7 = window.IRON_PIT_BROWSER_HEROES_2014["karnok-stoneward-2014-l7"];
+const karnok10 = window.IRON_PIT_BROWSER_HEROES_2014["karnok-stoneward-2014-l10"];
+assert.equal(karnok3.critical_hit_minimum, 19, "2014 Champion Improved Critical begins at level 3");
+assert.equal(karnok5.attack_action.slots.length, 2, "2014 Fighter Extra Attack begins at level 5");
+assert.equal(karnok7.initiative_bonus, 4, "2014 Remarkable Athlete must affect initiative");
+assert.deepEqual(karnok10.fighting_styles, ["Defense", "Archery"]);
+const longbow10 = karnok10.attacks.find((attack) => attack.weaponId === "longbow");
+assert.ok(longbow10, "2014 level 10 Fighter must expose the certified longbow");
+assert.equal(longbow10.bonus, 8, "Archery Fighting Style must add +2 to the level 10 longbow attack");
+
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
 assert.equal(monsters2014.length, 100, "2014 browser roster must contain exactly 100 certified monsters");
