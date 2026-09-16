@@ -15,10 +15,7 @@ _PB = re.compile(r"\bPB\s+(?P<pb>[+-]\d+)\b")
 
 def _profile(strength: int, proficiency_bonus: int) -> UnarmedStrikeDamage:
     modifier = (strength - 10) // 2
-    return UnarmedStrikeDamage(
-        attack_bonus=modifier + proficiency_bonus,
-        damage=max(0, 1 + modifier),
-    )
+    return UnarmedStrikeDamage(attack_bonus=modifier + proficiency_bonus, damage=max(0, 1 + modifier))
 
 
 def monster_unarmed_profile(row: dict[str, object]) -> UnarmedStrikeDamage:
@@ -41,6 +38,12 @@ def _character_profiles() -> dict[str, UnarmedStrikeDamage]:
     }
 
 
+def _template_character_profile(template: CombatantTemplate) -> UnarmedStrikeDamage | None:
+    if template.level is None or template.ability_scores is None:
+        return None
+    return _profile(template.ability_scores.strength, 2 + (template.level - 1) // 4)
+
+
 def complete_unarmed_opportunity_profiles(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
         characters = _character_profiles() if any(item.kind == "character" for item in templates) else {}
@@ -52,7 +55,7 @@ def complete_unarmed_opportunity_profiles(templates: list[CombatantTemplate]) ->
         completed: list[CombatantTemplate] = []
         for template in templates:
             if template.kind == "character":
-                profile = characters.get(template.id)
+                profile = characters.get(template.id) or _template_character_profile(template)
             else:
                 row = monster_rows.get(template.name)
                 profile = monster_unarmed_profile(row) if row is not None else None
