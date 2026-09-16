@@ -42,8 +42,8 @@ def _attacks(level: int) -> tuple[WeaponAttack, WeaponAttack]:
             attack_ability_modifier=strength_mod,
         ),
         WeaponAttack(
-            id="karnok-2014-light-crossbow",
-            weapon=build_weapon_2014("light-crossbow"),
+            id="karnok-2014-longbow",
+            weapon=build_weapon_2014("longbow"),
             attack_bonus=row.proficiency_bonus + dexterity_mod + archery_bonus,
             damage_bonus=dexterity_mod,
             attack_ability="dexterity",
@@ -70,7 +70,7 @@ def _attack_action(level: int) -> AttackActionDefinition | None:
     row = fighter_2014_level(level)
     if row.attack_count <= 1:
         return None
-    choices = ["karnok-2014-greatsword", "karnok-2014-light-crossbow"]
+    choices = ["karnok-2014-greatsword", "karnok-2014-longbow"]
     return AttackActionDefinition(
         id="extra-attack",
         name="Extra Attack",
@@ -83,7 +83,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
     """Compile the legal 2014 Human Champion Fighter progression for Iron Pit."""
     try:
         row = fighter_2014_level(level)
-        greatsword, crossbow = _attacks(level)
+        greatsword, longbow = _attacks(level)
         half_proficiency = math.ceil(row.proficiency_bonus / 2) if row.remarkable_athlete else 0
         dexterity_mod = _modifier(row.dexterity)
         strength_mod = _modifier(row.strength)
@@ -111,7 +111,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
                 critical_hit_minimum=row.critical_hit_minimum,
             ),
             weapon_attack=greatsword,
-            alternate_weapon_attacks=[crossbow],
+            alternate_weapon_attacks=[longbow],
             attack_action=_attack_action(level),
             saving_throw_bonuses={
                 "strength": row.proficiency_bonus + strength_mod,
