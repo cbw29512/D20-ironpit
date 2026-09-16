@@ -47,7 +47,7 @@ def _features(level: int) -> list[FeatureAudit]:
         _audit("fighting-style-defense", "Defense", "class"),
         _audit("second-wind", "Second Wind", "class"),
         _audit("greatsword", "Greatsword", "equipment", weapon="greatsword"),
-        _audit("light-crossbow", "Light Crossbow", "equipment", weapon="light-crossbow"),
+        _audit("longbow", "Longbow", "equipment", weapon="longbow"),
     ]
     if level >= 2:
         features.append(_audit("action-surge", "Action Surge", "class"))
@@ -104,7 +104,7 @@ def build_karnok_stoneward_2014_profile(level: int) -> CharacterBuildProfile:
             ),
             class_equipment_option="package",
             class_equipment=[
-                "Chain Mail", "Greatsword", "Longsword", "Light Crossbow", "20 Bolts", "Dungeoneer's Pack",
+                "Chain Mail", "Greatsword", "Longbow", "Light Crossbow", "20 Bolts", "Dungeoneer's Pack",
             ],
             background_equipment_option="package",
             background_equipment=[
@@ -119,7 +119,7 @@ def build_karnok_stoneward_2014_profile(level: int) -> CharacterBuildProfile:
                 "Basic Rules 2014: Human — Ability Score Increase",
                 "Basic Rules 2014: Fighter — levels 1-10 and Champion",
                 "Basic Rules 2014: Soldier background",
-                "Basic Rules 2014: Equipment — Chain Mail, Greatsword, Light Crossbow",
+                "Basic Rules 2014: Equipment — Chain Mail, Greatsword, Longbow, Light Crossbow",
             ],
         )
     except Exception:
