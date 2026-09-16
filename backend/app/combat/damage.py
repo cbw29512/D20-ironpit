@@ -15,7 +15,7 @@ from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
 from app.combat.savage_attacks import savage_attacks_bonus_die
 from app.combat.sneak_attack import sneak_attack_bonus_damage
-from app.domain.models import CombatantState, DamageType, DiceRoll, RollMode, WeaponAttack
+from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def resolve_weapon_damage(
     bonus_damage: BonusDamageSpec | None = None,
     target: CombatantState | None = None,
     sneak_attack_ally_available: bool = False,
-) -> tuple[DiceRoll, list]:
+) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
         weapon = attack.weapon
