@@ -7,6 +7,7 @@ from typing import Any
 
 from app.content.canonical_hero_policy import canonical_spell_package
 from app.content.certified_heroes import build_certified_hero_entries
+from app.content.certified_heroes_2014 import build_certified_hero_entries_2014
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -218,7 +219,11 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["heroic_warrior"] = True
     if progression.studied_attacks:
         row["studied_attacks"] = True
-    package = canonical_spell_package(class_id, level) if template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions or template.healing_actions else None
+    has_spells = bool(
+        template.spell_save_actions or template.spell_attack_actions
+        or template.defensive_spell_actions or template.healing_actions
+    )
+    package = canonical_spell_package(class_id, level) if template.ruleset == "2024" and has_spells else None
     if package is not None:
         row["canonical_cantrips"] = [_spell_choice(item) for item in package.cantrips]
         row["canonical_prepared_spells"] = [_spell_choice(item) for item in package.spells]
@@ -244,9 +249,19 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
 
 
 def render() -> str:
-    rows = [_template(key, template) for key, template in build_certified_hero_entries()]
-    payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
-    return "/* GENERATED from audited Python RAW-ready hero templates. Do not hand-edit. */\n(() => {\n  \"use strict\";\n  const heroes = " + payload + ";\n  window.IRON_PIT_BROWSER_HEROES = Object.fromEntries(heroes.map((item) => [item.id, item]));\n})();\n"
+    rows_2024 = [_template(key, template) for key, template in build_certified_hero_entries()]
+    rows_2014 = [_template(key, template) for key, template in build_certified_hero_entries_2014()]
+    payload_2024 = json.dumps(rows_2024, separators=(",", ":"), sort_keys=True)
+    payload_2014 = json.dumps(rows_2014, separators=(",", ":"), sort_keys=True)
+    return (
+        "/* GENERATED from audited Python RAW-ready hero templates. Do not hand-edit. */\n"
+        "(() => {\n  \"use strict\";\n"
+        "  const heroes2024 = " + payload_2024 + ";\n"
+        "  const heroes2014 = " + payload_2014 + ";\n"
+        "  window.IRON_PIT_BROWSER_HEROES = Object.fromEntries(heroes2024.map((item) => [item.id, item]));\n"
+        "  window.IRON_PIT_BROWSER_HEROES_2014 = Object.fromEntries(heroes2014.map((item) => [item.id, item]));\n"
+        "})();\n"
+    )
 
 
 def main() -> None:
