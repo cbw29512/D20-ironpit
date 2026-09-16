@@ -9,6 +9,10 @@ _FIXED_DAMAGE_IDS = {
 }
 
 
+def _runtime_attacks(template):
+    return [template.weapon_attack, *template.alternate_weapon_attacks]
+
+
 def test_fixed_damage_only_batch_is_admitted_and_compiles():
     source = {monster.id: monster for monster in load_monster_source_2014()}
     for monster_id in _FIXED_DAMAGE_IDS:
@@ -16,10 +20,11 @@ def test_fixed_damage_only_batch_is_admitted_and_compiles():
         assert basic_blockers_2014(monster) == ()
         definition = adapt_basic_monster_2014(monster)
         template = compile_combatant(definition)
+        runtime_attacks = _runtime_attacks(template)
         assert template.ruleset == "2014"
-        assert len(definition.attacks) == len(monster.attacks)
+        assert len(definition.attacks) == len(monster.attacks) == len(runtime_attacks)
         for source_attack, adapted_attack, compiled_attack in zip(
-            monster.attacks, definition.attacks, template.attacks, strict=True
+            monster.attacks, definition.attacks, runtime_attacks, strict=True
         ):
             assert source_attack.damage.dice_count == 0
             assert adapted_attack.damage is None
