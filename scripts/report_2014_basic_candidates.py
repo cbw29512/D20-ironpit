@@ -53,6 +53,19 @@ def _single_blocker_families(monsters):
     return names
 
 
+def _trait_only_details(monsters):
+    rows = []
+    for monster in monsters:
+        if basic_blockers_2014(monster) != ("source:trait",):
+            continue
+        unsupported = [
+            trait for trait in monster.trait_names
+            if trait not in _ARENA_NEUTRAL_TRAITS and not is_arena_neutral_bonus_action(trait)
+        ]
+        rows.append((monster.name, unsupported))
+    return rows
+
+
 def main() -> None:
     monsters = load_monster_source_2014()
     ready = [monster for monster in monsters if not basic_blockers_2014(monster)]
@@ -68,6 +81,9 @@ def main() -> None:
     print("Single-blocker unlocks:")
     for blocker, names in sorted(_single_blocker_families(monsters).items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"  {len(names):3}  {blocker}: {' | '.join(names)}")
+    print("Trait-only details:")
+    for name, traits in _trait_only_details(monsters):
+        print(f"  {name}: {' | '.join(traits)}")
     attack_counts, attack_names = _attack_shapes(monsters)
     print("Complex attack shapes:")
     for field, count in attack_counts.most_common():
