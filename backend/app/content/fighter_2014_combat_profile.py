@@ -35,8 +35,8 @@ def build_karnok_stoneward_2014_combat_profile(level: int) -> PregenCombatProfil
         attacks = (
             AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
             AttackExpectation(
-                "light-crossbow", "dexterity", 1, 8, "piercing",
-                normal_range_ft=80, long_range_ft=320,
+                "longbow", "dexterity", 1, 8, "piercing",
+                normal_range_ft=150, long_range_ft=600,
                 style_attack_bonus=2 if "Archery" in row.fighting_styles else 0,
             ),
         )
