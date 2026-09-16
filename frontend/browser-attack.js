@@ -3,8 +3,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
-  const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
-  const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE;
+  const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null }, HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE;
   const TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) };
   const STUDY = () => window.IRON_PIT_BROWSER_STUDIED_ATTACKS || { apply: () => false };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
@@ -79,18 +78,13 @@
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = "", vexApplied = false, studiedApplied = false;
-    let hitSave = null, saveDamage = null, topple = { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }; const applied = [];
+    let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = "", vexApplied = false, studiedApplied = false, hitSave = null, saveDamage = null;
+    let topple = { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }; const applied = [];
     if (hit) {
-      const affectedStates = states(extra.setup);
-      const damage = HD().resolve(
-        attacker.state, actualTarget.state, attack, critical, mode, extra.turnKey || `${round}:${attacker.combatant_id}`,
-        { bonusDamage: extra.bonusDamage || null,
-          sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false,
-          affectedStates },
-      );
-      damageComponents = damage.damageComponents; damageRoll = damage.damageRoll;
-      damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
+      const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
+        extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
+          sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates });
+      damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
