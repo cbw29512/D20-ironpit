@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from typing import get_args
-
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_source_2014 import SourceAttack2014
-from app.domain.actions import ConditionName
+from app.content.monster_zero_hp_save_rider_2014 import (
+    ZERO_HP_SAVE_RIDER_KEYS_2014,
+    supports_zero_hp_save_rider_2014,
+    zero_hp_save_rider_2014,
+)
 from app.domain.capability_effects import (
     AttackEffectDefinition,
     DamageEffectDefinition,
@@ -15,17 +17,14 @@ from app.domain.capability_effects import (
 )
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
-from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
 
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
-_CONDITIONS = frozenset(get_args(ConditionName))
 _DAMAGE_KEYS = frozenset({"average", "bonus", "dice_count", "dice_size", "type"})
 _CONTROL_KEYS = frozenset({"grapple_escape_dc", "max_target_size", "restrains_while_grappled"})
 _SAVE_CONDITION_KEYS = frozenset({"condition_id", "dc", "max_target_size", "save_ability"})
-_ZERO_HP_KEYS = frozenset({"zero_hp_stable", "zero_hp_condition_ids", "zero_hp_duration_rounds"})
 _SAVE_DAMAGE_KEYS = frozenset({
     "damage_bonus", "damage_dice_count", "damage_dice_size", "damage_type", "dc", "save_ability", "success_damage",
-}) | _ZERO_HP_KEYS
+}) | ZERO_HP_SAVE_RIDER_KEYS_2014
 _ABILITIES = frozenset({"strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"})
 
 
@@ -63,21 +62,6 @@ def _supported_save_condition(value: object) -> bool:
     )
 
 
-def _supported_zero_hp_rider(value: dict) -> bool:
-    present = _ZERO_HP_KEYS & set(value)
-    if not present:
-        return True
-    conditions = value.get("zero_hp_condition_ids")
-    return (
-        present == _ZERO_HP_KEYS
-        and value.get("zero_hp_stable") is True
-        and isinstance(conditions, list) and bool(conditions)
-        and all(isinstance(item, str) and item in _CONDITIONS for item in conditions)
-        and isinstance(value.get("zero_hp_duration_rounds"), int)
-        and int(value["zero_hp_duration_rounds"]) > 0
-    )
-
-
 def _supported_save_damage(value: object) -> bool:
     if not isinstance(value, dict) or not set(value) <= _SAVE_DAMAGE_KEYS:
         return False
@@ -91,7 +75,7 @@ def _supported_save_damage(value: object) -> bool:
         and isinstance(value["dc"], int) and 0 < int(value["dc"]) <= 40
         and str(value["save_ability"]).lower() in _ABILITIES
         and value["success_damage"] in {"none", "half"}
-        and _supported_zero_hp_rider(value)
+        and supports_zero_hp_save_rider_2014(value)
     )
 
 
@@ -140,18 +124,11 @@ def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefi
                 max_target_size=CreatureSize(str(max_size).lower()) if max_size is not None else None,
             ))
         else:
-            rider = None
-            if row.get("zero_hp_stable") is True:
-                rider = ZeroHpSaveDamageRider(
-                    stable=True,
-                    condition_ids=list(row["zero_hp_condition_ids"]),
-                    duration_rounds=int(row["zero_hp_duration_rounds"]),
-                )
             effects.append(SaveDamageEffectDefinition(
                 source=attack.name, save_ability=str(row["save_ability"]).lower(), dc=int(row["dc"]),
                 dice=DiceSpec(count=int(row["damage_dice_count"]), size=int(row["damage_dice_size"]), bonus=int(row.get("damage_bonus", 0))),
                 damage_type=DamageType(str(row["damage_type"]).lower()), success_damage=str(row["success_damage"]),
-                zero_hp_rider=rider,
+                zero_hp_rider=zero_hp_save_rider_2014(row),
             ))
     if attack.control_effect is not None:
         row = attack.control_effect
