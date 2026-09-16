@@ -11,9 +11,7 @@
   const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
-
   function cloneTemplate(template) { return structuredClone(template); }
-
   function resolveRuleset(members) {
     try {
       const rulesets = new Set(members.map((member) => member.state.template.ruleset || "2024"));
@@ -25,7 +23,6 @@
       throw error;
     }
   }
-
   function placeStandardGrid(heroMembers, monsterMembers) {
     try {
       if (!M()?.buildStandardMap || !M()?.buildHeroDeploymentZone || !M()?.buildMonsterDeploymentZone || !G()?.packZone || !G()?.apply) {
