@@ -50,8 +50,11 @@ class AttackCapabilityDefinition(BaseModel):
         control_count = sum(effect.kind in {"grapple", "condition", "save_condition"} for effect in self.effects)
         if control_count > 1:
             raise ValueError("Current runtime supports one persistent control rider per attack.")
-        if self.mastery_property == "Topple" and any(effect.kind == "save_condition" for effect in self.effects):
-            raise ValueError("One attack cannot combine Topple with another on-hit condition save.")
+        save_count = sum(effect.kind in {"save_condition", "save_damage"} for effect in self.effects)
+        if save_count > 1:
+            raise ValueError("Current runtime supports one on-hit saving throw rider per attack.")
+        if self.mastery_property == "Topple" and save_count:
+            raise ValueError("One attack cannot combine Topple with another on-hit saving throw.")
         return self
 
 
