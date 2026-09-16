@@ -43,7 +43,12 @@ def _attack() -> WeaponAttack:
 
 def _target(hp: int):
     source = build_goblin_warrior()
-    template = source.model_copy(update={"max_hp": 40}, deep=True)
+    bonuses = dict(source.saving_throw_bonuses)
+    bonuses["constitution"] = 0
+    template = source.model_copy(
+        update={"max_hp": 40, "saving_throw_bonuses": bonuses},
+        deep=True,
+    )
     state = build_combatant_state(template)
     state.current_hp = hp
     return state
