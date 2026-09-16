@@ -43,17 +43,19 @@ from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunit
 from app.domain.models import CombatantTemplate
 
 
-def build_legacy_monster_templates() -> list[CombatantTemplate]:
-    """Build the pre-capability monster roster for migration/parity checks only."""
+def build_legacy_monster_templates(*, include_capability_migrated: bool = True) -> list[CombatantTemplate]:
+    """Build migration/parity monsters; exporter may omit already capability-backed entries."""
+    wolf_entries = [build_wolf(), build_dire_wolf()] if include_capability_migrated else []
+    snake_entries = [build_giant_constrictor_snake()] if include_capability_migrated else []
     monsters = [
         build_goblin_warrior(), build_goblin_minion(), build_hobgoblin_warrior(), build_kobold_warrior(), build_goblin_boss(),
         build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(), build_blood_hawk(),
-        build_axe_beak(), build_giant_lizard(), build_wolf(), build_dire_wolf(), build_black_bear(), build_brown_bear(),
+        build_axe_beak(), build_giant_lizard(), *wolf_entries, build_black_bear(), build_brown_bear(),
         build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(), build_jackal(),
         build_boar(), build_elk(), build_giant_boar(), *build_charge_expansion(), build_goat(), build_merfolk_skirmisher(),
         build_hippogriff(), *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(),
         *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(), *build_venom_monsters(),
-        *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(), build_tyrannosaurus_rex(),
+        *build_expansion_four(), build_giant_crocodile(), *snake_entries, build_tyrannosaurus_rex(),
         *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
     monsters = complete_monster_movement_modes(monsters)
