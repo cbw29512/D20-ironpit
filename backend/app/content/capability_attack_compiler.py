@@ -57,6 +57,8 @@ def _compile_charge(definition) -> AttackChargeProfile | None:
         bonus_damage=damage(definition.bonus_damage),
         replacement_damage=damage(definition.replacement_damage),
         follow_up_attack_id=definition.follow_up_attack_id,
+        follow_up_required_target_condition=definition.follow_up_required_target_condition,
+        follow_up_action_cost=definition.follow_up_action_cost,
     )
 
 
