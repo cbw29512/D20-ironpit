@@ -2,7 +2,7 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll, savingThrowFlat: () => 0 };
   const S = () => window.IRON_PIT_BROWSER_SAVES;
 
   function use(state, ability) {
@@ -16,7 +16,7 @@
     const roll = M().applyD20Bonus(
       state,
       "saving-throw-bonus-die",
-      R().d20(saveBonus + bonus, S().saveMode(state, ability)),
+      R().d20(saveBonus + M().savingThrowFlat(state) + bonus, S().saveMode(state, ability)),
     );
     const suffix = bonus ? ` +${bonus}` : "";
     return { ...roll, notation: `${roll.notation} [Indomitable${suffix}]` };
