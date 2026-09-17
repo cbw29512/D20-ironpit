@@ -36,20 +36,11 @@
     state.action_available = false; state.bonus_action_available = false; state.movement_remaining_ft = 0;
   }
 
-  function survivorHeal(state) {
-    const amount = state.template.survivor_heal_amount || 0;
-    if (amount <= 0 || state.current_hp <= 0) return 0;
-    const maximum = effectiveMaxHp(state);
-    if (state.current_hp * 2 > maximum) return 0;
-    const before = state.current_hp;
-    state.current_hp = Math.min(maximum, state.current_hp + amount);
-    return state.current_hp - before;
-  }
-
   function refreshReaction(state) { state.reaction_available = true; }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
-    survivorHeal(state);
+    const survivor = state.template.survivor_heal_amount || 0, maximum = effectiveMaxHp(state);
+    if (survivor > 0 && state.current_hp > 0 && state.current_hp * 2 <= maximum) state.current_hp = Math.min(maximum, state.current_hp + survivor);
     window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
   }
 
@@ -147,6 +138,6 @@
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
     hasAdjacentActiveAlly, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost,
-    survivorHeal, targetPriority, terminateTurn,
+    targetPriority, terminateTurn,
   };
 })();
