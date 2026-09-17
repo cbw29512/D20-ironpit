@@ -14,6 +14,12 @@ def _member(template, combatant_id: str, side: str, position: int) -> EncounterC
     )
 
 
+def _setup(rogue: EncounterCombatant, target: EncounterCombatant) -> EncounterSetup:
+    return EncounterSetup(
+        heroes=[rogue], monsters=[target], hero_total_levels=2, monster_total_cr="2", ruleset="2014",
+    )
+
+
 def test_2014_thief_levels_one_through_ten_are_isolated_from_2024() -> None:
     for level in range(1, 11):
         hero = build_mara_quickstep_2014(level)
@@ -29,7 +35,7 @@ def test_2014_thief_levels_one_through_ten_are_isolated_from_2024() -> None:
 def test_cunning_action_dash_is_used_only_when_it_enables_offense() -> None:
     rogue = _member(build_mara_quickstep_2014(2), "mara", "heroes", 0)
     target = _member(build_karnok_stoneward_2014(2), "target", "monsters", 130)
-    setup = EncounterSetup(heroes=[rogue], monsters=[target], hero_total_levels=2, monster_total_cr="2")
+    setup = _setup(rogue, target)
     rogue.state.movement_remaining_ft = 30
     assert needs_dash(rogue, setup, "1:mara") is True
     event = use_dash(1, 1, rogue, setup, "1:mara")
@@ -40,7 +46,7 @@ def test_cunning_action_dash_is_used_only_when_it_enables_offense() -> None:
     close = _member(build_mara_quickstep_2014(2), "close", "heroes", 0)
     close.state.movement_remaining_ft = 30
     near_target = _member(build_karnok_stoneward_2014(2), "near", "monsters", 100)
-    near_setup = EncounterSetup(heroes=[close], monsters=[near_target], hero_total_levels=2, monster_total_cr="2")
+    near_setup = _setup(close, near_target)
     assert needs_dash(close, near_setup, "1:close") is False
 
 
