@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from app.combat.dice import DiceProvider
-from app.combat.exhaustion import speed_after_exhaustion
+from app.combat.exhaustion import d20_modifier, speed_after_exhaustion
 from app.domain.events import DiceRoll
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import CombatantState
@@ -113,14 +113,16 @@ def apply_d20_bonus_dice(
     state: CombatantState, kind: ModifierKind, roll: DiceRoll, dice: DiceProvider,
 ) -> DiceRoll:
     modifiers = _die_modifiers(state, kind)
-    if not modifiers:
+    exhaustion = d20_modifier(state)
+    if not modifiers and exhaustion == 0:
         return roll
     bonus_rolls = [dice.roll(item.dice_size) for item in modifiers for _ in range(item.dice_count)]
     notation = " + ".join([roll.notation, *(f"{item.dice_count}d{item.dice_size}" for item in modifiers)])
     return roll.model_copy(update={
         "notation": notation,
         "rolls": [*roll.rolls, *bonus_rolls],
-        "total": roll.total + sum(bonus_rolls),
+        "modifier": roll.modifier + exhaustion,
+        "total": roll.total + exhaustion + sum(bonus_rolls),
     })
 
 
