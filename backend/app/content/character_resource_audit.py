@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from app.content.level_resources import (
+    barbarian_2014_rage_uses,
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
     fighter_2014_action_surge_uses,
@@ -31,6 +32,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "rogue": (),
 }
 _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
+    "barbarian": (("rage", "Rage", barbarian_2014_rage_uses),),
     "fighter": (
         ("second-wind", "Second Wind", fighter_2014_second_wind_uses),
         ("action-surge", "Action Surge", fighter_2014_action_surge_uses),
