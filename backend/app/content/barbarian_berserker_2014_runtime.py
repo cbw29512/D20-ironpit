@@ -31,13 +31,9 @@ def _attack(level: int, weapon_id: str, scores: AbilityScores, *, rage_eligible:
 
 def _progression(level: int) -> ProgressionCombatFeatures:
     return ProgressionCombatFeatures(
-        danger_sense=level >= 2,
-        reckless_attack=level >= 2,
-        frenzy=level >= 3,
-        fast_movement_bonus_ft=10 if level >= 5 else 0,
-        mindless_rage=level >= 6,
-        initiative_advantage=level >= 7,
-        brutal_critical_dice=1 if level >= 9 else 0,
+        danger_sense=level >= 2, reckless_attack=level >= 2, frenzy=level >= 3,
+        fast_movement_bonus_ft=10 if level >= 5 else 0, mindless_rage=level >= 6,
+        initiative_advantage=level >= 7, brutal_critical_dice=1 if level >= 9 else 0,
     )
 
 
@@ -66,11 +62,10 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
             skill_bonuses={"athletics": scores.modifier("strength") + proficiency_bonus(level),
                            "acrobatics": dexterity},
             weapon_masteries=[], wearing_heavy_armor=False,
-            rage_damage_bonus=barbarian_rage_damage_bonus(level),
-            progression_features=_progression(level),
+            rage_damage_bonus=barbarian_rage_damage_bonus(level), progression_features=_progression(level),
             resources=[ResourceDefinition(id="rage", name="Rage", max_uses=barbarian_2014_rage_uses(level))],
             visual=VisualLoadout(armor="unarmored", main_hand="greataxe", body_style="humanoid"),
-            source="D&D Basic Rules 2014: Human; Barbarian; Path of the Berserker; Outlander; Equipment",
+            source="D&D Basic Rules 2014: Human; Barbarian; Path of the Berserker; Soldier; Equipment",
         )
     except Exception:
         logger.exception("Failed to compile 2014 Rokhan Stonefury at level %s", level)
