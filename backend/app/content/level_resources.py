@@ -36,6 +36,22 @@ def barbarian_rage_uses(level: int) -> int:
     return 6
 
 
+def barbarian_2014_rage_uses(level: int) -> int:
+    """2014 Barbarian Rage uses from the 2014 class table."""
+    level = _checked_level(level)
+    if level <= 2:
+        return 2
+    if level <= 5:
+        return 3
+    if level <= 11:
+        return 4
+    if level <= 16:
+        return 5
+    if level <= 19:
+        return 6
+    return 999
+
+
 def barbarian_rage_damage_bonus(level: int) -> int:
     level = _checked_level(level)
     if level <= 8:
@@ -43,6 +59,11 @@ def barbarian_rage_damage_bonus(level: int) -> int:
     if level <= 15:
         return 3
     return 4
+
+
+def barbarian_2014_rage_damage_bonus(level: int) -> int:
+    """2014 Rage damage bonus; kept explicit to prevent edition leakage."""
+    return barbarian_rage_damage_bonus(level)
 
 
 def cleric_channel_divinity_uses(level: int) -> int:
