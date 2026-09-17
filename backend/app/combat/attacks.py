@@ -2,7 +2,7 @@ from __future__ import annotations
 import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
-from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
+from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack, note_rage_damage
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
@@ -47,6 +47,7 @@ def resolve_attack(
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
+        exhaustion_disadvantage = 1 if attacker.exhaustion_level_2014 >= 3 else 0
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
@@ -54,7 +55,7 @@ def resolve_attack(
                                + reckless_attack_advantage(attacker, attack)
                                + conditional_attack_advantage_sources(attack, defender)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker),
+            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) + exhaustion_disadvantage,
             close_enemy_active=close_enemy_active,
         )
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
@@ -90,6 +91,7 @@ def resolve_attack(
             )
             damage_roll = hit_damage.damage_roll; damage_components = hit_damage.damage_components
             damage_outcome = hit_damage.damage_outcome; applied_total = hit_damage.applied_total
+            if applied_total > 0: note_rage_damage(actual_defender, round_number)
             save_damage = hit_damage.save_damage
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
             on_hit_save = resolve_on_hit_condition_save(actual_defender, attack, dice)
