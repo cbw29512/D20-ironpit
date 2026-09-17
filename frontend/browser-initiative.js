@@ -3,6 +3,7 @@
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
+  const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { abilityCheckDisadvantage: () => 0, d20Modifier: () => 0 };
 
   function priority(group) {
     if (group.natural_roll === 20) return 2;
@@ -46,18 +47,20 @@
     }));
     const byTemplate = new Map();
     setup.monsters.forEach((member, index) => {
-      const key = member.state.template.id;
+      const state = member.state;
+      const key = `${state.template.id}:${Number(Q().incapacitated(state))}:${state.exhaustion_level || 0}`;
       if (!byTemplate.has(key)) byTemplate.set(key, {
-        side: "monsters", template_id: key, members: [], index: setup.heroes.length + index,
+        side: "monsters", template_id: state.template.id, members: [], index: setup.heroes.length + index,
       });
       byTemplate.get(key).members.push(member);
     });
     groups.push(...byTemplate.values());
     for (const group of groups) {
       const state = group.members[0].state;
-      const advantage = Boolean(state.template.initiative_advantage), disadvantage = Q().incapacitated(state);
-      const mode = advantage === disadvantage ? "normal" : advantage ? "advantage" : "disadvantage";
-      const roll = R().d20(state.template.initiative_bonus, mode);
+      const advantage = Number(Boolean(state.template.initiative_advantage));
+      const disadvantage = Number(Q().incapacitated(state)) + X().abilityCheckDisadvantage(state);
+      const mode = R().modeFromSources(advantage, disadvantage);
+      const roll = R().d20(state.template.initiative_bonus + X().d20Modifier(state), mode);
       group.initiative_roll = roll;
       group.natural_roll = roll.selected_roll;
       group.initiative_bonus = state.template.initiative_bonus;
