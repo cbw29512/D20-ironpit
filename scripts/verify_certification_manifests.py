@@ -41,30 +41,54 @@ def _mechanics(template: Any) -> list[str]:
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
     features = template.progression_features
-    if features.critical_hit_minimum < 20: mechanics.add("expanded-critical-range")
-    if features.initiative_advantage: mechanics.add("initiative-advantage")
-    if features.athletics_advantage: mechanics.add("athletics-advantage")
-    if features.danger_sense: mechanics.add("danger-sense")
-    if features.reckless_attack: mechanics.add("reckless-attack")
-    if features.frenzy: mechanics.add("frenzy")
-    if features.frenzy_bonus_attack_2014: mechanics.add("frenzy-bonus-attack-2014")
-    if features.fast_movement_bonus_ft: mechanics.add("fast-movement")
-    if features.mindless_rage: mechanics.add("mindless-rage")
-    if features.instinctive_pounce_fraction: mechanics.add("instinctive-pounce")
-    if features.great_weapon_fighting: mechanics.add("great-weapon-fighting")
-    if features.indomitable_reroll or features.indomitable_bonus: mechanics.add("indomitable")
-    if features.tactical_master_sap_weapon_ids: mechanics.add("tactical-master")
-    if features.heroic_warrior: mechanics.add("heroic-warrior")
-    if features.studied_attacks: mechanics.add("studied-attacks")
-    if features.sneak_attack_d6: mechanics.add("sneak-attack")
-    if features.cunning_action: mechanics.add("cunning-action")
-    if features.uncanny_dodge: mechanics.add("uncanny-dodge")
-    if features.evasion: mechanics.add("evasion")
-    if features.survivor_heal_amount: mechanics.add("survivor")
-    if features.critical_move_fraction: mechanics.add("post-critical-movement")
-    if features.tactical_shift_fraction: mechanics.add("tactical-shift")
-    if features.intimidating_presence_2014_dc: mechanics.add("intimidating-presence-2014")
-    if features.brutal_critical_dice: mechanics.add("brutal-critical")
+    if features.critical_hit_minimum < 20:
+        mechanics.add("expanded-critical-range")
+    if features.initiative_advantage:
+        mechanics.add("initiative-advantage")
+    if features.athletics_advantage:
+        mechanics.add("athletics-advantage")
+    if features.danger_sense:
+        mechanics.add("danger-sense")
+    if features.reckless_attack:
+        mechanics.add("reckless-attack")
+    if features.frenzy:
+        mechanics.add("frenzy")
+    if features.frenzy_bonus_attack_2014:
+        mechanics.add("frenzy-bonus-attack-2014")
+    if features.fast_movement_bonus_ft:
+        mechanics.add("fast-movement")
+    if features.mindless_rage:
+        mechanics.add("mindless-rage")
+    if features.instinctive_pounce_fraction:
+        mechanics.add("instinctive-pounce")
+    if features.great_weapon_fighting:
+        mechanics.add("great-weapon-fighting")
+    if features.indomitable_reroll or features.indomitable_bonus:
+        mechanics.add("indomitable")
+    if features.tactical_master_sap_weapon_ids:
+        mechanics.add("tactical-master")
+    if features.heroic_warrior:
+        mechanics.add("heroic-warrior")
+    if features.studied_attacks:
+        mechanics.add("studied-attacks")
+    if features.sneak_attack_d6:
+        mechanics.add("sneak-attack")
+    if features.cunning_action:
+        mechanics.add("cunning-action")
+    if features.uncanny_dodge:
+        mechanics.add("uncanny-dodge")
+    if features.evasion:
+        mechanics.add("evasion")
+    if features.survivor_heal_amount:
+        mechanics.add("survivor")
+    if features.critical_move_fraction:
+        mechanics.add("post-critical-movement")
+    if features.tactical_shift_fraction:
+        mechanics.add("tactical-shift")
+    if features.intimidating_presence_2014_dc:
+        mechanics.add("intimidating-presence-2014")
+    if features.brutal_critical_dice:
+        mechanics.add("brutal-critical")
     return sorted(mechanics)
 
 
@@ -125,14 +149,22 @@ def build_hero_manifest() -> dict[str, Any]:
 def _detected_monster_mechanics(row: dict[str, object], source_blockers: list[str]) -> list[str]:
     actions = str(row.get("actions", ""))
     detected = set(source_blockers)
-    if re.search(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", actions, re.I): detected.add("attack-roll")
-    if re.search(r"\bMultiattack\b", actions, re.I): detected.add("multiattack")
-    if re.search(r"\bSaving Throw:", actions, re.I): detected.add("saving-throw-action")
-    if str(row.get("traits", "")).strip(): detected.add("trait")
-    if str(row.get("bonusActions", "")).strip(): detected.add("bonus-action")
-    if str(row.get("reactions", "")).strip(): detected.add("reaction")
-    if str(row.get("legendaryActions", "")).strip(): detected.add("legendary")
-    if re.search(r"\b(?:Vulnerabilities|Resistances|Immunities)\b", str(row.get("rawText", "")), re.I): detected.add("damage-or-condition-defense")
+    if re.search(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", actions, re.I):
+        detected.add("attack-roll")
+    if re.search(r"\bMultiattack\b", actions, re.I):
+        detected.add("multiattack")
+    if re.search(r"\bSaving Throw:", actions, re.I):
+        detected.add("saving-throw-action")
+    if str(row.get("traits", "")).strip():
+        detected.add("trait")
+    if str(row.get("bonusActions", "")).strip():
+        detected.add("bonus-action")
+    if str(row.get("reactions", "")).strip():
+        detected.add("reaction")
+    if str(row.get("legendaryActions", "")).strip():
+        detected.add("legendary")
+    if re.search(r"\b(?:Vulnerabilities|Resistances|Immunities)\b", str(row.get("rawText", "")), re.I):
+        detected.add("damage-or-condition-defense")
     return sorted(detected)
 
 
@@ -156,51 +188,85 @@ def build_monster_manifest() -> dict[str, Any]:
         if runtime_template_id is not None and runtime_template_id not in runtime:
             blockers = sorted(set([*blockers, "missing-runtime-template"]))
         monsters.append({
-            "monster_id": str(row["id"]), "monster_name": name,
-            "srd_source_page": int(row["sourcePage"]), "srd_source_reference": str(row["sourceReference"]),
-            "runtime_template_id": runtime_template_id, "detected_combat_mechanics": detected,
-            "supported_mechanics": supported, "unsupported_mechanics": unsupported,
+            "monster_id": str(row["id"]),
+            "monster_name": name,
+            "srd_source_page": int(row["sourcePage"]),
+            "srd_source_reference": str(row["sourceReference"]),
+            "runtime_template_id": runtime_template_id,
+            "detected_combat_mechanics": detected,
+            "supported_mechanics": supported,
+            "unsupported_mechanics": unsupported,
             "python_certification_status": "certified" if ready else "blocked",
             "browser_certification_status": "certified" if ready else "blocked",
             "generated_static_status": "current" if ready else "catalog-only",
-            "public_ready_status": "ready" if ready else "blocked", "blockers": blockers,
+            "public_ready_status": "ready" if ready else "blocked",
+            "blockers": blockers,
         })
     ready_count = sum(row["public_ready_status"] == "ready" for row in monsters)
     return {
-        "schema_version": 1, "ruleset": "srd-5.2.1-2024",
-        "generation_policy": "Derived from SRD source rows, certification catalog, and runtime/browser parity.",
-        "summary": {"canonical_monsters": len(monsters), "public_ready": ready_count}, "monsters": monsters,
+        "schema_version": 1,
+        "ruleset": "srd-5.2.1-2024",
+        "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
+        "summary": {"catalog_monsters": len(monsters), "public_ready": ready_count, "blocked": len(monsters) - ready_count},
+        "monsters": monsters,
     }
 
 
 def _write(path: Path, payload: dict[str, Any]) -> None:
-    path.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def _check_clean(paths: list[Path]) -> None:
-    relative = [str(path.relative_to(ROOT)) for path in paths]
-    result = subprocess.run(["git", "diff", "--exit-code", "--", *relative], cwd=ROOT, check=False)
-    if result.returncode:
-        raise RuntimeError("Certification manifests are stale: " + ", ".join(relative))
+def _assert_exact_ci_head() -> None:
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    expected = os.environ.get("GITHUB_SHA")
+    if event_path and Path(event_path).is_file():
+        event = json.loads(Path(event_path).read_text(encoding="utf-8"))
+        expected = event.get("pull_request", {}).get("head", {}).get("sha") or expected
+    if not expected:
+        return
+    actual = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    if actual != expected:
+        raise RuntimeError(f"CI checked out {actual}, but the event requires exact head {expected}.")
+
+
+def _validate_invariants(hero_manifest: dict[str, Any], monster_manifest: dict[str, Any]) -> None:
+    heroes = hero_manifest["heroes"]
+    if len(heroes) != 12 or sum(len(hero["levels"]) for hero in heroes) != 240:
+        raise RuntimeError("Hero manifest must contain exactly 12 identities and 240 level slots.")
+    for hero in heroes:
+        if [level["level"] for level in hero["levels"]] != list(range(1, 21)):
+            raise RuntimeError(f"Hero {hero['hero_id']} does not expose exactly levels 1-20.")
+    monsters = monster_manifest["monsters"]
+    if len(monsters) != 330 or len({row["monster_id"] for row in monsters}) != 330:
+        raise RuntimeError("Monster manifest must contain exactly 330 unique SRD records.")
+    ready_rows = [level for hero in heroes for level in hero["levels"]] + monsters
+    for row in ready_rows:
+        refs = row.get("source_references", [row.get("srd_source_reference")])
+        if row["public_ready_status"] == "ready" and (not refs or not refs[0]):
+            raise RuntimeError("Every certified manifest entry must have a source reference.")
+    blocker_counts = Counter(blocker for row in monsters for blocker in row["blockers"])
+    if monster_manifest["summary"]["blocked"] and not blocker_counts:
+        raise RuntimeError("Blocked monsters must expose machine-readable blocker families.")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Verify durable hero and monster certification manifests.")
-    parser.add_argument("--write", action="store_true", help="Write manifest candidates before checking.")
+    parser = argparse.ArgumentParser(description="Generate or verify Iron Pit certification manifests.")
+    parser.add_argument("--write", action="store_true", help="Rewrite manifests from authoritative repository state.")
     args = parser.parse_args()
+    heroes = build_hero_manifest()
+    monsters = build_monster_manifest()
+    _validate_invariants(heroes, monsters)
+    _assert_exact_ci_head()
     if args.write:
-        _write(HERO_MANIFEST, build_hero_manifest())
-        _write(MONSTER_MANIFEST, build_monster_manifest())
+        _write(HERO_MANIFEST, heroes)
+        _write(MONSTER_MANIFEST, monsters)
+        print("Wrote certification manifests from authoritative repository state.")
         return
-    if os.environ.get("CI"):
-        _check_clean([HERO_MANIFEST, MONSTER_MANIFEST])
-    hero = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
-    monster = json.loads(MONSTER_MANIFEST.read_text(encoding="utf-8"))
-    hero_statuses = Counter(level["public_ready_status"] for item in hero["heroes"] for level in item["levels"])
-    monster_statuses = Counter(item["public_ready_status"] for item in monster["monsters"])
-    print(f"Hero manifest: {hero_statuses['ready']} ready / {sum(hero_statuses.values())} slots")
-    print(f"Monster manifest: {monster_statuses['ready']} ready / {sum(monster_statuses.values())} monsters")
-
-
-if __name__ == "__main__":
-    main()
+    if json.loads(HERO_MANIFEST.read_text(encoding="utf-8")) != heroes:
+        raise RuntimeError("Hero certification manifest is stale or hand-edited.")
+    if json.loads(MONSTER_MANIFEST.read_text(encoding="utf-8")) != monsters:
+        raise RuntimeError("Monster certification manifest is stale or hand-edited.")
+    print("Certification manifests match authoritative runtime, source, browser, and catalog state.")
