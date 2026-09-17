@@ -87,6 +87,22 @@ def fighter_indomitable_uses(level: int) -> int:
     return 3
 
 
+def fighter_2014_second_wind_uses(level: int) -> int:
+    """2014 Fighter Second Wind is one use between short or long rests."""
+    _checked_level(level)
+    return 1
+
+
+def fighter_2014_action_surge_uses(level: int) -> int:
+    """2014 Fighter Action Surge begins at level 2 and gains a second use at 17."""
+    return fighter_action_surge_uses(level)
+
+
+def fighter_2014_indomitable_uses(level: int) -> int:
+    """2014 Fighter Indomitable uses progress at levels 9, 13, and 17."""
+    return fighter_indomitable_uses(level)
+
+
 def orc_adrenaline_rush_uses(level: int) -> int:
     """2024 Orc Adrenaline Rush uses equal the character's Proficiency Bonus."""
     return proficiency_bonus(level)
