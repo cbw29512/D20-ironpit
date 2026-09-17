@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
 from app.combat.bloodied import is_bloodied
+from app.combat.defensive_modifier_rules import healing_is_maximized
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
@@ -96,7 +97,7 @@ def resolve_healing(
             raise ValueError("Spell-slot healing requires an active turn key.")
         mark_slot_spell_cast(healer.state, turn_key)
     spend(healer.state, action.action_cost)
-    rolls = [dice.roll(action.dice_size) for _ in range(action.dice_count)]
+    rolls = [action.dice_size for _ in range(action.dice_count)] if healing_is_maximized(target.state) else [dice.roll(action.dice_size) for _ in range(action.dice_count)]
     total = sum(rolls) + action.healing_bonus
     hp_before = target.state.current_hp
     healed = restore_hit_points(target.state, total)
