@@ -13,6 +13,7 @@ from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
+from app.combat.intimidating_presence_2014 import end_invalid_presence
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
@@ -45,9 +46,11 @@ def _resolve_zero_hp_turn(
 
 
 def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
-    events, sequence = resolve_target_condition_timing(
+    events, sequence = end_invalid_presence(sequence, round_number, member, setup)
+    lifecycle, sequence = resolve_target_condition_timing(
         sequence, round_number, member, "target_turn_end", dice,
     )
+    events.extend(lifecycle)
     source_events, sequence = resolve_source_condition_timing(
         sequence, round_number, member, setup, "source_turn_end",
     )
