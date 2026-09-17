@@ -92,6 +92,11 @@ class CombatantState(BaseModel):
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
+    rage_started_round: int | None = Field(default=None, ge=1)
+    rage_last_attack_round: int | None = Field(default=None, ge=1)
+    rage_last_damage_round: int | None = Field(default=None, ge=1)
+    frenzy_2014_started_round: int | None = Field(default=None, ge=1)
+    exhaustion_level_2014: int = Field(default=0, ge=0, le=6)
 
 
 class BattlefieldState(BaseModel):
