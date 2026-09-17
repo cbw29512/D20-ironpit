@@ -10,7 +10,10 @@
   }
 
   function dangerSenseAdvantage(state, ability) {
-    return Number(Boolean(state?.template?.danger_sense) && ability === "dexterity" && !Q().incapacitated(state));
+    if (!state?.template?.danger_sense || ability !== "dexterity" || Q().incapacitated(state)) return 0;
+    if (state.template.ruleset === "2014"
+        && ["blinded", "deafened"].some((effect) => state.active_effect_ids?.includes(effect))) return 0;
+    return 1;
   }
 
   function activate(member, attack, round) {
