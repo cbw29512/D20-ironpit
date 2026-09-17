@@ -11,7 +11,9 @@ class ModifierKind(StrEnum):
     ARMOR_CLASS = "armor-class"
     ATTACK_ROLL_FLAT = "attack-roll-flat"
     ATTACK_ROLL_BONUS_DIE = "attack-roll-bonus-die"
+    SAVING_THROW_FLAT = "saving-throw-flat"
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
+    CONDITION_IMMUNITY = "condition-immunity"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
     BONUS_DAMAGE = "bonus-damage"
@@ -29,6 +31,7 @@ class CombatModifier(BaseModel):
     damage_type: DamageType | None = None
     target_id: str | None = None
     weapon_id: str | None = None
+    condition_id: str | None = None
     concentration_required: bool = False
     consume_on_attack_against: bool = False
     expires_at_start_of_source_turn: bool = False
@@ -57,6 +60,14 @@ class CombatModifier(BaseModel):
             raise ValueError("Flat attack modifiers require a nonzero bonus and weapon id.")
         if self.kind is not ModifierKind.ATTACK_ROLL_FLAT and self.weapon_id is not None:
             raise ValueError(f"{self.kind.value} does not accept a weapon id.")
+        if self.kind is ModifierKind.SAVING_THROW_FLAT and self.flat_bonus == 0:
+            raise ValueError("Flat saving-throw modifiers require a nonzero bonus.")
+        if self.kind is ModifierKind.CONDITION_IMMUNITY and self.condition_id is None:
+            raise ValueError("Condition-immunity modifiers require a condition id.")
+        if self.kind is not ModifierKind.CONDITION_IMMUNITY and self.condition_id is not None:
+            raise ValueError(f"{self.kind.value} does not accept a condition id.")
+        if self.kind is ModifierKind.CONDITION_IMMUNITY and self.flat_bonus:
+            raise ValueError("Condition-immunity modifiers do not accept a flat bonus.")
         if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
             raise ValueError("Speed modifiers require a nonzero flat bonus.")
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
