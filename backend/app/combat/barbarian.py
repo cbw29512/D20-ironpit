@@ -50,7 +50,7 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
     resource.current_uses -= 1
     spend(state, "bonus_action")
     state.active_effect_ids.append(RAGE_EFFECT_ID)
-    frenzy_2014 = state.template.ruleset == "2014" and state.template.progression_features.frenzy
+    frenzy_2014 = state.template.ruleset == "2014" and state.template.progression_features.frenzy_bonus_attack_2014
     if frenzy_2014:
         state.active_effect_ids.append(FRENZY_2014_EFFECT_ID)
     removed = _end_mindless_rage_conditions(state)
