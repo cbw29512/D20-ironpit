@@ -4,7 +4,7 @@
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
-  const D = () => window.IRON_PIT_DICE;
+  const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
 
   function validate(item) {
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
@@ -83,7 +83,8 @@
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
-  const effectiveSpeed = (state) => Math.max(0, state.template.speed_ft + flat(state, "speed"));
+  const effectiveSpeed = (state) => X()?.effectiveSpeed(state, Math.max(0, state.template.speed_ft + flat(state, "speed")))
+    ?? Math.max(0, state.template.speed_ft + flat(state, "speed"));
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
@@ -103,7 +104,8 @@
   function applyD20Bonus(state, kind, roll) {
     if (!new Set(["attack-roll-bonus-die", "saving-throw-bonus-die"]).has(kind)) throw new Error(`${kind} is not a D20 bonus modifier.`);
     const modifiers = (state.active_modifiers || []).filter((item) => item.kind === kind);
-    if (!modifiers.length) return roll;
+    const exhaustion = X()?.d20Modifier(state) || 0;
+    if (!modifiers.length && !exhaustion) return roll;
     const bonusDice = modifiers.map((item) => {
       const rolls = Array.from({ length: item.dice_count }, () => D().roll(item.dice_size));
       return { source_effect_id: item.source_effect_id, notation: `${item.dice_count}d${item.dice_size}`, rolls,
@@ -112,8 +114,8 @@
     const bonusRolls = bonusDice.flatMap((item) => item.rolls);
     return { ...roll,
       notation: [roll.notation, ...bonusDice.map((item) => item.notation)].join(" + "),
-      rolls: [...roll.rolls, ...bonusRolls], bonus_dice: bonusDice,
-      total: roll.total + bonusRolls.reduce((a, b) => a + b, 0) };
+      rolls: [...roll.rolls, ...bonusRolls], bonus_dice: bonusDice, modifier: (roll.modifier || 0) + exhaustion,
+      total: roll.total + exhaustion + bonusRolls.reduce((a, b) => a + b, 0) };
   }
 
   const bonusDamage = (state, targetId) => (state.active_modifiers || []).filter((item) => item.kind === "bonus-damage"
