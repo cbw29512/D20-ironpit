@@ -12,9 +12,12 @@ class ProgressionCombatFeatures(BaseModel):
     danger_sense: bool = False
     reckless_attack: bool = False
     frenzy: bool = False
+    frenzy_bonus_attack_2014: bool = False
     fast_movement_bonus_ft: int = Field(default=0, ge=0)
     mindless_rage: bool = False
     instinctive_pounce_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
+    brutal_critical_extra_dice: int = Field(default=0, ge=0, le=3)
+    intimidating_presence_2014: bool = False
     great_weapon_fighting: bool = False
     indomitable_reroll: bool = False
     indomitable_bonus: int = Field(default=0, ge=0, le=20)
