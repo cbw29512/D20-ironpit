@@ -9,6 +9,7 @@ from app.domain.combatants import DamageType
 
 class ModifierKind(StrEnum):
     ARMOR_CLASS = "armor-class"
+    ATTACK_ROLL_FLAT = "attack-roll-flat"
     ATTACK_ROLL_BONUS_DIE = "attack-roll-bonus-die"
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
@@ -27,6 +28,7 @@ class CombatModifier(BaseModel):
     dice_size: int = Field(default=0, ge=0, le=100)
     damage_type: DamageType | None = None
     target_id: str | None = None
+    weapon_id: str | None = None
     concentration_required: bool = False
     consume_on_attack_against: bool = False
     expires_at_start_of_source_turn: bool = False
@@ -50,7 +52,11 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
         advantage_kinds = {ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE}
         if self.kind in advantage_kinds and self.flat_bonus:
-            raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+            raise ValueError("Attack Advantage does not accept a flat bonus.")
+        if self.kind is ModifierKind.ATTACK_ROLL_FLAT and (self.flat_bonus == 0 or self.weapon_id is None):
+            raise ValueError("Flat attack modifiers require a nonzero bonus and weapon id.")
+        if self.kind is not ModifierKind.ATTACK_ROLL_FLAT and self.weapon_id is not None:
+            raise ValueError(f"{self.kind.value} does not accept a weapon id.")
         if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
             raise ValueError("Speed modifiers require a nonzero flat bonus.")
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
