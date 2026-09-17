@@ -4,6 +4,7 @@ from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, modeled_combat_traits_2014
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.content.monster_conditional_attack_advantage_2014 import conditional_attack_advantage_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import (
@@ -70,6 +71,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "reach_ft": attack.reach_ft,
         "effects": basic_attack_effects_2014(attack),
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
+        "conditional_attack_advantage": conditional_attack_advantage_2014(monster, attack),
         "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
     }
     if attack.damage.dice_count:
