@@ -3,8 +3,7 @@
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
-  const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
-  const D = () => window.IRON_PIT_DICE;
+  const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]), D = () => window.IRON_PIT_DICE;
 
   function validate(item) {
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
@@ -20,8 +19,7 @@
   }
 
   function add(state, modifier) {
-    validate(modifier);
-    const existing = (state.active_modifiers || []).find((item) => item.id === modifier.id);
+    validate(modifier); const existing = (state.active_modifiers || []).find((item) => item.id === modifier.id);
     if (existing) {
       if (JSON.stringify(existing) === JSON.stringify(modifier)) return;
       throw new Error(`Modifier id ${modifier.id} already exists with different data.`);
@@ -83,7 +81,12 @@
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
-  const effectiveSpeed = (state) => Math.max(0, state.template.speed_ft + flat(state, "speed"));
+  function effectiveSpeed(state) {
+    let speed = Math.max(0, state.template.speed_ft + flat(state, "speed"));
+    if ((state.exhaustion_level_2014 || 0) >= 5) return 0;
+    if ((state.exhaustion_level_2014 || 0) >= 2) speed = Math.floor(speed / 2);
+    return speed;
+  }
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
@@ -118,7 +121,6 @@
 
   const bonusDamage = (state, targetId) => (state.active_modifiers || []).filter((item) => item.kind === "bonus-damage"
     && (!item.target_id || item.target_id === targetId));
-
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
     consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
