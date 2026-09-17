@@ -6,7 +6,11 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const GEOM = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
-  const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
+  const effectiveMaxHp = (state) => {
+    let maximum = state.template.max_hp + (state.max_hp_bonus || 0);
+    if ((state.exhaustion_level_2014 || 0) >= 4) maximum = Math.floor(maximum / 2);
+    return Math.max(1, maximum);
+  };
 
   function buildState(template) {
     return {
@@ -21,6 +25,8 @@
       grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
+      rage_started_round: null, rage_last_attack_round: null, rage_last_damage_round: null,
+      frenzy_2014_started_round: null, exhaustion_level_2014: 0,
     };
   }
 
@@ -45,11 +51,9 @@
   function beginTurn(state) {
     state.turn_terminated = false; state.turn_termination_reason = null;
     const incapacitated = Q().incapacitated(state);
-    state.action_available = !incapacitated;
-    state.bonus_action_available = !incapacitated;
+    state.action_available = !incapacitated; state.bonus_action_available = !incapacitated;
     refreshStartOfTurn(state);
-    const speedZero = G()?.speedIsZero(state) || false;
-    const speed = M().effectiveSpeed(state);
+    const speedZero = G()?.speedIsZero(state) || false, speed = M().effectiveSpeed(state);
     state.movement_remaining_ft = speedZero ? 0 : speed;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
     if (state.active_effect_ids.includes("prone") && speed > 0 && !speedZero) {
@@ -73,8 +77,7 @@
     }
   }
 
-  const active = (member) => member.state.is_alive && !member.state.is_dead
-    && member.state.current_hp > 0 && !Q().incapacitated(member.state);
+  const active = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0 && !Q().incapacitated(member.state);
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
   const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
 
@@ -94,10 +97,8 @@
   }
 
   function nearestTarget(member, setup) {
-    const candidates = priorityTargets(member, setup);
-    if (!candidates.length) return null;
-    const held = candidates.filter((candidate) =>
-      candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
+    const candidates = priorityTargets(member, setup); if (!candidates.length) return null;
+    const held = candidates.filter((candidate) => candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
     if (held.length) return held.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
     const grapplerIds = new Set(member.state.grapple_sources.map((source) => source.source_id));
     const grapplers = candidates.filter((candidate) => grapplerIds.has(candidate.combatant_id));
@@ -123,8 +124,7 @@
     catch (error) { console.error("Failed browser Pack Tactics evaluation", { member: member.combatant_id, error }); throw error; }
   }
   function moveToward(member, target, desired) {
-    const before = distance(member, target);
-    const moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
+    const before = distance(member, target), moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
     if (!moved) return null;
     member.position_ft += (member.position_ft < target.position_ft ? 1 : -1) * moved;
     member.state.movement_remaining_ft -= moved;
