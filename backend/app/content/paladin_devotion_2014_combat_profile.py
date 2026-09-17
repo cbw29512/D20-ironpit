@@ -77,3 +77,11 @@ def build_aurelia_brightshield_2014_combat_profile(level: int) -> PregenCombatPr
     except Exception:
         logger.exception("Failed to compile Aurelia's 2014 combat fingerprint at level %s", level)
         raise
+
+
+def build_aurelia_2014_combat_profiles() -> list[PregenCombatProfile]:
+    try:
+        return [build_aurelia_brightshield_2014_combat_profile(level) for level in range(1, 11)]
+    except Exception:
+        logger.exception("Failed to compile Aurelia's 2014 combat fingerprint progression")
+        raise
