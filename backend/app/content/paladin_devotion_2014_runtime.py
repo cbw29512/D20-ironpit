@@ -3,7 +3,11 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
+from app.content.cleric_life_domain import AID
 from app.content.paladin_devotion_2014_attacks import build_extra_attack, build_javelin_attack, build_longsword_attack
+from app.content.paladin_devotion_2014_spells import (
+    beacon_of_hope_2014, lesser_restoration_2014, protection_from_evil_and_good_2014, sanctuary_2014,
+)
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
@@ -57,21 +61,34 @@ def _healing_actions(level: int, charisma_modifier: int) -> list[HealingAction]:
 
 
 def _condition_removal_actions(level: int) -> list[ConditionRemovalAction]:
-    return [ConditionRemovalAction(
+    actions = [ConditionRemovalAction(
         id="lay-on-hands-poison", name="Lay on Hands", action_cost="action", range_ft=5,
         target_mode="self_or_ally", removable_conditions=["poisoned"], max_conditions_per_use=1,
         resource_costs_per_condition={"lay-on-hands": 5}, animation="condition-removal",
     )]
+    if level >= 5:
+        actions.append(lesser_restoration_2014())
+    return actions
 
 
-def _defensive_spells(level: int):
+def _defensive_spells(level: int, charisma_modifier: int):
     if level < 2:
         return []
     source = "D&D SRD 5.1 (2014): Paladin spell list"
-    return [
+    actions = [
         BLESS.model_copy(update={"source": source}),
         SHIELD_OF_FAITH.model_copy(update={"source": source}),
     ]
+    if level >= 3:
+        actions.extend([
+            protection_from_evil_and_good_2014(),
+            sanctuary_2014(8 + proficiency_bonus(level) + charisma_modifier),
+        ])
+    if level >= 9:
+        actions.append(beacon_of_hope_2014())
+    if level >= 10:
+        actions.append(AID.model_copy(update={"source": source}))
+    return actions
 
 
 def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
@@ -104,7 +121,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
             weapon_attack=build_longsword_attack(level, scores),
             alternate_weapon_attacks=[build_javelin_attack(level, scores)],
             attack_action=build_extra_attack(level),
-            defensive_spell_actions=_defensive_spells(level),
+            defensive_spell_actions=_defensive_spells(level, charisma_modifier),
             healing_actions=_healing_actions(level, charisma_modifier),
             condition_removal_actions=_condition_removal_actions(level),
             saving_throw_bonuses=saves, skill_bonuses=_skill_bonuses(level, scores),
