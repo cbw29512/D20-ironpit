@@ -6,6 +6,7 @@ from app.combat.damage import BonusDamageSpec, aggregate_damage_components, reso
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.on_hit_save_damage import OnHitSaveDamageResolution, resolve_on_hit_save_damage
+from app.combat.rogue_defenses import apply_uncanny_dodge
 from app.combat.zero_hp import apply_damage
 from app.combat.zero_hp_save_damage_rider import apply_zero_hp_save_damage_rider, save_damage_caused_zero
 from app.domain.models import CombatantState, DamageRollComponent, DiceRoll, RollMode, WeaponAttack
@@ -18,6 +19,7 @@ class AttackHitDamageResolution:
     damage_outcome: str | None
     applied_total: int
     save_damage: OnHitSaveDamageResolution
+    uncanny_dodge_used: bool = False
 
 
 def resolve_attack_hit_damage(
@@ -41,7 +43,8 @@ def resolve_attack_hit_damage(
     save_component_present = save_damage.component is not None
     if save_component_present:
         rolled_components.append(save_damage.component)
-        damage_roll = aggregate_damage_components(rolled_components)
+    rolled_components, uncanny_used = apply_uncanny_dodge(attacker, defender, rolled_components)
+    damage_roll = aggregate_damage_components(rolled_components)
     applied_total, components = apply_damage_defenses(defender, rolled_components)
     damage_roll.total = applied_total
     applied_types = {part.damage_type for part in components if part.applied_total > 0}
@@ -56,4 +59,6 @@ def resolve_attack_hit_damage(
         assert effect is not None
         apply_zero_hp_save_damage_rider(defender, effect, turn_key, affected_states)
         outcome = "unconscious"
-    return AttackHitDamageResolution(damage_roll, components, outcome, applied_total, save_damage)
+    return AttackHitDamageResolution(
+        damage_roll, components, outcome, applied_total, save_damage, uncanny_used,
+    )

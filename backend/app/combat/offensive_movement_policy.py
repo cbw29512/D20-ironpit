@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
+from app.combat.cunning_action import use_dash
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.grid_pathing import plan_movement_toward
 from app.combat.offensive_ranges import offensive_ranges_for_target
@@ -82,23 +83,21 @@ def move_to_enable_offense(
     try:
         if setup.map_definition is None:
             return [], sequence
+        events: list[BattleEvent] = []
+        dash = use_dash(sequence, round_number, attacker, setup, turn_key)
+        if dash is not None:
+            events.append(dash); sequence += 1
         intent = choose_offensive_movement_intent(attacker, setup, turn_key)
         if intent is None:
-            return [], sequence
+            return events, sequence
         members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
         target = members.get(intent.target_id)
         if target is None:
             raise ValueError(f"Offensive movement target {intent.target_id!r} is missing.")
-        events, sequence, _ = move_toward_with_reactions(
-            sequence,
-            round_number,
-            attacker,
-            target,
-            setup,
-            intent.desired_distance_ft,
-            dice,
-            turn_key=turn_key,
+        moved, sequence, _ = move_toward_with_reactions(
+            sequence, round_number, attacker, target, setup, intent.desired_distance_ft, dice, turn_key=turn_key,
         )
+        events.extend(moved)
         return events, sequence
     except ValueError:
         raise

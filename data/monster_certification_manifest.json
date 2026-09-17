@@ -1,11 +1,10 @@
 {
   "schema_version": 1,
   "ruleset": "srd-5.2.1-2024",
-  "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
+  "generation_policy": "Derived from SRD source rows, certification catalog, and runtime/browser parity.",
   "summary": {
-    "catalog_monsters": 330,
-    "public_ready": 123,
-    "blocked": 207
+    "canonical_monsters": 330,
+    "public_ready": 123
   },
   "monsters": [
     {
@@ -9445,7 +9444,7 @@
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-will-o-wisp",
-      "monster_name": "Will-o’-Wisp",
+      "monster_name": "Will-o\u2019-Wisp",
       "srd_source_page": 341,
       "srd_source_reference": "SRD 5.2.1 p. 341",
       "runtime_template_id": null,

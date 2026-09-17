@@ -38,6 +38,7 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("action-surge", "Action Surge", fighter_2014_action_surge_uses),
         ("indomitable", "Indomitable", fighter_2014_indomitable_uses),
     ),
+    "rogue": (),
 }
 _2024_SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "orc": (

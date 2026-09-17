@@ -11,6 +11,7 @@ const assertRuleset = (items, expected, label) => {
   assert.ok(items.length > 0, `${label} must not be empty`);
   for (const item of items) assert.equal(item.ruleset, expected, `${item.id} must carry explicit ${expected} ruleset identity`);
 };
+const levels = (items, count) => assert.deepEqual(items.map((item) => item.level).sort((a, b) => a - b), Array.from({ length: count }, (_, i) => i + 1));
 
 load("browser-heroes.js");
 load("browser-monsters-generated.js");
@@ -19,11 +20,11 @@ const heroes2024 = browserHeroes.filter((hero) => hero.ruleset === "2024");
 const heroes2014 = browserHeroes.filter((hero) => hero.ruleset === "2014");
 const fighters2014 = heroes2014.filter((hero) => hero.class_id === "fighter");
 const barbarians2014 = heroes2014.filter((hero) => hero.class_id === "barbarian");
+const rogues2014 = heroes2014.filter((hero) => hero.class_id === "rogue");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
-assert.equal(heroes2014.length, 30, "2014 browser heroes must contain Fighter 1-20 and Barbarian 1-10");
-assert.deepEqual(fighters2014.map((hero) => hero.level).sort((a, b) => a - b), Array.from({ length: 20 }, (_, i) => i + 1));
-assert.deepEqual(barbarians2014.map((hero) => hero.level).sort((a, b) => a - b), Array.from({ length: 10 }, (_, i) => i + 1));
+assert.equal(heroes2014.length, 40, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-10, and Rogue 1-10");
+levels(fighters2014, 20); levels(barbarians2014, 10); levels(rogues2014, 10);
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
@@ -41,6 +42,14 @@ const barbarian10 = barbarians2014.find((hero) => hero.level === 10);
 assert.equal(barbarian3.frenzy_bonus_attack_2014, true);
 assert.equal(barbarian9.brutal_critical_dice, 1);
 assert.ok(barbarian10.intimidating_presence_2014_dc > 0);
+const rogue2 = rogues2014.find((hero) => hero.level === 2);
+const rogue5 = rogues2014.find((hero) => hero.level === 5);
+const rogue7 = rogues2014.find((hero) => hero.level === 7);
+const rogue10 = rogues2014.find((hero) => hero.level === 10);
+assert.equal(rogue2.cunning_action, true);
+assert.equal(rogue5.uncanny_dodge, true);
+assert.equal(rogue7.evasion, true);
+assert.equal(rogue10.sneak_attack_d6, 5);
 assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "canonical browser monsters");
 for (const fixture of [
   "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
@@ -62,24 +71,20 @@ for (const id of [
   "2014-giant-crab", "2014-roc", "2014-tyrannosaurus-rex",
   "2014-ankylosaurus", "2014-dire-wolf", "2014-giant-crocodile", "2014-mastiff", "2014-wolf", "2014-worg",
   "2014-giant-centipede", "2014-giant-poisonous-snake", "2014-giant-scorpion", "2014-giant-wasp",
-  "2014-poisonous-snake", "2014-scorpion", "2014-wyvern",
-  "2014-elk", "2014-giant-elk", "2014-giant-sea-horse", "2014-minotaur-skeleton", "2014-rhinoceros",
-  "2014-allosaurus", "2014-elephant", "2014-mammoth", "2014-panther", "2014-saber-toothed-tiger",
-  "2014-tiger", "2014-triceratops", "2014-warhorse", "2014-goat", "2014-giant-goat",
-  "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens",
+  "2014-poisonous-snake", "2014-scorpion", "2014-wyvern", "2014-elk", "2014-giant-elk",
+  "2014-giant-sea-horse", "2014-minotaur-skeleton", "2014-rhinoceros", "2014-allosaurus", "2014-elephant",
+  "2014-mammoth", "2014-panther", "2014-saber-toothed-tiger", "2014-tiger", "2014-triceratops",
+  "2014-warhorse", "2014-goat", "2014-giant-goat", "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes",
+  "2014-swarm-of-rats", "2014-swarm-of-ravens",
 ]) assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
-for (const id of [
-  "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens",
-]) {
+for (const id of ["2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens"]) {
   const swarm = monsters2014.find((monster) => monster.id === id);
-  assert.ok(swarm, `${id} must exist before source-shape assertions`);
-  assert.equal(swarm.traits.includes("swarm"), true);
+  assert.ok(swarm); assert.equal(swarm.traits.includes("swarm"), true);
   assert.equal(swarm.attacks[0].conditionalDamage.trigger, "attacker_bloodied");
   assert.equal(swarm.attacks[0].conditionalDamage.mode, "replace_weapon");
 }
 const mule = monsters2014.find((monster) => monster.id === "2014-mule");
-assert.ok(mule, "2014-mule must exist before trait assertions");
-assert.deepEqual(mule.traits, ["sure-footed"], "Beast of Burden stays arena-neutral while Sure-Footed remains modeled");
+assert.ok(mule); assert.deepEqual(mule.traits, ["sure-footed"]);
 assertRuleset(monsters2014, "2014", "2014 browser monsters");
 assert.equal(window.IRON_PIT_2014_MVP_READY, true);
 console.log("Browser combatants carry explicit isolated ruleset identity for 2014 and 2024.");

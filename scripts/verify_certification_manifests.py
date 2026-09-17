@@ -73,6 +73,12 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("studied-attacks")
     if features.sneak_attack_d6:
         mechanics.add("sneak-attack")
+    if features.cunning_action:
+        mechanics.add("cunning-action")
+    if features.uncanny_dodge:
+        mechanics.add("uncanny-dodge")
+    if features.evasion:
+        mechanics.add("evasion")
     if features.survivor_heal_amount:
         mechanics.add("survivor")
     if features.critical_move_fraction:

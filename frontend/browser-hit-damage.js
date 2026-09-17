@@ -7,6 +7,10 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || {
+    applyUncannyDodge: (_attacker, _defender, components) => ({ components, used: false }),
+    evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total,
+  };
 
   function resolveSaveDamage(defender, attack) {
     const effect = attack.onHitSaveDamage;
@@ -18,8 +22,8 @@
     };
     if (save.succeeded && effect.successDamage === "none") return result;
     const rolls = D().rollMany(effect.diceCount, effect.diceSize);
-    let total = rolls.reduce((sum, roll) => sum + roll, 0) + (effect.damageBonus || 0);
-    if (save.succeeded && effect.successDamage === "half") total = Math.floor(total / 2);
+    const raw = rolls.reduce((sum, roll) => sum + roll, 0) + (effect.damageBonus || 0);
+    const total = RD().evasionDamage(defender, effect.saveAbility, save.succeeded, effect.successDamage, raw);
     result.component = {
       source: effect.source || attack.name,
       damage_type: effect.damageType,
@@ -80,12 +84,13 @@
     const saveComponentPresent = Boolean(saveDamage.component);
     const rolled = [...base.components];
     if (saveComponentPresent) rolled.push(saveDamage.component);
-    const damageComponents = rolled.map((part) => ({
+    const uncanny = RD().applyUncannyDodge(attacker, defender, rolled);
+    const damageComponents = uncanny.components.map((part) => ({
       ...part,
       applied_total: A().adjustedDamage(defender, part.total, part.damage_type),
     }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
-    const damageRoll = { ...aggregate(rolled), total: appliedTotal };
+    const damageRoll = { ...aggregate(uncanny.components), total: appliedTotal };
     const appliedTypes = [...new Set(
       damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
     )];
@@ -99,7 +104,7 @@
       applyZeroHpSaveDamageRider(defender, effect, turnKey);
       damageOutcome = "unconscious";
     }
-    return { damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage };
+    return { damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage, uncannyDodgeUsed: uncanny.used };
   }
 
   window.IRON_PIT_BROWSER_HIT_DAMAGE = {
