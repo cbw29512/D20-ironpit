@@ -3,7 +3,9 @@ from app.content.certified_heroes import (
     build_all_certified_hero_entries,
     build_certified_hero_entries,
 )
+from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
+from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 
 
 def test_public_canonical_registry_remains_2024_only() -> None:
@@ -38,3 +40,13 @@ def test_arena_fingerprints_stay_2024_while_all_edition_registry_adds_2014() -> 
     assert ids_2014.isdisjoint(arena_profiles)
     assert ids_2014.issubset(all_profiles)
     assert set(all_profiles) == set(arena_profiles) | ids_2014
+
+
+def test_2014_fighter_gets_source_derived_unarmed_opportunity_profile() -> None:
+    hero = complete_unarmed_opportunity_profiles([build_karnok_stoneward_2014(5)])[0]
+    profile = hero.unarmed_opportunity_attack
+
+    assert profile is not None
+    assert hero.ability_scores.strength == 18
+    assert profile.attack_bonus == 7
+    assert profile.damage == 5
