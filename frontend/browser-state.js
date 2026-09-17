@@ -39,6 +39,8 @@
   function refreshReaction(state) { state.reaction_available = true; }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
+    const survivor = state.template.survivor_heal_amount || 0, maximum = effectiveMaxHp(state);
+    if (survivor > 0 && state.current_hp > 0 && state.current_hp * 2 <= maximum) state.current_hp = Math.min(maximum, state.current_hp + survivor);
     window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
   }
 

@@ -22,5 +22,6 @@ class ProgressionCombatFeatures(BaseModel):
     heroic_warrior: bool = False
     studied_attacks: bool = False
     sneak_attack_d6: int = Field(default=0, ge=0, le=10)
+    survivor_heal_amount: int = Field(default=0, ge=0, le=30)
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)

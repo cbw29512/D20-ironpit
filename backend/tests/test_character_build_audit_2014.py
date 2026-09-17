@@ -4,11 +4,10 @@ from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_201
 from app.domain.character_builds import AbilityIncrease
 
 
-def test_2014_karnok_profiles_match_runtime_through_level_ten() -> None:
-    for level in range(1, 11):
+def test_2014_karnok_profiles_match_runtime_through_level_twenty() -> None:
+    for level in range(1, 21):
         profile = build_karnok_stoneward_2014_profile(level)
         template = build_karnok_stoneward_2014(level)
-
         assert profile.ruleset == "2014"
         assert template.ruleset == "2014"
         assert profile.final_ability_scores == template.ability_scores
@@ -18,7 +17,6 @@ def test_2014_karnok_profiles_match_runtime_through_level_ten() -> None:
 
 def test_2014_human_uses_species_increases_not_2024_background_increases() -> None:
     profile = build_karnok_stoneward_2014_profile(1)
-
     assert profile.origin_feat_id is None
     assert profile.origin_feat_name is None
     assert profile.background_allowed_abilities == []
@@ -40,9 +38,7 @@ def test_2014_audit_rejects_2024_origin_rules_leaking_backward() -> None:
         AbilityIncrease(ability="strength", amount=2),
         AbilityIncrease(ability="constitution", amount=1),
     ]
-
     issues = audit_character_build(profile, template)
-
     assert "2014-origin-feat-not-allowed" in issues
     assert "2014-background-ability-increases-not-allowed" in issues
 
@@ -50,5 +46,4 @@ def test_2014_audit_rejects_2024_origin_rules_leaking_backward() -> None:
 def test_ruleset_mismatch_fails_closed() -> None:
     profile = build_karnok_stoneward_2014_profile(1)
     template = build_karnok_stoneward_2014(1).model_copy(update={"ruleset": "2024"})
-
     assert "runtime-ruleset-mismatch" in audit_character_build(profile, template)
