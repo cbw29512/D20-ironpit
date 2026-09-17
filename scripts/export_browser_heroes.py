@@ -220,41 +220,43 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["heroic_warrior"] = True
     if progression.studied_attacks:
         row["studied_attacks"] = True
-    if template.spellcasting is not None:
-        row["spellcasting"] = template.spellcasting.model_dump(mode="json")
-    if template.spell_attack_actions:
-        row["spellAttackActions"] = [_spell_attack(item) for item in template.spell_attack_actions]
-    if template.spell_save_actions:
-        row["spellSaveActions"] = [_spell(item) for item in template.spell_save_actions]
-    if template.defensive_spell_actions:
-        row["defensiveSpellActions"] = [_defense(item) for item in template.defensive_spell_actions]
-    if template.condition_removal_actions:
-        row["conditionRemovalActions"] = [_removal(item) for item in template.condition_removal_actions]
-    if template.modifier_effects:
-        row["modifierEffects"] = [_modifier_effect(item) for item in template.modifier_effects]
-    if template.modifier_immunities:
-        row["modifierImmunities"] = list(template.modifier_immunities)
-    package = canonical_spell_package(class_id, level)
+    package = canonical_spell_package(class_id, level) if template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions or template.healing_actions else None
     if package is not None:
-        row["spell_choices"] = [_spell_choice(choice) for choice in package.choices]
+        row["canonical_cantrips"] = [_spell_choice(item) for item in package.cantrips]
+        row["canonical_prepared_spells"] = [_spell_choice(item) for item in package.spells]
+    if template.spell_save_actions:
+        row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
+    if template.spell_attack_actions:
+        row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+    if template.defensive_spell_actions:
+        row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
+    if template.condition_removal_actions:
+        row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+    if template.attack_action:
+        row["attack_action"] = {
+            "id": template.attack_action.id,
+            "name": template.attack_action.name,
+            "isAttackAction": template.attack_action.is_attack_action,
+            "slots": [
+                {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+                for slot in template.attack_action.slots
+            ],
+        }
     return row
 
 
-def render_browser_heroes() -> str:
-    try:
-        payload = [_template(key, template) for key, _, template in build_certified_hero_entries()]
-        return "window.IRON_PIT_BROWSER_HEROES = " + json.dumps(payload, indent=2, sort_keys=True) + ";\n"
-    except Exception:
-        logger.exception("Failed to render browser hero bundle.")
-        raise
+def render() -> str:
+    rows = [_template(key, template) for key, template in build_certified_hero_entries()]
+    payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
+    return "/* GENERATED from audited Python RAW-ready hero templates. Do not hand-edit. */\n(() => {\n  \"use strict\";\n  const heroes = " + payload + ";\n  window.IRON_PIT_BROWSER_HEROES = Object.fromEntries(heroes.map((item) => [item.id, item]));\n})();\n"
 
 
 def main() -> None:
     try:
-        DESTINATION.write_text(render_browser_heroes(), encoding="utf-8")
-        logger.info("Exported browser hero bundle to %s.", DESTINATION)
+        DESTINATION.write_text(render(), encoding="utf-8")
+        logger.info("Exported certified browser heroes to %s.", DESTINATION)
     except Exception:
-        logger.exception("Browser hero export failed.")
+        logger.exception("Certified browser hero export failed.")
         raise
 
 
