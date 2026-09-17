@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.actions import AbilityName, ConditionTiming
-from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
+from app.domain.models import BattleEvent, CombatantState, CombatantTemplate, EncounterCombatant, EncounterSetup, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
 
 POISONED_EFFECT_ID = "poisoned"
@@ -16,6 +16,7 @@ def apply_timed_condition(
     source_id: str,
     *,
     source_effect_id: str | None = None,
+    source_template: CombatantTemplate | None = None,
     applied_round: int | None = None,
     expires_round: int | None = None,
     expires_at_start_of_source_turn: bool = True,
@@ -31,7 +32,7 @@ def apply_timed_condition(
     ends_if_source_dead: bool = False,
     use_default_poison_recovery: bool = True,
 ) -> str | None:
-    if condition_is_immune(state, effect_id):
+    if condition_is_immune(state, effect_id, source_template):
         return None
     if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
         if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
