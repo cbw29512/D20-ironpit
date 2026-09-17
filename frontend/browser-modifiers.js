@@ -2,7 +2,7 @@
   "use strict";
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
-  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
+  const KINDS = new Set(["armor-class", "attack-roll-flat", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
 
@@ -12,6 +12,8 @@
     if (DIE_KINDS.has(item.kind) ? count < 1 || sides < 2 : count || sides) throw new Error(`Invalid dice for ${item.kind}.`);
     if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
     if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
+    if (item.kind === "attack-roll-flat" && (!(item.flat_bonus || 0) || !item.weapon_id)) throw new Error("Flat attack modifiers require a bonus and weapon id.");
+    if (item.kind !== "attack-roll-flat" && item.weapon_id) throw new Error(`${item.kind} does not accept a weapon id.`);
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
@@ -82,6 +84,9 @@
 
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+  const attackRollFlat = (state, weaponId) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "attack-roll-flat" && item.weapon_id === weaponId)
+    .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
   const effectiveSpeed = (state) => X()?.effectiveSpeed(state, Math.max(0, state.template.speed_ft + flat(state, "speed")))
     ?? Math.max(0, state.template.speed_ft + flat(state, "speed"));
@@ -122,7 +127,7 @@
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
-    add, applyD20Bonus, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
+    add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
     consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     expireTargetTurn, nextAttackAgainstAdvantage, removeSource, validate,
   };
