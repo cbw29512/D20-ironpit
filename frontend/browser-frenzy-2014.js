@@ -20,7 +20,7 @@
 
   function resolve(sequence, round, member, setup, turnKey) {
     const state = member.state;
-    if (state.template.ruleset !== "2014" || !state.template.frenzy || !R()?.active(state)
+    if (state.template.ruleset !== "2014" || !state.template.frenzy_bonus_attack_2014 || !R()?.active(state)
         || !state.active_effect_ids.includes("frenzy-2014") || !E().available(state, "bonus_action")) {
       return { events: [], sequence };
     }
