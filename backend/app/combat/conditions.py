@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import attacks_have_advantage_against, has_condition
+from app.combat.defensive_modifier_rules import attacks_against_disadvantage_sources
 from app.combat.dodge import DODGE_EFFECT_ID, dodge_benefits_active
 from app.combat.exhaustion import attack_disadvantage_sources
 from app.combat.grapple import (
@@ -13,7 +14,7 @@ from app.combat.grapple import (
 from app.combat.hit_modifiers import apply_hit_modifier_effects
 from app.combat.modifier_stack import effective_speed
 from app.combat.timed_conditions import apply_timed_condition
-from app.domain.models import CombatantState, WeaponAttack
+from app.domain.models import CombatantState, CombatantTemplate, WeaponAttack
 from app.domain.size import size_at_most
 
 BLINDED_EFFECT_ID = "blinded"
@@ -28,9 +29,10 @@ def attack_roll_condition_sources(
     distance_ft: int,
     target_id: str | None = None,
 ) -> tuple[int, int]:
-    """Return Advantage and Disadvantage sources from supported conditions and 2014 Exhaustion."""
+    """Return Advantage and Disadvantage sources from supported conditions and wards."""
     advantage = 0
     disadvantage = attack_disadvantage_sources(attacker)
+    disadvantage += attacks_against_disadvantage_sources(defender, attacker.template)
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
@@ -63,6 +65,7 @@ def apply_hit_conditions(
     source_id: str,
     round_number: int | None = None,
     affected_states: list[CombatantState] | None = None,
+    source_template: CombatantTemplate | None = None,
 ) -> list[str]:
     """Apply certified automatic conditions and modifiers from a successful weapon hit."""
     if defender.is_dead or not defender.is_alive:
@@ -73,7 +76,7 @@ def apply_hit_conditions(
     if (
         maximum is not None
         and size_at_most(defender.template.size, maximum)
-        and not condition_is_immune(defender, PRONE_EFFECT_ID)
+        and not condition_is_immune(defender, PRONE_EFFECT_ID, source_template)
     ):
         if PRONE_EFFECT_ID not in defender.active_effect_ids:
             defender.active_effect_ids.append(PRONE_EFFECT_ID)
@@ -94,6 +97,7 @@ def apply_hit_conditions(
             control.condition_id,
             source_id,
             source_effect_id=attack.id,
+            source_template=source_template,
             applied_round=round_number,
             expires_at_start_of_source_turn=control.expires_at_start_of_source_turn,
             expiry_timing=control.expiry_timing,
