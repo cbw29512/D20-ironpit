@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from app.content.canonical_hero_policy import canonical_spell_package
-from app.content.certified_heroes import build_certified_hero_entries
+from app.content.certified_heroes import build_all_certified_hero_entries
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -210,6 +210,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
         "source": template.source,
     }
+    if progression.indomitable_reroll:
+        row["indomitable_reroll"] = True
     if progression.indomitable_bonus:
         row["indomitable_bonus"] = progression.indomitable_bonus
     if progression.tactical_master_sap_weapon_ids:
@@ -244,7 +246,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
 
 
 def render() -> str:
-    rows = [_template(key, template) for key, template in build_certified_hero_entries()]
+    rows = [_template(key, template) for key, template in build_all_certified_hero_entries()]
     payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
     return "/* GENERATED from audited Python RAW-ready hero templates. Do not hand-edit. */\n(() => {\n  \"use strict\";\n  const heroes = " + payload + ";\n  window.IRON_PIT_BROWSER_HEROES = Object.fromEntries(heroes.map((item) => [item.id, item]));\n})();\n"
 

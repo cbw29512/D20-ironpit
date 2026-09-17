@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-
 from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS
@@ -43,6 +42,7 @@ class PregenCombatProfile:
     fighting_style: str | None = None
     rage_damage_bonus: int = 0
     sneak_attack_d6: int = 0
+    initiative_bonus: int | None = None
 
 
 def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> AbilityScores:
@@ -143,8 +143,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profile
     profiles = [
         *(_karnok_profile(level) for level in range(1, 13)),
-        *(_rokhan_profile(level) for level in range(1, 7)),
-        *(_seraphine_profile(level) for level in range(1, 5)),
+        *(_rokhan_profile(level) for level in range(1, 7)), *(_seraphine_profile(level) for level in range(1, 5)),
         build_mara_quickstep_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}

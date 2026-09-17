@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.content.canonical_hero_policy import combat_feature_audits
-from app.domain.character_builds import AbilityName, CharacterBuildProfile
+from app.domain.character_builds import AbilityIncrease, AbilityName, CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
 _ABILITIES: tuple[AbilityName, ...] = (
@@ -12,40 +12,53 @@ _ABILITIES: tuple[AbilityName, ...] = (
     "wisdom",
     "charisma",
 )
-_REQUIRED_AUDIT_CATEGORIES = {"class", "species", "feat", "equipment"}
+_BASE_REQUIRED_AUDIT_CATEGORIES = {"class", "species", "equipment"}
 
 
-def _audit_background_increases(profile: CharacterBuildProfile) -> list[str]:
+def _audit_edition_origins(profile: CharacterBuildProfile) -> list[str]:
     issues: list[str] = []
-    allowed = set(profile.background_allowed_abilities)
-    increases = profile.background_increases
-    used = [increase.ability for increase in increases]
-    amounts = sorted(increase.amount for increase in increases)
+    if profile.ruleset == "2024":
+        if not profile.origin_feat_id or not profile.origin_feat_name:
+            issues.append("2024-origin-feat-required")
+        if profile.species_increases:
+            issues.append("2024-species-ability-increases-not-allowed")
+        allowed = set(profile.background_allowed_abilities)
+        increases = profile.background_increases
+        used = [increase.ability for increase in increases]
+        amounts = sorted(increase.amount for increase in increases)
+        if len(profile.background_allowed_abilities) != 3 or len(allowed) != 3:
+            issues.append("background-must-list-three-distinct-abilities")
+        if len(set(used)) != len(used):
+            issues.append("background-increases-must-use-distinct-abilities")
+        if not set(used).issubset(allowed):
+            issues.append("background-increase-uses-disallowed-ability")
+        if amounts not in ([1, 2], [1, 1, 1]):
+            issues.append("background-increase-pattern-must-be-plus2-plus1-or-three-plus1")
+        return issues
 
-    if len(allowed) != 3:
-        issues.append("background-must-list-three-distinct-abilities")
-    if len(set(used)) != len(used):
-        issues.append("background-increases-must-use-distinct-abilities")
-    if not set(used).issubset(allowed):
-        issues.append("background-increase-uses-disallowed-ability")
-    if amounts not in ([1, 2], [1, 1, 1]):
-        issues.append("background-increase-pattern-must-be-plus2-plus1-or-three-plus1")
+    if profile.origin_feat_id or profile.origin_feat_name:
+        issues.append("2014-origin-feat-not-allowed")
+    if profile.background_allowed_abilities or profile.background_increases:
+        issues.append("2014-background-ability-increases-not-allowed")
     return issues
 
 
-def _total_increases(profile: CharacterBuildProfile) -> dict[AbilityName, int]:
-    totals: dict[AbilityName, int] = {ability: 0 for ability in _ABILITIES}
-    for increase in [*profile.background_increases, *profile.advancement_increases]:
-        totals[increase.ability] += increase.amount
-    return totals
+def _declared_increases(profile: CharacterBuildProfile) -> list[AbilityIncrease]:
+    origin = profile.background_increases if profile.ruleset == "2024" else profile.species_increases
+    return [*origin, *profile.advancement_increases]
 
 
 def _audit_final_scores(profile: CharacterBuildProfile) -> list[str]:
-    increases = _total_increases(profile)
-    mismatch_source = "declared-increases" if profile.advancement_increases else "background-increases"
+    totals: dict[AbilityName, int] = {ability: 0 for ability in _ABILITIES}
+    for increase in _declared_increases(profile):
+        totals[increase.ability] += increase.amount
+    if profile.advancement_increases:
+        mismatch_source = "declared-increases"
+    else:
+        mismatch_source = "background-increases" if profile.ruleset == "2024" else "species-increases"
     issues: list[str] = []
     for ability in _ABILITIES:
-        expected = profile.base_ability_scores.score(ability) + increases[ability]
+        expected = profile.base_ability_scores.score(ability) + totals[ability]
         actual = profile.final_ability_scores.score(ability)
         if actual != expected:
             issues.append(f"final-{ability}-does-not-match-{mismatch_source}")
@@ -63,9 +76,12 @@ def _audit_features(
     if len(feature_ids) != len(set(feature_ids)):
         issues.append("feature-audit-ids-must-be-unique")
     categories = {audit.category for audit in profile.feature_audits}
-    for category in sorted(_REQUIRED_AUDIT_CATEGORIES - categories):
+    required = set(_BASE_REQUIRED_AUDIT_CATEGORIES)
+    if profile.ruleset == "2024":
+        required.add("feat")
+    for category in sorted(required - categories):
         issues.append(f"missing-{category}-feature-audit")
-    if profile.origin_feat_id not in feature_ids:
+    if profile.ruleset == "2024" and profile.origin_feat_id not in feature_ids:
         issues.append("origin-feat-missing-from-feature-audit")
 
     runtime_weapon_ids = {
@@ -93,6 +109,8 @@ def audit_character_build(
         issues.append("runtime-template-id-mismatch")
     if template.level != profile.level:
         issues.append("runtime-level-mismatch")
+    if template.ruleset != profile.ruleset:
+        issues.append("runtime-ruleset-mismatch")
     if template.archetype.lower() != profile.class_name.lower():
         issues.append("runtime-class-mismatch")
     if sorted(template.weapon_masteries) != sorted(profile.weapon_masteries):
@@ -102,7 +120,7 @@ def audit_character_build(
     if template.fighting_styles != profile.fighting_styles:
         issues.append("runtime-fighting-styles-mismatch")
 
-    issues.extend(_audit_background_increases(profile))
+    issues.extend(_audit_edition_origins(profile))
     issues.extend(_audit_final_scores(profile))
     issues.extend(_audit_features(profile, template))
     if not profile.source_references or any(not ref.strip() for ref in profile.source_references):

@@ -61,7 +61,7 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("instinctive-pounce")
     if features.great_weapon_fighting:
         mechanics.add("great-weapon-fighting")
-    if features.indomitable_bonus:
+    if features.indomitable_reroll or features.indomitable_bonus:
         mechanics.add("indomitable")
     if features.tactical_master_sap_weapon_ids:
         mechanics.add("tactical-master")

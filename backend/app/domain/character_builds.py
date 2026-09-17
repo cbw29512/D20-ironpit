@@ -15,6 +15,7 @@ AbilityName = Literal[
     "charisma",
 ]
 EquipmentOption = Literal["package", "gold"]
+RulesetId = Literal["2014", "2024"]
 
 
 class AbilityScores(BaseModel):
@@ -55,6 +56,7 @@ class CharacterBuildProfile(BaseModel):
     class_id: str
     class_name: str
     level: int = Field(ge=1, le=20)
+    ruleset: RulesetId = "2024"
     subclass_id: str | None = None
     subclass_name: str | None = None
     build_id: str | None = None
@@ -62,11 +64,12 @@ class CharacterBuildProfile(BaseModel):
     species_name: str
     background_id: str
     background_name: str
-    origin_feat_id: str
-    origin_feat_name: str
+    origin_feat_id: str | None = None
+    origin_feat_name: str | None = None
     base_ability_scores: AbilityScores
-    background_allowed_abilities: list[AbilityName] = Field(min_length=3, max_length=3)
-    background_increases: list[AbilityIncrease] = Field(min_length=2, max_length=3)
+    species_increases: list[AbilityIncrease] = Field(default_factory=list)
+    background_allowed_abilities: list[AbilityName] = Field(default_factory=list)
+    background_increases: list[AbilityIncrease] = Field(default_factory=list)
     advancement_increases: list[AbilityIncrease] = Field(default_factory=list)
     final_ability_scores: AbilityScores
     class_equipment_option: EquipmentOption

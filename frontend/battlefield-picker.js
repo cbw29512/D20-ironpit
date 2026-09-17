@@ -75,9 +75,6 @@
 
   function selectedCard(state) {
     if (!active) return null;
-    if (state.ruleset === "2014") {
-      return state.catalog[active.side].find((monster) => monster.id === el("picker-monster").value) || null;
-    }
     if (active.side === "heroes") return chosenHero(state);
     return state.catalog.monsters.find((monster) => monster.id === el("picker-monster").value) || null;
   }
@@ -85,10 +82,10 @@
   function open(state, side, index, onConfirm, onRemove) {
     active = { side, index, onConfirm, onRemove };
     const existing = (side === "heroes" ? state.heroSlots : state.monsterSlots)[index];
-    const is2014 = state.ruleset === "2014", sideLabel = is2014 ? (side === "heroes" ? "TEAM A" : "TEAM B") : side === "heroes" ? "HERO" : "MONSTER";
+    const sideLabel = side === "heroes" ? "HERO" : "MONSTER";
     el("picker-kicker").textContent = `${sideLabel} SLOT ${index + 1}`;
-    el("picker-title").textContent = existing ? `Change ${existing.name}` : is2014 || side === "monsters" ? "Choose a monster" : "Choose a hero";
-    const useMonsterPicker = is2014 || side === "monsters";
+    el("picker-title").textContent = existing ? `Change ${existing.name}` : side === "monsters" ? "Choose a monster" : "Choose a hero";
+    const useMonsterPicker = side === "monsters";
     el("hero-picker-fields").hidden = useMonsterPicker; el("monster-picker-fields").hidden = !useMonsterPicker;
     el("remove-card").hidden = !existing; el("confirm-card").textContent = "Add to Slot";
     if (useMonsterPicker) populateMonster(state, existing, side); else populateHero(state, existing);

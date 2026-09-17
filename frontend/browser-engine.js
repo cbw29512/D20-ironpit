@@ -19,11 +19,14 @@
   }
   function rosters(ruleset) {
     if (ruleset === "2014") {
+      const heroes = Object.fromEntries(Object.entries(window.IRON_PIT_BROWSER_HEROES || {}).filter(([, hero]) => hero.ruleset === "2014"));
       const monsters = window.IRON_PIT_BROWSER_MONSTERS_2014;
-      if (window.IRON_PIT_2014_MVP_READY !== true || !monsters) throw new Error("Certified 2014 browser roster is not loaded.");
-      return { heroes: monsters, monsters };
+      if (window.IRON_PIT_2014_MVP_READY !== true || !monsters) throw new Error("Certified 2014 monster roster is not loaded.");
+      if (!Object.keys(heroes).length) throw new Error("Certified 2014 hero roster is not loaded.");
+      return { heroes, monsters };
     }
-    return { heroes: window.IRON_PIT_BROWSER_HEROES, monsters: window.IRON_PIT_BROWSER_MONSTERS };
+    const heroes = Object.fromEntries(Object.entries(window.IRON_PIT_BROWSER_HEROES || {}).filter(([, hero]) => hero.ruleset === "2024"));
+    return { heroes, monsters: window.IRON_PIT_BROWSER_MONSTERS };
   }
   function resolveRuleset(members) {
     try {
@@ -49,12 +52,12 @@
     try {
       const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
       const heroMembers = selection.hero_ids.map((id, index) => {
-        if (!registry.heroes[id]) throw new Error(`Unknown certified Team A combatant for ${requestedRuleset}: ${id}`);
+        if (!registry.heroes[id]) throw new Error(`Unknown certified hero for ${requestedRuleset}: ${id}`);
         const template = cloneTemplate(registry.heroes[id]);
         return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", position_ft: F().startingPosition(template, "heroes"), state: S().buildState(template) };
       });
       const monsterMembers = selection.monster_ids.map((id, index) => {
-        if (!registry.monsters[id]) throw new Error(`Unknown certified Team B combatant for ${requestedRuleset}: ${id}`);
+        if (!registry.monsters[id]) throw new Error(`Unknown certified monster for ${requestedRuleset}: ${id}`);
         const template = cloneTemplate(registry.monsters[id]);
         return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: F().startingPosition(template, "monsters"), state: S().buildState(template) };
       });
@@ -140,9 +143,7 @@
     return finish(setup, init, events, "draw", resolvedRound, sequence);
   }
   function finish(setup, init, events, result, round, sequence) {
-    const teamA = setup.ruleset === "2014" ? "Team A" : "Heroes";
-    const teamB = setup.ruleset === "2014" ? "Team B" : "Monsters";
-    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? `${teamA} wins the deathmatch.` : result === "monsters_win" ? `${teamB} wins the deathmatch.` : "The fight reaches the arena round limit and ends in a draw." });
+    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
     return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: setup.ruleset };
   }
   window.IRON_PIT_BROWSER_ENGINE = { runEncounter, resolveRuleset, selectedRuleset };

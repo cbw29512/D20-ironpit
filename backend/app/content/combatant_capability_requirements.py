@@ -36,7 +36,7 @@ def combatant_capability_requirements(
         requirements.add("shield-ac")
     progression = template.progression_features
     replacements = set(progression.tactical_master_sap_weapon_ids)
-    if progression.indomitable_bonus:
+    if progression.indomitable_reroll or progression.indomitable_bonus:
         requirements.add("indomitable")
     if replacements:
         requirements.add("tactical-master")

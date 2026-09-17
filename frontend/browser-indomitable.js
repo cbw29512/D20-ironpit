@@ -7,9 +7,10 @@
 
   function use(state, ability) {
     const bonus = state.template.indomitable_bonus || 0;
+    const enabled = state.template.indomitable_reroll === true || bonus > 0;
     const uses = state.resources?.indomitable || 0;
     const saveBonus = state.template.saving_throw_bonuses?.[ability];
-    if (!bonus || !uses) return null;
+    if (!enabled || !uses) return null;
     if (saveBonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
     state.resources.indomitable -= 1;
     const roll = M().applyD20Bonus(
@@ -17,7 +18,8 @@
       "saving-throw-bonus-die",
       R().d20(saveBonus + bonus, S().saveMode(state, ability)),
     );
-    return { ...roll, notation: `${roll.notation} [Indomitable +${bonus}]` };
+    const suffix = bonus ? ` +${bonus}` : "";
+    return { ...roll, notation: `${roll.notation} [Indomitable${suffix}]` };
   }
 
   window.IRON_PIT_BROWSER_INDOMITABLE = { use };

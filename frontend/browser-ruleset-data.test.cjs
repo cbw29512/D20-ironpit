@@ -14,7 +14,17 @@ const assertRuleset = (items, expected, label) => {
 
 load("browser-heroes.js");
 load("browser-monsters-generated.js");
-assertRuleset(Object.values(window.IRON_PIT_BROWSER_HEROES), "2024", "canonical browser heroes");
+const browserHeroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
+const heroes2024 = browserHeroes.filter((hero) => hero.ruleset === "2024");
+const heroes2014 = browserHeroes.filter((hero) => hero.ruleset === "2014");
+assertRuleset(heroes2024, "2024", "2024 browser heroes");
+assertRuleset(heroes2014, "2014", "2014 browser heroes");
+assert.equal(heroes2014.length, 10, "2014 browser heroes must contain Karnok levels 1-10");
+assert.deepEqual(heroes2014.map((hero) => hero.level).sort((a, b) => a - b), [1,2,3,4,5,6,7,8,9,10]);
+for (const hero of heroes2014) {
+  assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
+  assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
+}
 assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "canonical browser monsters");
 for (const fixture of [
   "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
