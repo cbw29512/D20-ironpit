@@ -10,6 +10,7 @@ from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.pit_policy import save_distance, target_order
+from app.combat.sacred_weapon_2014 import resolve_sacred_weapon
 from app.combat.saving_throws import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -69,6 +70,10 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             sequence += 1
         channel_events, sequence = resolve_channel_support(sequence, round_number, member, setup, dice)
         events.extend(channel_events)
+        sacred_weapon = resolve_sacred_weapon(sequence, round_number, member)
+        if sacred_weapon is not None:
+            events.append(sacred_weapon)
+            sequence += 1
         return events, sequence
     except Exception:
         logger.exception("Failed support-action stage for %s.", member.combatant_id)
