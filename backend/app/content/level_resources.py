@@ -36,6 +36,22 @@ def barbarian_rage_uses(level: int) -> int:
     return 6
 
 
+def barbarian_2014_rage_uses(level: int) -> int:
+    """2014 Barbarian finite Rage uses; level 20 is Unlimited and needs separate resource policy."""
+    level = _checked_level(level)
+    if level == 20:
+        raise ValueError("2014 level-20 Barbarian Rage is Unlimited, not a finite resource count.")
+    if level <= 2:
+        return 2
+    if level <= 5:
+        return 3
+    if level <= 11:
+        return 4
+    if level <= 16:
+        return 5
+    return 6
+
+
 def barbarian_rage_damage_bonus(level: int) -> int:
     level = _checked_level(level)
     if level <= 8:
