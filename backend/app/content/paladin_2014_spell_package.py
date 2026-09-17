@@ -31,11 +31,11 @@ _PREPARED = (
     _spell("bless", "Bless", "buff", "modifier-stack", "concentration"),
     _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
     _spell("shield-of-faith", "Shield of Faith", "buff", "modifier-stack", "concentration", "bonus-action"),
-    _spell("heroism", "Heroism", "buff", "modifier-stack", "concentration"),
     _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
     _spell("detect-evil-and-good", "Detect Evil and Good", "utility", "arena-out-of-scope"),
     _spell("purify-food-and-drink", "Purify Food and Drink", "utility", "arena-out-of-scope"),
     _spell("detect-poison-and-disease", "Detect Poison and Disease", "utility", "arena-out-of-scope"),
+    _spell("aid", "Aid", "buff", "max-hp-increase", level=2, min_level=5),
 )
 
 _OATH = (
@@ -50,7 +50,7 @@ _OATH = (
     ),
     _spell("zone-of-truth", "Zone of Truth", "control", "arena-out-of-scope", level=2, min_level=5, oath_level=5),
     _spell(
-        "beacon-of-hope", "Beacon of Hope", "buff", "healing-maximize", "death-save-advantage", "concentration",
+        "beacon-of-hope", "Beacon of Hope", "buff", "saving-throw-advantage", "healing-maximize", "death-save-advantage", "concentration",
         level=3, min_level=9, oath_level=9,
     ),
     _spell("dispel-magic", "Dispel Magic", "utility", "effect-removal", level=3, min_level=9, oath_level=9),
