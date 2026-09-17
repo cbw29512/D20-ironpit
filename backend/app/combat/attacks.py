@@ -91,8 +91,8 @@ def resolve_attack(
             damage_roll = hit_damage.damage_roll; damage_components = hit_damage.damage_components
             damage_outcome = hit_damage.damage_outcome; applied_total = hit_damage.applied_total
             save_damage = hit_damage.save_damage
-            applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
-            on_hit_save = resolve_on_hit_condition_save(actual_defender, attack, dice)
+            applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states, attacker.template)
+            on_hit_save = resolve_on_hit_condition_save(actual_defender, attack, dice, attacker.template)
             if on_hit_save.applied_condition and on_hit_save.applied_condition not in applied_conditions: applied_conditions.append(on_hit_save.applied_condition)
             topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
