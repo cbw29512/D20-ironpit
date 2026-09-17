@@ -34,7 +34,7 @@ def test_2014_thief_levels_one_through_ten_are_isolated_from_2024() -> None:
 
 def test_cunning_action_dash_is_used_only_when_it_enables_offense() -> None:
     rogue = _member(build_mara_quickstep_2014(2), "mara", "heroes", 0)
-    target = _member(build_karnok_stoneward_2014(2), "target", "monsters", 130)
+    target = _member(build_karnok_stoneward_2014(2), "target", "monsters", 370)
     setup = _setup(rogue, target)
     rogue.state.movement_remaining_ft = 30
     assert needs_dash(rogue, setup, "1:mara") is True
