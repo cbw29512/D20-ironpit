@@ -27,7 +27,7 @@
     if (state.template.wearing_heavy_armor || !(state.template.rage_damage_bonus > 0) || active(state)) return null;
     if (!(state.resources.rage > 0) || !E().available(state, "bonus_action")) return null;
     state.resources.rage -= 1; E().spend(state, "bonus_action"); state.active_effect_ids.push(EFFECT);
-    const frenzy2014 = is2014(state) && state.template.frenzy;
+    const frenzy2014 = is2014(state) && state.template.frenzy_bonus_attack_2014;
     if (frenzy2014) state.active_effect_ids.push(FRENZY_2014);
     const removed = endMindlessConditions(state);
     for (const type of RESISTANCES) if (!state.temporary_damage_resistances.includes(type)) state.temporary_damage_resistances.push(type);
