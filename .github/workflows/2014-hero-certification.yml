@@ -31,6 +31,5 @@ jobs:
       - name: Certify 2014 hero data and browser behavior
         run: |
           node frontend/browser-catalog-2014.test.cjs
-          node frontend/browser-ruleset-data.test.cjs
-          node frontend/browser-2014-mvp.test.cjs
+          node frontend/browser-ruleset-isolation.test.cjs
           node frontend/browser-survivor.test.cjs
