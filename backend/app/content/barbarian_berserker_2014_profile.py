@@ -93,7 +93,7 @@ def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
             class_equipment=["Greataxe", "Two Handaxes", "Explorer's Pack", "Four Javelins"],
             background_equipment_option="package",
             background_equipment=["Rank Insignia", "Trophy", "Gaming Set", "Common Clothes", "10 gp"],
-            skill_proficiencies=["Athletics", "Intimidation", "Animal Handling", "Perception", "Survival"],
+            skill_proficiencies=["Athletics", "Intimidation", "Perception", "Survival"],
             weapon_masteries=[], combat_loadout_kind="two-handed", feature_audits=_audits(level),
             source_references=[
                 "D&D Basic Rules 2014: Half-Orc", "D&D Basic Rules 2014: Barbarian",
