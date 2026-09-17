@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.timed_conditions import apply_timed_condition
-from app.domain.models import CombatantState, WeaponAttack
+from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 RECKLESS_ATTACK_EFFECT_ID = "reckless-attack"
@@ -17,17 +17,23 @@ def reckless_attack_active(state: CombatantState) -> bool:
         raise RuntimeError("Reckless Attack state could not be read.") from exc
 
 
+def _eligible_attack(state: CombatantState, attack: WeaponAttack) -> bool:
+    if attack.attack_ability != "strength":
+        return False
+    return state.template.ruleset != "2014" or attack.weapon.attack_kind is WeaponAttackKind.MELEE
+
+
 def activate_reckless_attack(
     state: CombatantState,
     attack: WeaponAttack,
     actor_id: str,
     round_number: int,
 ) -> bool:
-    """Choose Reckless Attack on the first eligible Strength attack roll of the active turn."""
+    """Choose Reckless Attack on the first edition-eligible Strength attack roll of the active turn."""
     try:
         if not state.template.progression_features.reckless_attack:
             return False
-        if attack.attack_ability != "strength" or reckless_attack_active(state):
+        if not _eligible_attack(state, attack) or reckless_attack_active(state):
             return False
         applied = apply_timed_condition(
             state,
@@ -45,9 +51,9 @@ def activate_reckless_attack(
 
 
 def reckless_attack_advantage(state: CombatantState, attack: WeaponAttack) -> int:
-    """Return one Advantage source for Strength attack rolls while Reckless Attack is active."""
+    """Return one Advantage source for eligible attacks while Reckless Attack is active."""
     try:
-        return int(reckless_attack_active(state) and attack.attack_ability == "strength")
+        return int(reckless_attack_active(state) and _eligible_attack(state, attack))
     except Exception as exc:
         logger.exception("Reckless Attack advantage failed for %s.", state.template.name)
         raise RuntimeError("Reckless Attack advantage could not be resolved.") from exc
