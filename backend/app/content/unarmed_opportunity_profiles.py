@@ -3,8 +3,8 @@ from __future__ import annotations
 import logging
 import re
 
+from app.content.all_pregen_combat_profiles import build_all_pregen_combat_profiles
 from app.content.monster_catalog import load_monster_rows
-from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.domain.models import CombatantTemplate
 from app.domain.unarmed import UnarmedStrikeDamage
 
@@ -37,7 +37,7 @@ def monster_unarmed_profile(row: dict[str, object]) -> UnarmedStrikeDamage:
 def _character_profiles() -> dict[str, UnarmedStrikeDamage]:
     return {
         template_id: _profile(profile.abilities.strength, 2 + (profile.level - 1) // 4)
-        for template_id, profile in build_pregen_combat_profiles().items()
+        for template_id, profile in build_all_pregen_combat_profiles().items()
     }
 
 
