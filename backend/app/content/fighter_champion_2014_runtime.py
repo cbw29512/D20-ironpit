@@ -28,9 +28,9 @@ def _scores(level: int) -> AbilityScores:
 
 def _attack(level: int, weapon_id: str, scores: AbilityScores) -> WeaponAttack:
     weapon = build_weapon(weapon_id).model_copy(update={"mastery_property": None})
-    ability = "dexterity" if weapon_id == "shortbow" else "strength"
+    ability = "dexterity" if weapon_id == "longbow" else "strength"
     modifier = scores.modifier(ability)
-    style_bonus = 2 if weapon_id == "shortbow" and level >= 10 else 0
+    style_bonus = 2 if weapon_id == "longbow" and level >= 10 else 0
     return WeaponAttack(
         id=f"karnok-2014-{weapon_id}",
         weapon=weapon,
@@ -70,14 +70,14 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             raise ValueError("2014 Champion Fighter certification currently covers levels 1 through 10.")
         scores = _scores(level)
         greatsword = _attack(level, "greatsword", scores)
-        shortbow = _attack(level, "shortbow", scores)
+        longbow = _attack(level, "longbow", scores)
         attacks_per_action = 2 if level >= 5 else 1
         action = AttackActionDefinition(
             id="attack",
             name="Attack",
             is_attack_action=True,
             slots=[
-                AttackActionSlot(attack_ids=[greatsword.id, shortbow.id])
+                AttackActionSlot(attack_ids=[greatsword.id, longbow.id])
                 for _ in range(attacks_per_action)
             ],
         )
@@ -96,7 +96,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             speed_ft=30,
             initiative_bonus=scores.modifier("dexterity") + remarkable,
             weapon_attack=greatsword,
-            alternate_weapon_attacks=[shortbow],
+            alternate_weapon_attacks=[longbow],
             attack_action=action,
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "constitution")),
             skill_bonuses={
