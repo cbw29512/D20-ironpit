@@ -1,6 +1,7 @@
 (() => {
   "use strict";
-  const S = () => window.IRON_PIT_BROWSER_STATE, C = () => window.IRON_PIT_BROWSER_CHARGE;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
+  const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const R = () => window.IRON_PIT_BROWSER_RECHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK, G = () => window.IRON_PIT_BROWSER_RAGE;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
@@ -42,6 +43,8 @@
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
+    const frenzy = G()?.resolveFrenzyAttack?.(sequence, round, member, setup, turnKey);
+    if (frenzy) { events.push(...frenzy.events); sequence = frenzy.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
   }
