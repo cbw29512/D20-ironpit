@@ -2,12 +2,8 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.character_builds import (
-    AbilityIncrease,
-    AbilityScores,
-    CharacterBuildProfile,
-    FeatureAudit,
-)
+from app.content.monk_open_hand_2014_audits import build_monk_2014_feature_audits
+from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 _ABILITIES = (
@@ -18,33 +14,6 @@ _ABILITIES = (
     "wisdom",
     "charisma",
 )
-
-
-def _audit(
-    feature_id: str,
-    name: str,
-    category: str,
-    *,
-    combat: bool = True,
-    automated: bool = True,
-    weapon_id: str | None = None,
-    notes: str | None = None,
-) -> FeatureAudit:
-    source = (
-        "D&D SRD 5.1 (2014): Way of the Open Hand"
-        if category == "subclass"
-        else "D&D SRD 5.1 (2014): Monk"
-    )
-    return FeatureAudit(
-        feature_id=feature_id,
-        feature_name=name,
-        source_reference=source,
-        category=category,
-        combat_relevant=combat,
-        automated=automated,
-        runtime_attack_weapon_id=weapon_id,
-        notes=notes,
-    )
 
 
 def _base() -> AbilityScores:
@@ -82,81 +51,6 @@ def _final(
     return AbilityScores(**values)
 
 
-def _audits(level: int) -> list[FeatureAudit]:
-    audits = [
-        _audit(
-            "human-ability-increase",
-            "Human Ability Score Increase",
-            "species",
-            combat=False,
-            automated=False,
-        ),
-        _audit("unarmored-defense", "Unarmored Defense", "class"),
-        _audit("martial-arts", "Martial Arts", "class"),
-        _audit("shortsword", "Shortsword", "equipment", weapon_id="shortsword"),
-    ]
-    if level >= 2:
-        audits.extend(
-            [
-                _audit("ki", "Ki", "class"),
-                _audit("flurry-of-blows", "Flurry of Blows", "class"),
-                _audit("patient-defense", "Patient Defense", "class"),
-                _audit("step-of-the-wind", "Step of the Wind", "class"),
-                _audit("unarmored-movement", "Unarmored Movement", "class"),
-            ]
-        )
-    if level >= 3:
-        audits.extend(
-            [
-                _audit("deflect-missiles", "Deflect Missiles", "class"),
-                _audit("open-hand-technique", "Open Hand Technique", "subclass"),
-            ]
-        )
-    if level >= 4:
-        audits.append(
-            _audit(
-                "slow-fall",
-                "Slow Fall",
-                "class",
-                combat=False,
-                automated=False,
-                notes="The standard Iron Pit arena has no falling hazard.",
-            )
-        )
-    if level >= 5:
-        audits.extend(
-            [
-                _audit("extra-attack", "Extra Attack", "class"),
-                _audit("stunning-strike", "Stunning Strike", "class"),
-            ]
-        )
-    if level >= 6:
-        audits.extend(
-            [
-                _audit(
-                    "ki-empowered-strikes",
-                    "Ki-Empowered Strikes",
-                    "class",
-                    notes=(
-                        "The arena physical-damage pipeline does not separate magical from "
-                        "nonmagical B/P/S, so the unarmed strike is already resolved correctly."
-                    ),
-                ),
-                _audit("wholeness-of-body", "Wholeness of Body", "subclass"),
-            ]
-        )
-    if level >= 7:
-        audits.extend(
-            [
-                _audit("evasion", "Evasion", "class"),
-                _audit("stillness-of-mind", "Stillness of Mind", "class"),
-            ]
-        )
-    if level >= 10:
-        audits.append(_audit("purity-of-body", "Purity of Body", "class"))
-    return audits
-
-
 def build_kael_stillwater_2014_profile(level: int) -> CharacterBuildProfile:
     try:
         if level not in range(1, 11):
@@ -184,11 +78,7 @@ def build_kael_stillwater_2014_profile(level: int) -> CharacterBuildProfile:
             advancement_increases=advances,
             final_ability_scores=_final(base, species, advances),
             class_equipment_option="package",
-            class_equipment=[
-                "Shortsword",
-                "Explorer's Pack",
-                "10 Darts",
-            ],
+            class_equipment=["Shortsword", "Explorer's Pack", "10 Darts"],
             background_equipment_option="package",
             background_equipment=[
                 "Holy Symbol",
@@ -202,7 +92,7 @@ def build_kael_stillwater_2014_profile(level: int) -> CharacterBuildProfile:
             skill_proficiencies=["Acrobatics", "Stealth", "Insight", "Religion"],
             weapon_masteries=[],
             combat_loadout_kind="unarmed",
-            feature_audits=_audits(level),
+            feature_audits=build_monk_2014_feature_audits(level),
             source_references=[
                 "D&D Basic Rules 2014: Human",
                 "D&D SRD 5.1 (2014): Monk",
