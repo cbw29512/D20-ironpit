@@ -8,6 +8,7 @@ from app.combat.condition_removal import choose_condition_removal_action, resolv
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
 from app.combat.healing import choose_healing_action, resolve_healing
+from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.saving_throws import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -23,6 +24,16 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
                 sequence, round_number, attacker, setup, dice, turn_key,
             )
             events.extend(surge_events)
+        monk_events, sequence = resolve_monk_bonus_attacks(
+            sequence,
+            round_number,
+            attacker,
+            setup,
+            dice,
+            turn_key,
+            events,
+        )
+        events.extend(monk_events)
         frenzy_events, sequence = resolve_frenzy_bonus_attack(
             sequence, round_number, attacker, setup, dice, turn_key,
         )
