@@ -2,8 +2,7 @@ from app.combat.attacks import resolve_attack
 from app.combat.barbarian import (
     end_rage_if_incapacitated,
     enter_rage,
-    finish_rage_turn,
-    maintain_rage_with_bonus_action,
+    finalize_rage_turn,
     rage_active,
 )
 from app.combat.damage import resolve_weapon_damage
@@ -114,9 +113,10 @@ def test_bonus_action_can_extend_rage_when_no_attack_was_made() -> None:
     enter_rage(1, 1, state, "barbarian-1")
     begin_turn(state)
 
-    event = maintain_rage_with_bonus_action(2, 2, state, "barbarian-1")
+    event, next_sequence = finalize_rage_turn(2, 2, state, "barbarian-1")
 
     assert event is not None
+    assert next_sequence == 3
     assert state.bonus_action_available is False
     assert state.rage_expires_round == 3
 
@@ -124,7 +124,11 @@ def test_bonus_action_can_extend_rage_when_no_attack_was_made() -> None:
 def test_rage_ends_when_not_extended_or_when_incapacitated() -> None:
     state = _barbarian_state()
     enter_rage(1, 1, state, "barbarian-1")
-    finish_rage_turn(state, 2)
+    begin_turn(state)
+    state.bonus_action_available = False
+    event, next_sequence = finalize_rage_turn(2, 2, state, "barbarian-1")
+    assert event is None
+    assert next_sequence == 2
     assert rage_active(state) is False
     assert state.temporary_damage_resistances == []
 
@@ -187,6 +191,7 @@ def test_rage_cannot_extend_past_ten_minute_limit() -> None:
     state.rage_expires_round = 101
     begin_turn(state)
 
-    assert maintain_rage_with_bonus_action(2, 101, state, "barbarian-1") is None
-    finish_rage_turn(state, 101)
+    event, next_sequence = finalize_rage_turn(2, 101, state, "barbarian-1")
+    assert event is None
+    assert next_sequence == 2
     assert rage_active(state) is False
