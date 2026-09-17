@@ -17,21 +17,30 @@ load("browser-monsters-generated.js");
 const browserHeroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const heroes2024 = browserHeroes.filter((hero) => hero.ruleset === "2024");
 const heroes2014 = browserHeroes.filter((hero) => hero.ruleset === "2014");
+const fighters2014 = heroes2014.filter((hero) => hero.class_id === "fighter");
+const barbarians2014 = heroes2014.filter((hero) => hero.class_id === "barbarian");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
-assert.equal(heroes2014.length, 20, "2014 browser heroes must contain Karnok levels 1-20");
-assert.deepEqual(heroes2014.map((hero) => hero.level).sort((a, b) => a - b), Array.from({ length: 20 }, (_, i) => i + 1));
+assert.equal(heroes2014.length, 30, "2014 browser heroes must contain Fighter 1-20 and Barbarian 1-10");
+assert.deepEqual(fighters2014.map((hero) => hero.level).sort((a, b) => a - b), Array.from({ length: 20 }, (_, i) => i + 1));
+assert.deepEqual(barbarians2014.map((hero) => hero.level).sort((a, b) => a - b), Array.from({ length: 10 }, (_, i) => i + 1));
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
 }
-const fighter15 = heroes2014.find((hero) => hero.level === 15);
-const fighter18 = heroes2014.find((hero) => hero.level === 18);
-const fighter20 = heroes2014.find((hero) => hero.level === 20);
+const fighter15 = fighters2014.find((hero) => hero.level === 15);
+const fighter18 = fighters2014.find((hero) => hero.level === 18);
+const fighter20 = fighters2014.find((hero) => hero.level === 20);
 assert.equal(fighter15.critical_hit_minimum, 18);
 assert.equal(fighter18.survivor_heal_amount, 9);
 assert.equal(fighter20.survivor_heal_amount, 10);
 assert.equal(fighter20.attack_action.slots.length, 4);
+const barbarian3 = barbarians2014.find((hero) => hero.level === 3);
+const barbarian9 = barbarians2014.find((hero) => hero.level === 9);
+const barbarian10 = barbarians2014.find((hero) => hero.level === 10);
+assert.equal(barbarian3.frenzy_bonus_attack_2014, true);
+assert.equal(barbarian9.brutal_critical_dice, 1);
+assert.ok(barbarian10.intimidating_presence_2014_dc > 0);
 assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "canonical browser monsters");
 for (const fixture of [
   "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
@@ -58,9 +67,7 @@ for (const id of [
   "2014-allosaurus", "2014-elephant", "2014-mammoth", "2014-panther", "2014-saber-toothed-tiger",
   "2014-tiger", "2014-triceratops", "2014-warhorse", "2014-goat", "2014-giant-goat",
   "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens",
-]) {
-  assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
-}
+]) assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
 for (const id of [
   "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens",
 ]) {
