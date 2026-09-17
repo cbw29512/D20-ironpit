@@ -17,6 +17,7 @@ from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_
 from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
+from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
 from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
 from app.combat.saving_throws import resolve_save_action
@@ -39,6 +40,7 @@ def resolve_combat_turn(
     try:
         events: list[BattleEvent] = []
         cleanup_grapples(setup)
+        sync_paladin_auras_2014(setup)
         start_events, sequence = begin_turn_with_events(
             sequence, round_number, attacker.combatant_id, attacker.state, dice,
         )
@@ -94,6 +96,7 @@ def resolve_combat_turn(
             sequence, round_number, attacker, setup, turn_key, dice,
         )
         events.extend(movement_events)
+        sync_paladin_auras_2014(setup)
         if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
