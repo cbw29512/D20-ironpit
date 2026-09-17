@@ -12,6 +12,7 @@ class ProgressionCombatFeatures(BaseModel):
     danger_sense: bool = False
     reckless_attack: bool = False
     frenzy: bool = False
+    brutal_critical_dice: int = Field(default=0, ge=0, le=3)
     fast_movement_bonus_ft: int = Field(default=0, ge=0)
     mindless_rage: bool = False
     instinctive_pounce_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
