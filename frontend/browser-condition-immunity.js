@@ -3,6 +3,7 @@
 
   function immune(state, conditionId) {
     if (state.template.condition_immunities?.includes(conditionId) === true) return true;
+    if ((state.active_modifiers || []).some((item) => item.kind === "condition-immunity" && item.condition_id === conditionId)) return true;
     if (state.template.mindless_rage && state.active_effect_ids.includes("rage")
         && ["charmed", "frightened"].includes(conditionId)) return true;
     if (conditionId === "poisoned") {
