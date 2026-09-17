@@ -41,7 +41,7 @@ def resolve_frenzy_bonus_attack(
     state = attacker.state
     if (
         state.template.ruleset != "2014"
-        or not state.template.progression_features.frenzy
+        or not state.template.progression_features.frenzy_bonus_attack_2014
         or FRENZY_2014_EFFECT_ID not in state.active_effect_ids
         or not rage_active(state)
         or not is_available(state, "bonus_action")
