@@ -71,7 +71,12 @@ def audit_pregen_combat_stats(template: CombatantTemplate, profile: PregenCombat
         profile.armor_class, profile.max_hp, profile.speed_ft,
     ):
         issues.append("ac-hp-or-speed-mismatch")
-    if template.initiative_bonus != profile.abilities.modifier("dexterity"):
+    expected_initiative = (
+        profile.initiative_bonus
+        if profile.initiative_bonus is not None
+        else profile.abilities.modifier("dexterity")
+    )
+    if template.initiative_bonus != expected_initiative:
         issues.append("initiative-mismatch")
     if template.saving_throw_bonuses != _expected_saves(profile):
         issues.append("saving-throws-mismatch")
