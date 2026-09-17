@@ -21,6 +21,15 @@ from app.domain.models import CombatantTemplate
 
 ResourceRule = tuple[str, str, Callable[[int], int]]
 
+
+def _monk_2014_ki_uses(level: int) -> int:
+    return level if level >= 2 else 0
+
+
+def _monk_2014_wholeness_uses(level: int) -> int:
+    return 1 if level >= 6 else 0
+
+
 _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", barbarian_rage_uses),),
     "cleric": (("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),),
@@ -37,6 +46,10 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("second-wind", "Second Wind", fighter_2014_second_wind_uses),
         ("action-surge", "Action Surge", fighter_2014_action_surge_uses),
         ("indomitable", "Indomitable", fighter_2014_indomitable_uses),
+    ),
+    "monk": (
+        ("ki", "Ki", _monk_2014_ki_uses),
+        ("wholeness-of-body", "Wholeness of Body", _monk_2014_wholeness_uses),
     ),
     "rogue": (),
 }
