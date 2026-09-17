@@ -106,6 +106,14 @@
       }
     }
     const components = [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }];
+    const extraCriticalDice = critical && !replacement && attack.fixedDamage == null && attack.kind === "melee"
+      ? (attacker.template.melee_critical_extra_weapon_dice || 0) : 0;
+    if (extraCriticalDice > 0) {
+      const rolls = dice().rollMany(extraCriticalDice, attack.diceSize);
+      components.push({ source: "Extra critical weapon dice", damage_type: attack.damageType,
+        notation: `${extraCriticalDice}d${attack.diceSize}+0`, rolls, modifier: 0,
+        total: rolls.reduce((sum, value) => sum + value, 0) });
+    }
     for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
     if (mode === "advantage" && attack.conditionalAdvantage) {
       const [baseCount, sides] = attack.conditionalAdvantage;
