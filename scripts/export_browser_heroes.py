@@ -141,6 +141,18 @@ def _spell_choice(choice: Any) -> dict[str, Any]:
             "role": choice.role, "requiredCapabilities": list(choice.required_capabilities)}
 
 
+def _spell_package(class_id: str, level: int, template: CombatantTemplate):
+    if not (
+        template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions
+        or template.healing_actions
+    ):
+        return None
+    casting_modifier = None
+    if class_id == "paladin" and template.ability_scores is not None:
+        casting_modifier = template.ability_scores.modifier("charisma")
+    return canonical_spell_package(class_id, level, template.ruleset, casting_modifier)
+
+
 def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[str, Any]:
     class_id, level, build_id = key; attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
     progression = template.progression_features
@@ -171,6 +183,11 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "martial_arts_die_size": progression.martial_arts_die_size, "flurry_of_blows": progression.flurry_of_blows,
         "deflect_missiles": progression.deflect_missiles, "open_hand_technique": progression.open_hand_technique,
         "stunning_strike": progression.stunning_strike,
+        "divine_smite_2014": progression.divine_smite_2014, "turn_unholy_2014": progression.turn_unholy_2014,
+        "sacred_weapon_2014_bonus": progression.sacred_weapon_2014_bonus,
+        "aura_of_protection_2014_bonus": progression.aura_of_protection_2014_bonus,
+        "aura_of_devotion_2014": progression.aura_of_devotion_2014,
+        "aura_of_courage_2014": progression.aura_of_courage_2014,
         "survivor_heal_amount": progression.survivor_heal_amount,
         "critical_move_fraction": progression.critical_move_fraction, "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
@@ -182,10 +199,11 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if progression.tactical_master_sap_weapon_ids: row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)
     if progression.heroic_warrior: row["heroic_warrior"] = True
     if progression.studied_attacks: row["studied_attacks"] = True
-    package = canonical_spell_package(class_id, level) if template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions or template.healing_actions else None
+    package = _spell_package(class_id, level, template)
     if package is not None:
         row["canonical_cantrips"] = [_spell_choice(item) for item in package.cantrips]
         row["canonical_prepared_spells"] = [_spell_choice(item) for item in package.spells]
+        row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
