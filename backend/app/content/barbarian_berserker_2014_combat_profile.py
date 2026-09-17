@@ -33,7 +33,6 @@ def build_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
                 ("intimidation", scores.modifier("charisma") + pb),
                 ("perception", scores.modifier("wisdom") + pb),
                 ("survival", scores.modifier("wisdom") + pb),
-                ("animal-handling", scores.modifier("wisdom") + pb),
             ),
             attacks=attacks,
             weapon_masteries=(),
