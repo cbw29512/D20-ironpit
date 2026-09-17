@@ -56,6 +56,13 @@ def _remarkable_athlete_bonus(level: int) -> int:
     return (proficiency_bonus(level) + 1) // 2
 
 
+def _fighting_styles(level: int) -> list[str]:
+    styles = ["Defense"]
+    if level >= 10:
+        styles.append("Archery")
+    return styles
+
+
 def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
     """Compile the legal 2014 Human Champion Fighter baseline for Iron Pit."""
     try:
@@ -75,6 +82,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             ],
         )
         remarkable = _remarkable_athlete_bonus(level)
+        styles = _fighting_styles(level)
         return CombatantTemplate(
             id=f"karnok-stoneward-2014-l{level}",
             name="Karnok Stoneward",
@@ -95,8 +103,8 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
                 "athletics": scores.modifier("strength") + proficiency_bonus(level),
                 "acrobatics": scores.modifier("dexterity") + remarkable,
             },
-            fighting_style="Defense",
-            fighting_styles=["Defense", *( ["Archery"] if level >= 10 else [])],
+            fighting_style=styles[0],
+            fighting_styles=styles,
             weapon_masteries=[],
             visual=VisualLoadout(armor="chain-mail", main_hand="greatsword", body_style="humanoid"),
             resources=_resources(level),
