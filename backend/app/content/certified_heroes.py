@@ -31,11 +31,19 @@ def _validated(
     return (profile.class_id, profile.level, build_id), template
 
 
-def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
-    """Validate every contiguous level registered by each canonical progression."""
+def build_all_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
+    """Validate every registered hero level across every supported ruleset."""
     return [
         _validated(progression.template_builder(level), progression.profile(level))
         for progression, level in iter_certified_progression_levels()
+    ]
+
+
+def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
+    """Return the existing public 2024 canonical certification registry only."""
+    return [
+        entry for entry in build_all_certified_hero_entries()
+        if entry[1].ruleset == "2024"
     ]
 
 
