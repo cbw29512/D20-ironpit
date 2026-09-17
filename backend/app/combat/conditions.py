@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import attacks_have_advantage_against, has_condition
 from app.combat.dodge import DODGE_EFFECT_ID, dodge_benefits_active
+from app.combat.exhaustion import attack_disadvantage_sources
 from app.combat.grapple import (
     RESTRAINED_EFFECT_ID,
     apply_grapple,
@@ -27,9 +28,9 @@ def attack_roll_condition_sources(
     distance_ft: int,
     target_id: str | None = None,
 ) -> tuple[int, int]:
-    """Return Advantage and Disadvantage sources from supported conditions."""
+    """Return Advantage and Disadvantage sources from supported conditions and 2014 Exhaustion."""
     advantage = 0
-    disadvantage = 0
+    disadvantage = attack_disadvantage_sources(attacker)
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
