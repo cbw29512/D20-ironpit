@@ -75,13 +75,15 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
         audits.append(_audit("feral-instinct", "Feral Instinct", "class", source=barbarian))
     if level >= 9:
         audits.append(_audit("brutal-critical", "Brutal Critical", "class", source=barbarian))
+    if level >= 10:
+        audits.append(_audit("intimidating-presence", "Intimidating Presence", "subclass", source=berserker))
     return audits
 
 
 def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Rokhan profile certification currently covers levels 1 through 9.")
+        if level not in range(1, 11):
+            raise ValueError("2014 Rokhan profile certification covers levels 1 through 10.")
         base = _base_scores(); species = _species_increases(); advancements = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-rokhan-stonefury-2014-l{level}", template_id=f"rokhan-stonefury-2014-l{level}",
