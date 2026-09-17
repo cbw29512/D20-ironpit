@@ -94,7 +94,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         class_id="fighter",
         template_builder=build_karnok_stoneward_2014,
         profile_level_builder=build_karnok_stoneward_2014_profile,
-        max_level=10,
+        max_level=20,
     ),
     CertifiedHeroProgression(
         class_id="barbarian",
