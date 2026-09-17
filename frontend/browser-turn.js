@@ -3,6 +3,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE, C = () => window.IRON_PIT_BROWSER_CHARGE;
   const R = () => window.IRON_PIT_BROWSER_RECHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK, G = () => window.IRON_PIT_BROWSER_RAGE;
+  const AM = () => window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
@@ -62,7 +63,15 @@
       const turnKey = `${round}:${member.combatant_id}`;
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
-      const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
+      const rage = G()?.enter(sequence, round, member);
+      if (rage) {
+        events.push(rage); sequence += 1;
+        const fraction = member.state.template.instinctive_pounce_fraction || 0;
+        if (fraction > 0) {
+          const moved = AM().resolve(sequence, round, member, setup, { speedFraction: fraction, turnKey });
+          events.push(...moved.events); sequence = moved.sequence;
+        }
+      }
       const wind = P()?.secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; const shift = T()?.resolve(sequence, round, member, setup); if (shift) { events.push(shift); sequence += 1; } }
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
       const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
