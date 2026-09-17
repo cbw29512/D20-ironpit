@@ -76,7 +76,7 @@
       const maintained = state.rage_last_attack_round === round
         || (state.rage_last_damage_round != null && state.rage_last_damage_round >= round - 1);
       if (maintained) state.rage_expires_round = Math.min(round + 1, state.rage_max_round || round + 1);
-      else if (state.rage_expires_round <= round) end(state);
+      else end(state);
       return { event, sequence };
     }
     if (state.rage_max_round != null && state.rage_max_round <= round) { end(state); return { event, sequence }; }
