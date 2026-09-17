@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
+from app.combat.barbarian import mark_rage_damage_taken
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
@@ -59,6 +60,8 @@ def _finish_damage(
     dice: DiceProvider | None,
     affected_states: list[CombatantState] | None,
 ) -> ZeroHpOutcome:
+    if damage_taken > 0:
+        mark_rage_damage_taken(state)
     end_damage_sensitive_effects(state)
     if state.concentration is None:
         return outcome
