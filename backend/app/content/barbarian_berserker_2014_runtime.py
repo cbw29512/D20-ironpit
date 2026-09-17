@@ -29,19 +29,22 @@ def _attack(level: int, weapon_id: str, scores: AbilityScores, *, rage_eligible:
     )
 
 
-def _progression(level: int) -> ProgressionCombatFeatures:
+def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures:
+    presence_dc = 8 + proficiency_bonus(level) + scores.modifier("charisma") if level >= 10 else 0
     return ProgressionCombatFeatures(
-        danger_sense=level >= 2, reckless_attack=level >= 2, frenzy=level >= 3,
+        danger_sense=level >= 2, reckless_attack=level >= 2,
+        frenzy_bonus_attack_2014=level >= 3,
         fast_movement_bonus_ft=10 if level >= 5 else 0, mindless_rage=level >= 6,
         initiative_advantage=level >= 7, brutal_critical_dice=1 if level >= 9 else 0,
+        intimidating_presence_2014_dc=presence_dc,
     )
 
 
 def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
-    """Compile the 2014 Human Path of the Berserker Barbarian through Brutal Critical."""
+    """Compile the legal 2014 Human Path of the Berserker Barbarian through level 10."""
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Berserker certification currently covers levels 1 through 9.")
+        if level not in range(1, 11):
+            raise ValueError("2014 Berserker certification covers levels 1 through 10.")
         scores = _scores(level)
         greataxe = _attack(level, "greataxe", scores, rage_eligible=True)
         handaxe = _attack(level, "handaxe", scores, rage_eligible=False)
@@ -62,7 +65,7 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
             skill_bonuses={"athletics": scores.modifier("strength") + proficiency_bonus(level),
                            "acrobatics": dexterity},
             weapon_masteries=[], wearing_heavy_armor=False,
-            rage_damage_bonus=barbarian_rage_damage_bonus(level), progression_features=_progression(level),
+            rage_damage_bonus=barbarian_rage_damage_bonus(level), progression_features=_progression(level, scores),
             resources=[ResourceDefinition(id="rage", name="Rage", max_uses=barbarian_2014_rage_uses(level))],
             visual=VisualLoadout(armor="unarmored", main_hand="greataxe", body_style="humanoid"),
             source="D&D Basic Rules 2014: Human; Barbarian; Path of the Berserker; Soldier; Equipment",
