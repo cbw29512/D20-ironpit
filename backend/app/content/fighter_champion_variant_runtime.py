@@ -81,6 +81,7 @@ def _progression(level: int, styles: list[str], build_id: str) -> ProgressionCom
         initiative_advantage=True,
         athletics_advantage=True,
         great_weapon_fighting=has_fighting_style(styles, "Great Weapon Fighting"),
+        indomitable_reroll=level >= 9,
         indomitable_bonus=level if level >= 9 else 0,
         tactical_master_sap_weapon_ids=(
             list(_TACTICAL_MASTER_SAP_WEAPONS[build_id]) if level >= 9 else []
