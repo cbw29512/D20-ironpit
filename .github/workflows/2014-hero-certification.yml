@@ -1,0 +1,36 @@
+name: 2014 Hero Certification
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hero-2014-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  certify-2014-heroes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Generate canonical browser artifacts
+        run: |
+          python scripts/export_browser_heroes.py
+          python scripts/prepare_static_site.py
+      - name: Certify 2014 hero data and browser behavior
+        run: |
+          node frontend/browser-catalog-2014.test.cjs
+          node frontend/browser-ruleset-data.test.cjs
+          node frontend/browser-2014-mvp.test.cjs
+          node frontend/browser-survivor.test.cjs
