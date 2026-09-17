@@ -4,7 +4,7 @@
   const R = () => window.IRON_PIT_BROWSER_RECHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK, G = () => window.IRON_PIT_BROWSER_RAGE;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
-  const BF = () => window.IRON_PIT_BROWSER_FRENZY_2014;
+  const BF = () => window.IRON_PIT_BROWSER_FRENZY_2014, IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -32,7 +32,7 @@
     else state.death_save_failures = Math.min(3, state.death_save_failures + 1);
     if (state.death_save_failures >= 3) result += "; dies";
     if (state.death_save_failures >= 3) { state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false; }
-    else if (state.death_save_successes >= 3) { state.is_stable = true; state.is_unconscious = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable"; }
+    else if (state.death_save_successes >= 3) { state.is_stable = true; state.is_unconscious = true; state.is_stable = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable"; }
     return { sequence, round_number: round, event_type: "death_save", actor_id: member.combatant_id, actor_name: state.template.name,
       death_save_roll: { notation: "1d20", rolls: [natural], selected_roll: natural, modifier: 0, mode: "normal", total: natural }, hp_after: state.current_hp,
       death_save_successes_before: successesBefore, death_save_failures_before: failuresBefore, death_save_successes: state.death_save_successes,
@@ -46,7 +46,10 @@
     const frenzy = BF()?.resolve(sequence, round, member, setup, turnKey);
     if (frenzy) { events.push(...frenzy.events); sequence = frenzy.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
-    return { events, sequence: rage?.sequence ?? sequence };
+    sequence = rage?.sequence ?? sequence;
+    const fear = IP()?.cleanupTarget(sequence, round, member, setup);
+    if (fear) { events.push(...fear.events); sequence = fear.sequence; }
+    return { events, sequence };
   }
 
   function saveChoice(member, setup) {
@@ -78,6 +81,8 @@
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey); if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+      const presence = IP()?.resolve(sequence, round, member, targets[0]);
+      if (presence) { events.push(presence); sequence += 1; return finalize(events, sequence, round, member, setup, turnKey); }
       if (member.state.template.attack_action) {
         const multi = M().resolveAttackAction(sequence, round, member, setup); events.push(...multi.events); sequence = multi.sequence;
         if (multi.events.length || !E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
