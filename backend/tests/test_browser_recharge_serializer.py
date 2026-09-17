@@ -1,6 +1,15 @@
+from pathlib import Path
+import sys
 from types import SimpleNamespace
 
 import pytest
+
+# The serializer is a repository-level build tool.  CI runs the Python
+# certification suite from backend/, so make the repository root explicit
+# rather than relying on the caller's working directory.
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from scripts.browser_recharge_serializer import recharge_rows
 
