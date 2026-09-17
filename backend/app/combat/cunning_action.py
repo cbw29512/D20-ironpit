@@ -9,21 +9,30 @@ from app.domain.models import BattleEvent
 
 
 def needs_dash(member: EncounterCombatant, setup: EncounterSetup, turn_key: str) -> bool:
+    """Use Dash only when normal movement cannot reach any certified offensive range."""
     if not member.state.template.progression_features.cunning_action:
         return False
-    if not is_available(member.state, "bonus_action") or member.state.movement_remaining_ft <= 0:
+    if not is_available(member.state, "bonus_action"):
         return False
+    speed = effective_speed(member.state)
+    if speed <= 0:
+        return False
+    normal_move = member.state.movement_remaining_ft
+    dash_would_help = False
     for target in living_opponents(member, setup):
         distance = combatant_distance(member, target)
-        if any(distance <= desired for _, desired in offensive_ranges_for_target(member, target, turn_key)):
-            return False
-    return True
+        for _, desired in offensive_ranges_for_target(member, target, turn_key):
+            if distance <= desired + normal_move:
+                return False
+            if distance <= desired + normal_move + speed:
+                dash_would_help = True
+    return dash_would_help
 
 
 def use_dash(
     sequence: int, round_number: int, member: EncounterCombatant, setup: EncounterSetup, turn_key: str,
 ) -> BattleEvent | None:
-    """Spend Cunning Action on Dash only when ordinary movement has no legal offense already."""
+    """Spend Cunning Action on Dash only when it enables supported offense this turn."""
     if not needs_dash(member, setup, turn_key):
         return None
     spend(member.state, "bonus_action")
