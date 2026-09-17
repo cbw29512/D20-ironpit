@@ -7,6 +7,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014 || {
     applyDeflectMissiles: (_defender, _attack, components) => ({ components, used: false, reduction: 0 }),
   };
@@ -83,9 +84,11 @@
       attacker, attack, critical, mode, turnKey, options.bonusDamage || null,
       defender, Boolean(options.sneakAttackAllyAvailable),
     );
+    const rolled = [...base.components];
+    const smite = P()?.divineSmiteComponent(attacker, defender, attack, critical) || null;
+    if (smite) rolled.push(smite);
     const saveDamage = resolveSaveDamage(defender, attack);
     const saveComponentPresent = Boolean(saveDamage.component);
-    const rolled = [...base.components];
     if (saveComponentPresent) rolled.push(saveDamage.component);
     const deflect = MK().applyDeflectMissiles(defender, attack, rolled);
     const uncanny = RD().applyUncannyDodge(attacker, defender, deflect.components);
