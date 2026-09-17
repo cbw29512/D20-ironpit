@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from app.combat.damage import BonusDamageSpec, aggregate_damage_components, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
+from app.combat.deflect_missiles import apply_deflect_missiles
 from app.combat.dice import DiceProvider
 from app.combat.on_hit_save_damage import OnHitSaveDamageResolution, resolve_on_hit_save_damage
 from app.combat.rogue_defenses import apply_uncanny_dodge
@@ -20,6 +21,8 @@ class AttackHitDamageResolution:
     applied_total: int
     save_damage: OnHitSaveDamageResolution
     uncanny_dodge_used: bool = False
+    deflect_missiles_used: bool = False
+    deflect_missiles_reduction: int = 0
 
 
 def resolve_attack_hit_damage(
@@ -43,6 +46,12 @@ def resolve_attack_hit_damage(
     save_component_present = save_damage.component is not None
     if save_component_present:
         rolled_components.append(save_damage.component)
+    rolled_components, deflect_used, deflect_reduction = apply_deflect_missiles(
+        defender,
+        attack,
+        rolled_components,
+        dice,
+    )
     rolled_components, uncanny_used = apply_uncanny_dodge(attacker, defender, rolled_components)
     damage_roll = aggregate_damage_components(rolled_components)
     applied_total, components = apply_damage_defenses(defender, rolled_components)
@@ -60,5 +69,12 @@ def resolve_attack_hit_damage(
         apply_zero_hp_save_damage_rider(defender, effect, turn_key, affected_states)
         outcome = "unconscious"
     return AttackHitDamageResolution(
-        damage_roll, components, outcome, applied_total, save_damage, uncanny_used,
+        damage_roll=damage_roll,
+        damage_components=components,
+        damage_outcome=outcome,
+        applied_total=applied_total,
+        save_damage=save_damage,
+        uncanny_dodge_used=uncanny_used,
+        deflect_missiles_used=deflect_used,
+        deflect_missiles_reduction=deflect_reduction,
     )
