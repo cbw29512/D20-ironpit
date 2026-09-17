@@ -77,7 +77,7 @@ def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
             background_equipment_option="package",
             background_equipment=["Crowbar", "Dark Common Clothes with Hood", "Pouch", "15 gp"],
             skill_proficiencies=["Acrobatics", "Deception", "Investigation", "Perception", "Persuasion", "Stealth"],
-            weapon_masteries=[], combat_loadout_kind="finesse-ranged",
+            weapon_masteries=[], combat_loadout_kind="dual-wield",
             feature_audits=_audits(level), source_references=[
                 "D&D Basic Rules 2014: Human", "D&D Basic Rules 2014: Rogue",
                 "D&D Basic Rules 2014: Thief", "D&D Basic Rules 2014: Criminal",
