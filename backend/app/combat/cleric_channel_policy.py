@@ -65,6 +65,8 @@ def _worth_preserving(cleric: EncounterCombatant, setup: EncounterSetup) -> tupl
 
 def choose_channel_divinity(cleric: EncounterCombatant, setup: EncounterSetup) -> ChannelDivinityChoice | None:
     """Rescue/support first, then control Undead, and conserve damage Spark while spell slots remain."""
+    if cleric.state.template.archetype != "Cleric":
+        return None
     if not is_available(cleric.state, "action") or _uses(cleric, "channel-divinity") < 1:
         return None
     preserve = _worth_preserving(cleric, setup)
