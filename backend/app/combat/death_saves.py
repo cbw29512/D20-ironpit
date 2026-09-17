@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.defensive_modifier_rules import death_save_advantage_sources
 from app.combat.dice import DiceProvider
+from app.combat.rolls import roll_d20
 from app.combat.zero_hp import restore_hit_points, reset_death_saves
-from app.domain.models import BattleEvent, CombatantState, DiceRoll
+from app.domain.models import BattleEvent, CombatantState, RollMode
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +32,9 @@ def resolve_death_save(
         if state.current_hp != 0 or state.is_dead or state.is_stable:
             raise ValueError("This character does not currently make a Death Saving Throw.")
 
-        natural = dice.roll(20)
-        roll = DiceRoll(notation="1d20", rolls=[natural], selected_roll=natural, total=natural)
+        mode = RollMode.ADVANTAGE if death_save_advantage_sources(state) else RollMode.NORMAL
+        roll = roll_d20(dice, 0, mode)
+        natural = roll.selected_roll or 0
         hp_before = state.current_hp
         successes_before = state.death_save_successes
         failures_before = state.death_save_failures
