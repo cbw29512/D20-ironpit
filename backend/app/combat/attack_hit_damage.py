@@ -43,7 +43,7 @@ def resolve_attack_hit_damage(
     save_component_present = save_damage.component is not None
     if save_component_present:
         rolled_components.append(save_damage.component)
-    rolled_components, uncanny_used = apply_uncanny_dodge(defender, rolled_components)
+    rolled_components, uncanny_used = apply_uncanny_dodge(attacker, defender, rolled_components)
     damage_roll = aggregate_damage_components(rolled_components)
     applied_total, components = apply_damage_defenses(defender, rolled_components)
     damage_roll.total = applied_total
