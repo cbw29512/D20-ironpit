@@ -71,6 +71,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("studied-attacks")
     if features.sneak_attack_d6:
         mechanics.add("sneak-attack")
+    if features.survivor_heal_amount:
+        mechanics.add("survivor")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
@@ -257,6 +259,3 @@ def main() -> None:
         raise RuntimeError("Monster certification manifest is stale or hand-edited.")
     print("Certification manifests match authoritative runtime, source, browser, and catalog state.")
 
-
-if __name__ == "__main__":
-    main()
