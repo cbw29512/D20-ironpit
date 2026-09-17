@@ -48,6 +48,23 @@
   }
   function noteDamage(state, round) { if (active(state) && is2014(state)) state.rage_last_damage_round = round; }
 
+  function resolveFrenzyAttack(sequence, round, member, setup, turnKey) {
+    const state = member.state, started = state.frenzy_2014_started_round;
+    if (!is2014(state) || !state.template.frenzy_bonus_attack_2014 || !active(state)
+      || !state.active_effect_ids.includes(FRENZY_2014) || started == null || round <= started
+      || state.turn_terminated || Q().incapacitated(state) || !E().available(state, "bonus_action")) return null;
+    const ids = (state.template.attacks || []).map((attack) => attack.id);
+    const choice = window.IRON_PIT_BROWSER_FORMATION?.chooseAttack(member, setup, ids, "melee");
+    if (!choice) return null;
+    E().spend(state, "bonus_action");
+    const result = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
+      sequence, round, member, choice.target, choice.attack, choice.distance, setup, turnKey,
+      { allowReckless: false, featureId: FRENZY_2014 },
+    );
+    if (result.events.length) result.events[0].description += " 2014 Frenzy uses the Bonus Action melee attack.";
+    return result;
+  }
+
   function end(state) {
     if (!active(state)) return;
     if (is2014(state) && state.active_effect_ids.includes(FRENZY_2014)) {
@@ -90,5 +107,7 @@
     return { event, sequence };
   }
 
-  window.IRON_PIT_BROWSER_RAGE = { active, damageBonus, endIfIncapacitated, enter, extendFromAttack, finalize, noteDamage };
+  window.IRON_PIT_BROWSER_RAGE = {
+    active, damageBonus, endIfIncapacitated, enter, extendFromAttack, finalize, noteDamage, resolveFrenzyAttack,
+  };
 })();
