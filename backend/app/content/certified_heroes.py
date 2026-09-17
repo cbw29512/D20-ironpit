@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+from app.content.all_pregen_combat_profiles import build_all_pregen_combat_profiles
 from app.content.build_audit import assert_character_build_raw_ready
 from app.content.canonical_hero_policy import assert_canonical_profile_policy
 from app.content.certified_hero_progressions import iter_certified_progression_levels
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.hero_progressions import CANONICAL_BUILD_ID
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
-from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
@@ -21,7 +21,7 @@ def _validated(
 ) -> tuple[HeroBuildKey, CombatantTemplate]:
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, template)
-    combat_profile = build_pregen_combat_profiles().get(template.id)
+    combat_profile = build_all_pregen_combat_profiles().get(template.id)
     if combat_profile is None:
         raise ValueError(f"Certified hero {template.id} lacks a combat fingerprint.")
     assert_pregen_combat_stats(template, combat_profile)
