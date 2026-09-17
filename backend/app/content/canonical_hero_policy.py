@@ -128,7 +128,7 @@ def assert_canonical_profile_policy(profile: CharacterBuildProfile) -> None:
             )
 
     plan = canonical_combat_plan(profile.class_id)
-    if plan.mode in {"caster", "hybrid"}:
+    if profile.ruleset == "2024" and plan.mode in {"caster", "hybrid"}:
         canonical_spell_package(profile.class_id, profile.level)
     expected_loadout = canonical_melee_loadout(profile)
     expected_kind = expected_loadout.kind if expected_loadout else None
