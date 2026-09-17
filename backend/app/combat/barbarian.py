@@ -44,14 +44,16 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
     resource = _rage_resource(state)
     if resource is None or resource.current_uses <= 0 or not is_available(state, "bonus_action"):
         return None
-    resource.current_uses -= 1; spend(state, "bonus_action")
+    resource.current_uses -= 1
+    spend(state, "bonus_action")
     state.active_effect_ids.append(RAGE_EFFECT_ID)
     removed = _end_mindless_rage_conditions(state)
     for damage_type in _RAGE_RESISTANCES:
         if damage_type not in state.temporary_damage_resistances:
             state.temporary_damage_resistances.append(damage_type)
     state.rage_started_round = round_number
-    state.rage_last_attack_round = None; state.rage_last_damage_round = None
+    state.rage_last_attack_round = None
+    state.rage_last_damage_round = None
     state.rage_expires_round = round_number + 1
     state.rage_max_round = round_number + (9 if _is_2014(state) else _RAGE_2024_MAX_ROUNDS)
     if _is_2014(state) and state.template.progression_features.frenzy_bonus_attack_2014:
@@ -64,9 +66,16 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
     if removed:
         description += f" Mindless Rage ends {', '.join(removed)}."
     return BattleEvent(
-        sequence=sequence, round_number=round_number, event_type="feature", actor_id=actor_id,
-        actor_name=state.template.name, feature_id=RAGE_EFFECT_ID, removed_condition_ids=removed,
-        resource_remaining=resource.current_uses, animation="rage", description=description,
+        sequence=sequence,
+        round_number=round_number,
+        event_type="feature",
+        actor_id=actor_id,
+        actor_name=state.template.name,
+        feature_id=RAGE_EFFECT_ID,
+        removed_condition_ids=removed,
+        resource_remaining=resource.current_uses,
+        animation="rage",
+        description=description,
     )
 
 
@@ -90,7 +99,10 @@ def _end_frenzy_2014(state: CombatantState) -> None:
     state.frenzy_2014_started_round = None
     state.exhaustion_level_2014 = min(6, state.exhaustion_level_2014 + 1)
     if state.exhaustion_level_2014 >= 6:
-        state.current_hp = 0; state.is_alive = False; state.is_dead = True; state.is_unconscious = False
+        state.current_hp = 0
+        state.is_alive = False
+        state.is_dead = True
+        state.is_unconscious = False
 
 
 def end_rage(state: CombatantState) -> None:
@@ -100,8 +112,11 @@ def end_rage(state: CombatantState) -> None:
         _end_frenzy_2014(state)
     state.active_effect_ids.remove(RAGE_EFFECT_ID)
     state.temporary_damage_resistances = [d for d in state.temporary_damage_resistances if d not in _RAGE_RESISTANCES]
-    state.rage_expires_round = None; state.rage_max_round = None; state.rage_started_round = None
-    state.rage_last_attack_round = None; state.rage_last_damage_round = None
+    state.rage_expires_round = None
+    state.rage_max_round = None
+    state.rage_started_round = None
+    state.rage_last_attack_round = None
+    state.rage_last_damage_round = None
 
 
 def finalize_rage_turn(sequence: int, round_number: int, state: CombatantState, actor_id: str) -> tuple[BattleEvent | None, int]:
@@ -109,17 +124,19 @@ def finalize_rage_turn(sequence: int, round_number: int, state: CombatantState, 
         return None, sequence
     if _is_2014(state):
         if state.rage_max_round is not None and round_number >= state.rage_max_round:
-            end_rage(state); return None, sequence
+            end_rage(state)
+            return None, sequence
         maintained = state.rage_last_attack_round == round_number or (
             state.rage_last_damage_round is not None and state.rage_last_damage_round >= round_number - 1
         )
         if maintained:
             state.rage_expires_round = min(round_number + 1, state.rage_max_round or round_number + 1)
-        elif state.rage_expires_round <= round_number:
+        else:
             end_rage(state)
         return None, sequence
     if state.rage_max_round is not None and state.rage_max_round <= round_number:
-        end_rage(state); return None, sequence
+        end_rage(state)
+        return None, sequence
     if state.rage_expires_round > round_number or not is_available(state, "bonus_action"):
         if state.rage_expires_round <= round_number:
             end_rage(state)
@@ -127,8 +144,13 @@ def finalize_rage_turn(sequence: int, round_number: int, state: CombatantState, 
     spend(state, "bonus_action")
     state.rage_expires_round = min(round_number + 1, state.rage_max_round or round_number + 1)
     event = BattleEvent(
-        sequence=sequence, round_number=round_number, event_type="feature", actor_id=actor_id,
-        actor_name=state.template.name, feature_id=RAGE_EFFECT_ID, animation="rage",
+        sequence=sequence,
+        round_number=round_number,
+        event_type="feature",
+        actor_id=actor_id,
+        actor_name=state.template.name,
+        feature_id=RAGE_EFFECT_ID,
+        animation="rage",
         description=f"{state.template.name} extends Rage with a Bonus Action.",
     )
     return event, sequence + 1
