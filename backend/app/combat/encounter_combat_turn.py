@@ -12,6 +12,7 @@ from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
 from app.combat.encounter_turn_support import finish_turn, resolve_support_actions, save_choice
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
+from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
@@ -99,6 +100,10 @@ def resolve_combat_turn(
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        presence = resolve_intimidating_presence(sequence, round_number, attacker, target, dice)
+        if presence is not None:
+            events.append(presence); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         if attacker.state.template.attack_action is not None:
