@@ -35,8 +35,13 @@ def build_spell_modifier(
         dice_size=effect.dice_size,
         damage_type=DamageType(effect.damage_type) if effect.damage_type else None,
         target_id=target_id,
+        condition_id=effect.condition_id,
+        source_creature_types=list(effect.source_creature_types),
+        save_ability=effect.save_ability,
+        save_dc=effect.save_dc,
         concentration_required=concentration_required,
         consume_on_attack_against=effect.consume_on_attack_against,
+        ends_on_owner_attack=effect.ends_on_owner_attack,
         expires_source_turn_end_round=expiry,
     )
 
