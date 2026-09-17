@@ -42,20 +42,17 @@ def resolve_attack(
     sneak_attack_ally_available: bool = False, off_turn: bool = False,
 ) -> BattleEvent:
     try:
-        if spend_action and not is_available(attacker, "action"):
-            raise ValueError("Action is not available for an attack.")
-        weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
-        attacker_event_id = actor_event_id or attacker.template.id
+        if spend_action and not is_available(attacker, "action"): raise ValueError("Action is not available for an attack.")
+        weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id; attacker_event_id = actor_event_id or attacker.template.id
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
-        exhaustion_disadvantage = 1 if attacker.exhaustion_level_2014 >= 3 else 0
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
                                + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
-                               + reckless_attack_advantage(attacker, attack)
-                               + conditional_attack_advantage_sources(attack, defender)
+                               + reckless_attack_advantage(attacker, attack) + conditional_attack_advantage_sources(attack, defender)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) + exhaustion_disadvantage,
+            other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
+                                        + int(attacker.exhaustion_level_2014 >= 3)),
             close_enemy_active=close_enemy_active,
         )
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
@@ -68,12 +65,11 @@ def resolve_attack(
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        natural = attack_roll.selected_roll or 0; natural_20 = natural == 20
-        natural_1 = natural == 1; natural_1_ends_turn = natural_1 and not off_turn
+        natural = attack_roll.selected_roll or 0; natural_20 = natural == 20; natural_1 = natural == 1
+        natural_1_ends_turn = natural_1 and not off_turn
         if natural_1_ends_turn: terminate_turn(attacker, "iron-pit-natural-1-attack")
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
-        target_ac = effective_armor_class(actual_defender)
-        hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
+        target_ac = effective_armor_class(actual_defender); hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
@@ -85,10 +81,8 @@ def resolve_attack(
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
-            hit_damage = resolve_attack_hit_damage(
-                attacker, actual_defender, attack, dice, critical, mode, active_turn_key,
-                bonus_damage, affected_states, sneak_attack_ally_available,
-            )
+            hit_damage = resolve_attack_hit_damage(attacker, actual_defender, attack, dice, critical, mode, active_turn_key,
+                                                   bonus_damage, affected_states, sneak_attack_ally_available)
             damage_roll = hit_damage.damage_roll; damage_components = hit_damage.damage_components
             damage_outcome = hit_damage.damage_outcome; applied_total = hit_damage.applied_total
             if applied_total > 0: note_rage_damage(actual_defender, round_number)
@@ -106,8 +100,7 @@ def resolve_attack(
             graze = resolve_graze_miss(attacker, actual_defender, attack, dice, affected_states)
             if graze is not None: damage_roll, damage_components, damage_outcome = graze; end_rage_if_incapacitated(actual_defender)
             studied_applied = apply_studied_attack_miss(attacker, attacker_event_id, defender_event_id, round_number)
-        outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
-        description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS"); description = f"{attacker.template.name}: {outcome} with {weapon.name}."
         if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
@@ -123,10 +116,8 @@ def resolve_attack(
         if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-        if "prone" in applied_conditions: description += f" {actual_defender.template.name} is knocked Prone."
-        if "grappled" in applied_conditions: description += f" {actual_defender.template.name} is Grappled."
-        if "restrained" in applied_conditions: description += f" {actual_defender.template.name} is Restrained while Grappled."
-        if "poisoned" in applied_conditions: description += f" {actual_defender.template.name} is Poisoned."
+        for condition, text in (("prone", "is knocked Prone"), ("grappled", "is Grappled"), ("restrained", "is Restrained while Grappled"), ("poisoned", "is Poisoned")):
+            if condition in applied_conditions: description += f" {actual_defender.template.name} {text}."
         primary_save = save_damage if save_damage and save_damage.save_dc is not None else on_hit_save
         save_roll = primary_save.save_roll if primary_save and primary_save.save_dc is not None else (topple.save_roll if topple else None)
         save_ability = primary_save.save_ability if primary_save and primary_save.save_dc is not None else ("constitution" if topple and topple.save_dc is not None else None)
@@ -137,10 +128,8 @@ def resolve_attack(
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
             attack_roll=attack_roll, saving_throw_roll=save_roll, save_ability=save_ability, save_dc=save_dc, save_succeeded=save_succeeded,
             damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
-            hit=hit, critical=critical, turn_terminated=natural_1_ends_turn,
-            turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
-            hp_before=hp_before, hp_after=actual_defender.current_hp,
-            temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
+            hit=hit, critical=critical, turn_terminated=natural_1_ends_turn, turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
+            hp_before=hp_before, hp_after=actual_defender.current_hp, temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
