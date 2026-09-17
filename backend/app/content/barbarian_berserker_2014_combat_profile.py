@@ -36,4 +36,4 @@ def build_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 
 def build_rokhan_2014_combat_profiles() -> list[PregenCombatProfile]:
-    return [build_rokhan_2014_combat_profile(level) for level in range(1, 10)]
+    return [build_rokhan_2014_combat_profile(level) for level in range(1, 11)]
