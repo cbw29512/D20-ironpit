@@ -6,20 +6,12 @@ from app.content.canonical_combat_build_policy import (
     assert_canonical_base_array,
     canonical_background_increases,
 )
-from app.content.canonical_spell_packages import build_class_spell_package
+from app.content.canonical_spell_policy import canonical_spell_package
 from app.content.hero_progressions import COMBAT_PLAN_BY_CLASS, HERO_BY_CLASS
 from app.content.melee_loadout_policy import choose_melee_loadout
-from app.content.paladin_2014_spell_package import build_paladin_2014_spell_package
 from app.domain.character_builds import CharacterBuildProfile, FeatureAudit, RulesetId
-from app.domain.class_loadouts import (
-    CanonicalCombatPlan,
-    ClassSpellPackage,
-    MeleeLoadoutSelection,
-)
+from app.domain.class_loadouts import CanonicalCombatPlan, MeleeLoadoutSelection
 
-CASTER_CLASS_IDS = frozenset({
-    "bard", "cleric", "druid", "paladin", "ranger", "sorcerer", "warlock", "wizard",
-})
 _2014_STANDARD_ARRAY = [8, 10, 12, 13, 14, 15]
 
 
@@ -65,23 +57,6 @@ def assert_canonical_identity(
 def combat_feature_audits(audits: Iterable[FeatureAudit]) -> list[FeatureAudit]:
     """Return only features capable of changing an Iron Pit combat outcome."""
     return [audit for audit in audits if audit.combat_relevant]
-
-
-def canonical_spell_package(
-    class_id: str,
-    level: int,
-    ruleset: RulesetId = "2024",
-    casting_modifier: int | None = None,
-) -> ClassSpellPackage | None:
-    if class_id not in CASTER_CLASS_IDS:
-        return None
-    if ruleset == "2014":
-        if class_id != "paladin":
-            return None
-        if casting_modifier is None:
-            raise ValueError("2014 Paladin spell preparation requires the Charisma modifier.")
-        return build_paladin_2014_spell_package(level, casting_modifier)
-    return build_class_spell_package(class_id, level)  # type: ignore[arg-type]
 
 
 def canonical_melee_loadout(profile: CharacterBuildProfile) -> MeleeLoadoutSelection | None:
