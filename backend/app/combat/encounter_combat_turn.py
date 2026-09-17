@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
+from app.combat.activation_movement import resolve_activation_movement
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.barbarian import enter_rage
@@ -57,6 +58,13 @@ def resolve_combat_turn(
         if rage_event is not None:
             events.append(rage_event)
             sequence += 1
+            fraction = attacker.state.template.progression_features.instinctive_pounce_fraction
+            if fraction > 0:
+                movement_events, sequence = resolve_activation_movement(
+                    sequence, round_number, attacker, setup, dice,
+                    speed_fraction=fraction, turn_key=turn_key,
+                )
+                events.extend(movement_events)
         if should_use_second_wind(attacker.state):
             events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id))
             sequence += 1
