@@ -15,13 +15,14 @@ def _resource(state: CombatantState):
 def use_indomitable(state: CombatantState, ability: str, dice: DiceProvider) -> DiceRoll | None:
     """Resolve the edition-correct reroll after policy chooses to spend Indomitable."""
     progression = state.template.progression_features
+    bonus = progression.indomitable_bonus
+    enabled = progression.indomitable_reroll or bonus > 0
     resource = _resource(state)
-    if not progression.indomitable_reroll or resource is None or resource.current_uses <= 0:
+    if not enabled or resource is None or resource.current_uses <= 0:
         return None
     if ability not in state.template.saving_throw_bonuses:
         raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
     resource.current_uses -= 1
-    bonus = progression.indomitable_bonus
     roll = apply_d20_bonus_dice(
         state,
         ModifierKind.SAVING_THROW_BONUS_DIE,
