@@ -27,7 +27,8 @@ def _validated(
     assert_pregen_combat_stats(template, combat_profile)
     assert_character_resources_raw_ready(template, profile, combat_profile)
     template = complete_unarmed_opportunity_profiles([template])[0]
-    return (profile.class_id, profile.level, CANONICAL_BUILD_ID), template
+    build_id = CANONICAL_BUILD_ID if profile.ruleset == "2024" else f"{CANONICAL_BUILD_ID}-2014"
+    return (profile.class_id, profile.level, build_id), template
 
 
 def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
