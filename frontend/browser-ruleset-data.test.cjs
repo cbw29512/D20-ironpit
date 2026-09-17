@@ -19,12 +19,19 @@ const heroes2024 = browserHeroes.filter((hero) => hero.ruleset === "2024");
 const heroes2014 = browserHeroes.filter((hero) => hero.ruleset === "2014");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
-assert.equal(heroes2014.length, 10, "2014 browser heroes must contain Karnok levels 1-10");
-assert.deepEqual(heroes2014.map((hero) => hero.level).sort((a, b) => a - b), [1,2,3,4,5,6,7,8,9,10]);
+assert.equal(heroes2014.length, 20, "2014 browser heroes must contain Karnok levels 1-20");
+assert.deepEqual(heroes2014.map((hero) => hero.level).sort((a, b) => a - b), Array.from({ length: 20 }, (_, i) => i + 1));
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
 }
+const fighter15 = heroes2014.find((hero) => hero.level === 15);
+const fighter18 = heroes2014.find((hero) => hero.level === 18);
+const fighter20 = heroes2014.find((hero) => hero.level === 20);
+assert.equal(fighter15.critical_hit_minimum, 18);
+assert.equal(fighter18.survivor_heal_amount, 9);
+assert.equal(fighter20.survivor_heal_amount, 10);
+assert.equal(fighter20.attack_action.slots.length, 4);
 assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "canonical browser monsters");
 for (const fixture of [
   "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
@@ -49,8 +56,7 @@ for (const id of [
   "2014-poisonous-snake", "2014-scorpion", "2014-wyvern",
   "2014-elk", "2014-giant-elk", "2014-giant-sea-horse", "2014-minotaur-skeleton", "2014-rhinoceros",
   "2014-allosaurus", "2014-elephant", "2014-mammoth", "2014-panther", "2014-saber-toothed-tiger",
-  "2014-tiger", "2014-triceratops", "2014-warhorse",
-  "2014-goat", "2014-giant-goat",
+  "2014-tiger", "2014-triceratops", "2014-warhorse", "2014-goat", "2014-giant-goat",
   "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens",
 ]) {
   assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
