@@ -9,10 +9,17 @@ logger = logging.getLogger(__name__)
 
 
 def danger_sense_advantage(state: CombatantState, ability: str) -> int:
-    """Return one Advantage source for certified Barbarian Danger Sense."""
+    """Return one Advantage source using edition-correct Barbarian Danger Sense."""
     try:
-        enabled = state.template.progression_features.danger_sense
-        return int(enabled and ability == "dexterity" and not is_incapacitated(state))
+        if not state.template.progression_features.danger_sense or ability != "dexterity":
+            return 0
+        if is_incapacitated(state):
+            return 0
+        if state.template.ruleset == "2014" and any(
+            effect in state.active_effect_ids for effect in ("blinded", "deafened")
+        ):
+            return 0
+        return 1
     except Exception as exc:
         logger.exception("Danger Sense resolution failed for %s.", state.template.name)
         raise RuntimeError("Danger Sense could not be resolved.") from exc
