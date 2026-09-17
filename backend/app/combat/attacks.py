@@ -12,7 +12,7 @@ from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.modifier_stack import (
-    apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage,
+    apply_d20_bonus_dice, attack_roll_flat_bonus, attacks_against_advantage_sources, consume_attacks_against_advantage,
     consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
 )
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
@@ -57,7 +57,7 @@ def resolve_attack(
             other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker),
             close_enemy_active=close_enemy_active,
         )
-        base_roll = roll_d20(dice, attack.attack_bonus, mode)
+        base_roll = roll_d20(dice, attack.attack_bonus + attack_roll_flat_bonus(attacker, weapon.id), mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
         consume_next_attack_against_advantage(attacker, defender_event_id); consume_sap(attacker)
