@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.barbarian import rage_damage_bonus
+from app.combat.brutal_critical import brutal_critical_bonus_damage
 from app.combat.conditional_damage import active_replacement_damage, conditional_damage_active
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import frenzy_bonus_damage
@@ -89,6 +90,14 @@ def resolve_weapon_damage(
                 modifier=weapon_modifier, damage_type=weapon.damage_type,
                 critical=critical, turn_key=turn_key, damage_die_minimum=attack.damage_die_minimum,
             )]
+
+        brutal = brutal_critical_bonus_damage(attacker, attack, critical)
+        if brutal is not None:
+            source, dice_count, dice_size, damage_type = brutal
+            components.append(roll_damage_component(
+                dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
+                modifier=0, damage_type=damage_type, critical=False,
+            ))
 
         for extra in attack.on_hit_damage:
             if extra.dice_count == 0:
