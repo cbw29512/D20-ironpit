@@ -5,6 +5,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
 
 RAGE_EFFECT_ID = "rage"
+_RAGE_DAMAGE_MARKER = "2014-rage-damaged"
 _RAGE_MAX_ROUNDS_2014 = 10
 _RAGE_MAX_ROUNDS_2024 = 100
 _RAGE_RESISTANCES = (DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING)
@@ -25,6 +26,11 @@ def rage_active(state: CombatantState) -> bool:
 
 def rage_damage_bonus(state: CombatantState, attack: WeaponAttack) -> int:
     return state.template.rage_damage_bonus if rage_active(state) and attack.rage_eligible else 0
+
+
+def mark_rage_damage_taken(state: CombatantState) -> None:
+    if state.template.ruleset == "2014" and rage_active(state):
+        state.feature_last_turn_keys[_RAGE_DAMAGE_MARKER] = "pending"
 
 
 def _end_mindless_rage_conditions(state: CombatantState) -> list[str]:
@@ -75,12 +81,6 @@ def extend_rage_from_attack(state: CombatantState, round_number: int) -> None:
         _extend_rage(state, round_number)
 
 
-def extend_rage_from_damage(state: CombatantState, round_number: int) -> None:
-    """2014 Rage persists when the barbarian has taken damage since its previous turn."""
-    if state.template.ruleset == "2014" and rage_active(state):
-        _extend_rage(state, round_number)
-
-
 def maintain_rage_with_bonus_action(
     sequence: int, round_number: int, state: CombatantState, actor_id: str,
 ) -> BattleEvent | None:
@@ -106,12 +106,17 @@ def end_rage(state: CombatantState) -> None:
         return
     state.active_effect_ids.remove(RAGE_EFFECT_ID)
     state.temporary_damage_resistances = [d for d in state.temporary_damage_resistances if d not in _RAGE_RESISTANCES]
+    state.feature_last_turn_keys.pop(_RAGE_DAMAGE_MARKER, None)
     state.rage_expires_round = None
     state.rage_max_round = None
 
 
 def finish_rage_turn(state: CombatantState, round_number: int) -> None:
-    if rage_active(state) and state.rage_expires_round is not None and state.rage_expires_round <= round_number:
+    if not rage_active(state):
+        return
+    if state.template.ruleset == "2014" and state.feature_last_turn_keys.pop(_RAGE_DAMAGE_MARKER, None):
+        _extend_rage(state, round_number)
+    if state.rage_expires_round is not None and state.rage_expires_round <= round_number:
         end_rage(state)
 
 
