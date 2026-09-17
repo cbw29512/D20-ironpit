@@ -5,7 +5,8 @@ from collections import defaultdict
 
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
-from app.combat.rolls import roll_d20
+from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
+from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.domain.encounters import EncounterCombatant, EncounterInitiative, EncounterSetup, InitiativeGroup
 from app.domain.models import RollMode
 
@@ -13,16 +14,17 @@ logger = logging.getLogger(__name__)
 
 
 def _initiative_mode(member: EncounterCombatant) -> RollMode:
-    advantage = member.state.template.progression_features.initiative_advantage
-    disadvantage = is_incapacitated(member.state)
-    if advantage == disadvantage:
-        return RollMode.NORMAL
-    return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
+    state = member.state
+    return resolve_roll_mode(
+        advantage_sources=int(state.template.progression_features.initiative_advantage),
+        disadvantage_sources=int(is_incapacitated(state)) + ability_check_disadvantage_sources(state),
+    )
 
 
 def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> InitiativeGroup:
-    template = members[0].state.template
-    roll = roll_d20(dice, template.initiative_bonus, _initiative_mode(members[0]))
+    state = members[0].state
+    template = state.template
+    roll = roll_d20(dice, template.initiative_bonus + d20_modifier(state), _initiative_mode(members[0]))
     for member in members:
         member.state.initiative_roll = roll.selected_roll
         member.state.initiative_total = roll.total
@@ -39,10 +41,10 @@ def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> Initia
 
 def _base_groups(setup: EncounterSetup, dice: DiceProvider) -> list[InitiativeGroup]:
     groups = [_roll_group([hero], dice) for hero in setup.heroes]
-    monster_groups: dict[tuple[str, bool], list[EncounterCombatant]] = defaultdict(list)
-    monster_order: list[tuple[str, bool]] = []
+    monster_groups: dict[tuple[str, bool, int], list[EncounterCombatant]] = defaultdict(list)
+    monster_order: list[tuple[str, bool, int]] = []
     for monster in setup.monsters:
-        key = (monster.state.template.id, is_incapacitated(monster.state))
+        key = (monster.state.template.id, is_incapacitated(monster.state), monster.state.exhaustion_level)
         if key not in monster_groups:
             monster_order.append(key)
         monster_groups[key].append(monster)

@@ -15,6 +15,10 @@
     ["warlock", "Warlock", "Varek Ashenmark", "fiend-patron", "Fiend Patron"],
     ["wizard", "Wizard", "Elian Starweaver", "evoker", "Evoker"],
   ];
+  const SUBCLASS_2014 = {
+    fighter: ["champion", "Champion"],
+    barbarian: ["path-berserker", "Path of the Berserker"],
+  };
 
   function readyHeroIndex(ruleset = "2024") {
     return new Map(Object.values(window.IRON_PIT_BROWSER_HEROES || {})
@@ -41,23 +45,19 @@
   }
 
   function build2014Heroes() {
-    const runtimes = [...readyHeroIndex("2014").values()].sort((left, right) => left.level - right.level);
-    return runtimes.map((runtime) => ({
-      id: `hero-2014-${runtime.class_id}-l${runtime.level}`,
-      name: runtime.name,
-      class_id: runtime.class_id,
-      class_name: runtime.archetype,
-      level: runtime.level,
-      build_id: runtime.build_id || "canonical-2014",
-      build_name: "Canonical 2014 RAW Progression",
-      subclass_id: runtime.level >= 3 ? "champion" : null,
-      subclass_name: runtime.level >= 3 ? "Champion" : null,
-      ruleset: "2014",
-      kind: "character",
-      coverage_status: "raw_ready",
-      runnable_template_id: runtime.id,
-      blockers: [],
-    }));
+    const runtimes = [...readyHeroIndex("2014").values()]
+      .sort((left, right) => left.class_id.localeCompare(right.class_id) || left.level - right.level);
+    return runtimes.map((runtime) => {
+      const subclass = runtime.level >= 3 ? SUBCLASS_2014[runtime.class_id] : null;
+      return {
+        id: `hero-2014-${runtime.class_id}-l${runtime.level}`, name: runtime.name,
+        class_id: runtime.class_id, class_name: runtime.archetype, level: runtime.level,
+        build_id: runtime.build_id || "canonical-2014", build_name: "Canonical 2014 RAW Progression",
+        subclass_id: subclass?.[0] || null, subclass_name: subclass?.[1] || null,
+        ruleset: "2014", kind: "character", coverage_status: "raw_ready",
+        runnable_template_id: runtime.id, blockers: [],
+      };
+    });
   }
 
   function readyMonsterCards(registry = window.IRON_PIT_BROWSER_MONSTERS) {
@@ -93,15 +93,13 @@
 
   function build2014() {
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
-    const heroes = build2014Heroes();
-    const monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (heroes.length !== 20) throw new Error(`Expected 20 certified 2014 Fighter levels; found ${heroes.length}.`);
+    const heroes = build2014Heroes(), monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    if (heroes.length !== 30) throw new Error(`Expected 30 certified 2014 hero levels; found ${heroes.length}.`);
     if (monsters.length !== 100) throw new Error(`Expected 100 certified 2014 test monsters; found ${monsters.length}.`);
     if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 hero catalog crossed the ruleset boundary.");
     if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
-      heroes, monsters,
-      hero_count: 120, monster_count: 327,
+      heroes, monsters, hero_count: 120, monster_count: 327,
       hero_ready_count: heroes.length, monster_ready_count: monsters.length,
       ruleset: "2014", test_lane: true,
     };

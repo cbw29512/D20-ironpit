@@ -16,26 +16,27 @@ def test_public_canonical_registry_remains_2024_only() -> None:
     assert all(build_id == "canonical" for (class_id, level, build_id), template in entries)
 
 
-def test_all_edition_registry_contains_exact_2014_fighter_levels_one_through_twenty() -> None:
+def test_all_edition_registry_contains_exact_certified_2014_progressions() -> None:
     entries = build_all_certified_hero_entries()
-    fighter_2014 = [
-        (key, template)
-        for key, template in entries
-        if template.ruleset == "2014"
-    ]
+    heroes_2014 = [(key, template) for key, template in entries if template.ruleset == "2014"]
+    fighters = [(key, template) for key, template in heroes_2014 if key[0] == "fighter"]
+    barbarians = [(key, template) for key, template in heroes_2014 if key[0] == "barbarian"]
 
-    assert len(fighter_2014) == 20
-    assert [key[1] for key, _ in fighter_2014] == list(range(1, 21))
-    assert {key[0] for key, _ in fighter_2014} == {"fighter"}
-    assert {key[2] for key, _ in fighter_2014} == {"canonical-2014"}
-    assert {template.name for _, template in fighter_2014} == {"Karnok Stoneward"}
-    assert all(template.weapon_masteries == [] for _, template in fighter_2014)
+    assert len(heroes_2014) == 30
+    assert [key[1] for key, _ in fighters] == list(range(1, 21))
+    assert [key[1] for key, _ in barbarians] == list(range(1, 11))
+    assert {key[2] for key, _ in heroes_2014} == {"canonical-2014"}
+    assert {template.name for _, template in fighters} == {"Karnok Stoneward"}
+    assert {template.name for _, template in barbarians} == {"Rokhan Stonefury"}
+    assert all(template.weapon_masteries == [] for _, template in heroes_2014)
 
 
 def test_arena_fingerprints_stay_2024_while_all_edition_registry_adds_2014() -> None:
     arena_profiles = build_pregen_combat_profiles()
     all_profiles = build_all_pregen_combat_profiles()
-    ids_2014 = {f"karnok-stoneward-2014-l{level}" for level in range(1, 21)}
+    fighter_ids = {f"karnok-stoneward-2014-l{level}" for level in range(1, 21)}
+    barbarian_ids = {f"rokhan-stonefury-2014-l{level}" for level in range(1, 11)}
+    ids_2014 = fighter_ids | barbarian_ids
 
     assert ids_2014.isdisjoint(arena_profiles)
     assert ids_2014.issubset(all_profiles)

@@ -106,6 +106,8 @@
       }
     }
     const components = [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }];
+    const brutal = critical && attack.kind === "melee" ? attacker.template.brutal_critical_dice || 0 : 0;
+    if (brutal) components.push(damageComponent({ source: "Brutal Critical", diceCount: brutal, diceSize: attack.diceSize, damageBonus: 0, damageType: attack.damageType }, false));
     for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
     if (mode === "advantage" && attack.conditionalAdvantage) {
       const [baseCount, sides] = attack.conditionalAdvantage;

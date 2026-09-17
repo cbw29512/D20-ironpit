@@ -9,6 +9,7 @@
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
+  const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { saveDisadvantage: () => 0 };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
@@ -34,7 +35,8 @@
       + B2().dangerSenseAdvantage(state, ability)
       + DG().dexSaveAdvantageSources(state, ability)
       + sureFootedAdvantage(state, ability, context);
-    const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
+    const disadvantage = X().saveDisadvantage(state)
+      + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
     return R().modeFromSources(advantage, disadvantage);
   }
 

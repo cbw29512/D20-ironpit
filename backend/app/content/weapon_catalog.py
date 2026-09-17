@@ -83,6 +83,12 @@ _WEAPONS = {
         "rapier", "Rapier", 1, 8, DamageType.PIERCING, "Vex",
         finesse=True,
     ),
+    "handaxe": Weapon(
+        id="handaxe", name="Handaxe", attack_kind=WeaponAttackKind.RANGED,
+        dice_count=1, dice_size=6, damage_type=DamageType.SLASHING,
+        animation="projectile", normal_range_ft=20, long_range_ft=60,
+        projectile="handaxe", mastery_property="Vex", light=True,
+    ),
     "longbow": _ranged(
         "longbow", "Longbow", 8, 150, 600, "Slow",
         heavy=True, two_handed=True,

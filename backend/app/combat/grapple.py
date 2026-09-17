@@ -5,6 +5,8 @@ from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
 from app.combat.dice import DiceProvider
+from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
+from app.combat.modifier_stack import effective_speed
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
@@ -79,11 +81,12 @@ def should_escape_grapple(state: CombatantState) -> bool:
 
 
 def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
-    advantage = strength_check and (
+    advantage = int(strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
-    )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
-    if advantage == disadvantage:
+    ))
+    disadvantage = ability_check_disadvantage_sources(state)
+    disadvantage += int(has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID))
+    if (advantage > 0) == (disadvantage > 0):
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
 
@@ -105,7 +108,7 @@ def resolve_escape_grapple(
         raise ValueError("Action is not available to escape a grapple.")
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
     check_name, bonus, mode = _escape_choice(state)
-    check = roll_d20(dice, bonus, mode)
+    check = roll_d20(dice, bonus + d20_modifier(state), mode)
     success = check.total >= source.escape_dc
     tactical_used = False
     if not success:
@@ -114,7 +117,7 @@ def resolve_escape_grapple(
     if success:
         release_grapple(state, source.source_id)
         if not speed_is_zero(state):
-            state.movement_remaining_ft = max(state.movement_remaining_ft, state.template.speed_ft)
+            state.movement_remaining_ft = max(state.movement_remaining_ft, effective_speed(state))
     second_wind = next((item for item in state.resources if item.id == "second-wind"), None)
     tactical = " after using Tactical Mind" if tactical_used else ""
     return BattleEvent(

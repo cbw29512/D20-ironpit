@@ -7,6 +7,7 @@ from app.combat.condition_rules import automatically_fails_strength_dexterity_sa
 from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
+from app.combat.exhaustion import saving_throw_disadvantage_sources
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice
 from app.combat.rolls import roll_d20
@@ -30,7 +31,9 @@ def saving_throw_mode(
             + dodge_dex_save_advantage_sources(state, ability)
             + sure_footed_advantage(state, ability, context)
         )
-        disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
+        disadvantage = saving_throw_disadvantage_sources(state)
+        if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids:
+            disadvantage += 1
         if (advantage > 0) == (disadvantage > 0):
             return RollMode.NORMAL
         return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE

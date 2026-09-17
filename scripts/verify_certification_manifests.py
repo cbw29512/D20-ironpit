@@ -53,6 +53,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("reckless-attack")
     if features.frenzy:
         mechanics.add("frenzy")
+    if features.frenzy_bonus_attack_2014:
+        mechanics.add("frenzy-bonus-attack-2014")
     if features.fast_movement_bonus_ft:
         mechanics.add("fast-movement")
     if features.mindless_rage:
@@ -77,6 +79,10 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
         mechanics.add("tactical-shift")
+    if features.intimidating_presence_2014_dc:
+        mechanics.add("intimidating-presence-2014")
+    if features.brutal_critical_dice:
+        mechanics.add("brutal-critical")
     return sorted(mechanics)
 
 
@@ -258,4 +264,3 @@ def main() -> None:
     if json.loads(MONSTER_MANIFEST.read_text(encoding="utf-8")) != monsters:
         raise RuntimeError("Monster certification manifest is stale or hand-edited.")
     print("Certification manifests match authoritative runtime, source, browser, and catalog state.")
-

@@ -70,6 +70,7 @@ class CombatantState(BaseModel):
     is_unconscious: bool = False
     is_stable: bool = False
     is_dead: bool = False
+    exhaustion_level: int = Field(default=0, ge=0, le=6)
     death_save_successes: int = Field(default=0, ge=0, le=3)
     death_save_failures: int = Field(default=0, ge=0, le=3)
     action_available: bool = True
