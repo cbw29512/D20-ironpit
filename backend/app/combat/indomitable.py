@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.dice import DiceProvider
-from app.combat.modifier_stack import apply_d20_bonus_dice
+from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
 from app.combat.rolls import roll_d20
 from app.combat.saving_throw_rolls import saving_throw_mode
 from app.domain.models import CombatantState, DiceRoll
@@ -28,7 +28,7 @@ def use_indomitable(state: CombatantState, ability: str, dice: DiceProvider) -> 
         ModifierKind.SAVING_THROW_BONUS_DIE,
         roll_d20(
             dice,
-            state.template.saving_throw_bonuses[ability] + bonus,
+            state.template.saving_throw_bonuses[ability] + saving_throw_flat_bonus(state) + bonus,
             saving_throw_mode(state, ability),
         ),
         dice,
