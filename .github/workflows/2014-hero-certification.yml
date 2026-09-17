@@ -36,3 +36,4 @@ jobs:
           node frontend/browser-2014-berserker.test.cjs
           node frontend/browser-2014-rogue.test.cjs
           node frontend/browser-2014-monk.test.cjs
+          node frontend/browser-2014-monk-entrypoints.test.cjs
