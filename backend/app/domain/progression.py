@@ -12,6 +12,8 @@ class ProgressionCombatFeatures(BaseModel):
     danger_sense: bool = False
     reckless_attack: bool = False
     frenzy: bool = False
+    frenzy_bonus_attack_2014: bool = False
+    intimidating_presence_2014_dc: int = Field(default=0, ge=0, le=40)
     brutal_critical_dice: int = Field(default=0, ge=0, le=3)
     fast_movement_bonus_ft: int = Field(default=0, ge=0)
     mindless_rage: bool = False
