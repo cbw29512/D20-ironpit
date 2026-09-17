@@ -29,6 +29,8 @@ from app.content.fighter_asi_progression_profile import (
     build_karnok_stoneward_level8_profile,
     build_karnok_stoneward_level12_profile,
 )
+from app.content.fighter_champion_2014_profile import build_karnok_stoneward_2014_profile
+from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.fighter_champion_progression_profile import build_karnok_stoneward_level7_profile
 from app.content.fighter_level10_profile import build_karnok_stoneward_level10_profile
 from app.content.fighter_level11_profile import build_karnok_stoneward_level11_profile
@@ -44,6 +46,7 @@ from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
 ProfileBuilder = Callable[[], CharacterBuildProfile]
+ProfileLevelBuilder = Callable[[int], CharacterBuildProfile]
 TemplateLevelBuilder = Callable[[int], CombatantTemplate]
 
 
@@ -51,15 +54,20 @@ TemplateLevelBuilder = Callable[[int], CombatantTemplate]
 class CertifiedHeroProgression:
     class_id: str
     template_builder: TemplateLevelBuilder
-    profile_builders: tuple[ProfileBuilder, ...]
+    profile_builders: tuple[ProfileBuilder, ...] = ()
+    profile_level_builder: ProfileLevelBuilder | None = None
+    max_level: int | None = None
 
     @property
     def levels(self) -> range:
-        return range(1, len(self.profile_builders) + 1)
+        count = self.max_level if self.max_level is not None else len(self.profile_builders)
+        return range(1, count + 1)
 
     def profile(self, level: int) -> CharacterBuildProfile:
         if level not in self.levels:
             raise ValueError(f"{self.class_id} level {level} is not registered for certification.")
+        if self.profile_level_builder is not None:
+            return self.profile_level_builder(level)
         return self.profile_builders[level - 1]()
 
 
@@ -81,6 +89,12 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_karnok_stoneward_level11_profile,
             build_karnok_stoneward_level12_profile,
         ),
+    ),
+    CertifiedHeroProgression(
+        class_id="fighter",
+        template_builder=build_karnok_stoneward_2014,
+        profile_level_builder=build_karnok_stoneward_2014_profile,
+        max_level=10,
     ),
     CertifiedHeroProgression(
         class_id="barbarian",
