@@ -198,6 +198,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "danger_sense": progression.danger_sense,
         "reckless_attack": progression.reckless_attack,
         "frenzy": progression.frenzy,
+        "frenzy_bonus_attack_2014": progression.frenzy_bonus_attack_2014,
+        "intimidating_presence_2014": progression.intimidating_presence_2014,
+        "melee_critical_extra_weapon_dice": progression.melee_critical_extra_weapon_dice,
         "fast_movement_bonus_ft": progression.fast_movement_bonus_ft,
         "mindless_rage": progression.mindless_rage,
         "instinctive_pounce_fraction": progression.instinctive_pounce_fraction,
@@ -258,8 +261,3 @@ def main() -> None:
     except Exception:
         logger.exception("Certified browser hero export failed.")
         raise
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    main()
