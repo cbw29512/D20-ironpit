@@ -203,6 +203,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "instinctive_pounce_fraction": progression.instinctive_pounce_fraction,
         "great_weapon_fighting": progression.great_weapon_fighting,
         "sneak_attack_d6": progression.sneak_attack_d6,
+        "survivor_heal_amount": progression.survivor_heal_amount,
         "critical_move_fraction": progression.critical_move_fraction,
         "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
