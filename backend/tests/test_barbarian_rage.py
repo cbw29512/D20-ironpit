@@ -29,6 +29,12 @@ def _barbarian_state():
     return build_combatant_state(template)
 
 
+def _barbarian_2014_state():
+    state = _barbarian_state()
+    state.template.ruleset = "2014"
+    return state
+
+
 def test_enter_rage_spends_bonus_action_and_one_use() -> None:
     state = _barbarian_state()
     event = enter_rage(1, 1, state, "barbarian-1")
@@ -189,4 +195,37 @@ def test_rage_cannot_extend_past_ten_minute_limit() -> None:
 
     assert maintain_rage_with_bonus_action(2, 101, state, "barbarian-1") is None
     finish_rage_turn(state, 101)
+    assert rage_active(state) is False
+
+
+def test_2014_rage_uses_one_minute_limit_and_cannot_bonus_action_extend() -> None:
+    state = _barbarian_2014_state()
+    event = enter_rage(1, 1, state, "barbarian-1")
+
+    assert event is not None
+    assert state.rage_expires_round == 2
+    assert state.rage_max_round == 11
+    begin_turn(state)
+    assert maintain_rage_with_bonus_action(2, 2, state, "barbarian-1") is None
+
+
+def test_2014_rage_is_maintained_by_taking_damage() -> None:
+    state = _barbarian_2014_state()
+    enter_rage(1, 1, state, "barbarian-1")
+    begin_turn(state)
+    assert apply_damage(state, 3) == "damaged"
+
+    finish_rage_turn(state, 2)
+
+    assert rage_active(state)
+    assert state.rage_expires_round == 3
+
+
+def test_2014_rage_ends_without_attack_or_damage() -> None:
+    state = _barbarian_2014_state()
+    enter_rage(1, 1, state, "barbarian-1")
+    begin_turn(state)
+
+    finish_rage_turn(state, 2)
+
     assert rage_active(state) is False
