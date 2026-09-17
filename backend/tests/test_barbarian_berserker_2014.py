@@ -78,7 +78,7 @@ def test_2014_brutal_critical_adds_one_greataxe_die_only_on_critical() -> None:
 
 def test_2014_intimidating_presence_failed_save_frightens_and_success_grants_immunity() -> None:
     actor = _member(build_rokhan_stonefury_2014(10), "rokhan", "heroes", 0)
-    target = _member(build_karnok_stoneward_2014(10), "target", "monsters", 5)
+    target = _member(build_karnok_stoneward_2014(8), "target", "monsters", 5)
     assert can_use_presence(actor, target)
 
     failed = resolve_intimidating_presence(1, 1, actor, target, FixedDiceProvider([1]))
@@ -86,7 +86,7 @@ def test_2014_intimidating_presence_failed_save_frightens_and_success_grants_imm
     assert "frightened" in target.state.active_effect_ids
 
     actor2 = _member(build_rokhan_stonefury_2014(10), "rokhan-2", "heroes", 0)
-    target2 = _member(build_karnok_stoneward_2014(10), "target-2", "monsters", 5)
+    target2 = _member(build_karnok_stoneward_2014(8), "target-2", "monsters", 5)
     succeeded = resolve_intimidating_presence(1, 1, actor2, target2, FixedDiceProvider([20]))
     assert succeeded is not None and succeeded.save_succeeded is True
     actor2.state.action_available = True
