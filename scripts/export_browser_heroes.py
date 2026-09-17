@@ -261,3 +261,8 @@ def main() -> None:
     except Exception:
         logger.exception("Certified browser hero export failed.")
         raise
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    main()
