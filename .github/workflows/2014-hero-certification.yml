@@ -34,3 +34,4 @@ jobs:
           node frontend/browser-ruleset-isolation.test.cjs
           node frontend/browser-survivor.test.cjs
           node frontend/browser-2014-berserker.test.cjs
+          node frontend/browser-2014-rogue.test.cjs
