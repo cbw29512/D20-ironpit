@@ -26,8 +26,7 @@ def remove_source_modifiers(
         state.active_modifiers = [
             item for item in state.active_modifiers
             if not (
-                item.source_id == source_id
-                and item.source_effect_id == source_effect_id
+                item.source_id == source_id and item.source_effect_id == source_effect_id
                 and (not concentration_only or item.concentration_required)
             )
         ]
@@ -35,26 +34,20 @@ def remove_source_modifiers(
     return removed
 
 
-def expire_source_turn_modifiers(
-    states: Iterable[CombatantState], source_id: str, round_number: int,
-) -> int:
+def expire_source_turn_modifiers(states: Iterable[CombatantState], source_id: str, round_number: int) -> int:
     removed = 0
     for state in states:
         before = len(state.active_modifiers)
         state.active_modifiers = [
             item for item in state.active_modifiers
-            if not (
-                item.source_id == source_id
-                and item.expires_source_turn_end_round is not None
-                and item.expires_source_turn_end_round <= round_number
-            )
+            if not (item.source_id == source_id and item.expires_source_turn_end_round is not None
+                    and item.expires_source_turn_end_round <= round_number)
         ]
         removed += before - len(state.active_modifiers)
     return removed
 
 
 def expire_target_turn_modifiers(state: CombatantState) -> int:
-    """Expire modifiers whose duration ends at the end of the affected creature's turn."""
     before = len(state.active_modifiers)
     state.active_modifiers = [item for item in state.active_modifiers if not item.expires_at_end_of_target_turn]
     return before - len(state.active_modifiers)
@@ -67,9 +60,12 @@ def effective_armor_class(state: CombatantState) -> int:
 
 
 def effective_speed(state: CombatantState) -> int:
-    return max(0, state.template.speed_ft + sum(
+    speed = max(0, state.template.speed_ft + sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED
     ))
+    if state.exhaustion_level_2014 >= 5:
+        return 0
+    return speed // 2 if state.exhaustion_level_2014 >= 2 else speed
 
 
 def attacks_against_advantage_sources(state: CombatantState) -> int:
@@ -107,18 +103,14 @@ def _die_modifiers(state: CombatantState, kind: ModifierKind) -> list[CombatModi
     return [item for item in state.active_modifiers if item.kind is kind]
 
 
-def apply_d20_bonus_dice(
-    state: CombatantState, kind: ModifierKind, roll: DiceRoll, dice: DiceProvider,
-) -> DiceRoll:
+def apply_d20_bonus_dice(state: CombatantState, kind: ModifierKind, roll: DiceRoll, dice: DiceProvider) -> DiceRoll:
     modifiers = _die_modifiers(state, kind)
     if not modifiers:
         return roll
     bonus_rolls = [dice.roll(item.dice_size) for item in modifiers for _ in range(item.dice_count)]
     notation = " + ".join([roll.notation, *(f"{item.dice_count}d{item.dice_size}" for item in modifiers)])
     return roll.model_copy(update={
-        "notation": notation,
-        "rolls": [*roll.rolls, *bonus_rolls],
-        "total": roll.total + sum(bonus_rolls),
+        "notation": notation, "rolls": [*roll.rolls, *bonus_rolls], "total": roll.total + sum(bonus_rolls),
     })
 
 
