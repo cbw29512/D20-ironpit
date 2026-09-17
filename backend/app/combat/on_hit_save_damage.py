@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from app.combat.damage import roll_damage_component
 from app.combat.dice import DiceProvider
+from app.combat.rogue_defenses import evasion_damage
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.models import CombatantState, DamageRollComponent, DiceRoll, WeaponAttack
 
@@ -32,6 +33,8 @@ def resolve_on_hit_save_damage(
         dice, effect.source, effect.dice_count, effect.dice_size,
         effect.damage_bonus, effect.damage_type, critical=False,
     )
-    if succeeded and effect.success_damage == "half":
-        component = component.model_copy(update={"total": component.total // 2})
+    total = evasion_damage(
+        defender, effect.save_ability, succeeded, effect.success_damage, component.total,
+    )
+    component = component.model_copy(update={"total": total})
     return OnHitSaveDamageResolution(component, save_roll, effect.save_ability, effect.dc, succeeded)
