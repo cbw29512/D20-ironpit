@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import logging
 
+from app.content.armor_catalog import get_armor
+from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
@@ -28,9 +30,9 @@ def _scores(level: int) -> AbilityScores:
 
 def _attack(level: int, weapon_id: str, scores: AbilityScores) -> WeaponAttack:
     weapon = build_weapon(weapon_id).model_copy(update={"mastery_property": None})
-    ability = "dexterity" if weapon_id == "longbow" else "strength"
+    ability = "dexterity" if weapon.attack_kind is WeaponAttackKind.RANGED else "strength"
     modifier = scores.modifier(ability)
-    style_bonus = 2 if weapon_id == "longbow" and level >= 10 else 0
+    style_bonus = 2 if weapon.attack_kind is WeaponAttackKind.RANGED and level >= 10 else 0
     return WeaponAttack(
         id=f"karnok-2014-{weapon_id}",
         weapon=weapon,
@@ -69,6 +71,16 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
         if level not in range(1, 11):
             raise ValueError("2014 Champion Fighter certification currently covers levels 1 through 10.")
         scores = _scores(level)
+        styles = _fighting_styles(level)
+        armor = get_armor("chain-mail")
+        armor_class = compile_worn_armor_class(
+            armor.base_ac,
+            armor.category,
+            scores.modifier("dexterity"),
+            styles,
+            wielding_shield=False,
+            shield_trained=True,
+        )
         greatsword = _attack(level, "greatsword", scores)
         longbow = _attack(level, "longbow", scores)
         attacks_per_action = 2 if level >= 5 else 1
@@ -82,7 +94,6 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             ],
         )
         remarkable = _remarkable_athlete_bonus(level)
-        styles = _fighting_styles(level)
         return CombatantTemplate(
             id=f"karnok-stoneward-2014-l{level}",
             name="Karnok Stoneward",
@@ -91,7 +102,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             kind="character",
             ruleset="2014",
             ability_scores=scores,
-            armor_class=17,
+            armor_class=armor_class,
             max_hp=fixed_hit_points(level, 10, scores.modifier("constitution")),
             speed_ft=30,
             initiative_bonus=scores.modifier("dexterity") + remarkable,
@@ -106,7 +117,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             fighting_style=styles[0],
             fighting_styles=styles,
             weapon_masteries=[],
-            visual=VisualLoadout(armor="chain-mail", main_hand="greatsword", body_style="humanoid"),
+            visual=VisualLoadout(armor=armor.id, main_hand="greatsword", body_style="humanoid"),
             resources=_resources(level),
             progression_features=ProgressionCombatFeatures(
                 critical_hit_minimum=19 if level >= 3 else 20,
