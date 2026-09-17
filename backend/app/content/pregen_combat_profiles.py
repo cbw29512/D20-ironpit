@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-
 from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS
@@ -144,10 +143,8 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.fighter_champion_2014_combat_profile import build_karnok_2014_combat_profiles
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profile
     profiles = [
-        *(_karnok_profile(level) for level in range(1, 13)),
-        *build_karnok_2014_combat_profiles(),
-        *(_rokhan_profile(level) for level in range(1, 7)),
-        *(_seraphine_profile(level) for level in range(1, 5)),
+        *(_karnok_profile(level) for level in range(1, 13)), *build_karnok_2014_combat_profiles(),
+        *(_rokhan_profile(level) for level in range(1, 7)), *(_seraphine_profile(level) for level in range(1, 5)),
         build_mara_quickstep_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
