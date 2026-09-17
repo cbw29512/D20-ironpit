@@ -9,7 +9,7 @@ from app.content.canonical_combat_build_policy import (
 from app.content.canonical_spell_packages import build_class_spell_package
 from app.content.hero_progressions import COMBAT_PLAN_BY_CLASS, HERO_BY_CLASS
 from app.content.melee_loadout_policy import choose_melee_loadout
-from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
+from app.domain.character_builds import CharacterBuildProfile, FeatureAudit, RulesetId
 from app.domain.class_loadouts import (
     CanonicalCombatPlan,
     ClassSpellPackage,
@@ -19,15 +19,17 @@ from app.domain.class_loadouts import (
 CASTER_CLASS_IDS = frozenset({
     "bard", "cleric", "druid", "paladin", "ranger", "sorcerer", "warlock", "wizard",
 })
+_2014_STANDARD_ARRAY = [8, 10, 12, 13, 14, 15]
 
 
-def canonical_template_id(class_id: str, level: int) -> str:
+def canonical_template_id(class_id: str, level: int, ruleset: RulesetId = "2024") -> str:
     if class_id not in HERO_BY_CLASS:
         raise ValueError(f"Unknown canonical class: {class_id}.")
     if not 1 <= level <= 20:
         raise ValueError("Canonical hero level must be between 1 and 20.")
     slug = HERO_BY_CLASS[class_id].hero_name.lower().replace(" ", "-")
-    return f"{slug}-l{level}"
+    edition = "-2014" if ruleset == "2014" else ""
+    return f"{slug}{edition}-l{level}"
 
 
 def canonical_subclass_id(class_id: str, level: int) -> str | None:
@@ -45,13 +47,18 @@ def canonical_combat_plan(class_id: str) -> CanonicalCombatPlan:
     return plan
 
 
-def assert_canonical_identity(class_id: str, hero_name: str, level: int) -> None:
+def assert_canonical_identity(
+    class_id: str,
+    hero_name: str,
+    level: int,
+    ruleset: RulesetId = "2024",
+) -> None:
     hero = HERO_BY_CLASS.get(class_id)
     if hero is None:
         raise ValueError(f"Unknown canonical class: {class_id}.")
     if hero_name != hero.hero_name:
         raise ValueError(f"{class_id} must progress as {hero.hero_name}, not {hero_name}.")
-    canonical_template_id(class_id, level)
+    canonical_template_id(class_id, level, ruleset)
 
 
 def combat_feature_audits(audits: Iterable[FeatureAudit]) -> list[FeatureAudit]:
@@ -81,32 +88,44 @@ def canonical_melee_loadout(profile: CharacterBuildProfile) -> MeleeLoadoutSelec
     )
 
 
+def _assert_2014_standard_array(profile: CharacterBuildProfile) -> None:
+    values = sorted(profile.base_ability_scores.model_dump().values())
+    if values != _2014_STANDARD_ARRAY:
+        raise ValueError(
+            f"{profile.class_id} 2014 base abilities must use the standard array: "
+            f"{values} != {_2014_STANDARD_ARRAY}."
+        )
+
+
 def assert_canonical_profile_policy(profile: CharacterBuildProfile) -> None:
     hero = HERO_BY_CLASS.get(profile.class_id)
     if hero is None:
         raise ValueError(f"Unknown canonical class: {profile.class_id}.")
-    assert_canonical_identity(profile.class_id, profile.character_name, profile.level)
+    assert_canonical_identity(profile.class_id, profile.character_name, profile.level, profile.ruleset)
     if profile.class_name != hero.class_name:
         raise ValueError(
             f"{profile.class_id} canonical class name drifted: {profile.class_name} != {hero.class_name}."
         )
-    expected_template_id = canonical_template_id(profile.class_id, profile.level)
+    expected_template_id = canonical_template_id(profile.class_id, profile.level, profile.ruleset)
     if profile.template_id != expected_template_id:
         raise ValueError(
             f"{profile.class_id} level {profile.level} canonical template drifted: "
             f"{profile.template_id} != {expected_template_id}."
         )
 
-    assert_canonical_base_array(profile.class_id, profile.base_ability_scores)
-    expected_background = canonical_background_increases(
-        profile.class_id,
-        profile.background_allowed_abilities,
-    )
-    if profile.background_increases != expected_background:
-        raise ValueError(
-            f"{profile.class_id} level {profile.level} canonical Background increases drifted: "
-            f"{profile.background_increases} != {expected_background}."
+    if profile.ruleset == "2014":
+        _assert_2014_standard_array(profile)
+    else:
+        assert_canonical_base_array(profile.class_id, profile.base_ability_scores)
+        expected_background = canonical_background_increases(
+            profile.class_id,
+            profile.background_allowed_abilities,
         )
+        if profile.background_increases != expected_background:
+            raise ValueError(
+                f"{profile.class_id} level {profile.level} canonical Background increases drifted: "
+                f"{profile.background_increases} != {expected_background}."
+            )
 
     plan = canonical_combat_plan(profile.class_id)
     if plan.mode in {"caster", "hybrid"}:
