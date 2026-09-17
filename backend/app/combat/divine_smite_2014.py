@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.damage import BonusDamageSpec
 from app.domain.models import CombatantState, DamageType, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
+BonusDamageSpec = tuple[str, int, int, DamageType]
 
 
 def _available_slot_levels(state: CombatantState) -> list[int]:
