@@ -116,7 +116,6 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
                 "intimidation": scores.modifier("charisma") + proficiency_bonus(level),
                 "perception": scores.modifier("wisdom") + proficiency_bonus(level),
                 "survival": scores.modifier("wisdom") + proficiency_bonus(level),
-                "animal-handling": scores.modifier("wisdom") + proficiency_bonus(level),
             },
             combat_traits=[CombatTrait.RELENTLESS_ENDURANCE],
             weapon_masteries=[],
