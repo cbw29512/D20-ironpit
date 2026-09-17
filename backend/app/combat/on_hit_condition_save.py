@@ -6,7 +6,7 @@ import logging
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.domain.models import CombatantState, DiceRoll, WeaponAttack
+from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
 
@@ -26,6 +26,7 @@ def resolve_on_hit_condition_save(
     defender: CombatantState,
     attack: WeaponAttack,
     dice: DiceProvider,
+    source_template: CombatantTemplate | None = None,
 ) -> OnHitConditionSaveResolution:
     try:
         effect = attack.on_hit_condition_save
@@ -33,7 +34,7 @@ def resolve_on_hit_condition_save(
             return OnHitConditionSaveResolution()
         if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size):
             return OnHitConditionSaveResolution()
-        if condition_is_immune(defender, effect.condition_id):
+        if condition_is_immune(defender, effect.condition_id, source_template):
             return OnHitConditionSaveResolution()
         save_roll, succeeded = resolve_saving_throw(
             defender,
