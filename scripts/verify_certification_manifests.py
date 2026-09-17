@@ -53,6 +53,12 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("reckless-attack")
     if features.frenzy:
         mechanics.add("frenzy")
+    if features.frenzy_bonus_attack_2014:
+        mechanics.add("frenzy-bonus-attack-2014")
+    if features.intimidating_presence_2014:
+        mechanics.add("intimidating-presence-2014")
+    if features.melee_critical_extra_weapon_dice:
+        mechanics.add("melee-critical-extra-weapon-dice")
     if features.fast_movement_bonus_ft:
         mechanics.add("fast-movement")
     if features.mindless_rage:
