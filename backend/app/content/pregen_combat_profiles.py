@@ -7,7 +7,6 @@ from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS
 from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.domain.character_builds import AbilityScores
 
-
 @dataclass(frozen=True)
 class AttackExpectation:
     weapon_id: str
@@ -23,7 +22,6 @@ class AttackExpectation:
     mastery_property: str | None = None
     sneak_attack_eligible: bool = False
     conditional_damage: tuple[tuple[int, int, str], ...] = ()
-
 
 @dataclass(frozen=True)
 class PregenCombatProfile:
@@ -43,12 +41,15 @@ class PregenCombatProfile:
     rage_damage_bonus: int = 0
     sneak_attack_d6: int = 0
     initiative_bonus: int | None = None
+    damage_resistances: tuple[str, ...] = ()
+    damage_vulnerabilities: tuple[str, ...] = ()
+    damage_immunities: tuple[str, ...] = ()
+    condition_immunities: tuple[str, ...] = ()
 
 
 def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> AbilityScores:
     return AbilityScores(strength=strength, dexterity=dexterity, constitution=constitution,
                          intelligence=intelligence, wisdom=wisdom, charisma=charisma)
-
 
 _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),

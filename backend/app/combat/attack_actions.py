@@ -13,10 +13,26 @@ from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.opening_burst import opening_feature_id
 from app.combat.pit_policy import flexible_slot_has_both
 from app.combat.saving_throws import resolve_save_action
+from app.combat.stunning_strike_2014 import resolve_stunning_strike
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
+
+
+def _event_target(event: BattleEvent, setup: EncounterSetup) -> EncounterCombatant | None:
+    try:
+        return next(
+            (
+                member
+                for member in [*setup.heroes, *setup.monsters]
+                if member.combatant_id == event.target_id
+            ),
+            None,
+        )
+    except Exception:
+        logger.exception("Failed to resolve event target %s.", event.target_id)
+        raise
 
 
 def resolve_attack_action(
@@ -65,6 +81,20 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 sequence += 1
+                if event.hit:
+                    actual_target = _event_target(event, setup) or target
+                    stun = resolve_stunning_strike(
+                        sequence,
+                        round_number,
+                        attacker,
+                        actual_target,
+                        attack,
+                        dice,
+                        affected_states=affected_states,
+                    )
+                    if stun is not None:
+                        events.append(stun)
+                        sequence += 1
                 if attacker.state.turn_terminated:
                     break
                 cleave, sequence = resolve_cleave_extra_attack(

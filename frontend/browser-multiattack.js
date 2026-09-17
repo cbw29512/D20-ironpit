@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
@@ -50,6 +51,9 @@
     if (!slots.slice(1).some((slot) => F().flexibleSlotHasBoth(member, slotData(slot).attackIds))) return false;
     return D().roll(100) >= 76;
   }
+  function eventTarget(event, fallback, setup) {
+    return [...setup.heroes, ...setup.monsters].find((item) => item.combatant_id === event.target_id) || fallback;
+  }
 
   function resolveAttackAction(sequence, round, member, setup) {
     const definition = member.state.template.attack_action, slots = definition?.slots;
@@ -78,6 +82,10 @@
           allowReckless: true, ignoreCloseThreat: true,
         });
         events.push(event);
+        if (event.hit && MK()?.resolveStunning) {
+          const stun = MK().resolveStunning(sequence, round, member, eventTarget(event, choice.target, setup), choice.attack);
+          if (stun) { events.push(stun); sequence += 1; }
+        }
         if (member.state.turn_terminated) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;

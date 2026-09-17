@@ -60,6 +60,22 @@ def _attack_issues(template: CombatantTemplate, profile: PregenCombatProfile) ->
     return issues
 
 
+def _defense_issues(template: CombatantTemplate, profile: PregenCombatProfile) -> list[str]:
+    actual = (
+        tuple(sorted(item.value for item in template.damage_resistances)),
+        tuple(sorted(item.value for item in template.damage_vulnerabilities)),
+        tuple(sorted(item.value for item in template.damage_immunities)),
+        tuple(sorted(template.condition_immunities)),
+    )
+    expected = (
+        tuple(sorted(profile.damage_resistances)),
+        tuple(sorted(profile.damage_vulnerabilities)),
+        tuple(sorted(profile.damage_immunities)),
+        tuple(sorted(profile.condition_immunities)),
+    )
+    return [] if actual == expected else ["static-defense-mismatch"]
+
+
 def audit_pregen_combat_stats(template: CombatantTemplate, profile: PregenCombatProfile) -> list[str]:
     issues: list[str] = []
     expected_identity = (profile.template_id, profile.archetype, profile.level)
@@ -93,8 +109,7 @@ def audit_pregen_combat_stats(template: CombatantTemplate, profile: PregenCombat
     resources = {item.id: item.max_uses for item in template.resources}
     if resources != dict(profile.resources):
         issues.append("resources-mismatch")
-    if template.damage_resistances or template.damage_vulnerabilities or template.damage_immunities or template.condition_immunities:
-        issues.append("unexpected-static-defense-mismatch")
+    issues.extend(_defense_issues(template, profile))
     if not template.source.strip():
         issues.append("source-missing")
     issues.extend(_attack_issues(template, profile))

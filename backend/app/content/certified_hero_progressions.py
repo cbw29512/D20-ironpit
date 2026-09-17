@@ -30,6 +30,8 @@ from app.content.fighter_progression_profile import (
     build_karnok_stoneward_level2_profile, build_karnok_stoneward_level3_profile,
     build_karnok_stoneward_level4_profile, build_karnok_stoneward_level5_profile,
 )
+from app.content.monk_open_hand_2014_profile import build_kael_stillwater_2014_profile
+from app.content.monk_open_hand_2014_runtime import build_kael_stillwater_2014
 from app.content.rogue_thief_2014_profile import build_mara_quickstep_2014_profile
 from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.domain.character_builds import CharacterBuildProfile
@@ -103,6 +105,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="rogue", template_builder=build_mara_quickstep_2014,
         profile_level_builder=build_mara_quickstep_2014_profile, max_level=10,
+    ),
+    CertifiedHeroProgression(
+        class_id="monk", template_builder=build_kael_stillwater_2014,
+        profile_level_builder=build_kael_stillwater_2014_profile, max_level=10,
     ),
 )
 

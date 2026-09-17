@@ -28,6 +28,12 @@ class ProgressionCombatFeatures(BaseModel):
     cunning_action: bool = False
     uncanny_dodge: bool = False
     evasion: bool = False
+    martial_arts_bonus_attack: bool = False
+    martial_arts_die_size: int = Field(default=0, ge=0, le=12)
+    flurry_of_blows: bool = False
+    deflect_missiles: bool = False
+    open_hand_technique: bool = False
+    stunning_strike: bool = False
     survivor_heal_amount: int = Field(default=0, ge=0, le=30)
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)

@@ -89,6 +89,18 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("intimidating-presence-2014")
     if features.brutal_critical_dice:
         mechanics.add("brutal-critical")
+    if features.martial_arts_bonus_attack:
+        mechanics.add("martial-arts-bonus-attack")
+    if features.martial_arts_die_size:
+        mechanics.add("martial-arts-die")
+    if features.flurry_of_blows:
+        mechanics.add("flurry-of-blows")
+    if features.deflect_missiles:
+        mechanics.add("deflect-missiles")
+    if features.open_hand_technique:
+        mechanics.add("open-hand-technique")
+    if features.stunning_strike:
+        mechanics.add("stunning-strike")
     return sorted(mechanics)
 
 
