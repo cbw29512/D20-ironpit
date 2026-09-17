@@ -8,7 +8,7 @@ from app.combat.dice import DiceProvider
 from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
 from app.combat.sneak_attack import sneak_attack_bonus_damage
-from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
+from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 BonusDamageSpec = tuple[str, int, int, DamageType]
@@ -27,12 +27,8 @@ def roll_damage_component(
         count = dice_count * (2 if critical else 1)
         rolls = [dice.roll(dice_size) for _ in range(count)]
         return DamageRollComponent(
-            source=source,
-            notation=f"{count}d{dice_size}+{modifier}",
-            rolls=rolls,
-            modifier=modifier,
-            damage_type=damage_type,
-            total=sum(rolls) + modifier,
+            source=source, notation=f"{count}d{dice_size}+{modifier}", rolls=rolls,
+            modifier=modifier, damage_type=damage_type, total=sum(rolls) + modifier,
         )
     except Exception as exc:
         logger.exception("Failed to roll damage component %s.", source)
@@ -40,22 +36,14 @@ def roll_damage_component(
 
 
 def fixed_damage_component(source: str, amount: int, damage_type: DamageType) -> DamageRollComponent:
-    return DamageRollComponent(
-        source=source,
-        notation=str(amount),
-        rolls=[],
-        modifier=0,
-        damage_type=damage_type,
-        total=amount,
-    )
+    return DamageRollComponent(source=source, notation=str(amount), rolls=[], modifier=0, damage_type=damage_type, total=amount)
 
 
 def aggregate_damage_components(components: list[DamageRollComponent]) -> DiceRoll:
     return DiceRoll(
         notation=" + ".join(component.notation for component in components),
         rolls=[roll for component in components for roll in component.rolls],
-        modifier=sum(component.modifier for component in components),
-        total=sum(component.total for component in components),
+        modifier=sum(component.modifier for component in components), total=sum(component.total for component in components),
     )
 
 
@@ -83,17 +71,21 @@ def resolve_weapon_damage(
             components = [fixed_damage_component(weapon.name, attack.fixed_damage, weapon.damage_type)]
         else:
             weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
+            extra_critical = (
+                attacker.template.progression_features.melee_critical_extra_weapon_dice
+                if weapon.attack_kind is WeaponAttackKind.MELEE else 0
+            )
             components = [roll_weapon_component(
                 attacker, dice, source=weapon.name,
                 dice_count=weapon.dice_count, dice_size=weapon.dice_size,
                 modifier=weapon_modifier, damage_type=weapon.damage_type,
                 critical=critical, turn_key=turn_key, damage_die_minimum=attack.damage_die_minimum,
+                extra_critical_dice=extra_critical,
             )]
 
         for extra in attack.on_hit_damage:
             if extra.dice_count == 0:
-                components.append(fixed_damage_component(extra.source, extra.damage_bonus, extra.damage_type))
-                continue
+                components.append(fixed_damage_component(extra.source, extra.damage_bonus, extra.damage_type)); continue
             components.append(roll_damage_component(
                 dice, extra.source, extra.dice_count, extra.dice_size, extra.damage_bonus, extra.damage_type, critical,
             ))
@@ -102,44 +94,24 @@ def resolve_weapon_damage(
             if conditional.mode != "add" or not conditional_damage_active(conditional, attacker, target, attack_mode):
                 continue
             components.append(roll_damage_component(
-                dice=dice,
-                source="Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage",
-                dice_count=conditional.dice_count,
-                dice_size=conditional.dice_size,
-                modifier=conditional.damage_bonus,
-                damage_type=conditional.damage_type,
-                critical=critical,
+                dice=dice, source="Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage",
+                dice_count=conditional.dice_count, dice_size=conditional.dice_size, modifier=conditional.damage_bonus,
+                damage_type=conditional.damage_type, critical=critical,
             ))
 
-        sneak_damage = sneak_attack_bonus_damage(
-            attacker, attack, attack_mode, turn_key, sneak_attack_ally_available,
-        )
+        sneak_damage = sneak_attack_bonus_damage(attacker, attack, attack_mode, turn_key, sneak_attack_ally_available)
         if sneak_damage is not None:
             source, dice_count, dice_size, damage_type = sneak_damage
-            components.append(roll_damage_component(
-                dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
-                modifier=0, damage_type=damage_type, critical=critical,
-            ))
+            components.append(roll_damage_component(dice, source, dice_count, dice_size, 0, damage_type, critical))
 
         frenzy_damage = frenzy_bonus_damage(attacker, attack, turn_key)
         if frenzy_damage is not None:
             source, dice_count, dice_size, damage_type = frenzy_damage
-            components.append(roll_damage_component(
-                dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
-                modifier=0, damage_type=damage_type, critical=critical,
-            ))
+            components.append(roll_damage_component(dice, source, dice_count, dice_size, 0, damage_type, critical))
 
         if bonus_damage is not None:
             source, dice_count, dice_size, damage_type = bonus_damage
-            components.append(roll_damage_component(
-                dice=dice,
-                source=source,
-                dice_count=dice_count,
-                dice_size=dice_size,
-                modifier=0,
-                damage_type=damage_type,
-                critical=critical,
-            ))
+            components.append(roll_damage_component(dice, source, dice_count, dice_size, 0, damage_type, critical))
 
         return aggregate_damage_components(components), components
     except Exception as exc:
