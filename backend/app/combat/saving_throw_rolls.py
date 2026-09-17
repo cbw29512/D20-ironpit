@@ -5,6 +5,7 @@ import logging
 from app.combat.barbarian import rage_active
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
 from app.combat.danger_sense import danger_sense_advantage
+from app.combat.defensive_modifier_rules import saving_throw_advantage_sources
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
@@ -30,6 +31,7 @@ def saving_throw_mode(
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
             + sure_footed_advantage(state, ability, context)
+            + saving_throw_advantage_sources(state, ability)
         )
         disadvantage = saving_throw_disadvantage_sources(state)
         if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids:
