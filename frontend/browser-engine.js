@@ -19,18 +19,14 @@
   }
   function rosters(ruleset) {
     if (ruleset === "2014") {
-      const heroes = Object.fromEntries(Object.entries(window.IRON_PIT_BROWSER_HEROES || {})
-        .filter(([, hero]) => hero.ruleset === "2014"));
+      const heroes = Object.fromEntries(Object.entries(window.IRON_PIT_BROWSER_HEROES || {}).filter(([, hero]) => hero.ruleset === "2014"));
       const monsters = window.IRON_PIT_BROWSER_MONSTERS_2014;
       if (window.IRON_PIT_2014_MVP_READY !== true || !monsters) throw new Error("Certified 2014 monster roster is not loaded.");
       if (!Object.keys(heroes).length) throw new Error("Certified 2014 hero roster is not loaded.");
       return { heroes, monsters };
     }
-    return {
-      heroes: Object.fromEntries(Object.entries(window.IRON_PIT_BROWSER_HEROES || {})
-        .filter(([, hero]) => hero.ruleset === "2024")),
-      monsters: window.IRON_PIT_BROWSER_MONSTERS,
-    };
+    const heroes = Object.fromEntries(Object.entries(window.IRON_PIT_BROWSER_HEROES || {}).filter(([, hero]) => hero.ruleset === "2024"));
+    return { heroes, monsters: window.IRON_PIT_BROWSER_MONSTERS };
   }
   function resolveRuleset(members) {
     try {
