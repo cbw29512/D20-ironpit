@@ -11,9 +11,10 @@ from app.content.legacy_monster_roster import build_legacy_monster_templates
 logger = logging.getLogger(__name__)
 _OUTPUT = Path("backend/app/content/data/combatant_capabilities_v1.json")
 _HERO_ONLY_PROGRESSION_FIELDS = {
-    "danger_sense", "reckless_attack", "frenzy", "brutal_critical_dice", "fast_movement_bonus_ft", "mindless_rage",
-    "instinctive_pounce_fraction", "great_weapon_fighting", "indomitable_reroll", "indomitable_bonus",
-    "tactical_master_sap_weapon_ids", "sneak_attack_d6", "survivor_heal_amount",
+    "danger_sense", "reckless_attack", "frenzy", "frenzy_bonus_attack_2014", "intimidating_presence_2014_dc",
+    "brutal_critical_dice", "fast_movement_bonus_ft", "mindless_rage", "instinctive_pounce_fraction",
+    "great_weapon_fighting", "indomitable_reroll", "indomitable_bonus", "tactical_master_sap_weapon_ids",
+    "sneak_attack_d6", "survivor_heal_amount",
 }
 
 
