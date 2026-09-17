@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from app.content.level_resources import (
+    barbarian_2014_rage_uses,
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
     fighter_2014_action_surge_uses,
@@ -31,6 +32,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "rogue": (),
 }
 _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
+    "barbarian": (("rage", "Rage", barbarian_2014_rage_uses),),
     "fighter": (
         ("second-wind", "Second Wind", fighter_2014_second_wind_uses),
         ("action-surge", "Action Surge", fighter_2014_action_surge_uses),
@@ -43,6 +45,9 @@ _2024_SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("relentless-endurance", "Relentless Endurance", lambda _level: 1),
     ),
 }
+_2014_SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
+    "half-orc": (("relentless-endurance", "Relentless Endurance", lambda _level: 1),),
+}
 
 
 def _class_rules(profile: CharacterBuildProfile) -> dict[str, tuple[ResourceRule, ...]]:
@@ -52,7 +57,7 @@ def _class_rules(profile: CharacterBuildProfile) -> dict[str, tuple[ResourceRule
 def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     """Return independently certified positive-use resources for this build's edition."""
     class_rules = _class_rules(profile)
-    species_rules = {} if profile.ruleset == "2014" else _2024_SPECIES_RULES
+    species_rules = _2014_SPECIES_RULES if profile.ruleset == "2014" else _2024_SPECIES_RULES
     rules = [
         *class_rules.get(profile.class_id, ()),
         *species_rules.get(profile.species_id, ()),
