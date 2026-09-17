@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const C = () => window.IRON_PIT_BROWSER_CUNNING_ACTION;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const G = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT;
@@ -56,15 +57,19 @@
   function move(sequence, round, member, setup, turnKey) {
     try {
       if (!setup.map_definition) return { events: [], sequence };
+      const events = [];
+      const dash = C()?.useDash(sequence, round, member, setup, turnKey);
+      if (dash) { events.push(dash); sequence += 1; }
       const intent = chooseIntent(member, setup, turnKey);
-      if (!intent) return { events: [], sequence };
+      if (!intent) return { events, sequence };
       const target = [...setup.heroes, ...setup.monsters]
         .find((candidate) => candidate.combatant_id === intent.targetId);
       if (!target) throw new Error(`Missing offensive movement target ${intent.targetId}.`);
       const result = R().moveToward(
         sequence, round, member, target, setup, intent.desiredDistanceFt, "speed", { turnKey },
       );
-      return { events: result.events, sequence: result.sequence };
+      events.push(...result.events);
+      return { events, sequence: result.sequence };
     } catch (error) {
       console.error("Failed browser movement-to-offense execution", { member: member.combatant_id, error });
       throw error;
