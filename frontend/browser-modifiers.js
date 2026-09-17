@@ -2,7 +2,10 @@
   "use strict";
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
-  const KINDS = new Set(["armor-class", "attack-roll-flat", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
+  const KINDS = new Set([
+    "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
+    "attacks-against-advantage", "next-attack-against-advantage", "speed",
+  ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
 
@@ -14,6 +17,10 @@
     if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
     if (item.kind === "attack-roll-flat" && (!(item.flat_bonus || 0) || !item.weapon_id)) throw new Error("Flat attack modifiers require a bonus and weapon id.");
     if (item.kind !== "attack-roll-flat" && item.weapon_id) throw new Error(`${item.kind} does not accept a weapon id.`);
+    if (item.kind === "saving-throw-flat" && !(item.flat_bonus || 0)) throw new Error("Flat saving-throw modifiers require a nonzero bonus.");
+    if (item.kind === "condition-immunity" && !item.condition_id) throw new Error("Condition-immunity modifiers require a condition id.");
+    if (item.kind !== "condition-immunity" && item.condition_id) throw new Error(`${item.kind} does not accept a condition id.`);
+    if (item.kind === "condition-immunity" && (item.flat_bonus || 0)) throw new Error("Condition immunity does not accept a flat bonus.");
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
@@ -87,6 +94,7 @@
   const attackRollFlat = (state, weaponId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "attack-roll-flat" && item.weapon_id === weaponId)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+  const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
   const effectiveSpeed = (state) => X()?.effectiveSpeed(state, Math.max(0, state.template.speed_ft + flat(state, "speed")))
     ?? Math.max(0, state.template.speed_ft + flat(state, "speed"));
@@ -129,6 +137,6 @@
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
     consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
-    expireTargetTurn, nextAttackAgainstAdvantage, removeSource, validate,
+    expireTargetTurn, nextAttackAgainstAdvantage, removeSource, savingThrowFlat, validate,
   };
 })();
