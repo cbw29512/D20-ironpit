@@ -43,6 +43,10 @@ class PregenCombatProfile:
     rage_damage_bonus: int = 0
     sneak_attack_d6: int = 0
     initiative_bonus: int | None = None
+    damage_resistances: tuple[str, ...] = ()
+    damage_vulnerabilities: tuple[str, ...] = ()
+    damage_immunities: tuple[str, ...] = ()
+    condition_immunities: tuple[str, ...] = ()
 
 
 def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> AbilityScores:
