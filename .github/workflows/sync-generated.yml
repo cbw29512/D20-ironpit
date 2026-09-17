@@ -9,6 +9,7 @@ on:
       - "feat/2014-*"
       - "feat/2024-*"
       - "feat/paired-*"
+      - "automation/*"
 
 permissions:
   contents: write
