@@ -201,7 +201,7 @@ def build_kael_stillwater_2014_profile(level: int) -> CharacterBuildProfile:
             ],
             skill_proficiencies=["Acrobatics", "Stealth", "Insight", "Religion"],
             weapon_masteries=[],
-            combat_loadout_kind="unarmed-offense",
+            combat_loadout_kind="unarmed",
             feature_audits=_audits(level),
             source_references=[
                 "D&D Basic Rules 2014: Human",
