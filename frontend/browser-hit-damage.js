@@ -7,6 +7,9 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const MK = () => window.IRON_PIT_BROWSER_MONK_2014 || {
+    applyDeflectMissiles: (_defender, _attack, components) => ({ components, used: false, reduction: 0 }),
+  };
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || {
     applyUncannyDodge: (_attacker, _defender, components) => ({ components, used: false }),
     evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total,
@@ -84,7 +87,8 @@
     const saveComponentPresent = Boolean(saveDamage.component);
     const rolled = [...base.components];
     if (saveComponentPresent) rolled.push(saveDamage.component);
-    const uncanny = RD().applyUncannyDodge(attacker, defender, rolled);
+    const deflect = MK().applyDeflectMissiles(defender, attack, rolled);
+    const uncanny = RD().applyUncannyDodge(attacker, defender, deflect.components);
     const damageComponents = uncanny.components.map((part) => ({
       ...part,
       applied_total: A().adjustedDamage(defender, part.total, part.damage_type),
@@ -104,7 +108,11 @@
       applyZeroHpSaveDamageRider(defender, effect, turnKey);
       damageOutcome = "unconscious";
     }
-    return { damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage, uncannyDodgeUsed: uncanny.used };
+    return {
+      damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage,
+      uncannyDodgeUsed: uncanny.used, deflectMissilesUsed: deflect.used,
+      deflectMissilesReduction: deflect.reduction,
+    };
   }
 
   window.IRON_PIT_BROWSER_HIT_DAMAGE = {
