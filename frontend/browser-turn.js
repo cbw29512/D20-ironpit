@@ -5,7 +5,7 @@
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK, G = () => window.IRON_PIT_BROWSER_RAGE;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const BF = () => window.IRON_PIT_BROWSER_FRENZY_2014, IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
-  const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
+  const MK = () => window.IRON_PIT_BROWSER_MONK_2014, PA = () => window.IRON_PIT_BROWSER_PALADIN_AURAS_2014;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -65,22 +65,27 @@
   function resolveTurn(sequence, round, member, setup) {
     try {
       enablePitRangePolicy();
-      const events = []; H().cleanup(setup); S().beginTurn(member.state);
+      const events = []; H().cleanup(setup); PA()?.sync(setup); S().beginTurn(member.state);
       const recharge = R()?.resolveStartOfTurn(sequence, round, member);
       if (recharge) { events.push(...recharge.events); sequence = recharge.sequence; }
       const turnKey = `${round}:${member.combatant_id}`;
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
       const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
-      const wind = P()?.secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; const shift = T()?.resolve(sequence, round, member, setup); if (shift) { events.push(shift); sequence += 1; } }
+      const wind = P()?.secondWind(sequence, round, member); if (wind) {
+        events.push(wind); sequence += 1;
+        const shift = T()?.resolve(sequence, round, member, setup);
+        if (shift) { events.push(shift); sequence += 1; PA()?.sync(setup); }
+      }
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
       const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
       const spell = L()?.resolve(sequence, round, member, setup, turnKey); if (spell) { events.push(...spell.events); sequence = spell.sequence; }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const targets = F().targetOrder(member, setup); if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
       const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
-      if (charged?.handled) { events.push(...charged.events); return finalize(events, charged.sequence, round, member, setup, turnKey); }
-      const movement = OM()?.move(sequence, round, member, setup, turnKey); if (movement) { events.push(...movement.events); sequence = movement.sequence; }
+      if (charged?.handled) { events.push(...charged.events); PA()?.sync(setup); return finalize(events, charged.sequence, round, member, setup, turnKey); }
+      const movement = OM()?.move(sequence, round, member, setup, turnKey);
+      if (movement) { events.push(...movement.events); sequence = movement.sequence; PA()?.sync(setup); }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey); if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
