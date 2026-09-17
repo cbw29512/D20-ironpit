@@ -5,6 +5,7 @@
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK, G = () => window.IRON_PIT_BROWSER_RAGE;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const BF = () => window.IRON_PIT_BROWSER_FRENZY_2014, IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
+  const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -43,6 +44,8 @@
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
+    const monk = MK()?.resolveBonus(sequence, round, member, setup, turnKey, events);
+    if (monk) { events.push(...monk.events); sequence = monk.sequence; }
     const frenzy = BF()?.resolve(sequence, round, member, setup, turnKey);
     if (frenzy) { events.push(...frenzy.events); sequence = frenzy.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
