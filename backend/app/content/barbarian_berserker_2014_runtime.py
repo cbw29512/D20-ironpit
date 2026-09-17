@@ -7,7 +7,15 @@ from app.content.level_resources import barbarian_2014_rage_damage_bonus, barbar
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
+from app.domain.models import (
+    CombatantTemplate,
+    DamageType,
+    ResourceDefinition,
+    VisualLoadout,
+    Weapon,
+    WeaponAttack,
+    WeaponAttackKind,
+)
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.traits import CombatTrait
 
@@ -25,18 +33,43 @@ def _scores(level: int) -> AbilityScores:
     )
 
 
-def _attack(level: int, weapon_id: str, scores: AbilityScores) -> WeaponAttack:
-    weapon = build_weapon(weapon_id).model_copy(update={"mastery_property": None})
+def _greataxe_attack(level: int, scores: AbilityScores) -> WeaponAttack:
+    weapon = build_weapon("greataxe").model_copy(update={"mastery_property": None})
     modifier = scores.modifier("strength")
-    rage_eligible = weapon.attack_kind is WeaponAttackKind.MELEE
     return WeaponAttack(
-        id=f"rokhan-2014-{weapon_id}",
+        id="rokhan-2014-greataxe",
         weapon=weapon,
         attack_bonus=proficiency_bonus(level) + modifier,
         damage_bonus=modifier,
         attack_ability="strength",
         attack_ability_modifier=modifier,
-        rage_eligible=rage_eligible,
+        rage_eligible=True,
+    )
+
+
+def _handaxe_throw(level: int, scores: AbilityScores) -> WeaponAttack:
+    modifier = scores.modifier("strength")
+    return WeaponAttack(
+        id="rokhan-2014-handaxe-thrown",
+        weapon=Weapon(
+            id="handaxe",
+            name="Handaxe",
+            attack_kind=WeaponAttackKind.RANGED,
+            dice_count=1,
+            dice_size=6,
+            damage_type=DamageType.SLASHING,
+            animation="projectile",
+            normal_range_ft=20,
+            long_range_ft=60,
+            projectile="handaxe",
+            mastery_property=None,
+            light=True,
+        ),
+        attack_bonus=proficiency_bonus(level) + modifier,
+        damage_bonus=modifier,
+        attack_ability="strength",
+        attack_ability_modifier=modifier,
+        rage_eligible=False,
     )
 
 
@@ -53,8 +86,8 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
         if level not in range(1, 11):
             raise ValueError("2014 Berserker Barbarian certification currently covers levels 1 through 10.")
         scores = _scores(level)
-        greataxe = _attack(level, "greataxe", scores)
-        handaxe = _attack(level, "handaxe", scores)
+        greataxe = _greataxe_attack(level, scores)
+        handaxe = _handaxe_throw(level, scores)
         attacks_per_action = 2 if level >= 5 else 1
         attack_action = AttackActionDefinition(
             id="attack",
