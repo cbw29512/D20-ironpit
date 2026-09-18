@@ -205,7 +205,7 @@ Examples of useful themes, when supported by the actual subclass/spell list:
 - elemental/generalist damage and control;
 - enchantment/mind-control;
 - healing/support;
-- summoning or battlefield control.
+- battlefield control that changes supported combat numbers/state.
 
 The spell package contains desired spells, but the level compiler exposes only spells the character can legally know/prepare/cast at that level.
 
@@ -252,7 +252,8 @@ NO  -> retain as profile/source data if desired; no runtime combat handler.
 YES -> represent the needed fact and use/add one shared mechanic.
 ```
 
-Arena-out-of-scope is a deliberate product-scope classification, never a substitute for an outcome-changing RAW rule.
+Arena-out-of-scope is a deliberate product-scope classification. Under the Iron Pit product contract, summoning/new-combatant creation, teleportation/planar or ethereal relocation, and comparable non-core battlefield-complexity mechanics are explicitly arena-disabled even if they could matter in tabletop play. Preserve their source provenance but do not build runtime subsystems for them.
+
 
 ## Shared capability pattern
 
