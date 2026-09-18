@@ -92,6 +92,7 @@ jobs:
           for file in frontend/*.js; do node --check "$file"; done
       - name: Run browser combat regressions
         run: |
+          node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs
           node frontend/browser-execution.test.cjs
@@ -217,6 +218,7 @@ jobs:
           grep -q 'browser-monsters-expansion.js' index.html
           grep -q 'browser-condition-rules.js' index.html
           grep -q 'browser-action-economy.js' index.html
+          grep -q 'browser-ability-hooks.js' index.html
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
           grep -q 'browser-activation-movement.js' index.html
@@ -289,6 +291,7 @@ jobs:
           grep -q 'browser-condition-immunity.js' frontend/index.html
           grep -q 'browser-condition-rules.js' frontend/index.html
           grep -q 'browser-action-economy.js' frontend/index.html
+          grep -q 'browser-ability-hooks.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
           grep -q 'browser-reaction-movement.js' frontend/index.html
           grep -q 'browser-activation-movement.js' frontend/index.html
