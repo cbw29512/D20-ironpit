@@ -25,10 +25,6 @@ def _active_source(member: EncounterCombatant) -> bool:
     return state.is_alive and not state.is_dead and state.current_hp > 0 and not is_incapacitated(state)
 
 
-def _allies(source: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
-    return setup.heroes if source.side == "heroes" else setup.monsters
-
-
 def _clear_aura_modifiers(setup: EncounterSetup) -> None:
     for member in _members(setup):
         member.state.active_modifiers = [
