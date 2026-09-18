@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from app.combat.reckless_attack import reckless_attack_active
+from app.combat.forced_movement import push_straight_away
 from app.combat.modifier_stack import add_modifier
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DamageType, WeaponAttack
 from app.domain.modifiers import CombatModifier, ModifierKind
 
@@ -69,3 +71,12 @@ def apply_hamstring_blow(
     )
     add_modifier(defender, modifier)
     return True
+
+
+def apply_forceful_blow(
+    attacker: EncounterCombatant,
+    defender: EncounterCombatant,
+    setup: EncounterSetup,
+) -> int:
+    """Apply the 2024 Brutal Strike Forceful Blow 15-foot straight-away push."""
+    return push_straight_away(defender, attacker, setup, 15)
