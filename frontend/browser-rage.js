@@ -58,31 +58,44 @@
     if (state.template.wearing_heavy_armor || state.is_dead || Q().incapacitated(state)) end(state);
   }
 
+  function maintain(sequence, round, member) {
+    const state = member.state;
+    if (is2014(state) || !active(state) || state.rage_expires_round === null || state.rage_expires_round > round
+        || (state.rage_max_round && state.rage_max_round <= round) || !E().available(state, "bonus_action")) return null;
+    E().spend(state, "bonus_action");
+    state.rage_expires_round = Math.min(round + 1, state.rage_max_round || round + 1);
+    return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id,
+      actor_name: state.template.name, feature_id: EFFECT, animation: "rage",
+      description: `${state.template.name} extends Rage with a Bonus Action.` };
+  }
+
+  function cleanupExpired(sequence, round, member) {
+    const state = member.state;
+    if (!active(state) || state.rage_expires_round === null || state.rage_expires_round > round) {
+      return { events: [], sequence };
+    }
+    const exhaustion = end(state);
+    if (exhaustion === null) return { events: [], sequence };
+    return { events: [{ sequence, round_number: round, event_type: "feature",
+      actor_id: member.combatant_id, actor_name: state.template.name, feature_id: "exhaustion", animation: "condition",
+      description: `${state.template.name}'s Frenzy ends and causes Exhaustion level ${exhaustion}.` }], sequence: sequence + 1 };
+  }
+
   function finalize(sequence, round, member) {
-    const state = member.state; let event = null;
-    if (!is2014(state) && active(state) && state.rage_expires_round !== null && state.rage_expires_round <= round
-        && (!state.rage_max_round || state.rage_max_round > round) && E().available(state, "bonus_action")) {
-      E().spend(state, "bonus_action");
-      state.rage_expires_round = Math.min(round + 1, state.rage_max_round || round + 1);
-      event = { sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
-        actor_name: state.template.name, feature_id: EFFECT, animation: "rage",
-        description: `${state.template.name} extends Rage with a Bonus Action.` };
-    }
-    if (active(state) && state.rage_expires_round !== null && state.rage_expires_round <= round) {
-      const exhaustion = end(state);
-      if (exhaustion !== null) event = { sequence: sequence++, round_number: round, event_type: "feature",
-        actor_id: member.combatant_id, actor_name: state.template.name, feature_id: "exhaustion", animation: "condition",
-        description: `${state.template.name}'s Frenzy ends and causes Exhaustion level ${exhaustion}.` };
-    }
-    return { event, sequence };
+    const maintenance = maintain(sequence, round, member);
+    if (maintenance) return { event: maintenance, sequence: sequence + 1 };
+    const cleaned = cleanupExpired(sequence, round, member);
+    return { event: cleaned.events[0] || null, sequence: cleaned.sequence };
   }
 
   function installAbilityHooks() {
     const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
     if (!hooks) throw new Error("Rage hook installation requires browser-ability-hooks.js.");
-    const phase = hooks.PHASES.BONUS_ACTION_WINDOW;
-    if (hooks.abilitiesFor(phase).some((item) => item.id === "rage-enter")) return;
-    hooks.registerAbility(phase, {
+    const bonusPhase = hooks.PHASES.BONUS_ACTION_WINDOW;
+    const finalizePhase = hooks.PHASES.TURN_FINALIZE;
+    const bonusIds = () => new Set(hooks.abilitiesFor(bonusPhase).map((item) => item.id));
+
+    if (!bonusIds().has("rage-enter")) hooks.registerAbility(bonusPhase, {
       id: "rage-enter", priority: 10, rulesets: ["2014", "2024"],
       appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape",
       resolve: ({ sequence, round, member, setup, turnKey }) => {
@@ -100,9 +113,29 @@
         return { events, sequence: nextSequence, claimed: true };
       },
     });
+
+    if (!bonusIds().has("rage-maintain")) hooks.registerAbility(bonusPhase, {
+      id: "rage-maintain", priority: 120, rulesets: ["2024"],
+      appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "postAction",
+      resolve: ({ sequence, round, member }) => {
+        const event = maintain(sequence, round, member);
+        return event ? { events: [event], sequence: sequence + 1, claimed: true } : null;
+      },
+    });
+
+    if (!hooks.abilitiesFor(finalizePhase).some((item) => item.id === "rage-expiry-cleanup")) {
+      hooks.registerAbility(finalizePhase, {
+        id: "rage-expiry-cleanup", priority: 100, rulesets: ["2014", "2024"],
+        resolve: ({ sequence, round, member }) => {
+          const result = cleanupExpired(sequence, round, member);
+          return { ...result, claimed: false };
+        },
+      });
+    }
   }
 
   window.IRON_PIT_BROWSER_RAGE = {
-    active, damageBonus, end, endIfIncapacitated, enter, extendFromAttack, finalize, installAbilityHooks,
+    active, cleanupExpired, damageBonus, end, endIfIncapacitated, enter, extendFromAttack,
+    finalize, installAbilityHooks, maintain,
   };
 })();
