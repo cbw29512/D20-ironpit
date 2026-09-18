@@ -98,7 +98,7 @@
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
     const heroes = build2014Heroes(), monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
     if (heroes.length !== 60) throw new Error(`Expected 60 certified 2014 hero levels; found ${heroes.length}.`);
-    if (monsters.length !== 124) throw new Error(`Expected 124 certified 2014 test monsters; found ${monsters.length}.`);
+    if (monsters.length !== 127) throw new Error(`Expected 127 certified 2014 test monsters; found ${monsters.length}.`);
     if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 hero catalog crossed the ruleset boundary.");
     if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
