@@ -103,6 +103,7 @@ jobs:
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-swarm.test.cjs
           node frontend/browser-rage.test.cjs
+          node frontend/browser-instinctive-pounce.test.cjs
           node frontend/browser-barbarian3.test.cjs
           node frontend/browser-sneak-attack.test.cjs
           node frontend/browser-vex.test.cjs
@@ -217,6 +218,7 @@ jobs:
           grep -q 'browser-action-economy.js' index.html
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
+          grep -q 'browser-activation-movement.js' index.html
           grep -q 'browser-champion.js' index.html
           grep -q 'browser-tactical-shift.js' index.html
           grep -q 'browser-undead-fortitude.js' index.html
@@ -288,6 +290,7 @@ jobs:
           grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
           grep -q 'browser-reaction-movement.js' frontend/index.html
+          grep -q 'browser-activation-movement.js' frontend/index.html
           grep -q 'browser-grapple.js' frontend/index.html
           grep -q 'browser-champion.js' frontend/index.html
           grep -q 'browser-tactical-shift.js' frontend/index.html
