@@ -12,6 +12,7 @@ from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
+from app.combat.rampage import resolve_rampage
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.saving_throws import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -22,6 +23,10 @@ logger = logging.getLogger(__name__)
 
 def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     try:
+        rampage_events, sequence = resolve_rampage(
+            sequence, round_number, attacker, setup, dice, events, turn_key,
+        )
+        events.extend(rampage_events)
         if allow_surge:
             surge_events, sequence = resolve_action_surge_attack(
                 sequence, round_number, attacker, setup, dice, turn_key,
