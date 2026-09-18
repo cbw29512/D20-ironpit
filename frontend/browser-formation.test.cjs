@@ -35,7 +35,7 @@ assert.equal(F.startingPosition(rangedCaster, "heroes"), 0);
 
 function template(name, primary, attacks, kind = "character") {
   return {
-    id: name.toLowerCase(), name, kind, size: "medium", max_hp: 10, speed_ft: 30,
+    id: name.toLowerCase(), name, kind, ruleset: "2024", size: "medium", max_hp: 10, speed_ft: 30,
     primary_attack_id: primary, attacks, traits: [], resources: {}, saving_throw_actions: [],
   };
 }
