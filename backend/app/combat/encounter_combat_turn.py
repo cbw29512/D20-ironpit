@@ -3,10 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.activation_movement import resolve_activation_movement
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
-from app.combat.barbarian import enter_rage
 from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
@@ -26,6 +24,7 @@ from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
+from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -55,18 +54,10 @@ def resolve_combat_turn(
         events.extend(support_events)
         if is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
-        if rage_event is not None:
-            events.append(rage_event)
-            sequence += 1
-            fraction = attacker.state.template.progression_features.instinctive_pounce_fraction
-            if fraction > 0:
-                movement_events, sequence = resolve_activation_movement(
-                    sequence, round_number, attacker, setup, dice,
-                    speed_fraction=fraction, turn_key=turn_key,
-                )
-                events.extend(movement_events)
-                sync_paladin_auras_2014(setup)
+        activation_events, sequence = resolve_feature_activation_phase(
+            sequence, round_number, attacker, setup, dice, turn_key,
+        )
+        events.extend(activation_events)
         if should_use_second_wind(attacker.state):
             events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id))
             sequence += 1
