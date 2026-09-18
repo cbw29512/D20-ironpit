@@ -14,6 +14,7 @@ class ModifierKind(StrEnum):
     SAVING_THROW_FLAT = "saving-throw-flat"
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
     SAVING_THROW_ADVANTAGE = "saving-throw-advantage"
+    SAVING_THROW_DISADVANTAGE = "saving-throw-disadvantage"
     DEATH_SAVE_ADVANTAGE = "death-save-advantage"
     HEALING_MAXIMIZE = "healing-maximize"
     CONDITION_IMMUNITY = "condition-immunity"
@@ -42,6 +43,7 @@ class CombatModifier(BaseModel):
     save_dc: int | None = Field(default=None, ge=1, le=40)
     concentration_required: bool = False
     consume_on_attack_against: bool = False
+    consume_on_saving_throw: bool = False
     ends_on_owner_attack: bool = False
     expires_at_start_of_source_turn: bool = False
     expires_at_end_of_target_turn: bool = False
@@ -93,6 +95,8 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a save ability.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
             raise ValueError("Only attack-advantage defender modifiers can be consumed by the next attack.")
+        if self.consume_on_saving_throw and self.kind is not ModifierKind.SAVING_THROW_DISADVANTAGE:
+            raise ValueError("Only saving-throw Disadvantage modifiers can be consumed by a saving throw.")
         if self.ends_on_owner_attack and self.kind is not ModifierKind.TARGETING_SAVE_GATE:
             raise ValueError("Only targeting save gates can end when their owner attacks.")
         if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
