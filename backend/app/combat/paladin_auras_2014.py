@@ -73,6 +73,7 @@ def _apply_condition_aura(
     target: EncounterCombatant,
     sources: list[EncounterCombatant],
     feature_name: str,
+    effect_id: str,
     condition_id: str,
 ) -> None:
     if condition_id in target.state.template.condition_immunities:
@@ -84,9 +85,9 @@ def _apply_condition_aura(
     if source is None:
         return
     add_modifier(target.state, CombatModifier(
-        id=f"{source.combatant_id}:{feature_name}:{target.combatant_id}",
+        id=f"{source.combatant_id}:{effect_id}:{target.combatant_id}",
         source_id=source.combatant_id,
-        source_effect_id=feature_name,
+        source_effect_id=effect_id,
         kind=ModifierKind.CONDITION_IMMUNITY,
         condition_id=condition_id,
     ))
@@ -99,8 +100,12 @@ def sync_paladin_auras_2014(setup: EncounterSetup) -> None:
         for target in _members(setup):
             sources = _nearby_sources(target, setup)
             _apply_save_aura(target, sources)
-            _apply_condition_aura(target, sources, "aura_of_devotion_2014", "charmed")
-            _apply_condition_aura(target, sources, "aura_of_courage_2014", "frightened")
+            _apply_condition_aura(
+                target, sources, "aura_of_devotion_2014", "aura-of-devotion-2014", "charmed",
+            )
+            _apply_condition_aura(
+                target, sources, "aura_of_courage_2014", "aura-of-courage-2014", "frightened",
+            )
     except Exception:
         logger.exception("Failed to synchronize 2014 Paladin auras.")
         raise
