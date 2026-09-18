@@ -7,6 +7,9 @@ from app.content.monster_basic_candidates_2014 import (
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_save_capabilities_2014 import (
+    recharge_rules_2014, save_capabilities_2014, save_resources_2014,
+)
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import (
     AttackCapabilityDefinition,
@@ -116,6 +119,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=movement.walk_ft,
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
+        save_actions=save_capabilities_2014(monster),
+        resources=save_resources_2014(monster), recharge_rules=recharge_rules_2014(monster),
         combat_traits=modeled_combat_traits_2014(monster),
         saving_throw_bonuses=_save_bonuses(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
