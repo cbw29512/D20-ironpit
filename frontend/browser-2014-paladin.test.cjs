@@ -66,8 +66,8 @@ function queued(values) {
     class_id: "paladin", archetype: "Paladin", turn_unholy_2014: true,
     sacred_weapon_2014_bonus: 2, resources: { "channel-divinity": 1 },
   }));
-  const skeleton = member("skeleton", "monsters", 10, template("Skeleton", { kind: "monster", creature_type: "Undead" }));
-  const fiend = member("fiend", "monsters", 20, template("Fiend", { kind: "monster", creature_type: "Fiend" }));
+  const skeleton = member("skeleton", "monsters", 10, template("Skeleton", { kind: "monster", creature_type: "Undead (Shapechanger)" }));
+  const fiend = member("fiend", "monsters", 20, template("Fiend", { kind: "monster", creature_type: "Fiend (Devil)" }));
   queued([1, 20]);
   const result = P.resolveChannel(1, 1, paladin, { heroes: [paladin], monsters: [skeleton, fiend] });
   assert.equal(result.sequence, 3);
