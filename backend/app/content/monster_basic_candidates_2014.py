@@ -22,7 +22,7 @@ _MODELED_2014_TRAITS = {
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Pounce", "Trampling Charge"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
-    "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hold Breath", "Illumination",
+    "Amphibious", "Beast of Burden", "Echolocation", "False Appearance", "Flyby", "Hold Breath", "Illumination",
     "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight", "Keen Sight",
     "Ice Walk", "Keen Sight and Smell", "Keen Smell", "Mimicry", "Running Leap", "Spider Climb",
     "Sunlight Sensitivity", "Water Breathing", "Web Sense", "Web Walker",
