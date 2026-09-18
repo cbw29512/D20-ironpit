@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+from app.combat.undead_fortitude import consume_survival_save_log
 import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
@@ -152,7 +154,7 @@ def resolve_attack(
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
             feature_id=feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
-            animation=weapon.animation, description=description,
+            animation=weapon.animation, description=description + consume_survival_save_log(actual_defender),
         )
     except Exception as exc:
         logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)

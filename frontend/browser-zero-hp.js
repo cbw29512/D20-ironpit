@@ -94,6 +94,10 @@
     if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     const remaining = Math.max(0, amount - before);
     if (remaining >= S().effectiveMaxHp(state)) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
+    if (state.template.effect_bound_survival_save) {
+      if (!U()) throw new Error("Effect-bound survival save runtime is not loaded.");
+      if (U().resolveEffectBound(state)) return finish(state, "survival_save", incoming, affectedStates);
+    }
     if (useRelentless(state, remaining)) return finish(state, "relentless_endurance", incoming, affectedStates);
     markUnconscious(state);
     return finish(state, "unconscious", incoming, affectedStates);

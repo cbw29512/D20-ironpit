@@ -103,7 +103,7 @@
       save_succeeded: save.succeeded, damage_roll: { notation, rolls: [die], modifier: mod, total: applied },
       damage_components: [{ source: "Divine Spark", notation, rolls: [die], modifier: mod, damage_type: type, total: raw, applied_total: applied }],
       hp_before: before, hp_after: target.state.current_hp, feature_id: SPARK, resource_remaining: remaining, animation: SPARK,
-      description: `${target.state.template.name} takes ${applied} ${type} damage from Divine Spark.` }], sequence: sequence + 1 };
+      description: `${target.state.template.name} takes ${applied} ${type} damage from Divine Spark.` + (window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "") }], sequence: sequence + 1 };
   }
 
   function resolve(sequence, round, cleric, setup) {

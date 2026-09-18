@@ -127,6 +127,7 @@
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
       appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
     }
+    const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
     if (target.state.template.evasion && action.saveAbility === "dexterity" && action.successDamage === "half") description += " Evasion reduces the damage.";
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
@@ -142,7 +143,7 @@
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
       resource_remaining: resourceRemaining,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
-      animation: action.animation || "save-effect", description };
+      animation: action.animation || "save-effect", description: description + survivalLog };
   }
 
   window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveOnHitConditionSave, resolveSavingThrow, saveMode };

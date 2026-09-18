@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 SUPPORTED_HERO_ENGINE_FEATURES = {
     "second-wind", "savage-attacker", "adrenaline-rush", "relentless-endurance",
@@ -7,7 +11,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "improved-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
-    "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
+    "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
     "sneak-attack", "weapon-mastery",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
@@ -41,13 +45,23 @@ def unsupported_hero_engine_features(features: tuple[str, ...] | list[str]) -> t
 
 
 def compile_progression_feature_fields(features: tuple[str, ...] | list[str], level: int) -> dict[str, object]:
-    fields: dict[str, object] = {}
-    for feature in features:
-        fields.update(_STATIC_PROGRESSION_FIELDS.get(feature, {}))
-    if "indomitable" in features:
-        fields["indomitable_bonus"] = level
-    if "sneak-attack" in features:
-        fields["sneak_attack_d6"] = (level + 1) // 2
-    if "brutal-strike-2d10" in features:
-        fields["brutal_strike_damage_dice"] = 2
-    return fields
+    try:
+        fields: dict[str, object] = {}
+        for feature in features:
+            fields.update(_STATIC_PROGRESSION_FIELDS.get(feature, {}))
+        if "indomitable" in features:
+            fields["indomitable_bonus"] = level
+        if "sneak-attack" in features:
+            fields["sneak_attack_d6"] = (level + 1) // 2
+        if "brutal-strike-2d10" in features:
+            fields["brutal_strike_damage_dice"] = 2
+        if "relentless-rage" in features:
+            fields["effect_bound_survival_save"] = {
+                "source_id": "relentless-rage", "required_effect_id": "rage",
+                "save_ability": "constitution", "initial_dc": 10, "dc_increment": 5,
+                "replacement_hp": 2 * level,
+            }
+        return fields
+    except Exception:
+        logger.exception("Failed to compile progression capabilities at level %s.", level)
+        raise
