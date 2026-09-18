@@ -42,10 +42,6 @@ def build_aurelia_brightshield_2014_combat_profile(level: int) -> PregenCombatPr
         scores = _scores(level)
         pb = proficiency_bonus(level)
         aura_bonus = scores.modifier("charisma") if level >= 6 else 0
-        immunities = tuple(
-            condition for minimum, condition in ((7, "charmed"), (10, "frightened"))
-            if level >= minimum
-        )
         return PregenCombatProfile(
             template_id=f"aurelia-brightshield-2014-l{level}",
             archetype="Paladin",
@@ -71,8 +67,8 @@ def build_aurelia_brightshield_2014_combat_profile(level: int) -> PregenCombatPr
             weapon_masteries=(),
             resources=_resources(level),
             fighting_style="Defense" if level >= 2 else None,
-            saving_throw_flat_bonus=aura_bonus,
-            condition_immunities=immunities,
+            saving_throw_flat_bonus=0,
+            condition_immunities=(),
         )
     except Exception:
         logger.exception("Failed to compile Aurelia's 2014 combat fingerprint at level %s", level)
