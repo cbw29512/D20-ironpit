@@ -4,7 +4,6 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
-  const V = () => window.IRON_PIT_BROWSER_SAVES;
   const T = () => window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS;
   const D = () => window.IRON_PIT_DICE;
   const CHANNEL = "channel-divinity", SACRED = "sacred-weapon", TURN = "turn-the-unholy", TURNED = "turned-unholy";
@@ -56,18 +55,10 @@
     const legal = new Set(unholyTargets(member, setup).map((target) => target.combatant_id));
     if (targets.some((target) => !legal.has(target.combatant_id))) throw new Error("Turn the Unholy received an illegal target.");
     E().spend(member.state, "action"); member.state.resources[CHANNEL] -= 1;
-    const dc = saveDc(member), events = [];
-    for (const target of targets) {
-      const save = V().resolveSavingThrow(target.state, "wisdom", dc);
-      const applied = save.succeeded ? [] : T().apply(member, target, round, TURN, TURNED);
-      events.push({ sequence: sequence++, round_number: round, event_type: "saving_throw",
-        actor_id: member.combatant_id, actor_name: member.state.template.name,
-        target_id: target.combatant_id, target_name: target.state.template.name,
-        saving_throw_roll: save.roll, save_ability: "wisdom", save_dc: dc, save_succeeded: save.succeeded,
-        applied_condition_ids: applied, feature_id: TURN, resource_remaining: member.state.resources[CHANNEL],
-        animation: "turn-undead", description: `${target.state.template.name} ${save.succeeded ? "resists" : "fails"} ${member.state.template.name}'s Turn the Unholy.` });
-    }
-    return { events, sequence };
+    return T().resolve(
+      sequence, round, member, targets, saveDc(member), TURN, TURNED,
+      member.state.resources[CHANNEL], "Turn the Unholy",
+    );
   }
 
   function resolveChannel(sequence, round, member, setup) {
