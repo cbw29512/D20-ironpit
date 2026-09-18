@@ -115,15 +115,18 @@ The browser and Python implementations do not need identical source structure, b
 
 ## Current migration status
 
-The pre-action `bonusActionWindow` is now migrated in the browser production engine for:
+The browser production `bonusActionWindow` is migrated at the same checkpoints used by the pre-existing turn policy:
 
-- Rage entry, including Instinctive Pounce as a Rage-owned rider;
-- Second Wind, with Tactical Shift remaining a Second Wind rider;
-- Adrenaline Rush.
+- `beforeEscape`: Rage entry first, including Instinctive Pounce as a Rage-owned rider; then Second Wind, with Tactical Shift remaining a Second Wind rider;
+- grapple escape remains between the early and late pre-action Bonus Action checkpoints;
+- `afterEscape`: Adrenaline Rush;
+- `postAction`: 2014 Monk bonus attacks, then 2014 Frenzy, then 2024 Rage maintenance.
 
-The preserved Arena decision order is `Rage -> Second Wind -> Adrenaline Rush`. Hook priority records that existing order; it does not create a new tactical policy.
+The preserved pre-action Arena order is `Rage -> Second Wind -> grapple escape -> Adrenaline Rush`. The preserved post-action order is `Monk -> Frenzy -> Rage maintenance`. Hook priority records those existing deterministic orders; it does not create a new tactical policy.
 
-The Python certification oracle intentionally retains its existing orchestration for this tranche. Permanent parity tests assert the same choice order there. Post-action Bonus Action features such as Monk bonus attacks, Frenzy attacks, and Rage maintenance remain in the existing turn-finalization path and are **not** part of this pre-action migration.
+Rage expiration is deliberately **not** part of the exclusive Bonus Action claim. It is registered in nonexclusive `turnFinalize` cleanup so Rage can still expire after Monk, Frenzy, or another feature spends the Bonus Action.
+
+The Python certification oracle intentionally retains its existing orchestration for this tranche. Permanent parity tests lock its current Bonus Action policy while browser regressions prove the equivalent hook-driven order. No Python combat rule is changed merely to mirror browser source structure.
 
 ## Migration order
 
