@@ -3,10 +3,18 @@ from __future__ import annotations
 import logging
 
 from app.combat.timed_conditions import apply_timed_condition
-from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
+from app.domain.models import CombatTrait, CombatantState, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 RECKLESS_ATTACK_EFFECT_ID = "reckless-attack"
+
+
+def _has_reckless(state: CombatantState) -> bool:
+    try:
+        return state.template.progression_features.reckless_attack or CombatTrait.RECKLESS in state.template.combat_traits
+    except Exception as exc:
+        logger.exception("Reckless capability check failed for %s.", state.template.name)
+        raise RuntimeError("Reckless capability could not be read.") from exc
 
 
 def reckless_attack_active(state: CombatantState) -> bool:
@@ -31,7 +39,7 @@ def activate_reckless_attack(
 ) -> bool:
     """Choose Reckless Attack on the first edition-eligible Strength attack roll of the active turn."""
     try:
-        if not state.template.progression_features.reckless_attack:
+        if not _has_reckless(state):
             return False
         if not _eligible_attack(state, attack) or reckless_attack_active(state):
             return False

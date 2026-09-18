@@ -11,7 +11,8 @@ if str(BACKEND) not in sys.path:
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.capability_compiler import compile_combatant
-from app.content.monster_basic_candidates_2014 import _ARENA_NEUTRAL_TRAITS, basic_blockers_2014
+from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 
@@ -26,7 +27,7 @@ _ATTACK_FIELDS = (
 def _unsupported_traits(monsters):
     return Counter(
         trait for monster in monsters for trait in monster.trait_names
-        if trait not in _ARENA_NEUTRAL_TRAITS and not is_arena_neutral_bonus_action(trait)
+        if trait not in ARENA_NEUTRAL_TRAITS_2014 and not is_arena_neutral_bonus_action(trait)
     )
 
 
@@ -60,7 +61,7 @@ def _trait_only_details(monsters):
             continue
         unsupported = [
             trait for trait in monster.trait_names
-            if trait not in _ARENA_NEUTRAL_TRAITS and not is_arena_neutral_bonus_action(trait)
+            if trait not in ARENA_NEUTRAL_TRAITS_2014 and not is_arena_neutral_bonus_action(trait)
         ]
         rows.append((monster.name, unsupported))
     return rows

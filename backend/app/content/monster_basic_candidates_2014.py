@@ -4,12 +4,13 @@ from collections import Counter
 import logging
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
+from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
-from app.content.monster_trait_bindings_2014 import bound_trait_names_2014
+from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
 
@@ -21,12 +22,6 @@ _MODELED_2014_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Pounce", "Trampling Charge"})
-_ARENA_NEUTRAL_TRAITS = frozenset({
-    "Amphibious", "Beast of Burden", "Echolocation", "False Appearance", "Flyby", "Hold Breath", "Illumination",
-    "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight", "Keen Sight",
-    "Ice Walk", "Keen Sight and Smell", "Keen Smell", "Mimicry", "Running Leap", "Spider Climb",
-    "Sunlight Sensitivity", "Water Breathing", "Web Sense", "Web Walker",
-})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
 
@@ -69,7 +64,7 @@ def _multiattack_blockers(monster: SourceMonster2014) -> list[str]:
 
 def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
-        certified = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_2014_TRAITS)
+        certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
         certified.update(bound_trait_names_2014(monster))
         if _supported_charge(monster):
             certified.update(_CHARGE_TRAIT_NAMES)
@@ -111,6 +106,8 @@ def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
     ]
     if _supported_charge(monster):
         traits.append(CombatTrait.CHARGE)
+    if supports_reckless_2014(monster):
+        traits.append(CombatTrait.RECKLESS)
     return traits
 
 

@@ -62,6 +62,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
             "reach": weapon.reach_ft, "animation": weapon.animation,
         }
+        if attack.attack_ability is not None:
+            row["attackAbility"] = attack.attack_ability
         if weapon.normal_range_ft is not None:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
         if attack.fixed_damage is not None:
