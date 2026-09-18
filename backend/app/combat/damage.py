@@ -4,6 +4,7 @@ import logging
 
 from app.combat.barbarian import rage_damage_bonus
 from app.combat.brutal_critical import brutal_critical_bonus_damage
+from app.combat.brutal_strike import brutal_strike_bonus_damage
 from app.combat.conditional_damage import active_replacement_damage, conditional_damage_active
 from app.combat.dice import DiceProvider
 from app.combat.divine_smite_2014 import divine_smite_bonus_damage
@@ -63,7 +64,7 @@ def resolve_weapon_damage(
     attacker: CombatantState, attack: WeaponAttack, dice: DiceProvider, critical: bool,
     attack_mode: RollMode, turn_key: str | None = None,
     bonus_damage: BonusDamageSpec | None = None, target: CombatantState | None = None,
-    sneak_attack_ally_available: bool = False,
+    sneak_attack_ally_available: bool = False, brutal_strike_disadvantage: bool = False,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
@@ -111,6 +112,11 @@ def resolve_weapon_damage(
             critical=critical,
         )
         _append_bonus_component(components, dice, frenzy_bonus_damage(attacker, attack, turn_key), critical=critical)
+        _append_bonus_component(
+            components, dice,
+            brutal_strike_bonus_damage(attacker, attack, turn_key, has_disadvantage=brutal_strike_disadvantage),
+            critical=critical,
+        )
         _append_bonus_component(components, dice, divine_smite_bonus_damage(attacker, target, attack), critical=critical)
         _append_bonus_component(components, dice, bonus_damage, critical=critical)
         return aggregate_damage_components(components), components

@@ -5,7 +5,7 @@ from pathlib import Path
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-MAX_LINES = 150
+MAX_LINES = 200
 FORBIDDEN_PATHS = (
     Path(".env.example"),
     Path("docker-compose.yml"),

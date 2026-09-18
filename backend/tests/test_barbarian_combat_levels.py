@@ -74,7 +74,6 @@ def test_existing_barbarian_runtime_levels_are_compiled_from_the_table() -> None
 def test_complete_barbarian_table_blocks_only_on_missing_combat_engine_feature() -> None:
     assert unsupported_barbarian_engine_features(7) == ()
     assert unsupported_barbarian_engine_features(8) == ()
-    assert unsupported_barbarian_engine_features(9) == ("brutal-strike",)
+    assert unsupported_barbarian_engine_features(9) == ()
     assert (build_rokhan_stonefury_level(7).max_hp, build_rokhan_stonefury_level(8).max_hp) == (75, 85)
-    with pytest.raises(ValueError, match="brutal-strike"):
-        build_rokhan_stonefury_level(9)
+    assert build_rokhan_stonefury_level(9).progression_features.brutal_strike_damage_dice == 1

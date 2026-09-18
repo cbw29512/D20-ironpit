@@ -7,7 +7,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "improved-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
-    "feral-instinct", "instinctive-pounce",
+    "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
     "sneak-attack", "weapon-mastery",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
@@ -32,6 +32,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "mindless-rage": {"mindless_rage": True},
     "feral-instinct": {"initiative_advantage": True},
     "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
+    "brutal-strike": {"brutal_strike_damage_dice": 1},
 }
 
 
@@ -47,4 +48,6 @@ def compile_progression_feature_fields(features: tuple[str, ...] | list[str], le
         fields["indomitable_bonus"] = level
     if "sneak-attack" in features:
         fields["sneak_attack_d6"] = (level + 1) // 2
+    if "brutal-strike-2d10" in features:
+        fields["brutal_strike_damage_dice"] = 2
     return fields

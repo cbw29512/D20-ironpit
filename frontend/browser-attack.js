@@ -1,6 +1,6 @@
 (() => {
   "use strict"; const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false }, GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
   const TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) }, STUDY = () => window.IRON_PIT_BROWSER_STUDIED_ATTACKS || { apply: () => false };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) }, B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
@@ -57,10 +57,17 @@
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
-    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
-      + B2().attackAdvantage(attacker.state, attack) + A().sources(attack, target.state) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+    const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state), closeThreat);
+    const rangedDisadvantage = attack.kind === "ranged" && ((attack.normal && distance > attack.normal) || closeThreat);
+    const recklessAdvantage = B2().attackAdvantage(attacker.state, attack);
+    const brutalSuppression = BS()?.advantageSuppression(
+      attacker.state, attack, extra.turnKey, disadvantage > 0 || rangedDisadvantage,
+    ) || 0;
+    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
+      + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state)
+      + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+    const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id), mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
     M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
