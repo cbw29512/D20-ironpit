@@ -91,7 +91,12 @@ def _spell(action: Any) -> dict[str, Any]:
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
            "diceSize": effect.dice_size, "damageType": effect.damage_type}
+    if effect.condition_id: row["conditionId"] = effect.condition_id
+    if effect.source_creature_types: row["sourceCreatureTypes"] = list(effect.source_creature_types)
+    if effect.save_ability: row["saveAbility"] = effect.save_ability
+    if effect.save_dc is not None: row["saveDc"] = effect.save_dc
     if effect.consume_on_attack_against: row["consumeOnAttackAgainst"] = True
+    if effect.ends_on_owner_attack: row["endsOnOwnerAttack"] = True
     if effect.expires_after_source_turns is not None: row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
     return row
 
@@ -111,7 +116,9 @@ def _defense(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
            "range": action.range_ft, "durationMinutes": action.duration_minutes,
            "targetPolicy": action.target_policy, "targetCount": action.target_count,
+           "targetCountPerSlotAbove": action.target_count_per_slot_above,
            "temporaryHp": action.temporary_hp, "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
+           "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,
            "damageResistances": list(action.damage_resistances),
            "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
            "concentration": action.concentration, "priority": action.priority, "animation": action.animation}
@@ -139,6 +146,17 @@ def _removal(action: Any) -> dict[str, Any]:
 def _spell_choice(choice: Any) -> dict[str, Any]:
     return {"id": choice.id, "name": choice.name, "level": choice.spell_level,
             "role": choice.role, "requiredCapabilities": list(choice.required_capabilities)}
+
+
+def _effect_removal(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "castingAbility": action.casting_ability, "targetMode": action.target_mode,
+        "autoRemoveMaxLevel": action.auto_remove_max_level,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+    }
 
 
 def _spell_package(class_id: str, level: int, template: CombatantTemplate):
@@ -208,6 +226,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
     if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+    if template.effect_removal_actions: row["effect_removal_actions"] = [_effect_removal(item) for item in template.effect_removal_actions]
     if template.attack_action:
         row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name,
                                 "isAttackAction": template.attack_action.is_attack_action,
