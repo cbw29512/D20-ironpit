@@ -9,7 +9,7 @@ from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
-from app.content.monster_trait_bindings_2014 import bound_trait_names_2014
+from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
 
@@ -24,7 +24,8 @@ _CHARGE_TRAIT_NAMES = frozenset({"Pounce", "Trampling Charge"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Amphibious", "Beast of Burden", "Echolocation", "False Appearance", "Flyby", "Hold Breath", "Illumination",
     "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight", "Keen Sight",
-    "Ice Walk", "Keen Sight and Smell", "Keen Smell", "Mimicry", "Running Leap", "Spider Climb",
+    "Ice Walk", "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Mimicry", "Running Leap",
+    "Snow Camouflage", "Spider Climb",
     "Sunlight Sensitivity", "Water Breathing", "Web Sense", "Web Walker",
 })
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
@@ -111,6 +112,8 @@ def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
     ]
     if _supported_charge(monster):
         traits.append(CombatTrait.CHARGE)
+    if supports_reckless_2014(monster):
+        traits.append(CombatTrait.RECKLESS)
     return traits
 
 
