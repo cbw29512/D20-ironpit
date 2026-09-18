@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
+from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.barbarian import enter_rage
 from app.combat.charge import resolve_charge_closing
@@ -114,6 +115,15 @@ def resolve_combat_turn(
             events.extend(action_events)
             if action_events or not is_available(attacker.state, "action"):
                 return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        area_save = choose_area_save(attacker, setup)
+        if area_save is not None and is_available(attacker.state, "action"):
+            area_action, placement = area_save
+            area_events, sequence = resolve_area_save(
+                sequence, round_number, attacker, setup, area_action, placement, dice,
+            )
+            events.extend(area_events)
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         chosen_save = save_choice(attacker, setup)
         if chosen_save is not None and is_available(attacker.state, "action"):
