@@ -3,12 +3,11 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
-  const T = () => window.IRON_PIT_BROWSER_TIMED;
-  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
+  const TC = () => window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS;
   const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", SPARK = "divine-spark", PRESERVE = "preserve-life";
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const living = (m) => m.state.is_alive && !m.state.is_dead;
@@ -79,20 +78,13 @@
       description: `${cleric.state.template.name} uses Preserve Life: ${allocations.join("; ")}.` }], sequence: sequence + 1 };
   }
 
-  function turnEffects(cleric, target, round) {
-    const common = { sourceEffectId: TURN, appliedRound: round, expiresRound: round + 10, expiryTiming: "source_turn_start",
-      endsOnDamage: true, endsIfSourceIncapacitated: true, endsIfSourceDead: true };
-    const applied = [T().apply(target.state, TURNED, cleric.combatant_id, { ...common, turnBehavior: "forced_retreat" })];
-    for (const condition of ["frightened", "incapacitated"]) if (!I().immune(target.state, condition)) applied.push(T().apply(target.state, condition, cleric.combatant_id, common));
-    return applied.filter(Boolean);
-  }
 
   function resolveTurnUndead(sequence, round, cleric, setup, targets) {
     if (!targets.length || targets.some((t) => distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
     const dc = saveDc(cleric), remaining = spend(cleric), events = [];
     for (const target of targets) {
       const save = V().resolveSavingThrow(target.state, "wisdom", dc);
-      const applied = save.succeeded ? [] : turnEffects(cleric, target, round);
+      const applied = save.succeeded ? [] : TC().apply(cleric, target, round, TURN, TURNED);
       events.push({ sequence: sequence++, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id,
         actor_name: cleric.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
         saving_throw_roll: save.roll, save_ability: "wisdom", save_dc: dc, save_succeeded: save.succeeded,
