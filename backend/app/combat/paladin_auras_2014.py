@@ -37,14 +37,12 @@ def _nearby_sources(target: EncounterCombatant, setup: EncounterSetup) -> list[E
     side_members = setup.heroes if target.side == "heroes" else setup.monsters
     return [
         source for source in side_members
-        if source.combatant_id != target.combatant_id
-        and _active_source(source)
+        if _active_source(source)
         and combatant_distance(source, target) <= 10
     ]
 
 
 def _apply_save_aura(target: EncounterCombatant, sources: list[EncounterCombatant]) -> None:
-    own = target.state.template.progression_features.aura_of_protection_2014_bonus
     candidates = [
         (source.state.template.progression_features.aura_of_protection_2014_bonus, source)
         for source in sources
@@ -53,15 +51,12 @@ def _apply_save_aura(target: EncounterCombatant, sources: list[EncounterCombatan
     if not candidates:
         return
     best_bonus, source = max(candidates, key=lambda item: (item[0], item[1].combatant_id))
-    extra = max(0, best_bonus - own)
-    if extra <= 0:
-        return
     add_modifier(target.state, CombatModifier(
         id=f"{source.combatant_id}:aura-of-protection-2014:{target.combatant_id}",
         source_id=source.combatant_id,
         source_effect_id="aura-of-protection-2014",
         kind=ModifierKind.SAVING_THROW_FLAT,
-        flat_bonus=extra,
+        flat_bonus=best_bonus,
     ))
 
 
