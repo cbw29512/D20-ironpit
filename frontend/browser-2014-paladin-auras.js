@@ -20,23 +20,20 @@
   }
 
   function nearbySources(target, setup) {
-    return allies(target, setup).filter((source) => source.combatant_id !== target.combatant_id
-      && S().active(source) && S().distance(source, target) <= 10);
+    return allies(target, setup).filter((source) => S().active(source) && S().distance(source, target) <= 10);
   }
 
   function saveAura(target, sources) {
-    const own = target.state.template.aura_of_protection_2014_bonus || 0;
     const candidates = sources
       .map((source) => [source.state.template.aura_of_protection_2014_bonus || 0, source])
       .filter(([bonus]) => bonus > 0)
       .sort((a, b) => b[0] - a[0] || a[1].combatant_id.localeCompare(b[1].combatant_id));
     if (!candidates.length) return;
-    const [bestBonus, source] = candidates[0], extra = Math.max(0, bestBonus - own);
-    if (!extra) return;
+    const [bestBonus, source] = candidates[0];
     M().add(target.state, {
       id: `${source.combatant_id}:aura-of-protection-2014:${target.combatant_id}`,
       source_id: source.combatant_id, source_effect_id: "aura-of-protection-2014",
-      kind: "saving-throw-flat", flat_bonus: extra,
+      kind: "saving-throw-flat", flat_bonus: bestBonus,
     });
   }
 
