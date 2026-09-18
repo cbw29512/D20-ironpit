@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
-from app.content.monster_basic_candidates_2014 import basic_blockers_2014, modeled_combat_traits_2014
+from app.content.monster_basic_candidates_2014 import (
+    basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014,
+)
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
@@ -15,6 +17,7 @@ from app.domain.capability_effects import DiceSpec
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import VisualLoadout
 from app.domain.movement import MovementModes
+from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
 
 _ABILITY_KEYS = {
@@ -117,6 +120,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         saving_throw_bonuses=_save_bonuses(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
+        parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
+            if supports_parry_reaction_2014(monster) else None,
         damage_resistances=[item.lower() for item in monster.damage_resistances],
         damage_vulnerabilities=[item.lower() for item in monster.damage_vulnerabilities],
         damage_immunities=[item.lower() for item in monster.damage_immunities],
