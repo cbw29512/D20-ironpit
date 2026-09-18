@@ -41,7 +41,6 @@ def build_aurelia_brightshield_2014_combat_profile(level: int) -> PregenCombatPr
             raise ValueError("2014 Aurelia combat fingerprint covers levels 1 through 10.")
         scores = _scores(level)
         pb = proficiency_bonus(level)
-        aura_bonus = scores.modifier("charisma") if level >= 6 else 0
         return PregenCombatProfile(
             template_id=f"aurelia-brightshield-2014-l{level}",
             archetype="Paladin",
