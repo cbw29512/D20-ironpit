@@ -26,7 +26,7 @@ load("browser-spellcasting.js");
 load("browser-healing.js");
 load("browser-condition-removal.js");
 load("browser-effect-removal.js");
-load("browser-turn.js");
+load("browser-ability-hooks.js", "browser-turn.js");
 load("browser-precombat-spells.js");
 
 const S = window.IRON_PIT_BROWSER_STATE;
