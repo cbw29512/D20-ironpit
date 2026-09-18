@@ -78,6 +78,14 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         raise
 
 
+def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
+    try:
+        return monster.reaction_names == ["Parry"] and monster.parry_ac_bonus is not None
+    except Exception:
+        logger.exception("Failed to classify 2014 Parry support for %s.", monster.name)
+        raise
+
+
 def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     allowed_actions = {attack.name.casefold() for attack in monster.attacks}
     if monster.multiattack_slots:
@@ -88,7 +96,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         blockers.append("source:extra-action")
     if unsupported_traits_2014(monster):
         blockers.append("source:trait")
-    if monster.reaction_names or monster.parry_ac_bonus is not None:
+    if (monster.reaction_names or monster.parry_ac_bonus is not None) and not supports_parry_reaction_2014(monster):
         blockers.append("source:reaction")
     if monster.legendary_action_names:
         blockers.append("source:legendary")

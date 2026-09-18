@@ -152,7 +152,7 @@ assert.equal(event.hp_before - event.hp_after, event.damage_roll.total, "attack 
 
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
-assert.equal(Object.keys(roster).length, 100);
+assert.equal(Object.keys(roster).length, 101);
 for (const id of [
   "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp", "poisonous-snake", "scorpion", "wyvern",
 ]) {
