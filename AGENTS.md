@@ -7,10 +7,11 @@ Before changing combat code, read:
 1. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
 2. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
 3. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
-4. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
-5. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
-6. current source/runtime code and permanent tests.
-7. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+4. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
+5. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
+6. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
+7. current source/runtime code and permanent tests.
+8. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 

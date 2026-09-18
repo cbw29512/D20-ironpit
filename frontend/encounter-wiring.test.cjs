@@ -34,6 +34,7 @@ assert.equal(ids.has("distance"), false, "formation combat must not expose a sta
 assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/);
 assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
+assert.match(html, /browser-ability-hooks\.js/);
 assert.match(html, /browser-arena-map\.js/); assert.match(html, /browser-grid-geometry\.js/);
 assert.match(html, /browser-grid-movement-support\.js/); assert.match(html, /browser-grid-path-search-support\.js/);
 assert.match(html, /browser-grid-path-search\.js/); assert.match(html, /browser-grid-movement\.js/);
@@ -71,6 +72,8 @@ assert.match(engine, /map_definition/); assert.match(engine, /IRON_PIT_BROWSER_A
 assert.match(formation, /HERO_FRONT = 5/); assert.match(formation, /MONSTER_FRONT = 10/);
 assert.match(replay, /initiative-badge/); assert.match(replay, /critical-screen/); assert.match(replay, /fumble-blackout/);
 assert.match(css, /\.battle-card\.turn-active/); assert.match(css, /card-turn-shake/); assert.match(css, /\.battle-card\.battle-dead/);
+assert.ok(html.indexOf("browser-action-economy.js") < html.indexOf("browser-ability-hooks.js"));
+assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-tactical-mind.js"));
 assert.ok(html.indexOf("browser-tactical-mind.js") < html.indexOf("browser-grapple.js"));
 assert.ok(html.indexOf("browser-offense-value.js") < html.indexOf("browser-spell-offense.js"));
 assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.js"));

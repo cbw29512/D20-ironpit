@@ -72,6 +72,23 @@ Permanent tests for a new trigger must prove that it contributes to the existing
 
 If it is not completely clear whether source wording represents a genuinely new primitive or only another trigger/configuration for an existing one, stop and ask Chris before coding. Record the answer in the appropriate authoritative repository document before implementation.
 
+
+## Sequencing primitive contract
+
+Turn and attack timing are shared engine primitives, not ability-specific call chains.
+
+The browser sequencing surface is a fixed phase registry defined by `browser-ability-hooks.js`. Ability modules may register into canonical phases, but the shared turn/attack orchestrators must not accumulate named ability branches after a phase is migrated.
+
+Each hook registration must declare its supported ruleset scope explicitly. A shared registration names both `2014` and `2024`; an edition-specific registration names only that edition.
+
+Hook results separate emitted events from action-window consumption. Producing an event never implicitly consumes an Action or Bonus Action. Exclusive phases are consumed only by an explicit `claimed=true` result from the resolver that actually uses that opportunity.
+
+Hook priority is deterministic evaluation order, not tactical preference. Existing Arena AI / action-selection policy remains responsible for choosing among independent legal actions.
+
+Nested riders stay nested when they are not independent action choices. For example, a feature triggered only by another feature remains part of its parent feature's resolution instead of registering as a competing action.
+
+Before any browser phase migration changes live behavior, identify the equivalent Python reference resolution point, action-economy lifecycle, ruleset data, and permanent parity tests. The detailed contract and migration sequence live in `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md`.
+
 ## Arena movement policy
 
 Movement mechanics and movement policy are separate.
