@@ -31,6 +31,14 @@ def test_push_straight_away_moves_three_squares_without_spending_speed():
     assert target.state.movement_remaining_ft == 30
 
 
+def test_push_straight_away_preserves_non_diagonal_source_ray():
+    source = _member("source", "heroes", 1, 1)
+    target = _member("target", "monsters", 3, 2)
+    setup = _setup(source, target)
+    assert push_straight_away(target, source, setup, 5) == 5
+    assert target.state.position == GridPosition(x=5, y=3)
+
+
 def test_push_straight_away_stops_before_occupied_space():
     source = _member("source", "heroes", 1, 1)
     target = _member("target", "monsters", 2, 1)
