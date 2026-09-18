@@ -12,7 +12,7 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 120);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 124);
 const heroes2014 = Object.values(window.IRON_PIT_BROWSER_HEROES).filter((hero) => hero.ruleset === "2014");
 const fighters2014 = heroes2014.filter((hero) => hero.class_id === "fighter");
 const barbarians2014 = heroes2014.filter((hero) => hero.class_id === "barbarian");
@@ -41,6 +41,7 @@ for (const id of [
   "2014-black-dragon-wyrmling", "2014-blue-dragon-wyrmling", "2014-green-dragon-wyrmling", "2014-red-dragon-wyrmling", "2014-white-dragon-wyrmling", "2014-hell-hound", "2014-chimera", "2014-young-black-dragon", "2014-young-blue-dragon", "2014-young-green-dragon", "2014-young-red-dragon",
   "2014-giant-shark", "2014-hunter-shark", "2014-quipper", "2014-swarm-of-quippers",
   "2014-giant-wolf-spider", "2014-spider", "2014-lion", "2014-young-white-dragon",
+  "2014-bat", "2014-giant-bat", "2014-killer-whale", "2014-swarm-of-bats",
 ]) assert.ok(window.IRON_PIT_BROWSER_MONSTERS_2014[id], `${id} must be in the certified 2014 browser lane`);
 
 for (const id of ["2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens"]) {
