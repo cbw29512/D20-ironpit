@@ -33,7 +33,7 @@ def render_registry() -> str:
             definition.model_dump(
                 mode="json",
                 exclude_none=True,
-                exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
+                exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS, "effect_removal_actions": True},
             )
             for definition in definitions
         ]
