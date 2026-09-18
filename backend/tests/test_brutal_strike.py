@@ -1,0 +1,31 @@
+from app.combat.brutal_strike import brutal_strike_bonus_damage
+from app.combat.reckless_attack import RECKLESS_ATTACK_EFFECT_ID
+from app.content.pregen_combat_profiles import build_pregen_combat_profiles
+from app.combat.state import create_state
+
+
+def _barbarian(level: int):
+    profile = next(item for item in build_pregen_combat_profiles() if item.archetype == "barbarian" and item.level == level)
+    state = create_state(profile)
+    state.active_effect_ids.append(RECKLESS_ATTACK_EFFECT_ID)
+    return state, profile.weapon_attack
+
+
+def test_brutal_strike_is_one_1d10_strength_rider_per_turn_at_level_9():
+    state, attack = _barbarian(9)
+    first = brutal_strike_bonus_damage(state, attack, "1:rokhan", has_disadvantage=False)
+    second = brutal_strike_bonus_damage(state, attack, "1:rokhan", has_disadvantage=False)
+    assert first == ("Brutal Strike", 1, 10, attack.weapon.damage_type)
+    assert second is None
+
+
+def test_brutal_strike_is_blocked_by_disadvantage():
+    state, attack = _barbarian(9)
+    assert brutal_strike_bonus_damage(state, attack, "1:rokhan", has_disadvantage=True) is None
+
+
+def test_brutal_strike_scales_to_2d10_at_level_17():
+    state, attack = _barbarian(17)
+    assert brutal_strike_bonus_damage(state, attack, "1:rokhan", has_disadvantage=False) == (
+        "Brutal Strike", 2, 10, attack.weapon.damage_type,
+    )
