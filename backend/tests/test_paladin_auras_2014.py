@@ -36,7 +36,7 @@ def test_aura_of_protection_applies_inside_ten_feet_and_updates_save_math() -> N
     sync_paladin_auras_2014(setup)
 
     assert saving_throw_flat_bonus(ally.state) == 2
-    assert saving_throw_flat_bonus(paladin.state) == 0
+    assert saving_throw_flat_bonus(paladin.state) == 2
     roll, succeeded = resolve_saving_throw(ally.state, "wisdom", 12, FixedDiceProvider([8]))
     assert roll is not None
     assert roll.modifier == 4
@@ -67,10 +67,17 @@ def test_devotion_and_courage_grant_dynamic_condition_immunity() -> None:
 
 def test_incapacitated_or_dead_paladin_stops_granting_auras() -> None:
     setup, paladin, ally = _setup(10)
+    sync_paladin_auras_2014(setup)
+    assert saving_throw_flat_bonus(paladin.state) == 3
+    assert condition_is_immune(paladin.state, "charmed") is True
+    assert condition_is_immune(paladin.state, "frightened") is True
+
     paladin.state.is_unconscious = True
     sync_paladin_auras_2014(setup)
     assert saving_throw_flat_bonus(ally.state) == 0
+    assert saving_throw_flat_bonus(paladin.state) == 0
     assert condition_is_immune(ally.state, "charmed") is False
+    assert condition_is_immune(paladin.state, "charmed") is False
 
     paladin.state.is_unconscious = False
     paladin.state.is_dead = True
@@ -91,5 +98,5 @@ def test_multiple_paladin_protection_auras_use_only_the_strongest_bonus() -> Non
     assert first.state.template.progression_features.aura_of_protection_2014_bonus == 2
     assert stronger.state.template.progression_features.aura_of_protection_2014_bonus == 3
     assert saving_throw_flat_bonus(ally.state) == 3
-    assert saving_throw_flat_bonus(first.state) == 1
-    assert saving_throw_flat_bonus(stronger.state) == 0
+    assert saving_throw_flat_bonus(first.state) == 3
+    assert saving_throw_flat_bonus(stronger.state) == 3
