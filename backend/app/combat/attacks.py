@@ -50,8 +50,10 @@ def resolve_attack(
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
         disadvantage_total = other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
         reckless_advantage = reckless_attack_advantage(attacker, attack)
-        reckless_advantage -= brutal_strike_advantage_suppression(
-            attacker, attack, turn_key, has_disadvantage=disadvantage_total > 0,
+        reckless_advantage, brutal_strike_disadvantage = brutal_strike_attack_sources(
+            attacker, attack, turn_key,
+            reckless_advantage=reckless_advantage,
+            disadvantage_sources=disadvantage_total,
         )
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
