@@ -6,7 +6,8 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.cleric_life_domain import AID
 from app.content.paladin_devotion_2014_attacks import build_extra_attack, build_javelin_attack, build_longsword_attack
 from app.content.paladin_devotion_2014_spells import (
-    beacon_of_hope_2014, lesser_restoration_2014, protection_from_evil_and_good_2014, sanctuary_2014,
+    beacon_of_hope_2014, dispel_magic_2014, lesser_restoration_2014,
+    protection_from_evil_and_good_2014, sanctuary_2014,
 )
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.actions import ConditionRemovalAction, HealingAction
@@ -124,6 +125,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
             defensive_spell_actions=_defensive_spells(level, charisma_modifier),
             healing_actions=_healing_actions(level, charisma_modifier),
             condition_removal_actions=_condition_removal_actions(level),
+            effect_removal_actions=[dispel_magic_2014()] if level >= 9 else [],
             saving_throw_bonuses=saves, skill_bonuses=_skill_bonuses(level, scores),
             weapon_masteries=[], fighting_style="Defense" if level >= 2 else None,
             fighting_styles=["Defense"] if level >= 2 else [], condition_immunities=immunities,
