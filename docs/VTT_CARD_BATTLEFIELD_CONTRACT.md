@@ -58,7 +58,7 @@ For the canonical 2024 SRD roster, printed `size` comes from the vendored SRD 5.
 - A 5-foot adjacent orthogonal or diagonal square costs 5 feet of movement unless a specific rule changes the cost.
 - A combatant cannot end normal movement in an occupied illegal space.
 - Large footprints must fit completely inside legal map bounds and cannot overlap another occupying creature unless a specific rule permits it.
-- Dash, Disengage, difficult terrain, Grappled, Prone, speed changes, teleports, forced movement, flight, swim, burrow, and other movement rules feed the same movement/position engine.
+- Dash, Disengage, difficult terrain, Grappled, Prone, speed changes, forced movement, flight, swim, burrow, and other supported movement rules feed the same movement/position engine. Teleportation and planar/ethereal relocation are arena-disabled by the authoritative Iron Pit rules contract and therefore do not feed runtime position state.
 - Iron Pit no longer grants free ordinary closing. Arena design and AI policy prevent degenerate fleeing/kiting rather than bypassing printed movement.
 
 ### Moving around other creatures — SRD 5.2.1
