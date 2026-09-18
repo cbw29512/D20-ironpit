@@ -20,8 +20,13 @@
       dice_size: effect.diceSize || 0,
       damage_type: effect.damageType || null,
       target_id: targetId,
+      condition_id: effect.conditionId || null,
+      source_creature_types: [...(effect.sourceCreatureTypes || [])],
+      save_ability: effect.saveAbility || null,
+      save_dc: effect.saveDc ?? null,
       concentration_required: Boolean(spell.concentration),
       consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
+      ends_on_owner_attack: Boolean(effect.endsOnOwnerAttack),
       expires_source_turn_end_round: expiry,
     };
   }
