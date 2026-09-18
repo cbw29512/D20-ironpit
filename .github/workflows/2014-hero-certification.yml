@@ -35,7 +35,8 @@ jobs:
             backend/tests/test_paladin_auras_2014.py \
             backend/tests/test_paladin_channel_divinity_2014.py \
             backend/tests/test_paladin_devotion_2014_foundation.py \
-            backend/tests/test_paladin_oath_spells_2014.py
+            backend/tests/test_paladin_oath_spells_2014.py \
+            backend/tests/test_certification_progression_manifest.py
       - name: Certify 2014 hero data and browser behavior
         run: |
           node frontend/browser-catalog-2014.test.cjs
