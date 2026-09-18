@@ -6,8 +6,7 @@ from app.combat.cleric_divine_spark import resolve_divine_spark
 from app.combat.cleric_preserve_life import resolve_preserve_life
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.turn_creature_effects import apply_turned_creature_effects
+from app.combat.turn_creature_effects import resolve_turning_saves
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -56,24 +55,11 @@ def resolve_turn_undead(
             raise ValueError("Turn Undead targets must be Undead within 30 feet.")
     dc = _spell_save_dc(cleric)
     remaining = _spend_channel(cleric)
-    events: list[BattleEvent] = []
-    for target in targets:
-        roll, succeeded = resolve_saving_throw(target.state, "wisdom", dc, dice)
-        applied = [] if succeeded else apply_turned_creature_effects(
-            cleric, target, setup, round_number,
-            source_effect_id=TURN_UNDEAD, turned_effect_id=TURNED_EFFECT,
-        )
-        events.append(BattleEvent(
-            sequence=sequence, round_number=round_number, event_type="saving_throw",
-            actor_id=cleric.combatant_id, actor_name=cleric.state.template.name,
-            target_id=target.combatant_id, target_name=target.state.template.name,
-            saving_throw_roll=roll, save_ability="wisdom", save_dc=dc, save_succeeded=succeeded,
-            applied_condition_ids=applied, feature_id=TURN_UNDEAD, resource_remaining=remaining,
-            animation="turn-undead",
-            description=f"{target.state.template.name} {'resists' if succeeded else 'fails'} {cleric.state.template.name}'s Turn Undead.",
-        ))
-        sequence += 1
-    return events, sequence
+    return resolve_turning_saves(
+        sequence, round_number, cleric, setup, targets, dice,
+        save_dc=dc, source_effect_id=TURN_UNDEAD, turned_effect_id=TURNED_EFFECT,
+        resource_remaining=remaining, feature_name="Turn Undead",
+    )
 
 
 def resolve_channel_divinity(
