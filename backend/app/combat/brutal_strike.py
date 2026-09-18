@@ -28,3 +28,24 @@ def brutal_strike_bonus_damage(
         return None
     state.feature_last_turn_keys[BRUTAL_STRIKE_FEATURE_ID] = turn_key
     return ("Brutal Strike", dice_count, 10, attack.weapon.damage_type)
+
+
+def brutal_strike_advantage_suppression(
+    state: CombatantState,
+    attack: WeaponAttack,
+    turn_key: str | None,
+    *,
+    has_disadvantage: bool,
+) -> int:
+    """Cancel only the Advantage granted by Reckless Attack for the chosen Brutal Strike roll."""
+    if (
+        state.template.ruleset == "2014"
+        or state.template.progression_features.brutal_strike_damage_dice <= 0
+        or turn_key is None
+        or has_disadvantage
+        or attack.attack_ability != "strength"
+        or not reckless_attack_active(state)
+        or state.feature_last_turn_keys.get(BRUTAL_STRIKE_FEATURE_ID) == turn_key
+    ):
+        return 0
+    return 1
