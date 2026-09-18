@@ -3,6 +3,7 @@ from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import effective_speed
 from app.combat.reckless_attack import RECKLESS_ATTACK_EFFECT_ID
 from app.combat.state import build_combatant_state
+from app.content.hero_combat_feature_registry import compile_progression_feature_fields
 from app.content.barbarian_progression import build_rokhan_stonefury_level
 
 
@@ -27,7 +28,8 @@ def test_brutal_strike_is_blocked_by_disadvantage():
 
 
 def test_brutal_strike_scales_to_2d10_at_level_17():
-    state, attack = _barbarian(17)
+    state, attack = _barbarian(9)
+    state.template.progression_features = compile_progression_feature_fields(("brutal-strike-2d10",), 17)
     assert brutal_strike_bonus_damage(state, attack, "1:rokhan", has_disadvantage=False) == (
         "Brutal Strike", 2, 10, attack.weapon.damage_type,
     )
