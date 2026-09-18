@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
@@ -98,4 +99,16 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
         return None
     except Exception:
         logger.exception("Failed save-action choice for %s.", attacker.combatant_id)
+        raise
+
+
+def resolve_area_save_turn(sequence, round_number, member, setup, dice):
+    try:
+        choice = choose_area_save(member, setup)
+        if choice is None:
+            return [], sequence
+        action, placement = choice
+        return resolve_area_save(sequence, round_number, member, setup, action, placement, dice)
+    except Exception:
+        logger.exception("Failed area-save turn stage for %s.", member.combatant_id)
         raise
