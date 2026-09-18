@@ -27,7 +27,8 @@ def test_level7_rage_activation_grants_pounce_without_spending_normal_movement()
     )
 
     assert sequence > 1
-    assert events[0].event_type == "rage"
+    assert events[0].event_type == "feature"
+    assert events[0].feature_id == "rage"
     assert any(event.event_type == "movement" for event in events[1:])
     assert hero.position_ft > 0
     assert hero.state.movement_remaining_ft == normal_remaining
