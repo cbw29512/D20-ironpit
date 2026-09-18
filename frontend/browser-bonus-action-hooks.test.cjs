@@ -215,7 +215,7 @@ assert.doesNotMatch(turnSource, /\?\.enter\(/);
 assert.doesNotMatch(turnSource, /IRON_PIT_BROWSER_TACTICAL_SHIFT/);
 assert.doesNotMatch(turnSource, /IRON_PIT_BROWSER_ACTIVATION_MOVEMENT/);
 const beforeEscapeIndex = turnSource.indexOf('"beforeEscape"');
-const grappleEscapeIndex = turnSource.indexOf("shouldEscape");
+const grappleEscapeIndex = turnSource.indexOf("if (H().shouldEscape(member.state))");
 const afterEscapeIndex = turnSource.indexOf('"afterEscape"');
 assert.ok(beforeEscapeIndex >= 0 && beforeEscapeIndex < grappleEscapeIndex);
 assert.ok(grappleEscapeIndex < afterEscapeIndex, "Adrenaline checkpoint must remain after grapple escape");
