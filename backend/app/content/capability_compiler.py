@@ -20,6 +20,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         dc=definition.dc,
         range_ft=definition.range_ft,
         target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
+        area=definition.area,
         damage_dice_count=damage.count if damage else 0,
         damage_dice_size=damage.size if damage else 6,
         damage_bonus=damage.bonus if damage else 0,
@@ -27,7 +28,9 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         success_damage=definition.success_damage,
         grapple_escape_dc=grapple.escape_dc if grapple else None,
         restrains_while_grappled=grapple.restrains if grapple else False,
-        animation=definition.animation,
+        resource_id=definition.resource_id, resource_cost=definition.resource_cost,
+        requires_no_active_grapple=definition.requires_no_active_grapple,
+        magical_effect=definition.magical_effect, animation=definition.animation,
     )
 
 

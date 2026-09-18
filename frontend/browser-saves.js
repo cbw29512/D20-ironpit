@@ -93,10 +93,15 @@
   }
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
-    const spendAction = options.spendAction !== false;
+    const spendAction = options.spendAction !== false, checkResource = options.checkResource !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
+    if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
+    let resourceRemaining = options.resourceRemaining ?? null;
+    if (action.resourceId && options.spendResource !== false) {
+      actor.state.resources[action.resourceId] -= action.resourceCost || 1; resourceRemaining = actor.state.resources[action.resourceId];
+    }
     if (spendAction) E().spend(actor.state, "action");
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
@@ -135,6 +140,7 @@
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+      resource_remaining: resourceRemaining,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }

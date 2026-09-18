@@ -16,6 +16,7 @@ from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.recharge import RechargeRule
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.rulesets import RulesetId
 from app.domain.size import CreatureSize
@@ -73,6 +74,7 @@ class CombatantDefinition(BaseModel):
     wearing_heavy_armor: bool = False
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     resources: list[ResourceDefinition] = Field(default_factory=list)
+    recharge_rules: list[RechargeRule] = Field(default_factory=list)
     visual: VisualLoadout
     source: str
     unsupported_capabilities: list[str] = Field(default_factory=list)

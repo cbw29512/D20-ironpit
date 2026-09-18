@@ -8,6 +8,9 @@ from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_save_capabilities_2014 import (
+    supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014,
+)
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
 
@@ -87,10 +90,7 @@ def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
 
 
 def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
-    allowed_actions = {attack.name.casefold() for attack in monster.attacks}
-    if monster.multiattack_slots:
-        allowed_actions.add("multiattack")
-    extras = [name for name in monster.action_names if name.casefold() not in allowed_actions]
+    extras = unsupported_source_actions_2014(monster)
     blockers = []
     if extras:
         blockers.append("source:extra-action")
@@ -122,7 +122,7 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     blockers.extend(_source_name_blockers(monster))
     families = {
         "defense": monster.unsupported_defense_text,
-        "save-action": monster.saving_throw_actions,
+        "save-action": unsupported_save_actions_2014(monster),
         "swallow": monster.swallow_actions,
         "death-trigger": monster.death_trigger_actions,
         "healing": monster.healing_actions,
@@ -132,7 +132,9 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         "regeneration": monster.regeneration,
         "legendary": monster.legendary_actions or monster.legendary_action_uses
             or monster.unsupported_legendary_action_names,
-        "recharge": monster.action_recharges or monster.rest_recharge_action_ids,
+        "recharge": (
+            monster.action_recharges or monster.rest_recharge_action_ids
+        ) if not supports_recharge_rules_2014(monster) else {},
     }
     blockers.extend(f"mechanic:{name}" for name, value in families.items() if value)
     return tuple(sorted(set(blockers)))

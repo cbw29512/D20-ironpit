@@ -6,6 +6,7 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.rogue_defenses import evasion_damage
+from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
@@ -38,6 +39,7 @@ def _damage_components(state: CombatantState, action: SavingThrowAction, dice: D
 def resolve_save_action(
     sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
+    check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
