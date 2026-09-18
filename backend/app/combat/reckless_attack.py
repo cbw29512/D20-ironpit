@@ -10,7 +10,11 @@ RECKLESS_ATTACK_EFFECT_ID = "reckless-attack"
 
 
 def _has_reckless(state: CombatantState) -> bool:
-    return state.template.progression_features.reckless_attack or CombatTrait.RECKLESS in state.template.combat_traits
+    try:
+        return state.template.progression_features.reckless_attack or CombatTrait.RECKLESS in state.template.combat_traits
+    except Exception as exc:
+        logger.exception("Reckless capability check failed for %s.", state.template.name)
+        raise RuntimeError("Reckless capability could not be read.") from exc
 
 
 def reckless_attack_active(state: CombatantState) -> bool:
