@@ -2,11 +2,11 @@
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE, C = () => window.IRON_PIT_BROWSER_CHARGE;
   const R = () => window.IRON_PIT_BROWSER_RECHARGE;
-  const M = () => window.IRON_PIT_BROWSER_MULTIATTACK, G = () => window.IRON_PIT_BROWSER_RAGE;
+  const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const AH = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
-  const BF = () => window.IRON_PIT_BROWSER_FRENZY_2014, IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
-  const MK = () => window.IRON_PIT_BROWSER_MONK_2014, PA = () => window.IRON_PIT_BROWSER_PALADIN_AURAS_2014;
+  const IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
+  const PA = () => window.IRON_PIT_BROWSER_PALADIN_AURAS_2014;
   const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -47,22 +47,23 @@
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
-    const monk = MK()?.resolveBonus(sequence, round, member, setup, turnKey, events);
-    if (monk) { events.push(...monk.events); sequence = monk.sequence; }
-    const frenzy = BF()?.resolve(sequence, round, member, setup, turnKey);
-    if (frenzy) { events.push(...frenzy.events); sequence = frenzy.sequence; }
-    const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
-    sequence = rage?.sequence ?? sequence;
+    const bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "postAction", events);
+    events.push(...bonus.events); sequence = bonus.sequence;
+    const hooks = AH();
+    const cleanup = hooks.runPhase(hooks.PHASES.TURN_FINALIZE, {
+      sequence, round, member, setup, turnKey, turnEvents: [...events], events: [],
+    });
+    events.push(...cleanup.events); sequence = cleanup.sequence;
     const fear = IP()?.cleanupTarget(sequence, round, member, setup);
     if (fear) { events.push(...fear.events); sequence = fear.sequence; }
     return { events, sequence };
   }
 
-  function resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, bonusActionCheckpoint) {
+  function resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, bonusActionCheckpoint, turnEvents = []) {
     const hooks = AH();
     if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
     return hooks.runPhase(hooks.PHASES.BONUS_ACTION_WINDOW, {
-      sequence, round, member, setup, turnKey, bonusActionCheckpoint, events: [],
+      sequence, round, member, setup, turnKey, bonusActionCheckpoint, turnEvents, events: [],
     });
   }
 
