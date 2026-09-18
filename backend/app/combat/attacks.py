@@ -4,6 +4,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
+from app.combat.brutal_strike import brutal_strike_advantage_suppression
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.conditional_attack_advantage import conditional_attack_advantage_sources
@@ -47,14 +48,19 @@ def resolve_attack(
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
+        disadvantage_total = other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
+        reckless_advantage = reckless_attack_advantage(attacker, attack)
+        reckless_advantage -= brutal_strike_advantage_suppression(
+            attacker, attack, turn_key, has_disadvantage=disadvantage_total > 0,
+        )
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
                                + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
-                               + reckless_attack_advantage(attacker, attack)
+                               + reckless_advantage
                                + conditional_attack_advantage_sources(attack, defender)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker),
+            other_disadvantage_sources=disadvantage_total,
             close_enemy_active=close_enemy_active,
         )
         base_roll = roll_d20(dice, attack.attack_bonus + attack_roll_flat_bonus(attacker, weapon.id), mode)
@@ -87,7 +93,7 @@ def resolve_attack(
             hit_damage = resolve_attack_hit_damage(
                 attacker, actual_defender, attack, dice, critical, mode, active_turn_key,
                 bonus_damage, affected_states, sneak_attack_ally_available,
-                brutal_strike_disadvantage=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) > 0,
+                brutal_strike_disadvantage=disadvantage_total > 0,
             )
             damage_roll = hit_damage.damage_roll; damage_components = hit_damage.damage_components
             damage_outcome = hit_damage.damage_outcome; applied_total = hit_damage.applied_total
