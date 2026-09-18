@@ -79,7 +79,11 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
 
 
 def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
-    return monster.reaction_names == ["Parry"] and monster.parry_ac_bonus is not None
+    try:
+        return monster.reaction_names == ["Parry"] and monster.parry_ac_bonus is not None
+    except Exception:
+        logger.exception("Failed to classify 2014 Parry support for %s.", monster.name)
+        raise
 
 
 def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
