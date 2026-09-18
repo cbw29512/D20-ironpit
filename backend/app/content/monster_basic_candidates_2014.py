@@ -24,7 +24,8 @@ _CHARGE_TRAIT_NAMES = frozenset({"Pounce", "Trampling Charge"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hold Breath", "Illumination",
     "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight", "Keen Sight",
-    "Keen Sight and Smell", "Keen Smell", "Mimicry", "Sunlight Sensitivity", "Water Breathing",
+    "Ice Walk", "Keen Sight and Smell", "Keen Smell", "Mimicry", "Running Leap", "Spider Climb",
+    "Sunlight Sensitivity", "Water Breathing", "Web Sense", "Web Walker",
 })
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
