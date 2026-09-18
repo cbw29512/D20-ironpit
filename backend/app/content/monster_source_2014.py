@@ -29,6 +29,7 @@ class SourceAttack2014(BaseModel):
     name: str
     kind: Literal["melee", "ranged"]
     attack_bonus: int
+    attack_ability: str | None = None
     damage: SourceDamage2014
     reach_ft: int = 5
     normal_range_ft: int | None = None
