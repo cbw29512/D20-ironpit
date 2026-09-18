@@ -84,6 +84,7 @@
     if (hooks.abilitiesFor(phase).some((item) => item.id === "rage-enter")) return;
     hooks.registerAbility(phase, {
       id: "rage-enter", priority: 10, rulesets: ["2014", "2024"],
+      appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape",
       resolve: ({ sequence, round, member, setup, turnKey }) => {
         const rage = enter(sequence, round, member);
         if (!rage) return null;
