@@ -64,6 +64,7 @@
 
     if (!existing().has("second-wind")) hooks.registerAbility(phase, {
       id: "second-wind", priority: 20, rulesets: ["2014", "2024"],
+      appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape",
       resolve: ({ sequence, round, member, setup }) => {
         const wind = secondWind(sequence, round, member);
         if (!wind) return null;
@@ -79,6 +80,7 @@
 
     if (!existing().has("adrenaline-rush")) hooks.registerAbility(phase, {
       id: "adrenaline-rush", priority: 30, rulesets: ["2024"],
+      appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "afterEscape",
       resolve: ({ sequence, round, member }) => {
         const event = adrenaline(sequence, round, member);
         return event ? { events: [event], sequence: sequence + 1, claimed: true } : null;
