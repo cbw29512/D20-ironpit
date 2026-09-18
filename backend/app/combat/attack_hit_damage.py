@@ -36,11 +36,13 @@ def resolve_attack_hit_damage(
     bonus_damage: BonusDamageSpec | None,
     affected_states: list[CombatantState] | None,
     sneak_attack_ally_available: bool,
+    brutal_strike_disadvantage: bool = False,
 ) -> AttackHitDamageResolution:
     hp_buffer_before = defender.current_hp + defender.temporary_hp
     damage_roll, rolled_components = resolve_weapon_damage(
         attacker, attack, dice, critical, attack_mode, turn_key, bonus_damage=bonus_damage,
         target=defender, sneak_attack_ally_available=sneak_attack_ally_available,
+        brutal_strike_disadvantage=brutal_strike_disadvantage,
     )
     save_damage = resolve_on_hit_save_damage(defender, attack, dice)
     save_component_present = save_damage.component is not None
