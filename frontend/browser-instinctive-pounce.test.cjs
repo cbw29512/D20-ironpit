@@ -46,14 +46,17 @@ assert.throws(
   /speedFraction/,
 );
 
+const rageSource = fs.readFileSync(path.join(__dirname, "browser-rage.js"), "utf8");
 const turnSource = fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8");
-assert.match(turnSource, /instinctive_pounce_fraction/);
-assert.match(turnSource, /AM\(\)\.resolve/);
+assert.match(rageSource, /instinctive_pounce_fraction/);
+assert.match(rageSource, /IRON_PIT_BROWSER_ACTIVATION_MOVEMENT/);
+assert.doesNotMatch(turnSource, /instinctive_pounce_fraction/, "turn engine must not own Rage rider sequencing");
 
 for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname, "..", "index.html")]) {
   const html = fs.readFileSync(htmlPath, "utf8");
   assert.ok(html.indexOf("browser-activation-movement.js") >= 0, htmlPath + " must load activation movement");
-  assert.ok(html.indexOf("browser-activation-movement.js") < html.indexOf("browser-turn.js"), htmlPath + " must load activation movement before turn resolver");
+  assert.ok(html.indexOf("browser-activation-movement.js") < html.indexOf("browser-ability-hook-installation.js"), htmlPath + " must load activation movement before hook installation");
+  assert.ok(html.indexOf("browser-ability-hook-installation.js") < html.indexOf("browser-turn.js"), htmlPath + " must install hooks before turn resolver");
 }
 
 console.log("Browser Instinctive Pounce activation movement wiring is certified.");

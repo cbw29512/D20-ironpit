@@ -13,7 +13,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-state.js", "browser-formation.js", "browser-standard-attack-action.js", "browser-turn.js",
+  "browser-grapple.js", "browser-state.js", "browser-formation.js", "browser-standard-attack-action.js", "browser-ability-hooks.js", "browser-turn.js",
 ]) load(file);
 
 const F = window.IRON_PIT_BROWSER_FORMATION;
@@ -35,7 +35,7 @@ assert.equal(F.startingPosition(rangedCaster, "heroes"), 0);
 
 function template(name, primary, attacks, kind = "character") {
   return {
-    id: name.toLowerCase(), name, kind, size: "medium", max_hp: 10, speed_ft: 30,
+    id: name.toLowerCase(), name, kind, ruleset: "2024", size: "medium", max_hp: 10, speed_ft: 30,
     primary_attack_id: primary, attacks, traits: [], resources: {}, saving_throw_actions: [],
   };
 }

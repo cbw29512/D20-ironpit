@@ -12,7 +12,7 @@ for (const file of [
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-monsters-venom.js",
   "browser-monsters-mixed.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
-  "browser-attack.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js", "browser-turn.js",
+  "browser-attack.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js", "browser-ability-hooks.js", "browser-turn.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -60,7 +60,7 @@ assert.equal(Object.keys(monsters).length, 63, "mixed Multiattack batch must bri
 }
 
 const hybrid = {
-  id: "hybrid", name: "Hybrid", kind: "monster", size: "medium", armor_class: 12, max_hp: 30, speed_ft: 30,
+  id: "hybrid", name: "Hybrid", kind: "monster", ruleset: "2024", size: "medium", armor_class: 12, max_hp: 30, speed_ft: 30,
   initiative_bonus: 0, primary_attack_id: "sword", traits: [], resources: {}, saving_throw_actions: [],
   attacks: [
     { id: "sword", name: "Sword", kind: "melee", bonus: 5, reach: 5, diceCount: 1, diceSize: 6, damageBonus: 3, damageType: "slashing" },
@@ -73,12 +73,12 @@ const hybrid = {
 };
 const rangedHybrid = { ...hybrid, id: "ranged-hybrid", name: "Ranged Hybrid", primary_attack_id: "bow" };
 const frontTarget = {
-  id: "front", name: "Front", kind: "character", size: "medium", armor_class: 12, max_hp: 30, speed_ft: 30,
+  id: "front", name: "Front", kind: "character", ruleset: "2024", size: "medium", armor_class: 12, max_hp: 30, speed_ft: 30,
   primary_attack_id: "front-sword", traits: [], resources: {}, saving_throw_actions: [],
   attacks: [{ id: "front-sword", name: "Sword", kind: "melee", bonus: 4, reach: 5, diceCount: 1, diceSize: 6, damageBonus: 2, damageType: "slashing" }],
 };
 const backTarget = {
-  id: "back", name: "Back", kind: "character", size: "medium", armor_class: 12, max_hp: 30, speed_ft: 30,
+  id: "back", name: "Back", kind: "character", ruleset: "2024", size: "medium", armor_class: 12, max_hp: 30, speed_ft: 30,
   primary_attack_id: "back-bow", traits: [], resources: {}, saving_throw_actions: [],
   attacks: [
     { id: "back-bow", name: "Bow", kind: "ranged", bonus: 4, normal: 80, long: 320, diceCount: 1, diceSize: 6, damageBonus: 2, damageType: "piercing" },

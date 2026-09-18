@@ -20,13 +20,14 @@ window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL = {
 window.IRON_PIT_BROWSER_SUPPORT = { resolve: () => { supportCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_ACTION_SURGE = { resolveAttack: () => { surgeCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_RAGE = { finalize: (sequence) => ({ event: null, sequence }) };
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-ability-hooks.js"), "utf8"), { filename: "browser-ability-hooks.js" });
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8"), { filename: "browser-turn.js" });
 
 const member = {
   combatant_id: "fighter", side: "heroes", position_ft: 5,
-  state: { template: { name: "Fighter", attacks: [] }, timed_effects: [{ turn_behavior: "forced_retreat" }] },
+  state: { template: { name: "Fighter", ruleset: "2024", attacks: [] }, timed_effects: [{ turn_behavior: "forced_retreat" }] },
 };
-const enemy = { combatant_id: "goblin", side: "monsters", position_ft: 10, state: { template: { name: "Goblin" } } };
+const enemy = { combatant_id: "goblin", side: "monsters", position_ft: 10, state: { template: { name: "Goblin", ruleset: "2024" } } };
 const setup = { heroes: [member], monsters: [enemy] };
 const before = member.position_ft;
 const result = window.IRON_PIT_BROWSER_TURN.resolveTurn(1, 1, member, setup);

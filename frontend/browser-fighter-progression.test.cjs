@@ -19,7 +19,7 @@ const J = window.IRON_PIT_BROWSER_ACTION_SURGE;
 function fighterState(actionSurge = 1) {
   return {
     template: {
-      name: "Karnok Stoneward", archetype: "Fighter", level: 2, speed_ft: 30,
+      name: "Karnok Stoneward", archetype: "Fighter", ruleset: "2024", level: 2, speed_ft: 30,
       skill_bonuses: { athletics: 5, acrobatics: 1 }, weapon_masteries: [],
       attacks: [{ id: "greatsword", weaponId: "greatsword", name: "Greatsword", kind: "melee", reach: 5, light: false }],
     },
@@ -130,11 +130,12 @@ window.IRON_PIT_BROWSER_ATTACK = {
 for (const file of [
   "browser-weapon-mastery.js", "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
 ]) load(file);
+load("browser-ability-hooks.js");
 load("browser-turn.js");
 {
   const hero = { combatant_id: "hero-1", side: "heroes", position_ft: 0, state: fighterState() };
   const monster = { combatant_id: "monster-1", side: "monsters", position_ft: 5,
-    state: { template: { name: "Target", kind: "monster" }, current_hp: 100, is_alive: true, is_dead: false, is_unconscious: false, grapple_sources: [] } };
+    state: { template: { name: "Target", kind: "monster", ruleset: "2024" }, current_hp: 100, is_alive: true, is_dead: false, is_unconscious: false, grapple_sources: [] } };
   const result = window.IRON_PIT_BROWSER_TURN.resolveTurn(1, 1, hero, { heroes: [hero], monsters: [monster] });
   assert.equal(result.events.filter((event) => event.event_type === "attack").length, 2);
   assert.equal(result.events.filter((event) => event.feature_id === "action-surge").length, 2);

@@ -35,6 +35,7 @@ assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/
 assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
 assert.match(html, /browser-ability-hooks\.js/);
+assert.match(html, /browser-ability-hook-installation\.js/);
 assert.match(html, /browser-arena-map\.js/); assert.match(html, /browser-grid-geometry\.js/);
 assert.match(html, /browser-grid-movement-support\.js/); assert.match(html, /browser-grid-path-search-support\.js/);
 assert.match(html, /browser-grid-path-search\.js/); assert.match(html, /browser-grid-movement\.js/);
@@ -77,7 +78,9 @@ assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-tacti
 assert.ok(html.indexOf("browser-tactical-mind.js") < html.indexOf("browser-grapple.js"));
 assert.ok(html.indexOf("browser-offense-value.js") < html.indexOf("browser-spell-offense.js"));
 assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.js"));
-assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-turn.js"));
+assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-ability-hook-installation.js"));
+assert.ok(html.indexOf("browser-support.js") < html.indexOf("browser-ability-hook-installation.js"));
+assert.ok(html.indexOf("browser-ability-hook-installation.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-arena-map.js"));
 assert.ok(html.indexOf("browser-arena-map.js") < html.indexOf("browser-grid-geometry.js"));
 assert.ok(html.indexOf("browser-grid-geometry.js") < html.indexOf("browser-grid-movement-support.js"));
