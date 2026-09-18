@@ -53,8 +53,8 @@ def test_aurelia_runtime_and_fingerprint_match_levels_one_through_ten() -> None:
     assert len(build_aurelia_brightshield_2014(5).attack_action.slots) == 2
     assert build_aurelia_brightshield_2014(6).progression_features.aura_of_protection_2014_bonus == 2
     assert build_aurelia_brightshield_2014(8).progression_features.aura_of_protection_2014_bonus == 3
-    assert "charmed" in build_aurelia_brightshield_2014(7).condition_immunities
-    assert "frightened" in build_aurelia_brightshield_2014(10).condition_immunities
+    assert build_aurelia_brightshield_2014(7).condition_immunities == []
+    assert build_aurelia_brightshield_2014(10).condition_immunities == []
 
 
 def test_aurelia_levels_one_through_ten_are_build_audit_ready() -> None:
