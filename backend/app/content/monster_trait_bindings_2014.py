@@ -7,16 +7,30 @@ from app.domain.weapons import ConditionalAttackAdvantage
 
 logger = logging.getLogger(__name__)
 _BLOOD_FRENZY = "Blood Frenzy"
+_RECKLESS = "Reckless"
+
+
+def supports_reckless_2014(monster: SourceMonster2014) -> bool:
+    """Return whether printed Reckless can use the shared 2014 melee-Strength resolver."""
+    try:
+        if _RECKLESS not in monster.trait_names:
+            return False
+        melee = [attack for attack in monster.attacks if attack.kind == "melee"]
+        return bool(melee) and all(attack.attack_ability == "strength" for attack in melee)
+    except Exception:
+        logger.exception("Failed to classify 2014 Reckless support for %s.", monster.name)
+        raise
 
 
 def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     """Return source traits that are fully bound to existing universal primitives."""
     try:
-        if _BLOOD_FRENZY not in monster.trait_names:
-            return frozenset()
-        if not any(attack.kind == "melee" for attack in monster.attacks):
-            return frozenset()
-        return frozenset({_BLOOD_FRENZY})
+        bound: set[str] = set()
+        if _BLOOD_FRENZY in monster.trait_names and any(attack.kind == "melee" for attack in monster.attacks):
+            bound.add(_BLOOD_FRENZY)
+        if supports_reckless_2014(monster):
+            bound.add(_RECKLESS)
+        return frozenset(bound)
     except Exception:
         logger.exception("Failed to classify bound 2014 traits for %s.", monster.name)
         raise
