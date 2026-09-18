@@ -171,6 +171,7 @@ Permanent arena rules:
 - A combatant may pass through creature spaces only when the selected ruleset permits it, pays any required Difficult Terrain cost, and may not willingly end normal movement overlapping another creature.
 - Printed Walk, Fly, Climb, Swim, Burrow, Hover, and base-speed data remain source-derived and must not be rewritten merely to make a creature usable in the Pit.
 - Movement modes never become roster-eligibility filters. The magical Pit remains hospitable to aquatic, flying, burrowing, climbing, unusual-biology, breathing, and atmosphere requirements; this environmental hospitality does not grant free movement.
+- Teleportation and planar/ethereal relocation are arena-disabled product-scope mechanics. Preserve their source provenance, but do not create runtime teleport state, teleport movement, or roster blockers for teleport-only text.
 - Starting placement is deterministic and footprint-aware. Future manual legal placement is authoritative when explicitly selected by the user.
 - No environmental cover by default.
 - Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.
@@ -344,18 +345,16 @@ Iron Pit lair-action ownership house rule:
 5. ownership never transfers mid-fight;
 6. once selected, the lair action's actual mechanics/timing remain RAW.
 
-## 20. Summons, forms, splitting, and temporary removal
+## 20. Combat-only arena scope: summons, teleportation, forms, and removal
 
-Do not ban or mechanically compress summons merely to fit the UI.
+Iron Pit intentionally excludes mechanics that add substantial battlefield/state complexity without being part of the core card-vs-card combat-number model.
 
-- Each summoned creature remains an independent mechanical entity with its own HP, actions, saves, conditions, and death.
-- Identical summons may be visually stacked (`Wolves ×8`) but are not one creature under the hood.
-- If legal summoned occupancy exceeds the standard arena, create the minimum temporary magical Summoning Annex necessary. It cannot be exploited for fleeing/kiting/unreachable flight.
-- AoE can affect only the subset whose actual occupied positions are in the area; resolve saves/damage per entity.
-- Summon initiative/control/command cost/source-death behavior follows the source RAW.
-- Transformations/Wild Shape/Polymorph are replacement forms, not extra bodies.
-- Split/spawn mechanics create independent entities when RAW requires.
-- Swallow/engulf/banishment/ethereal/possession and similar mechanics use universal location/control/life-state structures rather than creature-name branches.
+- Summoning, conjuring, spawning, duplicating, and split-into-new-creatures mechanics are arena-disabled. Preserve source provenance, but do not create additional combatants.
+- Teleportation, Plane Shift, Dimension Door, Misty Step, Etherealness/Ethereal Jaunt, banishment-style temporary removal, and similar relocation/removal mechanics are arena-disabled. They do not create movement, positioning, reaction, or target-state changes in Iron Pit.
+- Utility-only, exploration-only, social-only, equipment-degradation-only, and other noncombat text is retained only as source/profile provenance when useful and does not block certification.
+- A feature that changes combat numbers or supported combat state—HP, Temporary HP, AC, attack/save modifiers, damage, healing, conditions, resistance/immunity/vulnerability, resources/recharge, action economy, legal attacks, forced movement, reach/range/area, or similar supported state—remains combat-relevant and must bind to a universal primitive or fail closed.
+- Transformations/Wild Shape/Polymorph are in scope only when represented as replacement combat statistics/state without creating extra bodies; otherwise they remain blocked until that shared replacement-form capability is certified.
+- Swallow/engulf remain combat-relevant because they change targetability, damage, conditions, and action options; they use shared control/life-state structures rather than creature-name branches.
 
 ## 21. Combat AI: legality first
 
