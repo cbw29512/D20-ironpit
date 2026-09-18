@@ -47,6 +47,24 @@ def action_label_2014(name: str) -> str:
     return name.split(" (Recharge", 1)[0].strip().casefold()
 
 
+
+def unsupported_save_actions_2014(monster: SourceMonster2014) -> list[object]:
+    return [
+        action for action in monster.saving_throw_actions
+        if not supports_save_action_2014(action)
+    ]
+
+
+def unsupported_source_actions_2014(monster: SourceMonster2014) -> list[str]:
+    allowed = {attack.name.casefold() for attack in monster.attacks}
+    allowed.update(
+        str(action.get("name", "")).casefold()
+        for action in monster.saving_throw_actions if isinstance(action, dict)
+    )
+    if monster.multiattack_slots:
+        allowed.add("multiattack")
+    return [name for name in monster.action_names if action_label_2014(name) not in allowed]
+
 def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDefinition]:
     try:
         result = []
