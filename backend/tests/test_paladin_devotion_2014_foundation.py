@@ -98,7 +98,7 @@ def test_divine_smite_spends_slot_only_on_melee_damage_resolution() -> None:
 
 def test_divine_smite_uses_highest_slot_scales_for_undead_and_doubles_on_critical() -> None:
     attacker = _state(5)
-    undead = _target(creature_type="undead")
+    undead = _target(creature_type="Undead (shapechanger)")
     _, components = resolve_weapon_damage(
         attacker,
         attacker.template.weapon_attack,
