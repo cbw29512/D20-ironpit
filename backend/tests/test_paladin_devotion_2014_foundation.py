@@ -57,18 +57,13 @@ def test_aurelia_runtime_and_fingerprint_match_levels_one_through_ten() -> None:
     assert "frightened" in build_aurelia_brightshield_2014(10).condition_immunities
 
 
-def test_aurelia_foundation_stays_fail_closed_until_remaining_features_are_wired() -> None:
-    level_two = audit_character_build(
-        build_aurelia_brightshield_2014_profile(2),
-        build_aurelia_brightshield_2014(2),
-    )
-    level_three = audit_character_build(
-        build_aurelia_brightshield_2014_profile(3),
-        build_aurelia_brightshield_2014(3),
-    )
-    assert "combat-feature-not-automated:spellcasting" in level_two
-    assert "combat-feature-not-automated:sacred-weapon" in level_three
-    assert "combat-feature-not-automated:turn-the-unholy" in level_three
+def test_aurelia_levels_one_through_ten_are_build_audit_ready() -> None:
+    for level in range(1, 11):
+        issues = audit_character_build(
+            build_aurelia_brightshield_2014_profile(level),
+            build_aurelia_brightshield_2014(level),
+        )
+        assert issues == []
 
 
 def test_divine_smite_spends_slot_only_on_melee_damage_resolution() -> None:
