@@ -113,6 +113,18 @@ Before each later phase migration:
 
 The browser and Python implementations do not need identical source structure, but supported behavior must remain equivalent.
 
+## Current migration status
+
+The pre-action `bonusActionWindow` is now migrated in the browser production engine for:
+
+- Rage entry, including Instinctive Pounce as a Rage-owned rider;
+- Second Wind, with Tactical Shift remaining a Second Wind rider;
+- Adrenaline Rush.
+
+The preserved Arena decision order is `Rage -> Second Wind -> Adrenaline Rush`. Hook priority records that existing order; it does not create a new tactical policy.
+
+The Python certification oracle intentionally retains its existing orchestration for this tranche. Permanent parity tests assert the same choice order there. Post-action Bonus Action features such as Monk bonus attacks, Frenzy attacks, and Rage maintenance remain in the existing turn-finalization path and are **not** part of this pre-action migration.
+
 ## Migration order
 
 Migrate one coherent phase per PR.
