@@ -3,11 +3,11 @@
   const S = () => window.IRON_PIT_BROWSER_STATE, C = () => window.IRON_PIT_BROWSER_CHARGE;
   const R = () => window.IRON_PIT_BROWSER_RECHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK, G = () => window.IRON_PIT_BROWSER_RAGE;
-  const AM = () => window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT;
+  const AH = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const BF = () => window.IRON_PIT_BROWSER_FRENZY_2014, IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014, PA = () => window.IRON_PIT_BROWSER_PALADIN_AURAS_2014;
-  const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
+  const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
@@ -58,6 +58,14 @@
     return { events, sequence };
   }
 
+  function resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, bonusActionCheckpoint) {
+    const hooks = AH();
+    if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
+    return hooks.runPhase(hooks.PHASES.BONUS_ACTION_WINDOW, {
+      sequence, round, member, setup, turnKey, bonusActionCheckpoint, events: [],
+    });
+  }
+
   function saveChoice(member, setup) {
     for (const target of F().targetOrder(member, setup)) for (const action of member.state.template.saving_throw_actions || []) {
       const distance = F().saveDistance(member, target, action.range); if (V().legalAction(action, target, distance)) return { target, action, distance };
@@ -74,13 +82,11 @@
       const turnKey = `${round}:${member.combatant_id}`;
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
-      const hooks = AH();
-      if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
-      const bonus = hooks.runPhase(hooks.PHASES.BONUS_ACTION_WINDOW, {
-        sequence, round, member, setup, turnKey, events: [],
-      });
+      let bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "beforeEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
+      bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "afterEscape");
+      events.push(...bonus.events); sequence = bonus.sequence;
       const spell = L()?.resolve(sequence, round, member, setup, turnKey); if (spell) { events.push(...spell.events); sequence = spell.sequence; }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const targets = F().targetOrder(member, setup); if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
