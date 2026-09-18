@@ -125,6 +125,10 @@
     if (sneak) components.push(bonusComponent(sneak, critical));
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
+    const brutalStrike = window.IRON_PIT_BROWSER_BRUTAL_STRIKE?.bonusDamage(
+      attacker, attack, turnKey, mode === "disadvantage",
+    );
+    if (brutalStrike) components.push(bonusComponent(brutalStrike, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
     const total = components.reduce((sum, item) => sum + item.total, 0);
     return {
