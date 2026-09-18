@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.reckless_attack import reckless_attack_active
 from app.combat.forced_movement import push_straight_away
+from app.combat.grid_reaction_movement import move_toward_on_grid
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DamageType, WeaponAttack
@@ -80,3 +81,26 @@ def apply_forceful_blow(
 ) -> int:
     """Apply the 2024 Brutal Strike Forceful Blow 15-foot straight-away push."""
     return push_straight_away(defender, attacker, setup, 15)
+
+
+def follow_forceful_blow(
+    sequence: int,
+    round_number: int,
+    attacker: EncounterCombatant,
+    defender: EncounterCombatant,
+    setup: EncounterSetup,
+    dice,
+    *,
+    turn_key: str | None = None,
+):
+    """Move up to half Speed straight toward the pushed target without provoking OAs."""
+    allowance = attacker.state.template.speed_ft // 2
+    normal_remaining = attacker.state.movement_remaining_ft
+    attacker.state.movement_remaining_ft = allowance
+    try:
+        return move_toward_on_grid(
+            sequence, round_number, attacker, defender, setup, 5, dice,
+            movement_source="forced", disengaged=True, turn_key=turn_key,
+        )
+    finally:
+        attacker.state.movement_remaining_ft = normal_remaining
