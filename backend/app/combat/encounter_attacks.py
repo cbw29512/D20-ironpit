@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import spend
 from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
@@ -8,6 +9,7 @@ from app.combat.dice import DiceProvider
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
+from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
 
@@ -32,6 +34,13 @@ def resolve_encounter_attack(
     allow_reckless: bool = False,
     off_turn: bool = False,
 ) -> BattleEvent:
+    ward = check_targeting_ward(attacker, target, dice)
+    if ward is not None and not ward.succeeded:
+        if spend_action:
+            spend(attacker.state, "action")
+        return blocked_targeting_event(
+            sequence, round_number, attacker, target, attack.weapon.name, ward,
+        )
     reckless_started = allow_reckless and activate_reckless_attack(
         attacker.state, attack, attacker.combatant_id, round_number,
     )
@@ -54,6 +63,13 @@ def resolve_encounter_attack(
         affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
         off_turn=off_turn,
     )
+    if ward is not None:
+        if event.saving_throw_roll is None:
+            event.saving_throw_roll = ward.roll
+            event.save_ability = ward.gate.save_ability
+            event.save_dc = ward.gate.save_dc
+            event.save_succeeded = True
+        event.description += f" {attacker.state.template.name} succeeds against {ward.gate.source_effect_id}."
     if reckless_started:
         event.description += f" {attacker.state.template.name} uses Reckless Attack."
         if event.feature_id is None:
