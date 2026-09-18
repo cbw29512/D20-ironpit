@@ -6,6 +6,7 @@ from typing import Any
 from app.combat.charge_profiles import charge_profile_for_attack
 from app.domain.models import CombatantTemplate, WeaponAttack
 from app.domain.traits import CombatTrait
+from browser_recharge_serializer import recharge_rows
 
 logger = logging.getLogger(__name__)
 
@@ -168,6 +169,15 @@ def _save(action: Any) -> dict[str, Any]:
     }
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
+    if action.area:
+        row["area"] = action.area.model_dump(mode="json")
+    if action.resource_id:
+        row["resourceId"] = action.resource_id
+        row["resourceCost"] = action.resource_cost
+    if action.requires_no_active_grapple:
+        row["requiresNoActiveGrapple"] = True
+    if action.magical_effect:
+        row["magicalEffect"] = True
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
@@ -302,6 +312,9 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_limited_use_names"] = list(template.source_limited_use_names)
             row["source_legendary_action_names"] = list(template.source_legendary_action_names)
             row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
+        recharge = recharge_rows(template)
+        if recharge:
+            row["recharge_rules"] = recharge
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
         if template.redirect_attack_reaction:
