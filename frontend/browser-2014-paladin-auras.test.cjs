@@ -12,6 +12,7 @@ load("browser-rolls.js");
 load("browser-condition-rules.js");
 load("browser-modifiers.js");
 load("browser-state.js");
+load("browser-defensive-modifier-rules.js");
 load("browser-condition-immunity.js");
 load("browser-saves.js");
 load("browser-2014-paladin-auras.js");
