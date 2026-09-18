@@ -63,9 +63,6 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
         charisma_modifier = scores.modifier("charisma")
         aura_bonus = charisma_modifier if level >= 6 else 0
         saves = saving_throw_bonuses(scores, level, ("wisdom", "charisma"))
-        if aura_bonus:
-            saves = {ability: bonus + aura_bonus for ability, bonus in saves.items()}
-        immunities = [condition for minimum, condition in ((7, "charmed"), (10, "frightened")) if level >= minimum]
         return CombatantTemplate(
             id=f"aurelia-brightshield-2014-l{level}", name="Aurelia Brightshield",
             archetype="Paladin", level=level, kind="character", ruleset="2014",
@@ -81,7 +78,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
             effect_removal_actions=[dispel_magic_2014()] if level >= 9 else [],
             saving_throw_bonuses=saves, skill_bonuses=_skill_bonuses(level, scores),
             weapon_masteries=[], fighting_style="Defense" if level >= 2 else None,
-            fighting_styles=["Defense"] if level >= 2 else [], condition_immunities=immunities,
+            fighting_styles=["Defense"] if level >= 2 else [], condition_immunities=[],
             wearing_heavy_armor=True, resources=_resources(level),
             progression_features=ProgressionCombatFeatures(
                 divine_smite_2014=level >= 2,
