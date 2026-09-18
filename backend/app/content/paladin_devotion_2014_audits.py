@@ -50,8 +50,12 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
             audits.extend([
                 _audit("fighting-style-defense", "Defense Fighting Style", "class"),
                 _audit(
-                    "spellcasting", "Spellcasting", "class", automated=False,
-                    notes="Spell-slot state is modeled; prepared Paladin spell actions still require browser/runtime wiring.",
+                    "spellcasting", "Spellcasting", "class",
+                    notes=(
+                        "Edition-correct prepared spell counts, slots, combat spell actions, Devotion oath spells, "
+                        "concentration, condition removal, defensive wards, and Dispel Magic are automated. "
+                        "Noncombat utility spells remain explicitly outside arena resolution."
+                    ),
                 ),
                 _audit("divine-smite", "Divine Smite", "class"),
             ])
@@ -62,30 +66,30 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     notes="The standard Iron Pit arena does not apply disease effects.",
                 ),
                 _audit(
-                    "sacred-weapon", "Sacred Weapon", "subclass", automated=False,
-                    notes="Channel Divinity state is modeled; timed attack-bonus activation is the next runtime hook.",
+                    "sacred-weapon", "Sacred Weapon", "subclass",
+                    notes="Channel Divinity activates the timed Charisma attack-roll bonus through the shared modifier engine.",
                 ),
                 _audit(
-                    "turn-the-unholy", "Turn the Unholy", "subclass", automated=False,
-                    notes="Devotion Channel Divinity control is not yet wired into the arena decision policy.",
+                    "turn-the-unholy", "Turn the Unholy", "subclass",
+                    notes="Fiends and Undead within 30 feet use the shared one-minute creature-turning engine.",
                 ),
             ])
         if level >= 5:
             audits.append(_audit("extra-attack", "Extra Attack", "class"))
         if level >= 6:
             audits.append(_audit(
-                "aura-of-protection", "Aura of Protection", "class", automated=False,
-                notes="Self saving-throw bonus is modeled; allied 10-foot aura propagation still needs encounter wiring.",
+                "aura-of-protection", "Aura of Protection", "class",
+                notes="The strongest 10-foot Paladin save bonus is recalculated from live encounter positions.",
             ))
         if level >= 7:
             audits.append(_audit(
-                "aura-of-devotion", "Aura of Devotion", "subclass", automated=False,
-                notes="Self charm immunity is modeled; allied aura propagation still needs encounter wiring.",
+                "aura-of-devotion", "Aura of Devotion", "subclass",
+                notes="Charm immunity propagates dynamically to allies within 10 feet.",
             ))
         if level >= 10:
             audits.append(_audit(
-                "aura-of-courage", "Aura of Courage", "class", automated=False,
-                notes="Self fear immunity is modeled; allied aura propagation still needs encounter wiring.",
+                "aura-of-courage", "Aura of Courage", "class",
+                notes="Fear immunity propagates dynamically to allies within 10 feet.",
             ))
         return audits
     except Exception:
