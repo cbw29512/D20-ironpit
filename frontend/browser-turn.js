@@ -9,7 +9,7 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
-  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
+  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, RP = () => window.IRON_PIT_BROWSER_RAMPAGE;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
@@ -44,6 +44,8 @@
   }
 
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
+    const rampage = RP()?.resolve(sequence, round, member, setup, events, turnKey);
+    if (rampage) { events.push(...rampage.events); sequence = rampage.sequence; }
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
     const monk = MK()?.resolveBonus(sequence, round, member, setup, turnKey, events);
