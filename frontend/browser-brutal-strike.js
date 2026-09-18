@@ -40,7 +40,7 @@
   }
 
   function followForceful(sequence, round, attacker, defender, setup, options = {}) {
-    const allowance = Math.floor(attacker.state.template.speed_ft / 2);
+    const allowance = Math.floor(M().effectiveSpeed(attacker.state) / 2);
     const normalRemaining = attacker.state.movement_remaining_ft;
     attacker.state.movement_remaining_ft = allowance;
     try {
