@@ -55,8 +55,10 @@
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
     const baseBonus = state.template.saving_throw_bonuses?.[ability];
     if (baseBonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    const bonus = baseBonus + M().savingThrowFlat(state);
-    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, context)));
+    const modifiers = M();
+    const bonus = baseBonus + (modifiers.savingThrowFlat?.(state) || 0);
+    const baseRoll = R().d20(bonus, saveMode(state, ability, context));
+    let roll = modifiers.applyD20Bonus?.(state, "saving-throw-bonus-die", baseRoll) || baseRoll;
     if (roll.total < dc) {
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
