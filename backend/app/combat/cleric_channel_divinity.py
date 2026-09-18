@@ -5,6 +5,7 @@ from app.combat.cleric_channel_policy import ChannelDivinityChoice
 from app.combat.cleric_divine_spark import resolve_divine_spark
 from app.combat.cleric_preserve_life import resolve_preserve_life
 from app.combat.dice import DiceProvider
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.turn_creature_effects import apply_turned_creature_effects
 from app.content.monster_creature_types import is_creature_type
@@ -51,7 +52,7 @@ def resolve_turn_undead(
     if not targets:
         raise ValueError("Turn Undead requires at least one legal Undead target.")
     for target in targets:
-        if abs(cleric.position_ft - target.position_ft) > 30 or not is_creature_type(target.state.template, "undead"):
+        if combatant_distance(cleric, target) > 30 or not is_creature_type(target.state.template, "undead"):
             raise ValueError("Turn Undead targets must be Undead within 30 feet.")
     dc = _spell_save_dc(cleric)
     remaining = _spend_channel(cleric)
