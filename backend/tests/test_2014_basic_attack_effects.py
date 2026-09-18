@@ -40,10 +40,10 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_101_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_112_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 101
+    assert len(ready) == 112
     expected = (
         _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS |
         _SURE_FOOTED_IDS | _SWARM_IDS
