@@ -18,6 +18,7 @@ from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.zero_hp import apply_damage
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -60,6 +61,14 @@ def resolve_spell_attack(
         resource = _slot_resource(caster, spell, turn_key)
         if spell.level > 0 and resource is None:
             raise ValueError(f"No level {spell.level} spell slot remains for {spell.name}.")
+        ward = check_targeting_ward(caster, target, dice)
+        if ward is not None and not ward.succeeded:
+            if resource is not None:
+                mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
+            spend(caster.state, spell.action_cost)
+            event = blocked_targeting_event(sequence, round_number, caster, target, spell.name, ward)
+            event.resource_remaining = resource.current_uses if resource is not None else None
+            return event
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
             caster.state, target.state, distance, target.combatant_id,
         )
@@ -100,7 +109,9 @@ def resolve_spell_attack(
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
-        return BattleEvent(
+        if ward is not None:
+            description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
+        event = BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=caster.combatant_id, actor_name=caster.state.template.name,
             target_id=target.combatant_id, target_name=target.state.template.name, attack_name=spell.name, target_ac=target_ac,
             attack_roll=attack_roll, damage_roll=damage_roll, damage_components=damage_components, hit=hit, critical=critical,
@@ -111,6 +122,12 @@ def resolve_spell_attack(
             concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
             animation=spell.animation, description=description,
         )
+        if ward is not None and event.saving_throw_roll is None:
+            event.saving_throw_roll = ward.roll
+            event.save_ability = ward.gate.save_ability
+            event.save_dc = ward.gate.save_dc
+            event.save_succeeded = True
+        return event
     except ValueError:
         raise
     except Exception as exc:
