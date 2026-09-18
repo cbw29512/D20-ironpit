@@ -146,6 +146,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "leather",
       "main_hand": "scimitar",
@@ -274,6 +275,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "clothes",
       "main_hand": "dagger",
@@ -416,6 +418,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "half-plate",
       "main_hand": "longsword",
@@ -546,6 +549,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "dagger",
@@ -728,6 +732,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "scimitar",
@@ -855,6 +860,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "leather",
       "main_hand": "scimitar",
@@ -955,6 +961,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "clothes",
       "main_hand": "club",
@@ -1080,6 +1087,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "spear",
@@ -1182,6 +1190,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "none",
       "main_hand": "bite",
@@ -1280,6 +1289,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "none",
       "main_hand": "bite",
@@ -1395,6 +1405,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "beak",
@@ -1493,6 +1504,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "none",
       "main_hand": "beak",
@@ -1593,6 +1605,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -1700,6 +1713,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -1807,6 +1821,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -1924,6 +1939,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "claw",
@@ -2070,6 +2086,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "claw",
@@ -2172,6 +2189,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2270,6 +2288,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2370,6 +2389,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "horns",
@@ -2468,6 +2488,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "hooves",
@@ -2568,6 +2589,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2666,6 +2688,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2769,6 +2792,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "hide",
       "main_hand": "tusks",
@@ -2869,6 +2893,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "hide",
       "main_hand": "antlers",
@@ -2972,6 +2997,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "hide",
       "main_hand": "tusks",
@@ -3103,6 +3129,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "bones",
       "main_hand": "horns",
@@ -3222,6 +3249,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "hide",
       "main_hand": "horns",
@@ -3329,6 +3357,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "bones",
       "main_hand": "hooves",
@@ -3455,6 +3484,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "hide",
       "main_hand": "claws",
@@ -3551,6 +3581,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "ram",
@@ -3718,6 +3749,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "spear",
@@ -3837,6 +3869,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "claws",
@@ -3935,6 +3968,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rake",
@@ -4031,6 +4065,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4125,6 +4160,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4221,6 +4257,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "scratch",
@@ -4317,6 +4354,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -4414,6 +4452,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4508,6 +4547,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -4604,6 +4644,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4700,6 +4741,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -4796,6 +4838,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4892,6 +4935,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -4986,6 +5030,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5084,6 +5129,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -5184,6 +5230,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5284,6 +5331,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5403,6 +5451,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5501,6 +5550,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -5601,6 +5651,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5699,6 +5750,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -5804,6 +5856,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5906,6 +5959,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -6004,6 +6058,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6104,6 +6159,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "ram",
@@ -6208,6 +6264,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -6310,6 +6367,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6408,6 +6466,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6511,6 +6570,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6611,6 +6671,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -6711,6 +6772,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "gore",
@@ -6811,6 +6873,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -6959,6 +7022,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "greatclub",
@@ -7076,6 +7140,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -7197,6 +7262,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -7342,6 +7408,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "leather",
       "main_hand": "longbow",
@@ -7470,6 +7537,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "spear",
@@ -7580,6 +7648,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -7690,6 +7759,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -7780,6 +7850,9 @@
           "max_target_size": "medium",
           "restrains": false
         },
+        "resource_cost": 1,
+        "requires_no_active_grapple": false,
+        "magical_effect": false,
         "animation": "constrict"
       }
     ],
@@ -7814,6 +7887,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -7984,6 +8058,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -8136,6 +8211,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "tentacles",
@@ -8264,6 +8340,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -8373,6 +8450,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -8487,6 +8565,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -8650,6 +8729,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "sting",
@@ -8765,6 +8845,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -8881,6 +8962,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "sting",
@@ -8999,6 +9081,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -9118,6 +9201,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "shell",
       "main_hand": "bite",
@@ -9240,6 +9324,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "tail",
@@ -9373,6 +9458,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "talons",
@@ -9489,6 +9575,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "antlers",
@@ -9646,6 +9733,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -9755,6 +9843,9 @@
           "max_target_size": "large",
           "restrains": false
         },
+        "resource_cost": 1,
+        "requires_no_active_grapple": false,
+        "magical_effect": false,
         "animation": "constrict"
       }
     ],
@@ -9790,6 +9881,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -9945,6 +10037,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "jaws",
@@ -10073,6 +10166,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -10182,6 +10276,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slash",
@@ -10285,6 +10380,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -10396,6 +10492,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Ritual Sickle",
@@ -10505,6 +10602,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -10630,6 +10728,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Claw",
@@ -10741,6 +10840,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bone Cudgel",
@@ -10912,6 +11012,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Javelin",
@@ -11031,6 +11132,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -11131,6 +11233,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -11240,6 +11343,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Vile Slime",
@@ -11392,6 +11496,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Rend",
@@ -11499,6 +11604,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -11610,6 +11716,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Hooves",
@@ -11717,6 +11824,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Sting",
@@ -11848,6 +11956,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Shortsword",
@@ -11958,6 +12067,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -12086,6 +12196,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Mace",
@@ -12197,6 +12308,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -12319,6 +12431,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Rotting Touch",
@@ -12426,6 +12539,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -12549,6 +12663,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -12653,6 +12768,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -12753,6 +12869,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -12856,6 +12973,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -12989,6 +13107,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bites",
@@ -13097,6 +13216,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -13225,6 +13345,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "none",
       "main_hand": "Bites",
@@ -13353,6 +13474,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "none",
       "main_hand": "Bites",
@@ -13491,6 +13613,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "none",
       "main_hand": "Swarm of Grasping Hands",
@@ -13642,6 +13765,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "studded-leather",
       "main_hand": "Scimitar",
@@ -13821,6 +13945,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "plate",
       "main_hand": "Greatsword",
@@ -13924,6 +14049,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "breastplate",
       "main_hand": "Rapier",
@@ -14075,6 +14201,7 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "recharge_rules": [],
     "visual": {
       "armor": "splint",
       "main_hand": "Greatsword",
