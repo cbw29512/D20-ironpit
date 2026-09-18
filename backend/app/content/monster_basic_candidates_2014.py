@@ -16,7 +16,9 @@ from app.domain.weapons import DamageType
 
 logger = logging.getLogger(__name__)
 _MODELED_2014_TRAITS = {
+    "Aggressive": CombatTrait.AGGRESSIVE,
     "Pack Tactics": CombatTrait.PACK_TACTICS,
+    "Rampage": CombatTrait.RAMPAGE,
     "Sure-Footed": CombatTrait.SURE_FOOTED,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
