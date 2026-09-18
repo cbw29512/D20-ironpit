@@ -63,8 +63,9 @@ function baseState(template, resources = {}) {
 const member = (id, template, resources) => ({
   combatant_id: id, side: "heroes", position_ft: 0, state: baseState(template, resources),
 });
-const run = (actor, round = 1) => H.runPhase(phase, {
-  sequence: 1, round, member: actor, setup: { heroes: [actor], monsters: [] }, turnKey: `${round}:${actor.combatant_id}`, events: [],
+const run = (actor, bonusActionCheckpoint, round = 1) => H.runPhase(phase, {
+  sequence: 1, round, member: actor, setup: { heroes: [actor], monsters: [] },
+  turnKey: `${round}:${actor.combatant_id}`, bonusActionCheckpoint, events: [],
 });
 
 {
@@ -73,7 +74,7 @@ const run = (actor, round = 1) => H.runPhase(phase, {
     wearing_heavy_armor: false, rage_damage_bonus: 2, frenzy_bonus_attack_2014: false,
     mindless_rage: false, instinctive_pounce_fraction: 0,
   }, { rage: 4, "adrenaline-rush": 3 });
-  const result = run(barbarian);
+  const result = run(barbarian, "beforeEscape");
   assert.equal(result.claimed, true);
   assert.deepEqual(result.events.map((event) => event.feature_id), ["rage"]);
   assert.equal(barbarian.state.resources.rage, 3);
@@ -88,7 +89,7 @@ const run = (actor, round = 1) => H.runPhase(phase, {
   }, { "second-wind": 3, "adrenaline-rush": 2 });
   fighter.state.current_hp = 20;
   window.IRON_PIT_DICE = { roll: () => 5 };
-  const result = run(fighter);
+  const result = run(fighter, "beforeEscape");
   assert.equal(result.claimed, true);
   assert.deepEqual(result.events.map((event) => event.feature_id), ["second-wind", "tactical-shift"]);
   assert.equal(shiftCalls, 1, "Tactical Shift remains a rider on Second Wind");
@@ -101,7 +102,9 @@ const run = (actor, round = 1) => H.runPhase(phase, {
     name: "Healthy Fighter", ruleset: "2024", max_hp: 40, level: 4, traits: ["adrenaline-rush"],
     wearing_heavy_armor: false, rage_damage_bonus: 0, tactical_shift_fraction: 0,
   }, { "second-wind": 3, "adrenaline-rush": 2 });
-  const result = run(fighter);
+  const beforeEscape = run(fighter, "beforeEscape");
+  assert.deepEqual(beforeEscape.events, [], "Adrenaline Rush must wait until after the grapple-escape checkpoint");
+  const result = run(fighter, "afterEscape");
   assert.deepEqual(result.events.map((event) => event.feature_id), ["adrenaline-rush"]);
   assert.equal(fighter.state.resources["second-wind"], 3);
   assert.equal(fighter.state.resources["adrenaline-rush"], 1);
@@ -113,7 +116,7 @@ const run = (actor, round = 1) => H.runPhase(phase, {
     name: "Legacy", ruleset: "2014", max_hp: 30, level: 4, traits: ["adrenaline-rush"],
     wearing_heavy_armor: false, rage_damage_bonus: 0, tactical_shift_fraction: 0,
   }, { "adrenaline-rush": 2 });
-  const result = run(legacy);
+  const result = run(legacy, "afterEscape");
   assert.deepEqual(result.events, [], "2024-only Adrenaline Rush must not cross into the 2014 ruleset");
   assert.equal(result.claimed, false);
 }
@@ -126,6 +129,11 @@ assert.doesNotMatch(turnSource, /\.adrenaline\(/);
 assert.doesNotMatch(turnSource, /\?\.enter\(/);
 assert.doesNotMatch(turnSource, /IRON_PIT_BROWSER_TACTICAL_SHIFT/);
 assert.doesNotMatch(turnSource, /IRON_PIT_BROWSER_ACTIVATION_MOVEMENT/);
+const beforeEscapeIndex = turnSource.indexOf('"beforeEscape"');
+const grappleEscapeIndex = turnSource.indexOf("shouldEscape");
+const afterEscapeIndex = turnSource.indexOf('"afterEscape"');
+assert.ok(beforeEscapeIndex >= 0 && beforeEscapeIndex < grappleEscapeIndex);
+assert.ok(grappleEscapeIndex < afterEscapeIndex, "Adrenaline checkpoint must remain after grapple escape");
 
 for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname, "..", "index.html")]) {
   const html = fs.readFileSync(htmlPath, "utf8");
