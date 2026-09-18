@@ -4,7 +4,8 @@
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set([
     "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
-    "attacks-against-advantage", "next-attack-against-advantage", "speed",
+    "saving-throw-advantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
+    "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
