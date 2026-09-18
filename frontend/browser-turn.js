@@ -24,7 +24,8 @@
   }
 
   function deathSave(sequence, round, member) {
-    const state = member.state, natural = D().roll(20);
+    const state = member.state, advantage = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.deathSaveAdvantage(state) || false;
+    const deathRoll = window.IRON_PIT_BROWSER_ROLLS.d20(0, advantage ? "advantage" : "normal"), natural = deathRoll.selected_roll;
     const successesBefore = state.death_save_successes, failuresBefore = state.death_save_failures;
     let result = "failure";
     if (natural === 20) { state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP"; }
@@ -35,7 +36,7 @@
     if (state.death_save_failures >= 3) { state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false; }
     else if (state.death_save_successes >= 3) { state.is_stable = true; state.is_unconscious = true; state.is_stable = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable"; }
     return { sequence, round_number: round, event_type: "death_save", actor_id: member.combatant_id, actor_name: state.template.name,
-      death_save_roll: { notation: "1d20", rolls: [natural], selected_roll: natural, modifier: 0, mode: "normal", total: natural }, hp_after: state.current_hp,
+      death_save_roll: deathRoll, hp_after: state.current_hp,
       death_save_successes_before: successesBefore, death_save_failures_before: failuresBefore, death_save_successes: state.death_save_successes,
       death_save_failures: state.death_save_failures, is_stable: state.is_stable, is_dead: state.is_dead, animation: "death-save",
       description: `${state.template.name} makes a Death Save: ${result}.` };
