@@ -77,7 +77,8 @@
       C().markSlotSpellCast(healer.state, turnKey);
     }
     E().spend(healer.state, action.actionCost);
-    const rolls = Array.from({ length: action.diceCount || 0 }, () => window.IRON_PIT_DICE.roll(action.diceSize || 6));
+    const maximized = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state) || false;
+    const rolls = Array.from({ length: action.diceCount || 0 }, () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6));
     const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
     const hpBefore = target.state.current_hp, healed = restore(target.state, total);
     let remaining = null;
