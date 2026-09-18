@@ -6,6 +6,9 @@
   const EFFECT_ID = "reckless-attack";
 
   function active(state) { return Boolean(state?.active_effect_ids?.includes(EFFECT_ID)); }
+  function hasReckless(state) {
+    return Boolean(state?.template?.reckless_attack || state?.template?.traits?.includes("reckless"));
+  }
   function eligible(state, attack) {
     if (attack?.attackAbility !== "strength") return false;
     return state.template.ruleset !== "2014" || attack.kind === "melee";
@@ -18,7 +21,7 @@
   }
 
   function activate(member, attack, round) {
-    if (!member?.state?.template?.reckless_attack || !eligible(member.state, attack) || active(member.state)) return false;
+    if (!member?.state || !hasReckless(member.state) || !eligible(member.state, attack) || active(member.state)) return false;
     const applied = T()?.apply(member.state, EFFECT_ID, member.combatant_id, {
       sourceEffectId: EFFECT_ID, appliedRound: round, expiresRound: round + 1, expiryTiming: "source_turn_start",
     });
