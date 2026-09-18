@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_policy import SpellChoice
 from app.combat.spellcasting import mark_slot_spell_cast
@@ -55,6 +56,7 @@ def resolve_spell(
         resource.current_uses -= 1
         remaining = resource.current_uses
     spend(caster.state, spell.action_cost)
+    remove_owner_attack_ending_modifiers(caster.state)
 
     placement = choice.placement
     detail = ""
