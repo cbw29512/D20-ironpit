@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.area_save_targeting import legal_area_save_placements
+from app.combat.area_targeting import AreaPlacement
 from app.combat.grapple_queries import source_has_active_grapple
 from app.combat.resources import action_resource_available
 from app.combat.save_targets import resolve_save_targets
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 def choose_area_save(
     actor: EncounterCombatant,
     setup: EncounterSetup,
-) -> tuple[SavingThrowAction, object] | None:
+) -> tuple[SavingThrowAction, AreaPlacement] | None:
     try:
         candidates = []
         for action in actor.state.template.saving_throw_actions:
@@ -41,7 +42,7 @@ def resolve_area_save(
     actor: EncounterCombatant,
     setup: EncounterSetup,
     action: SavingThrowAction,
-    placement,
+    placement: AreaPlacement,
     dice,
 ) -> tuple[list[BattleEvent], int]:
     try:
