@@ -102,13 +102,17 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
         raise
 
 
-def resolve_area_save_turn(sequence, round_number, member, setup, dice):
+def resolve_area_save_turn(events, sequence, round_number, member, setup, dice, turn_key):
     try:
         choice = choose_area_save(member, setup)
         if choice is None:
-            return [], sequence
+            return None
         action, placement = choice
-        return resolve_area_save(sequence, round_number, member, setup, action, placement, dice)
+        area_events, sequence = resolve_area_save(
+            sequence, round_number, member, setup, action, placement, dice,
+        )
+        events.extend(area_events)
+        return finish_turn(events, sequence, round_number, member, setup, dice, turn_key)
     except Exception:
         logger.exception("Failed area-save turn stage for %s.", member.combatant_id)
         raise
