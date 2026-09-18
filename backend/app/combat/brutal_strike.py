@@ -104,3 +104,18 @@ def follow_forceful_blow(
         )
     finally:
         attacker.state.movement_remaining_ft = normal_remaining
+
+def brutal_strike_attack_sources(
+    state: CombatantState,
+    attack: WeaponAttack,
+    turn_key: str | None,
+    *,
+    reckless_advantage: int,
+    disadvantage_sources: int,
+) -> tuple[int, bool]:
+    """Return adjusted Reckless Advantage and whether the chosen roll has Disadvantage."""
+    has_disadvantage = disadvantage_sources > 0
+    suppression = brutal_strike_advantage_suppression(
+        state, attack, turn_key, has_disadvantage=has_disadvantage,
+    )
+    return max(0, reckless_advantage - suppression), has_disadvantage
