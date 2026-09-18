@@ -46,7 +46,7 @@ function setup(sourceTemplate, targetPosition = 5) {
   const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2 }));
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 2);
-  assert.equal(M.savingThrowFlat(source.state), 0);
+  assert.equal(M.savingThrowFlat(source.state), 2);
   window.IRON_PIT_DICE = { roll: () => 8, rollMany: () => [8] };
   const save = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(ally.state, "wisdom", 12);
   assert.equal(save.roll.modifier, 4);
@@ -73,10 +73,18 @@ function setup(sourceTemplate, targetPosition = 5) {
 }
 
 {
-  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 3 }));
+  const { source, ally, battle } = setup(template("Aurelia", {
+    aura_of_protection_2014_bonus: 3, aura_of_devotion_2014: true, aura_of_courage_2014: true,
+  }));
+  A.sync(battle);
+  assert.equal(M.savingThrowFlat(source.state), 3);
+  assert.equal(I.immune(source.state, "charmed"), true);
+  assert.equal(I.immune(source.state, "frightened"), true);
   source.state.is_unconscious = true;
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 0);
+  assert.equal(M.savingThrowFlat(source.state), 0);
+  assert.equal(I.immune(source.state, "charmed"), false);
   source.state.is_unconscious = false;
   source.state.is_alive = false;
   source.state.is_dead = true;
@@ -91,8 +99,8 @@ function setup(sourceTemplate, targetPosition = 5) {
   battle.heroes.splice(1, 0, stronger);
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 3);
-  assert.equal(M.savingThrowFlat(source.state), 1);
-  assert.equal(M.savingThrowFlat(stronger.state), 0);
+  assert.equal(M.savingThrowFlat(source.state), 3);
+  assert.equal(M.savingThrowFlat(stronger.state), 3);
 }
 
 console.log("2014 Paladin browser aura parity passed.");
