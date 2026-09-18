@@ -8,6 +8,10 @@ from app.domain.actions import AbilityName, ActionCost, DamageTypeName
 
 from app.domain.spell_modifiers import SpellModifierEffect, SpellModifierKind
 
+SpellTargetPolicy = Literal["self", "friendly"]
+SpellAttackKind = Literal["melee", "ranged"]
+
+
 class DefensiveSpellAction(BaseModel):
     """A certified precombat defensive/buff spell with deterministic arena targeting."""
 
