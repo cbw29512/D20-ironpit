@@ -42,6 +42,7 @@ jobs:
           node frontend/browser-catalog-2014.test.cjs
           node frontend/browser-ruleset-isolation.test.cjs
           node frontend/browser-survivor.test.cjs
+          node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-2014-berserker.test.cjs
           node frontend/browser-2014-rogue.test.cjs
           node frontend/browser-2014-monk.test.cjs
