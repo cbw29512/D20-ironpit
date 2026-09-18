@@ -16,6 +16,7 @@
       turnKey,
     });
     const events = [event];
+    if (event.event_type === "saving_throw" && !event.attack_roll) return { events, sequence };
     if (member.state.turn_terminated) return { events, sequence };
     const cleave = W().resolveCleave(sequence, round, member, event, attack, setup, turnKey);
     events.push(...cleave.events); sequence = cleave.sequence;

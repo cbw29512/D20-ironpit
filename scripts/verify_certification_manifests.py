@@ -37,6 +37,7 @@ def _mechanics(template: Any) -> list[str]:
         *(f"defensive-spell-action:{item.id}" for item in template.defensive_spell_actions),
         *(f"healing-action:{item.id}" for item in template.healing_actions),
         *(f"condition-removal-action:{item.id}" for item in template.condition_removal_actions),
+        *(f"effect-removal-action:{item.id}" for item in template.effect_removal_actions),
     }
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
@@ -101,6 +102,18 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("open-hand-technique")
     if features.stunning_strike:
         mechanics.add("stunning-strike")
+    if features.divine_smite_2014:
+        mechanics.add("divine-smite-2014")
+    if features.sacred_weapon_2014_bonus:
+        mechanics.add("sacred-weapon-2014")
+    if features.turn_unholy_2014:
+        mechanics.add("turn-the-unholy-2014")
+    if features.aura_of_protection_2014_bonus:
+        mechanics.add("aura-of-protection-2014")
+    if features.aura_of_devotion_2014:
+        mechanics.add("aura-of-devotion-2014")
+    if features.aura_of_courage_2014:
+        mechanics.add("aura-of-courage-2014")
     return sorted(mechanics)
 
 

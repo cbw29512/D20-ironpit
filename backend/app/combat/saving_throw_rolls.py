@@ -5,11 +5,12 @@ import logging
 from app.combat.barbarian import rage_active
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
 from app.combat.danger_sense import danger_sense_advantage
+from app.combat.defensive_modifier_rules import saving_throw_advantage_sources
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
 from app.combat.grapple import RESTRAINED_EFFECT_ID
-from app.combat.modifier_stack import apply_d20_bonus_dice
+from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
 from app.combat.rolls import roll_d20
 from app.combat.saving_throw_traits import sure_footed_advantage
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
@@ -30,6 +31,7 @@ def saving_throw_mode(
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
             + sure_footed_advantage(state, ability, context)
+            + saving_throw_advantage_sources(state, ability)
         )
         disadvantage = saving_throw_disadvantage_sources(state)
         if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids:
@@ -74,10 +76,11 @@ def resolve_saving_throw(
             return None, False
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
+        modifier = state.template.saving_throw_bonuses[ability] + saving_throw_flat_bonus(state)
         roll = apply_d20_bonus_dice(
             state,
             ModifierKind.SAVING_THROW_BONUS_DIE,
-            roll_d20(dice, state.template.saving_throw_bonuses[ability], saving_throw_mode(state, ability, context)),
+            roll_d20(dice, modifier, saving_throw_mode(state, ability, context)),
             dice,
         )
         if roll.total < dc:

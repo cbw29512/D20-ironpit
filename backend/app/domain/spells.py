@@ -6,41 +6,10 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
 
-SpellModifierKind = Literal[
-    "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die",
-    "attacks-against-advantage", "bonus-damage", "speed",
-]
+from app.domain.spell_modifiers import SpellModifierEffect, SpellModifierKind
+
 SpellTargetPolicy = Literal["self", "friendly"]
 SpellAttackKind = Literal["melee", "ranged"]
-
-
-class SpellModifierEffect(BaseModel):
-    """Source-neutral modifier data converted to a runtime CombatModifier when a spell resolves."""
-
-    kind: SpellModifierKind
-    flat_bonus: int = 0
-    dice_count: int = Field(default=0, ge=0, le=20)
-    dice_size: int = Field(default=0, ge=0, le=100)
-    damage_type: DamageTypeName | None = None
-    consume_on_attack_against: bool = False
-    expires_after_source_turns: int | None = Field(default=None, ge=1, le=20)
-
-    @model_validator(mode="after")
-    def validate_payload(self) -> "SpellModifierEffect":
-        die_kind = self.kind in {"attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"}
-        if die_kind and (self.dice_count < 1 or self.dice_size < 2):
-            raise ValueError(f"{self.kind} requires certified dice.")
-        if not die_kind and (self.dice_count or self.dice_size):
-            raise ValueError(f"{self.kind} does not accept dice.")
-        if self.kind == "bonus-damage" and self.damage_type is None:
-            raise ValueError("Bonus damage requires a damage type.")
-        if self.kind != "bonus-damage" and self.damage_type is not None:
-            raise ValueError(f"{self.kind} does not accept a damage type.")
-        if self.kind == "attacks-against-advantage" and self.flat_bonus:
-            raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
-        if self.consume_on_attack_against and self.kind != "attacks-against-advantage":
-            raise ValueError("Only attack-advantage spell modifiers can be consumed by the next attack.")
-        return self
 
 
 class DefensiveSpellAction(BaseModel):

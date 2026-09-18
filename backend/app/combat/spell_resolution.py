@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_policy import SpellChoice
 from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -54,6 +56,7 @@ def resolve_spell(
         resource.current_uses -= 1
         remaining = resource.current_uses
     spend(caster.state, spell.action_cost)
+    remove_owner_attack_ending_modifiers(caster.state)
 
     placement = choice.placement
     detail = ""
@@ -78,11 +81,20 @@ def resolve_spell(
     shared_damage_rolls: list[int] | None = None
     for target_id in choice.target_ids:
         target = by_id[target_id]
+        ward = check_targeting_ward(caster, target, dice) if spell.area_radius_ft is None else None
+        if ward is not None and not ward.succeeded:
+            events.append(blocked_targeting_event(
+                sequence, round_number, caster, target, spell.name, ward,
+            ))
+            sequence += 1
+            continue
         event = resolve_save_action(
             sequence, round_number, caster, target, save_action,
             abs(caster.position_ft - target.position_ft), dice, spend_action=False,
             shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
         )
+        if ward is not None:
+            event.description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
         events.append(event)
         if shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)

@@ -1,8 +1,7 @@
 from app.content.canonical_hero_policy import (
-    CASTER_CLASS_IDS,
-    canonical_spell_package,
     canonical_template_id,
 )
+from app.content.canonical_spell_policy import CASTER_CLASS_IDS, canonical_spell_package
 from app.content.certified_heroes import build_certified_hero_entries
 from app.content.hero_progressions import HERO_BY_CLASS
 

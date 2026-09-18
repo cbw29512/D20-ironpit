@@ -67,6 +67,20 @@ def effective_armor_class(state: CombatantState) -> int:
     ))
 
 
+def attack_roll_flat_bonus(state: CombatantState, weapon_id: str) -> int:
+    return sum(
+        item.flat_bonus for item in state.active_modifiers
+        if item.kind is ModifierKind.ATTACK_ROLL_FLAT and item.weapon_id == weapon_id
+    )
+
+
+def saving_throw_flat_bonus(state: CombatantState) -> int:
+    return sum(
+        item.flat_bonus for item in state.active_modifiers
+        if item.kind is ModifierKind.SAVING_THROW_FLAT
+    )
+
+
 def effective_speed(state: CombatantState) -> int:
     base = max(0, state.template.speed_ft + sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED

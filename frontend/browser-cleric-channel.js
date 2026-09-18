@@ -3,14 +3,12 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
-  const T = () => window.IRON_PIT_BROWSER_TIMED;
-  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
+  const TC = () => window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS;
   const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", SPARK = "divine-spark", PRESERVE = "preserve-life";
-  const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const living = (m) => m.state.is_alive && !m.state.is_dead;
   const side = (m, setup, allies) => allies === (m.side === "heroes") ? setup.heroes : setup.monsters;
   const baseType = (m) => String(m.state.template.creature_type || "").split(" (")[0].toLowerCase();
@@ -33,12 +31,12 @@
 
   function preserveTargets(cleric, setup) {
     if (!cleric.state.template.traits?.includes("life-domain")) return [];
-    return side(cleric, setup, true).filter((m) => living(m) && distance(cleric, m) <= 30
+    return side(cleric, setup, true).filter((m) => living(m) && S().distance(cleric, m) <= 30
       && !m.state.template.traits?.includes("swarm") && capacity(m) > 0)
       .sort((a, b) => (a.state.current_hp > 0) - (b.state.current_hp > 0)
         || (a.combatant_id === cleric.combatant_id) - (b.combatant_id === cleric.combatant_id)
         || a.state.current_hp / S().effectiveMaxHp(a.state) - b.state.current_hp / S().effectiveMaxHp(b.state)
-        || distance(cleric, a) - distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
+        || S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
   }
 
   function choose(cleric, setup) {
@@ -48,14 +46,14 @@
       return { kind: PRESERVE, targets: preserve };
     }
     const allies = side(cleric, setup, true).filter(living);
-    const downed = allies.filter((m) => m.combatant_id !== cleric.combatant_id && m.state.current_hp === 0 && distance(cleric, m) <= 30)
+    const downed = allies.filter((m) => m.combatant_id !== cleric.combatant_id && m.state.current_hp === 0 && S().distance(cleric, m) <= 30)
       .sort((a, b) => b.state.death_save_failures - a.state.death_save_failures || a.combatant_id.localeCompare(b.combatant_id));
     if (downed.length && !slotsRemain(cleric)) return { kind: "divine-spark-heal", targets: [downed[0]] };
-    const enemies = side(cleric, setup, false).filter((m) => living(m) && m.state.current_hp > 0 && distance(cleric, m) <= 30);
-    const undead = enemies.filter((m) => baseType(m) === "undead").sort((a, b) => distance(cleric, a) - distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
+    const enemies = side(cleric, setup, false).filter((m) => living(m) && m.state.current_hp > 0 && S().distance(cleric, m) <= 30);
+    const undead = enemies.filter((m) => baseType(m) === "undead").sort((a, b) => S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
     if (undead.length) return { kind: TURN, targets: undead };
     if (slotsRemain(cleric)) return null;
-    enemies.sort((a, b) => distance(cleric, a) - distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
+    enemies.sort((a, b) => S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
     return enemies.length ? { kind: "divine-spark-damage", targets: [enemies[0]] } : null;
   }
 
@@ -79,31 +77,15 @@
       description: `${cleric.state.template.name} uses Preserve Life: ${allocations.join("; ")}.` }], sequence: sequence + 1 };
   }
 
-  function turnEffects(cleric, target, round) {
-    const common = { sourceEffectId: TURN, appliedRound: round, expiresRound: round + 10, expiryTiming: "source_turn_start",
-      endsOnDamage: true, endsIfSourceIncapacitated: true, endsIfSourceDead: true };
-    const applied = [T().apply(target.state, TURNED, cleric.combatant_id, { ...common, turnBehavior: "forced_retreat" })];
-    for (const condition of ["frightened", "incapacitated"]) if (!I().immune(target.state, condition)) applied.push(T().apply(target.state, condition, cleric.combatant_id, common));
-    return applied.filter(Boolean);
-  }
 
   function resolveTurnUndead(sequence, round, cleric, setup, targets) {
-    if (!targets.length || targets.some((t) => distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
-    const dc = saveDc(cleric), remaining = spend(cleric), events = [];
-    for (const target of targets) {
-      const save = V().resolveSavingThrow(target.state, "wisdom", dc);
-      const applied = save.succeeded ? [] : turnEffects(cleric, target, round);
-      events.push({ sequence: sequence++, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id,
-        actor_name: cleric.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
-        saving_throw_roll: save.roll, save_ability: "wisdom", save_dc: dc, save_succeeded: save.succeeded,
-        applied_condition_ids: applied, feature_id: TURN, resource_remaining: remaining, animation: TURN,
-        description: `${target.state.template.name} ${save.succeeded ? "resists" : "fails"} ${cleric.state.template.name}'s Turn Undead.` });
-    }
-    return { events, sequence };
+    if (!targets.length || targets.some((t) => S().distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
+    const dc = saveDc(cleric), remaining = spend(cleric);
+    return TC().resolve(sequence, round, cleric, targets, dc, TURN, TURNED, remaining, "Turn Undead");
   }
 
   function resolveSpark(sequence, round, cleric, setup, choice) {
-    const target = choice.targets[0]; if (!target || target.combatant_id === cleric.combatant_id || distance(cleric, target) > 30) throw new Error("Divine Spark requires another creature within 30 feet.");
+    const target = choice.targets[0]; if (!target || target.combatant_id === cleric.combatant_id || S().distance(cleric, target) > 30) throw new Error("Divine Spark requires another creature within 30 feet.");
     const remaining = spend(cleric), die = D().roll(8), mod = wisdomModifier(cleric), total = die + mod, notation = `1d8+${mod}`;
     if (choice.kind === "divine-spark-heal") {
       const before = target.state.current_hp, healed = H().restore(target.state, total);

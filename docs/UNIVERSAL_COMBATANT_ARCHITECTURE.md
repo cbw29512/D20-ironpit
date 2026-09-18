@@ -325,4 +325,3 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 - Python/browser parity stays mandatory.
 - Production source-size limits stay enforced.
 - Active means executable and certified.
-- PR #32 remains draft and unmerged until explicitly changed.

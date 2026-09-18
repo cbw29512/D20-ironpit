@@ -20,6 +20,10 @@ from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
 ResourceRule = tuple[str, str, Callable[[int], int]]
+_PALADIN_2014_SLOTS = {
+    1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
+    6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
+}
 
 
 def _monk_2014_ki_uses(level: int) -> int:
@@ -28,6 +32,17 @@ def _monk_2014_ki_uses(level: int) -> int:
 
 def _monk_2014_wholeness_uses(level: int) -> int:
     return 1 if level >= 6 else 0
+
+
+def _paladin_2014_channel_uses(level: int) -> int:
+    return 1 if level >= 3 else 0
+
+
+def _paladin_2014_spell_slots(level: int) -> dict[str, int]:
+    return {
+        f"spell-slot-{spell_level}": uses
+        for spell_level, uses in enumerate(_PALADIN_2014_SLOTS[level], start=1)
+    }
 
 
 _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
@@ -50,6 +65,10 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "monk": (
         ("ki", "Ki", _monk_2014_ki_uses),
         ("wholeness-of-body", "Wholeness of Body", _monk_2014_wholeness_uses),
+    ),
+    "paladin": (
+        ("lay-on-hands", "Lay on Hands", lambda level: 5 * level),
+        ("channel-divinity", "Channel Divinity", _paladin_2014_channel_uses),
     ),
     "rogue": (),
 }
@@ -76,6 +95,8 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
     if profile.ruleset == "2024" and profile.class_id in FULL_CASTER_CLASSES:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
+    if profile.ruleset == "2014" and profile.class_id == "paladin":
+        resolved.update(_paladin_2014_spell_slots(profile.level))
     return {resource_id: uses for resource_id, uses in resolved.items() if uses > 0}
 
 

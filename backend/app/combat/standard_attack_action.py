@@ -44,6 +44,8 @@ def resolve_standard_attack_action(
         )
         events = [event]
         sequence += 1
+        if event.event_type == "saving_throw" and event.attack_roll is None:
+            return events, sequence
         cleave, sequence = resolve_cleave_extra_attack(
             sequence, round_number, attacker, event, attack, setup, dice, turn_key,
         )

@@ -14,7 +14,9 @@ def _expected_saves(profile: PregenCombatProfile) -> dict[str, int]:
     pb = _proficiency_bonus(profile.level)
     proficient = set(profile.save_proficiencies)
     return {
-        ability: profile.abilities.modifier(ability) + (pb if ability in proficient else 0)
+        ability: profile.abilities.modifier(ability)
+        + (pb if ability in proficient else 0)
+        + profile.saving_throw_flat_bonus
         for ability in _ABILITIES
     }
 

@@ -51,6 +51,10 @@ def build_commoner() -> CombatantTemplate:
         max_hp=4,
         speed_ft=30,
         initiative_bonus=0,
+        saving_throw_bonuses={
+            "strength": 0, "dexterity": 0, "constitution": 0,
+            "intelligence": 0, "wisdom": 0, "charisma": 0,
+        },
         weapon_attack=build_commoner_club_attack(),
         visual=build_monster_visual("clothes", "club", "humanoid"),
         source="SRD 5.2.1 Commoner",

@@ -28,12 +28,26 @@ jobs:
         run: |
           python scripts/export_browser_heroes.py
           python scripts/prepare_static_site.py
+      - name: Certify 2014 Paladin Python behavior
+        run: |
+          pytest -q \
+            backend/tests/test_paladin_2014_spell_package.py \
+            backend/tests/test_paladin_auras_2014.py \
+            backend/tests/test_paladin_channel_divinity_2014.py \
+            backend/tests/test_paladin_devotion_2014_foundation.py \
+            backend/tests/test_paladin_oath_spells_2014.py \
+            backend/tests/test_certification_progression_manifest.py
       - name: Certify 2014 hero data and browser behavior
         run: |
           node frontend/browser-catalog-2014.test.cjs
           node frontend/browser-ruleset-isolation.test.cjs
           node frontend/browser-survivor.test.cjs
+          node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-2014-berserker.test.cjs
           node frontend/browser-2014-rogue.test.cjs
           node frontend/browser-2014-monk.test.cjs
           node frontend/browser-2014-monk-entrypoints.test.cjs
+          node frontend/browser-2014-paladin.test.cjs
+          node frontend/browser-2014-paladin-auras.test.cjs
+          node frontend/browser-paladin-oath-spells-2014.test.cjs
+          node frontend/browser-2014-paladin-entrypoints.test.cjs

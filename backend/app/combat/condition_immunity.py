@@ -1,11 +1,21 @@
 from __future__ import annotations
 
-from app.domain.models import CombatantState
+from app.combat.defensive_modifier_rules import condition_immunity_modifier_applies
+from app.domain.models import CombatantState, CombatantTemplate
 
 
-def condition_is_immune(state: CombatantState, condition_id: str) -> bool:
-    """Return static and condition-granted 2024 condition immunities plus Iron Pit protections."""
+def condition_is_immune(
+    state: CombatantState,
+    condition_id: str,
+    source: CombatantTemplate | None = None,
+) -> bool:
+    """Return static and runtime condition immunities, including source-typed wards."""
     if condition_id in state.template.condition_immunities:
+        return True
+    if any(
+        condition_immunity_modifier_applies(item, condition_id, source)
+        for item in state.active_modifiers
+    ):
         return True
     if (
         state.template.progression_features.mindless_rage

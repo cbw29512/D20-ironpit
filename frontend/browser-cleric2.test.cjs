@@ -9,9 +9,9 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
-  "browser-action-economy.js", "browser-modifiers.js", "browser-grapple.js", "browser-state.js", "browser-rolls.js",
+  "browser-action-economy.js", "browser-modifiers.js", "browser-grapple.js", "browser-grid-geometry.js", "browser-state.js", "browser-rolls.js",
   "browser-timed-conditions.js", "browser-source-bound-effects.js", "browser-undead-fortitude.js", "browser-zero-hp.js",
-  "browser-attack.js", "browser-saves.js", "browser-healing.js", "browser-cleric-channel.js",
+  "browser-attack.js", "browser-saves.js", "browser-healing.js", "browser-turn-creature-effects.js", "browser-cleric-channel.js",
 ]) load(file);
 
 const H = window.IRON_PIT_BROWSER_HEROES;
@@ -82,6 +82,16 @@ const fixedDice = (values) => {
       "Turn Undead has one initial save only; it must not gain an invented repeat save.");
     assert.deepEqual([...new Set(target.state.timed_effects.map((effect) => effect.expires_round))], [11]);
   }
+}
+
+{
+  const { cleric, skeleton, zombie, setup } = makeSetup();
+  cleric.state.position = { x: 0, y: 0 };
+  skeleton.state.position = { x: 2, y: 0 };
+  zombie.state.position = { x: 8, y: 0 };
+  const choice = C.choose(cleric, setup);
+  assert.equal(choice.kind, "turn-undead");
+  assert.deepEqual(choice.targets.map((target) => target.combatant_id), ["skeleton"]);
 }
 
 {

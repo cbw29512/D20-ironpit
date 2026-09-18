@@ -7,8 +7,8 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
-  const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
+  const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 }, DF = () => window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS || { saveAdvantage: () => 0 };
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll, savingThrowFlat: () => 0 };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { saveDisadvantage: () => 0 };
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || { evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
@@ -34,7 +34,7 @@
   function saveMode(state, ability, context = {}) {
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
-      + DG().dexSaveAdvantageSources(state, ability)
+      + DG().dexSaveAdvantageSources(state, ability) + DF().saveAdvantage(state, ability)
       + sureFootedAdvantage(state, ability, context);
     const disadvantage = X().saveDisadvantage(state)
       + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
@@ -53,9 +53,12 @@
 
   function resolveSavingThrow(state, ability, dc, context = {}) {
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
-    const bonus = state.template.saving_throw_bonuses?.[ability];
-    if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, context)));
+    const baseBonus = state.template.saving_throw_bonuses?.[ability];
+    if (baseBonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
+    const modifiers = M();
+    const bonus = baseBonus + (modifiers.savingThrowFlat?.(state) || 0);
+    const baseRoll = R().d20(bonus, saveMode(state, ability, context));
+    let roll = modifiers.applyD20Bonus?.(state, "saving-throw-bonus-die", baseRoll) || baseRoll;
     if (roll.total < dc) {
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
@@ -63,11 +66,11 @@
     return { roll, succeeded: roll.total >= dc };
   }
 
-  function resolveOnHitConditionSave(target, attack) {
+  function resolveOnHitConditionSave(target, attack, sourceTemplate = null) {
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
-    if (I().immune(target.state, effect.conditionId)) return null;
+    if (I().immune(target.state, effect.conditionId, sourceTemplate)) return null;
     const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { conditionId: effect.conditionId });
     let appliedCondition = null;
     if (!save.succeeded && !target.state.active_effect_ids.includes(effect.conditionId)) {

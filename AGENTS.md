@@ -30,6 +30,9 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 - Production combat is browser-only/backend-free.
 - Do not weaken a valid test to make CI green. Replace an obsolete assertion only when an explicit contract change supersedes it, with equally strong coverage for the new rule.
 - Keep production source modules at or below the repository source-size limit. Split modules rather than growing monoliths.
+- Before creating any new combat primitive, resolver, helper module, or rules hook, inspect both the Python rules-reference engine and browser production engine for an existing equivalent or composable primitive. Reuse or extend the shared primitive first; never add a second implementation merely because one side is easier to change.
+- New mechanics require an explicit parity map: identify the Python resolution point, browser resolution point, shared/declarative data, lifecycle/reset behavior, and permanent tests before implementation. If one engine already supports the behavior, port/reuse that model rather than redesigning it independently.
+- Before certification/merge, perform a technical-debt pass over the tranche: remove dead helpers/imports, collapse duplicated construction or calculations, reject speculative abstractions with no current consumer, keep generated data generated, and verify that independent certification fingerprints remain independent rather than being "deduplicated" into the runtime they audit.
 
 ## Mandatory uncertainty and clarification gate
 

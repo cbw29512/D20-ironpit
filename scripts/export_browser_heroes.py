@@ -91,7 +91,12 @@ def _spell(action: Any) -> dict[str, Any]:
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
            "diceSize": effect.dice_size, "damageType": effect.damage_type}
+    if effect.condition_id: row["conditionId"] = effect.condition_id
+    if effect.source_creature_types: row["sourceCreatureTypes"] = list(effect.source_creature_types)
+    if effect.save_ability: row["saveAbility"] = effect.save_ability
+    if effect.save_dc is not None: row["saveDc"] = effect.save_dc
     if effect.consume_on_attack_against: row["consumeOnAttackAgainst"] = True
+    if effect.ends_on_owner_attack: row["endsOnOwnerAttack"] = True
     if effect.expires_after_source_turns is not None: row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
     return row
 
@@ -111,7 +116,9 @@ def _defense(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
            "range": action.range_ft, "durationMinutes": action.duration_minutes,
            "targetPolicy": action.target_policy, "targetCount": action.target_count,
+           "targetCountPerSlotAbove": action.target_count_per_slot_above,
            "temporaryHp": action.temporary_hp, "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
+           "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,
            "damageResistances": list(action.damage_resistances),
            "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
            "concentration": action.concentration, "priority": action.priority, "animation": action.animation}
@@ -139,6 +146,29 @@ def _removal(action: Any) -> dict[str, Any]:
 def _spell_choice(choice: Any) -> dict[str, Any]:
     return {"id": choice.id, "name": choice.name, "level": choice.spell_level,
             "role": choice.role, "requiredCapabilities": list(choice.required_capabilities)}
+
+
+def _effect_removal(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "castingAbility": action.casting_ability, "targetMode": action.target_mode,
+        "autoRemoveMaxLevel": action.auto_remove_max_level,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+    }
+
+
+def _spell_package(class_id: str, level: int, template: CombatantTemplate):
+    if not (
+        template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions
+        or template.healing_actions
+    ):
+        return None
+    casting_modifier = None
+    if class_id == "paladin" and template.ability_scores is not None:
+        casting_modifier = template.ability_scores.modifier("charisma")
+    return canonical_spell_package(class_id, level, template.ruleset, casting_modifier)
 
 
 def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[str, Any]:
@@ -171,6 +201,11 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "martial_arts_die_size": progression.martial_arts_die_size, "flurry_of_blows": progression.flurry_of_blows,
         "deflect_missiles": progression.deflect_missiles, "open_hand_technique": progression.open_hand_technique,
         "stunning_strike": progression.stunning_strike,
+        "divine_smite_2014": progression.divine_smite_2014, "turn_unholy_2014": progression.turn_unholy_2014,
+        "sacred_weapon_2014_bonus": progression.sacred_weapon_2014_bonus,
+        "aura_of_protection_2014_bonus": progression.aura_of_protection_2014_bonus,
+        "aura_of_devotion_2014": progression.aura_of_devotion_2014,
+        "aura_of_courage_2014": progression.aura_of_courage_2014,
         "survivor_heal_amount": progression.survivor_heal_amount,
         "critical_move_fraction": progression.critical_move_fraction, "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
@@ -182,14 +217,16 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if progression.tactical_master_sap_weapon_ids: row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)
     if progression.heroic_warrior: row["heroic_warrior"] = True
     if progression.studied_attacks: row["studied_attacks"] = True
-    package = canonical_spell_package(class_id, level) if template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions or template.healing_actions else None
+    package = _spell_package(class_id, level, template)
     if package is not None:
         row["canonical_cantrips"] = [_spell_choice(item) for item in package.cantrips]
         row["canonical_prepared_spells"] = [_spell_choice(item) for item in package.spells]
+        row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
     if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+    if template.effect_removal_actions: row["effect_removal_actions"] = [_effect_removal(item) for item in template.effect_removal_actions]
     if template.attack_action:
         row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name,
                                 "isAttackAction": template.attack_action.is_attack_action,

@@ -32,6 +32,8 @@ from app.content.fighter_progression_profile import (
 )
 from app.content.monk_open_hand_2014_profile import build_kael_stillwater_2014_profile
 from app.content.monk_open_hand_2014_runtime import build_kael_stillwater_2014
+from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
+from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
 from app.content.rogue_thief_2014_profile import build_mara_quickstep_2014_profile
 from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.domain.character_builds import CharacterBuildProfile
@@ -109,6 +111,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="monk", template_builder=build_kael_stillwater_2014,
         profile_level_builder=build_kael_stillwater_2014_profile, max_level=10,
+    ),
+    CertifiedHeroProgression(
+        class_id="paladin", template_builder=build_aurelia_brightshield_2014,
+        profile_level_builder=build_aurelia_brightshield_2014_profile, max_level=10,
     ),
 )
 

@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-from app.content.canonical_hero_policy import (
-    CASTER_CLASS_IDS,
-    canonical_spell_package,
-    canonical_template_id,
-)
+from app.content.canonical_hero_policy import canonical_template_id
+from app.content.canonical_spell_policy import CASTER_CLASS_IDS, canonical_spell_package
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.hero_progressions import CANONICAL_BUILD_ID, CANONICAL_BUILD_NAME, CANONICAL_HEROES
 from app.domain.catalog import CoverageStatus, HeroCatalogCard

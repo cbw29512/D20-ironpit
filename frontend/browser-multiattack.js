@@ -82,6 +82,7 @@
           allowReckless: true, ignoreCloseThreat: true,
         });
         events.push(event);
+        if (event.event_type === "saving_throw" && !event.attack_roll) { openingFeature = null; continue; }
         if (event.hit && MK()?.resolveStunning) {
           const stun = MK().resolveStunning(sequence, round, member, eventTarget(event, choice.target, setup), choice.attack);
           if (stun) { events.push(stun); sequence += 1; }

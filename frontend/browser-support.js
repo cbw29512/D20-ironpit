@@ -3,7 +3,9 @@
 
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
+  const X = () => window.IRON_PIT_BROWSER_EFFECT_REMOVAL;
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
+  const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -20,8 +22,13 @@
     }
     healing = H()?.chooseAction(member, setup, turnKey);
     if (healing) events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
-    const channel = K()?.resolve(sequence, round, member, setup);
+    const effectRemoval = X()?.choose(member, setup, turnKey);
+    if (effectRemoval) events.push(X().resolve(sequence++, round, member, setup, effectRemoval.action, effectRemoval.effect, turnKey));
+    const cleric = member.state.template.class_id === "cleric" || member.state.template.archetype === "Cleric";
+    const channel = cleric ? K()?.resolve(sequence, round, member, setup) : null;
     if (channel) { events.push(...channel.events); sequence = channel.sequence; }
+    const paladin = P()?.resolveChannel(sequence, round, member, setup);
+    if (paladin) { events.push(...paladin.events); sequence = paladin.sequence; }
     return { events, sequence };
   }
 

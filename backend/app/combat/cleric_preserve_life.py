@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.hit_points import effective_max_hp
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -18,7 +19,7 @@ def preserve_life_targets(cleric: EncounterCombatant, setup: EncounterSetup) -> 
     legal = [
         target for target in allies
         if target.state.is_alive and not target.state.is_dead
-        and abs(cleric.position_ft - target.position_ft) <= 30
+        and combatant_distance(cleric, target) <= 30
         and CombatTrait.SWARM not in target.state.template.combat_traits
         and healing_capacity(target) > 0
     ]
@@ -26,7 +27,7 @@ def preserve_life_targets(cleric: EncounterCombatant, setup: EncounterSetup) -> 
         target.state.current_hp > 0,
         target.combatant_id == cleric.combatant_id,
         target.state.current_hp / effective_max_hp(target.state),
-        abs(cleric.position_ft - target.position_ft),
+        combatant_distance(cleric, target),
         target.combatant_id,
     ))
     return tuple(legal)

@@ -5,10 +5,12 @@ import logging
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
+from app.combat.effect_removal import choose_effect_removal_action, resolve_effect_removal
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
+from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.saving_throws import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -67,8 +69,19 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             action, target = healing_choice
             events.append(resolve_healing(sequence, round_number, member, target, action, dice, turn_key))
             sequence += 1
+        effect_choice = choose_effect_removal_action(member, setup, turn_key)
+        if effect_choice is not None:
+            action, effect = effect_choice
+            events.append(resolve_effect_removal(
+                sequence, round_number, member, setup, action, effect, dice, turn_key,
+            ))
+            sequence += 1
         channel_events, sequence = resolve_channel_support(sequence, round_number, member, setup, dice)
         events.extend(channel_events)
+        paladin_events, sequence = resolve_paladin_channel_support(
+            sequence, round_number, member, setup, dice,
+        )
+        events.extend(paladin_events)
         return events, sequence
     except Exception:
         logger.exception("Failed support-action stage for %s.", member.combatant_id)

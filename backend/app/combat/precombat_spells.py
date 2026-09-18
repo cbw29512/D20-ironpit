@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
 from app.combat.friendly_buff_targeting import select_friendly_buff_targets
+from app.content.monster_creature_types import base_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 from app.domain.spells import DefensiveSpellAction
@@ -26,6 +27,21 @@ def defensive_spell_active(member: EncounterCombatant, setup: EncounterSetup, sp
     )
 
 
+def _typed_defense_relevant(member: EncounterCombatant, setup: EncounterSetup, spell: DefensiveSpellAction) -> bool:
+    typed = [effect for effect in spell.modifier_effects if effect.source_creature_types]
+    if not typed:
+        return True
+    if any(not effect.source_creature_types for effect in spell.modifier_effects):
+        return True
+    enemies = setup.monsters if member.side == "heroes" else setup.heroes
+    enemy_types = {
+        base_creature_type(enemy.state.template.creature_type)
+        for enemy in enemies if enemy.state.is_alive and not enemy.state.is_dead
+    }
+    protected = {item.casefold() for effect in typed for item in effect.source_creature_types}
+    return bool(enemy_types & protected)
+
+
 def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | None = None):
     if member.state.opening_buff_spell_id is not None:
         return None
@@ -33,7 +49,7 @@ def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | N
     for _, spell in sorted(indexed, key=lambda item: (-item[1].level, -item[1].priority, item[0])):
         if spell.concentration and member.state.concentration is not None:
             continue
-        if setup is not None and defensive_spell_active(member, setup, spell):
+        if setup is not None and (defensive_spell_active(member, setup, spell) or not _typed_defense_relevant(member, setup, spell)):
             continue
         slot = _slot_resource(member, spell)
         if slot is not None:

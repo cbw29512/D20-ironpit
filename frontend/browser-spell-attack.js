@@ -25,6 +25,8 @@
     if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
+    const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
+    if (ward && !ward.succeeded) { if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; } E().spend(caster.state, spell.actionCost); const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward); event.resource_remaining = resourceId ? caster.state.resources[resourceId] : null; return event; }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
@@ -59,7 +61,7 @@
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
-    return {
+    const event = {
       sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, attack_name: spell.name, target_ac: targetAc,
       attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [], hit, critical,
@@ -71,6 +73,8 @@
       resource_remaining: resourceId ? caster.state.resources[resourceId] : null, animation: spell.animation || "spell-attack",
       description,
     };
+    if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
+    return event;
   }
 
   window.IRON_PIT_BROWSER_SPELL_ATTACK = { resolve };
