@@ -4,10 +4,9 @@ from app.combat.action_economy import is_available, spend
 from app.combat.cleric_channel_policy import ChannelDivinityChoice
 from app.combat.cleric_divine_spark import resolve_divine_spark
 from app.combat.cleric_preserve_life import resolve_preserve_life
-from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.timed_conditions import apply_timed_condition
+from app.combat.turn_creature_effects import apply_turned_creature_effects
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -40,34 +39,6 @@ def _spend_channel(cleric: EncounterCombatant) -> int:
     return resource.current_uses
 
 
-def _apply_turn_effects(
-    cleric: EncounterCombatant,
-    target: EncounterCombatant,
-    setup: EncounterSetup,
-    round_number: int,
-) -> list[str]:
-    states = [member.state for member in [*setup.heroes, *setup.monsters]]
-    common = dict(
-        source_effect_id=TURN_UNDEAD,
-        applied_round=round_number,
-        expires_round=round_number + 10,
-        expiry_timing="source_turn_start",
-        affected_states=states,
-        ends_on_damage=True,
-        ends_if_source_incapacitated=True,
-        ends_if_source_dead=True,
-    )
-    applied = [
-        apply_timed_condition(
-            target.state, TURNED_EFFECT, cleric.combatant_id,
-            turn_behavior="forced_retreat", **common,
-        )
-    ]
-    for condition in ("frightened", "incapacitated"):
-        if not condition_is_immune(target.state, condition):
-            applied.append(apply_timed_condition(target.state, condition, cleric.combatant_id, **common))
-    return [effect for effect in applied if effect is not None]
-
 
 def resolve_turn_undead(
     sequence: int,
@@ -87,7 +58,10 @@ def resolve_turn_undead(
     events: list[BattleEvent] = []
     for target in targets:
         roll, succeeded = resolve_saving_throw(target.state, "wisdom", dc, dice)
-        applied = [] if succeeded else _apply_turn_effects(cleric, target, setup, round_number)
+        applied = [] if succeeded else apply_turned_creature_effects(
+            cleric, target, setup, round_number,
+            source_effect_id=TURN_UNDEAD, turned_effect_id=TURNED_EFFECT,
+        )
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="saving_throw",
             actor_id=cleric.combatant_id, actor_name=cleric.state.template.name,
