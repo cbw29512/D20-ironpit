@@ -4,14 +4,13 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
-from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.barbarian import enter_rage
 from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
-from app.combat.encounter_turn_support import finish_turn, resolve_support_actions, save_choice
+from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
@@ -51,12 +50,10 @@ def resolve_combat_turn(
             events.append(build_forced_retreat_event(sequence, round_number, attacker.combatant_id, attacker.state))
             sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
-
         support_events, sequence = resolve_support_actions(sequence, round_number, attacker, setup, dice, turn_key)
         events.extend(support_events)
         if is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
         if rage_event is not None:
             events.append(rage_event)
@@ -116,14 +113,9 @@ def resolve_combat_turn(
             if action_events or not is_available(attacker.state, "action"):
                 return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-        area_save = choose_area_save(attacker, setup)
-        if area_save is not None and is_available(attacker.state, "action"):
-            area_action, placement = area_save
-            area_events, sequence = resolve_area_save(
-                sequence, round_number, attacker, setup, area_action, placement, dice,
-            )
-            events.extend(area_events)
-            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        area_result = resolve_area_save_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        if area_result is not None:
+            return area_result
 
         chosen_save = save_choice(attacker, setup)
         if chosen_save is not None and is_available(attacker.state, "action"):
