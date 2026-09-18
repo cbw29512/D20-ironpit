@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from app.combat.reckless_attack import reckless_attack_active
+from app.combat.modifier_stack import add_modifier
 from app.domain.models import CombatantState, DamageType, WeaponAttack
+from app.domain.modifiers import CombatModifier, ModifierKind
 
 BRUTAL_STRIKE_FEATURE_ID = "brutal-strike"
 BonusDamageSpec = tuple[str, int, int, DamageType]
@@ -49,3 +51,21 @@ def brutal_strike_advantage_suppression(
     ):
         return 0
     return 1
+
+
+def apply_hamstring_blow(
+    defender: CombatantState,
+    source_id: str,
+    round_number: int,
+) -> bool:
+    """Apply the 2024 Brutal Strike Hamstring Blow speed penalty until source turn start."""
+    modifier = CombatModifier(
+        id=f"hamstring-blow:{source_id}",
+        source_id=source_id,
+        source_effect_id="hamstring-blow",
+        kind=ModifierKind.SPEED,
+        flat_bonus=-15,
+        expires_source_turn_end_round=round_number,
+    )
+    add_modifier(defender, modifier)
+    return True
