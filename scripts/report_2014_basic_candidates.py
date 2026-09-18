@@ -61,7 +61,7 @@ def _trait_only_details(monsters):
             continue
         unsupported = [
             trait for trait in monster.trait_names
-            if trait not in _ARENA_NEUTRAL_TRAITS and not is_arena_neutral_bonus_action(trait)
+            if trait not in ARENA_NEUTRAL_TRAITS_2014 and not is_arena_neutral_bonus_action(trait)
         ]
         rows.append((monster.name, unsupported))
     return rows
