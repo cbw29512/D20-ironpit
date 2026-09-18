@@ -6,7 +6,7 @@
   const POISON_RECOVERY_DC = 10;
 
   function apply(state, effectId, sourceId, options = {}) {
-    if (I().immune(state, effectId)) return null;
+    if (I().immune(state, effectId, options.sourceTemplate || null)) return null;
     const defaultPoison = effectId === POISONED && options.useDefaultPoisonRecovery !== false;
     if (defaultPoison && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
     const sourceEffectId = options.sourceEffectId || null;
