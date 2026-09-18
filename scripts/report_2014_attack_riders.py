@@ -26,7 +26,7 @@ _FIELDS = (
     "forbid_target_grappled_by_self",
     "grapple_target_policy",
 )
-_EXPECTED_ATTACK_ONLY = 3
+_EXPECTED_ATTACK_ONLY = 5
 
 
 def _active(value: object, field: str) -> bool:
