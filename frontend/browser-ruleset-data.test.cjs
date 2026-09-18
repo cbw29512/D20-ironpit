@@ -77,7 +77,7 @@ assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy b
 
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
-assert.equal(monsters2014.length, 112, "2014 browser roster must contain exactly 112 certified monsters");
+assert.equal(monsters2014.length, 116, "2014 browser roster must contain exactly 116 certified monsters");
 for (const id of [
   "2014-bandit", "2014-brown-bear", "2014-goblin", "2014-skeleton", "2014-fire-giant", "2014-owlbear",
   "2014-badger", "2014-cat", "2014-crab", "2014-hawk", "2014-lizard", "2014-rat", "2014-weasel",
@@ -96,12 +96,18 @@ for (const id of [
   "2014-black-dragon-wyrmling", "2014-blue-dragon-wyrmling", "2014-green-dragon-wyrmling",
   "2014-red-dragon-wyrmling", "2014-white-dragon-wyrmling", "2014-hell-hound", "2014-chimera",
   "2014-young-black-dragon", "2014-young-blue-dragon", "2014-young-green-dragon", "2014-young-red-dragon",
+  "2014-giant-shark", "2014-hunter-shark", "2014-quipper", "2014-swarm-of-quippers",
 ]) assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
 for (const id of ["2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens"]) {
   const swarm = monsters2014.find((monster) => monster.id === id);
   assert.ok(swarm); assert.equal(swarm.traits.includes("swarm"), true);
   assert.equal(swarm.attacks[0].conditionalDamage.trigger, "attacker_bloodied");
   assert.equal(swarm.attacks[0].conditionalDamage.mode, "replace_weapon");
+}
+for (const id of ["2014-giant-shark", "2014-hunter-shark", "2014-quipper", "2014-swarm-of-quippers"]) {
+  const monster = monsters2014.find((item) => item.id === id);
+  assert.ok(monster);
+  assert.deepEqual(monster.attacks[0].conditionalAttackAdvantage, [{ trigger: "target_not_full_hp" }]);
 }
 const mule = monsters2014.find((monster) => monster.id === "2014-mule");
 assert.ok(mule); assert.deepEqual(mule.traits, ["sure-footed"]);
