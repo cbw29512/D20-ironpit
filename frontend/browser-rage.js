@@ -77,5 +77,31 @@
     return { event, sequence };
   }
 
-  window.IRON_PIT_BROWSER_RAGE = { active, damageBonus, end, endIfIncapacitated, enter, extendFromAttack, finalize };
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Rage hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.BONUS_ACTION_WINDOW;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === "rage-enter")) return;
+    hooks.registerAbility(phase, {
+      id: "rage-enter", priority: 10, rulesets: ["2014", "2024"],
+      resolve: ({ sequence, round, member, setup, turnKey }) => {
+        const rage = enter(sequence, round, member);
+        if (!rage) return null;
+        const events = [rage]; let nextSequence = sequence + 1;
+        const fraction = member.state.template.instinctive_pounce_fraction || 0;
+        if (fraction > 0) {
+          const movement = window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT;
+          if (!movement) throw new Error("Rage Instinctive Pounce requires browser-activation-movement.js.");
+          const moved = movement.resolve(nextSequence, round, member, setup, { speedFraction: fraction, turnKey });
+          events.push(...moved.events); nextSequence = moved.sequence;
+          window.IRON_PIT_BROWSER_PALADIN_AURAS_2014?.sync(setup);
+        }
+        return { events, sequence: nextSequence, claimed: true };
+      },
+    });
+  }
+
+  window.IRON_PIT_BROWSER_RAGE = {
+    active, damageBonus, end, endIfIncapacitated, enter, extendFromAttack, finalize, installAbilityHooks,
+  };
 })();

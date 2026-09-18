@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
   "browser-monsters-batch3.js", "browser-condition-immunity.js", "browser-condition-rules.js",
-  "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js",
+  "browser-action-economy.js", "browser-ability-hooks.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-weapon-mastery.js",
   "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
   "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
@@ -20,7 +20,7 @@ for (const file of [
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
-  "browser-turn.js", "browser-initiative.js", "browser-engine.js",
+  "browser-ability-hook-installation.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const maxDice = { roll: (sides) => sides, rollMany: (count, sides) => Array(count).fill(sides) };

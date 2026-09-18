@@ -20,7 +20,7 @@ window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL = {
 window.IRON_PIT_BROWSER_SUPPORT = { resolve: () => { supportCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_ACTION_SURGE = { resolveAttack: () => { surgeCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_RAGE = { finalize: (sequence) => ({ event: null, sequence }) };
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8"), { filename: "browser-turn.js" });
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-ability-hooks.js", "browser-turn.js"), "utf8"), { filename: "browser-turn.js" });
 
 const member = {
   combatant_id: "fighter", side: "heroes", position_ft: 5,

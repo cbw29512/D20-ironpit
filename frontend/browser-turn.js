@@ -74,22 +74,13 @@
       const turnKey = `${round}:${member.combatant_id}`;
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
-      const rage = G()?.enter(sequence, round, member);
-      if (rage) {
-        events.push(rage); sequence += 1;
-        const fraction = member.state.template.instinctive_pounce_fraction || 0;
-        if (fraction > 0) {
-          const moved = AM().resolve(sequence, round, member, setup, { speedFraction: fraction, turnKey });
-          events.push(...moved.events); sequence = moved.sequence; PA()?.sync(setup);
-        }
-      }
-      const wind = P()?.secondWind(sequence, round, member); if (wind) {
-        events.push(wind); sequence += 1;
-        const shift = T()?.resolve(sequence, round, member, setup);
-        if (shift) { events.push(shift); sequence += 1; PA()?.sync(setup); }
-      }
+      const hooks = AH();
+      if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
+      const bonus = hooks.runPhase(hooks.PHASES.BONUS_ACTION_WINDOW, {
+        sequence, round, member, setup, turnKey, events: [],
+      });
+      events.push(...bonus.events); sequence = bonus.sequence;
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
-      const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
       const spell = L()?.resolve(sequence, round, member, setup, turnKey); if (spell) { events.push(...spell.events); sequence = spell.sequence; }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const targets = F().targetOrder(member, setup); if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);

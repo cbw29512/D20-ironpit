@@ -130,7 +130,7 @@ window.IRON_PIT_BROWSER_ATTACK = {
 for (const file of [
   "browser-weapon-mastery.js", "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
 ]) load(file);
-load("browser-turn.js");
+load("browser-ability-hooks.js");\nload("browser-turn.js");
 {
   const hero = { combatant_id: "hero-1", side: "heroes", position_ft: 0, state: fighterState() };
   const monster = { combatant_id: "monster-1", side: "monsters", position_ft: 5,

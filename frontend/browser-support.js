@@ -56,5 +56,35 @@
       animation: "dash", description: `${state.template.name} uses Adrenaline Rush; Dash movement is abstracted by fixed Pit formation.` };
   }
 
-  window.IRON_PIT_BROWSER_SUPPORT = { adrenaline, resolve, secondWind };
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Support hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.BONUS_ACTION_WINDOW;
+    const existing = () => new Set(hooks.abilitiesFor(phase).map((item) => item.id));
+
+    if (!existing().has("second-wind")) hooks.registerAbility(phase, {
+      id: "second-wind", priority: 20, rulesets: ["2014", "2024"],
+      resolve: ({ sequence, round, member, setup }) => {
+        const wind = secondWind(sequence, round, member);
+        if (!wind) return null;
+        const events = [wind]; let nextSequence = sequence + 1;
+        const shift = window.IRON_PIT_BROWSER_TACTICAL_SHIFT?.resolve(nextSequence, round, member, setup);
+        if (shift) {
+          events.push(shift); nextSequence += 1;
+          window.IRON_PIT_BROWSER_PALADIN_AURAS_2014?.sync(setup);
+        }
+        return { events, sequence: nextSequence, claimed: true };
+      },
+    });
+
+    if (!existing().has("adrenaline-rush")) hooks.registerAbility(phase, {
+      id: "adrenaline-rush", priority: 30, rulesets: ["2024"],
+      resolve: ({ sequence, round, member }) => {
+        const event = adrenaline(sequence, round, member);
+        return event ? { events: [event], sequence: sequence + 1, claimed: true } : null;
+      },
+    });
+  }
+
+  window.IRON_PIT_BROWSER_SUPPORT = { adrenaline, resolve, secondWind, installAbilityHooks };
 })();
