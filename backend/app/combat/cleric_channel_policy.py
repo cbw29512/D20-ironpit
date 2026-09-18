@@ -5,6 +5,7 @@ from typing import Literal
 
 from app.combat.action_economy import is_available
 from app.combat.cleric_preserve_life import preserve_life_targets
+from app.combat.encounter_targeting import combatant_distance
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.traits import CombatTrait
@@ -16,10 +17,6 @@ ChannelChoiceKind = Literal["preserve-life", "turn-undead", "divine-spark-heal",
 class ChannelDivinityChoice:
     kind: ChannelChoiceKind
     targets: tuple[EncounterCombatant, ...]
-
-
-def _distance(left: EncounterCombatant, right: EncounterCombatant) -> int:
-    return abs(left.position_ft - right.position_ft)
 
 
 def _uses(member: EncounterCombatant, resource_id: str) -> int:
@@ -35,7 +32,7 @@ def _downed_other_ally(cleric: EncounterCombatant, setup: EncounterSetup) -> Enc
     allies = setup.heroes if cleric.side == "heroes" else setup.monsters
     legal = [
         ally for ally in _living(allies)
-        if ally.combatant_id != cleric.combatant_id and ally.state.current_hp == 0 and _distance(cleric, ally) <= 30
+        if ally.combatant_id != cleric.combatant_id and ally.state.current_hp == 0 and combatant_distance(cleric, ally) <= 30
     ]
     return max(legal, key=lambda ally: ally.state.death_save_failures, default=None)
 
@@ -44,15 +41,15 @@ def _undead_targets(cleric: EncounterCombatant, setup: EncounterSetup) -> tuple[
     enemies = setup.monsters if cleric.side == "heroes" else setup.heroes
     legal = [
         enemy for enemy in _living(enemies)
-        if _distance(cleric, enemy) <= 30 and is_creature_type(enemy.state.template, "undead")
+        if combatant_distance(cleric, enemy) <= 30 and is_creature_type(enemy.state.template, "undead")
     ]
-    return tuple(sorted(legal, key=lambda enemy: (_distance(cleric, enemy), enemy.combatant_id)))
+    return tuple(sorted(legal, key=lambda enemy: (combatant_distance(cleric, enemy), enemy.combatant_id)))
 
 
 def _nearest_enemy(cleric: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
     enemies = setup.monsters if cleric.side == "heroes" else setup.heroes
-    legal = [enemy for enemy in _living(enemies) if _distance(cleric, enemy) <= 30]
-    return min(legal, key=lambda enemy: (_distance(cleric, enemy), enemy.combatant_id), default=None)
+    legal = [enemy for enemy in _living(enemies) if combatant_distance(cleric, enemy) <= 30]
+    return min(legal, key=lambda enemy: (combatant_distance(cleric, enemy), enemy.combatant_id), default=None)
 
 
 def _worth_preserving(cleric: EncounterCombatant, setup: EncounterSetup) -> tuple[EncounterCombatant, ...]:
