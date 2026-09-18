@@ -58,12 +58,15 @@
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state);
+    const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
+    const rangedDisadvantage = attack.kind === "ranged" && ((attack.normal && distance > attack.normal) || closeThreat);
     const recklessAdvantage = B2().attackAdvantage(attacker.state, attack);
-    const brutalSuppression = BS()?.advantageSuppression(attacker.state, attack, extra.turnKey, disadvantage > 0) || 0;
+    const brutalSuppression = BS()?.advantageSuppression(
+      attacker.state, attack, extra.turnKey, disadvantage > 0 || rangedDisadvantage,
+    ) || 0;
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state)
       + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
-    const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id), mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
