@@ -40,13 +40,13 @@
     });
   }
 
-  function conditionAura(target, sources, featureName, conditionId) {
+  function conditionAura(target, sources, featureName, effectId, conditionId) {
     if (target.state.template.condition_immunities?.includes(conditionId)) return;
     const source = sources.find((member) => member.state.template[featureName] === true);
     if (!source) return;
     M().add(target.state, {
-      id: `${source.combatant_id}:${featureName}:${target.combatant_id}`,
-      source_id: source.combatant_id, source_effect_id: featureName,
+      id: `${source.combatant_id}:${effectId}:${target.combatant_id}`,
+      source_id: source.combatant_id, source_effect_id: effectId,
       kind: "condition-immunity", condition_id: conditionId,
     });
   }
@@ -58,8 +58,8 @@
       for (const target of members(setup)) {
         const sources = nearbySources(target, setup);
         saveAura(target, sources);
-        conditionAura(target, sources, "aura_of_devotion_2014", "charmed");
-        conditionAura(target, sources, "aura_of_courage_2014", "frightened");
+        conditionAura(target, sources, "aura_of_devotion_2014", "aura-of-devotion-2014", "charmed");
+        conditionAura(target, sources, "aura_of_courage_2014", "aura-of-courage-2014", "frightened");
       }
     } catch (error) {
       console.error("Failed to synchronize browser 2014 Paladin auras.", { error });
