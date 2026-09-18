@@ -44,6 +44,8 @@ def test_arena_neutral_traits_do_not_invent_combat_state_or_movement() -> None:
 
 def test_pinned_2014_text_matches_flat_arena_classification() -> None:
     source = _source()
-    assert "in contact with a web" in source["spider"].source_traits
+    for monster_id in ("giant-wolf-spider", "spider"):
+        assert "in contact with a web" in source[monster_id].source_traits
+        assert [attack.name for attack in source[monster_id].attacks] == ["Bite"]
     assert "long jump up to 25 feet" in source["lion"].source_traits
     assert "difficult terrain composed of ice or snow" in source["young-white-dragon"].source_traits
