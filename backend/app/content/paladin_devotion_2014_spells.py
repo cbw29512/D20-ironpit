@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.domain.actions import ConditionRemovalAction
+from app.domain.effect_removal import EffectRemovalAction
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 _PROTECTED_TYPES = ["aberration", "celestial", "elemental", "fey", "fiend", "undead"]
@@ -66,4 +67,13 @@ def beacon_of_hope_2014() -> DefensiveSpellAction:
             SpellModifierEffect(kind="healing-maximize"),
         ],
         animation="beacon-of-hope", source=_SOURCE,
+    )
+
+
+def dispel_magic_2014() -> EffectRemovalAction:
+    return EffectRemovalAction(
+        id="dispel-magic", name="Dispel Magic", level=3, action_cost="action",
+        range_ft=120, casting_ability="charisma", target_mode="enemy",
+        auto_remove_max_level=3, resource_id="spell-slot-3", resource_cost=1,
+        expends_spell_slot=True, animation="dispel-magic",
     )
