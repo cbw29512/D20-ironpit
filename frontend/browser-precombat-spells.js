@@ -16,6 +16,16 @@
       || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id));
   }
 
+  function typedRelevant(member, setup, spell) {
+    const typed = (spell.modifierEffects || []).filter((effect) => effect.sourceCreatureTypes?.length);
+    if (!typed.length || (spell.modifierEffects || []).some((effect) => !effect.sourceCreatureTypes?.length)) return true;
+    const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
+    const enemyTypes = new Set(enemies.filter((enemy) => enemy.state.is_alive && !enemy.state.is_dead)
+      .map((enemy) => String(enemy.state.template.creature_type || "").split(" (")[0].toLowerCase()));
+    const protectedTypes = new Set(typed.flatMap((effect) => effect.sourceCreatureTypes.map((value) => value.toLowerCase())));
+    return [...enemyTypes].some((value) => protectedTypes.has(value));
+  }
+
   function choose(member, setup = null) {
     if (member.state.opening_buff_spell_id) return null;
     const spells = (member.state.template.defensive_spell_actions || [])
@@ -24,7 +34,7 @@
         || (b.spell.priority || 0) - (a.spell.priority || 0) || a.index - b.index);
     for (const { spell } of spells) {
       if (spell.concentration && member.state.concentration) continue;
-      if (setup && active(member, setup, spell)) continue;
+      if (setup && (active(member, setup, spell) || !typedRelevant(member, setup, spell))) continue;
       const slotLevel = slotChoice(member, spell);
       if (slotLevel != null) return { spell, slotLevel };
     }
@@ -128,5 +138,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS = { active, choose, prepare, resolve, selectTargets, slotChoice };
+  window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS = { active, choose, prepare, resolve, selectTargets, slotChoice, typedRelevant };
 })();
