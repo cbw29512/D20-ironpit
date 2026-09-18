@@ -94,6 +94,8 @@
     const spendAction = options.spendAction !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+    const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(actor, target) || null;
+    if (ward && !ward.succeeded) { if (spendAction) E().spend(actor.state, "action"); return window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, actor, target, action.name, ward); }
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
@@ -125,7 +127,7 @@
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
-    return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
+    const event = { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,
       save_ability: action.saveAbility, save_dc: action.dc, save_succeeded: save.succeeded, damage_roll: damageRoll,
       damage_components: damageComponents, applied_condition_ids: appliedConditions, hp_before: hpBefore, hp_after: target.state.current_hp,
@@ -135,6 +137,8 @@
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
+    if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, actor.state.template.name);
+    return event;
   }
 
   window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveOnHitConditionSave, resolveSavingThrow, saveMode };
