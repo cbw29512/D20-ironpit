@@ -10,6 +10,7 @@ from app.content.audited_cleric import build_seraphine_dawnshield_level_two
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.capability_registry import build_combatant_from_capabilities
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.grid import GridPosition
 
 
 def _member(template, combatant_id: str, side: str, position: int) -> EncounterCombatant:
@@ -42,6 +43,19 @@ def test_level_two_policy_turns_every_legal_undead_before_spending_spell_slots()
     assert choice.kind == "turn-undead"
     assert choice.targets == (skeleton, zombie)
     assert _channel_uses(cleric) == 2
+
+
+def test_channel_divinity_uses_authoritative_grid_distance() -> None:
+    setup, cleric, skeleton, zombie = _setup()
+    cleric.state.position = GridPosition(x=0, y=0)
+    skeleton.state.position = GridPosition(x=2, y=0)
+    zombie.state.position = GridPosition(x=8, y=0)
+
+    choice = choose_channel_divinity(cleric, setup)
+
+    assert choice is not None
+    assert choice.kind == "turn-undead"
+    assert choice.targets == (skeleton,)
 
 
 def test_turn_undead_uses_one_initial_save_and_no_repeat_save() -> None:
