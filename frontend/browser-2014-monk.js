@@ -95,5 +95,22 @@
     } catch (error) { console.error("Browser Monk bonus attacks failed", { actor: actor?.combatant_id, error }); throw error; }
   }
 
-  window.IRON_PIT_BROWSER_MONK_2014 = { applyDeflectMissiles, monkDc, resolveBonus, resolveOpenHand, resolveStunning };
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Monk hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.BONUS_ACTION_WINDOW;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === "monk-bonus-attack-2014")) return;
+    hooks.registerAbility(phase, {
+      id: "monk-bonus-attack-2014", priority: 100, rulesets: ["2014"],
+      appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "postAction",
+      resolve: ({ sequence, round, member, setup, turnKey, turnEvents }) => {
+        const result = resolveBonus(sequence, round, member, setup, turnKey, turnEvents || []);
+        return result?.events?.length ? { ...result, claimed: true } : null;
+      },
+    });
+  }
+
+  window.IRON_PIT_BROWSER_MONK_2014 = {
+    applyDeflectMissiles, installAbilityHooks, monkDc, resolveBonus, resolveOpenHand, resolveStunning,
+  };
 })();
