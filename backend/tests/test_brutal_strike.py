@@ -2,15 +2,15 @@ from app.combat.brutal_strike import apply_hamstring_blow, brutal_strike_bonus_d
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import effective_speed
 from app.combat.reckless_attack import RECKLESS_ATTACK_EFFECT_ID
-from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.combat.state import build_combatant_state
+from app.content.barbarian_progression import build_rokhan_stonefury_level
 
 
 def _barbarian(level: int):
-    profile = next(item for item in build_pregen_combat_profiles().values() if item.archetype.lower() == "barbarian" and item.level == level)
-    state = build_combatant_state(profile)
+    template = build_rokhan_stonefury_level(level)
+    state = build_combatant_state(template)
     state.active_effect_ids.append(RECKLESS_ATTACK_EFFECT_ID)
-    return state, profile.weapon_attack
+    return state, template.weapon_attack
 
 
 def test_brutal_strike_is_one_1d10_strength_rider_per_turn_at_level_9():
