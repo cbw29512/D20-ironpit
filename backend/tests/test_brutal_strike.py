@@ -1,4 +1,6 @@
-from app.combat.brutal_strike import brutal_strike_bonus_damage
+from app.combat.brutal_strike import apply_hamstring_blow, brutal_strike_bonus_damage
+from app.combat.hit_modifiers import expire_source_turn_start_modifiers
+from app.combat.modifier_stack import effective_speed
 from app.combat.reckless_attack import RECKLESS_ATTACK_EFFECT_ID
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.combat.state import create_state
@@ -29,3 +31,12 @@ def test_brutal_strike_scales_to_2d10_at_level_17():
     assert brutal_strike_bonus_damage(state, attack, "1:rokhan", has_disadvantage=False) == (
         "Brutal Strike", 2, 10, attack.weapon.damage_type,
     )
+
+
+def test_hamstring_blow_reuses_speed_modifier_and_expires_at_source_turn_start():
+    state, _ = _barbarian(9)
+    base_speed = effective_speed(state)
+    assert apply_hamstring_blow(state, "rokhan", 1)
+    assert effective_speed(state) == max(0, base_speed - 15)
+    assert expire_source_turn_start_modifiers([state], "rokhan") == 1
+    assert effective_speed(state) == base_speed
