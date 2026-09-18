@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.combat.undead_fortitude import consume_survival_save_log
+
 import logging
 
 from app.combat.action_economy import is_available, spend
@@ -120,7 +122,7 @@ def resolve_spell_attack(
             death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
             is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=spell.id, resource_remaining=remaining,
             concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
-            animation=spell.animation, description=description,
+            animation=spell.animation, description=description + consume_survival_save_log(target.state),
         )
         if ward is not None and event.saving_throw_roll is None:
             event.saving_throw_roll = ward.roll

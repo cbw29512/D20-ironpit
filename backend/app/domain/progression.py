@@ -1,11 +1,24 @@
 from __future__ import annotations
 
 from pydantic import BaseModel, Field
+from typing import Literal
+
+
+class EffectBoundSurvivalSave(BaseModel):
+    """Immutable zero-HP replacement parameters; no class identity enters resolution."""
+
+    source_id: str
+    required_effect_id: str
+    save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"] = "constitution"
+    initial_dc: int = Field(ge=1)
+    dc_increment: int = Field(default=0, ge=0)
+    replacement_hp: int = Field(ge=1)
 
 
 class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
+    effect_bound_survival_save: EffectBoundSurvivalSave | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     athletics_advantage: bool = False

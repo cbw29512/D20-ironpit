@@ -123,6 +123,7 @@
       studiedApplied = STUDY().apply(attacker.state, attacker.combatant_id, target.combatant_id, round);
     }
     const attackSave = saveDamage?.saveDc != null ? saveDamage : hitSave;
+    const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(actualTarget.state) || "";
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
     if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
     else if (naturalOne) description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn.";
@@ -149,7 +150,7 @@
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
       feature_id: extra.featureId || (recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
-      animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
+      animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }

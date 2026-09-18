@@ -59,6 +59,7 @@
       });
     }
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
+    const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
     const event = {
@@ -71,7 +72,7 @@
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, weapon_id: null, projectile: null, feature_id: spell.id,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       resource_remaining: resourceId ? caster.state.resources[resourceId] : null, animation: spell.animation || "spell-attack",
-      description,
+      description: description + survivalLog,
     };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
     return event;

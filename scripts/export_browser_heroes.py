@@ -213,6 +213,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()}, "source": template.source,
     }
+    if progression.effect_bound_survival_save:
+        row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
     if progression.indomitable_bonus: row["indomitable_bonus"] = progression.indomitable_bonus
     if progression.tactical_master_sap_weapon_ids: row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)

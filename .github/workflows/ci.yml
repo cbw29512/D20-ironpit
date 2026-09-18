@@ -92,6 +92,7 @@ jobs:
           for file in frontend/*.js; do node --check "$file"; done
       - name: Run browser combat regressions
         run: |
+          node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs
           node frontend/browser-execution.test.cjs
           node frontend/browser-audit.test.cjs

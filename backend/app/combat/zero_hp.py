@@ -9,13 +9,13 @@ from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
 from app.combat.source_bound_effects import end_damage_sensitive_effects
-from app.combat.undead_fortitude import resolve_undead_fortitude
+from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
 from app.domain.models import CombatantState, DamageType
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
-    "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude",
+    "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude", "survival_save",
 ]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
@@ -137,6 +137,8 @@ def apply_damage(
         remaining_damage = max(0, amount - hp_before)
         if remaining_damage >= effective_max_hp(state):
             return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+        if resolve_effect_bound_survival_save(state, dice):
+            return _finish_damage(state, "survival_save", incoming, dice, affected_states)
         if use_relentless_endurance(state, remaining_damage):
             return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
         return _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
