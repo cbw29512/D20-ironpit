@@ -77,7 +77,7 @@ assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy b
 
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
-assert.equal(monsters2014.length, 112, "2014 browser roster must contain exactly 101 certified monsters");
+assert.equal(monsters2014.length, 112, "2014 browser roster must contain exactly 112 certified monsters");
 for (const id of [
   "2014-bandit", "2014-brown-bear", "2014-goblin", "2014-skeleton", "2014-fire-giant", "2014-owlbear",
   "2014-badger", "2014-cat", "2014-crab", "2014-hawk", "2014-lizard", "2014-rat", "2014-weasel",
@@ -93,6 +93,9 @@ for (const id of [
   "2014-mammoth", "2014-panther", "2014-saber-toothed-tiger", "2014-tiger", "2014-triceratops",
   "2014-warhorse", "2014-goat", "2014-giant-goat", "2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes",
   "2014-swarm-of-rats", "2014-swarm-of-ravens", "2014-noble",
+  "2014-black-dragon-wyrmling", "2014-blue-dragon-wyrmling", "2014-green-dragon-wyrmling",
+  "2014-red-dragon-wyrmling", "2014-white-dragon-wyrmling", "2014-hell-hound", "2014-chimera",
+  "2014-young-black-dragon", "2014-young-blue-dragon", "2014-young-green-dragon", "2014-young-red-dragon",
 ]) assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
 for (const id of ["2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens"]) {
   const swarm = monsters2014.find((monster) => monster.id === id);
@@ -104,6 +107,14 @@ const mule = monsters2014.find((monster) => monster.id === "2014-mule");
 assert.ok(mule); assert.deepEqual(mule.traits, ["sure-footed"]);
 const noble = monsters2014.find((monster) => monster.id === "2014-noble");
 assert.ok(noble); assert.deepEqual(noble.parry_reaction, { ac_bonus: 2 });
+const recoveredHellHound = monsters2014.find((monster) => monster.id === "2014-hell-hound");
+assert.ok(recoveredHellHound);
+const recoveredBreath = recoveredHellHound.saving_throw_actions.find((action) => action.id === "fire-breath");
+assert.equal(recoveredBreath.area.shape, "cone");
+assert.equal(recoveredBreath.area.length_ft, 15);
+assert.equal(recoveredBreath.resourceId, "fire-breath");
+assert.equal(recoveredHellHound.resources["fire-breath"], 1);
+assert.deepEqual(recoveredHellHound.recharge_rules, [{ resourceId: "fire-breath", minimumRoll: 5, dieSize: 6 }]);
 assertRuleset(monsters2014, "2014", "2014 browser monsters");
 assert.equal(window.IRON_PIT_2014_MVP_READY, true);
 console.log("Browser combatants carry explicit isolated ruleset identity for 2014 and 2024.");
