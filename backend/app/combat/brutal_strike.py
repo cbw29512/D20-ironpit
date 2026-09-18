@@ -65,7 +65,7 @@ def apply_hamstring_blow(
         source_effect_id="hamstring-blow",
         kind=ModifierKind.SPEED,
         flat_bonus=-15,
-        expires_source_turn_end_round=round_number,
+        expires_at_start_of_source_turn=True,
     )
     add_modifier(defender, modifier)
     return True
