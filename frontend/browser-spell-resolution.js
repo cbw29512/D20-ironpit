@@ -34,6 +34,7 @@
       remaining = caster.state.resources[resourceId];
     }
     E().spend(caster.state, spell.actionCost);
+    window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.removeOwnerAttackEnding(caster.state);
 
     const placement = choice.placement;
     const detail = placement
@@ -52,10 +53,16 @@
     let sharedDamageRolls = null;
     for (const targetId of choice.targetIds) {
       const target = members.get(targetId);
+      const ward = spell.areaRadius ? null : (window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null);
+      if (ward && !ward.succeeded) {
+        events.push(window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence++, round, caster, target, spell.name, ward));
+        continue;
+      }
       const event = V().resolveAction(
         sequence++, round, caster, target, action, S().distance(caster, target),
         { spendAction: false, sharedDamageRolls },
       );
+      if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
       events.push(event);
       if (sharedDamageRolls == null && event.damage_components?.length) {
         sharedDamageRolls = [...event.damage_components[0].rolls];
