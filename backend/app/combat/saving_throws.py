@@ -39,6 +39,7 @@ def _damage_components(state: CombatantState, action: SavingThrowAction, dice: D
 def resolve_save_action(
     sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
+    check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
