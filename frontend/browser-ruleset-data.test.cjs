@@ -102,6 +102,8 @@ for (const id of ["2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "20
 }
 const mule = monsters2014.find((monster) => monster.id === "2014-mule");
 assert.ok(mule); assert.deepEqual(mule.traits, ["sure-footed"]);
+const noble = monsters2014.find((monster) => monster.id === "2014-noble");
+assert.ok(noble); assert.deepEqual(noble.parry_reaction, { ac_bonus: 2 });
 assertRuleset(monsters2014, "2014", "2014 browser monsters");
 assert.equal(window.IRON_PIT_2014_MVP_READY, true);
 console.log("Browser combatants carry explicit isolated ruleset identity for 2014 and 2024.");
