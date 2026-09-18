@@ -80,17 +80,8 @@
 
   function resolveTurnUndead(sequence, round, cleric, setup, targets) {
     if (!targets.length || targets.some((t) => S().distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
-    const dc = saveDc(cleric), remaining = spend(cleric), events = [];
-    for (const target of targets) {
-      const save = V().resolveSavingThrow(target.state, "wisdom", dc);
-      const applied = save.succeeded ? [] : TC().apply(cleric, target, round, TURN, TURNED);
-      events.push({ sequence: sequence++, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id,
-        actor_name: cleric.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
-        saving_throw_roll: save.roll, save_ability: "wisdom", save_dc: dc, save_succeeded: save.succeeded,
-        applied_condition_ids: applied, feature_id: TURN, resource_remaining: remaining, animation: TURN,
-        description: `${target.state.template.name} ${save.succeeded ? "resists" : "fails"} ${cleric.state.template.name}'s Turn Undead.` });
-    }
-    return { events, sequence };
+    const dc = saveDc(cleric), remaining = spend(cleric);
+    return TC().resolve(sequence, round, cleric, targets, dc, TURN, TURNED, remaining, "Turn Undead");
   }
 
   function resolveSpark(sequence, round, cleric, setup, choice) {
