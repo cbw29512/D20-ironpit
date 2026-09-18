@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_creature_types import is_creature_type
 from app.domain.models import CombatantState, DamageType, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
@@ -39,7 +40,9 @@ def divine_smite_bonus_damage(
         resource = next(item for item in attacker.resources if item.id == f"spell-slot-{slot_level}")
         resource.current_uses -= 1
         dice_count = min(5, slot_level + 1)
-        if defender is not None and (defender.template.creature_type or "").lower() in {"undead", "fiend"}:
+        if defender is not None and any(
+            is_creature_type(defender.template, creature_type) for creature_type in ("undead", "fiend")
+        ):
             dice_count += 1
         return "Divine Smite", dice_count, 8, DamageType.RADIANT
     except Exception:
