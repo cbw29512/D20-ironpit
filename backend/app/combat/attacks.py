@@ -87,6 +87,7 @@ def resolve_attack(
             hit_damage = resolve_attack_hit_damage(
                 attacker, actual_defender, attack, dice, critical, mode, active_turn_key,
                 bonus_damage, affected_states, sneak_attack_ally_available,
+                brutal_strike_disadvantage=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) > 0,
             )
             damage_roll = hit_damage.damage_roll; damage_components = hit_damage.damage_components
             damage_outcome = hit_damage.damage_outcome; applied_total = hit_damage.applied_total
