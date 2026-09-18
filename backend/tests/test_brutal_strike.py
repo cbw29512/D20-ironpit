@@ -3,12 +3,12 @@ from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import effective_speed
 from app.combat.reckless_attack import RECKLESS_ATTACK_EFFECT_ID
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
-from app.combat.state import create_state
+from app.combat.state import build_combatant_state
 
 
 def _barbarian(level: int):
     profile = next(item for item in build_pregen_combat_profiles() if item.archetype == "barbarian" and item.level == level)
-    state = create_state(profile)
+    state = build_combatant_state(profile)
     state.active_effect_ids.append(RECKLESS_ATTACK_EFFECT_ID)
     return state, profile.weapon_attack
 
