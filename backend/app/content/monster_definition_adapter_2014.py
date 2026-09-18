@@ -72,6 +72,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "name": attack.name,
         "attack_kind": attack.kind,
         "attack_bonus": attack.attack_bonus,
+        "attack_ability": attack.attack_ability,
         "conditional_attack_advantage": conditional_attack_advantage_2014(monster, attack),
         "damage_type": str(attack.damage.type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
