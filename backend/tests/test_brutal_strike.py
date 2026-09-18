@@ -7,7 +7,7 @@ from app.combat.state import build_combatant_state
 
 
 def _barbarian(level: int):
-    profile = next(item for item in build_pregen_combat_profiles() if item.archetype == "barbarian" and item.level == level)
+    profile = next(item for item in build_pregen_combat_profiles().values() if item.archetype.lower() == "barbarian" and item.level == level)
     state = build_combatant_state(profile)
     state.active_effect_ids.append(RECKLESS_ATTACK_EFFECT_ID)
     return state, profile.weapon_attack
