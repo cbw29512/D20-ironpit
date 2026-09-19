@@ -79,6 +79,7 @@ window.IRON_PIT_BROWSER_CHARGE = { openingFeature: () => null };
 
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
+load("browser-damage-reactions.js");
 load("browser-main-action-providers.js");
 
 const S = window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
