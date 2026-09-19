@@ -5,6 +5,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const D = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const R = () => window.IRON_PIT_BROWSER_RAGE;
 
   function bestMelee(member, target) {
@@ -31,7 +32,9 @@
       const event = A().resolveAttack(sequence, round, member, target, choice.attack, choice.distance, {
         spendAction: false, featureId: "frenzy", turnKey, setup, allowReckless: false,
       });
-      return { events: [event], sequence: sequence + 1 };
+      const events = [];
+      sequence = D().append(events, sequence + 1, round, member, event, setup, turnKey);
+      return { events, sequence };
     }
     return { events: [], sequence };
   }

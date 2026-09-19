@@ -3,6 +3,7 @@
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const D = () => window.IRON_PIT_DICE;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
@@ -83,13 +84,18 @@
       if (flurry) state.resources.ki -= 1;
       E().spend(state, "bonus_action");
       const events = [], strikes = flurry ? 2 : 1, featureId = flurry ? "flurry-of-blows" : "martial-arts";
-      for (let index = 0; index < strikes && targets().length && !state.turn_terminated; index += 1) {
+      for (let index = 0; index < strikes && targets().length && !state.turn_terminated
+          && !state.is_dead && !state.is_unconscious; index += 1) {
         const target = targets()[0];
         const event = A().resolveAttack(sequence++, round, actor, target, attack, S().distance(actor, target),
           { spendAction: false, setup, featureId, turnKey, ignoreCloseThreat: true });
-        events.push(event); if (!event.hit) continue;
-        const stun = resolveStunning(sequence, round, actor, target, attack); if (stun) { events.push(stun); sequence += 1; }
-        if (flurry) { const open = resolveOpenHand(sequence, round, actor, target); if (open) { events.push(open); sequence += 1; } }
+        events.push(event); sequence += 1;
+        if (event.hit) {
+          const stun = resolveStunning(sequence, round, actor, target, attack); if (stun) { events.push(stun); sequence += 1; }
+          if (flurry) { const open = resolveOpenHand(sequence, round, actor, target); if (open) { events.push(open); sequence += 1; } }
+        }
+        const reactions = DR().resolve(sequence, round, actor, event, setup, turnKey);
+        events.push(...reactions.events); sequence = reactions.sequence;
       }
       return { events, sequence };
     } catch (error) { console.error("Browser Monk bonus attacks failed", { actor: actor?.combatant_id, error }); throw error; }

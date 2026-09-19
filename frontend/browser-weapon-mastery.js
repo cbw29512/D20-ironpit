@@ -2,6 +2,7 @@
   "use strict";
 
   const CLEAVE_FEATURE_ID = "weapon-mastery-cleave";
+  const D = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
 
   function mastered(state, attack) {
     return Boolean(attack?.weaponId)
@@ -60,7 +61,9 @@
         { spendAction: false, featureId: CLEAVE_FEATURE_ID, setup, turnKey, allowReckless: false },
       );
       if (typeof event.description === "string") event.description += " Cleave makes the once-per-turn extra attack.";
-      return { events: [event], sequence: sequence + 1 };
+      const events = [];
+      sequence = D().append(events, sequence + 1, round, member, event, setup, turnKey);
+      return { events, sequence };
     } catch (error) {
       console.error("Cleave mastery resolution failed.", error);
       throw error;

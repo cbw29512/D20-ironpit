@@ -3,19 +3,21 @@
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const L = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
+  const D = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || {
     resolveCleave: (sequence) => ({ events: [], sequence }),
   };
 
   function resolve(sequence, round, member, target, attack, distance, setup, turnKey, options = {}) {
-    const event = A().resolveAttack(sequence++, round, member, target, attack, distance, {
+    const event = A().resolveAttack(sequence, round, member, target, attack, distance, {
       advantage: options.advantage || 0,
       featureId: options.featureId || null,
       setup,
       allowReckless: options.allowReckless !== false,
       turnKey,
     });
-    const events = [event];
+    const events = [];
+    sequence = D().append(events, sequence + 1, round, member, event, setup, turnKey);
     if (event.event_type === "saving_throw" && !event.attack_roll) return { events, sequence };
     if (member.state.turn_terminated) return { events, sequence };
     const cleave = W().resolveCleave(sequence, round, member, event, attack, setup, turnKey);

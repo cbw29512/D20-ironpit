@@ -3,6 +3,7 @@
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
+  const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
@@ -85,11 +86,11 @@
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
-        const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
+        const event = A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
           allowReckless: true, ignoreCloseThreat: true,
         });
-        events.push(event);
+        sequence = DMR().append(events, sequence + 1, round, member, event, setup, turnKey);
         if (event.event_type === "saving_throw" && !event.attack_roll) { openingFeature = null; continue; }
         if (event.hit && MK()?.resolveStunning) {
           const stun = MK().resolveStunning(sequence, round, member, eventTarget(event, choice.target, setup), choice.attack);
@@ -103,7 +104,12 @@
         continue;
       }
       const saved = saveChoice(member, setup, data);
-      if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+      if (saved) {
+        const event = V().resolveAction(sequence, round, member, saved.target, saved.save, saved.distance, {
+          spendAction: false, setup,
+        });
+        sequence = DMR().append(events, sequence + 1, round, member, event, setup, turnKey);
+      }
     }
 
     if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated) {
