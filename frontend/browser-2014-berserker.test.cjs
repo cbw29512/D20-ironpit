@@ -12,7 +12,9 @@ for (const name of [
   "browser-action-economy.js", "browser-ability-checks.js", "browser-grapple.js", "browser-timed-conditions.js",
   "browser-exhaustion.js", "browser-modifiers.js", "browser-state.js", "browser-resources.js", "browser-rage.js",
   "browser-barbarian2.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js",
-  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-formation.js", "browser-frenzy-2014.js", "browser-saves.js",
+  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
+  "browser-damage-triggered-reactions.js", "browser-damage-reaction-dispatch.js",
+  "browser-formation.js", "browser-frenzy-2014.js", "browser-saves.js",
   "browser-intimidating-presence-2014.js",
 ]) load(name);
 
@@ -31,8 +33,16 @@ const l3 = heroes["rokhan-stonefury-2014-l3"];
 const l9 = heroes["rokhan-stonefury-2014-l9"];
 const l10 = heroes["rokhan-stonefury-2014-l10"];
 const l13 = heroes["rokhan-stonefury-2014-l13"];
-assert.ok(l3 && l9 && l10 && l13, "generated 2014 Berserker levels 3, 9, 10, and 13 must exist");
-for (const hero of [l3, l9, l10, l13]) {
+const l14 = heroes["rokhan-stonefury-2014-l14"];
+const l15 = heroes["rokhan-stonefury-2014-l15"];
+const l16 = heroes["rokhan-stonefury-2014-l16"];
+const l17 = heroes["rokhan-stonefury-2014-l17"];
+const l18 = heroes["rokhan-stonefury-2014-l18"];
+const l19 = heroes["rokhan-stonefury-2014-l19"];
+const l20 = heroes["rokhan-stonefury-2014-l20"];
+const progression = Array.from({ length: 20 }, (_, index) => heroes[`rokhan-stonefury-2014-l${index + 1}`]);
+assert.ok(progression.every(Boolean), "generated 2014 Berserker levels 1 through 20 must exist");
+for (const hero of progression) {
   assert.equal(hero.ruleset, "2014");
   assert.deepEqual(hero.weapon_masteries, []);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null));
@@ -66,10 +76,7 @@ for (const hero of [l3, l9, l10, l13]) {
 }
 
 {
-  const persistentTemplate = structuredClone(l13);
-  persistentTemplate.level = 15;
-  persistentTemplate.persistent_rage_2014 = true;
-  const hero = member(persistentTemplate, "rokhan-persistent", "heroes", 0);
+  const hero = member(l15, "rokhan-persistent", "heroes", 0);
   window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
   const rage = window.IRON_PIT_BROWSER_RAGE.enter(1, 1, hero);
   assert.ok(rage);
@@ -84,7 +91,7 @@ for (const hero of [l3, l9, l10, l13]) {
   window.IRON_PIT_BROWSER_RAGE.endIfIncapacitated(hero.state);
   assert.ok(!hero.state.active_effect_ids.includes("rage"));
 
-  const fresh = member(persistentTemplate, "rokhan-persistent-duration", "heroes", 0);
+  const fresh = member(l15, "rokhan-persistent-duration", "heroes", 0);
   window.IRON_PIT_BROWSER_STATE.beginTurn(fresh.state);
   assert.ok(window.IRON_PIT_BROWSER_RAGE.enter(3, 1, fresh));
   const ended = window.IRON_PIT_BROWSER_RAGE.cleanupExpired(4, 11, fresh);
@@ -93,12 +100,7 @@ for (const hero of [l3, l9, l10, l13]) {
 }
 
 {
-  const minimumTemplate = structuredClone(l13);
-  minimumTemplate.level = 18;
-  minimumTemplate.ability_check_minimums = [
-    { source_id: "indomitable-might", ability: "strength", minimum_source: "ability_score" },
-  ];
-  const hero = member(minimumTemplate, "rokhan-indomitable-might", "heroes", 0);
+  const hero = member(l18, "rokhan-indomitable-might", "heroes", 0);
   window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
   window.IRON_PIT_BROWSER_GRAPPLE.apply(hero.state, "monster-1", 19, 5, true);
   window.IRON_PIT_DICE = queuedDice([1]);
@@ -112,12 +114,9 @@ for (const hero of [l3, l9, l10, l13]) {
 }
 
 {
-  const unlimitedTemplate = structuredClone(l13);
-  unlimitedTemplate.level = 20;
-  unlimitedTemplate.resources = {};
-  unlimitedTemplate.unlimited_resources = ["rage"];
-  unlimitedTemplate.persistent_rage_2014 = true;
-  const hero = member(unlimitedTemplate, "rokhan-unlimited-rage", "heroes", 0);
+  const hero = member(l20, "rokhan-unlimited-rage", "heroes", 0);
+  assert.deepEqual(l20.unlimited_resources, ["rage"]);
+  assert.equal(Object.hasOwn(l20.resources, "rage"), false);
   for (const round of [1, 2]) {
     window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
     const event = window.IRON_PIT_BROWSER_RAGE.enter(round, round, hero);
@@ -127,6 +126,39 @@ for (const hero of [l3, l9, l10, l13]) {
     window.IRON_PIT_BROWSER_RAGE.end(hero.state);
   }
 }
+
+{
+  assert.deepEqual(l14.damage_triggered_melee_reaction, { id: "retaliation", trigger_range_ft: 5 });
+  const hero = member(l14, "rokhan-retaliation", "heroes", 0);
+  const source = member(heroes["karnok-stoneward-2014-l14"], "fighter-source", "monsters", 5);
+  const setup = { heroes: [hero], monsters: [source] };
+  window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+  window.IRON_PIT_BROWSER_STATE.beginTurn(source.state);
+  const sourceAttack = source.state.template.attacks.find((attack) => attack.kind === "melee");
+  window.IRON_PIT_DICE = queuedDice([19, 4, 4, 19, 5]);
+  const triggering = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(
+    1, 1, source, hero, sourceAttack, 5,
+    { spendAction: false, setup, allowReckless: false, offTurn: true },
+  );
+  const actionBefore = hero.state.action_available;
+  const result = window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH.resolve(
+    2, 1, source, triggering, setup, "1:fighter-source",
+  );
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].feature_id, "retaliation");
+  assert.equal(result.events[0].actor_id, "rokhan-retaliation");
+  assert.equal(result.events[0].target_id, "fighter-source");
+  assert.equal(result.events[0].weapon_id, "rokhan-2014-greataxe");
+  assert.equal(hero.state.reaction_available, false);
+  assert.equal(hero.state.action_available, actionBefore);
+}
+
+assert.equal(l16.ability_scores.constitution, 18);
+assert.equal(l16.rage_damage_bonus, 4);
+assert.equal(l17.brutal_critical_dice, 3);
+assert.equal(l17.resources.rage, 6);
+assert.equal(l19.ability_scores.constitution, 20);
+assert.deepEqual([l20.ability_scores.strength, l20.ability_scores.constitution], [24, 24]);
 
 {
   const state = member(l9, "critical", "heroes").state;
@@ -159,4 +191,4 @@ for (const hero of [l3, l9, l10, l13]) {
   assert.equal(window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014.canUse(actor2, target2), false);
 }
 
-console.log("2014 Berserker browser mechanics stay edition-isolated through the certified boundary, with Persistent Rage and Indomitable Might parity staged safely.");
+console.log("2014 Berserker browser mechanics certify levels 1-20, including Retaliation, Persistent Rage, Indomitable Might, and Unlimited Rage.");
