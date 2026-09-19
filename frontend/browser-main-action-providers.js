@@ -16,7 +16,6 @@
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
 
   const BOTH = Object.freeze(["2014", "2024"]);
-
   function saveChoice(member, setup) {
     if (!E().available(member.state, "action")) return null;
     for (const target of F().targetOrder(member, setup)) {
@@ -28,17 +27,11 @@
     return null;
   }
 
-  function memberById(setup, id) {
-    return [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === id) || null;
-  }
-
-  function actionById(member, id) {
-    return (member.state.template.saving_throw_actions || []).find((action) => action.id === id) || null;
-  }
-
-  function register(descriptor) {
-    S().registerProvider(descriptor);
-  }
+  const memberById = (setup, id) => [...setup.heroes, ...setup.monsters]
+    .find((member) => member.combatant_id === id) || null;
+  const actionById = (member, id) => (member.state.template.saving_throw_actions || [])
+    .find((action) => action.id === id) || null;
+  const register = (descriptor) => S().registerProvider(descriptor);
 
   function install() {
     const selection = S();
@@ -57,13 +50,18 @@
     register({
       id: "intimidating-presence-2014", category: C().INTIMIDATING_PRESENCE_2014, rulesets: ["2014"],
       discover: ({ member, setup }) => {
+        if (!(member.state.template.intimidating_presence_2014_dc > 0)) return null;
+        const runtime = IP();
+        if (!runtime) throw new Error("Intimidating Presence runtime is not loaded.");
         const target = F().targetOrder(member, setup)[0] || null;
-        return target && IP().canUse(member, target) ? { payload: { targetId: target.combatant_id } } : null;
+        return target && runtime.canUse(member, target) ? { payload: { targetId: target.combatant_id } } : null;
       },
       resolve: ({ sequence, round, member, setup }, candidate) => {
+        const runtime = IP();
+        if (!runtime) throw new Error("Intimidating Presence runtime is not loaded.");
         const target = memberById(setup, candidate.payload.targetId);
         if (!target) throw new Error("Intimidating Presence candidate target is unavailable.");
-        const event = IP().resolve(sequence, round, member, target);
+        const event = runtime.resolve(sequence, round, member, target);
         if (!event) throw new Error("Intimidating Presence candidate became illegal before resolution.");
         return { events: [event], sequence: sequence + 1 };
       },
@@ -71,8 +69,17 @@
 
     register({
       id: "attack-action", category: C().ATTACK_ACTION, rulesets: BOTH,
-      discover: ({ member, setup }) => M().available(member, setup) ? { payload: {} } : null,
-      resolve: ({ sequence, round, member, setup }) => M().resolveAttackAction(sequence, round, member, setup),
+      discover: ({ member, setup }) => {
+        if (!member.state.template.attack_action) return null;
+        const runtime = M();
+        if (!runtime) throw new Error("Attack/Multiattack runtime is not loaded.");
+        return runtime.available(member, setup) ? { payload: {} } : null;
+      },
+      resolve: ({ sequence, round, member, setup }) => {
+        const runtime = M();
+        if (!runtime) throw new Error("Attack/Multiattack runtime is not loaded.");
+        return runtime.resolveAttackAction(sequence, round, member, setup);
+      },
     });
 
     register({
