@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.damage_reaction_dispatch import resolve_damage_event_reactions
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_policy import SpellChoice
@@ -79,6 +80,7 @@ def resolve_spell(
     affected_states = [member.state for member in members]
     save_action = _save_action(choice)
     shared_damage_rolls: list[int] | None = None
+    damage_events: list[BattleEvent] = []
     for target_id in choice.target_ids:
         target = by_id[target_id]
         ward = check_targeting_ward(caster, target, dice) if spell.area_radius_ft is None else None
@@ -96,7 +98,13 @@ def resolve_spell(
         if ward is not None:
             event.description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
         events.append(event)
+        damage_events.append(event)
         if shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)
         sequence += 1
+    for event in damage_events:
+        reactions, sequence = resolve_damage_event_reactions(
+            sequence, round_number, caster, event, setup, dice, turn_key=turn_key,
+        )
+        events.extend(reactions)
     return events, sequence
