@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.damage_reactions import resolve_post_damage_reactions
 from app.combat.grid_geometry import footprint_distance_ft
 from app.combat.grid_pathing import plan_movement_toward
 from app.combat.grid_pathing_support import movement_step_cost_ft
@@ -75,6 +76,10 @@ def move_toward_on_grid(
                     continue
                 events.append(reaction)
                 sequence += 1
+                reactions, sequence = resolve_post_damage_reactions(
+                    sequence, round_number, reactor, reaction, setup, dice, turn_key=turn_key,
+                )
+                events.extend(reactions)
                 newly_prone = not was_prone and "prone" in mover.state.active_effect_ids
                 if mover.state.is_dead or mover.state.is_unconscious or speed_is_zero(mover.state) or newly_prone:
                     return events, sequence, last_movement
