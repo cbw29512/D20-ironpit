@@ -1,16 +1,23 @@
 from app.combat.barbarian import end_rage, end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
+from app.combat.damage_reaction_dispatch import plan_damage_reaction_attack, resolve_damage_reaction_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.zero_hp import apply_damage
+from app.content.barbarian_berserker_2014_combat_profile import _compile_rokhan_2014_combat_profile
 from app.content.barbarian_berserker_2014_profile import (
-    _advancements, _base_scores, _final_scores, _species_increases,
+    _advancements, _base_scores, _compile_rokhan_stonefury_2014_profile,
+    _final_scores, _species_increases,
 )
 from app.content.barbarian_berserker_2014_runtime import (
-    _progression, _scores, build_rokhan_stonefury_2014,
+    _compile_rokhan_stonefury_2014, _damage_reaction, _progression, _scores,
+    build_rokhan_stonefury_2014,
 )
+from app.content.character_resource_audit import audit_character_resources
+from app.content.demo import build_demo_fighter
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.progression import AbilityCheckMinimum
 
 
@@ -153,3 +160,164 @@ def test_staged_2014_level_20_unlimited_rage_has_no_counter_and_never_decrements
         assert event.resource_remaining is None
         assert state.resources == []
         assert end_rage(state) is not None
+
+
+
+def _retaliation_setup(source_position: int = 5) -> tuple[EncounterCombatant, EncounterCombatant, EncounterSetup]:
+    rokhan = EncounterCombatant(
+        combatant_id="rokhan",
+        side="heroes",
+        position_ft=0,
+        state=build_combatant_state(_compile_rokhan_stonefury_2014(14)),
+    )
+    source = EncounterCombatant(
+        combatant_id="source",
+        side="monsters",
+        position_ft=source_position,
+        state=build_combatant_state(build_demo_fighter()),
+    )
+    return rokhan, source, EncounterSetup(
+        heroes=[rokhan], monsters=[source], hero_total_levels=14, monster_total_cr="1", ruleset="2014",
+    )
+
+
+def test_staged_2014_level_14_retaliation_binds_universal_damage_reaction_policy() -> None:
+    rule = _damage_reaction(14)
+
+    assert rule is not None
+    assert rule.source_feature == "retaliation"
+    assert rule.trigger == "damaged-by-creature"
+    assert rule.source_range_ft == 5
+    assert rule.attack_kind == "melee"
+    assert _damage_reaction(13) is None
+
+
+def test_staged_2014_level_14_retaliation_plans_melee_attack_against_damage_source() -> None:
+    rokhan, source, setup = _retaliation_setup()
+
+    plan = plan_damage_reaction_attack(rokhan, source, setup, applied_damage=7)
+
+    assert plan is not None
+    assert plan.reactor.combatant_id == "rokhan"
+    assert plan.source.combatant_id == "source"
+    assert plan.attack.id == "rokhan-2014-greataxe"
+    assert plan.distance_ft == 5
+
+
+def test_staged_2014_level_14_retaliation_fails_closed_out_of_range_or_without_reaction() -> None:
+    rokhan, source, setup = _retaliation_setup(source_position=10)
+    assert plan_damage_reaction_attack(rokhan, source, setup, applied_damage=7) is None
+
+    rokhan, source, setup = _retaliation_setup()
+    rokhan.state.reaction_available = False
+    assert plan_damage_reaction_attack(rokhan, source, setup, applied_damage=7) is None
+
+
+
+def test_staged_2014_level_14_retaliation_resolves_off_turn_without_spending_action() -> None:
+    rokhan, source, setup = _retaliation_setup()
+    source_hp_before = source.state.current_hp
+    action_before = rokhan.state.action_available
+
+    event = resolve_damage_reaction_attack(
+        5,
+        2,
+        rokhan,
+        source,
+        setup,
+        applied_damage=7,
+        dice=FixedDiceProvider([19, 6]),
+        turn_key="2:source",
+    )
+
+    assert event is not None
+    assert event.event_type == "attack"
+    assert event.feature_id == "retaliation"
+    assert event.actor_id == "rokhan"
+    assert event.target_id == "source"
+    assert source.state.current_hp < source_hp_before
+    assert rokhan.state.reaction_available is False
+    assert rokhan.state.action_available is action_before
+    assert event.turn_terminated is False
+
+
+
+def test_private_2014_candidate_compilers_cover_levels_14_through_20_without_public_exposure() -> None:
+    for level in range(14, 21):
+        template = _compile_rokhan_stonefury_2014(level)
+        profile = _compile_rokhan_stonefury_2014_profile(level)
+
+        assert template.level == profile.level == level
+        assert template.id == profile.template_id
+        assert template.ability_scores == profile.final_ability_scores
+        assert template.damage_reaction_attack is not None
+        assert template.damage_reaction_attack.source_feature == "retaliation"
+
+    l20 = _compile_rokhan_stonefury_2014(20)
+    assert (l20.ability_scores.strength, l20.ability_scores.constitution) == (24, 24)
+    assert l20.resources == []
+    assert l20.unlimited_resource_ids == ["rage"]
+
+    for level in (14, 20):
+        try:
+            build_rokhan_stonefury_2014(level)
+        except ValueError as exc:
+            assert "certification covers levels 1 through 13" in str(exc)
+        else:
+            raise AssertionError("Uncertified high-level Rokhan must remain unavailable publicly.")
+
+
+
+def test_private_level_14_retaliation_serializes_for_browser_parity() -> None:
+    from scripts.export_browser_heroes import _template as export_browser_hero_template
+
+    template = _compile_rokhan_stonefury_2014(14)
+    row = export_browser_hero_template(("barbarian", 14, "canonical"), template)
+
+    assert row["damage_reaction_attack"] == {
+        "source_feature": "retaliation",
+        "trigger": "damaged-by-creature",
+        "source_range_ft": 5,
+        "attack_kind": "melee",
+    }
+
+
+
+def test_private_level_20_resource_fingerprint_matches_unlimited_rage_runtime() -> None:
+    template = _compile_rokhan_stonefury_2014(20)
+    profile = _compile_rokhan_stonefury_2014_profile(20)
+    combat_profile = _compile_rokhan_2014_combat_profile(20)
+
+    assert template.resources == []
+    assert template.unlimited_resource_ids == ["rage"]
+    assert combat_profile.resources == ()
+    assert combat_profile.unlimited_resources == ("rage",)
+    assert audit_character_resources(template, profile, combat_profile) == []
+
+
+
+def test_private_2014_candidates_have_exact_derived_values_14_through_20() -> None:
+    expected = {
+        14: {"ac": 15, "hp": 145, "attack": 10, "damage": 5, "rage_bonus": 3, "rages": 5},
+        15: {"ac": 15, "hp": 155, "attack": 10, "damage": 5, "rage_bonus": 3, "rages": 5},
+        16: {"ac": 16, "hp": 181, "attack": 10, "damage": 5, "rage_bonus": 4, "rages": 5},
+        17: {"ac": 16, "hp": 192, "attack": 11, "damage": 5, "rage_bonus": 4, "rages": 6},
+        18: {"ac": 16, "hp": 203, "attack": 11, "damage": 5, "rage_bonus": 4, "rages": 6},
+        19: {"ac": 17, "hp": 233, "attack": 11, "damage": 5, "rage_bonus": 4, "rages": 6},
+        20: {"ac": 19, "hp": 285, "attack": 13, "damage": 7, "rage_bonus": 4, "rages": None},
+    }
+
+    for level, values in expected.items():
+        hero = _compile_rokhan_stonefury_2014(level)
+        assert hero.armor_class == values["ac"]
+        assert hero.max_hp == values["hp"]
+        assert hero.weapon_attack.attack_bonus == values["attack"]
+        assert hero.weapon_attack.damage_bonus == values["damage"]
+        assert hero.rage_damage_bonus == values["rage_bonus"]
+        finite = {item.id: item.max_uses for item in hero.resources}
+        if values["rages"] is None:
+            assert finite == {}
+            assert hero.unlimited_resource_ids == ["rage"]
+        else:
+            assert finite == {"rage": values["rages"]}
+            assert hero.unlimited_resource_ids == []
