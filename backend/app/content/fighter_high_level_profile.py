@@ -144,11 +144,18 @@ def build_karnok_stoneward_level16_profile() -> CharacterBuildProfile:
 
 
 
+def _build_karnok_high_level_delta(previous: CharacterBuildProfile, level: int, *audits: FeatureAudit) -> CharacterBuildProfile:
+    data = advance_profile_data(previous, level)
+    apply_fighter_level_to_profile_data(data, level)
+    if audits:
+        data.update(feature_audits=[*data["feature_audits"], *(audit.model_dump() for audit in audits)])
+    return CharacterBuildProfile.model_validate(data)
+
+
 def build_karnok_stoneward_level17_profile() -> CharacterBuildProfile:
     try:
         previous = build_karnok_stoneward_level16_profile()
-        data = advance_profile_data(previous, 17)
-        apply_fighter_level_to_profile_data(data, 17)
+        data = None
         action_surge = FeatureAudit(
             feature_id="action-surge-two-uses",
             feature_name="Action Surge — Two Uses",
@@ -156,10 +163,9 @@ def build_karnok_stoneward_level17_profile() -> CharacterBuildProfile:
             category="class", combat_relevant=True, automated=True,
             notes="Level delta raises Action Surge to two uses; the existing universal resource/action path is reused.",
         )
-        data.update(
-            feature_audits=[*data["feature_audits"], action_surge.model_dump()],
-            source_references=[*data["source_references"], "D&D Beyond Basic Rules 2024: Fighter Level 17 — Action Surge and Indomitable"],
-        )
+        profile = _build_karnok_high_level_delta(previous, 17, action_surge)
+        data = profile.model_dump()
+        data["source_references"] = [*data["source_references"], "D&D Beyond Basic Rules 2024: Fighter Level 17 — Action Surge and Indomitable"]
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         logger.exception("Failed to build Karnok Stoneward level 17 profile.")
