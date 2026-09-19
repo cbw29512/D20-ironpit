@@ -3,6 +3,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE, C = () => window.IRON_PIT_BROWSER_CHARGE;
   const R = () => window.IRON_PIT_BROWSER_RECHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
+  const MA = () => window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
   const AH = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
@@ -65,6 +66,15 @@
     });
   }
 
+  function resolveMainActionOpportunity(profileId, sequence, round, member, setup, turnKey) {
+    const selector = MA();
+    if (!selector) throw new Error("Browser Main Action selector is not loaded.");
+    const context = { sequence, round, member, setup, turnKey };
+    const candidates = selector.discoverCandidates(profileId, context);
+    const selected = selector.selectCandidate(profileId, candidates);
+    return selected ? selector.resolveCandidate(profileId, selected, context) : { events: [], sequence };
+  }
+
   function saveChoice(member, setup) {
     for (const target of F().targetOrder(member, setup)) for (const action of member.state.template.saving_throw_actions || []) {
       const distance = F().saveDistance(member, target, action.range); if (V().legalAction(action, target, distance)) return { target, action, distance };
@@ -86,7 +96,8 @@
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
       bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "afterEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
-      const spell = L()?.resolve(sequence, round, member, setup, turnKey); if (spell) { events.push(...spell.events); sequence = spell.sequence; }
+      const preMove = resolveMainActionOpportunity("normalPreMove", sequence, round, member, setup, turnKey);
+      events.push(...preMove.events); sequence = preMove.sequence;
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const targets = F().targetOrder(member, setup); if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
       const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
