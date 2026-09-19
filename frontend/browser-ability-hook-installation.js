@@ -10,6 +10,11 @@
       ["Support", window.IRON_PIT_BROWSER_SUPPORT?.installAbilityHooks],
       ["2014 Monk", window.IRON_PIT_BROWSER_MONK_2014?.installAbilityHooks],
       ["2014 Frenzy", window.IRON_PIT_BROWSER_FRENZY_2014?.installAbilityHooks],
+      ["Graze", window.IRON_PIT_BROWSER_GRAZE?.installAbilityHooks],
+      ["Studied Attacks", window.IRON_PIT_BROWSER_STUDIED_ATTACKS?.installAbilityHooks],
+      ["Sap", window.IRON_PIT_BROWSER_SAP?.installAbilityHooks],
+      ["Topple", window.IRON_PIT_BROWSER_TOPPLE?.installAbilityHooks],
+      ["Vex", window.IRON_PIT_BROWSER_VEX?.installAbilityHooks],
     ];
     for (const [name, installer] of installers) {
       if (typeof installer !== "function") throw new Error(`${name} ability hook installer is not loaded.`);
