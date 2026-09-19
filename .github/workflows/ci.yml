@@ -232,6 +232,8 @@ jobs:
           grep -q 'browser-ability-hooks.js' index.html
           grep -q 'browser-attack-roll-context.js' index.html
           grep -q 'browser-bloodied-fury.js' index.html
+          grep -q 'browser-brutal-strike.js' index.html
+          grep -q 'browser-attack-roll-hook-installation.js' index.html
           grep -q 'browser-main-action-profiles.js' index.html
           grep -q 'browser-main-action-selection.js' index.html
           grep -q 'browser-main-action-providers.js' index.html
@@ -315,6 +317,8 @@ jobs:
           grep -q 'browser-ability-hooks.js' frontend/index.html
           grep -q 'browser-attack-roll-context.js' frontend/index.html
           grep -q 'browser-bloodied-fury.js' frontend/index.html
+          grep -q 'browser-brutal-strike.js' frontend/index.html
+          grep -q 'browser-attack-roll-hook-installation.js' frontend/index.html
           grep -q 'browser-main-action-profiles.js' frontend/index.html
           grep -q 'browser-main-action-selection.js' frontend/index.html
           grep -q 'browser-main-action-providers.js' frontend/index.html
