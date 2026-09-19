@@ -35,6 +35,10 @@ def resolve_best_spell_offense(
         event = resolve_spell_attack(
             sequence, round_number, caster, attack.target, attack.action, setup, turn_key, dice,
         )
-        return [event], sequence + 1
+        events: list[BattleEvent] = []
+        sequence = append_event_with_damage_reactions(
+            events, sequence + 1, round_number, caster, event, setup, dice, turn_key=turn_key,
+        )
+        return events, sequence
     assert save is not None
     return resolve_spell(sequence, round_number, caster, setup, save, turn_key, dice)
