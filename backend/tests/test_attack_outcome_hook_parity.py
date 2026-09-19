@@ -31,7 +31,7 @@ def test_python_miss_keeps_graze_before_studied_attacks() -> None:
     assert next_attack_against_advantage_sources(attacker, target.template.id) == 1
 
 
-def test_python_hit_keeps_tactical_sap_and_vex_in_same_attack_outcome() -> None:
+def test_python_tactical_master_replaces_vex_on_the_selected_weapon() -> None:
     template = build_mara_quickstep()
     features = template.progression_features.model_copy(update={
         "tactical_master_sap_weapon_ids": ["shortsword"],
@@ -49,6 +49,22 @@ def test_python_hit_keeps_tactical_sap_and_vex_in_same_attack_outcome() -> None:
 
     assert event.hit is True
     assert any(effect.effect_id == "tactical-master-sap" for effect in target.timed_effects)
-    assert next_attack_against_advantage_sources(attacker, target.template.id) == 1
+    assert next_attack_against_advantage_sources(attacker, target.template.id) == 0
     assert "Tactical Master applies Sap" in event.description
+    assert "Vex primes" not in event.description
+
+
+def test_python_vex_still_primes_when_tactical_master_does_not_replace_it() -> None:
+    template = build_mara_quickstep().model_copy(update={"weapon_masteries": ["shortsword"]})
+    attacker = _state(template)
+    target = _state(build_brom_ironmark())
+
+    event = resolve_attack(
+        1, 1, attacker, target, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([15, 4]), spend_action=False,
+    )
+
+    assert event.hit is True
+    assert not any(effect.effect_id == "tactical-master-sap" for effect in target.timed_effects)
+    assert next_attack_against_advantage_sources(attacker, target.template.id) == 1
     assert "Vex primes" in event.description
