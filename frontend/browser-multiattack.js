@@ -4,6 +4,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTIONS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
@@ -95,7 +96,9 @@
           const stun = MK().resolveStunning(sequence, round, member, eventTarget(event, choice.target, setup), choice.attack);
           if (stun) { events.push(stun); sequence += 1; }
         }
-        if (member.state.turn_terminated) break;
+        const reactions = DR().resolveAfterDamage(sequence, round, member, event, setup, turnKey);
+        events.push(...reactions.events); sequence = reactions.sequence;
+        if (member.state.turn_terminated || member.state.is_dead || member.state.is_unconscious) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
@@ -103,7 +106,13 @@
         continue;
       }
       const saved = saveChoice(member, setup, data);
-      if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+      if (saved) {
+        const event = V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false, setup });
+        events.push(event);
+        const reactions = DR().resolveAfterDamage(sequence, round, member, event, setup, turnKey);
+        events.push(...reactions.events); sequence = reactions.sequence;
+        if (member.state.is_dead || member.state.is_unconscious) break;
+      }
     }
 
     if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated) {
