@@ -21,3 +21,15 @@ def test_unmodeled_hp_maximum_reduction_fails_closed() -> None:
     issues = audit_monster_source(_wolf(), row)
 
     assert "unsupported-action-rider:hit-point-maximum-reduction" in issues
+
+
+def test_unmodeled_ability_score_reduction_fails_closed() -> None:
+    row = _wolf_row()
+    row["actions"] = (
+        str(row["actions"])
+        + " The target's Strength score decreases by 1d4."
+    )
+
+    issues = audit_monster_source(_wolf(), row)
+
+    assert "unsupported-action-rider:ability-score-reduction" in issues
