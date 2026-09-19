@@ -3,6 +3,7 @@
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const X = () => window.IRON_PIT_BROWSER_REACTIONS;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTIONS;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const GM = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT;
   const GS = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT_SUPPORT;
@@ -49,6 +50,8 @@
           );
           if (!event) continue;
           events.push(event); sequence += 1;
+          const reactions = DR().resolveAfterDamage(sequence, round, reactor, event, setup, options.turnKey || null);
+          events.push(...reactions.events); sequence = reactions.sequence;
           const newlyProne = !wasProne && mover.state.active_effect_ids.includes("prone");
           if (mover.state.is_dead || mover.state.is_unconscious || G()?.speedIsZero(mover.state) || newlyProne) {
             return { events, sequence, movement: lastMovement };
@@ -96,6 +99,8 @@
           const event = X().resolveOpportunityAttack(sequence, round, reactor, mover, setup, before, after, movementSource, options);
           if (!event) continue;
           events.push(event); sequence += 1;
+          const reactions = DR().resolveAfterDamage(sequence, round, reactor, event, setup, options.turnKey || null);
+          events.push(...reactions.events); sequence = reactions.sequence;
           const newlyProne = !wasProne && mover.state.active_effect_ids.includes("prone");
           if (mover.state.is_dead || mover.state.is_unconscious || G()?.speedIsZero(mover.state) || newlyProne) {
             return { events, sequence, movement: null };
