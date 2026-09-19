@@ -24,6 +24,7 @@ class ModifierKind(StrEnum):
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
+    OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
 
 
 class CombatModifier(BaseModel):
