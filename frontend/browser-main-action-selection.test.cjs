@@ -20,7 +20,7 @@ const member = (ruleset = "2024") => ({
   combatant_id: `hero-${ruleset}`,
   state: { template: { ruleset } },
 });
-const ctx = (ruleset = "2024") => ({ sequence: 3, round: 1, member: member(ruleset) });
+const ctx = (ruleset = "2024", id = null) => ({ sequence: 3, round: 1, turnKey: "1:hero", member: id ? { combatant_id: id, state: { template: { ruleset } } } : member(ruleset) });
 const provider = (id, category, rulesets, discover = () => ({ payload: { id } })) => ({
   id, category, rulesets, discover,
   resolve: ({ sequence }, candidate) => ({
@@ -49,6 +49,8 @@ const preMove = S.discoverCandidates("normalPreMove", ctx());
 assert.deepEqual(discovered, ["spell"], "disallowed categories must not be discovered");
 assert.deepEqual(preMove.map((item) => item.providerId), ["spell"]);
 assert.equal(preMove[0].opportunityProfile, "normalPreMove");
+assert.equal(preMove[0].combatantId, "hero-2024");
+assert.equal(preMove[0].turnKey, "1:hero");
 assert.equal(S.selectCandidate("normalPreMove", preMove).providerId, "spell");
 assert.deepEqual(S.discoverCandidates("normalPreMove", ctx("2014")), [], "ruleset scope must isolate providers");
 
@@ -92,12 +94,21 @@ assert.throws(
 S._resetForTests();
 S.registerProvider(provider("standard", "standard-attack", ["2024"]));
 const candidate = S.selectCandidate("normalPostMove", S.discoverCandidates("normalPostMove", ctx()));
-const resolved = S.resolveCandidate(candidate, ctx());
+const resolved = S.resolveCandidate("normalPostMove", candidate, ctx());
 assert.equal(resolved.sequence, 4);
 assert.deepEqual(resolved.events.map((event) => event.feature_id), ["standard"]);
 
 assert.throws(
-  () => S.resolveCandidate({ ...candidate, opportunityProfile: "actionSurgeAttack", category: "dodge" }, ctx()),
+  () => S.resolveCandidate("normalPostMove", candidate, ctx("2024", "other-hero")),
+  /does not match the current opportunity\/combatant\/turn/,
+);
+assert.throws(
+  () => S.resolveCandidate("normalPostMove", candidate, { ...ctx(), turnKey: "2:hero" }),
+  /does not match the current opportunity\/combatant\/turn/,
+);
+
+assert.throws(
+  () => S.resolveCandidate("actionSurgeAttack", { ...candidate, opportunityProfile: "actionSurgeAttack", category: "dodge" }, ctx()),
   /does not match its opportunity profile\/provider\/ruleset/,
 );
 assert.equal(S.selectCandidate("normalPreMove", []), null);
@@ -120,7 +131,7 @@ S.registerProvider({
 });
 const failing = S.selectCandidate("normalPostMove", S.discoverCandidates("normalPostMove", ctx()));
 assert.throws(
-  () => S.resolveCandidate(failing, ctx()),
+  () => S.resolveCandidate("normalPostMove", failing, ctx()),
   (error) => /failed during resolve: resolution boom/.test(error.message) && error.cause?.message === "resolution boom",
 );
 console.error = originalError;
