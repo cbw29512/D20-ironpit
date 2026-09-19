@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from app.content.monster_bonus_action_source_audit import bonus_action_issues, parse_bonus_action_names
+from app.content.monster_bonus_action_source_audit import (
+    bonus_action_issues,
+    is_supported_monster_bonus_action,
+    parse_bonus_action_names,
+)
 from app.content.monster_catalog import load_monster_rows
 from app.content.roster import build_arena_roster
 
@@ -25,6 +29,13 @@ def test_arena_neutral_nimble_escape_does_not_block() -> None:
     saber = _monster("Saber-Toothed Tiger")
     assert saber.source_bonus_action_names == ["Nimble Escape"]
     assert bonus_action_issues(saber, _row("Saber-Toothed Tiger")) == []
+
+
+def test_modeled_cunning_action_is_a_zero_engine_supported_bonus_action() -> None:
+    assert is_supported_monster_bonus_action("Cunning Action") is True
+    spy = _monster("Spy")
+    assert spy.progression_features.cunning_action is True
+    assert bonus_action_issues(spy, _row("Spy")) == []
 
 
 def test_outcome_changing_unimplemented_bonus_action_fails_closed() -> None:
