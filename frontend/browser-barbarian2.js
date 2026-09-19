@@ -39,6 +39,7 @@
     if (started) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(ctx.member.state, ctx.turnKey);
     roll.recklessStarted = Boolean(roll.recklessStarted || started);
     roll.recklessAdvantage = attackAdvantage(ctx.member.state, ctx.attack);
+    roll.targetRecklessAdvantage = attacksAgainstAdvantage(ctx.target.state);
     return C().noEventResult(ctx.sequence);
   }
 
