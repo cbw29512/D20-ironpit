@@ -15,7 +15,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js",
-  "browser-rage.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
+  "browser-rage.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack-roll-context.js", "browser-attack.js",
   "browser-formation.js", "browser-multiattack.js",
 ]) load(file);
 
