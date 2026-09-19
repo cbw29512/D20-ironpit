@@ -87,6 +87,7 @@ assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-tacti
 assert.ok(html.indexOf("browser-tactical-mind.js") < html.indexOf("browser-grapple.js"));
 assert.ok(html.indexOf("browser-offense-value.js") < html.indexOf("browser-spell-offense.js"));
 assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.js"));
+assert.ok(html.indexOf("browser-main-action-providers.js") < html.indexOf("browser-action-surge.js"));
 assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-ability-hook-installation.js"));
 assert.ok(html.indexOf("browser-support.js") < html.indexOf("browser-ability-hook-installation.js"));
 assert.ok(html.indexOf("browser-ability-hook-installation.js") < html.indexOf("browser-turn.js"));
