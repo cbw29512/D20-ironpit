@@ -21,6 +21,7 @@ window.IRON_PIT_BROWSER_SUPPORT = { resolve: () => { supportCalls += 1; return n
 window.IRON_PIT_BROWSER_ACTION_SURGE = { resolveAttack: () => { surgeCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_RAGE = { finalize: (sequence) => ({ event: null, sequence }) };
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-ability-hooks.js"), "utf8"), { filename: "browser-ability-hooks.js" });
+for (const name of ["browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js"]) vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8"), { filename: "browser-turn.js" });
 
 const member = {
