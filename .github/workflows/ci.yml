@@ -94,6 +94,7 @@ jobs:
         run: |
           node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-main-action-selection.test.cjs
+          node frontend/browser-main-action-providers.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
@@ -225,6 +226,10 @@ jobs:
           grep -q 'browser-ability-hooks.js' index.html
           grep -q 'browser-main-action-profiles.js' index.html
           grep -q 'browser-main-action-selection.js' index.html
+          grep -q 'browser-save-action-policy.js' index.html
+          grep -q 'browser-main-action-spell-provider.js' index.html
+          grep -q 'browser-main-action-core-providers.js' index.html
+          grep -q 'browser-dodge.js' index.html
           grep -q 'browser-attack-outcome.js' index.html
           grep -q 'browser-attack-outcome-hook-installation.js' index.html
           grep -q 'browser-ability-hook-installation.js' index.html
@@ -303,6 +308,10 @@ jobs:
           grep -q 'browser-ability-hooks.js' frontend/index.html
           grep -q 'browser-main-action-profiles.js' frontend/index.html
           grep -q 'browser-main-action-selection.js' frontend/index.html
+          grep -q 'browser-save-action-policy.js' frontend/index.html
+          grep -q 'browser-main-action-spell-provider.js' frontend/index.html
+          grep -q 'browser-main-action-core-providers.js' frontend/index.html
+          grep -q 'browser-dodge.js' frontend/index.html
           grep -q 'browser-attack-outcome.js' frontend/index.html
           grep -q 'browser-attack-outcome-hook-installation.js' frontend/index.html
           grep -q 'browser-ability-hook-installation.js' frontend/index.html
