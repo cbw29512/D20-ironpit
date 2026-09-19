@@ -1,6 +1,6 @@
 # Main Action Selection Contract
 
-Status: normalPostMove live-migration tranche. Both normal-turn Main Action opportunities now route through the selector; Action Surge remains on its existing restrictive direct path.
+Status: Action Surge live-migration tranche. Both normal-turn Main Action opportunities and the restrictive attack-only Action Surge opportunity route through the selector.
 
 ## Objective
 
@@ -93,7 +93,7 @@ The migration changes orchestration, not those choices.
 
 The browser registers providers for all seven normal-turn Action families: spell offense, 2014 Intimidating Presence, Attack/Multiattack, area save, save action, standard attack, and Dodge. Provider discovery reuses the existing pure choice/legality paths; both normal-turn opportunities now resolve through the selector.
 
-`browser-spell-offense.js` exposes a pure `choose()` plus `resolveChoice()` split so discovery can select the same attack-vs-save spell without casting it. `browser-multiattack.js` exposes pure `available()` using the same slot legality checks as live Attack Action resolution.
+`browser-spell-offense.js` exposes a pure `choose()` plus `resolveChoice()` split so discovery can select the same attack-vs-save spell without casting it. `browser-multiattack.js` exposes normal-turn `available()` plus pure `hasLegalChoice()` so Action Surge can prove Attack Action legality while the normal Action is already spent.
 
 The existing single-target save fallback is preserved exactly, including its historical behavior after the dedicated area-save opportunity. Policy cleanup is deliberately out of scope for this architecture migration.
 
@@ -103,11 +103,13 @@ The existing single-target save fallback is preserved exactly, including its his
 
 `normalPostMove` now recomputes the full legal candidate set after charge/offensive movement, selects by the certified Arena category order, and resolves exactly one Action family. The named spell/presence/Attack Action/area-save/save/standard-attack/Dodge branches have been removed from `browser-turn.js`.
 
+`actionSurgeAttack` discovers only Attack Action and standard-attack candidates while the normal Action is already spent. Discovery does not grant the extra Action or spend the resource. If no legal attack candidate exists, Action Surge remains unused; after a candidate is selected, Action Surge grants the extra Action and the same candidate resolves through the shared provider path.
+
 ## Migration plan
 
 1. Land this candidate registry/selector inert with adversarial tests and production wiring.
 2. Register providers without routing live turn behavior through them; prove discovery parity.
 3. Route `normalPreMove` through the selector.
 4. Route `normalPostMove` through the selector and remove named Action-family branches from `browser-turn.js`. **Complete.**
-5. Reuse the same selector infrastructure for Action Surge with the restrictive `actionSurgeAttack` profile.
+5. Reuse the same selector infrastructure for Action Surge with the restrictive `actionSurgeAttack` profile. **Complete.**
 6. Keep Python as the rules oracle and add permanent Python/browser policy-parity tests before each live behavior migration.
