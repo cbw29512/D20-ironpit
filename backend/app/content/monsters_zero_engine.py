@@ -18,6 +18,10 @@ from app.domain.traits import CombatTrait
 _ATTACKS = {
     "Animated Armor": [("Slam", "melee", 4, 1, 6, 2, "bludgeoning", None, 5, None, None, [])],
     "Animated Flying Sword": [("Slash", "melee", 4, 1, 8, 2, "slashing", None, 5, None, None, [])],
+    "Earth Elemental": [
+        ("Slam", "melee", 8, 2, 8, 5, "bludgeoning", None, 10, None, None, []),
+        ("Rock Launch", "ranged", 8, 1, 6, 5, "bludgeoning", None, 5, 60, 60, []),
+    ],
     "Awakened Tree": [("Slam", "melee", 6, 3, 6, 4, "bludgeoning", None, 10, None, None, [])],
     "Cultist": [("Ritual Sickle", "melee", 3, 1, 4, 1, "slashing", None, 5, None, None, [("Necrotic", 0, 2, 1, "necrotic")])],
     "Flying Snake": [("Bite", "melee", 4, 0, 2, 0, "piercing", 1, 5, None, None, [("Poison", 2, 4, 0, "poison")])],
@@ -61,10 +65,12 @@ _ATTACKS = {
 }
 _MULTI = {
     "Animated Armor": (2, ("Slam",)), "Gargoyle": (2, ("Claw",)),
+    "Earth Elemental": (2, ("Slam", "Rock Launch")),
     "Guard Captain": (2, ("Javelin", "Longsword")), "Hill Giant": (2, ("Tree Club", "Trash Lob")),
     "Hippopotamus": (2, ("Bite",)), "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
 }
 _PRONE_MAX_SIZE = {
+    ("Earth Elemental", "Rock Launch"): CreatureSize.LARGE,
     ("Hill Giant", "Tree Club"): CreatureSize.LARGE,
 }
 _CONTROL_EFFECTS = {
