@@ -2,36 +2,14 @@
   "use strict";
 
   const RULESETS = Object.freeze(["2014", "2024"]);
-  const CATEGORIES = Object.freeze({
-    SPELL_OFFENSE: "spell-offense",
-    INTIMIDATING_PRESENCE_2014: "intimidating-presence-2014",
-    ATTACK_ACTION: "attack-action",
-    AREA_SAVE: "area-save",
-    SAVE_ACTION: "save-action",
-    STANDARD_ATTACK: "standard-attack",
-    DODGE: "dodge",
-  });
-  const PROFILES = Object.freeze({
-    normalPreMove: Object.freeze([CATEGORIES.SPELL_OFFENSE]),
-    normalPostMove: Object.freeze([
-      CATEGORIES.SPELL_OFFENSE,
-      CATEGORIES.INTIMIDATING_PRESENCE_2014,
-      CATEGORIES.ATTACK_ACTION,
-      CATEGORIES.AREA_SAVE,
-      CATEGORIES.SAVE_ACTION,
-      CATEGORIES.STANDARD_ATTACK,
-      CATEGORIES.DODGE,
-    ]),
-    actionSurgeAttack: Object.freeze([
-      CATEGORIES.ATTACK_ACTION,
-      CATEGORIES.STANDARD_ATTACK,
-    ]),
-  });
-  const KNOWN_CATEGORIES = new Set(Object.values(CATEGORIES));
+  const P = () => window.IRON_PIT_BROWSER_MAIN_ACTION_PROFILES;
+  const CATEGORIES = () => P().CATEGORIES;
+  const PROFILES = () => P().PROFILES;
+  const knownCategories = () => new Set(Object.values(CATEGORIES()));
   const providers = new Map();
 
   function requireProfile(profileId) {
-    const profile = PROFILES[profileId];
+    const profile = PROFILES()[profileId];
     if (!profile) throw new Error(`Unknown Main Action opportunity profile: ${String(profileId)}.`);
     return profile;
   }
@@ -57,7 +35,7 @@
     if (typeof descriptor.id !== "string" || !descriptor.id.trim()) {
       throw new Error("Main Action provider requires a stable non-empty id.");
     }
-    if (!KNOWN_CATEGORIES.has(descriptor.category)) {
+    if (!knownCategories().has(descriptor.category)) {
       throw new Error(`Main Action provider "${descriptor.id}" has unknown category: ${String(descriptor.category)}.`);
     }
     if (!Array.isArray(descriptor.rulesets) || descriptor.rulesets.length === 0) {
@@ -161,7 +139,7 @@
   function _resetForTests() { providers.clear(); }
 
   window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION = {
-    CATEGORIES, PROFILES, registerProvider, discoverCandidates, selectCandidate,
+    get CATEGORIES() { return CATEGORIES(); }, get PROFILES() { return PROFILES(); }, registerProvider, discoverCandidates, selectCandidate,
     resolveCandidate, registeredProviders, _resetForTests,
   };
 })();
