@@ -27,25 +27,16 @@ def _species_increases() -> list[AbilityIncrease]:
 
 def _advancements(level: int) -> list[AbilityIncrease]:
     increases: list[AbilityIncrease] = []
-    if level >= 4:
-        increases.append(AbilityIncrease(ability="strength", amount=2))
-    if level >= 8:
-        increases.append(AbilityIncrease(ability="strength", amount=2))
+    if level >= 4: increases.append(AbilityIncrease(ability="strength", amount=2))
+    if level >= 8: increases.append(AbilityIncrease(ability="strength", amount=2))
     if level >= 12:
-        increases.extend([
-            AbilityIncrease(ability="constitution", amount=1),
-            AbilityIncrease(ability="wisdom", amount=1),
-        ])
-    if level >= 16:
-        increases.append(AbilityIncrease(ability="constitution", amount=2))
-    if level >= 19:
-        increases.append(AbilityIncrease(ability="constitution", amount=2))
+        increases.extend([AbilityIncrease(ability="constitution", amount=1), AbilityIncrease(ability="wisdom", amount=1)])
+    if level >= 16: increases.append(AbilityIncrease(ability="constitution", amount=2))
+    if level >= 19: increases.append(AbilityIncrease(ability="constitution", amount=2))
     if level >= 20:
         increases.extend([
-            AbilityIncrease(ability="strength", amount=2),
-            AbilityIncrease(ability="strength", amount=2),
-            AbilityIncrease(ability="constitution", amount=2),
-            AbilityIncrease(ability="constitution", amount=2),
+            AbilityIncrease(ability="strength", amount=2), AbilityIncrease(ability="strength", amount=2),
+            AbilityIncrease(ability="constitution", amount=2), AbilityIncrease(ability="constitution", amount=2),
         ])
     return increases
 
@@ -62,47 +53,27 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
     barbarian = "D&D Basic Rules 2014: Barbarian"
     berserker = "D&D Basic Rules 2014: Path of the Berserker"
     audits = [
-        _audit("human-ability-increase", "Human Ability Score Increase", "species",
-               source="D&D Basic Rules 2014: Human"),
+        _audit("human-ability-increase", "Human Ability Score Increase", "species", source="D&D Basic Rules 2014: Human"),
         _audit("rage", "Rage", "class", source=barbarian),
         _audit("unarmored-defense", "Unarmored Defense", "class", source=barbarian),
-        _audit("greataxe", "Greataxe", "equipment", source="D&D Basic Rules 2014: Equipment",
-               weapon_id="greataxe"),
-        _audit("handaxe", "Handaxe", "equipment", source="D&D Basic Rules 2014: Equipment",
-               weapon_id="handaxe"),
-        _audit("soldier-athletics", "Soldier Athletics Proficiency", "background",
-               source="D&D Basic Rules 2014: Soldier"),
+        _audit("greataxe", "Greataxe", "equipment", source="D&D Basic Rules 2014: Equipment", weapon_id="greataxe"),
+        _audit("handaxe", "Handaxe", "equipment", source="D&D Basic Rules 2014: Equipment", weapon_id="handaxe"),
+        _audit("soldier-athletics", "Soldier Athletics Proficiency", "background", source="D&D Basic Rules 2014: Soldier"),
     ]
     if level >= 2:
-        audits.extend([
-            _audit("reckless-attack", "Reckless Attack", "class", source=barbarian),
-            _audit("danger-sense", "Danger Sense", "class", source=barbarian),
-        ])
-    if level >= 3:
-        audits.append(_audit("frenzy", "Frenzy", "subclass", source=berserker))
+        audits.extend([_audit("reckless-attack", "Reckless Attack", "class", source=barbarian), _audit("danger-sense", "Danger Sense", "class", source=barbarian)])
+    if level >= 3: audits.append(_audit("frenzy", "Frenzy", "subclass", source=berserker))
     if level >= 5:
-        audits.extend([
-            _audit("extra-attack", "Extra Attack", "class", source=barbarian),
-            _audit("fast-movement", "Fast Movement", "class", source=barbarian),
-        ])
-    if level >= 6:
-        audits.append(_audit("mindless-rage", "Mindless Rage", "subclass", source=berserker))
-    if level >= 7:
-        audits.append(_audit("feral-instinct", "Feral Instinct", "class", source=barbarian))
-    if level >= 9:
-        audits.append(_audit("brutal-critical", "Brutal Critical", "class", source=barbarian))
-    if level >= 10:
-        audits.append(_audit("intimidating-presence", "Intimidating Presence", "subclass", source=berserker))
-    if level >= 11:
-        audits.append(_audit("relentless-rage", "Relentless Rage", "class", source=barbarian))
-    if level >= 14:
-        audits.append(_audit("retaliation", "Retaliation", "subclass", source=berserker))
-    if level >= 15:
-        audits.append(_audit("persistent-rage", "Persistent Rage", "class", source=barbarian))
-    if level >= 18:
-        audits.append(_audit("indomitable-might", "Indomitable Might", "class", source=barbarian))
-    if level >= 20:
-        audits.append(_audit("primal-champion", "Primal Champion", "class", source=barbarian))
+        audits.extend([_audit("extra-attack", "Extra Attack", "class", source=barbarian), _audit("fast-movement", "Fast Movement", "class", source=barbarian)])
+    if level >= 6: audits.append(_audit("mindless-rage", "Mindless Rage", "subclass", source=berserker))
+    if level >= 7: audits.append(_audit("feral-instinct", "Feral Instinct", "class", source=barbarian))
+    if level >= 9: audits.append(_audit("brutal-critical", "Brutal Critical", "class", source=barbarian))
+    if level >= 10: audits.append(_audit("intimidating-presence", "Intimidating Presence", "subclass", source=berserker))
+    if level >= 11: audits.append(_audit("relentless-rage", "Relentless Rage", "class", source=barbarian))
+    if level >= 14: audits.append(_audit("retaliation", "Retaliation", "subclass", source=berserker))
+    if level >= 15: audits.append(_audit("persistent-rage", "Persistent Rage", "class", source=barbarian))
+    if level >= 18: audits.append(_audit("indomitable-might", "Indomitable Might", "class", source=barbarian))
+    if level >= 20: audits.append(_audit("primal-champion", "Primal Champion", "class", source=barbarian))
     return audits
 
 
@@ -118,17 +89,15 @@ def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
             subclass_name="Path of the Berserker" if level >= 3 else None, build_id="berserker-greataxe",
             species_id="human", species_name="Human", background_id="soldier", background_name="Soldier",
             base_ability_scores=base, species_increases=species, advancement_increases=advancements,
-            final_ability_scores=_final_scores(base, species, advancements), class_equipment_option="package",
+            final_ability_scores=_final_scores(base, species, advancements),
+            ability_score_maximums={"strength": 24, "constitution": 24} if level >= 20 else {},
+            class_equipment_option="package",
             class_equipment=["Greataxe", "Two Handaxes", "Explorer's Pack", "Four Javelins"],
             background_equipment_option="package",
             background_equipment=["Rank Insignia", "Trophy", "Gaming Set", "Common Clothes", "10 gp"],
             skill_proficiencies=["Athletics", "Intimidation", "Perception", "Survival"],
             weapon_masteries=[], combat_loadout_kind="two-handed", feature_audits=_feature_audits(level),
-            source_references=[
-                "D&D Basic Rules 2014: Human", "D&D Basic Rules 2014: Barbarian",
-                "D&D Basic Rules 2014: Path of the Berserker", "D&D Basic Rules 2014: Soldier",
-                "D&D Basic Rules 2014: Equipment",
-            ],
+            source_references=["D&D Basic Rules 2014: Human", "D&D Basic Rules 2014: Barbarian", "D&D Basic Rules 2014: Path of the Berserker", "D&D Basic Rules 2014: Soldier", "D&D Basic Rules 2014: Equipment"],
         )
     except Exception:
         logger.exception("Failed to compile 2014 Rokhan build profile at level %s", level)
