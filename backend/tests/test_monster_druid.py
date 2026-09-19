@@ -52,6 +52,7 @@ def test_druid_source_attacks_and_multiattack_are_exact() -> None:
 def test_druid_arena_spell_package_preserves_use_budget() -> None:
     try:
         druid = _druid()
+        assert druid.source_spellcasting_fingerprint is not None
         assert druid.spell_attack_actions == []
         assert [spell.id for spell in druid.spell_save_actions] == [
             "inflict-wounds-l1-arena",
