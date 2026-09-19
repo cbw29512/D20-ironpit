@@ -86,7 +86,11 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
                            "acrobatics": dexterity},
             weapon_masteries=[], wearing_heavy_armor=False,
             rage_damage_bonus=barbarian_rage_damage_bonus(level), progression_features=_progression(level, scores),
-            resources=[ResourceDefinition(id="rage", name="Rage", max_uses=barbarian_2014_rage_uses(level))],
+            resources=(
+                [] if level >= 20
+                else [ResourceDefinition(id="rage", name="Rage", max_uses=barbarian_2014_rage_uses(level))]
+            ),
+            unlimited_resource_ids=["rage"] if level >= 20 else [],
             visual=VisualLoadout(armor="unarmored", main_hand="greataxe", body_style="humanoid"),
             source="D&D Basic Rules 2014: Human; Barbarian; Path of the Berserker; Soldier; Equipment",
         )

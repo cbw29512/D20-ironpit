@@ -1,8 +1,8 @@
-from app.combat.barbarian import end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
+from app.combat.barbarian import end_rage, end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
 from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
-from app.combat.state import build_combatant_state
+from app.combat.state import begin_turn, build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.barbarian_berserker_2014_profile import (
     _advancements, _base_scores, _final_scores, _species_increases,
@@ -131,3 +131,25 @@ def test_staged_2014_level_20_primal_champion_scores_are_24_but_rage_fails_close
         assert "Unlimited" in str(exc)
     else:
         raise AssertionError("2014 level-20 Rage must remain fail-closed until unlimited resources exist.")
+
+
+
+def test_staged_2014_level_20_unlimited_rage_has_no_counter_and_never_decrements() -> None:
+    base = build_rokhan_stonefury_2014(13)
+    features = base.progression_features.model_copy(update={"persistent_rage_2014": True})
+    template = base.model_copy(update={
+        "level": 20,
+        "progression_features": features,
+        "resources": [],
+        "unlimited_resource_ids": ["rage"],
+    })
+    state = build_combatant_state(template)
+
+    assert state.resources == []
+    for round_number in (1, 2):
+        begin_turn(state)
+        event = enter_rage(round_number, round_number, state, "rokhan")
+        assert event is not None
+        assert event.resource_remaining is None
+        assert state.resources == []
+        assert end_rage(state) is not None
