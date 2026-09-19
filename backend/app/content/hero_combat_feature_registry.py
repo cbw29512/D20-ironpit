@@ -9,7 +9,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "second-wind", "savage-attacker", "adrenaline-rush", "relentless-endurance",
     "action-surge", "tactical-mind", "extra-attack",
     "improved-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
-    "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
+    "indomitable", "tactical-master", "heroic-warrior", "studied-attacks", "superior-critical",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
     "sneak-attack", "weapon-mastery",
