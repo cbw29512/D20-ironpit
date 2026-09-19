@@ -48,6 +48,7 @@ S.registerProvider(provider("spell", "spell-offense", ["2024"], () => {
 const preMove = S.discoverCandidates("normalPreMove", ctx());
 assert.deepEqual(discovered, ["spell"], "disallowed categories must not be discovered");
 assert.deepEqual(preMove.map((item) => item.providerId), ["spell"]);
+assert.equal(preMove[0].opportunityProfile, "normalPreMove");
 assert.equal(S.selectCandidate("normalPreMove", preMove).providerId, "spell");
 assert.deepEqual(S.discoverCandidates("normalPreMove", ctx("2014")), [], "ruleset scope must isolate providers");
 
@@ -74,6 +75,12 @@ const surge = S.discoverCandidates("actionSurgeAttack", ctx());
 assert.deepEqual(surge.map((item) => item.providerId), ["attack"]);
 assert.equal(S.selectCandidate("actionSurgeAttack", surge).providerId, "attack");
 
+const forgedSpell = {
+  providerId: "spell", category: "spell-offense",
+  opportunityProfile: "normalPreMove", payload: {},
+};
+assert.equal(S.selectCandidate("actionSurgeAttack", [forgedSpell]), null);
+
 S._resetForTests();
 S.registerProvider(provider("attack-a", "attack-action", ["2024"]));
 S.registerProvider(provider("attack-b", "attack-action", ["2024"]));
@@ -88,6 +95,11 @@ const candidate = S.selectCandidate("normalPostMove", S.discoverCandidates("norm
 const resolved = S.resolveCandidate(candidate, ctx());
 assert.equal(resolved.sequence, 4);
 assert.deepEqual(resolved.events.map((event) => event.feature_id), ["standard"]);
+
+assert.throws(
+  () => S.resolveCandidate({ ...candidate, opportunityProfile: "actionSurgeAttack", category: "dodge" }, ctx()),
+  /does not match its opportunity profile\/provider\/ruleset/,
+);
 assert.equal(S.selectCandidate("normalPreMove", []), null);
 
 S._resetForTests();
