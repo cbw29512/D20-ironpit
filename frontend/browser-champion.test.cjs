@@ -108,6 +108,9 @@ load("browser-grid-geometry.js");
 load("browser-arena-map.js");
 load("browser-grid-placement.js");
 load("browser-initiative.js");
+window.IRON_PIT_BROWSER_ABILITY_HOOKS = {};
+window.IRON_PIT_BROWSER_ABILITY_HOOK_INSTALLATION = {};
+window.IRON_PIT_BROWSER_ATTACK_OUTCOME_HOOKS = {};
 load("browser-engine.js");
 {
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({ hero_ids: ["champion"], monster_ids: ["target"] });
