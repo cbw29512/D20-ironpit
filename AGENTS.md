@@ -36,6 +36,20 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 - New mechanics require an explicit parity map: identify the Python resolution point, browser resolution point, shared/declarative data, lifecycle/reset behavior, and permanent tests before implementation. If one engine already supports the behavior, port/reuse that model rather than redesigning it independently.
 - Before certification/merge, perform a technical-debt pass over the tranche: remove dead helpers/imports, collapse duplicated construction or calculations, reject speculative abstractions with no current consumer, keep generated data generated, and verify that independent certification fingerprints remain independent rather than being "deduplicated" into the runtime they audit.
 
+## Canonical character leveling contract
+
+- Every canonical pregen is one continuous character progression, not a collection of independently rebuilt level snapshots.
+- Build and audit the canonical foundation once: identity, edition, species/race, background, class/subclass, established equipment/loadout, fighting style, and other persistent choices. A higher level inherits that foundation unless an authoritative rule or explicit canonical choice changes it.
+- Generate level N+1 from the certified level N state by applying only that edition's authoritative level delta. Never recreate the character from scratch merely because the level changed.
+- Keep 2014 and 2024 progression data hard-separated. Use the appropriate edition's authoritative Player's Handbook/basic-rules class and subclass progression and feature rules; never import a same-named feature from the other edition without explicit authority.
+- A level delta may update level, Hit Dice/HP, proficiency bonus at its breakpoints, class/subclass features, spellcasting progression, resource counts, attacks, ASIs/feats/epic boons, and other values the authoritative progression grants at that level.
+- Preserve unchanged state. Species/race, background, subclass, armor, weapons, equipment, and prior legal choices remain unchanged unless the authoritative progression or the canonical build explicitly changes them.
+- Recalculate derived combat values only when their inputs change. Examples include attack bonus/damage after STR/DEX changes, initiative/saves/checks after an ability or proficiency change, AC when its armor/ability/formula inputs change, spell attack/save DC when casting ability or proficiency changes, and resource maximums when progression changes them.
+- Weapon damage dice do not increase just because character level increases. They change only when an authoritative feature, weapon/equipment change, magic item, form, or other explicit rule changes them. Ability modifiers and other legal bonuses are recalculated separately.
+- Treat supplied leveled canonical character references as verification evidence: generated snapshots should reconcile with those references after applying the authoritative level deltas. Resolve discrepancies rather than silently overwriting either source.
+- Certification snapshots are outputs of the foundation-plus-deltas progression. They are not separate hand-authored character builds. Tests must verify inheritance, the new level delta, affected derived values, and fail-closed behavior for the next uncertified level.
+- Prefer declarative class/subclass progression tables and reusable advancement functions so contiguous safe levels can be certified in batches. Do not create bespoke per-level engine mechanics when the level only changes data already supported by the universal engine.
+
 ## Mandatory uncertainty and clarification gate
 
 - If there is any uncertainty about RAW wording, source interpretation, timing, architecture, data mapping, user intent, or whether an existing shared mechanic already covers the behavior, stop before changing code.
