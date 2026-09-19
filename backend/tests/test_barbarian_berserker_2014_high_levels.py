@@ -1,5 +1,6 @@
 from app.combat.barbarian import end_rage, end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
+from app.combat.damage_reaction_dispatch import plan_damage_reaction_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import begin_turn, build_combatant_state
@@ -8,9 +9,11 @@ from app.content.barbarian_berserker_2014_profile import (
     _advancements, _base_scores, _final_scores, _species_increases,
 )
 from app.content.barbarian_berserker_2014_runtime import (
-    _progression, _scores, build_rokhan_stonefury_2014,
+    _damage_reaction, _progression, _scores, build_rokhan_stonefury_2014,
 )
+from app.content.demo import build_demo_fighter
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.progression import AbilityCheckMinimum
 
 
@@ -153,3 +156,58 @@ def test_staged_2014_level_20_unlimited_rage_has_no_counter_and_never_decrements
         assert event.resource_remaining is None
         assert state.resources == []
         assert end_rage(state) is not None
+
+
+
+def _retaliation_setup(source_position: int = 5) -> tuple[EncounterCombatant, EncounterCombatant, EncounterSetup]:
+    base = build_rokhan_stonefury_2014(13)
+    rokhan = EncounterCombatant(
+        combatant_id="rokhan",
+        side="heroes",
+        position_ft=0,
+        state=build_combatant_state(base.model_copy(update={
+            "level": 14,
+            "damage_reaction_attack": _damage_reaction(14),
+        })),
+    )
+    source = EncounterCombatant(
+        combatant_id="source",
+        side="monsters",
+        position_ft=source_position,
+        state=build_combatant_state(build_demo_fighter()),
+    )
+    return rokhan, source, EncounterSetup(
+        heroes=[rokhan], monsters=[source], hero_total_levels=14, monster_total_cr="1", ruleset="2014",
+    )
+
+
+def test_staged_2014_level_14_retaliation_binds_universal_damage_reaction_policy() -> None:
+    rule = _damage_reaction(14)
+
+    assert rule is not None
+    assert rule.source_feature == "retaliation"
+    assert rule.trigger == "damaged-by-creature"
+    assert rule.source_range_ft == 5
+    assert rule.attack_kind == "melee"
+    assert _damage_reaction(13) is None
+
+
+def test_staged_2014_level_14_retaliation_plans_melee_attack_against_damage_source() -> None:
+    rokhan, source, setup = _retaliation_setup()
+
+    plan = plan_damage_reaction_attack(rokhan, source, setup, applied_damage=7)
+
+    assert plan is not None
+    assert plan.reactor.combatant_id == "rokhan"
+    assert plan.source.combatant_id == "source"
+    assert plan.attack.id == "rokhan-2014-greataxe"
+    assert plan.distance_ft == 5
+
+
+def test_staged_2014_level_14_retaliation_fails_closed_out_of_range_or_without_reaction() -> None:
+    rokhan, source, setup = _retaliation_setup(source_position=10)
+    assert plan_damage_reaction_attack(rokhan, source, setup, applied_damage=7) is None
+
+    rokhan, source, setup = _retaliation_setup()
+    rokhan.state.reaction_available = False
+    assert plan_damage_reaction_attack(rokhan, source, setup, applied_damage=7) is None

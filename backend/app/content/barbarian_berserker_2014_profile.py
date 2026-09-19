@@ -95,6 +95,8 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
         audits.append(_audit("intimidating-presence", "Intimidating Presence", "subclass", source=berserker))
     if level >= 11:
         audits.append(_audit("relentless-rage", "Relentless Rage", "class", source=barbarian))
+    if level >= 14:
+        audits.append(_audit("retaliation", "Retaliation", "subclass", source=berserker))
     if level >= 15:
         audits.append(_audit("persistent-rage", "Persistent Rage", "class", source=barbarian))
     if level >= 18:

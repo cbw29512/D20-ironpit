@@ -9,6 +9,7 @@ from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import AbilityCheckMinimum, EffectBoundSurvivalSave, ProgressionCombatFeatures
+from app.domain.reactions import DamageReactionAttack
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,10 @@ def _attack(level: int, weapon_id: str, scores: AbilityScores, *, rage_eligible:
         attack_bonus=proficiency_bonus(level) + modifier, damage_bonus=modifier,
         attack_ability="strength", attack_ability_modifier=modifier, rage_eligible=rage_eligible,
     )
+
+
+def _damage_reaction(level: int) -> DamageReactionAttack | None:
+    return DamageReactionAttack(source_feature="retaliation") if level >= 14 else None
 
 
 def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures:
@@ -81,6 +86,7 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
             max_hp=fixed_hit_points(level, 12, constitution), speed_ft=40 if level >= 5 else 30,
             initiative_bonus=dexterity, weapon_attack=greataxe, alternate_weapon_attacks=[handaxe],
             attack_action=action,
+            damage_reaction_attack=_damage_reaction(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "constitution")),
             skill_bonuses={"athletics": scores.modifier("strength") + proficiency_bonus(level),
                            "acrobatics": dexterity},
