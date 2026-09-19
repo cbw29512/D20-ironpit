@@ -32,6 +32,10 @@ const provider = (id, category, rulesets, discover = () => ({ payload: { id } })
 assert.deepEqual(S.PROFILES.normalPreMove, ["spell-offense"]);
 assert.deepEqual(S.PROFILES.actionSurgeAttack, ["attack-action", "standard-attack"]);
 assert.throws(() => S.discoverCandidates("unknown", ctx()), /Unknown Main Action opportunity profile/);
+assert.throws(
+  () => S.discoverCandidates("normalPreMove", { sequence: 1, member: member() }),
+  /requires a stable non-empty turnKey/,
+);
 assert.throws(() => S.registerProvider(provider("bad", "teleport", ["2024"])), /unknown category/);
 assert.throws(() => S.registerProvider(provider("bad-rules", "dodge", ["2025"])), /invalid ruleset scope/);
 
