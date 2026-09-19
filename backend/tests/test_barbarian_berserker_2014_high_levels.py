@@ -1,4 +1,4 @@
-from app.combat.barbarian import enter_rage, finish_rage_turn, rage_active
+from app.combat.barbarian import end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
@@ -51,6 +51,15 @@ def test_2014_level_15_persistent_rage_uses_full_duration_without_maintenance() 
     assert state.rage_max_round == 11
     assert finish_rage_turn(state, 2) is None
     assert rage_active(state) is True
+    state.active_effect_ids.append("stunned")
+    end_rage_if_incapacitated(state)
+    assert rage_active(state) is True
+    state.is_unconscious = True
+    end_rage_if_incapacitated(state)
+    assert rage_active(state) is False
+
+    state = build_combatant_state(base.model_copy(update={"level": 15, "progression_features": features}))
+    assert enter_rage(2, 1, state, "rokhan") is not None
     assert finish_rage_turn(state, 11) == 1
     assert rage_active(state) is False
 
