@@ -6,7 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.charge_profiles import ChargeProfile
 from app.combat.condition_rules import has_condition
 from app.combat.dice import DiceProvider
-from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.damage_reactions import resolve_attack_event_chain
 from app.combat.encounter_targeting import combatant_distance
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
@@ -66,12 +66,11 @@ def resolve_charge_follow_up(
             )
         if profile.follow_up_action_cost == "bonus_action":
             spend(attacker.state, "bonus_action")
-        event = resolve_encounter_attack(
+        return resolve_attack_event_chain(
             sequence, round_number, attacker, actual_target, attack,
             combatant_distance(attacker, actual_target), dice, setup,
             spend_action=False, feature_id="charge-follow-up",
         )
-        return [event], sequence + 1
     except Exception:
         logger.exception("Charge follow-up resolution failed for %s.", attacker.state.template.id)
         raise
