@@ -60,6 +60,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("persistent-rage-2014")
     if features.effect_bound_survival_save:
         mechanics.add(features.effect_bound_survival_save.source_id)
+    if features.ability_check_minimums:
+        mechanics.update(rule.source_id for rule in features.ability_check_minimums)
     if features.brutal_strike_damage_dice:
         mechanics.add("brutal-strike")
     if features.fast_movement_bonus_ft:
