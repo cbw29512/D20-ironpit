@@ -17,11 +17,11 @@ earlier outcome-changing feature is unsupported.
 | 12 | ASI | +1 Constitution, +1 Wisdom; derived AC, HP, saves, attacks and resource count recomputed | No new mutable state | Supported and eligible for certification |
 | 13 | Brutal Critical (2 dice) | `brutal_critical_dice=2`; PB increases to +5 | Existing critical-hit resolution | Supported and eligible for certification |
 | 14 | Retaliation | Reaction trigger: damage from a creature within 5 feet, then one melee weapon attack against that creature | Must consume the Reaction and resolve immediately off-turn | **Blocked: missing universal damage-trigger dispatch** |
-| 15 | Persistent Rage | Rage early-expiry policy changes; 1-minute maximum remains | Rage no longer ends early for lack of attack/damage; unconsciousness or voluntary end still ends it | Blocked cumulatively by level 14; do not add dead feature code before Retaliation is supported |
-| 16 | ASI | Canonical combat ASI; Rage damage is +4 at this level | No new mutable state | Blocked cumulatively by level 14 |
-| 17 | Brutal Critical (3 dice), 6 Rages | Existing brutal-critical dice field can represent 3 | Existing critical-hit/resource state | Blocked cumulatively by level 14 |
+| 15 | Persistent Rage | `persistent_rage_2014=True`; 1-minute maximum remains | Isolated shared Rage primitive is implemented/tested in Python and browser; Rage no longer ends early for lack of attack/damage, but still ends on incapacity/maximum duration | Primitive staged safely; Rokhan level 15 remains uncertified because level 14 Retaliation is missing |
+| 16 | ASI | Canonical choice: +2 Constitution (16 -> 18); Rage damage becomes +4 | No new mutable state | Numerically straightforward but not exposed as a runnable Rokhan template while level 14 is unsupported |
+| 17 | Brutal Critical (3 dice), 6 Rages | Existing brutal-critical dice/resource fields can represent both deltas | Existing critical-hit/resource state | Numerically supported by existing primitives but not exposed as a runnable Rokhan template while level 14 is unsupported |
 | 18 | Indomitable Might | Strength-check result has a floor equal to Strength score | Requires a shared ability-check result-replacement primitive | **Additional blocker: missing universal check-floor primitive** |
-| 19 | ASI | Canonical combat ASI | No new mutable state | Blocked cumulatively by level 14 and level 18 |
+| 19 | ASI | Canonical choice: +2 Constitution (18 -> 20) | No new mutable state | Not exposed as a runnable Rokhan template while levels 14 and 18 remain unsupported |
 | 20 | Primal Champion; unlimited Rage | Strength and Constitution +4, maxima become 24; Rage ceases to be finite | Unlimited resource must not be represented by a fake large use count | **Additional blockers: unlimited-resource semantics and feature-aware >20 ability cap audit** |
 
 ## Implemented parity map for levels 11-13
@@ -52,6 +52,20 @@ The existing shared 2014 primitive consumes declarative
 `brutal_critical_dice`. Level 9 remains 1 die and level 13 becomes 2 dice.
 No 2024 Weapon Mastery or 2024 Brutal Strike data is introduced.
 
+## Safe staged primitive above the certification boundary
+
+### Persistent Rage (level 15)
+
+The existing Rage engine now accepts a ruleset-scoped declarative `persistent_rage_2014` flag.
+When active, a 2014 Rage begins with its full one-minute expiry instead of the normal next-round
+early-expiry checkpoint. The ordinary maximum duration, incapacity cleanup, Frenzy exhaustion,
+and fresh-combat reset behavior are unchanged. Python and browser regression coverage exercise
+this primitive with a synthetic level-15 state derived from the certified level-13 template.
+
+This does **not** make Rokhan level 15 runnable or certifiable. The builder remains capped at 13
+because exposing any level 14+ template before Retaliation exists would silently omit a mandatory
+combat feature and violate fail-closed certification.
+
 ## Level-14 architectural blocker
 
 Retaliation cannot be implemented correctly as a weapon-hit-only callback.
@@ -76,6 +90,9 @@ creature."
 
 ## Certification boundary
 
-This tranche may register levels 11-13 only. Levels 14-20 remain unregistered
-until their cumulative outcome-changing mechanics are supported. Generated
-counts are authoritative; no hand-authored manifest count should be changed.
+This tranche registers levels 11-13 only. The connected branch registry therefore contains 63
+certified 2014 snapshots (Fighter 1-20, Barbarian 1-13, Rogue/Monk/Paladin 1-10). Level 15's
+Persistent Rage primitive is staged and tested but intentionally does not widen the registered
+Rokhan progression. Levels 14-20 remain unregistered until their cumulative outcome-changing
+mechanics are supported. Generated counts are authoritative; no hand-authored manifest count
+should be changed.
