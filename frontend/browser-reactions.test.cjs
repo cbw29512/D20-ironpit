@@ -51,6 +51,16 @@ function redirectTemplate() {
   S.beginTurn(monster.state); assert.equal(monster.state.reaction_available, true);
 }
 {
+  dice(); const { hero, monster, fight } = setup();
+  monster.state.active_modifiers.push({
+    id: "hero-1:staggering:oa", source_id: hero.combatant_id, source_effect_id: "staggering-blow",
+    kind: "opportunity-attack-suppressed", expires_at_start_of_source_turn: true,
+  });
+  assert.equal(X.opportunityAttacksSuppressed(monster.state), true);
+  assert.equal(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed"), null);
+  assert.equal(monster.state.reaction_available, true);
+}
+{
   for (const [source, disengaged] of [["speed", true], ["teleport", false], ["forced", false]]) {
     dice(); const { hero, monster, fight } = setup();
     assert.equal(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, source, { disengaged }), null);
