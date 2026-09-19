@@ -5,6 +5,7 @@
   const AR = () => window.IRON_PIT_BROWSER_SPELL_ATTACK;
   const SP = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const SR = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTIONS;
 
   function choose(member, setup, turnKey) {
     const attack = AP()?.choose(member, setup, turnKey) || null;
@@ -19,7 +20,8 @@
     if (!selected) return { events: [], sequence };
     if (selected.kind === "attack") {
       const event = AR().resolve(sequence++, round, member, selected.choice.target, selected.choice.action, setup, turnKey);
-      return { events: [event], sequence };
+      const reactions = DR().resolveAfterDamage(sequence, round, member, event, setup, turnKey);
+      return { events: [event, ...reactions.events], sequence: reactions.sequence };
     }
     if (selected.kind === "save") return SR().resolve(sequence, round, member, setup, selected.choice, turnKey);
     throw new Error(`Unknown spell-offense choice kind: ${String(selected.kind)}.`);
