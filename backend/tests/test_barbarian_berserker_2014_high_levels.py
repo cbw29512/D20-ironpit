@@ -12,7 +12,7 @@ from app.content.barbarian_berserker_2014_profile import (
 from app.content.barbarian_berserker_2014_runtime import (
     _progression, _scores, build_rokhan_stonefury_2014,
 )
-from app.content.demo import build_goblin_warrior
+from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.progression import AbilityCheckMinimum
@@ -152,16 +152,17 @@ def test_2014_level_14_retaliation_attacks_damage_source_and_spends_only_reactio
         state=build_combatant_state(build_rokhan_stonefury_2014(14)),
     )
     goblin = EncounterCombatant(
-        combatant_id="goblin",
+        combatant_id="fighter-source",
         side="monsters",
         position_ft=5,
-        state=build_combatant_state(build_goblin_warrior()),
+        state=build_combatant_state(build_karnok_stoneward_2014(14)),
     )
     setup = EncounterSetup(
         heroes=[rokhan],
         monsters=[goblin],
         hero_total_levels=14,
-        monster_total_cr="1/4",
+        monster_total_cr="0",
+        ruleset="2014",
     )
     triggering = resolve_encounter_attack(
         1, 1, goblin, rokhan, goblin.state.template.weapon_attack, 5,
@@ -175,7 +176,7 @@ def test_2014_level_14_retaliation_attacks_damage_source_and_spends_only_reactio
 
     assert [event.feature_id for event in reactions] == ["retaliation"]
     assert reactions[0].actor_id == "rokhan"
-    assert reactions[0].target_id == "goblin"
+    assert reactions[0].target_id == "fighter-source"
     assert reactions[0].weapon_id == "greataxe"
     assert rokhan.state.reaction_available is False
     assert rokhan.state.action_available is action_before
