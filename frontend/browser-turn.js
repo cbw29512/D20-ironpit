@@ -2,18 +2,12 @@
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE, C = () => window.IRON_PIT_BROWSER_CHARGE;
   const R = () => window.IRON_PIT_BROWSER_RECHARGE;
-  const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const MA = () => window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
   const AH = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
-  const IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
   const PA = () => window.IRON_PIT_BROWSER_PALADIN_AURAS_2014;
   const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
-  const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
-  const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
-  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
-  const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
-  const D = () => window.IRON_PIT_DICE;
+  const F = () => window.IRON_PIT_BROWSER_FORMATION, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
@@ -75,13 +69,6 @@
     return selected ? selector.resolveCandidate(profileId, selected, context) : { events: [], sequence };
   }
 
-  function saveChoice(member, setup) {
-    for (const target of F().targetOrder(member, setup)) for (const action of member.state.template.saving_throw_actions || []) {
-      const distance = F().saveDistance(member, target, action.range); if (V().legalAction(action, target, distance)) return { target, action, distance };
-    }
-    return null;
-  }
-
   function resolveTurn(sequence, round, member, setup) {
     try {
       enablePitRangePolicy();
@@ -105,24 +92,8 @@
       const movement = OM()?.move(sequence, round, member, setup, turnKey);
       if (movement) { events.push(...movement.events); sequence = movement.sequence; PA()?.sync(setup); }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-      const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey); if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
-      if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-      const presence = IP()?.resolve(sequence, round, member, targets[0]);
-      if (presence) { events.push(presence); sequence += 1; return finalize(events, sequence, round, member, setup, turnKey); }
-      if (member.state.template.attack_action) {
-        const multi = M().resolveAttackAction(sequence, round, member, setup); events.push(...multi.events); sequence = multi.sequence;
-        if (multi.events.length || !E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-      }
-      const area = AS()?.resolve(sequence, round, member, setup, AS()?.choose(member, setup));
-      if (area) { events.push(...area.events); return finalize(events, area.sequence, round, member, setup, turnKey); }
-      const saved = saveChoice(member, setup);
-      if (saved && E().available(member.state, "action")) { events.push(V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance)); return finalize(events, sequence, round, member, setup, turnKey); }
-      const choice = F().chooseStandardAttack(member, setup);
-      if (choice && E().available(member.state, "action")) {
-        const pack = S().packTactics(member, choice.target, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
-        const standard = U().resolve(sequence, round, member, choice.target, choice.attack, choice.distance, setup, turnKey, { advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null) });
-        events.push(...standard.events); sequence = standard.sequence;
-      } else if (E().available(member.state, "action")) events.push(DG().take(sequence++, round, member));
+      const postMove = resolveMainActionOpportunity("normalPostMove", sequence, round, member, setup, turnKey);
+      events.push(...postMove.events); sequence = postMove.sequence;
       return finalize(events, sequence, round, member, setup, turnKey);
     } catch (error) {
       console.error("Browser turn resolution failed", { combatant: member?.combatant_id, round, error });

@@ -85,6 +85,8 @@ const member = (ruleset = "2024") => ({
     action_available: true,
     template: {
       ruleset, spellEnabled: true, presenceEnabled: true, attackActionEnabled: true,
+      intimidating_presence_2014_dc: ruleset === "2014" ? 15 : 0,
+      attack_action: { id: "test-attack-action", slots: [["sword"]] },
       areaEnabled: true, standardEnabled: true,
       attacks: [{ id: "sword" }],
       saving_throw_actions: [{ id: "save", range: 30 }],

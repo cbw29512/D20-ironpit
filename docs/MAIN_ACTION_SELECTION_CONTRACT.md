@@ -1,6 +1,6 @@
 # Main Action Selection Contract
 
-Status: normalPreMove live-migration tranche. Provider registration is complete; only the pre-move spell-offense Action opportunity is routed through the selector. Post-move Action families remain on the existing direct path.
+Status: normalPostMove live-migration tranche. Both normal-turn Main Action opportunities now route through the selector; Action Surge remains on its existing restrictive direct path.
 
 ## Objective
 
@@ -91,7 +91,7 @@ The migration changes orchestration, not those choices.
 
 ## Registered provider families
 
-The browser now registers inert providers for all seven first-migration Action families: spell offense, 2014 Intimidating Presence, Attack/Multiattack, area save, save action, standard attack, and Dodge. Provider discovery reuses the existing pure choice/legality paths and does not route live turns through the selector yet.
+The browser registers providers for all seven normal-turn Action families: spell offense, 2014 Intimidating Presence, Attack/Multiattack, area save, save action, standard attack, and Dodge. Provider discovery reuses the existing pure choice/legality paths; both normal-turn opportunities now resolve through the selector.
 
 `browser-spell-offense.js` exposes a pure `choose()` plus `resolveChoice()` split so discovery can select the same attack-vs-save spell without casting it. `browser-multiattack.js` exposes pure `available()` using the same slot legality checks as live Attack Action resolution.
 
@@ -101,13 +101,13 @@ The existing single-target save fallback is preserved exactly, including its his
 
 `normalPreMove` is the first live selector route. Its profile allows only `spell-offense`, so this migration changes orchestration without introducing category competition. If a legal pre-move spell candidate exists, the selector resolves it through the existing spell-offense provider; if none exists, sequence and state pass through unchanged to the existing charge/movement path.
 
-`normalPostMove` is intentionally not migrated in this tranche.
+`normalPostMove` now recomputes the full legal candidate set after charge/offensive movement, selects by the certified Arena category order, and resolves exactly one Action family. The named spell/presence/Attack Action/area-save/save/standard-attack/Dodge branches have been removed from `browser-turn.js`.
 
 ## Migration plan
 
 1. Land this candidate registry/selector inert with adversarial tests and production wiring.
 2. Register providers without routing live turn behavior through them; prove discovery parity.
 3. Route `normalPreMove` through the selector.
-4. Route `normalPostMove` through the selector and remove named Action-family branches from `browser-turn.js`.
+4. Route `normalPostMove` through the selector and remove named Action-family branches from `browser-turn.js`. **Complete.**
 5. Reuse the same selector infrastructure for Action Surge with the restrictive `actionSurgeAttack` profile.
 6. Keep Python as the rules oracle and add permanent Python/browser policy-parity tests before each live behavior migration.
