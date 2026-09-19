@@ -4,6 +4,10 @@ import json
 import logging
 from pathlib import Path
 
+from app.content.hero_combat_feature_registry import (
+    compile_progression_feature_fields,
+    unsupported_hero_engine_features,
+)
 from app.domain.capabilities import CombatantDefinition
 from app.domain.combatant_source import (
     HeroBuildSource,
@@ -170,7 +174,12 @@ def compile_hero_definition(
             "attack_action": attack_action, "saving_throw_bonuses": saves, "skill_bonuses": skills,
             "fighting_style": build.fighting_style, "weapon_masteries": folded["weapon_masteries"],
             "resources": resources, "visual": build.visual, "source": build.source,
-            "unsupported_capabilities": list(folded["arena_ignored"]),
+            "progression_features": compile_progression_feature_fields(
+                tuple(folded["capabilities"]), int(folded["level"])
+            ),
+            "unsupported_capabilities": list(
+                unsupported_hero_engine_features(tuple(folded["capabilities"]))
+            ),
         })
     except Exception:
         LOGGER.exception("Failed to compile hero definition hero=%s level=%s", hero_id, folded.get("level"))
