@@ -97,7 +97,6 @@ def _moonbeam_substitution():
     return build_inflict_wounds(save_dc=13).model_copy(update={
         "level": 2,
         "damage_dice_count": 3,
-        "source": "Iron Pit arena substitution for SRD Moonbeam",
     })
 
 
