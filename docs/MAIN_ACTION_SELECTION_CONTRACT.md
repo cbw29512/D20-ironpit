@@ -37,6 +37,7 @@ The ephemeral candidate returned to the selector is:
 MainActionCandidate
   providerId: string
   category: canonical category
+  opportunityProfile: profile that discovered this candidate
   payload: object
 ```
 
@@ -61,6 +62,7 @@ The Action Surge profile deliberately preserves the currently certified Iron Pit
 - The selector walks the selected profile's category order.
 - At most one candidate may exist in a category for one opportunity. More than one is a fail-closed architecture error; split the category or define explicit policy instead of relying on insertion order.
 - Candidates outside the selected opportunity profile are ignored and need not be discovered.
+- A candidate is bound to the opportunity profile that discovered it; resolution rejects cross-profile reuse.
 - Ruleset scope is explicit on every provider.
 - Candidate discovery is side-effect free.
 - Resolution remains owned by the existing Action-family module.
