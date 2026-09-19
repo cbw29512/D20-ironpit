@@ -2923,26 +2923,24 @@
       "monster_name": "Druid",
       "srd_source_page": 282,
       "srd_source_reference": "SRD 5.2.1 p. 282",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-druid",
       "detected_combat_mechanics": [
         "attack-roll",
-        "multiattack",
-        "spellcasting"
+        "multiattack"
       ],
       "supported_mechanics": [
         "attack-roll",
         "multiattack"
       ],
       "unsupported_mechanics": [
-        "spellcasting"
+        "monster-spell-package-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "spellcasting"
+        "monster-spell-package-mismatch"
       ]
     },
     {
@@ -8759,7 +8757,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "spellcasting",
         "trait"
       ],
       "supported_mechanics": [
@@ -8771,7 +8768,6 @@
         "bonus-action",
         "legendary",
         "limited-use",
-        "spellcasting",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -8783,7 +8779,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-certified",
-        "spellcasting",
         "trait"
       ]
     },
