@@ -38,7 +38,10 @@ window.IRON_PIT_BROWSER_SPELL_OFFENSE = {
   resolve: () => { throw new Error("legacy direct pre-move spell path must not execute"); },
 };
 window.IRON_PIT_BROWSER_FORMATION = {
-  targetOrder: () => { throw new Error("targeting must not run after pre-move spell consumes Action"); },
+  targetOrder: (_member, activeSetup) => {
+    if (selectorHasCandidate) throw new Error("targeting must not run after pre-move spell consumes Action");
+    return activeSetup.monsters;
+  },
 };
 window.IRON_PIT_BROWSER_SAVES = {};
 window.IRON_PIT_BROWSER_AREA_SAVES = {};
