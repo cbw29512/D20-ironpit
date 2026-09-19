@@ -84,7 +84,7 @@ assert.deepEqual(
 
 {
   callOrder.length = 0;
-  const attacker = member("miss-attacker", { studied_attacks: true });
+  const attacker = member("miss-attacker", { studied_attacks: true, weapon_masteries: ["greatsword"] });
   const target = member("miss-target");
   const attack = {
     id: "greatsword", weaponId: "greatsword", name: "Greatsword",
