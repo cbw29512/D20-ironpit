@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "id": "karnok-stoneward-great-weapon",
+  "class_id": "fighter",
+  "armor_class": 17,
+  "speed_ft": 30,
+  "save_proficiencies": [
+    "strength",
+    "constitution"
+  ],
+  "skill_proficiencies": {
+    "athletics": "strength",
+    "acrobatics": "dexterity"
+  },
+  "fighting_style": "Defense",
+  "attacks": [
+    {
+      "id": "karnok-greatsword",
+      "name": "Greatsword",
+      "weapon_id": "greatsword",
+      "attack_kind": "melee",
+      "ability": "strength",
+      "dice_count": 2,
+      "dice_size": 6,
+      "damage_type": "slashing",
+      "reach_ft": 5,
+      "animation": "heavy-slash",
+      "mastery_property": "Graze",
+      "heavy": true,
+      "two_handed": true
+    },
+    {
+      "id": "karnok-shortbow",
+      "name": "Shortbow",
+      "weapon_id": "shortbow",
+      "attack_kind": "ranged",
+      "ability": "dexterity",
+      "dice_count": 1,
+      "dice_size": 6,
+      "damage_type": "piercing",
+      "normal_range_ft": 80,
+      "long_range_ft": 320,
+      "animation": "projectile",
+      "mastery_property": "Vex"
+    }
+  ],
+  "primary_attack_id": "karnok-greatsword",
+  "visual": {
+    "armor": "chain-mail",
+    "main_hand": "greatsword",
+    "off_hand": null,
+    "body_style": "humanoid"
+  },
+  "source": "D&D Beyond Basic Rules 2024: Fighter, Orc, Soldier, Equipment"
+}
