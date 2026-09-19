@@ -4,7 +4,8 @@ import logging
 
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.resources import action_resource_available, spend_action_resource
-from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.damage_reaction_wrappers import resolve_save_event_chain
+from app.combat.saving_throws import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, SavingThrowAction
 
@@ -57,16 +58,15 @@ def resolve_save_targets(
         shared = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)] if action.damage_dice_count else None
         events: list[BattleEvent] = []
         for target in targets:
-            event = resolve_save_action(
+            chain, sequence = resolve_save_event_chain(
                 sequence, round_number, actor, target, action,
-                0 if skip_range_check else combatant_distance(actor, target), dice,
+                0 if skip_range_check else combatant_distance(actor, target), dice, setup,
                 spend_action=False, check_resource=False, spend_resource=False,
                 shared_damage_rolls=shared, affected_states=states,
             )
             if action.resource_id is not None:
-                event.resource_remaining = remaining
-            events.append(event)
-            sequence += 1
+                chain[0].resource_remaining = remaining
+            events.extend(chain)
         return events, sequence
     except Exception:
         logger.exception("Failed shared multi-target save resolution for %s.", action.id)

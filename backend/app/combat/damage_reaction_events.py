@@ -36,16 +36,20 @@ def applied_damage_total(event: BattleEvent) -> int:
 
 
 def _member_by_id(setup: EncounterSetup, combatant_id: str | None) -> EncounterCombatant | None:
-    if combatant_id is None:
-        return None
-    return next(
-        (
-            member
-            for member in [*setup.heroes, *setup.monsters]
-            if member.combatant_id == combatant_id
-        ),
-        None,
-    )
+    try:
+        if combatant_id is None:
+            return None
+        return next(
+            (
+                member
+                for member in [*setup.heroes, *setup.monsters]
+                if member.combatant_id == combatant_id
+            ),
+            None,
+        )
+    except Exception as exc:
+        logger.exception("Failed to resolve encounter member %s for damage reaction.", combatant_id)
+        raise RuntimeError("Damage reaction encounter member could not be resolved.") from exc
 
 
 def resolve_damage_event_reactions(
@@ -116,13 +120,24 @@ def damage_event_chain(
     turn_key: str | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Return one resolved damage event followed by any immediate reaction chain."""
-    reactions, final_sequence = resolve_damage_event_reactions(
-        next_sequence,
-        round_number,
-        source,
-        event,
-        setup,
-        dice,
-        turn_key=turn_key,
-    )
-    return [event, *reactions], final_sequence
+    try:
+        reactions, final_sequence = resolve_damage_event_reactions(
+            next_sequence,
+            round_number,
+            source,
+            event,
+            setup,
+            dice,
+            turn_key=turn_key,
+        )
+        return [event, *reactions], final_sequence
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception(
+            "Damage event-chain assembly failed: source=%s event=%s next_sequence=%s.",
+            source.combatant_id,
+            event.sequence,
+            next_sequence,
+        )
+        raise RuntimeError("Damage event chain could not be assembled.") from exc

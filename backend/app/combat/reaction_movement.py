@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.damage_reaction_events import damage_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import move_toward_combatant
 from app.combat.grid_reaction_movement import move_toward_on_grid
@@ -122,8 +123,10 @@ def move_toward_with_reactions(
                 )
                 if event is None:
                     continue
-                events.append(event)
-                sequence += 1
+                chain, sequence = damage_event_chain(
+                    sequence + 1, round_number, reactor, event, setup, dice, turn_key=turn_key,
+                )
+                events.extend(chain)
                 newly_prone = not was_prone and "prone" in mover.state.active_effect_ids
                 if mover.state.is_dead or mover.state.is_unconscious or speed_is_zero(mover.state) or newly_prone:
                     return events, sequence, None
