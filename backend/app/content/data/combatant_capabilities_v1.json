@@ -13320,6 +13320,140 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-sahuagin-warrior",
+    "name": "Sahuagin Warrior",
+    "archetype": "source-certified monster",
+    "challenge_rating": "1/2",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "medium",
+    "armor_class": 12,
+    "max_hp": 22,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 0,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-sahuagin-warrior-claw",
+        "name": "Claw",
+        "weapon_id": "srd-sahuagin-warrior-claw-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 3,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 1
+        },
+        "damage_type": "slashing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [
+          {
+            "trigger": "target_not_full_hp"
+          }
+        ],
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-sahuagin-warrior-claw",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 3,
+      "damage": 2
+    },
+    "attack_action": {
+      "id": "srd-sahuagin-warrior-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-sahuagin-warrior-claw"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-sahuagin-warrior-claw"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 1,
+      "dexterity": 0,
+      "constitution": 1,
+      "intelligence": 1,
+      "wisdom": 1,
+      "charisma": -1
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Blood Frenzy",
+      "Limited Amphibiousness",
+      "Shark Telepathy"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [
+      "Aquatic Charge"
+    ],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [
+      "acid",
+      "cold"
+    ],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "recharge_rules": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Claw",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 321",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-swarm-of-piranhas",
     "name": "Swarm of Piranhas",
     "archetype": "source-certified monster",
