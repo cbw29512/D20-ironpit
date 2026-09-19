@@ -133,16 +133,56 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
     return issues
 
 
+def _save_action_clause(action: Any, actions: str) -> str:
+    heading = re.compile(
+        rf"\b{re.escape(action.name)}(?:\s+\([^)]*\))?\.",
+        re.IGNORECASE,
+    )
+    match = heading.search(actions)
+    return actions[match.start():match.start() + 700] if match else ""
+
+
+def _save_area_matches(action: Any, clause: str) -> bool:
+    area = action.area
+    if area is None:
+        return True
+    if area.shape == "cone":
+        return bool(re.search(rf"\b{area.length_ft}-foot\s+cone\b", clause, re.IGNORECASE))
+    if area.shape == "line":
+        return bool(re.search(
+            rf"\b{area.length_ft}-foot-long,?\s+{area.width_ft}-foot-wide\s+line\b",
+            clause,
+            re.IGNORECASE,
+        ))
+    if area.shape == "cube":
+        return bool(re.search(rf"\b{area.length_ft}-foot\s+cube\b", clause, re.IGNORECASE))
+    return bool(re.search(
+        rf"\b{area.radius_ft}-foot\s+{area.shape}\b",
+        clause,
+        re.IGNORECASE,
+    ))
+
+
 def save_action_issues(action: Any, actions: str) -> list[str]:
     issues: list[str] = []
-    if action.name.lower() not in actions:
-        issues.append(f"save-action-name-missing:{action.id}")
+    clause = _save_action_clause(action, actions)
+    if not clause:
+        return [f"save-action-name-missing:{action.id}"]
     save = rf"{action.save_ability}\s+Saving Throw:\s*DC\s*{action.dc}\b"
-    if not re.search(save, actions, re.IGNORECASE):
+    if not re.search(save, clause, re.IGNORECASE):
         issues.append(f"save-dc-mismatch:{action.id}")
-    if action.damage_dice_count and not _dice_pattern(action.damage_dice_count, action.damage_dice_size, action.damage_bonus).search(actions):
+    if action.damage_dice_count and not _dice_pattern(
+        action.damage_dice_count, action.damage_dice_size, action.damage_bonus
+    ).search(clause):
         issues.append(f"save-damage-mismatch:{action.id}")
+    if action.damage_type and action.damage_type.lower() not in clause:
+        issues.append(f"save-damage-type-mismatch:{action.id}")
+    source_half = bool(re.search(r"\bsuccess:\s*half\s+damage\b", clause, re.IGNORECASE))
+    if source_half != (action.success_damage == "half"):
+        issues.append(f"save-success-damage-mismatch:{action.id}")
+    if not _save_area_matches(action, clause):
+        issues.append(f"save-area-mismatch:{action.id}")
     if action.grapple_escape_dc is not None:
-        if "grappled" not in actions or f"escape dc {action.grapple_escape_dc}" not in actions:
+        if "grappled" not in clause or f"escape dc {action.grapple_escape_dc}" not in clause:
             issues.append(f"save-grapple-rider-mismatch:{action.id}")
     return issues
