@@ -135,3 +135,14 @@
 .stick-figure[data-form="plant"][data-detail="violet-fungus"] .legs{display:none}
 .stick-figure[data-form="plant"][data-detail="violet-fungus"] .feature-one{display:block;width:35px;height:5px;left:12px;top:89px;background:currentColor;border-radius:50%}
 
+
+
+/* Xorn: radial elemental anatomy with three limbs and top-mounted maw. */
+.stick-figure[data-form="xorn"] .head{width:34px;height:24px;left:13px;top:17px;border:5px solid currentColor;border-radius:50%;background:transparent}
+.stick-figure[data-form="xorn"] .body{width:29px;height:45px;left:15px;top:39px;border-radius:45% 45% 55% 55%}
+.stick-figure[data-form="xorn"] .arms{width:58px;height:6px;left:1px;top:48px;transform:none}
+.stick-figure[data-form="xorn"] .arms::after{content:"";position:absolute;width:6px;height:34px;left:26px;top:-13px;background:currentColor;transform:rotate(180deg);border-radius:999px}
+.stick-figure[data-form="xorn"] .legs{width:5px;height:28px;left:18px;top:78px;transform:rotate(22deg);box-shadow:20px 0 0 currentColor}
+.stick-figure[data-form="xorn"] .legs::after{content:"";position:absolute;width:5px;height:29px;left:9px;top:-1px;background:currentColor;transform:rotate(-22deg);border-radius:999px}
+.stick-figure[data-form="xorn"] .feature-one{display:block;width:27px;height:13px;left:16px;top:20px;background:transparent;border:4px solid currentColor;border-radius:50%}
+.stick-figure[data-form="xorn"] .feature-one::after{content:"";position:absolute;width:4px;height:4px;left:8px;top:-11px;background:currentColor;border-radius:50%;box-shadow:9px 0 0 currentColor,4px -7px 0 currentColor}
