@@ -50,7 +50,8 @@ window.IRON_PIT_BROWSER_DODGE = {
 window.IRON_PIT_BROWSER_STATE = { packTactics: () => false };
 window.IRON_PIT_BROWSER_CHARGE = { openingFeature: () => null };
 window.IRON_PIT_BROWSER_SPELL_OFFENSE = {
-  choose: () => ({ kind: "attack", choice: { action: { id: "bolt" } } }),
+  choose: (member) => member.state.action_available
+    ? { kind: "attack", choice: { action: { id: "bolt" } } } : null,
   resolveChoice: (sequence) => ({ events: [{ event_type: "attack" }], sequence: sequence + 1 }),
 };
 
@@ -95,6 +96,14 @@ const ctx = (ruleset = "2024") => ({
   const candidates = S.discoverCandidates("actionSurgeAttack", ctx());
   assert.deepEqual(candidates.map((item) => item.category), ["attack-action", "standard-attack"]);
   assert.equal(S.selectCandidate("actionSurgeAttack", candidates).providerId, "attack-action");
+}
+
+
+{
+  const context = ctx();
+  context.member.state.action_available = false;
+  const candidates = S.discoverCandidates("normalPostMove", context);
+  assert.deepEqual(candidates, [], "spent Action must suppress all Main Action candidates");
 }
 
 {
