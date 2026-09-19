@@ -52,14 +52,24 @@ def test_druid_source_attacks_and_multiattack_are_exact() -> None:
 def test_druid_arena_spell_package_preserves_use_budget() -> None:
     try:
         druid = _druid()
-        assert [spell.id for spell in druid.spell_attack_actions] == ["guiding-bolt"]
-        assert [spell.id for spell in druid.spell_save_actions] == ["inflict-wounds"]
+        assert druid.spell_attack_actions == []
+        assert [spell.id for spell in druid.spell_save_actions] == [
+            "inflict-wounds-l1-arena",
+            "inflict-wounds-l2-arena",
+        ]
         assert [spell.id for spell in druid.defensive_spell_actions] == ["longstrider"]
 
-        guiding = druid.spell_attack_actions[0]
-        assert (guiding.level, guiding.attack_bonus, guiding.range_ft) == (1, 5, 120)
+        level_one_sub = druid.spell_save_actions[0]
+        assert (
+            level_one_sub.level,
+            level_one_sub.save_ability,
+            level_one_sub.dc,
+            level_one_sub.range_ft,
+            level_one_sub.damage_dice_count,
+            level_one_sub.damage_dice_size,
+        ) == (1, "constitution", 13, 5, 2, 10)
 
-        moonbeam_sub = druid.spell_save_actions[0]
+        moonbeam_sub = druid.spell_save_actions[1]
         assert (
             moonbeam_sub.level,
             moonbeam_sub.save_ability,
