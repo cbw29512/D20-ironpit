@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.damage_reactions import resolve_post_damage_reactions
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throws import legal_save_action, resolve_save_action
@@ -67,6 +68,10 @@ def resolve_save_targets(
                 event.resource_remaining = remaining
             events.append(event)
             sequence += 1
+            reactions, sequence = resolve_post_damage_reactions(
+                sequence, round_number, actor, event, setup, dice,
+            )
+            events.extend(reactions)
         return events, sequence
     except Exception:
         logger.exception("Failed shared multi-target save resolution for %s.", action.id)
