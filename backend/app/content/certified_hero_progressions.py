@@ -33,6 +33,7 @@ from app.content.fighter_progression_profile import (
     build_karnok_stoneward_level2_profile, build_karnok_stoneward_level3_profile,
     build_karnok_stoneward_level4_profile, build_karnok_stoneward_level5_profile,
 )
+from app.content.json_hero_runtime import json_template_builder
 from app.content.monk_open_hand_2014_profile import build_kael_stillwater_2014_profile
 from app.content.monk_open_hand_2014_runtime import build_kael_stillwater_2014
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
@@ -54,6 +55,7 @@ class CertifiedHeroProgression:
     profile_builders: tuple[ProfileBuilder, ...] = ()
     profile_level_builder: ProfileLevelBuilder | None = None
     max_level: int | None = None
+    oracle_builder: TemplateLevelBuilder | None = None
 
     @property
     def levels(self) -> range:
@@ -67,10 +69,15 @@ class CertifiedHeroProgression:
             return self.profile_level_builder(level)
         return self.profile_builders[level - 1]()
 
+    def oracle(self, level: int) -> CombatantTemplate:
+        builder = self.oracle_builder or self.template_builder
+        return builder(level)
+
 
 CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
-        class_id="fighter", template_builder=build_karnok_stoneward_level,
+        class_id="fighter", template_builder=json_template_builder("2024", "karnok-stoneward"),
+        oracle_builder=build_karnok_stoneward_level,
         profile_builders=(
             build_karnok_stoneward_profile, build_karnok_stoneward_level2_profile,
             build_karnok_stoneward_level3_profile, build_karnok_stoneward_level4_profile,
@@ -82,7 +89,8 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         ),
     ),
     CertifiedHeroProgression(
-        class_id="fighter", template_builder=build_karnok_stoneward_2014,
+        class_id="fighter", template_builder=json_template_builder("2014", "karnok-stoneward-2014"),
+        oracle_builder=build_karnok_stoneward_2014,
         profile_level_builder=build_karnok_stoneward_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(

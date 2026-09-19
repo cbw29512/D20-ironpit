@@ -26,8 +26,9 @@ It does not replace `docs/IRON_PIT_RULES_CONTRACT.md`. Pit rules, house rules, a
 - [x] Reconcile `hp_by_level` with hit-die math or record why the canonical numbers differ.
 - [x] Audit levels 18–20 and list actual unsupported universal capability IDs.
 - [ ] Implement only genuinely missing reusable capabilities, with Python/browser parity.
-- [ ] Compile/certify Fighter 1–20 from JSON.
-- [ ] Switch Fighter runtime/certification registration to the JSON path.
+- [x] Compile/certify 2014 Fighter 1–20 from JSON.
+- [ ] Compile/certify 2024 Fighter 1–20 from JSON. Certified runtime is 1–14; 16/19 choices and 2024 Survivor still block 15–20.
+- [x] Switch Fighter runtime/certification registration to the JSON path for currently certified levels.
 - [ ] Delete obsolete Fighter per-level builders only after permanent parity tests are green.
 
 ### 2024 Champion 15–20 RAW audit

@@ -12,7 +12,7 @@ def archery_fighting_style_bonus(
     fighting_styles: FightingStyleSelection,
     weapon_kind: WeaponAttackKind,
 ) -> int:
-    """Return the static 2024 Archery bonus for attacks made with Ranged weapons."""
+    """Return the static Archery +2 for Ranged weapon attacks in 2014 and 2024."""
     try:
         if not isinstance(weapon_kind, WeaponAttackKind):
             raise ValueError("Archery requires a typed weapon attack kind.")

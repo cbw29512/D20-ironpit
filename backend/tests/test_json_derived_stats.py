@@ -115,3 +115,24 @@ def test_2024_karnok_level_15_compiles_and_high_level_survivor_fails_closed():
     folded = fold_hero_level(progression, subclass, species, track, 19)
     definition = compile_hero_definition(identity.id, identity.name, folded, build)
     assert "boon-combat-prowess" in definition.unsupported_capabilities
+
+
+def test_2014_karnok_archery_adds_plus_two_to_longbow_at_level_10():
+    identity, progression, subclass, species, track, build = load_hero_bundle(
+        ROOT, "2014", "karnok-stoneward-2014",
+    )
+    before = compile_combatant(compile_hero_definition(
+        identity.id, identity.name,
+        fold_hero_level(progression, subclass, species, track, 9),
+        build,
+    ))
+    after = compile_combatant(compile_hero_definition(
+        identity.id, identity.name,
+        fold_hero_level(progression, subclass, species, track, 10),
+        build,
+    ))
+    bow_before = next(item for item in before.alternate_weapon_attacks if item.weapon.id == "longbow")
+    bow_after = next(item for item in after.alternate_weapon_attacks if item.weapon.id == "longbow")
+    assert "Archery" not in (before.fighting_styles or [])
+    assert "Archery" in (after.fighting_styles or [])
+    assert bow_after.attack_bonus == bow_before.attack_bonus + 2

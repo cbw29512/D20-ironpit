@@ -60,7 +60,7 @@ def test_certified_json_matches_python_core_combat_fields(edition, class_id, slu
     identity, class_prog, subclass, species, track, build = load_hero_bundle(ROOT, edition, slug)
     mismatches = {}
     for level in progression.levels:
-        certified = progression.template_builder(level)
+        certified = progression.oracle(level)
         folded = fold_hero_level(class_prog, subclass, species, track, level)
         compiled = compile_combatant(compile_hero_definition(identity.id, identity.name, folded, build))
         left = _core(certified)
@@ -73,3 +73,16 @@ def test_certified_json_matches_python_core_combat_fields(edition, class_id, slu
         if diffs:
             mismatches[level] = diffs
     assert mismatches == {}, f"{edition} {class_id} {slug}: {mismatches}"
+
+
+def test_fighter_runtime_uses_json_and_keeps_python_oracle():
+    fighters = [item for item in CERTIFIED_HERO_PROGRESSIONS if item.class_id == "fighter"]
+    assert fighters
+    for progression in fighters:
+        assert progression.oracle_builder is not None
+        assert progression.oracle_builder is not progression.template_builder
+        runtime = progression.template_builder(list(progression.levels)[0])
+        oracle = progression.oracle(list(progression.levels)[0])
+        assert runtime.id == oracle.id
+        assert runtime.max_hp == oracle.max_hp
+        assert runtime.armor_class == oracle.armor_class

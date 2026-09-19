@@ -6,8 +6,8 @@ from app.content.hero_combat_feature_registry import (
     compile_progression_feature_fields,
     unsupported_hero_engine_features,
 )
+from app.content.json_hero_attacks import compile_hero_attacks
 from app.content.json_hero_derived import ability_modifier, derive_armor_class, require_matching_fingerprint
-from app.content.weapon_catalog import build_weapon
 from app.domain.capabilities import CombatantDefinition
 from app.domain.combatant_source import HeroBuildSource
 from app.domain.traits import CombatTrait
@@ -21,12 +21,6 @@ RESOURCE_ORDER = (
 )
 TRAIT_ORDER = (CombatTrait.SAVAGE_ATTACKER, CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE)
 
-
-def _catalog_weapon(weapon_id: str):
-    try:
-        return build_weapon(weapon_id)
-    except ValueError:
-        return None
 
 def _ordered_resources(raw: dict[str, int]) -> list[dict[str, object]]:
     seen: list[str] = []
@@ -77,46 +71,18 @@ def compile_hero_definition(
         proficiency = int(folded["proficiency_bonus"])
         capabilities = list(folded["capabilities"])
         edition = str(folded["edition"])
-        gwf = "great-weapon-fighting" in capabilities
-        unarmed_dice = folded.get("unarmed_dice_size")
-        attacks = []
-        for attack in build.attacks:
-            weapon = _catalog_weapon(attack.weapon_id)
-            modifier = ability_modifier(int(abilities[attack.ability]))
-            if weapon is None:
-                dice_size = int(unarmed_dice) if unarmed_dice and attack.weapon_id == "unarmed-strike" else attack.dice_size
-                melee = attack.attack_kind == "melee"
-                two_handed = attack.two_handed
-                attacks.append({
-                    "id": attack.id, "name": attack.name, "weapon_id": attack.weapon_id,
-                    "attack_kind": attack.attack_kind, "attack_bonus": proficiency + modifier,
-                    "damage": {"count": attack.dice_count, "size": dice_size, "bonus": modifier},
-                    "damage_type": attack.damage_type, "animation": attack.animation,
-                    "reach_ft": attack.reach_ft, "normal_range_ft": attack.normal_range_ft,
-                    "long_range_ft": attack.long_range_ft, "mastery_property": attack.mastery_property,
-                    "heavy": attack.heavy, "two_handed": two_handed,
-                    "attack_ability": attack.ability, "attack_ability_modifier": modifier,
-                    "rage_eligible": "rage" in capabilities,
-                    "sneak_attack_eligible": "sneak-attack" in capabilities,
-                    "damage_die_minimum": 3 if gwf and melee and two_handed else None,
-                })
-                continue
-            melee = str(getattr(weapon.attack_kind, "value", weapon.attack_kind)) == "melee"
-            attacks.append({
-                "id": attack.id, "name": weapon.name, "weapon_id": weapon.id,
-                "attack_kind": weapon.attack_kind, "attack_bonus": proficiency + modifier,
-                "damage": {"count": weapon.dice_count, "size": weapon.dice_size, "bonus": modifier},
-                "damage_type": weapon.damage_type, "animation": weapon.animation,
-                "reach_ft": weapon.reach_ft, "normal_range_ft": weapon.normal_range_ft,
-                "long_range_ft": weapon.long_range_ft, "projectile": weapon.projectile,
-                "mastery_property": None if edition == "2014" else weapon.mastery_property,
-                "heavy": weapon.heavy, "two_handed": weapon.two_handed,
-                "light": weapon.light, "finesse": weapon.finesse, "versatile": weapon.versatile,
-                "attack_ability": attack.ability, "attack_ability_modifier": modifier,
-                "rage_eligible": "rage" in capabilities,
-                "sneak_attack_eligible": "sneak-attack" in capabilities,
-                "damage_die_minimum": 3 if gwf and melee and weapon.two_handed else None,
-            })
+        fighting_styles = list(folded.get("fighting_styles") or [])
+        if not fighting_styles and build.fighting_style:
+            fighting_styles = [build.fighting_style]
+        attacks = compile_hero_attacks(
+            edition=edition,
+            abilities=abilities,
+            proficiency=proficiency,
+            capabilities=capabilities,
+            fighting_styles=fighting_styles,
+            unarmed_dice=folded.get("unarmed_dice_size"),
+            build=build,
+        )
         saves = {
             ability: ability_modifier(int(score)) + (proficiency if ability in build.save_proficiencies else 0)
             for ability, score in abilities.items()
@@ -163,9 +129,6 @@ def compile_hero_definition(
             progression["aura_of_protection_2014_bonus"] = ability_modifier(int(abilities["charisma"]))
         if folded.get("unarmed_dice_size"):
             progression["martial_arts_die_size"] = int(folded["unarmed_dice_size"])
-        fighting_styles = list(folded.get("fighting_styles") or [])
-        if not fighting_styles and build.fighting_style:
-            fighting_styles = [build.fighting_style]
         armor_class = require_matching_fingerprint(
             "armor_class",
             derive_armor_class(
