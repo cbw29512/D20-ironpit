@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
@@ -98,12 +99,15 @@
     const type = A().adjustedDamage(target.state, 2, "radiant") >= A().adjustedDamage(target.state, 2, "necrotic") ? "radiant" : "necrotic";
     const raw = save.succeeded ? Math.floor(total / 2) : total, applied = A().adjustedDamage(target.state, raw, type), before = target.state.current_hp;
     if (applied) A().applyDamage(target.state, applied, false, [type], [...setup.heroes, ...setup.monsters].map((m) => m.state));
-    return { events: [{ sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
+    const event = { sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: "constitution", save_dc: dc,
       save_succeeded: save.succeeded, damage_roll: { notation, rolls: [die], modifier: mod, total: applied },
       damage_components: [{ source: "Divine Spark", notation, rolls: [die], modifier: mod, damage_type: type, total: raw, applied_total: applied }],
       hp_before: before, hp_after: target.state.current_hp, feature_id: SPARK, resource_remaining: remaining, animation: SPARK,
-      description: `${target.state.template.name} takes ${applied} ${type} damage from Divine Spark.` + (window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "") }], sequence: sequence + 1 };
+      description: `${target.state.template.name} takes ${applied} ${type} damage from Divine Spark.` + (window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "") };
+    const next = sequence + 1;
+    return DMR() ? DMR().chain(next, round, cleric, event, setup)
+      : { events: [event], sequence: next };
   }
 
   function resolve(sequence, round, cleric, setup) {

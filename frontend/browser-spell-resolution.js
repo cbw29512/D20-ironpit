@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -59,11 +60,14 @@
         continue;
       }
       const event = V().resolveAction(
-        sequence++, round, caster, target, action, S().distance(caster, target),
+        sequence, round, caster, target, action, S().distance(caster, target),
         { spendAction: false, sharedDamageRolls },
       );
+      sequence += 1;
       if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
-      events.push(event);
+      const chain = DR() ? DR().chain(sequence, round, caster, event, setup, turnKey)
+        : { events: [event], sequence };
+      events.push(...chain.events); sequence = chain.sequence;
       if (sharedDamageRolls == null && event.damage_components?.length) {
         sharedDamageRolls = [...event.damage_components[0].rolls];
       }

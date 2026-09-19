@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const L = () => window.IRON_PIT_BROWSER_LIGHT_WEAPONS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -25,11 +26,13 @@
     if (plan.usesBonusAction) E().spend(member.state, "bonus_action");
     L().markUsed(member.state, turnKey);
     const pack = S().packTactics(member, target, setup);
-    const event = A().resolveAttack(sequence++, round, member, target, plan.attack, distance, {
+    const event = A().resolveAttack(sequence, round, member, target, plan.attack, distance, {
       spendAction: false, advantage: pack ? 1 : 0, setup,
       featureId: plan.featureId, turnKey, allowReckless: true,
     });
-    return { events: [event], sequence };
+    sequence += 1;
+    if (!DR()) return { events: [event], sequence };
+    return DR().chain(sequence, round, member, event, setup, turnKey);
   }
 
   window.IRON_PIT_BROWSER_LIGHT_ATTACK = { inRange, resolve };

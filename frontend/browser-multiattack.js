@@ -3,10 +3,12 @@
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
+  const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
@@ -85,28 +87,45 @@
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
-        const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
+        const event = A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
           allowReckless: true, ignoreCloseThreat: true,
         });
-        events.push(event);
-        if (event.event_type === "saving_throw" && !event.attack_roll) { openingFeature = null; continue; }
+        sequence += 1;
+        if (event.event_type === "saving_throw" && !event.attack_roll) {
+          const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
+          events.push(...chain.events); sequence = chain.sequence; openingFeature = null;
+          if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
+          continue;
+        }
         if (event.hit && MK()?.resolveStunning) {
           const stun = MK().resolveStunning(sequence, round, member, eventTarget(event, choice.target, setup), choice.attack);
           if (stun) { events.push(stun); sequence += 1; }
         }
-        if (member.state.turn_terminated) break;
+        const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
+        events.push(...chain.events); sequence = chain.sequence;
+        if (member.state.turn_terminated || member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;
+        if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
         continue;
       }
       const saved = saveChoice(member, setup, data);
-      if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+      if (saved) {
+        const event = V().resolveAction(sequence, round, member, saved.target, saved.save, saved.distance, {
+          spendAction: false, setup,
+        });
+        sequence += 1;
+        const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
+        events.push(...chain.events); sequence = chain.sequence;
+        if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
+      }
     }
 
-    if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated) {
+    if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated
+      && !member.state.is_dead && !Q()?.incapacitated?.(member.state)) {
       const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
       events.push(...extra.events); sequence = extra.sequence;
     }
