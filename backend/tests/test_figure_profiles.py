@@ -72,6 +72,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Animated Flying Sword": "flying-sword",
         "Awakened Tree": "tree",
         "Blood Hawk": "blood-hawk",
+        "Earth Elemental": "earth-elemental",
         "Flying Snake": "flying-snake",
         "Gargoyle": "gargoyle",
         "Giant Shark": "shark",
