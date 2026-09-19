@@ -162,15 +162,11 @@ def test_staged_2014_level_20_unlimited_rage_has_no_counter_and_never_decrements
 
 
 def _retaliation_setup(source_position: int = 5) -> tuple[EncounterCombatant, EncounterCombatant, EncounterSetup]:
-    base = build_rokhan_stonefury_2014(13)
     rokhan = EncounterCombatant(
         combatant_id="rokhan",
         side="heroes",
         position_ft=0,
-        state=build_combatant_state(base.model_copy(update={
-            "level": 14,
-            "damage_reaction_attack": _damage_reaction(14),
-        })),
+        state=build_combatant_state(_compile_rokhan_stonefury_2014(14)),
     )
     source = EncounterCombatant(
         combatant_id="source",
