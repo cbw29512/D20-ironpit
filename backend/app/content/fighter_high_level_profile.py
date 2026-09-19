@@ -1,0 +1,76 @@
+from __future__ import annotations
+
+import logging
+
+from app.content.canonical_progression import advance_profile_data
+from app.content.fighter_asi_progression_profile import build_karnok_stoneward_level12_profile
+from app.content.fighter_profile_from_levels import apply_fighter_level_to_profile_data
+from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
+
+logger = logging.getLogger(__name__)
+
+
+def build_karnok_stoneward_level13_profile() -> CharacterBuildProfile:
+    try:
+        previous = build_karnok_stoneward_level12_profile()
+        data = advance_profile_data(previous, 13)
+        apply_fighter_level_to_profile_data(data, 13)
+        studied_attacks = FeatureAudit(
+            feature_id="studied-attacks",
+            feature_name="Studied Attacks",
+            source_reference="D&D Beyond Basic Rules 2024: Fighter Level 13 — Studied Attacks",
+            category="class",
+            combat_relevant=True,
+            automated=True,
+            notes=(
+                "After Karnok misses an attack roll against a creature, his next attack roll "
+                "against that creature has Advantage until the end of his next turn. The shared "
+                "Studied Attacks runtime owns the temporary target-bound state."
+            ),
+        )
+        data.update(
+            feature_audits=[*data["feature_audits"], studied_attacks.model_dump()],
+            source_references=[
+                *data["source_references"],
+                "D&D Beyond Basic Rules 2024: Fighter Level 13 — Indomitable and Studied Attacks",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        logger.exception("Failed to build Karnok Stoneward level 13 profile.")
+        raise RuntimeError("Karnok Stoneward level 13 profile could not be built.") from exc
+
+
+def build_karnok_stoneward_level14_profile() -> CharacterBuildProfile:
+    try:
+        previous = build_karnok_stoneward_level13_profile()
+        data = advance_profile_data(previous, 14)
+        apply_fighter_level_to_profile_data(data, 14)
+        ability_score_improvement = FeatureAudit(
+            feature_id="ability-score-improvement-l14",
+            feature_name="Ability Score Improvement",
+            source_reference=(
+                "D&D Beyond Basic Rules 2024: Fighter Level 14; "
+                "Feats — Ability Score Improvement"
+            ),
+            category="feat",
+            combat_relevant=True,
+            automated=True,
+            notes=(
+                "Deterministic ranged-defense progression choice: +2 Dexterity, DEX 13→15. "
+                "The authoritative Fighter table updates initiative, Dexterity-based attacks, "
+                "Dexterity checks, and Dexterity saving throws from the new score."
+            ),
+        )
+        data.update(
+            feature_audits=[*data["feature_audits"], ability_score_improvement.model_dump()],
+            source_references=[
+                *data["source_references"],
+                "D&D Beyond Basic Rules 2024: Fighter Level 14 — Ability Score Improvement",
+                "D&D Beyond Basic Rules 2024: Feats — Ability Score Improvement (+2 Dexterity)",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        logger.exception("Failed to build Karnok Stoneward level 14 profile.")
+        raise RuntimeError("Karnok Stoneward level 14 profile could not be built.") from exc
