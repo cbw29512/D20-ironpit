@@ -85,6 +85,8 @@ Hook results separate emitted events from action-window consumption. Producing a
 
 Hook priority is deterministic evaluation order, not tactical preference. Existing Arena AI / action-selection policy remains responsible for choosing among independent legal actions.
 
+Main Action selection therefore uses a separate candidate/selection contract. Action-family modules discover legal candidates; an explicit opportunity profile chooses among categories in the already-certified Arena order. Provider registration order is never tactical policy, and Action Surge or other extra Action opportunities must supply an explicit allowed-category profile rather than inheriting every normal Action family. See `docs/MAIN_ACTION_SELECTION_CONTRACT.md`.
+
 Nested riders stay nested when they are not independent action choices. For example, a feature triggered only by another feature remains part of its parent feature's resolution instead of registering as a competing action.
 
 Before any browser phase migration changes live behavior, identify the equivalent Python reference resolution point, action-economy lifecycle, ruleset data, and permanent parity tests. The detailed contract and migration sequence live in `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md`.
