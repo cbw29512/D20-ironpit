@@ -218,6 +218,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
+    if progression.damage_triggered_reaction_attack:
+        row["damage_triggered_reaction_attack"] = progression.damage_triggered_reaction_attack.model_dump()
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
