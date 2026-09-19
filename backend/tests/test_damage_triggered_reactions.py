@@ -1,4 +1,6 @@
+from app.combat.damage_reaction_dispatch import resolve_damage_event_reactions
 from app.combat.damage_triggered_reactions import resolve_damage_triggered_melee_reaction
+from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
@@ -91,3 +93,101 @@ def test_damage_triggered_melee_reaction_requires_declared_melee_weapon() -> Non
 
     assert event is None
     assert reactor.state.reaction_available is True
+
+
+def test_damage_event_dispatch_triggers_immediate_reaction_after_applied_damage() -> None:
+    reactor, source, setup = _setup()
+    triggering = resolve_encounter_attack(
+        1,
+        1,
+        source,
+        reactor,
+        source.state.template.weapon_attack,
+        5,
+        FixedDiceProvider([19, 4]),
+        setup,
+        spend_action=False,
+    )
+
+    reactions, sequence = resolve_damage_event_reactions(
+        2,
+        1,
+        source,
+        triggering,
+        setup,
+        FixedDiceProvider([19, 5]),
+        turn_key="1:monster-1",
+    )
+
+    assert len(reactions) == 1
+    assert reactions[0].feature_id == "retaliation"
+    assert reactions[0].actor_id == reactor.combatant_id
+    assert reactions[0].target_id == source.combatant_id
+    assert sequence == 3
+
+
+def test_damage_event_dispatch_ignores_event_without_applied_damage() -> None:
+    reactor, source, setup = _setup()
+    source.state.template.armor_class = 99
+    triggering = resolve_encounter_attack(
+        1,
+        1,
+        reactor,
+        source,
+        reactor.state.template.weapon_attack,
+        5,
+        FixedDiceProvider([2]),
+        setup,
+        spend_action=False,
+        off_turn=True,
+    )
+
+    reactions, sequence = resolve_damage_event_reactions(
+        2,
+        1,
+        reactor,
+        triggering,
+        setup,
+        FixedDiceProvider([19, 5]),
+    )
+
+    assert triggering.damage_roll is None
+    assert reactions == []
+    assert sequence == 2
+
+
+def test_damage_event_dispatch_allows_one_counter_reaction_per_creature() -> None:
+    reactor, source, setup = _setup()
+    source.state.template.damage_triggered_melee_reaction = DamageTriggeredMeleeReaction(
+        id="counter-retaliation",
+        trigger_range_ft=5,
+    )
+    triggering = resolve_encounter_attack(
+        1,
+        1,
+        source,
+        reactor,
+        source.state.template.weapon_attack,
+        5,
+        FixedDiceProvider([19, 4]),
+        setup,
+        spend_action=False,
+    )
+
+    reactions, sequence = resolve_damage_event_reactions(
+        2,
+        1,
+        source,
+        triggering,
+        setup,
+        FixedDiceProvider([19, 5, 19, 4]),
+        turn_key="1:monster-1",
+    )
+
+    assert [event.feature_id for event in reactions] == [
+        "retaliation",
+        "counter-retaliation",
+    ]
+    assert sequence == 4
+    assert reactor.state.reaction_available is False
+    assert source.state.reaction_available is False
