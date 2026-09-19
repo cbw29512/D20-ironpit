@@ -21,6 +21,9 @@
     if (!Number.isInteger(ctx.sequence) || ctx.sequence < 0) {
       throw new Error("Main Action selection requires a non-negative integer sequence.");
     }
+    if (typeof ctx.turnKey !== "string" || !ctx.turnKey.trim()) {
+      throw new Error("Main Action selection requires a stable non-empty turnKey.");
+    }
     const ruleset = ctx.member?.state?.template?.ruleset;
     if (!RULESETS.includes(ruleset)) {
       throw new Error(`Main Action selection requires ruleset 2014 or 2024; received ${String(ruleset)}.`);
@@ -95,7 +98,7 @@
       if (typeof payload !== "object" || Array.isArray(payload)) {
         throw new Error(`Main Action provider "${provider.id}" candidate payload must be an object.`);
       }
-      candidates.push(Object.freeze({ providerId: provider.id, category: provider.category, opportunityProfile: profileId, combatantId: ctx.member.combatant_id, turnKey: ctx.turnKey ?? null, payload }));
+      candidates.push(Object.freeze({ providerId: provider.id, category: provider.category, opportunityProfile: profileId, combatantId: ctx.member.combatant_id, turnKey: ctx.turnKey, payload }));
     }
     return candidates;
   }
@@ -117,7 +120,7 @@
     const ruleset = rulesetFrom(ctx), profile = requireProfile(profileId);
     if (!candidate || typeof candidate !== "object") throw new Error("Main Action resolution requires a candidate.");
     if (candidate.opportunityProfile !== profileId || candidate.combatantId !== ctx.member.combatant_id
-      || candidate.turnKey !== (ctx.turnKey ?? null)
+      || candidate.turnKey !== ctx.turnKey
       || !candidate.payload || typeof candidate.payload !== "object" || Array.isArray(candidate.payload)) {
       throw new Error("Main Action candidate does not match the current opportunity/combatant/turn.");
     }
