@@ -16,6 +16,7 @@ from app.domain.models import CombatantTemplate
 logger = logging.getLogger(__name__)
 # Compatibility aliases for the reporting script while callers migrate to the shared policy module.
 _ARENA_NEUTRAL_BONUS_ACTIONS = ARENA_NEUTRAL_BONUS_ACTIONS
+_MODELED_MONSTER_BONUS_ACTIONS = frozenset({"Cunning Action"})
 _base_name = bonus_action_base_name
 
 
@@ -25,6 +26,10 @@ def _slug(name: str) -> str:
 
 def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
     return parse_trait_names(source_bonus_actions)
+
+
+def is_supported_monster_bonus_action(name: str) -> bool:
+    return is_arena_neutral_bonus_action(name) or bonus_action_base_name(name) in _MODELED_MONSTER_BONUS_ACTIONS
 
 
 def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
@@ -38,7 +43,7 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
             if not template.progression_features.cunning_action:
                 issues.append("bonus-action-runtime-missing:cunning-action")
             continue
-        if not is_arena_neutral_bonus_action(name):
+        if not is_supported_monster_bonus_action(name):
             issues.append(f"uncertified-bonus-action:{_slug(name)}")
     if template.progression_features.cunning_action and "Cunning Action" not in expected:
         issues.append("bonus-action-source-missing:cunning-action")
