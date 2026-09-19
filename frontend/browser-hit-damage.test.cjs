@@ -58,6 +58,7 @@ window.IRON_PIT_BROWSER_TIMED = {
 window.IRON_PIT_BROWSER_STATE = { canProne: () => false, terminateTurn: () => {}, sizeAtMost: () => true };
 window.IRON_PIT_ACTION_ECONOMY = { available: () => true, spend: () => {} };
 
+load("browser-ability-hooks.js");
 load("browser-attack.js");
 load("browser-hit-damage.js");
 
@@ -81,7 +82,7 @@ const state = (resist = [], immune = []) => ({
   death_save_successes: 0, death_save_failures: 0, is_stable: false, is_dead: false, is_alive: true,
   is_unconscious: false,
 });
-const attackerState = { template: { name: "Wyvern", max_hp: 110, armor_class: 13, traits: [] }, current_hp: 110,
+const attackerState = { template: { name: "Wyvern", ruleset: "2014", max_hp: 110, armor_class: 13, traits: [] }, current_hp: 110,
   active_effect_ids: [], feature_last_turn_keys: {}, action_available: true };
 
 saveSucceeded = false; queueDice([6, 5, 4]);
