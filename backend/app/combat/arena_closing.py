@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available
 from app.combat.charge import resolve_charge_closing
 from app.combat.dice import DiceProvider
+from app.combat.damage_reaction_wrappers import resolve_attack_event_chain
 from app.combat.dodge import resolve_dodge_action
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
@@ -52,12 +53,12 @@ def _hold_backline(
         return None
     events: list[BattleEvent] = []
     if is_available(attacker.state, "action"):
-        events.append(resolve_encounter_attack(
+        more, sequence = resolve_attack_event_chain(
             sequence, round_number, attacker, target, ranged,
             combatant_distance(attacker, target), dice, setup,
             allow_reckless=True, turn_key=turn_key,
-        ))
-        sequence += 1
+        )
+        events.extend(more)
     return events, sequence, True
 
 
@@ -100,12 +101,20 @@ def resolve_simple_closing(
     events: list[BattleEvent] = []
     ranged = _legal_ranged_attack(attacker, combatant_distance(attacker, target))
     if ranged is not None and is_available(attacker.state, "action"):
-        events.append(resolve_encounter_attack(
-            sequence, round_number, attacker, target, ranged,
-            combatant_distance(attacker, target), dice, setup,
-            allow_reckless=True, turn_key=turn_key,
-        ))
-        sequence += 1
+        if setup is None:
+            events.append(resolve_encounter_attack(
+                sequence, round_number, attacker, target, ranged,
+                combatant_distance(attacker, target), dice, setup,
+                allow_reckless=True, turn_key=turn_key,
+            ))
+            sequence += 1
+        else:
+            more, sequence = resolve_attack_event_chain(
+                sequence, round_number, attacker, target, ranged,
+                combatant_distance(attacker, target), dice, setup,
+                allow_reckless=True, turn_key=turn_key,
+            )
+            events.extend(more)
     elif is_available(attacker.state, "action"):
         events.append(resolve_dodge_action(sequence, round_number, attacker))
         sequence += 1
