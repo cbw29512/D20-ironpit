@@ -143,6 +143,9 @@ The Intimidating Presence module self-registers immediately when the dispatcher 
 
 The browser production `turnStart` phase now owns declarative Recharge checks. Core turn initialization remains outside the hook registry: grapple cleanup, aura synchronization, `beginTurn()`, action/reaction refresh, movement initialization, and generic condition state are lifecycle primitives rather than named abilities. After `beginTurn()`, `browser-turn.js` runs `turnStart`; the Recharge module self-registers for both rulesets and participates only when the combatant declares Recharge rules. Python parity remains `begin_turn() -> resolve_recharge_checks()` through `begin_turn_with_events()`.
 
+
+The browser production `beforeAttackRoll` phase now owns named pre-roll Advantage/Disadvantage sources that were previously hardcoded in the central attack resolvers. The preserved order is `Reckless Attack -> Sap -> Brutal Strike -> Bloodied Fury`: Reckless establishes attacker/defender Advantage, Sap contributes and consumes its next-attack Disadvantage, Brutal Strike may suppress only Reckless Advantage when the roll has no Disadvantage, and Bloodied Fury contributes its weapon-only melee Advantage. Weapon and spell attacks use the same typed mutable attack-roll context; weapon-only hooks explicitly reject spell-attack context. Heroic Inspiration remains outside this phase because it is a post-roll die replacement after a failed d20 result, not a pre-roll source. Python retains its existing orchestration, with parity tests locking equivalent source math and consumption.
+
 ## Migration order
 
 Migrate one coherent phase per PR.
