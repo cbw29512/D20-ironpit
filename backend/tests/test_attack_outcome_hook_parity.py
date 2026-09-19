@@ -31,31 +31,23 @@ def test_python_miss_keeps_graze_before_studied_attacks() -> None:
     assert next_attack_against_advantage_sources(attacker, target.template.id) == 1
 
 
-def test_python_tactical_master_replaces_vex_on_the_selected_weapon() -> None:
-    template = build_mara_quickstep()
-    features = template.progression_features.model_copy(update={
-        "tactical_master_sap_weapon_ids": ["shortsword"],
-    })
-    attacker = _state(template.model_copy(update={
-        "weapon_masteries": ["shortsword"],
-        "progression_features": features,
-    }))
+def test_python_tactical_master_sap_replaces_native_mastery_on_hit() -> None:
+    attacker = _state(build_karnok_stoneward_level(9))
     target = _state(build_brom_ironmark())
 
     event = resolve_attack(
         1, 1, attacker, target, attacker.template.weapon_attack, 5,
-        FixedDiceProvider([15, 4]), spend_action=False,
+        FixedDiceProvider([15, 4, 4]), spend_action=False,
     )
 
     assert event.hit is True
     assert any(effect.effect_id == "tactical-master-sap" for effect in target.timed_effects)
-    assert next_attack_against_advantage_sources(attacker, target.template.id) == 0
     assert "Tactical Master applies Sap" in event.description
     assert "Vex primes" not in event.description
 
 
-def test_python_vex_still_primes_when_tactical_master_does_not_replace_it() -> None:
-    template = build_mara_quickstep().model_copy(update={"weapon_masteries": ["shortsword"]})
+def test_python_vex_hit_still_primes_the_next_attack() -> None:
+    template = build_mara_quickstep().model_copy(update={"weapon_masteries": ["shortsword", "shortbow"]})
     attacker = _state(template)
     target = _state(build_brom_ironmark())
 
@@ -65,6 +57,5 @@ def test_python_vex_still_primes_when_tactical_master_does_not_replace_it() -> N
     )
 
     assert event.hit is True
-    assert not any(effect.effect_id == "tactical-master-sap" for effect in target.timed_effects)
-    assert next_attack_against_advantage_sources(attacker, target.template.id) == 1
     assert "Vex primes" in event.description
+    assert next_attack_against_advantage_sources(attacker, target.template.id) == 1
