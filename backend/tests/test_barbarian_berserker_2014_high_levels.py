@@ -1,6 +1,6 @@
 from app.combat.barbarian import end_rage, end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
-from app.combat.damage_reaction_dispatch import plan_damage_reaction_attack
+from app.combat.damage_reaction_dispatch import plan_damage_reaction_attack, resolve_damage_reaction_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import begin_turn, build_combatant_state
@@ -211,3 +211,31 @@ def test_staged_2014_level_14_retaliation_fails_closed_out_of_range_or_without_r
     rokhan, source, setup = _retaliation_setup()
     rokhan.state.reaction_available = False
     assert plan_damage_reaction_attack(rokhan, source, setup, applied_damage=7) is None
+
+
+
+def test_staged_2014_level_14_retaliation_resolves_off_turn_without_spending_action() -> None:
+    rokhan, source, setup = _retaliation_setup()
+    source_hp_before = source.state.current_hp
+    action_before = rokhan.state.action_available
+
+    event = resolve_damage_reaction_attack(
+        5,
+        2,
+        rokhan,
+        source,
+        setup,
+        applied_damage=7,
+        dice=FixedDiceProvider([19, 6]),
+        turn_key="2:source",
+    )
+
+    assert event is not None
+    assert event.event_type == "attack"
+    assert event.feature_id == "retaliation"
+    assert event.actor_id == "rokhan"
+    assert event.target_id == "source"
+    assert source.state.current_hp < source_hp_before
+    assert rokhan.state.reaction_available is False
+    assert rokhan.state.action_available is action_before
+    assert event.turn_terminated is False
