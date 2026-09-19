@@ -5,14 +5,11 @@
   "class_id": "fighter",
   "armor_class": 17,
   "speed_ft": 30,
-  "save_proficiencies": [
-    "strength",
-    "constitution"
+  "save_proficiencies": ["strength", "constitution"],
+  "skills": [
+    { "id": "athletics", "ability": "strength", "proficient": true },
+    { "id": "acrobatics", "ability": "dexterity", "proficient": false }
   ],
-  "skill_proficiencies": {
-    "athletics": "strength",
-    "acrobatics": "dexterity"
-  },
   "fighting_style": "Defense",
   "attacks": [
     {

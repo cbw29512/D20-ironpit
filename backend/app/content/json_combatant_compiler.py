@@ -8,6 +8,7 @@ from app.content.hero_combat_feature_registry import (
     compile_progression_feature_fields,
     unsupported_hero_engine_features,
 )
+from app.content.weapon_catalog import build_weapon
 from app.domain.capabilities import CombatantDefinition
 from app.domain.combatant_source import (
     HeroBuildSource,
@@ -17,8 +18,21 @@ from app.domain.combatant_source import (
     SpeciesSource,
     SubclassProgressionSource,
 )
+from app.domain.traits import CombatTrait
 
 LOGGER = logging.getLogger(__name__)
+RESOURCE_ORDER = (
+    "second-wind",
+    "action-surge",
+    "indomitable",
+    "adrenaline-rush",
+    "relentless-endurance",
+)
+TRAIT_ORDER = (
+    CombatTrait.SAVAGE_ATTACKER,
+    CombatTrait.ADRENALINE_RUSH,
+    CombatTrait.RELENTLESS_ENDURANCE,
+)
 
 
 def _read_json(path: Path) -> object:
@@ -168,6 +182,40 @@ def _modifier(score: int) -> int:
     return (score - 10) // 2
 
 
+def _catalog_weapon(weapon_id: str):
+    try:
+        return build_weapon(weapon_id)
+    except ValueError:
+        LOGGER.exception("Hero attack weapon_id is not in the shared catalog: %s", weapon_id)
+        raise
+
+
+def _ordered_resources(raw: dict[str, int]) -> list[dict[str, object]]:
+    seen: list[str] = []
+    for resource_id in RESOURCE_ORDER:
+        if raw.get(resource_id, 0) > 0:
+            seen.append(resource_id)
+    for resource_id, uses in raw.items():
+        if uses > 0 and resource_id not in seen:
+            seen.append(resource_id)
+    return [
+        {"id": resource_id, "name": resource_id.replace("-", " ").title(), "max_uses": raw[resource_id]}
+        for resource_id in seen
+    ]
+
+
+def _combat_traits(capabilities: list[str]) -> list[str]:
+    available = {item.value: item for item in CombatTrait}
+    traits: list[str] = []
+    for trait in TRAIT_ORDER:
+        if trait.value in capabilities:
+            traits.append(trait.value)
+    for capability in capabilities:
+        if capability in available and capability not in traits:
+            traits.append(capability)
+    return traits
+
+
 def compile_hero_definition(
     hero_id: str,
     hero_name: str,
@@ -180,26 +228,43 @@ def compile_hero_definition(
             raise ValueError("Folded progression and hero build must share edition and class.")
         abilities = dict(folded["ability_scores"])
         proficiency = int(folded["proficiency_bonus"])
+        capabilities = list(folded["capabilities"])
+        gwf = "great-weapon-fighting" in capabilities
         attacks = []
         for attack in build.attacks:
+            weapon = _catalog_weapon(attack.weapon_id)
             modifier = _modifier(int(abilities[attack.ability]))
+            melee = weapon.attack_kind == "melee" or attack.attack_kind == "melee"
             attacks.append({
-                "id": attack.id, "name": attack.name, "weapon_id": attack.weapon_id,
-                "attack_kind": attack.attack_kind, "attack_bonus": proficiency + modifier,
-                "damage": {"count": attack.dice_count, "size": attack.dice_size, "bonus": modifier},
-                "damage_type": attack.damage_type, "animation": attack.animation,
-                "reach_ft": attack.reach_ft, "normal_range_ft": attack.normal_range_ft,
-                "long_range_ft": attack.long_range_ft, "mastery_property": attack.mastery_property,
-                "heavy": attack.heavy, "two_handed": attack.two_handed,
-                "attack_ability": attack.ability, "attack_ability_modifier": modifier,
+                "id": attack.id,
+                "name": weapon.name,
+                "weapon_id": weapon.id,
+                "attack_kind": weapon.attack_kind,
+                "attack_bonus": proficiency + modifier,
+                "damage": {"count": weapon.dice_count, "size": weapon.dice_size, "bonus": modifier},
+                "damage_type": weapon.damage_type,
+                "animation": weapon.animation,
+                "reach_ft": weapon.reach_ft,
+                "normal_range_ft": weapon.normal_range_ft,
+                "long_range_ft": weapon.long_range_ft,
+                "projectile": weapon.projectile,
+                "mastery_property": weapon.mastery_property,
+                "heavy": weapon.heavy,
+                "two_handed": weapon.two_handed,
+                "light": weapon.light,
+                "finesse": weapon.finesse,
+                "versatile": weapon.versatile,
+                "attack_ability": attack.ability,
+                "attack_ability_modifier": modifier,
+                "damage_die_minimum": 3 if gwf and melee and weapon.two_handed else None,
             })
         saves = {
             ability: _modifier(int(score)) + (proficiency if ability in build.save_proficiencies else 0)
             for ability, score in abilities.items()
         }
         skills = {
-            skill: _modifier(int(abilities[ability])) + proficiency
-            for skill, ability in build.skill_proficiencies.items()
+            skill.id: _modifier(int(abilities[skill.ability])) + (proficiency if skill.proficient else 0)
+            for skill in build.skills
         }
         attack_count = int(folded["attack_count"])
         attack_ids = [attack.id for attack in build.attacks]
@@ -207,10 +272,10 @@ def compile_hero_definition(
             "id": "extra-attack", "name": "Extra Attack", "is_attack_action": True,
             "slots": [{"attack_ids": attack_ids} for _ in range(attack_count)],
         }
-        resources = [
-            {"id": resource_id, "name": resource_id.replace("-", " ").title(), "max_uses": uses}
-            for resource_id, uses in dict(folded["resources"]).items() if uses > 0
-        ]
+        progression = compile_progression_feature_fields(tuple(capabilities), int(folded["level"]))
+        if "tactical-master" in capabilities:
+            primary = next(attack for attack in build.attacks if attack.id == build.primary_attack_id)
+            progression["tactical_master_sap_weapon_ids"] = [primary.weapon_id]
         return CombatantDefinition.model_validate({
             "schema_version": 1, "id": f"{hero_id}-l{folded['level']}", "name": hero_name,
             "archetype": build.class_id.title(), "level": folded["level"], "kind": "character",
@@ -219,14 +284,12 @@ def compile_hero_definition(
             "initiative_bonus": _modifier(int(abilities["dexterity"])),
             "attacks": attacks, "primary_attack_id": build.primary_attack_id,
             "attack_action": attack_action, "saving_throw_bonuses": saves, "skill_bonuses": skills,
+            "combat_traits": _combat_traits(capabilities),
             "fighting_style": build.fighting_style, "weapon_masteries": folded["weapon_masteries"],
-            "resources": resources, "visual": build.visual, "source": build.source,
-            "progression_features": compile_progression_feature_fields(
-                tuple(folded["capabilities"]), int(folded["level"])
-            ),
-            "unsupported_capabilities": list(
-                unsupported_hero_engine_features(tuple(folded["capabilities"]))
-            ),
+            "resources": _ordered_resources(dict(folded["resources"])), "visual": build.visual,
+            "source": build.source,
+            "progression_features": progression,
+            "unsupported_capabilities": list(unsupported_hero_engine_features(tuple(capabilities))),
         })
     except Exception:
         LOGGER.exception("Failed to compile hero definition hero=%s level=%s", hero_id, folded.get("level"))

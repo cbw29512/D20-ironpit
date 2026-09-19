@@ -16,7 +16,7 @@ It is intentionally ordered so future work can resume from repository state rath
 - [x] Fold merges class + subclass + species + track.
 - [x] Hero JSON compiles to `CombatantDefinition` then `CombatantTemplate` (same boundary as monsters).
 - [x] Edition-mismatch rejection at fold and compile.
-- [ ] Compare JSON-compiled Karnok 1–17 against the certified Python fingerprints already on `main`.
+- [x] Compare JSON-compiled Karnok 1–14 against the certified Python fingerprints already on `main`.
 - [ ] Do not add more Python per-level Fighter builders.
 
 ## Phase 1 — Finish 2024 Fighter migration

@@ -142,6 +142,12 @@ class HeroTrackSource(BaseModel):
         return self
 
 
+class HeroSkillSource(BaseModel):
+    id: str
+    ability: AbilityName
+    proficient: bool = True
+
+
 class HeroAttackSource(BaseModel):
     id: str
     name: str
@@ -168,7 +174,7 @@ class HeroBuildSource(BaseModel):
     armor_class: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     save_proficiencies: list[AbilityName] = Field(default_factory=list)
-    skill_proficiencies: dict[str, AbilityName] = Field(default_factory=dict)
+    skills: list[HeroSkillSource] = Field(default_factory=list)
     fighting_style: str | None = None
     attacks: list[HeroAttackSource] = Field(min_length=1)
     primary_attack_id: str

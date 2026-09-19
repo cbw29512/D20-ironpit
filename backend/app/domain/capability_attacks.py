@@ -63,6 +63,7 @@ class AttackCapabilityDefinition(BaseModel):
     versatile: bool = False
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
+    damage_die_minimum: int | None = Field(default=None, ge=2, le=100)
     rage_eligible: bool = False
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     effects: list[AttackEffectDefinition] = Field(default_factory=list)

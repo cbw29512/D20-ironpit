@@ -113,6 +113,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         damage_bonus=damage.bonus if damage else 0,
         attack_ability=definition.attack_ability,
         attack_ability_modifier=definition.attack_ability_modifier,
+        damage_die_minimum=definition.damage_die_minimum,
         rage_eligible=definition.rage_eligible,
         fixed_damage=definition.fixed_damage,
         conditional_damage=conditional,
