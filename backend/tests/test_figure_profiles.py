@@ -80,6 +80,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Grimlock": "grimlock",
         "Guard Captain": "guard-captain",
         "Hippopotamus": "hippopotamus",
+        "Hill Giant": "hill-giant",
         "Hunter Shark": "shark",
         "Killer Whale": "orca",
         "Lemure": "lemure",
