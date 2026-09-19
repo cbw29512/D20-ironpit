@@ -5,12 +5,7 @@ from app.domain.character_builds import AbilityIncrease, AbilityName, CharacterB
 from app.domain.models import CombatantTemplate
 
 _ABILITIES: tuple[AbilityName, ...] = (
-    "strength",
-    "dexterity",
-    "constitution",
-    "intelligence",
-    "wisdom",
-    "charisma",
+    "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
 )
 _BASE_REQUIRED_AUDIT_CATEGORIES = {"class", "species", "equipment"}
 
@@ -35,7 +30,6 @@ def _audit_edition_origins(profile: CharacterBuildProfile) -> list[str]:
         if amounts not in ([1, 2], [1, 1, 1]):
             issues.append("background-increase-pattern-must-be-plus2-plus1-or-three-plus1")
         return issues
-
     if profile.origin_feat_id or profile.origin_feat_name:
         issues.append("2014-origin-feat-not-allowed")
     if profile.background_allowed_abilities or profile.background_increases:
@@ -52,25 +46,24 @@ def _audit_final_scores(profile: CharacterBuildProfile) -> list[str]:
     totals: dict[AbilityName, int] = {ability: 0 for ability in _ABILITIES}
     for increase in _declared_increases(profile):
         totals[increase.ability] += increase.amount
-    if profile.advancement_increases:
-        mismatch_source = "declared-increases"
-    else:
-        mismatch_source = "background-increases" if profile.ruleset == "2024" else "species-increases"
+    mismatch_source = "declared-increases" if profile.advancement_increases else (
+        "background-increases" if profile.ruleset == "2024" else "species-increases"
+    )
     issues: list[str] = []
     for ability in _ABILITIES:
         expected = profile.base_ability_scores.score(ability) + totals[ability]
         actual = profile.final_ability_scores.score(ability)
+        maximum = profile.ability_score_maximums.get(ability, 20)
         if actual != expected:
             issues.append(f"final-{ability}-does-not-match-{mismatch_source}")
-        if actual > 20:
-            issues.append(f"final-{ability}-exceeds-20")
+        if maximum < 20 or maximum > 30:
+            issues.append(f"invalid-{ability}-maximum")
+        if actual > maximum:
+            issues.append(f"final-{ability}-exceeds-{maximum}")
     return issues
 
 
-def _audit_features(
-    profile: CharacterBuildProfile,
-    template: CombatantTemplate,
-) -> list[str]:
+def _audit_features(profile: CharacterBuildProfile, template: CombatantTemplate) -> list[str]:
     issues: list[str] = []
     feature_ids = [audit.feature_id for audit in profile.feature_audits]
     if len(feature_ids) != len(set(feature_ids)):
@@ -83,7 +76,6 @@ def _audit_features(
         issues.append(f"missing-{category}-feature-audit")
     if profile.ruleset == "2024" and profile.origin_feat_id not in feature_ids:
         issues.append("origin-feat-missing-from-feature-audit")
-
     runtime_weapon_ids = {
         template.weapon_attack.weapon.id,
         *(attack.weapon.id for attack in template.alternate_weapon_attacks),
@@ -97,29 +89,17 @@ def _audit_features(
     return issues
 
 
-def audit_character_build(
-    profile: CharacterBuildProfile,
-    template: CombatantTemplate,
-) -> list[str]:
+def audit_character_build(profile: CharacterBuildProfile, template: CombatantTemplate) -> list[str]:
     """Return fail-closed blockers for a legal build's combat-relevant runtime state."""
     issues: list[str] = []
-    if template.kind != "character":
-        issues.append("runtime-template-is-not-character")
-    if template.id != profile.template_id:
-        issues.append("runtime-template-id-mismatch")
-    if template.level != profile.level:
-        issues.append("runtime-level-mismatch")
-    if template.ruleset != profile.ruleset:
-        issues.append("runtime-ruleset-mismatch")
-    if template.archetype.lower() != profile.class_name.lower():
-        issues.append("runtime-class-mismatch")
-    if sorted(template.weapon_masteries) != sorted(profile.weapon_masteries):
-        issues.append("runtime-weapon-masteries-mismatch")
-    if template.fighting_style != profile.fighting_style:
-        issues.append("runtime-fighting-style-mismatch")
-    if template.fighting_styles != profile.fighting_styles:
-        issues.append("runtime-fighting-styles-mismatch")
-
+    if template.kind != "character": issues.append("runtime-template-is-not-character")
+    if template.id != profile.template_id: issues.append("runtime-template-id-mismatch")
+    if template.level != profile.level: issues.append("runtime-level-mismatch")
+    if template.ruleset != profile.ruleset: issues.append("runtime-ruleset-mismatch")
+    if template.archetype.lower() != profile.class_name.lower(): issues.append("runtime-class-mismatch")
+    if sorted(template.weapon_masteries) != sorted(profile.weapon_masteries): issues.append("runtime-weapon-masteries-mismatch")
+    if template.fighting_style != profile.fighting_style: issues.append("runtime-fighting-style-mismatch")
+    if template.fighting_styles != profile.fighting_styles: issues.append("runtime-fighting-styles-mismatch")
     issues.extend(_audit_edition_origins(profile))
     issues.extend(_audit_final_scores(profile))
     issues.extend(_audit_features(profile, template))
@@ -128,10 +108,7 @@ def audit_character_build(
     return issues
 
 
-def assert_character_build_raw_ready(
-    profile: CharacterBuildProfile,
-    template: CombatantTemplate,
-) -> None:
+def assert_character_build_raw_ready(profile: CharacterBuildProfile, template: CombatantTemplate) -> None:
     issues = audit_character_build(profile, template)
     if issues:
         raise ValueError("Character build is not RAW-ready: " + ", ".join(issues))
