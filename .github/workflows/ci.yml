@@ -97,6 +97,7 @@ jobs:
           node frontend/browser-main-action-pre-move.test.cjs
           node frontend/browser-main-action-post-move.test.cjs
           node frontend/browser-main-action-providers.test.cjs
+          node frontend/browser-main-action-provider-dependencies.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
