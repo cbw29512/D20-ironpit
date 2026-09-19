@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.damage_reactions import resolve_post_damage_reactions
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_policy import SpellChoice
@@ -99,4 +100,8 @@ def resolve_spell(
         if shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)
         sequence += 1
+        reactions, sequence = resolve_post_damage_reactions(
+            sequence, round_number, caster, event, setup, dice, turn_key=turn_key,
+        )
+        events.extend(reactions)
     return events, sequence
