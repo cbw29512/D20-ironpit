@@ -53,17 +53,25 @@ def test_druid_arena_spell_package_preserves_use_budget() -> None:
     try:
         druid = _druid()
         assert [spell.id for spell in druid.spell_attack_actions] == ["guiding-bolt"]
-        assert [spell.id for spell in druid.spell_save_actions] == ["shatter"]
+        assert [spell.id for spell in druid.spell_save_actions] == ["inflict-wounds"]
         assert [spell.id for spell in druid.defensive_spell_actions] == ["longstrider"]
 
         guiding = druid.spell_attack_actions[0]
         assert (guiding.level, guiding.attack_bonus, guiding.range_ft) == (1, 5, 120)
 
-        shatter = druid.spell_save_actions[0]
-        assert (shatter.level, shatter.save_ability, shatter.dc, shatter.range_ft) == (2, "constitution", 13, 60)
-        assert (shatter.area_radius_ft, shatter.damage_dice_count, shatter.damage_dice_size, shatter.damage_type) == (
-            10, 3, 8, "thunder",
-        )
+        moonbeam_sub = druid.spell_save_actions[0]
+        assert (
+            moonbeam_sub.level,
+            moonbeam_sub.save_ability,
+            moonbeam_sub.dc,
+            moonbeam_sub.range_ft,
+        ) == (2, "constitution", 13, 5)
+        assert (
+            moonbeam_sub.damage_dice_count,
+            moonbeam_sub.damage_dice_size,
+            moonbeam_sub.damage_type,
+            moonbeam_sub.upcast_dice_per_level,
+        ) == (3, 10, "necrotic", 1)
 
         longstrider = druid.defensive_spell_actions[0]
         assert longstrider.level == 1
@@ -82,8 +90,8 @@ def test_druid_spellcasting_audit_fails_closed_on_missing_substitution_or_uses()
         druid = _druid()
         row = _row()
 
-        missing_shatter = druid.model_copy(update={"spell_save_actions": []})
-        assert "monster-spell-package-mismatch" in spellcasting_issues(missing_shatter, row)
+        missing_substitution = druid.model_copy(update={"spell_save_actions": []})
+        assert "monster-spell-package-mismatch" in spellcasting_issues(missing_substitution, row)
 
         wrong_uses = druid.model_copy(update={
             "resources": [
