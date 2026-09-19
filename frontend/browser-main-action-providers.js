@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const S = () => window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
+  const S = () => window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION, DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const C = () => S().CATEGORIES;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
@@ -109,8 +109,9 @@
         const target = memberById(setup, candidate.payload.targetId);
         const action = actionById(member, candidate.payload.actionId);
         if (!target || !action) throw new Error("Save-action candidate target/action is unavailable.");
-        const event = V().resolveAction(sequence, round, member, target, action, candidate.payload.distance);
-        return { events: [event], sequence: sequence + 1 };
+        const event = V().resolveAction(sequence, round, member, target, action, candidate.payload.distance, { setup });
+        const next = sequence + 1;
+        return DR() ? DR().chain(next, round, member, event, setup) : { events: [event], sequence: next };
       },
     });
 
