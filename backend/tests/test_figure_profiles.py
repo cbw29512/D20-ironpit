@@ -93,6 +93,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Scorpion": "scorpion",
         "Sahuagin Warrior": "sahuagin-warrior",
         "Skeleton": "skeleton",
+        "Spy": "spy",
         "Swarm of Bats": "bats",
         "Swarm of Crawling Claws": "crawling-claws",
         "Swarm of Insects": "insects",
