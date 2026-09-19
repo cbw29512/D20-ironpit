@@ -4,7 +4,7 @@
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set([
     "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
-    "saving-throw-advantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
+    "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
@@ -25,6 +25,7 @@
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
+    if (item.consume_on_saving_throw && item.kind !== "saving-throw-disadvantage") throw new Error("Only saving-throw Disadvantage can use consume_on_saving_throw.");
     if (item.expires_source_turn_end_round != null && item.expires_source_turn_end_round < 1) throw new Error("Modifier expiry round must be positive.");
     return item;
   }

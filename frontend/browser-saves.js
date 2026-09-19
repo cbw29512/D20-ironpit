@@ -36,7 +36,7 @@
       + B2().dangerSenseAdvantage(state, ability)
       + DG().dexSaveAdvantageSources(state, ability) + DF().saveAdvantage(state, ability)
       + sureFootedAdvantage(state, ability, context);
-    const disadvantage = X().saveDisadvantage(state)
+    const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state) || 0)
       + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
     return R().modeFromSources(advantage, disadvantage);
   }
@@ -52,13 +52,17 @@
   }
 
   function resolveSavingThrow(state, ability, dc, context = {}) {
-    if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
+    if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) {
+      DF().consumeSavingThrowModifiers?.(state);
+      return { roll: null, succeeded: false };
+    }
     const baseBonus = state.template.saving_throw_bonuses?.[ability];
     if (baseBonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
     const modifiers = M();
     const bonus = baseBonus + (modifiers.savingThrowFlat?.(state) || 0);
     const baseRoll = R().d20(bonus, saveMode(state, ability, context));
     let roll = modifiers.applyD20Bonus?.(state, "saving-throw-bonus-die", baseRoll) || baseRoll;
+    DF().consumeSavingThrowModifiers?.(state);
     if (roll.total < dc) {
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };

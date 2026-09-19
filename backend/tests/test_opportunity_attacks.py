@@ -6,6 +6,7 @@ from app.content.pregens import build_selene_asharrow
 from app.content.roster import build_arena_roster
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import EncounterSelection
+from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.unarmed import UnarmedStrikeDamage
 
 
@@ -31,6 +32,22 @@ def test_opportunity_attack_spends_reaction_not_action_and_only_once() -> None:
     ) is None
 
     begin_turn(reactor.state)
+    assert reactor.state.reaction_available is True
+
+
+def test_generic_modifier_can_suppress_opportunity_attacks() -> None:
+    setup, reactor, mover = _setup()
+    reactor.state.active_modifiers.append(CombatModifier(
+        id="source:staggering:oa", source_id=mover.combatant_id,
+        source_effect_id="staggering-blow", kind=ModifierKind.OPPORTUNITY_ATTACK_SUPPRESSED,
+        expires_at_start_of_source_turn=True,
+    ))
+
+    event = resolve_opportunity_attack(
+        1, 1, reactor, mover, setup, 5, 10, "speed", FixedDiceProvider([19]),
+    )
+
+    assert event is None
     assert reactor.state.reaction_available is True
 
 

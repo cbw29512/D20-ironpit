@@ -30,6 +30,22 @@ def saving_throw_advantage_sources(state: CombatantState, ability: str) -> int:
     )
 
 
+def saving_throw_disadvantage_sources(state: CombatantState) -> int:
+    return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.SAVING_THROW_DISADVANTAGE)
+
+
+def consume_saving_throw_modifiers(state: CombatantState) -> list[str]:
+    removed = [
+        item.source_effect_id for item in state.active_modifiers
+        if item.kind is ModifierKind.SAVING_THROW_DISADVANTAGE and item.consume_on_saving_throw
+    ]
+    state.active_modifiers = [
+        item for item in state.active_modifiers
+        if not (item.kind is ModifierKind.SAVING_THROW_DISADVANTAGE and item.consume_on_saving_throw)
+    ]
+    return sorted(set(removed))
+
+
 def death_save_advantage_sources(state: CombatantState) -> int:
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.DEATH_SAVE_ADVANTAGE)
 

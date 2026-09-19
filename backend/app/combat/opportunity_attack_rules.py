@@ -7,9 +7,18 @@ from app.combat.condition_rules import BLINDED, has_condition
 from app.combat.policy import weapon_attack_profiles
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import WeaponAttack, WeaponAttackKind
+from app.domain.modifiers import ModifierKind
 
 MovementSource = Literal["speed", "action", "bonus_action", "reaction", "forced", "teleport"]
 _PROVOKING_SOURCES = frozenset({"speed", "action", "bonus_action", "reaction"})
+
+
+def opportunity_attacks_suppressed(reactor: EncounterCombatant) -> bool:
+    """Return whether a generic active modifier currently forbids OAs."""
+    return any(
+        modifier.kind is ModifierKind.OPPORTUNITY_ATTACK_SUPPRESSED
+        for modifier in reactor.state.active_modifiers
+    )
 
 
 def _can_react(
@@ -19,6 +28,7 @@ def _can_react(
     return (
         reactor.side != mover.side and not disengaged and can_see
         and not has_condition(reactor.state, BLINDED)
+        and not opportunity_attacks_suppressed(reactor)
         and movement_source in _PROVOKING_SOURCES
         and is_available(reactor.state, "reaction")
     )
