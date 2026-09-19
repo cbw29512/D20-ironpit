@@ -88,4 +88,21 @@ assert.throws(
   "feature owners must fail closed when the runtime is missing",
 );
 
+
+actor.state.template.intimidating_presence_2014_dc = 0;
+actor.state.template.attack_action = null;
+delete window.IRON_PIT_BROWSER_MULTIATTACK;
+assert.deepEqual(
+  selector.discoverCandidates("normalPostMove", ctx),
+  [],
+  "actors without an Attack Action must not require the Multiattack runtime",
+);
+
+actor.state.template.attack_action = { id: "extra-attack", slots: [["sword"]] };
+assert.throws(
+  () => selector.discoverCandidates("normalPostMove", ctx),
+  /Attack\/Multiattack runtime is not loaded/,
+  "Attack Action owners must fail closed when the runtime is missing",
+);
+
 console.log("Browser Main Action provider dependency gating passed.");
