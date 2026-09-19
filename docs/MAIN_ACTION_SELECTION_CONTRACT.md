@@ -1,6 +1,6 @@
 # Main Action Selection Contract
 
-Status: normalPostMove live-migration tranche. Both normal-turn Main Action opportunities now route through the selector; Action Surge remains on its existing restrictive direct path.
+Status: selector migration complete for normal turns and Action Surge. `normalPreMove`, `normalPostMove`, and the restrictive `actionSurgeAttack` opportunity all route through the Main Action selector.
 
 ## Objective
 
@@ -101,7 +101,9 @@ The existing single-target save fallback is preserved exactly, including its his
 
 `normalPreMove` is the first live selector route. Its profile allows only `spell-offense`, so this migration changes orchestration without introducing category competition. If a legal pre-move spell candidate exists, the selector resolves it through the existing spell-offense provider; if none exists, sequence and state pass through unchanged to the existing charge/movement path.
 
-`normalPostMove` now recomputes the full legal candidate set after charge/offensive movement, selects by the certified Arena category order, and resolves exactly one Action family. The named spell/presence/Attack Action/area-save/save/standard-attack/Dodge branches have been removed from `browser-turn.js`.
+`normalPostMove` recomputes the full legal candidate set after charge/offensive movement, selects by the certified Arena category order, and resolves exactly one Action family. The named spell/presence/Attack Action/area-save/save/standard-attack/Dodge branches have been removed from `browser-turn.js`.
+
+`actionSurgeAttack` now discovers only Attack/Multiattack and standard-attack candidates before spending Action Surge. If no legal attack candidate exists, the resource is not spent. If a candidate exists, Action Surge grants the extra Action and that same selector-bound candidate resolves through the shared provider path.
 
 ## Migration plan
 
@@ -109,5 +111,5 @@ The existing single-target save fallback is preserved exactly, including its his
 2. Register providers without routing live turn behavior through them; prove discovery parity.
 3. Route `normalPreMove` through the selector.
 4. Route `normalPostMove` through the selector and remove named Action-family branches from `browser-turn.js`. **Complete.**
-5. Reuse the same selector infrastructure for Action Surge with the restrictive `actionSurgeAttack` profile.
+5. Reuse the same selector infrastructure for Action Surge with the restrictive `actionSurgeAttack` profile. **Complete.**
 6. Keep Python as the rules oracle and add permanent Python/browser policy-parity tests before each live behavior migration.
