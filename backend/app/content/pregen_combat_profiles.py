@@ -1,91 +1,42 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
 from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS
-from app.content.canonical_class_combat_spines import canonical_combat_features
-from app.domain.character_builds import AbilityScores
-
-@dataclass(frozen=True)
-class AttackExpectation:
-    weapon_id: str
-    ability: str
-    dice_count: int
-    dice_size: int
-    damage_type: str
-    reach_ft: int = 5
-    normal_range_ft: int | None = None
-    long_range_ft: int | None = None
-    style_attack_bonus: int = 0
-    damage_die_minimum: int | None = None
-    mastery_property: str | None = None
-    sneak_attack_eligible: bool = False
-    conditional_damage: tuple[tuple[int, int, str], ...] = ()
-
-@dataclass(frozen=True)
-class PregenCombatProfile:
-    template_id: str
-    archetype: str
-    level: int
-    abilities: AbilityScores
-    save_proficiencies: tuple[str, ...]
-    armor_class: int
-    max_hp: int
-    speed_ft: int
-    skill_bonuses: tuple[tuple[str, int], ...]
-    attacks: tuple[AttackExpectation, ...]
-    weapon_masteries: tuple[str, ...]
-    resources: tuple[tuple[str, int], ...] = ()
-    fighting_style: str | None = None
-    rage_damage_bonus: int = 0
-    sneak_attack_d6: int = 0
-    initiative_bonus: int | None = None
-    saving_throw_flat_bonus: int = 0
-    damage_resistances: tuple[str, ...] = ()
-    damage_vulnerabilities: tuple[str, ...] = ()
-    damage_immunities: tuple[str, ...] = ()
-    condition_immunities: tuple[str, ...] = ()
-
-def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> AbilityScores:
-    return AbilityScores(strength=strength, dexterity=dexterity, constitution=constitution,
-                         intelligence=intelligence, wisdom=wisdom, charisma=charisma)
-
-_KARNOK_ATTACKS = (
-    AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
-    AttackExpectation("shortbow", "dexterity", 1, 6, "piercing", normal_range_ft=80, long_range_ft=320),
-)
-_ROKHAN_ATTACKS = (
-    AttackExpectation("greataxe", "strength", 1, 12, "slashing"),
-    AttackExpectation("handaxe", "strength", 1, 6, "slashing", normal_range_ft=20, long_range_ft=60),
-)
+from app.content.pregen_combat_audit import AttackExpectation, PregenCombatProfile
 
 
 def _modifier(score: int) -> int:
     return (score - 10) // 2
 
 
-def _karnok_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatProfile:
+def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> tuple[tuple[str, int], ...]:
+    return (
+        ("strength", strength), ("dexterity", dexterity), ("constitution", constitution),
+        ("intelligence", intelligence), ("wisdom", wisdom), ("charisma", charisma),
+    )
+
+
+_KARNOK_ATTACKS = (
+    AttackExpectation("longsword", "strength", 1, 8, "slashing"),
+    AttackExpectation("longbow", "dexterity", 1, 8, "piercing"),
+)
+_ROKHAN_ATTACKS = (
+    AttackExpectation("greataxe", "strength", 1, 12, "slashing"),
+    AttackExpectation("handaxe", "strength", 1, 6, "slashing"),
+)
+
+
+def _karnok_profile(level: int) -> PregenCombatProfile:
     row = FIGHTER_COMBAT_LEVELS[level]
     abilities = _scores(row.strength, row.dexterity, row.constitution, 10, 10, 10)
-    resources = [("second-wind", row.second_wind_uses)]
-    if row.action_surge_uses:
-        resources.append(("action-surge", row.action_surge_uses))
-    if row.indomitable_uses:
-        resources.append(("indomitable", row.indomitable_uses))
-    resources.extend((("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)))
-    features = canonical_combat_features("fighter", level, "champion")
-    attacks = (replace(_KARNOK_ATTACKS[0], damage_die_minimum=3), _KARNOK_ATTACKS[1]) if "great-weapon-fighting" in features else _KARNOK_ATTACKS
     return PregenCombatProfile(
         f"karnok-stoneward-l{level}", "Fighter", level, abilities, ("strength", "constitution"),
         row.armor_class, row.max_hp, 30,
         (("athletics", row.proficiency_bonus + _modifier(row.strength)), ("acrobatics", _modifier(row.dexterity))),
-        attacks, row.weapon_masteries, tuple(resources), "Defense",
+        _KARNOK_ATTACKS, row.weapon_masteries,
+        (("second-wind", row.second_wind_uses),),
     )
-
-
-def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(4)
 
 
 def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
@@ -144,7 +95,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profile
     profiles = [
         *(_karnok_profile(level) for level in range(1, 15)),
-        *(_rokhan_profile(level) for level in range(1, 7)), *(_seraphine_profile(level) for level in range(1, 5)),
+        *(_rokhan_profile(level) for level in range(1, 8)), *(_seraphine_profile(level) for level in range(1, 5)),
         build_mara_quickstep_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
