@@ -3,7 +3,10 @@ import logging
 from app.content.legacy_monster_roster import build_legacy_monster_templates
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_source_audit import audit_monster_source
-from app.content.monster_spellcasting_source_audit import spellcasting_issues
+from app.content.monster_spellcasting_source_audit import (
+    _printed_spell_names,
+    spellcasting_issues,
+)
 from app.domain.catalog import CoverageStatus
 
 logger = logging.getLogger(__name__)
@@ -15,6 +18,17 @@ def _druid():
 
 def _row():
     return next(row for row in load_monster_rows() if row["name"] == "Druid")
+
+
+def test_druid_spell_parser_trims_neighbor_heading_without_changing_source() -> None:
+    try:
+        row = _row()
+        assert str(row["actions"]).endswith("Moonbeam Dryad")
+        assert "Moonbeam" in _printed_spell_names(row)
+        assert "Moonbeam Dryad" not in _printed_spell_names(row)
+    except Exception:
+        logger.exception("Druid spell source-bleed regression failed.")
+        raise
 
 
 def test_druid_source_attacks_and_multiattack_are_exact() -> None:
