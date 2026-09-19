@@ -10,7 +10,6 @@ const load = (name) => vm.runInThisContext(
   fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name },
 );
 
-let mutationCount = 0;
 window.IRON_PIT_ACTION_ECONOMY = {
   available: (state, cost) => cost === "action" && state.action_available,
 };
@@ -75,11 +74,12 @@ const ctx = (ruleset = "2024") => ({
 });
 
 {
-  const before = JSON.stringify(ctx());
-  const candidates = S.discoverCandidates("normalPreMove", ctx());
+  const context = ctx();
+  const before = structuredClone(context);
+  const candidates = S.discoverCandidates("normalPreMove", context);
   assert.deepEqual(candidates.map((item) => item.category), ["spell-offense"]);
   assert.equal(S.selectCandidate("normalPreMove", candidates).providerId, "spell-offense");
-  assert.equal(JSON.stringify(ctx()), before, "discovery must not mutate context state");
+  assert.deepEqual(context, before, "discovery must not mutate context state");
 }
 
 {
@@ -110,20 +110,10 @@ const ctx = (ruleset = "2024") => ({
 }
 
 {
-  const candidates = S.discoverCandidates("normalPostMove", ctx());
-  for (const candidate of candidates) {
-    const before = JSON.stringify(ctx());
-    if (candidate.providerId === "dodge") mutationCount += 0;
-    assert.equal(JSON.stringify(ctx()), before);
-  }
-}
-
-{
   const selected = S.selectCandidate("actionSurgeAttack", S.discoverCandidates("actionSurgeAttack", ctx()));
   const result = S.resolveCandidate("actionSurgeAttack", selected, ctx());
   assert.equal(result.sequence, 11);
   assert.deepEqual(result.events.map((event) => event.event_type), ["attack"]);
 }
 
-assert.equal(mutationCount, 0);
 console.log("Browser Main Action provider discovery regressions passed.");
