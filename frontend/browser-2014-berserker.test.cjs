@@ -77,7 +77,17 @@ for (const hero of [l3, l9, l10, l13]) {
   assert.equal(hero.state.rage_max_round, 11);
   assert.deepEqual(window.IRON_PIT_BROWSER_RAGE.cleanupExpired(2, 2, hero), { events: [], sequence: 2 });
   assert.ok(hero.state.active_effect_ids.includes("rage"));
-  const ended = window.IRON_PIT_BROWSER_RAGE.cleanupExpired(3, 11, hero);
+  hero.state.active_effect_ids.push("stunned");
+  window.IRON_PIT_BROWSER_RAGE.endIfIncapacitated(hero.state);
+  assert.ok(hero.state.active_effect_ids.includes("rage"));
+  hero.state.is_unconscious = true;
+  window.IRON_PIT_BROWSER_RAGE.endIfIncapacitated(hero.state);
+  assert.ok(!hero.state.active_effect_ids.includes("rage"));
+
+  const fresh = member(persistentTemplate, "rokhan-persistent-duration", "heroes", 0);
+  window.IRON_PIT_BROWSER_STATE.beginTurn(fresh.state);
+  assert.ok(window.IRON_PIT_BROWSER_RAGE.enter(3, 1, fresh));
+  const ended = window.IRON_PIT_BROWSER_RAGE.cleanupExpired(4, 11, fresh);
   assert.equal(ended.events[0].feature_id, "exhaustion");
   assert.ok(!hero.state.active_effect_ids.includes("rage"));
 }
