@@ -3,6 +3,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PYTHON_TURN = REPO_ROOT / "backend" / "app" / "combat" / "encounter_combat_turn.py"
+PYTHON_SURGE = REPO_ROOT / "backend" / "app" / "combat" / "encounter_action_surge.py"
 BROWSER_PROFILES = REPO_ROOT / "frontend" / "browser-main-action-profiles.js"
 
 
@@ -40,3 +41,31 @@ def test_browser_normal_post_move_profile_matches_python_policy_order() -> None:
         "CATEGORIES.STANDARD_ATTACK",
         "CATEGORIES.DODGE",
     ])
+
+
+def test_python_action_surge_policy_remains_attack_only() -> None:
+    source = PYTHON_SURGE.read_text(encoding="utf-8")
+    surge = source[source.index("def resolve_action_surge_attack("):]
+    _positions_in_order(surge, [
+        "more, sequence = resolve_attack_action(",
+        "more, sequence = resolve_standard_attack_action(",
+    ])
+    for forbidden in [
+        "resolve_best_spell_offense(", "resolve_intimidating_presence(",
+        "resolve_area_save_turn(", "resolve_save_action(", "resolve_dodge_action(",
+    ]:
+        assert forbidden not in surge
+
+
+def test_browser_action_surge_profile_matches_python_attack_only_policy() -> None:
+    source = BROWSER_PROFILES.read_text(encoding="utf-8")
+    start = source.index("actionSurgeAttack: Object.freeze([")
+    end = source.index("]),", start)
+    profile = source[start:end]
+    assert "CATEGORIES.ATTACK_ACTION" in profile
+    assert "CATEGORIES.STANDARD_ATTACK" in profile
+    for forbidden in [
+        "CATEGORIES.SPELL_OFFENSE", "CATEGORIES.INTIMIDATING_PRESENCE_2014",
+        "CATEGORIES.AREA_SAVE", "CATEGORIES.SAVE_ACTION", "CATEGORIES.DODGE",
+    ]:
+        assert forbidden not in profile
