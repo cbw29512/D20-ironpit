@@ -11,12 +11,17 @@ const load = (name) => vm.runInThisContext(
 );
 
 const calls = [];
+let selectorHasCandidate = true;
+let chargeCalls = 0;
 window.IRON_PIT_BROWSER_STATE = {
   beginTurn() {},
   packTactics: () => false,
 };
 window.IRON_PIT_BROWSER_CHARGE = {
-  resolveClosing: () => { throw new Error("movement/charge must not run after pre-move spell consumes Action"); },
+  resolveClosing: (sequence) => {
+    chargeCalls += 1;
+    return selectorHasCandidate ? (() => { throw new Error("movement/charge must not run after pre-move spell consumes Action"); })() : { handled: true, events: [{ sequence, event_type: "feature", feature_id: "charge" }], sequence: sequence + 1 };
+  },
 };
 window.IRON_PIT_BROWSER_RECHARGE = { resolveStartOfTurn: () => null };
 window.IRON_PIT_BROWSER_MULTIATTACK = {};
@@ -51,11 +56,11 @@ window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION = {
   discoverCandidates(profileId, ctx) {
     calls.push(["discover", profileId, ctx.sequence, ctx.turnKey]);
     assert.equal(profileId, "normalPreMove");
-    return [{ providerId: "spell-offense", category: "spell-offense" }];
+    return selectorHasCandidate ? [{ providerId: "spell-offense", category: "spell-offense" }] : [];
   },
   selectCandidate(profileId, candidates) {
     calls.push(["select", profileId, candidates.length]);
-    return candidates[0];
+    return candidates[0] || null;
   },
   resolveCandidate(profileId, candidate, ctx) {
     calls.push(["resolve", profileId, candidate.providerId, ctx.sequence]);
@@ -93,6 +98,20 @@ assert.equal(result.sequence, 2);
 assert.equal(result.events.length, 1);
 assert.equal(result.events[0].feature_id, "test-spell");
 assert.equal(member.state.action_available, false);
+assert.equal(chargeCalls, 0);
+
+selectorHasCandidate = false;
+calls.length = 0;
+chargeCalls = 0;
+member.state.action_available = true;
+const passthrough = window.IRON_PIT_BROWSER_TURN.resolveTurn(10, 3, member, setup);
+assert.deepEqual(calls, [
+  ["discover", "normalPreMove", 10, "3:hero-1"],
+  ["select", "normalPreMove", 0],
+]);
+assert.equal(chargeCalls, 1);
+assert.equal(passthrough.events.some((event) => event.feature_id === "charge"), true);
+assert.equal(member.state.action_available, true);
 
 const turnSource = fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8");
 assert.match(turnSource, /resolveMainActionOpportunity\("normalPreMove"/);
