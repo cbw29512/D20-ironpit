@@ -84,15 +84,27 @@ def _class_rules(profile: CharacterBuildProfile) -> dict[str, tuple[ResourceRule
     return _2014_CLASS_RULES if profile.ruleset == "2014" else _2024_CLASS_RULES
 
 
+def expected_unlimited_resources(profile: CharacterBuildProfile) -> set[str]:
+    """Return independently certified non-finite resources for this build's edition."""
+    if profile.ruleset == "2014" and profile.class_id == "barbarian" and profile.level == 20:
+        return {"rage"}
+    return set()
+
+
 def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
-    """Return independently certified positive-use resources for this build's edition."""
+    """Return independently certified positive finite resources for this build's edition."""
     class_rules = _class_rules(profile)
     species_rules = {} if profile.ruleset == "2014" else _2024_SPECIES_RULES
     rules = [
         *class_rules.get(profile.class_id, ()),
         *species_rules.get(profile.species_id, ()),
     ]
-    resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
+    unlimited = expected_unlimited_resources(profile)
+    resolved = {
+        resource_id: resolver(profile.level)
+        for resource_id, _name, resolver in rules
+        if resource_id not in unlimited
+    }
     if profile.ruleset == "2024" and profile.class_id in FULL_CASTER_CLASSES:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
     if profile.ruleset == "2014" and profile.class_id == "paladin":
@@ -111,11 +123,14 @@ def audit_character_resources(
     if build_profile.class_id not in class_rules:
         issues.append("class-level-resource-rules-not-certified")
     expected = expected_resources(build_profile)
+    expected_unlimited = expected_unlimited_resources(build_profile)
     runtime = {item.id: item.max_uses for item in template.resources}
+    runtime_unlimited = set(template.unlimited_resource_ids)
     fingerprint = dict(combat_profile.resources)
-    if runtime != expected:
+    fingerprint_unlimited = set(combat_profile.unlimited_resources)
+    if runtime != expected or runtime_unlimited != expected_unlimited:
         issues.append("level-derived-runtime-resources-mismatch")
-    if fingerprint != expected:
+    if fingerprint != expected or fingerprint_unlimited != expected_unlimited:
         issues.append("level-derived-combat-profile-resources-mismatch")
     return issues
 
