@@ -37,7 +37,7 @@ def test_python_tactical_master_sap_replaces_native_mastery_on_hit() -> None:
 
     event = resolve_attack(
         1, 1, attacker, target, attacker.template.weapon_attack, 5,
-        FixedDiceProvider([15, 4, 4]), spend_action=False,
+        FixedDiceProvider([15, 4, 4, 5, 5]), spend_action=False,
     )
 
     assert event.hit is True
