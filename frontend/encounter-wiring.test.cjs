@@ -35,7 +35,7 @@ assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/
 assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
 assert.match(html, /browser-ability-hooks\.js/);
-assert.match(html, /browser-main-action-profiles\.js/); assert.match(html, /browser-main-action-selection\.js/);
+assert.match(html, /browser-main-action-profiles\.js/); assert.match(html, /browser-main-action-selection\.js/); assert.match(html, /browser-main-action-providers\.js/);
 assert.match(html, /browser-attack-outcome\.js/); assert.match(html, /browser-attack-outcome-hook-installation\.js/);
 assert.match(html, /browser-ability-hook-installation\.js/);
 assert.match(html, /browser-arena-map\.js/); assert.match(html, /browser-grid-geometry\.js/);
@@ -78,7 +78,8 @@ assert.match(css, /\.battle-card\.turn-active/); assert.match(css, /card-turn-sh
 assert.ok(html.indexOf("browser-action-economy.js") < html.indexOf("browser-ability-hooks.js"));
 assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-main-action-profiles.js"));
 assert.ok(html.indexOf("browser-main-action-profiles.js") < html.indexOf("browser-main-action-selection.js"));
-assert.ok(html.indexOf("browser-main-action-selection.js") < html.indexOf("browser-attack-outcome.js"));
+assert.ok(html.indexOf("browser-main-action-selection.js") < html.indexOf("browser-main-action-providers.js"));
+assert.ok(html.indexOf("browser-main-action-providers.js") < html.indexOf("browser-attack-outcome.js"));
 assert.ok(html.indexOf("browser-attack-outcome.js") < html.indexOf("browser-attack.js"));
 assert.ok(html.indexOf("browser-topple.js") < html.indexOf("browser-attack-outcome-hook-installation.js"));
 assert.ok(html.indexOf("browser-attack-outcome-hook-installation.js") < html.indexOf("browser-ability-hook-installation.js"));
