@@ -17,7 +17,7 @@ earlier outcome-changing feature is unsupported.
 | 12 | ASI | +1 Constitution, +1 Wisdom; derived AC, HP, saves, attacks and resource count recomputed | No new mutable state | Supported and eligible for certification |
 | 13 | Brutal Critical (2 dice) | `brutal_critical_dice=2`; PB increases to +5 | Existing critical-hit resolution | Supported and eligible for certification |
 | 14 | Retaliation | Reaction trigger: damage from a creature within 5 feet, then one melee weapon attack against that creature | Must consume the Reaction and resolve immediately off-turn | **Blocked: missing universal damage-trigger dispatch** |
-| 15 | Persistent Rage | `persistent_rage_2014=True`; 1-minute maximum remains | Isolated shared Rage primitive is implemented/tested in Python and browser; Rage no longer ends early for lack of attack/damage, but still ends on incapacity/maximum duration | Primitive staged safely; Rokhan level 15 remains uncertified because level 14 Retaliation is missing |
+| 15 | Persistent Rage | `persistent_rage_2014=True`; 1-minute maximum remains | Isolated shared Rage primitive is implemented/tested in Python and browser; Rage no longer ends early for lack of attack/damage and ignores other incapacitation; it still ends on unconsciousness/death or maximum duration | Primitive staged safely; Rokhan level 15 remains uncertified because level 14 Retaliation is missing |
 | 16 | ASI | Canonical choice: +2 Constitution (16 -> 18); Rage damage becomes +4 | No new mutable state | Numerically straightforward but not exposed as a runnable Rokhan template while level 14 is unsupported |
 | 17 | Brutal Critical (3 dice), 6 Rages | Existing brutal-critical dice/resource fields can represent both deltas | Existing critical-hit/resource state | Numerically supported by existing primitives but not exposed as a runnable Rokhan template while level 14 is unsupported |
 | 18 | Indomitable Might | Strength-check result has a floor equal to Strength score | Requires a shared ability-check result-replacement primitive | **Additional blocker: missing universal check-floor primitive** |
@@ -58,7 +58,7 @@ No 2024 Weapon Mastery or 2024 Brutal Strike data is introduced.
 
 The existing Rage engine now accepts a ruleset-scoped declarative `persistent_rage_2014` flag.
 When active, a 2014 Rage begins with its full one-minute expiry instead of the normal next-round
-early-expiry checkpoint. The ordinary maximum duration, incapacity cleanup, Frenzy exhaustion,
+early-expiry checkpoint. The ordinary maximum duration, unconsciousness/death cleanup, Frenzy exhaustion,
 and fresh-combat reset behavior are unchanged. Python and browser regression coverage exercise
 this primitive with a synthetic level-15 state derived from the certified level-13 template.
 
