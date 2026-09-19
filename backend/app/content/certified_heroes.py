@@ -10,6 +10,7 @@ from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
+from app.domain.rulesets import RulesetId
 
 HeroBuildKey = tuple[str, int, str]
 HeroCatalogReady = tuple[str, str]
@@ -39,17 +40,31 @@ def build_all_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemp
     ]
 
 
+def build_certified_hero_entries_for_ruleset(
+    ruleset: RulesetId,
+) -> list[tuple[HeroBuildKey, CombatantTemplate]]:
+    """Return validated canonical hero entries for one explicit ruleset."""
+    entries = [
+        entry for entry in build_all_certified_hero_entries()
+        if entry[1].ruleset == ruleset
+    ]
+    if not entries:
+        raise ValueError(f"No certified hero entries are registered for ruleset {ruleset}.")
+    return entries
+
+
 def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
     """Return the existing public 2024 canonical certification registry only."""
-    return [
-        entry for entry in build_all_certified_hero_entries()
-        if entry[1].ruleset == "2024"
-    ]
+    return build_certified_hero_entries_for_ruleset("2024")
 
 
 def build_certified_hero_registry() -> dict[HeroBuildKey, HeroCatalogReady]:
     return {key: (template.name, template.id) for key, template in build_certified_hero_entries()}
 
 
+def build_certified_hero_templates_for_ruleset(ruleset: RulesetId) -> list[CombatantTemplate]:
+    return [template for _, template in build_certified_hero_entries_for_ruleset(ruleset)]
+
+
 def build_certified_hero_templates() -> list[CombatantTemplate]:
-    return [template for _, template in build_certified_hero_entries()]
+    return build_certified_hero_templates_for_ruleset("2024")
