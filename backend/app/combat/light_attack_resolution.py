@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.damage_reaction_wrappers import resolve_attack_event_chain
 from app.combat.light_weapons import mark_light_extra_attack_used, plan_light_extra_attack
 from app.combat.pit_policy import choose_attack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -38,13 +38,12 @@ def resolve_light_extra_attack(
             spend(attacker.state, "bonus_action")
         mark_light_extra_attack_used(attacker.state, turn_key)
         pack = pack_tactics_active(attacker, target, setup)
-        event = resolve_encounter_attack(
+        return resolve_attack_event_chain(
             sequence, round_number, attacker, target, attack, distance, dice, setup,
             spend_action=False, advantage_sources=1 if pack else 0,
             feature_id=plan.feature_id, turn_key=turn_key, allow_reckless=True,
             close_enemy_active=False,
         )
-        return [event], sequence + 1
     except ValueError:
         raise
     except Exception as exc:
