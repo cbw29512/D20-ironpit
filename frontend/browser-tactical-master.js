@@ -66,4 +66,5 @@
     applyEffect, applyWeapon, consume, disadvantage, installAbilityHooks, resolveHit, weaponEligible,
   };
   window.IRON_PIT_BROWSER_TACTICAL_MASTER = { apply: applyTactical, eligible: selected, selected };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
 })();
