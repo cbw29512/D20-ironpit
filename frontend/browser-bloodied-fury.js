@@ -1,7 +1,6 @@
 (() => {
   "use strict";
 
-  const C = () => window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function active(state, attack) {
@@ -24,9 +23,11 @@
   }
 
   function resolveBeforeAttackRoll(ctx) {
-    const roll = C().requireContext(ctx);
-    C().setAdvantageSource(roll, "bloodied-fury", active(ctx.member.state, ctx.attack) ? 1 : 0);
-    return C().noEventResult(ctx.sequence);
+    const api = ctx.attackRollApi;
+    if (!api) throw new Error("Before-attack-roll hook requires attackRollApi.");
+    const roll = api.requireContext(ctx);
+    api.setAdvantageSource(roll, "bloodied-fury", active(ctx.member.state, ctx.attack) ? 1 : 0);
+    return api.noEventResult(ctx.sequence);
   }
 
   function installAbilityHooks() {
