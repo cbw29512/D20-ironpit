@@ -95,7 +95,7 @@
       if (typeof payload !== "object" || Array.isArray(payload)) {
         throw new Error(`Main Action provider "${provider.id}" candidate payload must be an object.`);
       }
-      candidates.push(Object.freeze({ providerId: provider.id, category: provider.category, opportunityProfile: profileId, payload }));
+      candidates.push(Object.freeze({ providerId: provider.id, category: provider.category, opportunityProfile: profileId, combatantId: ctx.member.combatant_id, turnKey: ctx.turnKey ?? null, payload }));
     }
     return candidates;
   }
@@ -113,17 +113,21 @@
     return null;
   }
 
-  function resolveCandidate(candidate, ctx) {
-    const ruleset = rulesetFrom(ctx);
+  function resolveCandidate(profileId, candidate, ctx) {
+    const ruleset = rulesetFrom(ctx), profile = requireProfile(profileId);
     if (!candidate || typeof candidate !== "object") throw new Error("Main Action resolution requires a candidate.");
-    const profile = requireProfile(candidate.opportunityProfile);
+    if (candidate.opportunityProfile !== profileId || candidate.combatantId !== ctx.member.combatant_id
+      || candidate.turnKey !== (ctx.turnKey ?? null)
+      || !candidate.payload || typeof candidate.payload !== "object" || Array.isArray(candidate.payload)) {
+      throw new Error("Main Action candidate does not match the current opportunity/combatant/turn.");
+    }
     const provider = providers.get(candidate.providerId);
     if (!profile.includes(candidate.category)
       || !provider || provider.category !== candidate.category || !provider.rulesets.includes(ruleset)) {
       throw new Error("Main Action candidate does not match its opportunity profile/provider/ruleset.");
     }
     let result;
-    try { result = provider.resolve({ ...ctx }, candidate); }
+    try { result = provider.resolve({ ...ctx, opportunityProfile: profileId }, candidate); }
     catch (error) { providerFailure(provider, "resolve", ctx, error); }
     if (!result || !Array.isArray(result.events)
       || !Number.isInteger(result.sequence) || result.sequence < ctx.sequence) {
@@ -132,16 +136,10 @@
     return { events: result.events, sequence: result.sequence };
   }
 
-  function registeredProviders() {
-    return [...providers.values()].map(({ discover: _discover, resolve: _resolve, ...item }) => ({
-      ...item, rulesets: [...item.rulesets],
-    }));
-  }
-
   function _resetForTests() { providers.clear(); }
 
   window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION = {
     get CATEGORIES() { return CATEGORIES(); }, get PROFILES() { return PROFILES(); }, registerProvider, discoverCandidates, selectCandidate,
-    resolveCandidate, registeredProviders, _resetForTests,
+    resolveCandidate, _resetForTests,
   };
 })();
