@@ -125,3 +125,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         profile_level_builder=build_aurelia_brightshield_2014_profile, max_level=10,
     ),
 )
+
+
+def iter_certified_progression_levels() -> list[tuple[CertifiedHeroProgression, int]]:
+    return [(progression, level) for progression in CERTIFIED_HERO_PROGRESSIONS for level in progression.levels]
