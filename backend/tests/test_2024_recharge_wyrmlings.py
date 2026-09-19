@@ -21,6 +21,13 @@ _EXPECTED = {
     "Red Dragon Wyrmling": ("Fire Breath", "dexterity", 13, "cone", 15, None, 7, 6, "fire"),
     "White Dragon Wyrmling": ("Cold Breath", "constitution", 12, "cone", 15, None, 5, 8, "cold"),
 }
+_EXPECTED_IMMUNITY = {
+    "Black Dragon Wyrmling": "acid",
+    "Blue Dragon Wyrmling": "lightning",
+    "Green Dragon Wyrmling": "poison",
+    "Red Dragon Wyrmling": "fire",
+    "White Dragon Wyrmling": "cold",
+}
 
 
 def _runtime_by_name():
@@ -55,6 +62,7 @@ def test_wyrmlings_match_source_and_recharge_contract() -> None:
             damage_type,
         )
         assert breath.success_damage == "half"
+        assert [item.value for item in monster.damage_immunities] == [_EXPECTED_IMMUNITY[name]]
         assert breath.resource_id is not None
         assert monster.resources[0].id == breath.resource_id
         assert monster.resources[0].max_uses == 1
