@@ -4,6 +4,8 @@
   "class_id": "barbarian",
   "source": "D&D Beyond Basic Rules 2024: Barbarian",
   "hit_die": 12,
+  "unarmored_defense_abilities": ["dexterity", "constitution"],
+  "unarmored_defense_allows_shield": true,
   "levels": [
     {
       "level": 1,
@@ -13,7 +15,8 @@
         "rage": 2
       },
       "capabilities_added": [
-        "rage"
+        "rage",
+        "unarmored-defense"
       ]
     },
     {

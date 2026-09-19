@@ -4,6 +4,8 @@
   "class_id": "monk",
   "source": "D&D Beyond Basic Rules 2024: Monk",
   "hit_die": 8,
+  "unarmored_defense_abilities": ["dexterity", "wisdom"],
+  "unarmored_defense_allows_shield": false,
   "levels": [
     {
       "level": 1,

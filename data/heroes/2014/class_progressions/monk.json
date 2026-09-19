@@ -5,6 +5,8 @@
   "source": "D&D Basic Rules 2014: Monk",
   "hit_die": 8,
   "emit_attack_action_at_one": false,
+  "unarmored_defense_abilities": ["dexterity", "wisdom"],
+  "unarmored_defense_allows_shield": false,
   "levels": [
     {
       "level": 1,

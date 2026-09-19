@@ -38,7 +38,7 @@ Use edition-scoped data so 2014 and 2024 can never silently bleed into each othe
 - `data/heroes/<edition>/builds/<build>.json`: equipment, Fighting Style, attacks, visual loadout.
 - shared capability IDs point at the same universal combat capability registry used by monsters.
 
-`hp_by_level` on the track is canonical fingerprint evidence until hit-die derivation is proven to match it. Do not silently replace those numbers.
+`hp_by_level` and `ac_by_level` on the track are fail-closed fingerprints, not authoring inputs. Hit points are derived from the class Hit Die plus the current Constitution modifier treated as if it applied from 1st level (`fixed_hit_points`). Armor Class is derived from worn armor + Dexterity cap + Fighting Style + shield, or from Unarmored Defense ability modifiers when the loadout is unarmored. If a fingerprint is present and disagrees with the derived value, compilation fails. Do not invent ASI/feat/boon choices to fill later levels.
 
 ## Level compiler
 

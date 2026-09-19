@@ -14,9 +14,11 @@ class ArmorRecord:
 
 
 ARMOR_CATALOG = {
-    "chain-mail": ArmorRecord("chain-mail", "Chain Mail", "heavy", 16),
-    "scale-mail": ArmorRecord("scale-mail", "Scale Mail", "medium", 14),
+    "leather": ArmorRecord("leather", "Leather Armor", "light", 11),
     "studded-leather": ArmorRecord("studded-leather", "Studded Leather Armor", "light", 12),
+    "chain-shirt": ArmorRecord("chain-shirt", "Chain Shirt", "medium", 13),
+    "scale-mail": ArmorRecord("scale-mail", "Scale Mail", "medium", 14),
+    "chain-mail": ArmorRecord("chain-mail", "Chain Mail", "heavy", 16),
 }
 
 

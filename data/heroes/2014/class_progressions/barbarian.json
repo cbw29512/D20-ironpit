@@ -5,6 +5,8 @@
   "source": "D&D Basic Rules 2014: Barbarian",
   "hit_die": 12,
   "emit_attack_action_at_one": true,
+  "unarmored_defense_abilities": ["dexterity", "constitution"],
+  "unarmored_defense_allows_shield": true,
   "levels": [
     {
       "level": 1,
@@ -14,7 +16,8 @@
         "rage": 2
       },
       "capabilities_added": [
-        "rage"
+        "rage",
+        "unarmored-defense"
       ]
     },
     {

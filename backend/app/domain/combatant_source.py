@@ -52,6 +52,8 @@ class HeroProgressionSource(BaseModel):
     source: str
     hit_die: int = Field(ge=4, le=12)
     emit_attack_action_at_one: bool = False
+    unarmored_defense_abilities: list[AbilityName] = Field(default_factory=list)
+    unarmored_defense_allows_shield: bool = False
     levels: list[HeroLevelDelta] = Field(min_length=1)
 
     @model_validator(mode="after")

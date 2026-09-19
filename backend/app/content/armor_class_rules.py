@@ -91,6 +91,27 @@ def compile_equipped_base_ac(
         raise RuntimeError("Equipped base AC could not be compiled.") from exc
 
 
+def compile_unarmored_defense_ac(
+    ability_modifiers: list[int],
+    *,
+    wielding_shield: bool,
+    allows_shield: bool,
+) -> int:
+    """Compile 10 + listed ability modifiers, plus shield only when the feature allows it."""
+    try:
+        if not ability_modifiers:
+            raise ValueError("Unarmored Defense requires at least one ability modifier.")
+        if not isinstance(wielding_shield, bool) or not isinstance(allows_shield, bool):
+            raise ValueError("Unarmored Defense shield flags must be booleans.")
+        shield = 2 if wielding_shield and allows_shield else 0
+        return 10 + sum(ability_modifiers) + shield
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Unarmored Defense AC compilation failed.")
+        raise RuntimeError("Unarmored Defense AC could not be compiled.") from exc
+
+
 def compile_worn_armor_class(
     armor_base_ac: int,
     armor_category: ArmorCategory,

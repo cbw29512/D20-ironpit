@@ -15,6 +15,10 @@ def test_fixed_hit_points_use_current_constitution_modifier_retroactively() -> N
     assert fixed_hit_points(3, 10, 2) == 28
     assert fixed_hit_points(4, 10, 3) == 40
     assert fixed_hit_points(20, 10, 5) == 224
+    assert fixed_hit_points(1, 12, 2) == 14
+    assert fixed_hit_points(4, 12, 3) == 45
+    assert fixed_hit_points(1, 8, 0) == 8
+    assert fixed_hit_points(4, 8, 0) == 23
 
 
 def test_saving_throw_bonuses_are_derived_from_scores_and_proficiencies() -> None:

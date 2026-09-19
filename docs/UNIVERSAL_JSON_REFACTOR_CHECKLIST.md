@@ -21,14 +21,34 @@ It is intentionally ordered so future work can resume from repository state rath
 
 ## Phase 1 — Finish 2024 Fighter migration
 
-- [ ] Report every fingerprint mismatch as source-data, compiler, or capability-registry work.
-- [ ] Derive AC from armor + Dex + Fighting Style once fingerprints prove the inputs.
-- [ ] Reconcile `hp_by_level` with hit-die math or record why the canonical numbers differ.
-- [ ] Audit levels 18–20 and list actual unsupported universal capability IDs.
+- [x] Report every fingerprint mismatch as source-data, compiler, or capability-registry work.
+- [x] Derive AC from armor + Dex + Fighting Style once fingerprints prove the inputs.
+- [x] Reconcile `hp_by_level` with hit-die math or record why the canonical numbers differ.
+- [x] Audit levels 18–20 and list actual unsupported universal capability IDs.
 - [ ] Implement only genuinely missing reusable capabilities, with Python/browser parity.
 - [ ] Compile/certify Fighter 1–20 from JSON.
 - [ ] Switch Fighter runtime/certification registration to the JSON path.
 - [ ] Delete obsolete Fighter per-level builders only after permanent parity tests are green.
+
+### 2024 Champion 15–20 RAW audit
+
+JSON now derives Karnok HP/AC from RAW inputs. Certified fingerprints for 1–14 match that math. Remaining blockers are not HP/AC:
+
+- **15 Superior Critical:** same expanded-critical primitive as Improved Critical (`critical_hit_minimum` 18). JSON compiles. Not yet certified; Python runtime registration still stops at 14.
+- **16 ASI/feat:** required Fighter choice. Karnok's track has no level-16 pick. Do not invent scores or a feat.
+- **17 Action Surge (2) / Indomitable (3):** already in the class table. Still blocked in certification by the missing level-16 choice sitting in front of it.
+- **18 Survivor:** `survivor-defy-death` and `survivor-heroic-rally` are 2024 Champion text, not 2014 Survivor. 2014 Survivor is start-of-turn heal at ≤ half HP (`survivor`). 2024 Heroic Rally is a Bonus Action heal; Defy Death is Advantage on death saves plus a drop-to-1-HP resource. Fail closed. Do not reuse 2014 Survivor.
+- **19 Epic Boon of Combat Prowess:** `boon-combat-prowess` is unsupported. Also a character choice that must be recorded on the track before certification.
+- **20 Extra Attack (3):** `attack_count` 4 is already in the class table.
+
+Champion 7 Additional Fighting Style is a character choice. Karnok's Great Weapon Fighting is still stored as a subclass capability rather than a track fighting-style pick; that is a later source-data cleanup, not a new engine.
+
+### Derived-stat contract
+
+- HP = class Hit Die max at 1 + average (die/2 + 1) each later level + current Constitution modifier × level.
+- Worn AC uses the shared armor catalog, Dexterity cap, Defense Fighting Style, and shield.
+- Barbarian Unarmored Defense = 10 + Dex + Con, shield allowed. Monk = 10 + Dex + Wis, no shield.
+- Fingerprints stay in the track only to fail closed if derivation drifts.
 
 ## Phase 2 — Normalize monster authoring
 
