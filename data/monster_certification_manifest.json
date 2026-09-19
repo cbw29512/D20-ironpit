@@ -7668,7 +7668,8 @@
         "attack-roll",
         "bonus-action",
         "damage-or-condition-defense",
-        "trait"
+        "trait",
+        "unsupported-action-rider"
       ],
       "supported_mechanics": [
         "attack-roll",
@@ -7676,7 +7677,8 @@
         "damage-or-condition-defense"
       ],
       "unsupported_mechanics": [
-        "trait"
+        "trait",
+        "unsupported-action-rider"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -7684,7 +7686,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "unsupported-action-rider"
       ]
     },
     {
