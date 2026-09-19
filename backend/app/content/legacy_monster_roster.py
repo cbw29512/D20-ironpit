@@ -69,7 +69,7 @@ def build_legacy_monster_templates(*, include_capability_migrated: bool = True) 
         build_hippogriff(), *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(),
         *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(), *build_venom_monsters(),
         *build_expansion_four(), build_giant_crocodile(), *snake_entries, build_tyrannosaurus_rex(),
-        *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
+        *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), build_xorn(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)
