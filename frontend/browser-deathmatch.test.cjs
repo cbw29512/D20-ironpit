@@ -20,7 +20,7 @@ for (const file of [
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
-  "browser-frenzy-2014.js", "browser-2014-monk.js", "browser-ability-hook-installation.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
+  "browser-frenzy-2014.js", "browser-2014-monk.js", "browser-ability-hook-installation.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const maxDice = { roll: (sides) => sides, rollMany: (count, sides) => Array(count).fill(sides) };
