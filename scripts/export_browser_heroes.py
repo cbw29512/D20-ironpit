@@ -216,6 +216,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     }
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
+    if template.damage_reaction_attack:
+        row["damage_reaction_attack"] = template.damage_reaction_attack.model_dump()
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.ability_check_minimums:
