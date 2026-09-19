@@ -1,8 +1,8 @@
 (() => {
   "use strict"; const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
-  const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false }, GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
-  const TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) }, STUDY = () => window.IRON_PIT_BROWSER_STUDIED_ATTACKS || { apply: () => false };
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE;
+  const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
+  const AH = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) }, B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0, consumeNextAttackAgainstAdvantage: () => 0,
     effectiveArmorClass: (state) => state.template.armor_class, effectiveSpeed: (state) => state.template.speed_ft, attackRollFlat: () => 0, applyD20Bonus: (_state, _kind, roll) => roll };
@@ -49,6 +49,11 @@
     return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || []), appliedTotal, saveDamage: null };
   }
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
+  function runOutcomePhase(phase, sequence, context) {
+    const hooks = AH(); if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
+    const result = hooks.runPhase(phase, { sequence, member: context.attacker, events: [], ...context });
+    if (result.events.length) throw new Error(`${phase} attack-outcome hooks must decorate the canonical attack event, not emit sibling events.`);
+  }
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
@@ -85,8 +90,10 @@
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = "", vexApplied = false, studiedApplied = false, hitSave = null, saveDamage = null;
-    let topple = { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }; const applied = [];
+    let damageRoll = null, damageComponents = [], damageOutcome = null, hitSave = null, saveDamage = null;
+    const outcome = { sapApplied: "", vexApplied: false, studiedApplied: false,
+      topple: { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }, applied: [] };
+    const applied = outcome.applied;
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
@@ -105,23 +112,25 @@
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
       hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, attack, attacker.state.template) || null : null; if (hitSave?.appliedCondition && !applied.includes(hitSave.appliedCondition)) applied.push(hitSave.appliedCondition);
-      topple = TOP().resolve(attacker, actualTarget, attack); if (topple.applied && !applied.includes("prone")) applied.push("prone");
-      if (living) sapApplied = SAP().applyWeapon(attacker, actualTarget, attack, round) ? "weapon" : TM().apply(attacker, actualTarget, attack, round) ? "tactical" : "";
-      vexApplied = window.IRON_PIT_BROWSER_VEX?.apply(attacker.state, attacker.combatant_id, actualTarget.combatant_id, attack, round, damageRoll.total) || false;
+      runOutcomePhase(AH().PHASES.ON_HIT, sequence, {
+        attacker, target: actualTarget, originalTarget: target, attack, round, setup: extra.setup,
+        living, damageRoll, outcome, adjustedDamage, applyDamage,
+      });
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     } else {
-      const rawGraze = GRZ().rawDamage(attacker.state, attack);
-      if (rawGraze !== null) {
-        const appliedTotal = adjustedDamage(actualTarget.state, rawGraze, attack.damageType, false);
-        damageComponents = [{ source: `${attack.name} (Graze)`, notation: String(rawGraze), rolls: [], modifier: 0,
-          damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
-        damageRoll = { notation: String(rawGraze), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal };
-        const affectedStates = states(extra.setup), appliedTypes = appliedTotal > 0 ? [attack.damageType] : [];
-        damageOutcome = applyDamage(actualTarget.state, appliedTotal, false, appliedTypes, affectedStates);
+      const missOutcome = { damageRoll: null, damageComponents: [], damageOutcome: null, studiedApplied: false };
+      runOutcomePhase(AH().PHASES.ON_MISS, sequence, {
+        attacker, target: actualTarget, originalTarget: target, attack, round, setup: extra.setup,
+        outcome: missOutcome, adjustedDamage, applyDamage,
+      });
+      damageRoll = missOutcome.damageRoll; damageComponents = missOutcome.damageComponents;
+      damageOutcome = missOutcome.damageOutcome; outcome.studiedApplied = missOutcome.studiedApplied;
+      if (damageRoll !== null) {
+        const affectedStates = states(extra.setup);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
       }
-      studiedApplied = STUDY().apply(attacker.state, attacker.combatant_id, target.combatant_id, round);
     }
+    const topple = outcome.topple, sapApplied = outcome.sapApplied, vexApplied = outcome.vexApplied, studiedApplied = outcome.studiedApplied;
     const attackSave = saveDamage?.saveDc != null ? saveDamage : hitSave;
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(actualTarget.state) || "";
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
