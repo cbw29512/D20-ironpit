@@ -57,13 +57,18 @@
     register({
       id: "intimidating-presence-2014", category: C().INTIMIDATING_PRESENCE_2014, rulesets: ["2014"],
       discover: ({ member, setup }) => {
+        if (!(member.state.template.intimidating_presence_2014_dc > 0)) return null;
+        const runtime = IP();
+        if (!runtime) throw new Error("Intimidating Presence runtime is not loaded.");
         const target = F().targetOrder(member, setup)[0] || null;
-        return target && IP().canUse(member, target) ? { payload: { targetId: target.combatant_id } } : null;
+        return target && runtime.canUse(member, target) ? { payload: { targetId: target.combatant_id } } : null;
       },
       resolve: ({ sequence, round, member, setup }, candidate) => {
+        const runtime = IP();
+        if (!runtime) throw new Error("Intimidating Presence runtime is not loaded.");
         const target = memberById(setup, candidate.payload.targetId);
         if (!target) throw new Error("Intimidating Presence candidate target is unavailable.");
-        const event = IP().resolve(sequence, round, member, target);
+        const event = runtime.resolve(sequence, round, member, target);
         if (!event) throw new Error("Intimidating Presence candidate became illegal before resolution.");
         return { events: [event], sequence: sequence + 1 };
       },
