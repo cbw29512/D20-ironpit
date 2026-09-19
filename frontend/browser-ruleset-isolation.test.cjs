@@ -12,7 +12,7 @@ const load = (name) => vm.runInThisContext(
 );
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-ability-hooks.js", "browser-attack-outcome.js",
+  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack-outcome.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-weapon-mastery.js",
   "browser-state.js", "browser-rage.js", "browser-frenzy-2014.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
