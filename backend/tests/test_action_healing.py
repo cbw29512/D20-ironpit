@@ -67,6 +67,19 @@ def test_bonus_action_heal_rescues_downed_ally_before_self_and_preserves_action(
     assert healer.state.bonus_action_available is False
 
 
+def test_injured_but_not_bloodied_ally_is_not_healed() -> None:
+    setup = _setup()
+    healer, ally = setup.heroes
+    healer.state.current_hp = healer.state.template.max_hp - 1
+    ally.state.current_hp = ally.state.template.max_hp - 1
+    action = HealingAction(
+        id="ally-heal", name="Ally Heal", action_cost="action", range_ft=5,
+        target_mode="self_or_ally", healing_bonus=5,
+    )
+    assert choose_healing_target(healer, setup, action) is None
+    assert choose_healing_action(healer, setup) is None
+
+
 def test_bloodied_ally_is_healed_before_more_injured_self() -> None:
     setup = _setup()
     healer, ally = setup.heroes

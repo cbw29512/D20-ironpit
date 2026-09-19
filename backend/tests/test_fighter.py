@@ -38,3 +38,15 @@ def test_arena_policy_waits_until_half_hp_or_lower() -> None:
 
     fighter.current_hp = 6
     assert should_use_second_wind(fighter) is True
+
+    fighter.current_hp = 0
+    assert should_use_second_wind(fighter) is False
+
+
+def test_second_wind_bloodied_gate_uses_effective_maximum() -> None:
+    fighter = build_combatant_state(build_demo_fighter())
+    fighter.max_hp_bonus = 5
+    fighter.current_hp = 7
+    assert should_use_second_wind(fighter) is True
+    fighter.current_hp = 9
+    assert should_use_second_wind(fighter) is False

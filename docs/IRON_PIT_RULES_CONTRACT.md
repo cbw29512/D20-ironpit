@@ -166,6 +166,18 @@ AI selection must not use unavailable abilities, knowingly choose arena-no-effec
 
 Dodge is a final legal fallback after supported offensive options cannot be made legal; it is not a way to hide malformed data or unsupported mechanics.
 
+Arena healing selection is a policy overlay, not a RAW rewrite. Healing abilities remain legal whenever the selected edition says they are legal. Arena AI spends a proactive heal only on a Bloodied creature: current HP is half the creature's effective Hit Point maximum or fewer. A living creature at 0 HP is Bloodied. Temporary HP does not change that threshold; Aid and similar current-maximum changes do.
+
+Among legal Bloodied targets, Arena order is:
+
+1. a living ally at 0 HP;
+2. a Bloodied ally, lowest current-HP fraction first;
+3. Bloodied self, and only for Action or Bonus Action heals.
+
+Second Wind, Lay on Hands, Cure Wounds, Healing Word, Divine Spark heal, Preserve Life, and other proactive heals use this gate. Arena AI does not spend a turn topping off a non-Bloodied combatant.
+
+2014 Survivor is not an Arena choice. It is a RAW start-of-turn heal while the Champion is alive at or below half HP. 2024 Survivor remains unsupported until its distinct Defy Death and Heroic Rally primitives are implemented; Heroic Rally, when added, still uses this Bloodied gate because that is also its printed restriction.
+
 ## 13. Battlefield
 
 The battlefield uses one authoritative 5-foot-square grid with real x/y positions.

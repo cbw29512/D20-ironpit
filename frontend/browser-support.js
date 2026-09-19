@@ -32,9 +32,14 @@
     return { events, sequence };
   }
 
+  function bloodied(state) {
+    const maximum = typeof S()?.effectiveMaxHp === "function" ? S().effectiveMaxHp(state) : state.template.max_hp;
+    return state.current_hp * 2 <= maximum;
+  }
+
   function secondWind(sequence, round, member) {
     const state = member.state, uses = state.resources["second-wind"] || 0;
-    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
+    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || !bloodied(state)) return null;
     const die = D().roll(10), total = die + state.template.level, before = state.current_hp;
     state.current_hp = Math.min(state.template.max_hp, state.current_hp + total);
     state.resources["second-wind"] -= 1; E().spend(state, "bonus_action");

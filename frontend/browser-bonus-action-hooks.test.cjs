@@ -119,6 +119,17 @@ const finalizePhase = (actor, round = 1, monsters = [], turnEvents = []) => H.ru
 }
 
 {
+  const fighter = member("above-half-fighter", {
+    name: "Above Half Fighter", ruleset: "2024", max_hp: 40, level: 4, traits: ["adrenaline-rush"],
+    wearing_heavy_armor: false, rage_damage_bonus: 0, tactical_shift_fraction: 0,
+  }, { "second-wind": 3, "adrenaline-rush": 2 });
+  fighter.state.current_hp = 21;
+  const result = run(fighter, "beforeEscape");
+  assert.deepEqual(result.events, [], "Second Wind must wait until the fighter is Bloodied");
+  assert.equal(fighter.state.resources["second-wind"], 3);
+}
+
+{
   const fighter = member("healthy-fighter", {
     name: "Healthy Fighter", ruleset: "2024", max_hp: 40, level: 4, traits: ["adrenaline-rush"],
     wearing_heavy_armor: false, rage_damage_bonus: 0, tactical_shift_fraction: 0,
