@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "heroes": [
+    {
+      "id": "karnok-stoneward",
+      "name": "Karnok Stoneward",
+      "class_id": "fighter",
+      "subclass_id": "champion",
+      "build_id": "karnok-stoneward-great-weapon",
+      "species": "orc",
+      "background": "soldier",
+      "track_id": "karnok-stoneward-champion-great-weapon",
+      "level_range": [1, 20]
+    }
+  ]
+}

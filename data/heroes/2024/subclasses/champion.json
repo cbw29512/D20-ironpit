@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "fighter",
+  "subclass_id": "champion",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "improved-critical",
+        "remarkable-athlete"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "great-weapon-fighting"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "heroic-warrior"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "superior-critical"
+      ],
+      "capabilities_removed": [
+        "improved-critical"
+      ]
+    },
+    "18": {
+      "capabilities_added": [
+        "survivor-defy-death",
+        "survivor-heroic-rally"
+      ]
+    }
+  }
+}

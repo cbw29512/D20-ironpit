@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "id": "orc",
+  "speed_ft": 30,
+  "capabilities_added": [
+    "adrenaline-rush",
+    "relentless-endurance"
+  ],
+  "resources": {
+    "relentless-endurance": 1
+  },
+  "resource_equals_proficiency": [
+    "adrenaline-rush"
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "fighter",
+  "source": "D&D Beyond Basic Rules 2024",
+  "hit_die": 10,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "attack_count": 1,
+      "resources": {
+        "second-wind": 2
+      },
+      "capabilities_added": [
+        "second-wind"
+      ]
+    },
+    {
+      "level": 2,
+      "resources": {
+        "action-surge": 1
+      },
+      "capabilities_added": [
+        "action-surge",
+        "tactical-mind"
+      ]
+    },
+    {
+      "level": 3
+    },
+    {
+      "level": 4,
+      "resources": {
+        "second-wind": 3
+      }
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "attack_count": 2,
+      "capabilities_added": [
+        "extra-attack",
+        "tactical-shift"
+      ]
+    },
+    {
+      "level": 6
+    },
+    {
+      "level": 7
+    },
+    {
+      "level": 8
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "resources": {
+        "indomitable": 1
+      },
+      "capabilities_added": [
+        "indomitable",
+        "tactical-master"
+      ],
+      "arena_ignored": [
+        "tactical-master-push",
+        "tactical-master-slow"
+      ]
+    },
+    {
+      "level": 10,
+      "resources": {
+        "second-wind": 4
+      }
+    },
+    {
+      "level": 11,
+      "attack_count": 3
+    },
+    {
+      "level": 12
+    },
+    {
+      "level": 13,
+      "proficiency_bonus": 5,
+      "resources": {
+        "indomitable": 2
+      },
+      "capabilities_added": [
+        "studied-attacks"
+      ]
+    },
+    {
+      "level": 14
+    },
+    {
+      "level": 15
+    },
+    {
+      "level": 16
+    },
+    {
+      "level": 17,
+      "proficiency_bonus": 6,
+      "resources": {
+        "action-surge": 2,
+        "indomitable": 3
+      }
+    },
+    {
+      "level": 18
+    },
+    {
+      "level": 19,
+      "capabilities_added": [
+        "boon-combat-prowess"
+      ]
+    },
+    {
+      "level": 20,
+      "attack_count": 4
+    }
+  ]
+}

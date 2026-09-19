@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "id": "karnok-stoneward-champion-great-weapon",
+  "hero_id": "karnok-stoneward",
+  "class_id": "fighter",
+  "subclass_id": "champion",
+  "species_id": "orc",
+  "build_id": "karnok-stoneward-great-weapon",
+  "origin_capabilities": [
+    "savage-attacker"
+  ],
+  "ability_scores": {
+    "strength": 17,
+    "dexterity": 13,
+    "constitution": 15,
+    "intelligence": 10,
+    "wisdom": 10,
+    "charisma": 10
+  },
+  "ability_score_improvements": {
+    "4": { "strength": 18, "constitution": 16 },
+    "6": { "strength": 20 },
+    "8": { "constitution": 18 },
+    "12": { "constitution": 20 },
+    "14": { "dexterity": 15 },
+    "16": { "dexterity": 17 },
+    "19": { "dexterity": 18 }
+  },
+  "hp_by_level": [12, 20, 28, 40, 49, 58, 67, 84, 94, 104, 114, 136, 147, 158, 169, 180, 191, 202, 213, 224],
+  "weapon_masteries_by_level": {
+    "1": ["flail", "javelin", "spear"],
+    "4": ["flail", "javelin", "spear", "longsword"],
+    "9": ["flail", "javelin", "spear", "greatsword"],
+    "10": ["flail", "javelin", "spear", "greatsword", "shortbow"],
+    "16": ["flail", "javelin", "spear", "greatsword", "shortbow", "longsword"]
+  }
+}
