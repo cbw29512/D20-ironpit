@@ -54,7 +54,10 @@
     if (hooks.abilitiesFor(phase).some((item) => item.id === EFFECT_ID)) return;
     hooks.registerAbility(phase, {
       id: EFFECT_ID, priority: 10, rulesets: ["2014", "2024"],
-      appliesTo: (member, ctx) => hasReckless(member.state) && eligible(member.state, ctx.attack),
+      appliesTo: (member, ctx) => (
+        (hasReckless(member.state) && eligible(member.state, ctx.attack))
+        || attacksAgainstAdvantage(ctx.target.state) > 0
+      ),
       resolve: resolveBeforeAttackRoll,
     });
   }
