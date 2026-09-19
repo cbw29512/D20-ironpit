@@ -7,6 +7,8 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, use_ranged_split
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
+from app.combat.condition_rules import is_incapacitated
+from app.combat.damage_reaction_dispatch import resolve_damage_event_reactions
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
@@ -95,12 +97,18 @@ def resolve_attack_action(
                     if stun is not None:
                         events.append(stun)
                         sequence += 1
-                if attacker.state.turn_terminated:
+                reactions, sequence = resolve_damage_event_reactions(
+                    sequence, round_number, attacker, event, setup, dice, turn_key=turn_key,
+                )
+                events.extend(reactions)
+                if attacker.state.turn_terminated or attacker.state.is_dead or is_incapacitated(attacker.state):
                     break
                 cleave, sequence = resolve_cleave_extra_attack(
                     sequence, round_number, attacker, event, attack, setup, dice, turn_key,
                 )
                 events.extend(cleave)
+                if attacker.state.is_dead or is_incapacitated(attacker.state):
+                    break
                 if definition.is_attack_action and light_trigger is None and attack.weapon.light:
                     light_trigger = attack
                 opening_feature = None
@@ -109,13 +117,24 @@ def resolve_attack_action(
             chosen_save = save_choice(attacker, setup, slot)
             if chosen_save is not None:
                 target, save_action, distance = chosen_save
-                events.append(resolve_save_action(
+                event = resolve_save_action(
                     sequence, round_number, attacker, target, save_action,
                     distance, dice, spend_action=False, affected_states=affected_states,
-                ))
+                )
+                events.append(event)
                 sequence += 1
+                reactions, sequence = resolve_damage_event_reactions(
+                    sequence, round_number, attacker, event, setup, dice, turn_key=turn_key,
+                )
+                events.extend(reactions)
+                if attacker.state.is_dead or is_incapacitated(attacker.state):
+                    break
 
-        if definition.is_attack_action and light_trigger is not None and not attacker.state.turn_terminated:
+        if (
+            definition.is_attack_action and light_trigger is not None
+            and not attacker.state.turn_terminated and not attacker.state.is_dead
+            and not is_incapacitated(attacker.state)
+        ):
             more, sequence = resolve_light_extra_attack(
                 sequence, round_number, attacker, setup, dice, light_trigger, turn_key,
             )
