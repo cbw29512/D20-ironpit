@@ -19,6 +19,9 @@ def test_shared_feature_registry_compiles_reusable_fighter_and_barbarian_flags()
         "studied_attacks": True,
     }
 
+    superior_critical = compile_progression_feature_fields(("improved-critical", "superior-critical"), 15)
+    assert superior_critical["critical_hit_minimum"] == 18
+
     barbarian = compile_progression_feature_fields(
         ("danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage", "feral-instinct"), 7,
     )
@@ -36,4 +39,4 @@ def test_shared_feature_registry_fails_closed_for_unimplemented_combat_mechanics
     assert unsupported_hero_engine_features(("rage", "frenzy")) == ()
     assert unsupported_hero_engine_features(("heroic-warrior", "studied-attacks")) == ()
     assert unsupported_hero_engine_features(("rage", "instinctive-pounce", "brutal-strike")) == ()
-    assert unsupported_hero_engine_features(("studied-attacks", "superior-critical")) == ("superior-critical",)
+    assert unsupported_hero_engine_features(("studied-attacks", "superior-critical")) == ()
