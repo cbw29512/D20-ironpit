@@ -2,6 +2,7 @@
   "use strict";
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const T = () => window.IRON_PIT_BROWSER_AREA_TARGETING;
   const D = () => window.IRON_PIT_DICE;
@@ -58,10 +59,11 @@
       for (const id of placement.targetIds) {
         const target = memberById(setup, id);
         if (!target) throw new Error(`Unknown area-save target ${id}.`);
-        events.push(V().resolveAction(sequence++, round, member, target, action, 0, {
+        const event = V().resolveAction(sequence, round, member, target, action, 0, {
           spendAction: false, checkResource: false, spendResource: false,
           resourceRemaining: remaining, sharedDamageRolls: shared, setup,
-        }));
+        });
+        sequence = DMR().append(events, sequence + 1, round, member, event, setup);
       }
       return { events, sequence, placement };
     } catch (error) {

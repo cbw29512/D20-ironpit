@@ -3,6 +3,7 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
+  const D = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
@@ -59,11 +60,11 @@
         continue;
       }
       const event = V().resolveAction(
-        sequence++, round, caster, target, action, S().distance(caster, target),
-        { spendAction: false, sharedDamageRolls },
+        sequence, round, caster, target, action, S().distance(caster, target),
+        { spendAction: false, sharedDamageRolls, setup },
       );
       if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
-      events.push(event);
+      sequence = D().append(events, sequence + 1, round, caster, event, setup, turnKey);
       if (sharedDamageRolls == null && event.damage_components?.length) {
         sharedDamageRolls = [...event.damage_components[0].rolls];
       }
