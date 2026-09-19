@@ -16,3 +16,10 @@ class RedirectAttackReaction(BaseModel):
 
     ally_range_ft: int = Field(default=5, ge=1, le=30)
     ally_max_size: CreatureSize = CreatureSize.MEDIUM
+
+
+class DamageTriggeredMeleeReaction(BaseModel):
+    """Reaction attack triggered after taking damage from a nearby creature."""
+
+    id: str = Field(min_length=1)
+    trigger_range_ft: int = Field(default=5, ge=1, le=30)
