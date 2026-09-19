@@ -7,7 +7,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
-from app.combat.damage_reactions import resolve_post_damage_reactions
+from app.combat.damage_reactions import resolve_save_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
 from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
@@ -20,7 +20,6 @@ from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
 from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
-from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
@@ -121,17 +120,11 @@ def resolve_combat_turn(
         chosen_save = save_choice(attacker, setup)
         if chosen_save is not None and is_available(attacker.state, "action"):
             save_target, save_action, distance = chosen_save
-            affected = [member.state for member in [*setup.heroes, *setup.monsters]]
-            event = resolve_save_action(
-                sequence, round_number, attacker, save_target, save_action, distance, dice,
-                affected_states=affected,
+            more, sequence = resolve_save_event_chain(
+                sequence, round_number, attacker, save_target, save_action, distance, dice, setup,
+                turn_key=turn_key, affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
             )
-            events.append(event)
-            sequence += 1
-            reactions, sequence = resolve_post_damage_reactions(
-                sequence, round_number, attacker, event, setup, dice, turn_key=turn_key,
-            )
-            events.extend(reactions)
+            events.extend(more)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         attack_choice = choose_standard_attack(attacker, setup)
