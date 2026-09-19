@@ -20,6 +20,7 @@ def test_xorn_exact_multiattack_and_traits_match_source() -> None:
 
     assert xorn.movement_modes.burrow_ft == 20
     assert xorn.source_trait_names == ["Earth Glide", "Treasure Sense"]
+    assert xorn.source_bonus_action_names == ["Charge"]
     assert xorn.attack_action is not None
 
     by_id = {
