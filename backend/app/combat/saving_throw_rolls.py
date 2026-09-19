@@ -5,7 +5,11 @@ import logging
 from app.combat.barbarian import rage_active
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
 from app.combat.danger_sense import danger_sense_advantage
-from app.combat.defensive_modifier_rules import saving_throw_advantage_sources
+from app.combat.defensive_modifier_rules import (
+    consume_saving_throw_modifiers,
+    saving_throw_advantage_sources,
+    saving_throw_disadvantage_sources as modifier_save_disadvantage_sources,
+)
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
@@ -33,7 +37,10 @@ def saving_throw_mode(
             + sure_footed_advantage(state, ability, context)
             + saving_throw_advantage_sources(state, ability)
         )
-        disadvantage = saving_throw_disadvantage_sources(state)
+        disadvantage = (
+            saving_throw_disadvantage_sources(state)
+            + modifier_save_disadvantage_sources(state)
+        )
         if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids:
             disadvantage += 1
         if (advantage > 0) == (disadvantage > 0):
@@ -73,6 +80,7 @@ def resolve_saving_throw(
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
+            consume_saving_throw_modifiers(state)
             return None, False
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
@@ -83,6 +91,7 @@ def resolve_saving_throw(
             roll_d20(dice, modifier, saving_throw_mode(state, ability, context)),
             dice,
         )
+        consume_saving_throw_modifiers(state)
         if roll.total < dc:
             from app.combat.indomitable import use_indomitable
 

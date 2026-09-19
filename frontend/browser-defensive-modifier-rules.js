@@ -10,6 +10,17 @@
     .filter((item) => item.kind === "attacks-against-disadvantage" && sourceMatches(item, attackerTemplate)).length;
   const saveAdvantage = (state, ability) => (state.active_modifiers || [])
     .filter((item) => item.kind === "saving-throw-advantage" && item.save_ability === ability).length;
+  const saveDisadvantage = (state) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "saving-throw-disadvantage").length;
+
+  function consumeSavingThrowModifiers(state) {
+    const removed = (state.active_modifiers || [])
+      .filter((item) => item.kind === "saving-throw-disadvantage" && item.consume_on_saving_throw)
+      .map((item) => item.source_effect_id);
+    state.active_modifiers = (state.active_modifiers || [])
+      .filter((item) => !(item.kind === "saving-throw-disadvantage" && item.consume_on_saving_throw));
+    return [...new Set(removed)].sort();
+  }
   const deathSaveAdvantage = (state) => (state.active_modifiers || [])
     .some((item) => item.kind === "death-save-advantage");
   const healingMaximized = (state) => (state.active_modifiers || [])
@@ -29,7 +40,7 @@
   }
 
   window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = {
-    attacksAgainstDisadvantage, conditionImmune, deathSaveAdvantage, healingMaximized,
-    removeOwnerAttackEnding, saveAdvantage, targetingGate,
+    attacksAgainstDisadvantage, conditionImmune, consumeSavingThrowModifiers, deathSaveAdvantage, healingMaximized,
+    removeOwnerAttackEnding, saveAdvantage, saveDisadvantage, targetingGate,
   };
 })();
