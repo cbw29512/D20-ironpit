@@ -5,6 +5,7 @@
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const T = () => window.IRON_PIT_BROWSER_AREA_TARGETING;
   const D = () => window.IRON_PIT_DICE;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTIONS;
 
   function memberById(setup, id) {
     return [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === id) || null;
@@ -58,10 +59,13 @@
       for (const id of placement.targetIds) {
         const target = memberById(setup, id);
         if (!target) throw new Error(`Unknown area-save target ${id}.`);
-        events.push(V().resolveAction(sequence++, round, member, target, action, 0, {
+        const event = V().resolveAction(sequence++, round, member, target, action, 0, {
           spendAction: false, checkResource: false, spendResource: false,
           resourceRemaining: remaining, sharedDamageRolls: shared, setup,
-        }));
+        });
+        events.push(event);
+        const reactions = DR().resolveAfterDamage(sequence, round, member, event, setup);
+        events.push(...reactions.events); sequence = reactions.sequence;
       }
       return { events, sequence, placement };
     } catch (error) {
