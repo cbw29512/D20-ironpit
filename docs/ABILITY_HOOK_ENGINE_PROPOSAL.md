@@ -128,6 +128,12 @@ Rage expiration is deliberately **not** part of the exclusive Bonus Action claim
 
 The Python certification oracle intentionally retains its existing orchestration for this tranche. Permanent parity tests lock its current Bonus Action policy while browser regressions prove the equivalent hook-driven order. No Python combat rule is changed merely to mirror browser source structure.
 
+The browser production `onHit` / `onMiss` phases now preserve the existing single-attack audit event through a typed mutable `attackOutcome` accumulator. Outcome hooks may mutate that accumulator and combat state, but they must return the normal hook result shape with an empty `events` array; they may not emit separate battle events for effects that historically belong to the aggregate attack event.
+
+The preserved hit order is `Topple -> Sap/Tactical Master -> Vex`. The preserved miss order is `Graze -> Studied Attacks`. Generic hit damage, printed control effects, condition-save handling, zero-HP lifecycle, Rage incapacitation cleanup, and concentration cleanup remain in the shared attack primitive rather than being mislabeled as named ability hooks.
+
+The Python oracle retains its existing attack orchestration for this tranche. Dedicated parity coverage proves that Graze and Studied Attacks still coexist on one miss and that Tactical Master/Sap and Vex still coexist on one hit, while browser hook regressions lock the equivalent order and aggregate-event behavior.
+
 ## Migration order
 
 Migrate one coherent phase per PR.
