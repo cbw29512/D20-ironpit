@@ -1,5 +1,6 @@
 from app.combat.barbarian import end_rage, end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
+from app.combat.damage_reaction_dispatch import resolve_damage_reaction_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import begin_turn, build_combatant_state
@@ -8,9 +9,11 @@ from app.content.barbarian_berserker_2014_profile import (
     _advancements, _base_scores, _final_scores, _species_increases,
 )
 from app.content.barbarian_berserker_2014_runtime import (
-    _progression, _scores, build_rokhan_stonefury_2014,
+    _damage_reaction, _progression, _scores, build_rokhan_stonefury_2014,
 )
+from app.content.demo import build_goblin_warrior
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.progression import AbilityCheckMinimum
 
 
@@ -153,3 +156,70 @@ def test_staged_2014_level_20_unlimited_rage_has_no_counter_and_never_decrements
         assert event.resource_remaining is None
         assert state.resources == []
         assert end_rage(state) is not None
+
+
+
+def test_staged_2014_level_14_retaliation_binds_to_universal_source_dispatch() -> None:
+    base = build_rokhan_stonefury_2014(13)
+    policy = _damage_reaction(14)
+    assert policy is not None
+    assert policy.source_feature == "retaliation"
+    assert policy.trigger == "damaged-by-creature"
+    assert policy.source_range_ft == 5
+    assert policy.attack_kind == "melee"
+
+    rokhan_template = base.model_copy(update={
+        "level": 14,
+        "damage_reaction_attack": policy,
+    })
+    rokhan = EncounterCombatant(
+        combatant_id="rokhan",
+        side="heroes",
+        position_ft=0,
+        state=build_combatant_state(rokhan_template),
+    )
+    source = EncounterCombatant(
+        combatant_id="goblin-source",
+        side="monsters",
+        position_ft=5,
+        state=build_combatant_state(build_goblin_warrior()),
+    )
+    decoy = EncounterCombatant(
+        combatant_id="goblin-decoy",
+        side="monsters",
+        position_ft=5,
+        state=build_combatant_state(build_goblin_warrior()),
+    )
+    setup = EncounterSetup(
+        heroes=[rokhan],
+        monsters=[decoy, source],
+        hero_total_levels=14,
+        monster_total_cr="1/2",
+    )
+    hp_before = source.state.current_hp
+    action_before = rokhan.state.action_available
+
+    event = resolve_damage_reaction_attack(
+        7,
+        3,
+        rokhan,
+        source,
+        setup,
+        applied_damage=6,
+        dice=FixedDiceProvider([19, 5]),
+        turn_key="3:goblin-source",
+    )
+
+    assert event is not None
+    assert event.feature_id == "retaliation"
+    assert event.actor_id == "rokhan"
+    assert event.target_id == "goblin-source"
+    assert event.weapon_id == "rokhan-2014-greataxe"
+    assert source.state.current_hp < hp_before
+    assert rokhan.state.reaction_available is False
+    assert rokhan.state.action_available is action_before
+    assert decoy.state.current_hp == decoy.state.template.max_hp
+
+
+def test_staged_2014_retaliation_policy_is_absent_before_level_14() -> None:
+    assert _damage_reaction(13) is None

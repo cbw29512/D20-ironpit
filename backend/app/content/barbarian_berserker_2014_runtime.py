@@ -9,6 +9,7 @@ from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import AbilityCheckMinimum, EffectBoundSurvivalSave, ProgressionCombatFeatures
+from app.domain.reactions import DamageReactionAttack
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,10 @@ def _scores(level: int) -> AbilityScores:
     wisdom = 13 + (1 if level >= 12 else 0)
     return AbilityScores(strength=strength, dexterity=14, constitution=constitution,
                          intelligence=9, wisdom=wisdom, charisma=11)
+
+
+def _damage_reaction(level: int) -> DamageReactionAttack | None:
+    return DamageReactionAttack(source_feature="retaliation") if level >= 14 else None
 
 
 def _attack(level: int, weapon_id: str, scores: AbilityScores, *, rage_eligible: bool) -> WeaponAttack:
@@ -85,6 +90,7 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
             skill_bonuses={"athletics": scores.modifier("strength") + proficiency_bonus(level),
                            "acrobatics": dexterity},
             weapon_masteries=[], wearing_heavy_armor=False,
+            damage_reaction_attack=_damage_reaction(level),
             rage_damage_bonus=barbarian_rage_damage_bonus(level), progression_features=_progression(level, scores),
             resources=(
                 [] if level >= 20

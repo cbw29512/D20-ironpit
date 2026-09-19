@@ -16,7 +16,7 @@ earlier outcome-changing feature is unsupported.
 | 11 | Relentless Rage | Effect-bound survival save: Rage required, Constitution DC 10, +5 per attempt, success sets HP to 1 | Existing per-fight survival-save attempt map; fresh combat resets attempts | Supported and eligible for certification |
 | 12 | ASI | +1 Constitution, +1 Wisdom; derived AC, HP, saves, attacks and resource count recomputed | No new mutable state | Supported and eligible for certification |
 | 13 | Brutal Critical (2 dice) | `brutal_critical_dice=2`; PB increases to +5 | Existing critical-hit resolution | Supported and eligible for certification |
-| 14 | Retaliation | Reaction trigger: damage from a creature within 5 feet, then one melee weapon attack against that creature | Must consume the Reaction and resolve immediately off-turn | **Blocked: missing universal damage-trigger dispatch** |
+| 14 | Retaliation | Declarative `DamageReactionAttack(source_feature="retaliation")` from level 14; source range 5 ft; melee-only | Python source-bound dispatcher now selects the triggering source, validates range, spends Reaction only, and resolves an immediate normal melee attack | Rokhan binding and Python dispatch regression staged; certification still blocked on shared damage-family wiring plus browser parity |
 | 15 | Persistent Rage | `persistent_rage_2014=True`; 1-minute maximum remains | Isolated shared Rage primitive is implemented/tested in Python and browser; Rage no longer ends early for lack of attack/damage and ignores other incapacitation; it still ends on unconsciousness/death or maximum duration | Primitive staged safely; Rokhan level 15 remains uncertified because level 14 Retaliation is missing |
 | 16 | ASI | Canonical choice: +2 Constitution (16 -> 18); Rage damage becomes +4 | No new mutable state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
 | 17 | Brutal Critical (3 dice), 6 Rages | `brutal_critical_dice=3`; finite Rage count = 6 | Existing critical-hit/resource state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
@@ -78,27 +78,20 @@ Unlimited resources are modeled without a fake counter. A combatant declares an 
 
 This completes the safe level-20 Rage primitive without widening certification beyond level 13.
 
-## Level-14 architectural blocker
+## Level-14 Retaliation integration state
 
-Retaliation cannot be implemented correctly as a weapon-hit-only callback.
-The source trigger is **taking damage from a creature within 5 feet**, so the
-universal engine must preserve damage-source creature provenance across every
-supported damage family that can satisfy the trigger.
+The shared engine now provides the state-first schema, runtime eligibility gate, and Python source-bound attack dispatcher. Rokhan's level-14 binding is staged declaratively through `DamageReactionAttack(source_feature="retaliation")`. A focused synthetic encounter regression proves the shared dispatcher:
 
-The required reusable primitive must:
+1. binds the reaction to the actual damaging source rather than normal target order;
+2. enforces the 5-foot source range;
+3. spends the defender's Reaction without spending the Action;
+4. selects Rokhan's declared legal melee attack;
+5. resolves the counterattack immediately through the normal encounter attack resolver;
+6. disables Reckless Attack on the off-turn counterattack.
 
-1. dispatch after qualifying damage is actually applied;
-2. identify the source creature without a Rokhan/Barbarian name check;
-3. use authoritative grid distance and require the source within 5 feet;
-4. check and spend the defender's Reaction;
-5. select a legal melee weapon attack against that source;
-6. resolve the reaction attack immediately through the normal attack resolver;
-7. preserve Python/browser parity and audit ordering;
-8. avoid recursive or duplicate trigger resolution.
+Certification is still fail-closed because the shared architecture has not yet wired this dispatcher after every supported damage-producing family and browser parity has not landed. The public Rokhan builder therefore remains capped at level 13.
 
-Do not approximate this with an `onHit` hook, because damage can arrive through
-other supported families and `onHit` does not mean "took damage from a
-creature."
+Do not approximate the remaining work with an `onHit` hook, because damage can arrive through other supported families and `onHit` does not mean "took damage from a creature."
 
 ## Certification boundary
 
