@@ -47,7 +47,8 @@ def consume_saving_throw_modifiers(state: CombatantState) -> list[str]:
 
 
 def death_save_advantage_sources(state: CombatantState) -> int:
-    return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.DEATH_SAVE_ADVANTAGE)
+    from_modifiers = sum(1 for item in state.active_modifiers if item.kind is ModifierKind.DEATH_SAVE_ADVANTAGE)
+    return from_modifiers + int(state.template.progression_features.death_save_advantage)
 
 
 def healing_is_maximized(state: CombatantState) -> bool:

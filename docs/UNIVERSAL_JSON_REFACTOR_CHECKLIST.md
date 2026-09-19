@@ -25,9 +25,9 @@ It does not replace `docs/IRON_PIT_RULES_CONTRACT.md`. Pit rules, house rules, a
 - [x] Derive AC from armor + Dex + Fighting Style once fingerprints prove the inputs.
 - [x] Reconcile `hp_by_level` with hit-die math or record why the canonical numbers differ.
 - [x] Audit levels 18–20 and list actual unsupported universal capability IDs.
-- [ ] Implement only genuinely missing reusable capabilities, with Python/browser parity.
+- [x] Implement only genuinely missing reusable capabilities, with Python/browser parity.
 - [x] Compile/certify 2014 Fighter 1–20 from JSON.
-- [ ] Compile/certify 2024 Fighter 1–20 from JSON. Certified runtime is 1–14; 16/19 choices and 2024 Survivor still block 15–20.
+- [ ] Compile/certify 2024 Fighter 1–20 from JSON. JSON now compiles 1–20 with SRD Survivor and Boon of Combat Prowess. Certified runtime registration is still 1–14 until fingerprints/profiles are extended.
 - [x] Switch Fighter runtime/certification registration to the JSON path for currently certified levels.
 - [ ] Delete obsolete Fighter per-level builders only after permanent parity tests are green.
 
@@ -36,10 +36,10 @@ It does not replace `docs/IRON_PIT_RULES_CONTRACT.md`. Pit rules, house rules, a
 JSON now derives Karnok HP/AC from RAW inputs. Certified fingerprints for 1–14 match that math. Remaining blockers are not HP/AC:
 
 - **15 Superior Critical:** same expanded-critical primitive as Improved Critical (`critical_hit_minimum` 18). JSON compiles. Not yet certified; Python runtime registration still stops at 14.
-- **16 ASI/feat:** required Fighter choice. Karnok's track has no level-16 pick. Do not invent scores or a feat.
-- **17 Action Surge (2) / Indomitable (3):** already in the class table. Still blocked in certification by the missing level-16 choice sitting in front of it.
-- **18 Survivor:** `survivor-defy-death` and `survivor-heroic-rally` are 2024 Champion text, not 2014 Survivor. 2014 Survivor is start-of-turn heal at ≤ half HP (`survivor`). 2024 Heroic Rally is a Bonus Action heal; Defy Death is Advantage on death saves plus a drop-to-1-HP resource. Fail closed. Do not reuse 2014 Survivor.
-- **19 Epic Boon of Combat Prowess:** `boon-combat-prowess` is unsupported. Also a character choice that must be recorded on the track before certification.
+- **16 ASI/feat:** recorded on Karnok's track as Dexterity 15→17. Same combat-role ASI already stored in `FIGHTER_COMBAT_LEVELS`.
+- **17 Action Surge (2) / Indomitable (3):** already in the class table.
+- **18 Survivor (SRD 5.2.1):** Defy Death is Advantage on Death Saves and 18–20 counts as a 20. Heroic Rally is start-of-turn heal of 5 + Con while Bloodied and at least 1 HP; it reuses the existing Survivor heal primitive. Implemented with Python/browser parity.
+- **19 Epic Boon of Combat Prowess (SRD 5.2.1):** +1 Dexterity (15/17/18 already on the level table) and Peerless Aim (one miss becomes a hit, once per turn; Iron Pit natural 1 still misses). Implemented with Python/browser parity.
 - **20 Extra Attack (3):** `attack_count` 4 is already in the class table.
 
 Champion 7 Additional Fighting Style is a character choice. Karnok's Great Weapon Fighting is still stored as a subclass capability rather than a track fighting-style pick; that is a later source-data cleanup, not a new engine.

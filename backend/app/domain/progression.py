@@ -67,5 +67,8 @@ class ProgressionCombatFeatures(BaseModel):
     aura_of_courage_2014: bool = False
     sacred_weapon_2014_bonus: int = Field(default=0, ge=0, le=10)
     survivor_heal_amount: int = Field(default=0, ge=0, le=30)
+    death_save_advantage: bool = False
+    death_save_nat20_minimum: int = Field(default=20, ge=2, le=20)
+    peerless_aim: bool = False
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)

@@ -117,7 +117,7 @@ def compile_hero_definition(
         if "tactical-master" in capabilities:
             primary = next(item for item in build.attacks if item.id == build.primary_attack_id)
             progression["tactical_master_sap_weapon_ids"] = [primary.weapon_id]
-        if "survivor" in capabilities:
+        if "survivor" in capabilities or "survivor-heroic-rally" in capabilities:
             progression["survivor_heal_amount"] = 5 + ability_modifier(int(abilities["constitution"]))
         if "intimidating-presence" in capabilities:
             progression["intimidating_presence_2014_dc"] = (

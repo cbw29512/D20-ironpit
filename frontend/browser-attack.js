@@ -86,7 +86,10 @@
     const naturalOne = natural === 1, naturalOneEndsTurn = naturalOne && extra.offTurn !== true;
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const initialHit = !naturalOne && (naturalTwenty || attackRoll.total >= baseTargetAc);
-    const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
+    const peerless = window.IRON_PIT_BROWSER_PEERLESS_AIM?.apply(
+      attacker, initialHit, naturalOne, extra.turnKey || `${round}:${attacker.combatant_id}`,
+    ) || { hit: initialHit, used: false };
+    const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, peerless.hit, baseTargetAc) || { hit: peerless.hit, used: false };
     const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
@@ -141,6 +144,7 @@
     if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
     else if (naturalOne) description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn.";
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
+    if (peerless.used) description += " Boon of Combat Prowess turns the miss into a hit.";
     if (!hit && damageRoll !== null) description += ` Graze deals ${damageRoll.total} ${attack.damageType} damage.`;
     if (studiedApplied) description += ` Studied Attacks primes the next attack against ${target.state.template.name}.`;
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`;

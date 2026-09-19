@@ -23,8 +23,9 @@
     const state = member.state, advantage = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.deathSaveAdvantage(state) || false;
     const deathRoll = window.IRON_PIT_BROWSER_ROLLS.d20(0, advantage ? "advantage" : "normal"), natural = deathRoll.selected_roll;
     const successesBefore = state.death_save_successes, failuresBefore = state.death_save_failures;
+    const nat20Floor = state.template.death_save_nat20_minimum || 20;
     let result = "failure";
-    if (natural === 20) { state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP"; }
+    if (natural >= nat20Floor) { state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP"; }
     else if (natural === 1) { state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures"; }
     else if (natural >= 10) { state.death_save_successes = Math.min(3, state.death_save_successes + 1); result = "success"; }
     else state.death_save_failures = Math.min(3, state.death_save_failures + 1);

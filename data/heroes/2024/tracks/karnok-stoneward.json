@@ -34,6 +34,12 @@
     },
     "14": {
       "dexterity": 15
+    },
+    "16": {
+      "dexterity": 17
+    },
+    "19": {
+      "dexterity": 18
     }
   },
   "hp_by_level": [
@@ -142,6 +148,14 @@
       "spear",
       "greatsword",
       "shortbow"
+    ],
+    "16": [
+      "flail",
+      "javelin",
+      "spear",
+      "greatsword",
+      "shortbow",
+      "longsword"
     ]
   },
   "fighting_styles_by_level": {

@@ -20,6 +20,7 @@ from app.combat.modifier_stack import (
 )
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.parry import resolve_parry_hit
+from app.combat.peerless_aim import apply_peerless_aim
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
@@ -83,6 +84,8 @@ def resolve_attack(
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         target_ac = effective_armor_class(actual_defender)
         hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
+        active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
+        hit, peerless_used = apply_peerless_aim(attacker, hit, natural_1, active_turn_key)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
@@ -120,6 +123,7 @@ def resolve_attack(
         if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
+        if peerless_used: description += " Boon of Combat Prowess turns the miss into a hit."
         if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
         if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."

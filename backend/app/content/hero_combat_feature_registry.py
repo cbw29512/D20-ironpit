@@ -22,6 +22,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "turn-unholy-2014", "aura-of-devotion-2014", "aura-of-courage-2014",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
+    "survivor-defy-death", "survivor-heroic-rally", "boon-combat-prowess",
 }
 
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
@@ -44,6 +45,8 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "feral-instinct": {"initiative_advantage": True},
     "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
     "brutal-strike": {"brutal_strike_damage_dice": 1},
+    "survivor-defy-death": {"death_save_advantage": True, "death_save_nat20_minimum": 18},
+    "boon-combat-prowess": {"peerless_aim": True},
 }
 
 

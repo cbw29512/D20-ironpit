@@ -21,8 +21,8 @@
       .filter((item) => !(item.kind === "saving-throw-disadvantage" && item.consume_on_saving_throw));
     return [...new Set(removed)].sort();
   }
-  const deathSaveAdvantage = (state) => (state.active_modifiers || [])
-    .some((item) => item.kind === "death-save-advantage");
+  const deathSaveAdvantage = (state) => Boolean(state.template?.death_save_advantage)
+    || (state.active_modifiers || []).some((item) => item.kind === "death-save-advantage");
   const healingMaximized = (state) => (state.active_modifiers || [])
     .some((item) => item.kind === "healing-maximize");
   const conditionImmune = (state, conditionId, sourceTemplate = null) => (state.active_modifiers || [])

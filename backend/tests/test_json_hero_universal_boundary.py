@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-from app.content.capability_attack_compiler import UnsupportedCapabilityError
 from app.content.capability_compiler import compile_combatant
 from app.content.capability_registry import get_capability_definition
 from app.content.json_combatant_compiler import (
@@ -60,13 +59,15 @@ def test_fighter_json_derives_attack_math_after_asi():
     assert template.saving_throw_bonuses["strength"] == 6
 
 
-def test_unsupported_high_level_capability_fails_closed_at_shared_compiler():
+def test_level_eighteen_survivor_compiles_through_shared_boundary():
     folded, build = _fold(18)
     definition = compile_hero_definition("karnok-stoneward", "Karnok Stoneward", folded, build)
+    template = compile_combatant(definition)
 
-    assert "survivor-defy-death" in definition.unsupported_capabilities
-    with pytest.raises(UnsupportedCapabilityError):
-        compile_combatant(definition)
+    assert definition.unsupported_capabilities == []
+    assert template.progression_features.survivor_heal_amount == 10
+    assert template.progression_features.death_save_advantage is True
+    assert template.progression_features.death_save_nat20_minimum == 18
 
 
 def test_character_and_monster_share_engine_facing_template_contract():

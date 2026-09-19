@@ -95,7 +95,7 @@ def test_fingerprint_mismatch_fails_closed():
         }), 2)
 
 
-def test_2024_karnok_level_15_compiles_and_high_level_survivor_fails_closed():
+def test_2024_karnok_level_15_compiles_and_high_level_survivor_is_supported():
     identity, progression, subclass, species, track, build = load_hero_bundle(
         ROOT, "2024", "karnok-stoneward",
     )
@@ -106,15 +106,29 @@ def test_2024_karnok_level_15_compiles_and_high_level_survivor_fails_closed():
     assert compiled.max_hp == 169
     assert compiled.armor_class == 17
     assert compiled.progression_features.critical_hit_minimum == 18
+    assert compiled.ability_scores.dexterity == 15
+
+    folded = fold_hero_level(progression, subclass, species, track, 16)
+    compiled = compile_combatant(compile_hero_definition(identity.id, identity.name, folded, build))
+    assert compiled.ability_scores.dexterity == 17
 
     folded = fold_hero_level(progression, subclass, species, track, 18)
     definition = compile_hero_definition(identity.id, identity.name, folded, build)
-    assert "survivor-defy-death" in definition.unsupported_capabilities
-    assert "survivor-heroic-rally" in definition.unsupported_capabilities
+    assert definition.unsupported_capabilities == []
+    compiled = compile_combatant(definition)
+    assert compiled.progression_features.survivor_heal_amount == 10
+    assert compiled.progression_features.death_save_advantage is True
+    assert compiled.progression_features.death_save_nat20_minimum == 18
 
     folded = fold_hero_level(progression, subclass, species, track, 19)
-    definition = compile_hero_definition(identity.id, identity.name, folded, build)
-    assert "boon-combat-prowess" in definition.unsupported_capabilities
+    compiled = compile_combatant(compile_hero_definition(identity.id, identity.name, folded, build))
+    assert compiled.ability_scores.dexterity == 18
+    assert compiled.progression_features.peerless_aim is True
+
+    folded = fold_hero_level(progression, subclass, species, track, 20)
+    compiled = compile_combatant(compile_hero_definition(identity.id, identity.name, folded, build))
+    assert compiled.attack_action is not None
+    assert len(compiled.attack_action.slots) == 4
 
 
 def test_2014_karnok_archery_adds_plus_two_to_longbow_at_level_10():

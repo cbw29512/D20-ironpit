@@ -9,6 +9,7 @@ from app.content.fighter_progression import (
     build_karnok_stoneward_level,
     unsupported_fighter_engine_features,
 )
+from app.content.json_hero_runtime import compile_json_hero_template
 from app.content.canonical_class_combat_spines import canonical_combat_features
 
 
@@ -88,8 +89,17 @@ def test_complete_table_can_outrun_engine_without_silently_running_unsupported_r
     assert unsupported_fighter_engine_features(12) == ()
     assert unsupported_fighter_engine_features(13) == ()
     assert unsupported_fighter_engine_features(14) == ()
-    assert unsupported_fighter_engine_features(15) == ("superior-critical",)
+    assert unsupported_fighter_engine_features(15) == ()
+    assert unsupported_fighter_engine_features(18) == ()
+    assert unsupported_fighter_engine_features(19) == ()
+    assert unsupported_fighter_engine_features(20) == ()
     assert FIGHTER_COMBAT_LEVELS[13].max_hp == 147
     assert FIGHTER_COMBAT_LEVELS[14].max_hp == 158
-    with pytest.raises(ValueError, match="superior-critical"):
-        build_karnok_stoneward_level(15)
+    python_fifteen = build_karnok_stoneward_level(15)
+    assert python_fifteen.progression_features.critical_hit_minimum == 18
+    compiled = compile_json_hero_template("2024", "karnok-stoneward", 20)
+    assert compiled.progression_features.critical_hit_minimum == 18
+    assert compiled.progression_features.survivor_heal_amount == 10
+    assert compiled.progression_features.peerless_aim is True
+    assert compiled.attack_action is not None
+    assert len(compiled.attack_action.slots) == 4
