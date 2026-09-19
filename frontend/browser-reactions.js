@@ -7,6 +7,15 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
 
+  function opportunityAttacksSuppressed(state) {
+    try {
+      return (state.active_modifiers || []).some((modifier) => modifier.kind === "opportunity-attack-suppressed");
+    } catch (error) {
+      console.error("Failed to resolve browser opportunity attack suppression.", { error, combatant: state?.template?.name });
+      throw error;
+    }
+  }
+
   function unarmedOpportunityAttack(template) {
     const profile = template.unarmed_opportunity_attack || window.IRON_PIT_UNARMED_OPPORTUNITY?.[template.id];
     if (!profile) return null;
@@ -19,6 +28,7 @@
 
   function opportunityAttackWeapon(reactor, mover, before, after, source, options = {}) {
     if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
+    if (opportunityAttacksSuppressed(reactor.state)) return null;
     if (Q()?.has(reactor.state, "blinded") || !PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
     const weapon = (reactor.state.template.attacks || []).find((attack) =>
       attack.kind === "melee" && before <= (attack.reach || 5) && after > (attack.reach || 5));
@@ -69,5 +79,7 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack };
+  window.IRON_PIT_BROWSER_REACTIONS = {
+    opportunityAttackWeapon, opportunityAttacksSuppressed, parryHit, redirectAttack, resolveOpportunityAttack,
+  };
 })();
