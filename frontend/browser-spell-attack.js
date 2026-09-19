@@ -9,7 +9,8 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
-  const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
+  const H = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+  const RC = () => window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT;
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
 
   function slotResource(caster, spell, turnKey) {
@@ -28,14 +29,32 @@
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) { if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; } E().spend(caster.state, spell.actionCost); const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward); event.resource_remaining = resourceId ? caster.state.resources[resourceId] : null; return event; }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
-    const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
-    const mode = R().modeFromSources(advantage, conditions.disadvantage + SAP().disadvantage(caster.state) + (closeThreat ? 1 : 0));
+    const attackContext = {
+      id: spell.id, name: spell.name, kind: spell.attackKind || "ranged",
+      attackAbility: null, weaponId: null, damageType: spell.damageType || null, isSpellAttack: true,
+    };
+    const rollApi = RC();
+    const hooks = H();
+    if (!rollApi || !hooks) throw new Error("Spell attacks require the before-attack-roll hook runtime.");
+    const rollContext = rollApi.create({
+      baseAdvantageSources: conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id),
+      baseDisadvantageSources: conditions.disadvantage,
+      rangeDisadvantage: closeThreat,
+    });
+    const preRoll = hooks.runPhase(hooks.PHASES.BEFORE_ATTACK_ROLL, {
+      sequence, round, member: caster, target, attack: attackContext, setup, turnKey,
+      allowReckless: false, attackRollContext: rollContext, attackRollApi: rollApi, events: [],
+    });
+    if (preRoll.events.length || preRoll.sequence !== sequence) {
+      throw new Error("Before-attack-roll hooks must not emit standalone battle events or advance sequence.");
+    }
+    const mode = R().modeFromSources(rollApi.advantageTotal(rollContext), rollApi.disadvantageTotal(rollContext));
     const targetAc = M().effectiveArmorClass(target.state);
     const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus, mode), targetAc);
     const attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll);
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
-    SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
+    M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
     const natural = attackRoll.selected_roll;
