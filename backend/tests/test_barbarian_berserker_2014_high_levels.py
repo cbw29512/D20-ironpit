@@ -1,9 +1,11 @@
 from app.combat.barbarian import end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
 from app.combat.dice import FixedDiceProvider
+from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
+from app.domain.progression import AbilityCheckMinimum
 
 
 def test_2014_level_11_relentless_rage_reuses_effect_bound_survival_save() -> None:
@@ -74,3 +76,24 @@ def test_2014_level_13_brutal_critical_adds_two_weapon_dice() -> None:
     assert damage_type == attack.weapon.damage_type
     assert attack.attack_bonus == 10
     assert state.template.max_hp == 135
+
+
+
+def test_2014_level_18_indomitable_might_uses_auditable_strength_check_floor() -> None:
+    base = build_rokhan_stonefury_2014(13)
+    features = base.progression_features.model_copy(update={
+        "ability_check_minimums": [
+            AbilityCheckMinimum(source_id="indomitable-might", ability="strength"),
+        ],
+    })
+    state = build_combatant_state(base.model_copy(update={"level": 18, "progression_features": features}))
+    apply_grapple(state, "monster-1", 19, 5, restrains=True)
+    event = resolve_escape_grapple(1, 1, "rokhan", state, FixedDiceProvider([1]))
+    assert event.check_succeeded is True
+    assert event.ability_check_roll is not None
+    assert event.ability_check_roll.total == 20
+    revision = event.ability_check_roll.revisions[-1]
+    assert revision.source_effect_id == "indomitable-might"
+    assert revision.kind == "total_replacement"
+    assert (revision.original_total, revision.replacement_total) == (11, 20)
+    assert revision.accepted == "replacement"

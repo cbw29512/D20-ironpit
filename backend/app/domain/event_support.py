@@ -32,7 +32,7 @@ class AuditPhase(StrEnum):
 
 class RollRevision(BaseModel):
     source_effect_id: str
-    kind: Literal["die_replacement", "full_reroll", "roll_twice_choose"]
+    kind: Literal["die_replacement", "full_reroll", "roll_twice_choose", "total_replacement"]
     original_rolls: list[int]
     replacement_rolls: list[int]
     original_modifier: int = 0
