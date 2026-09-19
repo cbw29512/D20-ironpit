@@ -6,6 +6,7 @@ on:
       - main
       - audit/raw-combat-log-figures-20260830
       - reconcile/2014-ruleset-isolation
+      - fix/certification-manifest-entrypoint
       - "feat/2014-*"
       - "feat/2024-*"
       - "feat/paired-*"
