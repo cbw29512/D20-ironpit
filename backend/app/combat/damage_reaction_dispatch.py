@@ -81,3 +81,29 @@ def resolve_damage_event_reactions(
             triggering_event.sequence,
         )
         raise RuntimeError("Post-damage reactions could not be resolved.") from exc
+
+
+def append_event_with_damage_reactions(
+    events: list[BattleEvent],
+    sequence: int,
+    round_number: int,
+    source: EncounterCombatant,
+    event: BattleEvent,
+    setup: EncounterSetup,
+    dice,
+    *,
+    turn_key: str | None = None,
+) -> int:
+    """Append one event and any immediate damage-triggered reaction events."""
+    events.append(event)
+    reactions, sequence = resolve_damage_event_reactions(
+        sequence,
+        round_number,
+        source,
+        event,
+        setup,
+        dice,
+        turn_key=turn_key,
+    )
+    events.extend(reactions)
+    return sequence
