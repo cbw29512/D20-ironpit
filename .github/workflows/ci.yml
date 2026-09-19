@@ -94,6 +94,7 @@ jobs:
         run: |
           node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-main-action-selection.test.cjs
+          node frontend/browser-main-action-pre-move.test.cjs
           node frontend/browser-main-action-providers.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
