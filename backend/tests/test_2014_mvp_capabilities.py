@@ -1,5 +1,3 @@
-import pytest
-
 from app.combat.attacks import resolve_attack
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import FixedDiceProvider
@@ -99,12 +97,16 @@ def test_2014_brown_bear_uses_universal_ordered_multiattack() -> None:
     assert bear.source_trait_names == ["Keen Smell"]
 
 
-def test_2014_mvp_slice_is_not_admitted_into_2024_production_roster() -> None:
+def test_2014_mvp_slice_is_isolated_from_2024_and_admitted_to_2014_roster() -> None:
     mvp_ids = set(_monsters())
-    production = build_arena_roster("2024")
-    production_ids = {item.id for item in production.monsters}
-    assert mvp_ids.isdisjoint(production_ids)
-    assert all(item.ruleset == "2024" for item in production.monsters)
+    production_2024 = build_arena_roster("2024")
+    production_2014 = build_arena_roster("2014")
+    ids_2024 = {item.id for item in production_2024.monsters}
+    ids_2014 = {item.id for item in production_2014.monsters}
 
-    with pytest.raises(ValueError, match="2014 roster is not admitted"):
-        build_arena_roster("2014")
+    assert mvp_ids.isdisjoint(ids_2024)
+    assert mvp_ids.issubset(ids_2014)
+    assert all(item.ruleset == "2024" for item in production_2024.monsters)
+    assert all(item.ruleset == "2014" for item in production_2014.monsters)
+    assert len(production_2014.monsters) == 127
+    assert len(production_2014.characters) >= 63
