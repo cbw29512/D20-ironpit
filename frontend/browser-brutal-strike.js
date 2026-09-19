@@ -34,8 +34,8 @@
     const suppression = advantageSuppression(
       ctx.member.state, ctx.attack, ctx.turnKey, hasDisadvantage,
     );
-    roll.brutalStrikeSuppression = suppression;
-    roll.recklessAdvantage = Math.max(0, roll.recklessAdvantage - suppression);
+    const reckless = C().advantageSource(roll, "reckless-attacker");
+    C().setAdvantageSource(roll, "reckless-attacker", Math.max(0, reckless - suppression));
     return C().noEventResult(ctx.sequence);
   }
 
