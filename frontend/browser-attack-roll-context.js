@@ -8,11 +8,9 @@
     return {
       baseDisadvantageSources,
       rangedDisadvantage: Boolean(rangedDisadvantage),
-      recklessStarted: false,
-      recklessAdvantage: 0,
-      targetRecklessAdvantage: 0,
-      brutalStrikeSuppression: 0,
-      bloodiedFuryAdvantage: 0,
+      advantageSources: {},
+      descriptionFragments: [],
+      aggregateFeatureId: null,
     };
   }
 
@@ -21,18 +19,38 @@
     if (!state || typeof state !== "object" || Array.isArray(state)) {
       throw new Error("Before-attack-roll hook requires a mutable attackRollContext object.");
     }
-    for (const field of [
-      "baseDisadvantageSources", "recklessAdvantage", "targetRecklessAdvantage",
-      "brutalStrikeSuppression", "bloodiedFuryAdvantage",
-    ]) {
-      if (!Number.isFinite(state[field]) || state[field] < 0) {
-        throw new Error(`Attack-roll context field ${field} must be a non-negative number.`);
-      }
+    if (!Number.isFinite(state.baseDisadvantageSources) || state.baseDisadvantageSources < 0) {
+      throw new Error("Attack-roll context base Disadvantage sources are invalid.");
     }
-    if (typeof state.rangedDisadvantage !== "boolean" || typeof state.recklessStarted !== "boolean") {
-      throw new Error("Attack-roll context boolean fields are invalid.");
+    if (typeof state.rangedDisadvantage !== "boolean") {
+      throw new Error("Attack-roll context ranged Disadvantage flag is invalid.");
+    }
+    if (!state.advantageSources || typeof state.advantageSources !== "object"
+        || Array.isArray(state.advantageSources) || !Array.isArray(state.descriptionFragments)) {
+      throw new Error("Attack-roll context source/description state is invalid.");
     }
     return state;
+  }
+
+  function setAdvantageSource(state, sourceId, value) {
+    if (typeof sourceId !== "string" || !sourceId.trim()) {
+      throw new Error("Attack-roll Advantage source requires a stable id.");
+    }
+    if (!Number.isFinite(value) || value < 0) {
+      throw new Error(`Attack-roll Advantage source ${sourceId} must be non-negative.`);
+    }
+    state.advantageSources[sourceId] = value;
+  }
+
+  function advantageSource(state, sourceId) {
+    return Number(state.advantageSources[sourceId] || 0);
+  }
+
+  function advantageTotal(state) {
+    return Object.values(state.advantageSources).reduce((sum, value) => {
+      if (!Number.isFinite(value) || value < 0) throw new Error("Attack-roll Advantage source map is invalid.");
+      return sum + value;
+    }, 0);
   }
 
   function noEventResult(sequence) {
@@ -42,5 +60,7 @@
     return { events: [], sequence, claimed: false };
   }
 
-  window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT = { create, noEventResult, requireContext };
+  window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT = {
+    advantageSource, advantageTotal, create, noEventResult, requireContext, setAdvantageSource,
+  };
 })();
