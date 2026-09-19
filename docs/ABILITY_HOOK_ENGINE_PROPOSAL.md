@@ -139,6 +139,8 @@ The Python oracle retains its existing attack orchestration for this tranche. De
 
 2014 Intimidating Presence invalidation belongs to `turnEndLifecycle`, matching the Python encounter engine's `end_invalid_presence()` ordering before target/source end-turn condition timing. This fixes the previous browser gap where a 0-HP creature could skip the cleanup because browser cleanup lived only inside `resolveTurn().finalize()`.
 
+The Intimidating Presence module self-registers immediately when the dispatcher is already loaded, or queues its installer when load order is reversed. It is not a mandatory dependency of the shared Bonus Action installer.
+
 ## Migration order
 
 Migrate one coherent phase per PR.
