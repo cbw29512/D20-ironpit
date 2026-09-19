@@ -77,6 +77,29 @@ assert.deepEqual(merfolkTemplate.attacks[0].onHitModifiers, [
 assert.deepEqual(merfolkTemplate.attacks[1].onHitModifiers, merfolkTemplate.attacks[0].onHitModifiers);
 assert.deepEqual(merfolkTemplate.source_trait_names, ["Amphibious"]);
 
+const hellHound = generated["srd-hell-hound"];
+assert.ok(hellHound, "Hell Hound must be present in generated runtime");
+assert.deepEqual(hellHound.source_trait_names, ["Pack Tactics"]);
+assert.deepEqual(hellHound.source_limited_use_names, ["actions:Fire Breath (Recharge 5-6)"]);
+assert.deepEqual(hellHound.resources, { "fire-breath": 1 });
+assert.deepEqual(hellHound.recharge_rules, [
+  { resourceId: "fire-breath", minimumRoll: 5, dieSize: 6 },
+]);
+const hellHoundBreath = hellHound.saving_throw_actions.find(
+  (action) => action.id === "srd-hell-hound-fire-breath",
+);
+assert.ok(hellHoundBreath);
+assert.equal(hellHoundBreath.saveAbility, "dexterity");
+assert.equal(hellHoundBreath.dc, 12);
+assert.equal(hellHoundBreath.damageDiceCount, 5);
+assert.equal(hellHoundBreath.damageDiceSize, 6);
+assert.equal(hellHoundBreath.damageType, "fire");
+assert.equal(hellHoundBreath.successDamage, "half");
+assert.equal(hellHoundBreath.resourceId, "fire-breath");
+assert.deepEqual(hellHoundBreath.area, {
+  shape: "cone", origin: "self", radius_ft: null, length_ft: 15, width_ft: null,
+});
+
 const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
 for (const monster of Object.values(generated)) {
   assert.deepEqual(Object.keys(monster.movement_modes).sort(), movementKeys, `${monster.id} must export the full movement fingerprint`);
