@@ -6,10 +6,12 @@ from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.barbarian_berserker_2014_profile import (
-    _advancements, _base_scores, _final_scores, _species_increases,
+    _advancements, _base_scores, _compile_rokhan_stonefury_2014_profile,
+    _final_scores, _species_increases,
 )
 from app.content.barbarian_berserker_2014_runtime import (
-    _damage_reaction, _progression, _scores, build_rokhan_stonefury_2014,
+    _compile_rokhan_stonefury_2014, _damage_reaction, _progression, _scores,
+    build_rokhan_stonefury_2014,
 )
 from app.content.demo import build_demo_fighter
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
@@ -239,3 +241,29 @@ def test_staged_2014_level_14_retaliation_resolves_off_turn_without_spending_act
     assert rokhan.state.reaction_available is False
     assert rokhan.state.action_available is action_before
     assert event.turn_terminated is False
+
+
+
+def test_private_2014_candidate_compilers_cover_levels_14_through_20_without_public_exposure() -> None:
+    for level in range(14, 21):
+        template = _compile_rokhan_stonefury_2014(level)
+        profile = _compile_rokhan_stonefury_2014_profile(level)
+
+        assert template.level == profile.level == level
+        assert template.id == profile.template_id
+        assert template.ability_scores == profile.final_ability_scores
+        assert template.damage_reaction_attack is not None
+        assert template.damage_reaction_attack.source_feature == "retaliation"
+
+    l20 = _compile_rokhan_stonefury_2014(20)
+    assert (l20.ability_scores.strength, l20.ability_scores.constitution) == (24, 24)
+    assert l20.resources == []
+    assert l20.unlimited_resource_ids == ["rage"]
+
+    for level in (14, 20):
+        try:
+            build_rokhan_stonefury_2014(level)
+        except ValueError as exc:
+            assert "certification covers levels 1 through 13" in str(exc)
+        else:
+            raise AssertionError("Uncertified high-level Rokhan must remain unavailable publicly.")

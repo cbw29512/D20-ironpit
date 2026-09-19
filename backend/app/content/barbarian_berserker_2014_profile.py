@@ -106,12 +106,11 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
     return audits
 
 
-def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
-    try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Rokhan profile certification covers levels 1 through 13.")
-        base = _base_scores(); species = _species_increases(); advancements = _advancements(level)
-        return CharacterBuildProfile(
+def _compile_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
+    if level not in range(1, 21):
+        raise ValueError("2014 Rokhan profile progression covers levels 1 through 20.")
+    base = _base_scores(); species = _species_increases(); advancements = _advancements(level)
+    return CharacterBuildProfile(
             id=f"build-rokhan-stonefury-2014-l{level}", template_id=f"rokhan-stonefury-2014-l{level}",
             character_name="Rokhan Stonefury", class_id="barbarian", class_name="Barbarian", level=level,
             ruleset="2014", subclass_id="path-berserker" if level >= 3 else None,
@@ -129,7 +128,14 @@ def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
                 "D&D Basic Rules 2014: Path of the Berserker", "D&D Basic Rules 2014: Soldier",
                 "D&D Basic Rules 2014: Equipment",
             ],
-        )
+    )
+
+
+def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
+    try:
+        if level not in range(1, 14):
+            raise ValueError("2014 Rokhan profile certification covers levels 1 through 13.")
+        return _compile_rokhan_stonefury_2014_profile(level)
     except Exception:
-        logger.exception("Failed to compile 2014 Rokhan build profile at level %s", level)
+        logger.exception("Failed to compile certified 2014 Rokhan build profile at level %s", level)
         raise
