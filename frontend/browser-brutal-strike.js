@@ -3,7 +3,6 @@
 
   const FEATURE = "brutal-strike";
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2;
-  const C = () => window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const F = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
@@ -29,14 +28,16 @@
   }
 
   function resolveBeforeAttackRoll(ctx) {
-    const roll = C().requireContext(ctx);
+    const api = ctx.attackRollApi;
+    if (!api) throw new Error("Before-attack-roll hook requires attackRollApi.");
+    const roll = api.requireContext(ctx);
     const hasDisadvantage = roll.baseDisadvantageSources > 0 || roll.rangedDisadvantage;
     const suppression = advantageSuppression(
       ctx.member.state, ctx.attack, ctx.turnKey, hasDisadvantage,
     );
-    const reckless = C().advantageSource(roll, "reckless-attacker");
-    C().setAdvantageSource(roll, "reckless-attacker", Math.max(0, reckless - suppression));
-    return C().noEventResult(ctx.sequence);
+    const reckless = api.advantageSource(roll, "reckless-attacker");
+    api.setAdvantageSource(roll, "reckless-attacker", Math.max(0, reckless - suppression));
+    return api.noEventResult(ctx.sequence);
   }
 
   function installAbilityHooks() {
