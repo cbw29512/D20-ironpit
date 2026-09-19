@@ -2,20 +2,26 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const L = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || {
     resolveCleave: (sequence) => ({ events: [], sequence }),
   };
 
   function resolve(sequence, round, member, target, attack, distance, setup, turnKey, options = {}) {
-    const event = A().resolveAttack(sequence++, round, member, target, attack, distance, {
+    const event = A().resolveAttack(sequence, round, member, target, attack, distance, {
       advantage: options.advantage || 0,
       featureId: options.featureId || null,
       setup,
       allowReckless: options.allowReckless !== false,
       turnKey,
     });
-    const events = [event];
+    let events = [event];
+    sequence += 1;
+    if (setup && DR()) {
+      const chain = DR().chain(sequence, round, member, event, setup, turnKey);
+      events = chain.events; sequence = chain.sequence;
+    }
     if (event.event_type === "saving_throw" && !event.attack_roll) return { events, sequence };
     if (member.state.turn_terminated) return { events, sequence };
     const cleave = W().resolveCleave(sequence, round, member, event, attack, setup, turnKey);
