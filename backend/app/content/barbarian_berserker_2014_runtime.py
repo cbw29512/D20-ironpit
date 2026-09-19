@@ -8,7 +8,7 @@ from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.progression import EffectBoundSurvivalSave, ProgressionCombatFeatures
+from app.domain.progression import AbilityCheckMinimum, EffectBoundSurvivalSave, ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
 
@@ -41,8 +41,13 @@ def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures
         )
         if level >= 11 else None
     )
+    check_minimums = (
+        [AbilityCheckMinimum(source_id="indomitable-might", ability="strength")]
+        if level >= 18 else []
+    )
     return ProgressionCombatFeatures(
         effect_bound_survival_save=relentless,
+        ability_check_minimums=check_minimums,
         danger_sense=level >= 2, reckless_attack=level >= 2,
         frenzy_bonus_attack_2014=level >= 3,
         fast_movement_bonus_ft=10 if level >= 5 else 0, mindless_rage=level >= 6,
