@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.damage_reaction_dispatch import append_event_with_damage_reactions
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.weapon_mastery import weapon_mastery_active
@@ -89,7 +90,11 @@ def resolve_cleave_extra_attack(
             spend_action=False, feature_id=CLEAVE_FEATURE_ID, turn_key=turn_key, allow_reckless=False,
         )
         event.description += " Cleave makes the once-per-turn extra attack."
-        return [event], sequence + 1
+        events: list[BattleEvent] = []
+        sequence = append_event_with_damage_reactions(
+            events, sequence + 1, round_number, attacker, event, setup, dice, turn_key=turn_key,
+        )
+        return events, sequence
     except ValueError:
         raise
     except Exception as exc:
