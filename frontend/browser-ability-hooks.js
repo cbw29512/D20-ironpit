@@ -162,4 +162,11 @@
   window.IRON_PIT_BROWSER_ABILITY_HOOKS = {
     PHASES, registerAbility, unregisterAbility, runPhase, abilitiesFor, knownPhases, _resetForTests,
   };
+
+  const pending = window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS || [];
+  window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS = [];
+  for (const installer of pending) {
+    if (typeof installer !== "function") throw new Error("Pending ability-hook installer must be a function.");
+    installer();
+  }
 })();
