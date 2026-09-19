@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
+from app.combat.damage_reaction_dispatch import append_event_with_damage_reactions
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_weapons import mark_light_extra_attack_used, plan_light_extra_attack
 from app.combat.pit_policy import choose_attack
@@ -44,7 +45,11 @@ def resolve_light_extra_attack(
             feature_id=plan.feature_id, turn_key=turn_key, allow_reckless=True,
             close_enemy_active=False,
         )
-        return [event], sequence + 1
+        events: list[BattleEvent] = []
+        sequence = append_event_with_damage_reactions(
+            events, sequence + 1, round_number, attacker, event, setup, dice, turn_key=turn_key,
+        )
+        return events, sequence
     except ValueError:
         raise
     except Exception as exc:
