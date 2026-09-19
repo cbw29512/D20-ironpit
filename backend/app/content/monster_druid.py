@@ -5,7 +5,7 @@ import re
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
-from app.content.offensive_spell_effects import build_guiding_bolt, build_inflict_wounds
+from app.content.offensive_spell_effects import build_inflict_wounds
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.combatants import ResourceDefinition
 from app.domain.models import (
@@ -92,9 +92,17 @@ def _longstrider() -> DefensiveSpellAction:
     )
 
 
-def _moonbeam_substitution():
-    """Use the certified Inflict Wounds primitive at level 2 as the arena replacement."""
+def _level_one_substitution():
+    """Use the certified Inflict Wounds primitive for level-1 arena replacements."""
     return build_inflict_wounds(save_dc=13).model_copy(update={
+        "id": "inflict-wounds-l1-arena",
+    })
+
+
+def _moonbeam_substitution():
+    """Use the certified Inflict Wounds primitive at level 2 as the Moonbeam replacement."""
+    return build_inflict_wounds(save_dc=13).model_copy(update={
+        "id": "inflict-wounds-l2-arena",
         "level": 2,
         "damage_dice_count": 3,
     })
@@ -133,8 +141,7 @@ def build_druid_monster() -> CombatantTemplate:
                 AttackActionSlot(attack_ids=[staff.id, wisp.id]),
             ],
         ),
-        spell_attack_actions=[build_guiding_bolt(attack_bonus=5)],
-        spell_save_actions=[_moonbeam_substitution()],
+        spell_save_actions=[_level_one_substitution(), _moonbeam_substitution()],
         defensive_spell_actions=[_longstrider()],
         damage_vulnerabilities=[
             DamageType(item) for item in sorted(defenses["damage_vulnerabilities"])
