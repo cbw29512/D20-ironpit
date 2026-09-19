@@ -15,7 +15,7 @@ window.IRON_PIT_BROWSER_WEAPON_MASTERY = {
   mastered: (state, attack) => (state.template.weapon_masteries || []).includes(attack.weaponId),
   active(state, attack, mastery) {
     const replaced = (state.template.tactical_master_sap_weapon_ids || []).includes(attack.weaponId);
-    return attack.mastery === mastery
+    return attack.masteryProperty === mastery
       && (state.template.weapon_masteries || []).includes(attack.weaponId)
       && !replaced;
   },
@@ -88,7 +88,7 @@ assert.deepEqual(
   const target = member("miss-target");
   const attack = {
     id: "greatsword", weaponId: "greatsword", name: "Greatsword",
-    mastery: "Graze", attackAbilityModifier: 4, damageType: "slashing",
+    masteryProperty: "Graze", attackAbilityModifier: 4, damageType: "slashing",
   };
   const outcome = O.create();
   const result = H.runPhase(H.PHASES.ON_MISS, {
@@ -113,7 +113,7 @@ assert.deepEqual(
   const target = member("hit-target");
   const attack = {
     id: "shortsword", weaponId: "shortsword", name: "Shortsword",
-    mastery: "Vex", attackAbilityModifier: 4, damageType: "piercing",
+    masteryProperty: "Vex", attackAbilityModifier: 4, damageType: "piercing",
   };
   const outcome = O.create();
   outcome.damageRoll = { total: 8 };
@@ -133,7 +133,7 @@ assert.deepEqual(
   const target = member("vex-target");
   const attack = {
     id: "shortsword", weaponId: "shortsword", name: "Shortsword",
-    mastery: "Vex", attackAbilityModifier: 4, damageType: "piercing",
+    masteryProperty: "Vex", attackAbilityModifier: 4, damageType: "piercing",
   };
   const outcome = O.create();
   outcome.damageRoll = { total: 8 };
@@ -152,7 +152,7 @@ assert.deepEqual(
   const target = member("topple-target");
   const attack = {
     id: "maul", weaponId: "maul", name: "Maul",
-    mastery: "Topple", attackAbilityModifier: 4, damageType: "bludgeoning",
+    masteryProperty: "Topple", attackAbilityModifier: 4, damageType: "bludgeoning",
   };
   const outcome = O.create();
   outcome.damageRoll = { total: 9 };
