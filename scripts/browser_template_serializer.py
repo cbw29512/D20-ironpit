@@ -324,6 +324,11 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "ally_range_ft": template.redirect_attack_reaction.ally_range_ft,
                 "ally_max_size": template.redirect_attack_reaction.ally_max_size.value,
             }
+        if template.damage_triggered_melee_reaction:
+            row["damage_triggered_melee_reaction"] = {
+                "id": template.damage_triggered_melee_reaction.id,
+                "trigger_range_ft": template.damage_triggered_melee_reaction.trigger_range_ft,
+            }
         if template.spell_save_actions:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
