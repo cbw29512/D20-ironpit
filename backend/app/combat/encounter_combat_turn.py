@@ -7,6 +7,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
+from app.combat.damage_reactions import resolve_post_damage_reactions
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
 from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
@@ -121,11 +122,16 @@ def resolve_combat_turn(
         if chosen_save is not None and is_available(attacker.state, "action"):
             save_target, save_action, distance = chosen_save
             affected = [member.state for member in [*setup.heroes, *setup.monsters]]
-            events.append(resolve_save_action(
+            event = resolve_save_action(
                 sequence, round_number, attacker, save_target, save_action, distance, dice,
                 affected_states=affected,
-            ))
+            )
+            events.append(event)
             sequence += 1
+            reactions, sequence = resolve_post_damage_reactions(
+                sequence, round_number, attacker, event, setup, dice, turn_key=turn_key,
+            )
+            events.extend(reactions)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         attack_choice = choose_standard_attack(attacker, setup)
