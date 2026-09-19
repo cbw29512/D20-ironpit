@@ -46,11 +46,11 @@ def test_fighter_nine_features_fail_closed_when_downgraded() -> None:
     assert "combat-capability-not-supported:tactical-master:blocked" in issues
 
 
-def test_level_fifteen_is_next_explicit_champion_blocker() -> None:
-    assert audit_fighter_champion_variant_readiness("great-weapon", 13, STATUSES) == []
-    assert audit_fighter_champion_variant_readiness("great-weapon", 14, STATUSES) == []
-    issues = audit_fighter_champion_variant_readiness("great-weapon", 15, STATUSES)
-    assert "combat-feature-not-automated:superior-critical" in issues
+def test_level_fifteen_is_ready_and_survivor_is_next_explicit_champion_blocker() -> None:
+    assert audit_fighter_champion_variant_readiness("great-weapon", 15, STATUSES) == []
+    assert audit_fighter_champion_variant_readiness("great-weapon", 17, STATUSES) == []
+    issues = audit_fighter_champion_variant_readiness("great-weapon", 18, STATUSES)
+    assert "combat-feature-not-automated:survivor" in issues
 
 
 def test_no_full_champion_family_can_be_called_active_yet() -> None:
