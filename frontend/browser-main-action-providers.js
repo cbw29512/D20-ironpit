@@ -69,11 +69,12 @@
 
     register({
       id: "attack-action", category: C().ATTACK_ACTION, rulesets: BOTH,
-      discover: ({ member, setup }) => {
+      discover: ({ member, setup, opportunityProfile }) => {
         if (!member.state.template.attack_action) return null;
         const runtime = M();
         if (!runtime) throw new Error("Attack/Multiattack runtime is not loaded.");
-        return runtime.available(member, setup) ? { payload: {} } : null;
+        const legal = opportunityProfile === "actionSurgeAttack" ? runtime.legalChoiceAvailable(member, setup) : runtime.available(member, setup);
+        return legal ? { payload: {} } : null;
       },
       resolve: ({ sequence, round, member, setup }) => {
         const runtime = M();
@@ -115,12 +116,10 @@
 
     register({
       id: "standard-attack", category: C().STANDARD_ATTACK, rulesets: BOTH,
-      discover: ({ member, setup }) => {
-        if (!E().available(member.state, "action")) return null;
+      discover: ({ member, setup, opportunityProfile }) => {
+        if (opportunityProfile !== "actionSurgeAttack" && !E().available(member.state, "action")) return null;
         const choice = F().chooseStandardAttack(member, setup);
-        return choice ? { payload: {
-          targetId: choice.target.combatant_id, attackId: choice.attack.id, distance: choice.distance,
-        } } : null;
+        return choice ? { payload: { targetId: choice.target.combatant_id, attackId: choice.attack.id, distance: choice.distance } } : null;
       },
       resolve: ({ sequence, round, member, setup, turnKey, opportunityProfile }, candidate) => {
         const target = memberById(setup, candidate.payload.targetId);
