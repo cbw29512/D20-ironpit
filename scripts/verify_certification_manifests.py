@@ -303,3 +303,8 @@ def main() -> None:
     if json.loads(MONSTER_MANIFEST.read_text(encoding="utf-8")) != monsters:
         raise RuntimeError("Monster certification manifest is stale or hand-edited.")
     print("Certification manifests match authoritative runtime, source, browser, and catalog state.")
+
+
+
+if __name__ == "__main__":
+    main()
