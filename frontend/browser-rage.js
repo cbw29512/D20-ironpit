@@ -57,6 +57,10 @@
   }
 
   function endIfIncapacitated(state) {
+    if (is2014(state) && state.template.persistent_rage_2014) {
+      if (state.is_dead || state.is_unconscious) end(state);
+      return;
+    }
     if (state.template.wearing_heavy_armor || state.is_dead || Q().incapacitated(state)) end(state);
   }
 
