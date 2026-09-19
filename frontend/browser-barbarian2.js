@@ -1,7 +1,6 @@
 (() => {
   "use strict";
 
-  const C = () => window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const EFFECT_ID = "reckless-attack";
@@ -34,16 +33,18 @@
   function attacksAgainstAdvantage(state) { return Number(active(state)); }
 
   function resolveBeforeAttackRoll(ctx) {
-    const roll = C().requireContext(ctx);
+    const api = ctx.attackRollApi;
+    if (!api) throw new Error("Before-attack-roll hook requires attackRollApi.");
+    const roll = api.requireContext(ctx);
     const started = ctx.allowReckless === true && activate(ctx.member, ctx.attack, ctx.round);
     if (started) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(ctx.member.state, ctx.turnKey);
-    C().setAdvantageSource(roll, "reckless-attacker", attackAdvantage(ctx.member.state, ctx.attack));
-    C().setAdvantageSource(roll, "reckless-defender", attacksAgainstAdvantage(ctx.target.state));
+    api.setAdvantageSource(roll, "reckless-attacker", attackAdvantage(ctx.member.state, ctx.attack));
+    api.setAdvantageSource(roll, "reckless-defender", attacksAgainstAdvantage(ctx.target.state));
     if (started) {
       roll.descriptionFragments.push(`${ctx.member.state.template.name} uses Reckless Attack.`);
       roll.aggregateFeatureId ||= EFFECT_ID;
     }
-    return C().noEventResult(ctx.sequence);
+    return api.noEventResult(ctx.sequence);
   }
 
   function installAbilityHooks() {
