@@ -1,6 +1,8 @@
 from app.combat.barbarian import end_rage, end_rage_if_incapacitated, enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
+from app.combat.damage_reaction_dispatch import resolve_damage_event_reactions
 from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.zero_hp import apply_damage
@@ -10,7 +12,9 @@ from app.content.barbarian_berserker_2014_profile import (
 from app.content.barbarian_berserker_2014_runtime import (
     _progression, _scores, build_rokhan_stonefury_2014,
 )
+from app.content.demo import build_goblin_warrior
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.progression import AbilityCheckMinimum
 
 
@@ -50,9 +54,7 @@ def test_2014_level_12_asi_updates_all_derived_combat_values() -> None:
 
 
 def test_2014_level_15_persistent_rage_uses_full_duration_without_maintenance() -> None:
-    base = build_rokhan_stonefury_2014(13)
-    features = base.progression_features.model_copy(update={"persistent_rage_2014": True})
-    state = build_combatant_state(base.model_copy(update={"level": 15, "progression_features": features}))
+    state = build_combatant_state(build_rokhan_stonefury_2014(15))
 
     assert enter_rage(1, 1, state, "rokhan") is not None
     assert state.rage_expires_round == 11
@@ -66,7 +68,7 @@ def test_2014_level_15_persistent_rage_uses_full_duration_without_maintenance() 
     end_rage_if_incapacitated(state)
     assert rage_active(state) is False
 
-    state = build_combatant_state(base.model_copy(update={"level": 15, "progression_features": features}))
+    state = build_combatant_state(build_rokhan_stonefury_2014(15))
     assert enter_rage(2, 1, state, "rokhan") is not None
     assert finish_rage_turn(state, 11) == 1
     assert rage_active(state) is False
@@ -86,13 +88,7 @@ def test_2014_level_13_brutal_critical_adds_two_weapon_dice() -> None:
 
 
 def test_2014_level_18_indomitable_might_uses_auditable_strength_check_floor() -> None:
-    base = build_rokhan_stonefury_2014(13)
-    features = base.progression_features.model_copy(update={
-        "ability_check_minimums": [
-            AbilityCheckMinimum(source_id="indomitable-might", ability="strength"),
-        ],
-    })
-    state = build_combatant_state(base.model_copy(update={"level": 18, "progression_features": features}))
+    state = build_combatant_state(build_rokhan_stonefury_2014(18))
     apply_grapple(state, "monster-1", 19, 5, restrains=True)
     event = resolve_escape_grapple(1, 1, "rokhan", state, FixedDiceProvider([1]))
     assert event.check_succeeded is True
@@ -134,16 +130,8 @@ def test_staged_2014_level_20_primal_champion_scores_are_24_but_rage_fails_close
 
 
 
-def test_staged_2014_level_20_unlimited_rage_has_no_counter_and_never_decrements() -> None:
-    base = build_rokhan_stonefury_2014(13)
-    features = base.progression_features.model_copy(update={"persistent_rage_2014": True})
-    template = base.model_copy(update={
-        "level": 20,
-        "progression_features": features,
-        "resources": [],
-        "unlimited_resource_ids": ["rage"],
-    })
-    state = build_combatant_state(template)
+def test_2014_level_20_unlimited_rage_has_no_counter_and_never_decrements() -> None:
+    state = build_combatant_state(build_rokhan_stonefury_2014(20))
 
     assert state.resources == []
     for round_number in (1, 2):
@@ -153,3 +141,55 @@ def test_staged_2014_level_20_unlimited_rage_has_no_counter_and_never_decrements
         assert event.resource_remaining is None
         assert state.resources == []
         assert end_rage(state) is not None
+
+
+
+def test_2014_level_14_retaliation_attacks_damage_source_and_spends_only_reaction() -> None:
+    rokhan = EncounterCombatant(
+        combatant_id="rokhan",
+        side="heroes",
+        position_ft=0,
+        state=build_combatant_state(build_rokhan_stonefury_2014(14)),
+    )
+    goblin = EncounterCombatant(
+        combatant_id="goblin",
+        side="monsters",
+        position_ft=5,
+        state=build_combatant_state(build_goblin_warrior()),
+    )
+    setup = EncounterSetup(
+        heroes=[rokhan],
+        monsters=[goblin],
+        hero_total_levels=14,
+        monster_total_cr="1/4",
+    )
+    triggering = resolve_encounter_attack(
+        1, 1, goblin, rokhan, goblin.state.template.weapon_attack, 5,
+        FixedDiceProvider([19, 4]), setup, spend_action=False,
+    )
+    action_before = rokhan.state.action_available
+    reactions, sequence = resolve_damage_event_reactions(
+        2, 1, goblin, triggering, setup, FixedDiceProvider([19, 5]),
+        turn_key="1:goblin",
+    )
+
+    assert [event.feature_id for event in reactions] == ["retaliation"]
+    assert reactions[0].actor_id == "rokhan"
+    assert reactions[0].target_id == "goblin"
+    assert reactions[0].weapon_id == "greataxe"
+    assert rokhan.state.reaction_available is False
+    assert rokhan.state.action_available is action_before
+    assert sequence == 3
+
+
+def test_2014_levels_14_through_20_are_real_runnable_templates() -> None:
+    heroes = [build_rokhan_stonefury_2014(level) for level in range(14, 21)]
+
+    assert all(hero.ruleset == "2014" for hero in heroes)
+    assert heroes[0].damage_triggered_melee_reaction is not None
+    assert heroes[0].damage_triggered_melee_reaction.id == "retaliation"
+    assert heroes[1].progression_features.persistent_rage_2014 is True
+    assert heroes[3].progression_features.brutal_critical_dice == 3
+    assert heroes[4].progression_features.ability_check_minimums[0].source_id == "indomitable-might"
+    assert (heroes[-1].ability_scores.strength, heroes[-1].ability_scores.constitution) == (24, 24)
+    assert heroes[-1].unlimited_resource_ids == ["rage"]

@@ -2,6 +2,9 @@ from dataclasses import replace
 
 from app.content.audited_barbarian import build_rokhan_stonefury
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
+from app.content.barbarian_berserker_2014_combat_profile import build_rokhan_2014_combat_profile
+from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_2014_profile
+from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
 from app.content.character_resource_audit import audit_character_resources
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.domain.models import ResourceDefinition
@@ -47,4 +50,30 @@ def test_class_without_independent_level_resource_rules_fails_closed() -> None:
 
     assert "class-level-resource-rules-not-certified" in audit_character_resources(
         template, build_profile, combat_profile
+    )
+
+
+
+def test_2014_level_20_resource_audit_accepts_explicit_unlimited_rage() -> None:
+    template = build_rokhan_stonefury_2014(20)
+    build_profile = build_rokhan_stonefury_2014_profile(20)
+    combat_profile = build_rokhan_2014_combat_profile(20)
+
+    assert template.resources == []
+    assert template.unlimited_resource_ids == ["rage"]
+    assert combat_profile.resources == ()
+    assert combat_profile.unlimited_resources == ("rage",)
+    assert audit_character_resources(template, build_profile, combat_profile) == []
+
+
+def test_2014_level_20_resource_audit_rejects_fake_finite_rage() -> None:
+    template = build_rokhan_stonefury_2014(20).model_copy(update={
+        "unlimited_resource_ids": [],
+        "resources": [ResourceDefinition(id="rage", name="Rage", max_uses=99)],
+    })
+    build_profile = build_rokhan_stonefury_2014_profile(20)
+    combat_profile = build_rokhan_2014_combat_profile(20)
+
+    assert "level-derived-runtime-resources-mismatch" in audit_character_resources(
+        template, build_profile, combat_profile,
     )

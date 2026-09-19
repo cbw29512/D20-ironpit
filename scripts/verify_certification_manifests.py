@@ -30,6 +30,7 @@ def _mechanics(template: Any) -> list[str]:
     mechanics = {
         *(f"attack:{item.id}" for item in [template.weapon_attack, *template.alternate_weapon_attacks]),
         *(f"resource:{item.id}" for item in template.resources),
+        *(f"resource:{resource_id}" for resource_id in template.unlimited_resource_ids),
         *(f"trait:{item.value}" for item in template.combat_traits),
         *(f"saving-throw-action:{item.id}" for item in template.saving_throw_actions),
         *(f"spell-save-action:{item.id}" for item in template.spell_save_actions),
@@ -41,6 +42,8 @@ def _mechanics(template: Any) -> list[str]:
     }
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
+    if template.damage_triggered_melee_reaction is not None:
+        mechanics.add(template.damage_triggered_melee_reaction.id)
     features = template.progression_features
     if features.critical_hit_minimum < 20:
         mechanics.add("expanded-critical-range")
