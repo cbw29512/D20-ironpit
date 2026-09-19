@@ -15,6 +15,9 @@ def _hill_giant():
 def test_hill_giant_source_attacks_and_control_riders() -> None:
     giant = _hill_giant()
     row = next(row for row in load_monster_rows() if row["name"] == "Hill Giant")
+    assert giant.size is CreatureSize.HUGE
+    assert (giant.armor_class, giant.max_hp, giant.speed_ft, giant.initiative_bonus) == (13, 105, 40, 2)
+
     attacks = {
         attack.weapon.name: attack
         for attack in [giant.weapon_attack, *giant.alternate_weapon_attacks]
