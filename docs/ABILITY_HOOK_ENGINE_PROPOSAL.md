@@ -132,7 +132,7 @@ The browser production `onHit` / `onMiss` phases now preserve the existing singl
 
 The preserved hit order is `Topple -> Sap/Tactical Master -> Vex`. The preserved miss order is `Graze -> Studied Attacks`. Generic hit damage, printed control effects, condition-save handling, zero-HP lifecycle, Rage incapacitation cleanup, and concentration cleanup remain in the shared attack primitive rather than being mislabeled as named ability hooks.
 
-The Python oracle retains its existing attack orchestration for this tranche. Dedicated parity coverage proves that Graze and Studied Attacks still coexist on one miss and that Tactical Master/Sap and Vex still coexist on one hit, while browser hook regressions lock the equivalent order and aggregate-event behavior.
+The Python oracle retains its existing attack orchestration for this tranche. Dedicated parity coverage proves that Graze and Studied Attacks still coexist on one miss, that Tactical Master/Sap correctly replaces a weapon's native mastery on a hit, and that an unreplaced Vex hit still primes the next attack. Browser hook regressions lock the equivalent order and aggregate-event behavior.
 
 ## Migration order
 
