@@ -152,5 +152,10 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Worg": _p("quadruped", "canine"),
     "Wyvern": _p("reptile", "wyvern"),
     "Xorn": _p("brute", "xorn"),
+    "Young Black Dragon": _p("reptile", "young-black-dragon"),
+    "Young Blue Dragon": _p("reptile", "young-blue-dragon"),
+    "Young Green Dragon": _p("reptile", "young-green-dragon"),
+    "Young Red Dragon": _p("reptile", "young-red-dragon"),
+    "Young White Dragon": _p("reptile", "young-white-dragon"),
     "Zombie": _p("humanoid", "zombie"),
 }

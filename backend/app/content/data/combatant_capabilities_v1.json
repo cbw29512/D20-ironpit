@@ -15432,6 +15432,926 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-young-black-dragon",
+    "name": "Young Black Dragon",
+    "archetype": "source-certified monster",
+    "challenge_rating": "7",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "large",
+    "armor_class": 18,
+    "max_hp": 127,
+    "speed_ft": 80,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 80,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 5,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "cunning_action": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-young-black-dragon-rend",
+        "name": "Rend",
+        "weapon_id": "srd-young-black-dragon-rend-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 7,
+        "damage": {
+          "count": 2,
+          "size": 4,
+          "bonus": 4
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Acid",
+            "dice": {
+              "count": 1,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "acid",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-young-black-dragon-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 7,
+      "damage": 5
+    },
+    "attack_action": {
+      "id": "srd-young-black-dragon-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-young-black-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-black-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-black-dragon-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-young-black-dragon-acid-breath",
+        "name": "Acid Breath",
+        "save_ability": "dexterity",
+        "dc": 14,
+        "range_ft": 30,
+        "area": {
+          "shape": "line",
+          "origin": "self",
+          "length_ft": 30,
+          "width_ft": 5
+        },
+        "damage": {
+          "count": 14,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "acid",
+        "success_damage": "half",
+        "resource_id": "acid-breath",
+        "resource_cost": 1,
+        "requires_no_active_grapple": false,
+        "magical_effect": false,
+        "animation": "save-effect"
+      }
+    ],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 5,
+      "constitution": 3,
+      "intelligence": 1,
+      "wisdom": 3,
+      "charisma": 2
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Amphibious"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Acid Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "acid"
+    ],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [
+      {
+        "id": "acid-breath",
+        "name": "Acid Breath",
+        "max_uses": 1
+      }
+    ],
+    "recharge_rules": [
+      {
+        "resource_id": "acid-breath",
+        "minimum_roll": 5,
+        "die_size": 6
+      }
+    ],
+    "visual": {
+      "armor": "scales",
+      "main_hand": "Rend",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 264",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-young-blue-dragon",
+    "name": "Young Blue Dragon",
+    "archetype": "source-certified monster",
+    "challenge_rating": "9",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "large",
+    "armor_class": 18,
+    "max_hp": 152,
+    "speed_ft": 80,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 80,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 20,
+      "hover": false
+    },
+    "initiative_bonus": 4,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "cunning_action": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-young-blue-dragon-rend",
+        "name": "Rend",
+        "weapon_id": "srd-young-blue-dragon-rend-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 9,
+        "damage": {
+          "count": 2,
+          "size": 6,
+          "bonus": 5
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Lightning",
+            "dice": {
+              "count": 1,
+              "size": 10,
+              "bonus": 0
+            },
+            "damage_type": "lightning",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-young-blue-dragon-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 9,
+      "damage": 6
+    },
+    "attack_action": {
+      "id": "srd-young-blue-dragon-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-young-blue-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-blue-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-blue-dragon-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-young-blue-dragon-lightning-breath",
+        "name": "Lightning Breath",
+        "save_ability": "dexterity",
+        "dc": 16,
+        "range_ft": 60,
+        "area": {
+          "shape": "line",
+          "origin": "self",
+          "length_ft": 60,
+          "width_ft": 5
+        },
+        "damage": {
+          "count": 10,
+          "size": 10,
+          "bonus": 0
+        },
+        "damage_type": "lightning",
+        "success_damage": "half",
+        "resource_id": "lightning-breath",
+        "resource_cost": 1,
+        "requires_no_active_grapple": false,
+        "magical_effect": false,
+        "animation": "save-effect"
+      }
+    ],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 5,
+      "dexterity": 4,
+      "constitution": 4,
+      "intelligence": 2,
+      "wisdom": 5,
+      "charisma": 3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Lightning Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "lightning"
+    ],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [
+      {
+        "id": "lightning-breath",
+        "name": "Lightning Breath",
+        "max_uses": 1
+      }
+    ],
+    "recharge_rules": [
+      {
+        "resource_id": "lightning-breath",
+        "minimum_roll": 5,
+        "die_size": 6
+      }
+    ],
+    "visual": {
+      "armor": "scales",
+      "main_hand": "Rend",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 266",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-young-green-dragon",
+    "name": "Young Green Dragon",
+    "archetype": "source-certified monster",
+    "challenge_rating": "8",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "large",
+    "armor_class": 18,
+    "max_hp": 136,
+    "speed_ft": 80,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 80,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 4,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "cunning_action": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-young-green-dragon-rend",
+        "name": "Rend",
+        "weapon_id": "srd-young-green-dragon-rend-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 7,
+        "damage": {
+          "count": 2,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 2,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-young-green-dragon-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 7,
+      "damage": 5
+    },
+    "attack_action": {
+      "id": "srd-young-green-dragon-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-young-green-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-green-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-green-dragon-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-young-green-dragon-poison-breath",
+        "name": "Poison Breath",
+        "save_ability": "constitution",
+        "dc": 14,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "damage": {
+          "count": 12,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "poison",
+        "success_damage": "half",
+        "resource_id": "poison-breath",
+        "resource_cost": 1,
+        "requires_no_active_grapple": false,
+        "magical_effect": false,
+        "animation": "save-effect"
+      }
+    ],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 4,
+      "constitution": 3,
+      "intelligence": 3,
+      "wisdom": 4,
+      "charisma": 2
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Amphibious"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Poison Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "poisoned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [
+      {
+        "id": "poison-breath",
+        "name": "Poison Breath",
+        "max_uses": 1
+      }
+    ],
+    "recharge_rules": [
+      {
+        "resource_id": "poison-breath",
+        "minimum_roll": 5,
+        "die_size": 6
+      }
+    ],
+    "visual": {
+      "armor": "scales",
+      "main_hand": "Rend",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 293",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-young-red-dragon",
+    "name": "Young Red Dragon",
+    "archetype": "source-certified monster",
+    "challenge_rating": "10",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "large",
+    "armor_class": 18,
+    "max_hp": 178,
+    "speed_ft": 80,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 80,
+      "climb_ft": 40,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 4,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "cunning_action": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-young-red-dragon-rend",
+        "name": "Rend",
+        "weapon_id": "srd-young-red-dragon-rend-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 10,
+        "damage": {
+          "count": 2,
+          "size": 6,
+          "bonus": 6
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Fire",
+            "dice": {
+              "count": 1,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "fire",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-young-red-dragon-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 10,
+      "damage": 7
+    },
+    "attack_action": {
+      "id": "srd-young-red-dragon-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-young-red-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-red-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-red-dragon-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-young-red-dragon-fire-breath",
+        "name": "Fire Breath",
+        "save_ability": "dexterity",
+        "dc": 17,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "damage": {
+          "count": 16,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "fire",
+        "success_damage": "half",
+        "resource_id": "fire-breath",
+        "resource_cost": 1,
+        "requires_no_active_grapple": false,
+        "magical_effect": false,
+        "animation": "save-effect"
+      }
+    ],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 6,
+      "dexterity": 4,
+      "constitution": 5,
+      "intelligence": 2,
+      "wisdom": 4,
+      "charisma": 4
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Fire Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "fire"
+    ],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [
+      {
+        "id": "fire-breath",
+        "name": "Fire Breath",
+        "max_uses": 1
+      }
+    ],
+    "recharge_rules": [
+      {
+        "resource_id": "fire-breath",
+        "minimum_roll": 5,
+        "die_size": 6
+      }
+    ],
+    "visual": {
+      "armor": "scales",
+      "main_hand": "Rend",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 318",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-young-white-dragon",
+    "name": "Young White Dragon",
+    "archetype": "source-certified monster",
+    "challenge_rating": "6",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "large",
+    "armor_class": 17,
+    "max_hp": 123,
+    "speed_ft": 80,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 80,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 20,
+      "hover": false
+    },
+    "initiative_bonus": 3,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "cunning_action": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-young-white-dragon-rend",
+        "name": "Rend",
+        "weapon_id": "srd-young-white-dragon-rend-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 7,
+        "damage": {
+          "count": 2,
+          "size": 4,
+          "bonus": 4
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Cold",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 0
+            },
+            "damage_type": "cold",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-young-white-dragon-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 7,
+      "damage": 5
+    },
+    "attack_action": {
+      "id": "srd-young-white-dragon-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-young-white-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-white-dragon-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-young-white-dragon-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-young-white-dragon-cold-breath",
+        "name": "Cold Breath",
+        "save_ability": "constitution",
+        "dc": 15,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "damage": {
+          "count": 9,
+          "size": 8,
+          "bonus": 0
+        },
+        "damage_type": "cold",
+        "success_damage": "half",
+        "resource_id": "cold-breath",
+        "resource_cost": 1,
+        "requires_no_active_grapple": false,
+        "magical_effect": false,
+        "animation": "save-effect"
+      }
+    ],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 3,
+      "constitution": 4,
+      "intelligence": -2,
+      "wisdom": 3,
+      "charisma": 1
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Ice Walk"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Cold Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "cold"
+    ],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [
+      {
+        "id": "cold-breath",
+        "name": "Cold Breath",
+        "max_uses": 1
+      }
+    ],
+    "recharge_rules": [
+      {
+        "resource_id": "cold-breath",
+        "minimum_roll": 5,
+        "die_size": 6
+      }
+    ],
+    "visual": {
+      "armor": "scales",
+      "main_hand": "Rend",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 340",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-worg",
     "name": "Worg",
     "archetype": "source-certified pack predator",
