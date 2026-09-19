@@ -3,12 +3,13 @@ from app.content.canonical_hero_policy import assert_canonical_profile_policy
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.fighter_high_level_profile import build_karnok_stoneward_level15_profile
-from app.content.fighter_progression import build_karnok_stoneward_level
+from app.content.fighter_progression import build_karnok_stoneward_level, unsupported_fighter_engine_features
 from app.content.pregen_combat_audit import assert_pregen_combat_stats, audit_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 
 
 def test_fighter_level_fifteen_certifies_superior_critical() -> None:
+    assert unsupported_fighter_engine_features(15) == ()
     profile = build_karnok_stoneward_level15_profile()
     template = build_karnok_stoneward_level(15)
     combat_profile = build_pregen_combat_profiles()[template.id]
