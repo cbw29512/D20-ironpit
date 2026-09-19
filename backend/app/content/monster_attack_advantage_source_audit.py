@@ -9,13 +9,23 @@ logger = logging.getLogger(__name__)
 _TARGET_NOT_FULL = r"with\s+advantage\s+if\s+the\s+target\s+(?:doesn['’]t|does\s+not)\s+have\s+all\s+its\s+hit\s+points"
 
 
-def conditional_attack_advantage_issues(attack: WeaponAttack, actions: str) -> list[str]:
+def conditional_attack_advantage_issues(
+    attack: WeaponAttack,
+    actions: str,
+    traits: str = "",
+) -> list[str]:
     try:
         name = re.escape(attack.weapon.name)
-        source_has = bool(re.search(
+        action_has = bool(re.search(
             rf"\b{name}\.\s+(?:melee|ranged|melee\s+or\s+ranged)\s+attack\s+roll:[^.]*?\(\s*{_TARGET_NOT_FULL}\s*\)",
             actions, re.IGNORECASE,
         ))
+        trait_has = bool(re.search(
+            r"\bBlood Frenzy\.\s+[^.]*Advantage on attack rolls against any creature "
+            r"that (?:doesn['’]t|does not) have all its Hit Points\.",
+            traits, re.IGNORECASE,
+        ))
+        source_has = action_has or trait_has
         runtime_count = sum(spec.trigger == "target_not_full_hp" for spec in attack.conditional_attack_advantage)
         issues: list[str] = []
         if source_has and runtime_count != 1:

@@ -46,6 +46,10 @@ _ATTACKS = {
     ],
     "Venomous Snake": [("Bite", "melee", 4, 1, 4, 2, "piercing", None, 5, None, None, [("Poison", 1, 6, 0, "poison")])],
     "Violet Fungus": [("Rotting Touch", "melee", 2, 1, 8, 0, "necrotic", None, 10, None, None, [])],
+    "Xorn": [
+        ("Bite", "melee", 6, 4, 6, 3, "piercing", None, 5, None, None, []),
+        ("Claw", "melee", 6, 1, 10, 3, "slashing", None, 5, None, None, []),
+    ],
     "Zombie": [("Slam", "melee", 3, 1, 8, 1, "bludgeoning", None, 5, None, None, [])],
 }
 _MULTI = {
@@ -92,6 +96,17 @@ def _weapon_attack(monster: str, spec: tuple) -> WeaponAttack:
 
 
 def _multiattack(monster: str, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
+    if monster == "Xorn":
+        by_name = {attack.weapon.name: attack.id for attack in attacks}
+        return AttackActionDefinition(
+            id="srd-xorn-multiattack", name="Multiattack",
+            slots=[
+                AttackActionSlot(attack_ids=[by_name["Bite"]]),
+                AttackActionSlot(attack_ids=[by_name["Claw"]]),
+                AttackActionSlot(attack_ids=[by_name["Claw"]]),
+                AttackActionSlot(attack_ids=[by_name["Claw"]]),
+            ],
+        )
     profile = _MULTI.get(monster)
     if profile is None:
         return None

@@ -13,6 +13,7 @@ _EXPECTED_IDS = {
     "Hunter Shark": "srd-hunter-shark",
     "Piranha": "srd-piranha",
     "Reef Shark": "srd-reef-shark",
+    "Sahuagin Warrior": "srd-sahuagin-warrior",
     "Swarm of Piranhas": "srd-swarm-of-piranhas",
 }
 _NAMES = set(_EXPECTED_IDS)
@@ -29,6 +30,11 @@ def test_target_not_full_hp_monsters_are_source_complete() -> None:
         assert templates["Giant Shark"].speed_ft == 5
         assert templates["Giant Shark"].movement_modes.swim_ft == 60
         assert len(templates["Giant Shark"].attack_action.slots) == 2
+        sahuagin = templates["Sahuagin Warrior"]
+        assert len(sahuagin.attack_action.slots) == 2
+        assert sahuagin.weapon_attack.weapon.name == "Claw"
+        assert sahuagin.weapon_attack.weapon.damage_type.value == "slashing"
+        assert [spec.trigger for spec in sahuagin.weapon_attack.conditional_attack_advantage] == ["target_not_full_hp"]
         assert templates["Swarm of Piranhas"].weapon_attack.conditional_damage[0].trigger == "attacker_bloodied"
     except Exception:
         logger.exception("Target-not-full-HP monster source regression failed.")
@@ -46,4 +52,25 @@ def test_aquatic_monsters_certify_from_runtime_and_source_audit() -> None:
             assert card.blockers == []
     except Exception:
         logger.exception("Runtime-derived aquatic monster certification regression failed.")
+        raise
+
+
+def test_sahuagin_blood_frenzy_uses_shared_target_hp_advantage() -> None:
+    try:
+        sahuagin = next(
+            monster for monster in build_legacy_monster_templates()
+            if monster.name == "Sahuagin Warrior"
+        )
+        attacks = [sahuagin.weapon_attack, *sahuagin.alternate_weapon_attacks]
+        assert attacks
+        assert all(
+            [spec.trigger for spec in attack.conditional_attack_advantage] == ["target_not_full_hp"]
+            for attack in attacks
+        )
+        card = next(card for card in build_monster_catalog() if card.name == "Sahuagin Warrior")
+        assert card.coverage_status is CoverageStatus.RAW_READY
+        assert card.runnable_template_id == "srd-sahuagin-warrior"
+        assert card.blockers == []
+    except Exception:
+        logger.exception("Sahuagin Blood Frenzy certification regression failed.")
         raise

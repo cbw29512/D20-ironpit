@@ -16,12 +16,13 @@ _MODELED_TRAITS = {
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
+_DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
     "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
-    "Running Leap", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Training", "Water Breathing",
-    "Web Walker",
+    "Earth Glide", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity",
+    "Training", "Treasure Sense", "Water Breathing", "Web Walker",
 })
 
 
@@ -66,7 +67,14 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-runtime-missing:{runtime_trait.value}")
         elif runtime_has and not source_has:
             issues.append(f"trait-source-missing:{runtime_trait.value}")
-    certified = set(_MODELED_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    if "Blood Frenzy" in expected:
+        attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        if not attacks or any(
+            not any(spec.trigger == "target_not_full_hp" for spec in attack.conditional_attack_advantage)
+            for attack in attacks
+        ):
+            issues.append("trait-runtime-missing:blood-frenzy")
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")

@@ -20,9 +20,12 @@ _SPECS = {
     "Hunter Shark": (6, 3, 6, 4, None),
     "Piranha": (5, 0, 2, 0, 1),
     "Reef Shark": (4, 2, 4, 2, None),
+    "Sahuagin Warrior": (3, 1, 6, 1, None),
     "Swarm of Piranhas": (5, 2, 4, 3, None),
 }
-_CONDITIONAL_ADVANTAGE = frozenset({"Giant Shark", "Hunter Shark", "Piranha", "Swarm of Piranhas"})
+_CONDITIONAL_ADVANTAGE = frozenset({
+    "Giant Shark", "Hunter Shark", "Piranha", "Sahuagin Warrior", "Swarm of Piranhas",
+})
 _TRAITS = {"Reef Shark": [CombatTrait.PACK_TACTICS], "Swarm of Piranhas": [CombatTrait.SWARM]}
 
 
@@ -48,12 +51,14 @@ def _row(name: str) -> dict[str, object]:
 def _attack(name: str) -> WeaponAttack:
     try:
         bonus, count, size, damage_bonus, fixed = _SPECS[name]
-        attack_id = f"srd-{_slug(name)}-{'bites' if name == 'Swarm of Piranhas' else 'bite'}"
+        attack_name = "Claw" if name == "Sahuagin Warrior" else ("Bites" if name == "Swarm of Piranhas" else "Bite")
+        attack_id = f"srd-{_slug(name)}-{_slug(attack_name)}"
+        damage_type = DamageType.SLASHING if name == "Sahuagin Warrior" else DamageType.PIERCING
         conditional_damage = []
         if name == "Swarm of Piranhas":
             conditional_damage = [ConditionalDamage(
                 trigger="attacker_bloodied", mode="replace_weapon", dice_count=1, dice_size=4, damage_bonus=3,
-                damage_type=DamageType.PIERCING,
+                damage_type=damage_type,
             )]
         conditional_advantage = (
             [ConditionalAttackAdvantage(trigger="target_not_full_hp")] if name in _CONDITIONAL_ADVANTAGE else []
@@ -61,9 +66,9 @@ def _attack(name: str) -> WeaponAttack:
         return WeaponAttack(
             id=attack_id,
             weapon=Weapon(
-                id=f"{attack_id}-weapon", name="Bites" if name == "Swarm of Piranhas" else "Bite",
+                id=f"{attack_id}-weapon", name=attack_name,
                 attack_kind=WeaponAttackKind.MELEE, dice_count=count, dice_size=size,
-                damage_type=DamageType.PIERCING, animation="strike", reach_ft=5,
+                damage_type=damage_type, animation="strike", reach_ft=5,
             ),
             attack_bonus=bonus, damage_bonus=damage_bonus, fixed_damage=fixed,
             conditional_damage=conditional_damage, conditional_attack_advantage=conditional_advantage,
@@ -83,9 +88,9 @@ def _template(name: str) -> CombatantTemplate:
             raise ValueError(f"Missing SRD initiative for {name!r}.")
         size_name = str(row["size"]).split()[0].lower()
         multiattack = None
-        if name == "Giant Shark":
+        if name in {"Giant Shark", "Sahuagin Warrior"}:
             multiattack = AttackActionDefinition(
-                id="srd-giant-shark-multiattack", name="Multiattack",
+                id=f"srd-{_slug(name)}-multiattack", name="Multiattack",
                 slots=[AttackActionSlot(attack_ids=[attack.id]), AttackActionSlot(attack_ids=[attack.id])],
             )
         return CombatantTemplate(
