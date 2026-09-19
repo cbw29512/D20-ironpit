@@ -112,6 +112,21 @@ const attack = { id: "test-weapon", name: "Test Weapon", damageType: "slashing" 
 }
 
 {
+  const savedGraze = window.IRON_PIT_BROWSER_GRAZE;
+  delete window.IRON_PIT_BROWSER_GRAZE;
+  const grazer = { combatant_id: "grazer", state: state("2024") };
+  grazer.state.template.weapon_masteries = ["greatsword"];
+  const grazeAttack = { ...attack, weaponId: "greatsword", masteryProperty: "Graze" };
+  assert.throws(() => H.runPhase(H.PHASES.ON_MISS, {
+    sequence: 1, member: grazer, attacker: grazer, target, originalTarget: target,
+    attack: grazeAttack, round: 1, setup: { heroes: [grazer], monsters: [target] },
+    outcome: { damageRoll: null, damageComponents: [], damageOutcome: null, studiedApplied: false },
+    adjustedDamage: (_state, amount) => amount, applyDamage: () => "damaged", events: [],
+  }), /Applicable Graze attack outcome requires its browser runtime/);
+  window.IRON_PIT_BROWSER_GRAZE = savedGraze;
+}
+
+{
   calls.length = 0;
   const legacy = { combatant_id: "legacy", state: state("2014") };
   const outcome = {
