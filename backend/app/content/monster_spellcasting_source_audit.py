@@ -26,7 +26,7 @@ _ARENA_NEUTRAL_SPELLS = frozenset({
 # The replacement is content policy, not a combat-engine special case.
 _ARENA_SPELL_SUBSTITUTIONS: dict[str, tuple[str, int]] = {
     "Entangle": ("guiding-bolt", 1),
-    "Moonbeam": ("shatter", 2),
+    "Moonbeam": ("inflict-wounds", 2),
     "Thunderwave": ("guiding-bolt", 1),
 }
 # Printed spells whose relevant arena behavior is directly represented by an existing
