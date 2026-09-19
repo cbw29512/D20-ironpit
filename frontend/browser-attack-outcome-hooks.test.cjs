@@ -122,7 +122,11 @@ const attack = { id: "test-weapon", name: "Test Weapon", damageType: "slashing" 
     attack: grazeAttack, round: 1, setup: { heroes: [grazer], monsters: [target] },
     outcome: { damageRoll: null, damageComponents: [], damageOutcome: null, studiedApplied: false },
     adjustedDamage: (_state, amount) => amount, applyDamage: () => "damaged", events: [],
-  }), /Applicable Graze attack outcome requires its browser runtime/);
+  }), (error) => {
+    assert.match(error.message, /Ability hook "graze-miss" failed during resolve/);
+    assert.match(error.cause?.message || "", /Applicable Graze attack outcome requires its browser runtime/);
+    return true;
+  });
   window.IRON_PIT_BROWSER_GRAZE = savedGraze;
 }
 
