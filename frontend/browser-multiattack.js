@@ -55,12 +55,15 @@
     return [...setup.heroes, ...setup.monsters].find((item) => item.combatant_id === event.target_id) || fallback;
   }
 
-  function available(member, setup) {
-    const definition = member.state.template.attack_action, slots = definition?.slots;
+  function hasLegalChoice(member, setup) {
+    const slots = member.state.template.attack_action?.slots;
     return Boolean(slots?.length
-      && E().available(member.state, "action")
       && F().targetOrder(member, setup).length
       && slots.some((slot) => slotHasLegalChoice(member, setup, slot)));
+  }
+
+  function available(member, setup) {
+    return E().available(member.state, "action") && hasLegalChoice(member, setup);
   }
 
   function resolveAttackAction(sequence, round, member, setup) {
@@ -110,5 +113,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_MULTIATTACK = { available, resolveAttackAction };
+  window.IRON_PIT_BROWSER_MULTIATTACK = { available, hasLegalChoice, resolveAttackAction };
 })();

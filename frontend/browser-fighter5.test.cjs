@@ -14,7 +14,8 @@ const load = (name) => vm.runInThisContext(
 for (const file of [
   "browser-heroes.js", "browser-action-economy.js", "browser-grapple.js", "browser-state.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saves.js", "browser-charge.js",
-  "browser-formation.js", "browser-multiattack.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
+  "browser-formation.js", "browser-multiattack.js", "browser-main-action-profiles.js", "browser-main-action-selection.js",
+  "browser-main-action-providers.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
 ]) load(file);
 
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l5"];
@@ -109,6 +110,8 @@ const targetTemplate = {
   const normal = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, hero, setup);
   assert.equal(normal.events.filter((event) => event.event_type === "attack").length, 2);
   assert.equal(hero.state.action_available, false);
+  assert.equal(window.IRON_PIT_BROWSER_MULTIATTACK.hasLegalChoice(hero, setup), true,
+    "Action Surge discovery must prove Attack Action legality without granting the Action");
 
   const surged = window.IRON_PIT_BROWSER_ACTION_SURGE.resolveAttack(normal.sequence, 1, hero, setup, "1:hero-attacks");
   assert.ok(surged);

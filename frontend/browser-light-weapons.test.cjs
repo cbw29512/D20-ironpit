@@ -34,7 +34,8 @@ window.IRON_PIT_BROWSER_ATTACK = {
 
 for (const file of [
   "browser-weapon-mastery.js", "browser-light-weapons.js", "browser-light-attack.js",
-  "browser-standard-attack-action.js", "browser-formation.js", "browser-multiattack.js", "browser-action-surge.js",
+  "browser-standard-attack-action.js", "browser-formation.js", "browser-multiattack.js",
+  "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-action-surge.js",
 ]) load(file);
 
 const scimitar = {
@@ -55,7 +56,7 @@ function fighter(masteries = ["scimitar"], withAction = false, fightingStyles = 
     combatant_id: "hero-1", side: "heroes", position_ft: 0,
     state: {
       template: {
-        kind: "character", name: "Nick Fighter", attacks: [shortsword, scimitar], weapon_masteries: masteries,
+        kind: "character", name: "Nick Fighter", ruleset: "2024", attacks: [shortsword, scimitar], weapon_masteries: masteries,
         fighting_style: fightingStyles[0] || null, fighting_styles: fightingStyles,
         attack_action: withAction ? {
           id: "extra-attack", isAttackAction: true,
@@ -70,7 +71,7 @@ function fighter(masteries = ["scimitar"], withAction = false, fightingStyles = 
 function monster(id, position = 5) {
   return {
     combatant_id: id, side: "monsters", position_ft: position,
-    state: { template: { kind: "monster", name: id }, current_hp: 100, is_alive: true, is_dead: false, grapple_sources: [] },
+    state: { template: { kind: "monster", name: id, ruleset: "2024" }, current_hp: 100, is_alive: true, is_dead: false, grapple_sources: [] },
   };
 }
 const target = monster("monster-1");

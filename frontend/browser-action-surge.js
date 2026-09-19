@@ -1,9 +1,7 @@
 (() => {
   "use strict";
 
-  const F = () => window.IRON_PIT_BROWSER_FORMATION;
-  const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
-  const U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
+  const MA = () => window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
 
   function available(state, turnKey) {
@@ -27,21 +25,22 @@
     };
   }
   function resolveAttack(sequence, round, member, setup, turnKey) {
-    if (!available(member.state, turnKey)) return null;
-    const choice = member.state.template.attack_action ? F().targetOrder(member, setup)[0] : F().chooseStandardAttack(member, setup);
-    if (!choice) return null;
-    const events = [use(sequence++, round, member, turnKey)];
-    if (member.state.template.attack_action) {
-      const multi = M().resolveAttackAction(sequence, round, member, setup);
-      events.push(...multi.events);
-      return { events, sequence: multi.sequence };
+    try {
+      if (!available(member.state, turnKey)) return null;
+      const selector = MA();
+      if (!selector) throw new Error("Action Surge requires the Main Action selector.");
+      const context = { sequence, round, member, setup, turnKey };
+      const candidates = selector.discoverCandidates("actionSurgeAttack", context);
+      const selected = selector.selectCandidate("actionSurgeAttack", candidates);
+      if (!selected) return null;
+      const events = [use(sequence++, round, member, turnKey)];
+      const resolved = selector.resolveCandidate("actionSurgeAttack", selected, { ...context, sequence });
+      events.push(...resolved.events);
+      return { events, sequence: resolved.sequence };
+    } catch (error) {
+      console.error("Browser Action Surge resolution failed", { combatant: member?.combatant_id, round, error });
+      throw error;
     }
-    const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
-    const standard = U().resolve(sequence, round, member, choice.target, choice.attack, choice.distance, setup, turnKey, {
-      advantage: pack ? 1 : 0, featureId: "action-surge",
-    });
-    events.push(...standard.events);
-    return { events, sequence: standard.sequence };
   }
 
   window.IRON_PIT_BROWSER_ACTION_SURGE = { available, resolveAttack, use };
