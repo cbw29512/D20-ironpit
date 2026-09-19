@@ -192,6 +192,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "initiative_advantage": progression.initiative_advantage, "athletics_advantage": progression.athletics_advantage,
         "danger_sense": progression.danger_sense, "reckless_attack": progression.reckless_attack,
         "frenzy": progression.frenzy, "frenzy_bonus_attack_2014": progression.frenzy_bonus_attack_2014,
+        "persistent_rage_2014": progression.persistent_rage_2014,
         "intimidating_presence_2014_dc": progression.intimidating_presence_2014_dc,
         "brutal_critical_dice": progression.brutal_critical_dice,
         "brutal_strike_damage_dice": progression.brutal_strike_damage_dice, "fast_movement_bonus_ft": progression.fast_movement_bonus_ft,
@@ -213,7 +214,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()}, "source": template.source,
     }
-    if progression.persistent_rage_2014: row["persistent_rage_2014"] = True
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
