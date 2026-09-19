@@ -22,6 +22,7 @@ from app.content.monster_spellcasting_source_audit import complete_monster_spell
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monster_tyrannosaurus import build_tyrannosaurus_rex
 from app.content.monster_worg import build_worg
+from app.content.monster_xorn import build_xorn
 from app.content.monsters import build_axe_beak, build_bandit, build_commoner, build_giant_lizard
 from app.content.monsters_bears import build_black_bear, build_brown_bear
 from app.content.monsters_batch_three import build_monster_batch_three
