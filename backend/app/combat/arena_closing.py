@@ -4,7 +4,7 @@ from app.combat.action_economy import is_available
 from app.combat.charge import resolve_charge_closing
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
-from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.damage_reactions import resolve_attack_event_chain
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.formation import backline_holds_position
 from app.combat.policy import weapon_attack_profiles
@@ -52,12 +52,12 @@ def _hold_backline(
         return None
     events: list[BattleEvent] = []
     if is_available(attacker.state, "action"):
-        events.append(resolve_encounter_attack(
+        attack_events, sequence = resolve_attack_event_chain(
             sequence, round_number, attacker, target, ranged,
             combatant_distance(attacker, target), dice, setup,
             allow_reckless=True, turn_key=turn_key,
-        ))
-        sequence += 1
+        )
+        events.extend(attack_events)
     return events, sequence, True
 
 
@@ -100,12 +100,12 @@ def resolve_simple_closing(
     events: list[BattleEvent] = []
     ranged = _legal_ranged_attack(attacker, combatant_distance(attacker, target))
     if ranged is not None and is_available(attacker.state, "action"):
-        events.append(resolve_encounter_attack(
+        attack_events, sequence = resolve_attack_event_chain(
             sequence, round_number, attacker, target, ranged,
             combatant_distance(attacker, target), dice, setup,
             allow_reckless=True, turn_key=turn_key,
-        ))
-        sequence += 1
+        )
+        events.extend(attack_events)
     elif is_available(attacker.state, "action"):
         events.append(resolve_dodge_action(sequence, round_number, attacker))
         sequence += 1
