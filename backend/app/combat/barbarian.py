@@ -141,5 +141,9 @@ def finalize_rage_turn(
 
 
 def end_rage_if_incapacitated(state: CombatantState) -> None:
+    if state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014:
+        if state.is_dead or state.is_unconscious:
+            end_rage(state)
+        return
     if state.template.wearing_heavy_armor or state.is_dead or is_incapacitated(state):
         end_rage(state)
