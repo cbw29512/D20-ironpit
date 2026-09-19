@@ -48,6 +48,7 @@ def test_fighter_level_sixteen_certifies_dexterity_asi_and_sixth_mastery() -> No
 
 
 def test_fighter_level_seventeen_certifies_resource_use_increases() -> None:
+    assert unsupported_fighter_engine_features(17) == ()
     profile = build_karnok_stoneward_level17_profile()
     template = build_karnok_stoneward_level(17)
     resources = {item.id: item.max_uses for item in template.resources}
