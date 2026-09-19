@@ -37,9 +37,12 @@
     const roll = C().requireContext(ctx);
     const started = ctx.allowReckless === true && activate(ctx.member, ctx.attack, ctx.round);
     if (started) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(ctx.member.state, ctx.turnKey);
-    roll.recklessStarted = Boolean(roll.recklessStarted || started);
-    roll.recklessAdvantage = attackAdvantage(ctx.member.state, ctx.attack);
-    roll.targetRecklessAdvantage = attacksAgainstAdvantage(ctx.target.state);
+    C().setAdvantageSource(roll, "reckless-attacker", attackAdvantage(ctx.member.state, ctx.attack));
+    C().setAdvantageSource(roll, "reckless-defender", attacksAgainstAdvantage(ctx.target.state));
+    if (started) {
+      roll.descriptionFragments.push(`${ctx.member.state.template.name} uses Reckless Attack.`);
+      roll.aggregateFeatureId ||= EFFECT_ID;
+    }
     return C().noEventResult(ctx.sequence);
   }
 
