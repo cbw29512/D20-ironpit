@@ -10,6 +10,7 @@ from app.content.legacy_migrated_monsters import (
 from app.content.monster_blood_hawk import build_blood_hawk
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_giant_crocodile import build_giant_crocodile
+from app.content.monster_druid import build_druid_monster
 from app.content.monster_goat import build_goat
 from app.content.monster_goblin_boss import build_goblin_boss
 from app.content.monster_hippogriff import build_hippogriff
@@ -69,6 +70,7 @@ def build_legacy_monster_templates(*, include_capability_migrated: bool = True) 
         build_axe_beak(), build_giant_lizard(), *wolf_entries, build_black_bear(), build_brown_bear(),
         build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(), build_jackal(),
         build_boar(), build_elk(), build_giant_boar(), *build_charge_expansion(), build_goat(), build_merfolk_skirmisher(),
+        build_druid_monster(),
         build_hippogriff(), *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(),
         *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(), *build_venom_monsters(),
         *build_expansion_four(), build_giant_crocodile(), *snake_entries, build_tyrannosaurus_rex(),
