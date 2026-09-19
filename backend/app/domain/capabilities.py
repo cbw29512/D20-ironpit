@@ -17,7 +17,7 @@ from app.domain.effect_removal import EffectRemovalAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
-from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.reactions import DamageTriggeredMeleeReaction, ParryReaction, RedirectAttackReaction
 from app.domain.rulesets import RulesetId
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
@@ -64,6 +64,7 @@ class CombatantDefinition(BaseModel):
     source_spellcasting_fingerprint: str | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
+    damage_triggered_melee_reaction: DamageTriggeredMeleeReaction | None = None
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
