@@ -19,6 +19,8 @@ def test_spy_source_attacks_and_cunning_action_match_srd() -> None:
 
     assert spy.progression_features.cunning_action is True
     assert spy.source_bonus_action_names == ["Cunning Action"]
+    assert spy.movement_modes.climb_ft == 30
+    assert spy.initiative_bonus == 4
 
     attacks = {
         attack.weapon.name: attack
