@@ -78,6 +78,7 @@ load("browser-attack-outcome.js");
 load("browser-tactical-master.js");
 load("browser-graze.js");
 load("browser-modifiers.js");
+load("browser-attack-roll-context.js");
 load("browser-attack.js");
 load("browser-saves.js");
 load("browser-indomitable.js");
