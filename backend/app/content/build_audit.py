@@ -60,10 +60,13 @@ def _audit_final_scores(profile: CharacterBuildProfile) -> list[str]:
     for ability in _ABILITIES:
         expected = profile.base_ability_scores.score(ability) + totals[ability]
         actual = profile.final_ability_scores.score(ability)
+        maximum = profile.ability_score_maximums.get(ability, 20)
         if actual != expected:
             issues.append(f"final-{ability}-does-not-match-{mismatch_source}")
-        if actual > 20:
-            issues.append(f"final-{ability}-exceeds-20")
+        if maximum < 20 or maximum > 30:
+            issues.append(f"invalid-{ability}-maximum")
+        if actual > maximum:
+            issues.append(f"final-{ability}-exceeds-{maximum}")
     return issues
 
 

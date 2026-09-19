@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import logging
 
-from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_2014_profile
+from app.content.barbarian_berserker_2014_profile import (
+    _compile_rokhan_stonefury_2014_profile,
+    build_rokhan_stonefury_2014_profile,
+)
 from app.content.character_math import fixed_hit_points, proficiency_bonus
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
 from app.content.pregen_combat_profiles import AttackExpectation, PregenCombatProfile
@@ -10,28 +13,36 @@ from app.content.pregen_combat_profiles import AttackExpectation, PregenCombatPr
 logger = logging.getLogger(__name__)
 
 
+def _compile_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
+    source = _compile_rokhan_stonefury_2014_profile(level)
+    scores = source.final_ability_scores
+    pb = proficiency_bonus(level)
+    attacks = (
+        AttackExpectation("greataxe", "strength", 1, 12, "slashing"),
+        AttackExpectation("handaxe", "strength", 1, 6, "slashing", normal_range_ft=20, long_range_ft=60),
+    )
+    resources = () if level >= 20 else (("rage", barbarian_2014_rage_uses(level)),)
+    return PregenCombatProfile(
+        template_id=source.template_id, archetype="Barbarian", level=level, abilities=scores,
+        save_proficiencies=("strength", "constitution"),
+        armor_class=10 + scores.modifier("dexterity") + scores.modifier("constitution"),
+        max_hp=fixed_hit_points(level, 12, scores.modifier("constitution")),
+        speed_ft=40 if level >= 5 else 30,
+        skill_bonuses=(("athletics", scores.modifier("strength") + pb),
+                       ("acrobatics", scores.modifier("dexterity"))),
+        attacks=attacks, weapon_masteries=(), resources=resources,
+        unlimited_resources=("rage",) if level >= 20 else (),
+        rage_damage_bonus=barbarian_rage_damage_bonus(level), initiative_bonus=scores.modifier("dexterity"),
+    )
+
+
 def build_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        source = build_rokhan_stonefury_2014_profile(level)
-        scores = source.final_ability_scores
-        pb = proficiency_bonus(level)
-        attacks = (
-            AttackExpectation("greataxe", "strength", 1, 12, "slashing"),
-            AttackExpectation("handaxe", "strength", 1, 6, "slashing", normal_range_ft=20, long_range_ft=60),
-        )
-        return PregenCombatProfile(
-            template_id=source.template_id, archetype="Barbarian", level=level, abilities=scores,
-            save_proficiencies=("strength", "constitution"),
-            armor_class=10 + scores.modifier("dexterity") + scores.modifier("constitution"),
-            max_hp=fixed_hit_points(level, 12, scores.modifier("constitution")),
-            speed_ft=40 if level >= 5 else 30,
-            skill_bonuses=(("athletics", scores.modifier("strength") + pb),
-                           ("acrobatics", scores.modifier("dexterity"))),
-            attacks=attacks, weapon_masteries=(), resources=(("rage", barbarian_2014_rage_uses(level)),),
-            rage_damage_bonus=barbarian_rage_damage_bonus(level), initiative_bonus=scores.modifier("dexterity"),
-        )
+        if level not in range(1, 14):
+            raise ValueError("2014 Rokhan combat-profile certification covers levels 1 through 13.")
+        return _compile_rokhan_2014_combat_profile(level)
     except Exception:
-        logger.exception("Failed to build 2014 Rokhan combat profile at level %s", level)
+        logger.exception("Failed to build certified 2014 Rokhan combat profile at level %s", level)
         raise
 
 
