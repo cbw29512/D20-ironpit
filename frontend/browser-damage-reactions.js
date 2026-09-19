@@ -67,8 +67,20 @@
     }
   }
 
+  function resolveAttackChain(sequence, round, attacker, target, attack, distance, setup, options = {}) {
+    const event = A().resolveAttack(sequence, round, attacker, target, attack, distance, {
+      ...options,
+      setup,
+    });
+    const reactions = resolveAfterDamage(
+      sequence + 1, round, attacker, event, setup, options.turnKey || null,
+    );
+    return { events: [event, ...reactions.events], sequence: reactions.sequence };
+  }
+
   window.IRON_PIT_BROWSER_DAMAGE_REACTIONS = {
     eventAppliedDamage,
     resolveAfterDamage,
+    resolveAttackChain,
   };
 })();
