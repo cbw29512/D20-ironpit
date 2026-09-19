@@ -110,6 +110,8 @@ const targetTemplate = {
   const normal = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, hero, setup);
   assert.equal(normal.events.filter((event) => event.event_type === "attack").length, 2);
   assert.equal(hero.state.action_available, false);
+  assert.equal(window.IRON_PIT_BROWSER_MULTIATTACK.hasLegalChoice(hero, setup), true,
+    "Action Surge discovery must prove Attack Action legality without granting the Action");
 
   const surged = window.IRON_PIT_BROWSER_ACTION_SURGE.resolveAttack(normal.sequence, 1, hero, setup, "1:hero-attacks");
   assert.ok(surged);
