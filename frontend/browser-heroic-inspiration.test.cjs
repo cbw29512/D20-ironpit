@@ -100,6 +100,8 @@ window.IRON_PIT_BROWSER_RAGE = { damageBonus: () => 0, extendFromAttack: () => {
 window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage: (state, amount) => { state.current_hp = Math.max(0, state.current_hp - amount); return null; } };
 window.IRON_PIT_BROWSER_CHAMPION = { criticalMove: (_attacker, _setup, event) => event };
 load("browser-rolls.js");
+load("browser-ability-hooks.js");
+load("browser-attack-outcome.js");
 load("browser-attack.js");
 
 {
