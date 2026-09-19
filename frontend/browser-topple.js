@@ -4,10 +4,13 @@
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
   const S = () => window.IRON_PIT_BROWSER_SAVES;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const O = () => window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
   const empty = () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false });
 
   function proficiencyBonus(level) {
-    if (!Number.isInteger(level) || level < 1 || level > 20) throw new Error(`Topple requires a certified character level; received ${level}.`);
+    if (!Number.isInteger(level) || level < 1 || level > 20) {
+      throw new Error(`Topple requires a certified character level; received ${level}.`);
+    }
     return 2 + Math.floor((level - 1) / 4);
   }
 
@@ -28,5 +31,28 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_TOPPLE = { proficiencyBonus, resolve };
+  function resolveHit(ctx) {
+    const outcome = O().requireOutcome(ctx);
+    outcome.topple = resolve(ctx.member, ctx.target, ctx.attack);
+    if (outcome.topple.applied && !outcome.appliedConditions.includes("prone")) {
+      outcome.appliedConditions.push("prone");
+    }
+    return outcome.topple.saveDc == null ? null : O().noEventResult(ctx.sequence);
+  }
+
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Topple hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.ON_HIT;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === "topple-mastery")) return;
+    hooks.registerAbility(phase, {
+      id: "topple-mastery", priority: 10, rulesets: ["2024"],
+      appliesTo: (member, ctx) => W().active(member.state, ctx.attack, "Topple"),
+      resolve: resolveHit,
+    });
+  }
+
+  window.IRON_PIT_BROWSER_TOPPLE = { installAbilityHooks, proficiencyBonus, resolve, resolveHit };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();

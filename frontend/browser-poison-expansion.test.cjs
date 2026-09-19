@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-modifiers.js",
   "browser-state.js", "browser-rage.js", "browser-sneak-attack.js", "browser-rolls.js", "browser-undead-fortitude.js",
-  "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-condition-lifecycle.js",
+  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saves.js", "browser-condition-lifecycle.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;

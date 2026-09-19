@@ -94,6 +94,7 @@ jobs:
         run: |
           node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
+          node frontend/browser-attack-outcome-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs
           node frontend/browser-execution.test.cjs
@@ -220,6 +221,8 @@ jobs:
           grep -q 'browser-condition-rules.js' index.html
           grep -q 'browser-action-economy.js' index.html
           grep -q 'browser-ability-hooks.js' index.html
+          grep -q 'browser-attack-outcome.js' index.html
+          grep -q 'browser-attack-outcome-hook-installation.js' index.html
           grep -q 'browser-ability-hook-installation.js' index.html
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
@@ -294,6 +297,8 @@ jobs:
           grep -q 'browser-condition-rules.js' frontend/index.html
           grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-ability-hooks.js' frontend/index.html
+          grep -q 'browser-attack-outcome.js' frontend/index.html
+          grep -q 'browser-attack-outcome-hook-installation.js' frontend/index.html
           grep -q 'browser-ability-hook-installation.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
           grep -q 'browser-reaction-movement.js' frontend/index.html

@@ -6,6 +6,7 @@
   const SAP_EFFECT_IDS = new Set([WEAPON_EFFECT_ID, TACTICAL_EFFECT_ID]);
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
+  const O = () => window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
 
   function applyEffect(attackerId, target, round, effectId, sourceEffectId) {
     if (target.state.is_dead || target.state.current_hp <= 0) return false;
@@ -41,6 +42,30 @@
     return applyEffect(attacker.combatant_id, target, round, TACTICAL_EFFECT_ID, "tactical-master");
   }
 
-  window.IRON_PIT_BROWSER_SAP = { applyEffect, applyWeapon, consume, disadvantage, weaponEligible };
+  function resolveHit(ctx) {
+    const outcome = O().requireOutcome(ctx);
+    if (ctx.target.state.is_dead || ctx.target.state.current_hp <= 0) return null;
+    if (applyWeapon(ctx.member, ctx.target, ctx.attack, ctx.round)) outcome.sapApplied = "weapon";
+    else if (applyTactical(ctx.member, ctx.target, ctx.attack, ctx.round)) outcome.sapApplied = "tactical";
+    return outcome.sapApplied ? O().noEventResult(ctx.sequence) : null;
+  }
+
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Sap hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.ON_HIT;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === "sap-outcome")) return;
+    hooks.registerAbility(phase, {
+      id: "sap-outcome", priority: 20, rulesets: ["2024"],
+      appliesTo: (member, ctx) => weaponEligible(member.state, ctx.attack) || selected(member.state, ctx.attack),
+      resolve: resolveHit,
+    });
+  }
+
+  window.IRON_PIT_BROWSER_SAP = {
+    applyEffect, applyWeapon, consume, disadvantage, installAbilityHooks, resolveHit, weaponEligible,
+  };
   window.IRON_PIT_BROWSER_TACTICAL_MASTER = { apply: applyTactical, eligible: selected, selected };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();

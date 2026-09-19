@@ -12,7 +12,7 @@ for (const file of [
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-monsters-venom.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-ability-hooks.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
-  "browser-weapon-mastery.js", "browser-attack.js", "browser-reactions.js", "browser-saves.js",
+  "browser-weapon-mastery.js", "browser-attack-outcome.js", "browser-attack.js", "browser-reactions.js", "browser-saves.js",
   "browser-condition-lifecycle.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
   "browser-standard-attack-action.js", "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js",
   "browser-condition-removal.js", "browser-support.js", "browser-dodge.js", "browser-formation.js",

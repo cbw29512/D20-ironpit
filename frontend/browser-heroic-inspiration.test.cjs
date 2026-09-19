@@ -22,7 +22,7 @@ const setDice = (values) => {
 
 load("browser-heroic-inspiration.js");
 
-const template = { heroic_warrior: true, name: "Karnok", max_hp: 104, speed_ft: 30, traits: [] };
+const template = { heroic_warrior: true, name: "Karnok", ruleset: "2024", max_hp: 104, speed_ft: 30, traits: [] };
 const plainState = () => ({ template, heroic_inspiration: false });
 
 {
@@ -100,6 +100,8 @@ window.IRON_PIT_BROWSER_RAGE = { damageBonus: () => 0, extendFromAttack: () => {
 window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage: (state, amount) => { state.current_hp = Math.max(0, state.current_hp - amount); return null; } };
 window.IRON_PIT_BROWSER_CHAMPION = { criticalMove: (_attacker, _setup, event) => event };
 load("browser-rolls.js");
+load("browser-ability-hooks.js");
+load("browser-attack-outcome.js");
 load("browser-attack.js");
 
 {
@@ -108,7 +110,7 @@ load("browser-attack.js");
     damage_immunities: [], damage_resistances: [], damage_vulnerabilities: [],
   };
   const targetTemplate = {
-    name: "Target", armor_class: 17, max_hp: 100, speed_ft: 30, kind: "monster", size: "medium", traits: [],
+    name: "Target", ruleset: "2024", armor_class: 17, max_hp: 100, speed_ft: 30, kind: "monster", size: "medium", traits: [],
     damage_immunities: [], damage_resistances: [], damage_vulnerabilities: [], critical_hit_minimum: 20,
   };
   const hero = { combatant_id: "hero-1", side: "heroes", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(fighterTemplate) };

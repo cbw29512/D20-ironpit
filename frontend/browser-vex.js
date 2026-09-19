@@ -3,6 +3,7 @@
 
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
+  const O = () => window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
   const EFFECT_ID = "weapon-mastery-vex";
 
   function active(attacker, attack) {
@@ -22,5 +23,28 @@
     return true;
   }
 
-  window.IRON_PIT_BROWSER_VEX = { active, apply };
+  function resolveHit(ctx) {
+    const outcome = O().requireOutcome(ctx);
+    outcome.vexApplied = apply(
+      ctx.member.state, ctx.member.combatant_id, ctx.target.combatant_id,
+      ctx.attack, ctx.round, outcome.damageRoll?.total || 0,
+    );
+    return outcome.vexApplied ? O().noEventResult(ctx.sequence) : null;
+  }
+
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Vex hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.ON_HIT;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === EFFECT_ID)) return;
+    hooks.registerAbility(phase, {
+      id: EFFECT_ID, priority: 30, rulesets: ["2024"],
+      appliesTo: (member, ctx) => active(member.state, ctx.attack),
+      resolve: resolveHit,
+    });
+  }
+
+  window.IRON_PIT_BROWSER_VEX = { active, apply, installAbilityHooks, resolveHit };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();

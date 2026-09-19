@@ -25,6 +25,8 @@ load("browser-rolls.js");
 load("browser-grapple.js");
 load("browser-champion.js");
 load("browser-zero-hp.js");
+load("browser-ability-hooks.js");
+load("browser-attack-outcome.js");
 load("browser-attack.js");
 
 const greatsword = { id: "greatsword", name: "Greatsword", kind: "melee", bonus: 5,
@@ -34,7 +36,7 @@ const shortbow = { id: "shortbow", name: "Shortbow", kind: "ranged", bonus: 3,
 
 function state(name, kind, hp = 100) {
   return {
-    template: { name, kind, armor_class: 10, max_hp: hp, speed_ft: 30, size: "medium",
+    template: { name, kind, ruleset: "2024", armor_class: 10, max_hp: hp, speed_ft: 30, size: "medium",
       attacks: kind === "character" ? [greatsword, shortbow] : [], primary_attack_id: "greatsword",
       skill_bonuses: { athletics: 5, acrobatics: 1 }, traits: [], damage_immunities: [], damage_resistances: [],
       damage_vulnerabilities: [], critical_hit_minimum: kind === "character" ? 19 : 20,

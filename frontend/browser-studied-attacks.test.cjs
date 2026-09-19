@@ -15,9 +15,10 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
 }
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-modifiers.js", "browser-weapon-mastery.js", "browser-graze.js",
-  "browser-studied-attacks.js", "browser-heroic-inspiration.js", "browser-state.js", "browser-rage.js",
-  "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-attack.js",
+  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-grapple.js", "browser-modifiers.js",
+  "browser-weapon-mastery.js", "browser-graze.js", "browser-studied-attacks.js", "browser-heroic-inspiration.js",
+  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-undead-fortitude.js",
+  "browser-zero-hp.js", "browser-attack.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE, M = window.IRON_PIT_BROWSER_MODIFIERS;
@@ -34,7 +35,12 @@ function member(id, side, options = {}) {
   const template = structuredClone(base);
   Object.assign(template, { id: `template-${id}`, name: id, armor_class: options.armorClass ?? 18,
     studied_attacks: options.studied !== false, traits: [] });
-  if (options.nativeGraze) template.tactical_master_sap_weapon_ids = [];
+  if (options.nativeGraze) {
+    template.tactical_master_sap_weapon_ids = [];
+    const primary = template.attacks.find((item) => item.id === template.primary_attack_id);
+    primary.masteryProperty = "Graze";
+    template.weapon_masteries = [...new Set([...(template.weapon_masteries || []), primary.weaponId])];
+  }
   return { combatant_id: id, side, position_ft: options.position ?? 0, state: S.buildState(template) };
 }
 function attack(attacker, target, values, sequence = 1) {

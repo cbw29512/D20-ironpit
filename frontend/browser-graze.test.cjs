@@ -18,7 +18,7 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-sneak-attack.js",
   "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-weapon-mastery.js",
-  "browser-graze.js", "browser-attack.js",
+  "browser-graze.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -108,7 +108,11 @@ function miss(attacker, target) {
 
 {
   const fighter = member("fighter", "heroes", { missingModifier: true }), target = member("target", "monsters");
-  assert.throws(() => miss(fighter, target), /requires an explicit attack ability modifier/);
+  let failure = null;
+  try { miss(fighter, target); } catch (error) { failure = error; }
+  assert.ok(failure instanceof Error);
+  assert.match(failure.message, /Ability hook "graze-mastery" failed during resolve in phase "onMiss"/);
+  assert.match(failure.cause?.message || "", /requires an explicit attack ability modifier/);
 }
 
 console.log("Browser Graze weapon mastery regressions passed.");
