@@ -167,5 +167,19 @@
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
+  if (!window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH) {
+    const noReactionTarget = (event, setup) => [...(setup?.heroes || []), ...(setup?.monsters || [])]
+      .find((member) => member.combatant_id === event?.target_id)?.state?.template?.damage_triggered_melee_reaction;
+    window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH = {
+      append: (events, sequence, _round, _source, event, setup) => {
+        if (noReactionTarget(event, setup)) throw new Error("Configured post-damage reaction runtime is not loaded.");
+        events.push(event); return sequence;
+      },
+      resolve: (sequence, _round, _source, event, setup) => {
+        if (noReactionTarget(event, setup)) throw new Error("Configured post-damage reaction runtime is not loaded.");
+        return { events: [], sequence };
+      },
+    };
+  }
   window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack };
 })();
