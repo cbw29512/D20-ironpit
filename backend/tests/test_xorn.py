@@ -26,6 +26,11 @@ def test_xorn_exact_multiattack_and_traits_match_source() -> None:
     }
     slot_names = [by_id[slot.attack_ids[0]] for slot in xorn.attack_action.slots]
     assert slot_names == ["Bite", "Claw", "Claw", "Claw"]
+
+    bite = xorn.weapon_attack
+    claw = xorn.alternate_weapon_attacks[0]
+    assert (bite.attack_bonus, bite.weapon.dice_count, bite.weapon.dice_size, bite.damage_bonus) == (6, 4, 6, 3)
+    assert (claw.attack_bonus, claw.weapon.dice_count, claw.weapon.dice_size, claw.damage_bonus) == (6, 1, 10, 3)
     assert audit_monster_source(xorn, row) == []
 
 
