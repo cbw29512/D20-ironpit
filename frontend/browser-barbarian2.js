@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const C = () => window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const EFFECT_ID = "reckless-attack";
@@ -32,7 +33,31 @@
   function attackAdvantage(state, attack) { return Number(active(state) && eligible(state, attack)); }
   function attacksAgainstAdvantage(state) { return Number(active(state)); }
 
+  function resolveBeforeAttackRoll(ctx) {
+    const roll = C().requireContext(ctx);
+    const started = ctx.allowReckless === true && activate(ctx.member, ctx.attack, ctx.round);
+    if (started) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(ctx.member.state, ctx.turnKey);
+    roll.recklessStarted = Boolean(roll.recklessStarted || started);
+    roll.recklessAdvantage = attackAdvantage(ctx.member.state, ctx.attack);
+    return C().noEventResult(ctx.sequence);
+  }
+
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Reckless Attack hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.BEFORE_ATTACK_ROLL;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === EFFECT_ID)) return;
+    hooks.registerAbility(phase, {
+      id: EFFECT_ID, priority: 10, rulesets: ["2014", "2024"],
+      appliesTo: (member, ctx) => hasReckless(member.state) && eligible(member.state, ctx.attack),
+      resolve: resolveBeforeAttackRoll,
+    });
+  }
+
   window.IRON_PIT_BROWSER_BARBARIAN2 = {
     active, activate, attackAdvantage, attacksAgainstAdvantage, dangerSenseAdvantage,
+    eligible, hasReckless, installAbilityHooks, resolveBeforeAttackRoll,
   };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();
