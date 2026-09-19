@@ -18,6 +18,8 @@ def _member(template, combatant_id: str, side: str) -> EncounterCombatant:
 
 
 def test_barbarian_seven_is_certified_after_shared_pounce_engine_support() -> None:
+    # This is the public-certification boundary: level 7 must be registry-backed,
+    # not merely constructible as a candidate snapshot.
     template = build_rokhan_stonefury_level(7)
     assert (template.id, template.level, template.max_hp, template.armor_class, template.speed_ft) == (
         "rokhan-stonefury-l7", 7, 75, 14, 40,
