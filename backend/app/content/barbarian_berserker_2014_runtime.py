@@ -8,15 +8,17 @@ from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.progression import ProgressionCombatFeatures
+from app.domain.progression import EffectBoundSurvivalSave, ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
 
 
 def _scores(level: int) -> AbilityScores:
     strength = 16 + (2 if level >= 4 else 0) + (2 if level >= 8 else 0)
-    return AbilityScores(strength=strength, dexterity=14, constitution=15,
-                         intelligence=9, wisdom=13, charisma=11)
+    constitution = 15 + (1 if level >= 12 else 0)
+    wisdom = 13 + (1 if level >= 12 else 0)
+    return AbilityScores(strength=strength, dexterity=14, constitution=constitution,
+                         intelligence=9, wisdom=wisdom, charisma=11)
 
 
 def _attack(level: int, weapon_id: str, scores: AbilityScores, *, rage_eligible: bool) -> WeaponAttack:
@@ -31,20 +33,29 @@ def _attack(level: int, weapon_id: str, scores: AbilityScores, *, rage_eligible:
 
 def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures:
     presence_dc = 8 + proficiency_bonus(level) + scores.modifier("charisma") if level >= 10 else 0
+    brutal_dice = 2 if level >= 13 else 1 if level >= 9 else 0
+    relentless = (
+        EffectBoundSurvivalSave(
+            source_id="relentless-rage", required_effect_id="rage",
+            save_ability="constitution", initial_dc=10, dc_increment=5, replacement_hp=1,
+        )
+        if level >= 11 else None
+    )
     return ProgressionCombatFeatures(
+        effect_bound_survival_save=relentless,
         danger_sense=level >= 2, reckless_attack=level >= 2,
         frenzy_bonus_attack_2014=level >= 3,
         fast_movement_bonus_ft=10 if level >= 5 else 0, mindless_rage=level >= 6,
-        initiative_advantage=level >= 7, brutal_critical_dice=1 if level >= 9 else 0,
+        initiative_advantage=level >= 7, brutal_critical_dice=brutal_dice,
         intimidating_presence_2014_dc=presence_dc,
     )
 
 
 def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
-    """Compile the legal 2014 Human Path of the Berserker Barbarian through level 10."""
+    """Compile the certified 2014 Human Path of the Berserker Barbarian through level 13."""
     try:
-        if level not in range(1, 11):
-            raise ValueError("2014 Berserker certification covers levels 1 through 10.")
+        if level not in range(1, 14):
+            raise ValueError("2014 Berserker certification covers levels 1 through 13.")
         scores = _scores(level)
         greataxe = _attack(level, "greataxe", scores, rage_eligible=True)
         handaxe = _attack(level, "handaxe", scores, rage_eligible=False)
