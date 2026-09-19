@@ -58,13 +58,15 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["public_ready_status"] == "ready"
 
 
-def test_fighter_levels_thirteen_through_fifteen_are_public_and_sixteen_remains_blocked() -> None:
+def test_fighter_levels_thirteen_through_seventeen_are_public_and_eighteen_remains_blocked() -> None:
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
     level_thirteen = next(level for level in fighter["levels"] if level["level"] == 13)
     level_fourteen = next(level for level in fighter["levels"] if level["level"] == 14)
     level_fifteen = next(level for level in fighter["levels"] if level["level"] == 15)
     level_sixteen = next(level for level in fighter["levels"] if level["level"] == 16)
+    level_seventeen = next(level for level in fighter["levels"] if level["level"] == 17)
+    level_eighteen = next(level for level in fighter["levels"] if level["level"] == 18)
     counted_ready = sum(
         1
         for hero in manifest["heroes"]
@@ -77,7 +79,7 @@ def test_fighter_levels_thirteen_through_fifteen_are_public_and_sixteen_remains_
     }
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 26
+    assert manifest["summary"]["public_ready"] == counted_ready == 28
 
     assert level_thirteen["runtime_template_id"] == "karnok-stoneward-l13"
     assert required_thirteen <= set(level_thirteen["expected_combat_features"])
@@ -103,7 +105,17 @@ def test_fighter_levels_thirteen_through_fifteen_are_public_and_sixteen_remains_
     assert level_fifteen["public_ready_status"] == "ready"
     assert "karnok-stoneward-l15" in browser
 
-    assert level_sixteen["runtime_template_id"] is None
-    assert level_sixteen["public_ready_status"] == "blocked"
-    assert "hero-level-not-certified" in level_sixteen["blockers"]
-    assert "karnok-stoneward-l16" not in browser
+    for level, template_id in (
+        (level_sixteen, "karnok-stoneward-l16"),
+        (level_seventeen, "karnok-stoneward-l17"),
+    ):
+        assert level["runtime_template_id"] == template_id
+        assert level["unsupported_mechanics"] == []
+        assert level["blockers"] == []
+        assert level["public_ready_status"] == "ready"
+        assert template_id in browser
+
+    assert level_eighteen["runtime_template_id"] is None
+    assert level_eighteen["public_ready_status"] == "blocked"
+    assert "hero-level-not-certified" in level_eighteen["blockers"]
+    assert "karnok-stoneward-l18" not in browser
