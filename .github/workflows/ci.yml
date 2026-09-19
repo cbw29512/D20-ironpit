@@ -222,6 +222,9 @@ jobs:
           grep -q 'browser-action-economy.js' index.html
           grep -q 'browser-ability-hooks.js' index.html
           grep -q 'browser-attack-outcome-hooks.js' index.html
+          grep -q 'browser-topple.js' index.html
+          grep -q 'browser-tactical-master.js' index.html
+          grep -q 'browser-studied-attacks.js' index.html
           grep -q 'browser-ability-hook-installation.js' index.html
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
@@ -297,6 +300,9 @@ jobs:
           grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-ability-hooks.js' frontend/index.html
           grep -q 'browser-attack-outcome-hooks.js' frontend/index.html
+          grep -q 'browser-topple.js' frontend/index.html
+          grep -q 'browser-tactical-master.js' frontend/index.html
+          grep -q 'browser-studied-attacks.js' frontend/index.html
           grep -q 'browser-ability-hook-installation.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
           grep -q 'browser-reaction-movement.js' frontend/index.html
