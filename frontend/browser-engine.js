@@ -108,7 +108,13 @@
     }
     return { events: [...target.events, ...source.events], sequence: source.sequence };
   }
+  function requireProductionHooks() {
+    if (!window.IRON_PIT_BROWSER_ABILITY_HOOKS) throw new Error("Production combat requires browser-ability-hooks.js.");
+    if (!window.IRON_PIT_BROWSER_ABILITY_HOOK_INSTALLATION) throw new Error("Production combat requires Bonus Action hook installation.");
+    if (!window.IRON_PIT_BROWSER_ATTACK_OUTCOME_HOOKS) throw new Error("Production combat requires attack outcome hook installation.");
+  }
   function runEncounter(selection) {
+    requireProductionHooks();
     if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");
     const setup = buildSetup(selection);
     const prep = P()?.prepare(setup, 1) || { events: [], sequence: 1 };
