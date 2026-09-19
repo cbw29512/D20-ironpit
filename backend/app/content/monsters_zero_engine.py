@@ -6,7 +6,10 @@ from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
-from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.models import (
+    CombatantTemplate, DamageType, HitControlEffect, OnHitDamage, VisualLoadout,
+    Weapon, WeaponAttack, WeaponAttackKind,
+)
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
@@ -26,6 +29,10 @@ _ATTACKS = {
         ("Longsword", "melee", 6, 2, 10, 4, "slashing", None, 5, None, None, []),
     ],
     "Hippopotamus": [("Bite", "melee", 7, 2, 10, 5, "piercing", None, 5, None, None, [])],
+    "Hill Giant": [
+        ("Tree Club", "melee", 8, 3, 8, 5, "bludgeoning", None, 10, None, None, []),
+        ("Trash Lob", "ranged", 8, 2, 10, 5, "bludgeoning", None, 5, 60, 240, []),
+    ],
     "Killer Whale": [("Bite", "melee", 6, 5, 6, 4, "piercing", None, 5, None, None, [])],
     "Lemure": [("Vile Slime", "melee", 2, 1, 4, 0, "poison", None, 5, None, None, [])],
     "Manticore": [
@@ -54,8 +61,17 @@ _ATTACKS = {
 }
 _MULTI = {
     "Animated Armor": (2, ("Slam",)), "Gargoyle": (2, ("Claw",)),
-    "Guard Captain": (2, ("Javelin", "Longsword")), "Hippopotamus": (2, ("Bite",)),
-    "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
+    "Guard Captain": (2, ("Javelin", "Longsword")), "Hill Giant": (2, ("Tree Club", "Trash Lob")),
+    "Hippopotamus": (2, ("Bite",)), "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
+}
+_PRONE_MAX_SIZE = {
+    ("Hill Giant", "Tree Club"): CreatureSize.LARGE,
+}
+_CONTROL_EFFECTS = {
+    ("Hill Giant", "Trash Lob"): HitControlEffect(
+        condition_id="poisoned",
+        expiry_timing="target_turn_end",
+    ),
 }
 _TRAITS = {
     "Ogre Zombie": [CombatTrait.UNDEAD_FORTITUDE],
@@ -92,6 +108,8 @@ def _weapon_attack(monster: str, spec: tuple) -> WeaponAttack:
     return WeaponAttack(
         id=attack_id, weapon=weapon, attack_bonus=bonus, damage_bonus=damage_bonus,
         fixed_damage=fixed, on_hit_damage=on_hit,
+        knocks_prone_max_size=_PRONE_MAX_SIZE.get((monster, name)),
+        control_effect=_CONTROL_EFFECTS.get((monster, name)),
     )
 
 
