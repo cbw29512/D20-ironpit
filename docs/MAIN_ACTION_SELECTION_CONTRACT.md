@@ -1,6 +1,6 @@
 # Main Action Selection Contract
 
-Status: provider-registration tranche. Candidate discovery and Arena selection are implemented and wired, but live Action resolution still remains in `browser-turn.js`.
+Status: normalPreMove live-migration tranche. Provider registration is complete; only the pre-move spell-offense Action opportunity is routed through the selector. Post-move Action families remain on the existing direct path.
 
 ## Objective
 
@@ -96,6 +96,12 @@ The browser now registers inert providers for all seven first-migration Action f
 `browser-spell-offense.js` exposes a pure `choose()` plus `resolveChoice()` split so discovery can select the same attack-vs-save spell without casting it. `browser-multiattack.js` exposes pure `available()` using the same slot legality checks as live Attack Action resolution.
 
 The existing single-target save fallback is preserved exactly, including its historical behavior after the dedicated area-save opportunity. Policy cleanup is deliberately out of scope for this architecture migration.
+
+## Live migration status
+
+`normalPreMove` is the first live selector route. Its profile allows only `spell-offense`, so this migration changes orchestration without introducing category competition. If a legal pre-move spell candidate exists, the selector resolves it through the existing spell-offense provider; if none exists, sequence and state pass through unchanged to the existing charge/movement path.
+
+`normalPostMove` is intentionally not migrated in this tranche.
 
 ## Migration plan
 
