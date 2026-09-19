@@ -54,4 +54,5 @@
 
   window.IRON_PIT_BROWSER_TOPPLE = { installAbilityHooks, proficiencyBonus, resolve, resolveHit };
   if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();
