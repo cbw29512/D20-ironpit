@@ -4,6 +4,7 @@ import pytest
 
 from app.content.capability_attack_compiler import UnsupportedCapabilityError
 from app.content.capability_compiler import compile_combatant
+from app.content.capability_registry import get_capability_definition
 from app.content.json_combatant_compiler import (
     compile_hero_definition,
     fold_hero_level,
@@ -59,3 +60,29 @@ def test_unsupported_high_level_capability_fails_closed_at_shared_compiler():
     assert "survivor-defy-death" in definition.unsupported_capabilities
     with pytest.raises(UnsupportedCapabilityError):
         compile_combatant(definition)
+
+
+def test_character_and_monster_share_engine_facing_template_contract():
+    progression, subclass, build = _sources()
+    hero = compile_combatant(
+        compile_hero_definition(
+            "karnok-stoneward",
+            "Karnok Stoneward",
+            fold_hero_level(progression, subclass, 3),
+            build,
+        )
+    )
+    monster = compile_combatant(get_capability_definition("srd-swarm-of-insects"))
+
+    assert hero.kind == "character"
+    assert monster.kind == "monster"
+    assert type(hero) is type(monster)
+    for field in (
+        "ruleset", "armor_class", "max_hp", "speed_ft", "movement_modes",
+        "initiative_bonus", "weapon_attack", "alternate_weapon_attacks",
+        "attack_action", "saving_throw_actions", "combat_traits",
+        "damage_resistances", "condition_immunities", "resources",
+    ):
+        assert hasattr(hero, field)
+        assert hasattr(monster, field)
+    assert hero.ruleset == monster.ruleset == "2024"
