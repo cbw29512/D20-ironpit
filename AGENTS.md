@@ -1,5 +1,9 @@
 # D20 Iron Pit repository instructions
 
+## Mandatory start-of-work gate
+
+Before EVERY implementation tranche involving combat, monsters, pregens, homebrew, certification, or runtime rules, re-read `docs/IRON_PIT_RULES_CONTRACT.md` from the exact branch/head being changed. Do this even when the task appears to be a continuation of prior work. Do not rely on chat memory or a previous read. Then read the relevant architecture contract(s) before writing. No combat/content write begins until this gate is satisfied.
+
 ## Authority order
 
 Before changing combat code, read:
