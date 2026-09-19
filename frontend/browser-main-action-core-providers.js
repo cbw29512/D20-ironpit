@@ -85,6 +85,5 @@
   }
 
   window.IRON_PIT_BROWSER_MAIN_ACTION_CORE_PROVIDERS = { install };
-  if (window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION) install();
-  else (window.IRON_PIT_PENDING_MAIN_ACTION_PROVIDER_INSTALLERS ||= []).push(install);
+  install();
 })();
