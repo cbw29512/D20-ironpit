@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 126,
-    "blocked": 204
+    "public_ready": 131,
+    "blocked": 199
   },
   "monsters": [
     {
@@ -1671,7 +1671,7 @@
       "monster_name": "Black Dragon Wyrmling",
       "srd_source_page": 263,
       "srd_source_reference": "SRD 5.2.1 p. 263",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-black-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -1684,23 +1684,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-black-pudding",
@@ -1789,7 +1784,7 @@
       "monster_name": "Blue Dragon Wyrmling",
       "srd_source_page": 266,
       "srd_source_reference": "SRD 5.2.1 p. 266",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-blue-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -1801,22 +1796,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-boar",
@@ -4636,7 +4626,7 @@
       "monster_name": "Green Dragon Wyrmling",
       "srd_source_page": 293,
       "srd_source_reference": "SRD 5.2.1 p. 293",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-green-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -4649,23 +4639,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-green-hag",
@@ -7190,7 +7175,7 @@
       "monster_name": "Red Dragon Wyrmling",
       "srd_source_page": 318,
       "srd_source_reference": "SRD 5.2.1 p. 318",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-red-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -7202,22 +7187,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-reef-shark",
@@ -9370,7 +9350,7 @@
       "monster_name": "White Dragon Wyrmling",
       "srd_source_page": 339,
       "srd_source_reference": "SRD 5.2.1 p. 339",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-white-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9383,23 +9363,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wight",
