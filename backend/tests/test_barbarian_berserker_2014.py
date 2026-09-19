@@ -8,11 +8,11 @@ from app.combat.exhaustion import (
     saving_throw_disadvantage_sources,
     speed_after_exhaustion,
 )
-from app.combat.intimidating_presence_2014 import can_use_presence, resolve_intimidating_presence
+from app.combat.intimidating_presence_2014 import can_use_presence, end_invalid_presence, resolve_intimidating_presence
 from app.combat.state import build_combatant_state
 from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
-from app.domain.encounters import EncounterCombatant
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 
 def _member(template, combatant_id: str, side: str, position: int = 0) -> EncounterCombatant:
@@ -91,3 +91,26 @@ def test_2014_intimidating_presence_failed_save_frightens_and_success_grants_imm
     assert succeeded is not None and succeeded.save_succeeded is True
     actor2.state.action_available = True
     assert can_use_presence(actor2, target2) is False
+
+
+def test_2014_intimidating_presence_end_lifecycle_runs_for_zero_hp_target() -> None:
+    actor = _member(build_rokhan_stonefury_2014(10), "rokhan-cleanup", "heroes", 0)
+    target = _member(build_karnok_stoneward_2014(8), "target-cleanup", "monsters", 5)
+    failed = resolve_intimidating_presence(1, 1, actor, target, FixedDiceProvider([1]))
+    assert failed is not None and failed.save_succeeded is False
+    assert "frightened" in target.state.active_effect_ids
+
+    target.state.current_hp = 0
+    target.state.is_unconscious = True
+    actor.position_ft = 100
+    setup = EncounterSetup(
+        heroes=[actor], monsters=[target], hero_total_levels=10,
+        monster_total_cr="0", ruleset="2014",
+    )
+    events, sequence = end_invalid_presence(2, 1, target, setup)
+
+    assert sequence == 3
+    assert len(events) == 1
+    assert events[0].feature_id == "intimidating-presence-2014"
+    assert events[0].removed_condition_ids == ["frightened"]
+    assert "frightened" not in target.state.active_effect_ids
