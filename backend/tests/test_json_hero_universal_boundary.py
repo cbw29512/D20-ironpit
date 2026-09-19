@@ -86,3 +86,12 @@ def test_character_and_monster_share_engine_facing_template_contract():
         assert hasattr(hero, field)
         assert hasattr(monster, field)
     assert hero.ruleset == monster.ruleset == "2024"
+
+
+def test_hero_build_rejects_cross_edition_compilation():
+    progression, subclass, build = _sources()
+    folded = fold_hero_level(progression, subclass, 3)
+    mismatched = build.model_copy(update={"edition": "2014"})
+
+    with pytest.raises(ValueError, match="share edition and class"):
+        compile_hero_definition("karnok-stoneward", "Karnok Stoneward", folded, mismatched)
