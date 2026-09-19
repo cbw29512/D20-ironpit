@@ -3,6 +3,8 @@ from __future__ import annotations
 from app.combat.action_economy import is_available
 from app.combat.charge_follow_up import resolve_charge_follow_up
 from app.combat.charge_profiles import ChargeProfile, charge_profile_for_attack, charge_profile_for_attack_id
+from app.combat.condition_rules import is_incapacitated
+from app.combat.damage_reaction_dispatch import append_event_with_damage_reactions
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.opening_burst import opening_burst_available
@@ -101,8 +103,18 @@ def resolve_charge_closing(
         attack.weapon.reach_ft, dice, setup,
         feature_id="charge", bonus_damage=_bonus_damage(profile),
     )
-    sequence += 1
+    events: list[BattleEvent] = []
+    if setup is None:
+        events.append(event)
+        sequence += 1
+    else:
+        sequence = append_event_with_damage_reactions(
+            events, sequence + 1, round_number, attacker, event, setup, dice,
+        )
+    if attacker.state.is_dead or is_incapacitated(attacker.state):
+        return events, sequence, True
     follow_events, sequence = resolve_charge_follow_up(
         sequence, round_number, attacker, target, profile, event, dice, setup,
     )
-    return [event, *follow_events], sequence, True
+    events.extend(follow_events)
+    return events, sequence, True
