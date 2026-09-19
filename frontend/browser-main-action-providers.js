@@ -76,8 +76,17 @@
 
     register({
       id: "attack-action", category: C().ATTACK_ACTION, rulesets: BOTH,
-      discover: ({ member, setup }) => M().available(member, setup) ? { payload: {} } : null,
-      resolve: ({ sequence, round, member, setup }) => M().resolveAttackAction(sequence, round, member, setup),
+      discover: ({ member, setup }) => {
+        if (!member.state.template.attack_action) return null;
+        const runtime = M();
+        if (!runtime) throw new Error("Attack/Multiattack runtime is not loaded.");
+        return runtime.available(member, setup) ? { payload: {} } : null;
+      },
+      resolve: ({ sequence, round, member, setup }) => {
+        const runtime = M();
+        if (!runtime) throw new Error("Attack/Multiattack runtime is not loaded.");
+        return runtime.resolveAttackAction(sequence, round, member, setup);
+      },
     });
 
     register({
