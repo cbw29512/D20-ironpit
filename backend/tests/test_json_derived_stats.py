@@ -150,3 +150,41 @@ def test_2014_karnok_archery_adds_plus_two_to_longbow_at_level_10():
     assert "Archery" not in (before.fighting_styles or [])
     assert "Archery" in (after.fighting_styles or [])
     assert bow_after.attack_bonus == bow_before.attack_bonus + 2
+
+
+def _compile(edition, slug, level):
+    identity, progression, subclass, species, track, build = load_hero_bundle(ROOT, edition, slug)
+    folded = fold_hero_level(progression, subclass, species, track, level)
+    definition = compile_hero_definition(identity.id, identity.name, folded, build)
+    assert definition.unsupported_capabilities == []
+    return compile_combatant(definition)
+
+
+def test_2014_rokhan_json_compiles_retaliation_through_primal_champion():
+    hp = [14, 23, 32, 41, 50, 59, 68, 77, 86, 95, 104, 125, 135, 145, 155, 181, 192, 203, 233, 285]
+    for level, max_hp in enumerate(hp, start=1):
+        hero = _compile("2014", "rokhan-stonefury-2014", level)
+        assert (hero.max_hp, hero.speed_ft) == (max_hp, 30 if level < 5 else 40)
+    l14 = _compile("2014", "rokhan-stonefury-2014", 14)
+    assert l14.damage_reaction_attack is not None
+    assert l14.damage_reaction_attack.source_feature == "retaliation"
+    assert _compile("2014", "rokhan-stonefury-2014", 15).progression_features.persistent_rage_2014 is True
+    assert _compile("2014", "rokhan-stonefury-2014", 17).progression_features.brutal_critical_dice == 3
+    l18 = _compile("2014", "rokhan-stonefury-2014", 18)
+    assert l18.progression_features.ability_check_minimums[0].source_id == "indomitable-might"
+    l20 = _compile("2014", "rokhan-stonefury-2014", 20)
+    assert l20.ability_scores.model_dump()["strength"] == 24
+    assert l20.ability_scores.model_dump()["constitution"] == 24
+    assert l20.unlimited_resource_ids == ["rage"]
+    assert l20.resources == []
+
+
+def test_2024_rokhan_json_compiles_through_retaliation():
+    l8 = _compile("2024", "rokhan-stonefury", 8)
+    assert l8.ability_scores.strength == 20
+    l10 = _compile("2024", "rokhan-stonefury", 10)
+    assert l10.damage_reaction_attack is not None
+    assert l10.damage_reaction_attack.source_feature == "retaliation"
+    l12 = _compile("2024", "rokhan-stonefury", 12)
+    assert l12.max_hp == 137
+    assert l12.ability_scores.constitution == 18

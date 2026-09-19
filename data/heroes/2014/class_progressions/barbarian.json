@@ -88,6 +88,46 @@
       "capabilities_added": [
         "brutal-critical-2"
       ]
+    },
+    {
+      "level": 14
+    },
+    {
+      "level": 15,
+      "capabilities_added": [
+        "persistent-rage-2014"
+      ]
+    },
+    {
+      "level": 16
+    },
+    {
+      "level": 17,
+      "proficiency_bonus": 6,
+      "resources": {
+        "rage": 6
+      },
+      "capabilities_added": [
+        "brutal-critical-3"
+      ],
+      "capabilities_removed": [
+        "brutal-critical-2"
+      ]
+    },
+    {
+      "level": 18,
+      "capabilities_added": [
+        "indomitable-might"
+      ]
+    },
+    {
+      "level": 19
+    },
+    {
+      "level": 20,
+      "capabilities_added": [
+        "primal-champion"
+      ]
     }
   ]
 }

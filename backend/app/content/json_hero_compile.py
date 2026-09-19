@@ -129,6 +129,11 @@ def compile_hero_definition(
             progression["aura_of_protection_2014_bonus"] = ability_modifier(int(abilities["charisma"]))
         if folded.get("unarmed_dice_size"):
             progression["martial_arts_die_size"] = int(folded["unarmed_dice_size"])
+        resources = dict(folded["resources"])
+        unlimited: list[str] = []
+        if edition == "2014" and "primal-champion" in capabilities:
+            resources.pop("rage", None)
+            unlimited = ["rage"]
         armor_class = require_matching_fingerprint(
             "armor_class",
             derive_armor_class(
@@ -153,7 +158,11 @@ def compile_hero_definition(
             "fighting_style": fighting_styles[0] if fighting_styles else build.fighting_style,
             "fighting_styles": fighting_styles, "weapon_masteries": folded["weapon_masteries"],
             "rage_damage_bonus": int(folded.get("rage_damage_bonus") or 0),
-            "resources": _ordered_resources(dict(folded["resources"])), "visual": build.visual,
+            "resources": _ordered_resources(resources), "unlimited_resource_ids": unlimited,
+            "damage_reaction_attack": (
+                {"source_feature": "retaliation"} if "retaliation" in capabilities else None
+            ),
+            "visual": build.visual,
             "source": build.source, "progression_features": progression,
             "unsupported_capabilities": list(unsupported_hero_engine_features(tuple(capabilities))),
         })

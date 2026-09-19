@@ -22,50 +22,40 @@
     "4": {
       "strength": 18,
       "constitution": 16
+    },
+    "8": {
+      "strength": 20
+    },
+    "12": {
+      "constitution": 18
+    },
+    "16": {
+      "constitution": 20
+    },
+    "19": {
+      "strength": 21
+    },
+    "20": {
+      "strength": 25,
+      "constitution": 24
     }
   },
   "hp_by_level": [
-    14,
-    23,
-    32,
-    45,
-    55,
-    65
+    14, 23, 32, 45, 55, 65, 75, 85, 95, 105, 115, 137, 148, 159, 170, 197, 209, 221, 233, 285
   ],
   "ac_by_level": [
-    13,
-    13,
-    13,
-    14,
-    14,
-    14
+    13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 18
   ],
   "speed_by_level": [
-    30,
-    30,
-    30,
-    30,
-    40,
-    40
+    30, 30, 30, 30, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40
   ],
   "rage_damage_bonus_by_level": [
-    2,
-    2,
-    2,
-    2,
-    2,
-    2
+    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4
   ],
   "weapon_masteries_by_level": {
-    "1": [
-      "flail",
-      "pike"
-    ],
-    "4": [
-      "flail",
-      "pike",
-      "longsword"
-    ]
+    "1": ["flail", "pike"],
+    "4": ["flail", "pike", "longsword"],
+    "10": ["flail", "pike", "longsword", "greatsword"]
   },
   "fighting_styles_by_level": {
     "1": []

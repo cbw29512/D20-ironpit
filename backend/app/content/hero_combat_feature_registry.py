@@ -12,7 +12,8 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks", "survivor",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
-    "brutal-critical", "brutal-critical-2", "intimidating-presence",
+    "brutal-critical", "brutal-critical-2", "brutal-critical-3", "intimidating-presence",
+    "retaliation", "persistent-rage-2014", "indomitable-might", "primal-champion",
     "sneak-attack", "weapon-mastery", "cunning-action", "uncanny-dodge", "evasion",
     "fast-hands", "second-story-work", "superior-critical",
     "martial-arts", "unarmored-defense", "unarmored-movement", "ki", "stunning-strike",
@@ -106,6 +107,12 @@ def compile_progression_feature_fields(
                 fields["aura_of_protection_2014_bonus"] = 1
             if "sacred-weapon-2014" in features:
                 fields["sacred_weapon_2014_bonus"] = 1
+            if "persistent-rage-2014" in features:
+                fields["persistent_rage_2014"] = True
+            if "indomitable-might" in features:
+                fields["ability_check_minimums"] = [
+                    {"source_id": "indomitable-might", "ability": "strength"},
+                ]
         else:
             for feature in features:
                 fields.update(_STATIC_PROGRESSION_FIELDS.get(feature, {}))
@@ -118,7 +125,9 @@ def compile_progression_feature_fields(
             fields["sneak_attack_d6"] = (level + 1) // 2
         if "brutal-strike-2d10" in features:
             fields["brutal_strike_damage_dice"] = 2
-        if "brutal-critical-2" in features:
+        if "brutal-critical-3" in features:
+            fields["brutal_critical_dice"] = 3
+        elif "brutal-critical-2" in features:
             fields["brutal_critical_dice"] = 2
         elif "brutal-critical" in features:
             fields["brutal_critical_dice"] = 1
