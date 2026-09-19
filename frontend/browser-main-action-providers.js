@@ -12,6 +12,7 @@
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const DG = () => window.IRON_PIT_BROWSER_DODGE;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTIONS;
   const ST = () => window.IRON_PIT_BROWSER_STATE;
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
 
@@ -109,8 +110,9 @@
         const target = memberById(setup, candidate.payload.targetId);
         const action = actionById(member, candidate.payload.actionId);
         if (!target || !action) throw new Error("Save-action candidate target/action is unavailable.");
-        const event = V().resolveAction(sequence, round, member, target, action, candidate.payload.distance);
-        return { events: [event], sequence: sequence + 1 };
+        const event = V().resolveAction(sequence, round, member, target, action, candidate.payload.distance, { setup });
+        const reactions = DR().resolveAfterDamage(sequence + 1, round, member, event, setup);
+        return { events: [event, ...reactions.events], sequence: reactions.sequence };
       },
     });
 
