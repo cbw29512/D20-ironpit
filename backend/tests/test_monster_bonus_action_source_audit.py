@@ -38,6 +38,14 @@ def test_modeled_cunning_action_is_a_zero_engine_supported_bonus_action() -> Non
     assert bonus_action_issues(spy, _row("Spy")) == []
 
 
+def test_cunning_action_source_without_runtime_flag_fails_closed() -> None:
+    wolf = _monster("Wolf")
+    row = dict(_row("Wolf"))
+    row["bonusActions"] = "Cunning Action. The wolf takes the Dash, Disengage, or Hide action."
+    drifted = wolf.model_copy(update={"source_bonus_action_names": ["Cunning Action"]})
+    assert "bonus-action-runtime-missing:cunning-action" in bonus_action_issues(drifted, row)
+
+
 def test_outcome_changing_unimplemented_bonus_action_fails_closed() -> None:
     wolf = _monster("Wolf")
     row = dict(_row("Wolf"))
