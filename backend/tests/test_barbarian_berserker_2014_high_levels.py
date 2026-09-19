@@ -293,3 +293,31 @@ def test_private_level_20_resource_fingerprint_matches_unlimited_rage_runtime() 
     assert combat_profile.resources == ()
     assert combat_profile.unlimited_resources == ("rage",)
     assert audit_character_resources(template, profile, combat_profile) == []
+
+
+
+def test_private_2014_candidates_have_exact_derived_values_14_through_20() -> None:
+    expected = {
+        14: {"ac": 15, "hp": 145, "attack": 10, "damage": 5, "rage_bonus": 3, "rages": 5},
+        15: {"ac": 15, "hp": 155, "attack": 10, "damage": 5, "rage_bonus": 3, "rages": 5},
+        16: {"ac": 16, "hp": 181, "attack": 10, "damage": 5, "rage_bonus": 4, "rages": 5},
+        17: {"ac": 16, "hp": 192, "attack": 11, "damage": 5, "rage_bonus": 4, "rages": 6},
+        18: {"ac": 16, "hp": 203, "attack": 11, "damage": 5, "rage_bonus": 4, "rages": 6},
+        19: {"ac": 17, "hp": 233, "attack": 11, "damage": 5, "rage_bonus": 4, "rages": 6},
+        20: {"ac": 19, "hp": 285, "attack": 13, "damage": 7, "rage_bonus": 4, "rages": None},
+    }
+
+    for level, values in expected.items():
+        hero = _compile_rokhan_stonefury_2014(level)
+        assert hero.armor_class == values["ac"]
+        assert hero.max_hp == values["hp"]
+        assert hero.weapon_attack.attack_bonus == values["attack"]
+        assert hero.weapon_attack.damage_bonus == values["damage"]
+        assert hero.rage_damage_bonus == values["rage_bonus"]
+        finite = {item.id: item.max_uses for item in hero.resources}
+        if values["rages"] is None:
+            assert finite == {}
+            assert hero.unlimited_resource_ids == ["rage"]
+        else:
+            assert finite == {"rage": values["rages"]}
+            assert hero.unlimited_resource_ids == []
