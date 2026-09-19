@@ -77,6 +77,17 @@ assert.deepEqual(merfolkTemplate.attacks[0].onHitModifiers, [
 assert.deepEqual(merfolkTemplate.attacks[1].onHitModifiers, merfolkTemplate.attacks[0].onHitModifiers);
 assert.deepEqual(merfolkTemplate.source_trait_names, ["Amphibious"]);
 
+const spyTemplate = generated["srd-spy"];
+assert.ok(spyTemplate, "Spy must be present in generated runtime");
+assert.equal(spyTemplate.cunning_action, true, "Spy must preserve printed Cunning Action in browser data");
+assert.deepEqual(spyTemplate.source_bonus_action_names, ["Cunning Action"]);
+assert.deepEqual(spyTemplate.attacks.map((item) => item.name), ["Shortsword", "Hand Crossbow"]);
+for (const spyAttack of spyTemplate.attacks) {
+  assert.deepEqual(spyAttack.onHitDamage, [
+    { source: "Poison", diceCount: 2, diceSize: 6, damageBonus: 0, damageType: "poison" },
+  ]);
+}
+
 const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
 for (const monster of Object.values(generated)) {
   assert.deepEqual(Object.keys(monster.movement_modes).sort(), movementKeys, `${monster.id} must export the full movement fingerprint`);
