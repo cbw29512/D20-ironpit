@@ -31,7 +31,8 @@
     if (frenzy2014) state.active_effect_ids.push(FRENZY_2014);
     const removed = endMindlessConditions(state);
     for (const type of RESISTANCES) if (!state.temporary_damage_resistances.includes(type)) state.temporary_damage_resistances.push(type);
-    state.rage_expires_round = round + 1; state.rage_max_round = round + (is2014(state) ? 10 : 100);
+    state.rage_max_round = round + (is2014(state) ? 10 : 100);
+    state.rage_expires_round = is2014(state) && state.template.persistent_rage_2014 ? state.rage_max_round : round + 1;
     let description = `${state.template.name} enters Rage.`;
     if (frenzy2014) description += " The Berserker enters a Frenzy.";
     if (removed.length) description += ` Mindless Rage ends ${removed.join(", ")}.`;
@@ -41,6 +42,7 @@
   }
 
   function extendFromAttack(state, round) {
+    if (is2014(state) && state.template.persistent_rage_2014) return;
     if (!active(state)) return;
     state.rage_expires_round = Math.min(round + 1, state.rage_max_round || round + 1);
   }
@@ -55,6 +57,10 @@
   }
 
   function endIfIncapacitated(state) {
+    if (is2014(state) && state.template.persistent_rage_2014) {
+      if (state.is_dead || state.is_unconscious) end(state);
+      return;
+    }
     if (state.template.wearing_heavy_armor || state.is_dead || Q().incapacitated(state)) end(state);
   }
 

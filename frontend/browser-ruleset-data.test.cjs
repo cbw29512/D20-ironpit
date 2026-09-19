@@ -25,8 +25,8 @@ const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
-assert.equal(heroes2014.length, 60, "2014 browser heroes must contain Fighter 1-20 plus Barbarian, Rogue, Monk, and Paladin 1-10");
-levels(fighters2014, 20); levels(barbarians2014, 10); levels(rogues2014, 10); levels(monks2014, 10); levels(paladins2014, 10);
+assert.equal(heroes2014.length, 63, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-13, and Rogue, Monk, Paladin 1-10");
+levels(fighters2014, 20); levels(barbarians2014, 13); levels(rogues2014, 10); levels(monks2014, 10); levels(paladins2014, 10);
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
@@ -41,9 +41,23 @@ assert.equal(fighter20.attack_action.slots.length, 4);
 const barbarian3 = barbarians2014.find((hero) => hero.level === 3);
 const barbarian9 = barbarians2014.find((hero) => hero.level === 9);
 const barbarian10 = barbarians2014.find((hero) => hero.level === 10);
+const barbarian11 = barbarians2014.find((hero) => hero.level === 11);
+const barbarian12 = barbarians2014.find((hero) => hero.level === 12);
+const barbarian13 = barbarians2014.find((hero) => hero.level === 13);
 assert.equal(barbarian3.frenzy_bonus_attack_2014, true);
 assert.equal(barbarian9.brutal_critical_dice, 1);
 assert.ok(barbarian10.intimidating_presence_2014_dc > 0);
+assert.deepEqual(barbarian11.effect_bound_survival_save, {
+  source_id: "relentless-rage", required_effect_id: "rage", save_ability: "constitution",
+  initial_dc: 10, dc_increment: 5, replacement_hp: 1,
+});
+assert.deepEqual(
+  [barbarian12.ability_scores.constitution, barbarian12.ability_scores.wisdom, barbarian12.armor_class, barbarian12.max_hp],
+  [16, 14, 15, 125],
+);
+assert.equal(barbarian12.resources.rage, 5);
+assert.equal(barbarian13.brutal_critical_dice, 2);
+assert.equal(barbarian13.attacks[0].bonus, 10);
 const rogue2 = rogues2014.find((hero) => hero.level === 2);
 const rogue5 = rogues2014.find((hero) => hero.level === 5);
 const rogue7 = rogues2014.find((hero) => hero.level === 7);

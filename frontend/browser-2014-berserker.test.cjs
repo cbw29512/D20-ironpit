@@ -30,8 +30,9 @@ const heroes = window.IRON_PIT_BROWSER_HEROES;
 const l3 = heroes["rokhan-stonefury-2014-l3"];
 const l9 = heroes["rokhan-stonefury-2014-l9"];
 const l10 = heroes["rokhan-stonefury-2014-l10"];
-assert.ok(l3 && l9 && l10, "generated 2014 Berserker levels 3, 9, and 10 must exist");
-for (const hero of [l3, l9, l10]) {
+const l13 = heroes["rokhan-stonefury-2014-l13"];
+assert.ok(l3 && l9 && l10 && l13, "generated 2014 Berserker levels 3, 9, 10, and 13 must exist");
+for (const hero of [l3, l9, l10, l13]) {
   assert.equal(hero.ruleset, "2014");
   assert.deepEqual(hero.weapon_masteries, []);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null));
@@ -65,6 +66,33 @@ for (const hero of [l3, l9, l10]) {
 }
 
 {
+  const persistentTemplate = structuredClone(l13);
+  persistentTemplate.level = 15;
+  persistentTemplate.persistent_rage_2014 = true;
+  const hero = member(persistentTemplate, "rokhan-persistent", "heroes", 0);
+  window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+  const rage = window.IRON_PIT_BROWSER_RAGE.enter(1, 1, hero);
+  assert.ok(rage);
+  assert.equal(hero.state.rage_expires_round, 11);
+  assert.equal(hero.state.rage_max_round, 11);
+  assert.deepEqual(window.IRON_PIT_BROWSER_RAGE.cleanupExpired(2, 2, hero), { events: [], sequence: 2 });
+  assert.ok(hero.state.active_effect_ids.includes("rage"));
+  hero.state.active_effect_ids.push("stunned");
+  window.IRON_PIT_BROWSER_RAGE.endIfIncapacitated(hero.state);
+  assert.ok(hero.state.active_effect_ids.includes("rage"));
+  hero.state.is_unconscious = true;
+  window.IRON_PIT_BROWSER_RAGE.endIfIncapacitated(hero.state);
+  assert.ok(!hero.state.active_effect_ids.includes("rage"));
+
+  const fresh = member(persistentTemplate, "rokhan-persistent-duration", "heroes", 0);
+  window.IRON_PIT_BROWSER_STATE.beginTurn(fresh.state);
+  assert.ok(window.IRON_PIT_BROWSER_RAGE.enter(3, 1, fresh));
+  const ended = window.IRON_PIT_BROWSER_RAGE.cleanupExpired(4, 11, fresh);
+  assert.equal(ended.events[0].feature_id, "exhaustion");
+  assert.ok(!hero.state.active_effect_ids.includes("rage"));
+}
+
+{
   const state = member(l9, "critical", "heroes").state;
   const greataxe = state.template.attacks.find((attack) => attack.kind === "melee");
   window.IRON_PIT_DICE = queuedDice([6, 7, 8]);
@@ -95,4 +123,4 @@ for (const hero of [l3, l9, l10]) {
   assert.equal(window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014.canUse(actor2, target2), false);
 }
 
-console.log("2014 Berserker browser mechanics stay edition-isolated and RAW-certified through level 10.");
+console.log("2014 Berserker browser mechanics stay edition-isolated through the certified boundary, with Persistent Rage parity staged safely.");
