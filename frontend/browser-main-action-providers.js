@@ -16,7 +16,6 @@
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
 
   const BOTH = Object.freeze(["2014", "2024"]);
-
   function saveChoice(member, setup) {
     if (!E().available(member.state, "action")) return null;
     for (const target of F().targetOrder(member, setup)) {
