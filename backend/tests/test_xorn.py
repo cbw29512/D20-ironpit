@@ -1,3 +1,4 @@
+from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_saving_throws import with_source_saving_throws
 from app.content.monster_source_audit import audit_monster_source
@@ -8,7 +9,8 @@ from app.domain.catalog import CoverageStatus
 
 def _xorn_template():
     raw = next(template for template in build_zero_engine_monsters() if template.name == "Xorn")
-    fingerprinted = complete_monster_trait_fingerprints([raw])[0]
+    fingerprinted = complete_monster_trait_fingerprints([raw])
+    fingerprinted = complete_monster_bonus_action_fingerprints(fingerprinted)[0]
     return with_source_saving_throws(fingerprinted)
 
 
