@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "bard",
+  "subclass_id": "college-valor",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "combat-inspiration",
+        "valor-martial-training"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "valor-extra-attack"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "battle-magic"
+      ]
+    }
+  }
+}

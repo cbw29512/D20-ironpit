@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "fighter",
+  "subclass_id": "eldritch-knight",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "eldritch-knight-spellcasting",
+        "eldritch-knight-war-bond"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "eldritch-knight-war-magic"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "eldritch-knight-eldritch-strike"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "eldritch-knight-arcane-charge"
+      ]
+    },
+    "18": {
+      "capabilities_added": [
+        "eldritch-knight-improved-war-magic"
+      ]
+    }
+  }
+}

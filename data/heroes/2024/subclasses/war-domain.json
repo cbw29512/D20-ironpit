@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "cleric",
+  "subclass_id": "war-domain",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "war-priest",
+        "guided-strike"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "war-gods-blessing"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "avatar-of-battle"
+      ]
+    }
+  }
+}

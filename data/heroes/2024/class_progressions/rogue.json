@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "rogue",
+  "source": "D&D Beyond Basic Rules 2024: Rogue",
+  "hit_die": 8,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "capabilities_added": [
+        "sneak-attack",
+        "weapon-mastery"
+      ],
+      "arena_ignored": [
+        "expertise",
+        "thieves-cant"
+      ],
+      "attack_count": 1
+    },
+    {
+      "level": 2,
+      "capabilities_added": [
+        "cunning-action"
+      ]
+    },
+    {
+      "level": 3,
+      "capabilities_added": [
+        "steady-aim"
+      ]
+    },
+    {
+      "level": 4
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "capabilities_added": [
+        "cunning-strike",
+        "uncanny-dodge"
+      ]
+    },
+    {
+      "level": 6,
+      "arena_ignored": [
+        "expertise"
+      ]
+    },
+    {
+      "level": 7,
+      "capabilities_added": [
+        "evasion"
+      ],
+      "arena_ignored": [
+        "reliable-talent"
+      ]
+    },
+    {
+      "level": 8
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4
+    },
+    {
+      "level": 10
+    },
+    {
+      "level": 11,
+      "capabilities_added": [
+        "improved-cunning-strike"
+      ]
+    },
+    {
+      "level": 12
+    },
+    {
+      "level": 13,
+      "proficiency_bonus": 5
+    },
+    {
+      "level": 14,
+      "capabilities_added": [
+        "devious-strikes"
+      ]
+    },
+    {
+      "level": 15,
+      "capabilities_added": [
+        "slippery-mind"
+      ]
+    },
+    {
+      "level": 16
+    },
+    {
+      "level": 17,
+      "proficiency_bonus": 6
+    },
+    {
+      "level": 18,
+      "capabilities_added": [
+        "elusive"
+      ]
+    },
+    {
+      "level": 19,
+      "capabilities_added": [
+        "rogue-epic-boon"
+      ]
+    },
+    {
+      "level": 20,
+      "capabilities_added": [
+        "stroke-of-luck"
+      ]
+    }
+  ]
+}

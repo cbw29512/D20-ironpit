@@ -42,29 +42,30 @@ It is intentionally ordered so future work can resume from repository state rath
 
 ## Phase 3 — Migrate all pregens as data
 
-- [ ] 2024 Barbarian
-- [ ] 2024 Bard
-- [ ] 2024 Cleric
-- [ ] 2024 Druid
-- [ ] 2024 Monk
-- [ ] 2024 Paladin
-- [ ] 2024 Ranger
-- [ ] 2024 Rogue
-- [ ] 2024 Sorcerer
-- [ ] 2024 Warlock
-- [ ] 2024 Wizard
-- [ ] 2014 Fighter
-- [ ] 2014 Barbarian
-- [ ] 2014 Bard
-- [ ] 2014 Cleric
-- [ ] 2014 Druid
-- [ ] 2014 Monk
-- [ ] 2014 Paladin
-- [ ] 2014 Ranger
-- [ ] 2014 Rogue
-- [ ] 2014 Sorcerer
-- [ ] 2014 Warlock
-- [ ] 2014 Wizard
+- [x] 2024 Fighter JSON source + certified fingerprint match for 1–14
+- [x] 2024 Barbarian JSON source + certified fingerprint match for 1–6
+- [x] 2024 Cleric JSON source + certified fingerprint match for 1–4
+- [x] 2024 Rogue JSON source + certified fingerprint match for 1
+- [ ] 2024 Bard — class/subclass tables only; no certified HP/weapon track
+- [ ] 2024 Druid — class/subclass tables only; no certified HP/weapon track
+- [ ] 2024 Monk — class/subclass tables only; spine has no HP
+- [ ] 2024 Paladin — class/subclass tables only; spine has no HP
+- [ ] 2024 Ranger — class/subclass tables only; spine has no HP
+- [ ] 2024 Sorcerer — class/subclass tables only; spine has no HP
+- [ ] 2024 Warlock — class/subclass tables only; spine has no HP
+- [ ] 2024 Wizard — class/subclass tables only; spine has no HP
+- [x] 2014 Fighter JSON source + certified fingerprint match for 1–20
+- [x] 2014 Barbarian JSON source + certified fingerprint match for 1–13
+- [x] 2014 Monk JSON source + certified fingerprint match for 1–10
+- [x] 2014 Paladin JSON source + certified fingerprint match for 1–10
+- [x] 2014 Rogue JSON source + certified fingerprint match for 1–10
+- [ ] 2014 Bard — no certified Python track; do not invent
+- [ ] 2014 Cleric — no certified Python track; do not invent
+- [ ] 2014 Druid — no certified Python track; do not invent
+- [ ] 2014 Ranger — no certified Python track; do not invent
+- [ ] 2014 Sorcerer — no certified Python track; do not invent
+- [ ] 2014 Warlock — no certified Python track; do not invent
+- [ ] 2014 Wizard — no certified Python track; do not invent
 
 For each track: identity + species + class deltas + subclass deltas + build -> compile 1–20 -> capability audit -> parity/certification -> remove superseded builders.
 

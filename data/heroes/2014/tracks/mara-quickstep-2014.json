@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "id": "mara-quickstep-2014-thief",
+  "hero_id": "mara-quickstep-2014",
+  "class_id": "rogue",
+  "subclass_id": "thief",
+  "species_id": "human",
+  "build_id": "mara-quickstep-2014-rapier",
+  "origin_capabilities": [],
+  "ability_scores": {
+    "strength": 9,
+    "dexterity": 16,
+    "constitution": 14,
+    "intelligence": 11,
+    "wisdom": 13,
+    "charisma": 15
+  },
+  "ability_score_improvements": {
+    "4": {
+      "dexterity": 18
+    },
+    "8": {
+      "dexterity": 20
+    },
+    "10": {
+      "wisdom": 14,
+      "charisma": 16
+    }
+  },
+  "hp_by_level": [
+    10,
+    17,
+    24,
+    31,
+    38,
+    45,
+    52,
+    59,
+    66,
+    73
+  ],
+  "ac_by_level": [
+    14,
+    14,
+    14,
+    15,
+    15,
+    15,
+    15,
+    16,
+    16,
+    16
+  ],
+  "speed_by_level": [
+    30,
+    30,
+    30,
+    30,
+    30,
+    30,
+    30,
+    30,
+    30,
+    30
+  ],
+  "rage_damage_bonus_by_level": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "weapon_masteries_by_level": {
+    "1": []
+  },
+  "fighting_styles_by_level": {
+    "1": []
+  },
+  "expertise_by_level": {
+    "1": [
+      "stealth",
+      "perception"
+    ],
+    "6": [
+      "stealth",
+      "perception",
+      "acrobatics",
+      "deception"
+    ]
+  }
+}

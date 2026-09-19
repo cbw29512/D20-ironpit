@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "warlock",
+  "subclass_id": "great-old-one-patron",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "awakened-mind",
+        "great-old-one-combat-spells-2"
+      ]
+    },
+    "5": {
+      "capabilities_added": [
+        "great-old-one-combat-spells-3"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "clairvoyant-combatant"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "great-old-one-combat-spells-4"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "great-old-one-combat-spells-5"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "eldritch-hex"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "create-thrall"
+      ]
+    }
+  }
+}

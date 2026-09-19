@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "monk",
+  "subclass_id": "warrior-elements",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "elemental-attunement"
+      ],
+      "arena_ignored": [
+        "manipulate-elements"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "elemental-burst"
+      ]
+    },
+    "11": {
+      "capabilities_added": [
+        "stride-of-the-elements"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "elemental-epitome"
+      ]
+    }
+  }
+}

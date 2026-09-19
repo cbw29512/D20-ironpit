@@ -1,60 +1,66 @@
 {
   "schema_version": 1,
-  "edition": "2024",
-  "id": "karnok-stoneward-champion",
-  "hero_id": "karnok-stoneward",
+  "edition": "2014",
+  "id": "karnok-stoneward-2014-champion",
+  "hero_id": "karnok-stoneward-2014",
   "class_id": "fighter",
   "subclass_id": "champion",
-  "species_id": "orc",
-  "build_id": "karnok-stoneward-greatsword",
-  "origin_capabilities": [
-    "savage-attacker"
-  ],
+  "species_id": "human",
+  "build_id": "karnok-stoneward-2014-greatsword",
+  "origin_capabilities": [],
   "ability_scores": {
-    "strength": 17,
-    "dexterity": 13,
+    "strength": 16,
+    "dexterity": 14,
     "constitution": 15,
-    "intelligence": 10,
-    "wisdom": 10,
-    "charisma": 10
+    "intelligence": 9,
+    "wisdom": 13,
+    "charisma": 11
   },
   "ability_score_improvements": {
     "4": {
-      "strength": 18,
-      "constitution": 16
+      "strength": 18
     },
     "6": {
       "strength": 20
     },
     "8": {
-      "constitution": 18
+      "dexterity": 15,
+      "constitution": 16
     },
     "12": {
-      "constitution": 20
+      "constitution": 18
     },
     "14": {
-      "dexterity": 15
+      "dexterity": 16,
+      "constitution": 19
+    },
+    "16": {
+      "dexterity": 18
+    },
+    "19": {
+      "constitution": 20,
+      "wisdom": 14
     }
   },
   "hp_by_level": [
     12,
     20,
     28,
-    40,
-    49,
-    58,
-    67,
-    84,
+    36,
+    44,
+    52,
+    60,
+    76,
+    85,
     94,
-    104,
-    114,
-    136,
-    147,
-    158,
-    169,
-    180,
-    191,
-    202,
+    103,
+    124,
+    134,
+    144,
+    154,
+    164,
+    174,
+    184,
     213,
     224
   ],
@@ -116,37 +122,24 @@
     0,
     0,
     0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
     0
   ],
   "weapon_masteries_by_level": {
-    "1": [
-      "flail",
-      "javelin",
-      "spear"
-    ],
-    "4": [
-      "flail",
-      "javelin",
-      "spear",
-      "longsword"
-    ],
-    "9": [
-      "flail",
-      "javelin",
-      "spear",
-      "greatsword"
-    ],
-    "10": [
-      "flail",
-      "javelin",
-      "spear",
-      "greatsword",
-      "shortbow"
-    ]
+    "1": []
   },
   "fighting_styles_by_level": {
     "1": [
       "Defense"
+    ],
+    "10": [
+      "Defense",
+      "Archery"
     ]
   }
 }

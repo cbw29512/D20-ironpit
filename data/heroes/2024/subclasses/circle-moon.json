@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "druid",
+  "subclass_id": "circle-moon",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "circle-forms",
+        "circle-moon-spells"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "improved-circle-forms"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "moonlight-step"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "lunar-form"
+      ]
+    }
+  }
+}

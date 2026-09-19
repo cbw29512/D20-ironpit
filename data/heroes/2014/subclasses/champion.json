@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "class_id": "fighter",
+  "subclass_id": "champion",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "improved-critical"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "remarkable-athlete"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "superior-critical"
+      ],
+      "capabilities_removed": [
+        "improved-critical"
+      ]
+    },
+    "18": {
+      "capabilities_added": [
+        "survivor"
+      ]
+    }
+  }
+}

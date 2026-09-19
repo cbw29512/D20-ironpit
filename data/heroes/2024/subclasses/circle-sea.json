@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "druid",
+  "subclass_id": "circle-sea",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "wrath-of-the-sea",
+        "circle-sea-spells"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "aquatic-affinity"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "stormborn"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "oceanic-gift"
+      ]
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "ranger",
+  "subclass_id": "gloom-stalker",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "gloom-stalker-dread-ambusher",
+        "gloom-stalker-combat-spells-1",
+        "gloom-stalker-umbral-sight"
+      ]
+    },
+    "5": {
+      "capabilities_added": [
+        "gloom-stalker-combat-spells-2"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "gloom-stalker-iron-mind"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "gloom-stalker-combat-spells-3"
+      ]
+    },
+    "11": {
+      "capabilities_added": [
+        "gloom-stalker-stalkers-flurry"
+      ]
+    },
+    "13": {
+      "capabilities_added": [
+        "gloom-stalker-combat-spells-4"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "gloom-stalker-shadowy-dodge"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "gloom-stalker-combat-spells-5"
+      ]
+    }
+  }
+}

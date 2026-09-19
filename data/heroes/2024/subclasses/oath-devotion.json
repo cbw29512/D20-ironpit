@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "paladin",
+  "subclass_id": "oath-devotion",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "sacred-weapon",
+        "devotion-combat-spells-1"
+      ]
+    },
+    "5": {
+      "capabilities_added": [
+        "devotion-combat-spells-2"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "aura-of-devotion"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "devotion-combat-spells-3"
+      ]
+    },
+    "13": {
+      "capabilities_added": [
+        "devotion-combat-spells-4"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "smite-of-protection"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "devotion-combat-spells-5"
+      ]
+    },
+    "20": {
+      "capabilities_added": [
+        "holy-nimbus"
+      ]
+    }
+  }
+}

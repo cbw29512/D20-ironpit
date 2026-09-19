@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "bard",
+  "subclass_id": "college-lore",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "cutting-words"
+      ],
+      "arena_ignored": [
+        "lore-bonus-proficiencies"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "magical-discoveries"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "peerless-skill"
+      ]
+    }
+  }
+}

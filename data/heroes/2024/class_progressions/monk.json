@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "monk",
+  "source": "D&D Beyond Basic Rules 2024: Monk",
+  "hit_die": 8,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "unarmed_dice_size": 6,
+      "capabilities_added": [
+        "martial-arts",
+        "unarmored-defense"
+      ],
+      "attack_count": 1
+    },
+    {
+      "level": 2,
+      "resources": {
+        "ki": 2
+      },
+      "capabilities_added": [
+        "monks-focus",
+        "unarmored-movement",
+        "uncanny-metabolism"
+      ]
+    },
+    {
+      "level": 3,
+      "resources": {
+        "ki": 3
+      },
+      "capabilities_added": [
+        "deflect-attacks"
+      ]
+    },
+    {
+      "level": 4,
+      "resources": {
+        "ki": 4
+      },
+      "arena_ignored": [
+        "slow-fall"
+      ]
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "unarmed_dice_size": 8,
+      "resources": {
+        "ki": 5
+      },
+      "capabilities_added": [
+        "extra-attack",
+        "stunning-strike"
+      ]
+    },
+    {
+      "level": 6,
+      "resources": {
+        "ki": 6
+      },
+      "capabilities_added": [
+        "empowered-strikes"
+      ]
+    },
+    {
+      "level": 7,
+      "resources": {
+        "ki": 7
+      },
+      "capabilities_added": [
+        "evasion"
+      ]
+    },
+    {
+      "level": 8,
+      "resources": {
+        "ki": 8
+      }
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "resources": {
+        "ki": 9
+      },
+      "arena_ignored": [
+        "acrobatic-movement"
+      ]
+    },
+    {
+      "level": 10,
+      "resources": {
+        "ki": 10
+      },
+      "capabilities_added": [
+        "heightened-focus",
+        "self-restoration"
+      ]
+    },
+    {
+      "level": 11,
+      "unarmed_dice_size": 10,
+      "resources": {
+        "ki": 11
+      }
+    },
+    {
+      "level": 12,
+      "resources": {
+        "ki": 12
+      }
+    },
+    {
+      "level": 13,
+      "proficiency_bonus": 5,
+      "resources": {
+        "ki": 13
+      },
+      "capabilities_added": [
+        "deflect-energy"
+      ]
+    },
+    {
+      "level": 14,
+      "resources": {
+        "ki": 14
+      },
+      "capabilities_added": [
+        "disciplined-survivor"
+      ]
+    },
+    {
+      "level": 15,
+      "resources": {
+        "ki": 15
+      },
+      "capabilities_added": [
+        "perfect-focus"
+      ]
+    },
+    {
+      "level": 16,
+      "resources": {
+        "ki": 16
+      }
+    },
+    {
+      "level": 17,
+      "proficiency_bonus": 6,
+      "unarmed_dice_size": 12,
+      "resources": {
+        "ki": 17
+      }
+    },
+    {
+      "level": 18,
+      "resources": {
+        "ki": 18
+      },
+      "capabilities_added": [
+        "superior-defense"
+      ]
+    },
+    {
+      "level": 19,
+      "resources": {
+        "ki": 19
+      },
+      "capabilities_added": [
+        "boon-irresistible-offense"
+      ]
+    },
+    {
+      "level": 20,
+      "resources": {
+        "ki": 20
+      },
+      "capabilities_added": [
+        "body-and-mind"
+      ]
+    }
+  ]
+}

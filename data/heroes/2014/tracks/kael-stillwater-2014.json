@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "id": "kael-stillwater-2014-warrior-open-hand",
+  "hero_id": "kael-stillwater-2014",
+  "class_id": "monk",
+  "subclass_id": "warrior-open-hand",
+  "species_id": "human",
+  "build_id": "kael-stillwater-2014-unarmed-strike",
+  "origin_capabilities": [],
+  "ability_scores": {
+    "strength": 13,
+    "dexterity": 16,
+    "constitution": 14,
+    "intelligence": 11,
+    "wisdom": 15,
+    "charisma": 9
+  },
+  "ability_score_improvements": {
+    "4": {
+      "dexterity": 18
+    },
+    "8": {
+      "dexterity": 20
+    }
+  },
+  "hp_by_level": [
+    10,
+    17,
+    24,
+    31,
+    38,
+    45,
+    52,
+    59,
+    66,
+    73
+  ],
+  "ac_by_level": [
+    15,
+    15,
+    15,
+    16,
+    16,
+    16,
+    16,
+    17,
+    17,
+    17
+  ],
+  "speed_by_level": [
+    30,
+    40,
+    40,
+    40,
+    40,
+    45,
+    45,
+    45,
+    45,
+    50
+  ],
+  "rage_damage_bonus_by_level": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "weapon_masteries_by_level": {
+    "1": []
+  },
+  "fighting_styles_by_level": {
+    "1": []
+  }
+}

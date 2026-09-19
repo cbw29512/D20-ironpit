@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "monk",
+  "subclass_id": "warrior-open-hand",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "open-hand-technique"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "wholeness-of-body"
+      ]
+    },
+    "11": {
+      "capabilities_added": [
+        "fleet-step"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "quivering-palm"
+      ]
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "warlock",
+  "subclass_id": "fiend-patron",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "dark-ones-blessing",
+        "fiend-combat-spells-2"
+      ]
+    },
+    "5": {
+      "capabilities_added": [
+        "fiend-combat-spells-3"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "dark-ones-own-luck"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "fiend-combat-spells-4"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "fiend-combat-spells-5"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "fiendish-resilience"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "hurl-through-hell"
+      ]
+    }
+  }
+}

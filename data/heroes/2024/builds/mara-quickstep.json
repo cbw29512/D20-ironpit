@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "id": "mara-quickstep-shortsword",
+  "class_id": "rogue",
+  "armor_class": 14,
+  "speed_ft": 30,
+  "save_proficiencies": [
+    "dexterity",
+    "intelligence"
+  ],
+  "skills": [
+    {
+      "id": "athletics",
+      "ability": "strength",
+      "proficient": true
+    },
+    {
+      "id": "acrobatics",
+      "ability": "dexterity",
+      "proficient": true
+    }
+  ],
+  "fighting_style": null,
+  "attacks": [
+    {
+      "id": "mara-shortsword",
+      "name": "Shortsword",
+      "weapon_id": "shortsword",
+      "attack_kind": "melee",
+      "ability": "dexterity",
+      "dice_count": 1,
+      "dice_size": 6,
+      "damage_type": "piercing",
+      "animation": "thrust",
+      "reach_ft": 5,
+      "mastery_property": "Vex",
+      "heavy": false,
+      "two_handed": false
+    },
+    {
+      "id": "mara-shortbow",
+      "name": "Shortbow",
+      "weapon_id": "shortbow",
+      "attack_kind": "ranged",
+      "ability": "dexterity",
+      "dice_count": 1,
+      "dice_size": 6,
+      "damage_type": "piercing",
+      "animation": "projectile",
+      "reach_ft": 5,
+      "mastery_property": "Vex",
+      "heavy": false,
+      "two_handed": false,
+      "normal_range_ft": 80,
+      "long_range_ft": 320
+    }
+  ],
+  "primary_attack_id": "mara-shortsword",
+  "visual": {
+    "armor": "leather",
+    "main_hand": "shortsword",
+    "off_hand": "shortbow",
+    "body_style": "rogue"
+  },
+  "source": "D&D Beyond Basic Rules 2024: Rogue 1, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
+}

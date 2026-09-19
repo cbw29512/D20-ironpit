@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "id": "seraphine-dawnshield-mace",
+  "class_id": "cleric",
+  "armor_class": 15,
+  "speed_ft": 30,
+  "save_proficiencies": [
+    "intelligence",
+    "wisdom",
+    "charisma"
+  ],
+  "skills": [
+    {
+      "id": "athletics",
+      "ability": "strength",
+      "proficient": false
+    },
+    {
+      "id": "acrobatics",
+      "ability": "dexterity",
+      "proficient": false
+    },
+    {
+      "id": "arcana",
+      "ability": "intelligence",
+      "proficient": true
+    },
+    {
+      "id": "history",
+      "ability": "intelligence",
+      "proficient": true
+    },
+    {
+      "id": "medicine",
+      "ability": "wisdom",
+      "proficient": true
+    },
+    {
+      "id": "persuasion",
+      "ability": "charisma",
+      "proficient": true
+    }
+  ],
+  "fighting_style": null,
+  "attacks": [
+    {
+      "id": "seraphine-mace",
+      "name": "Mace",
+      "weapon_id": "mace",
+      "attack_kind": "melee",
+      "ability": "strength",
+      "dice_count": 1,
+      "dice_size": 6,
+      "damage_type": "bludgeoning",
+      "animation": "blunt-strike",
+      "reach_ft": 5,
+      "mastery_property": null,
+      "heavy": false,
+      "two_handed": false
+    }
+  ],
+  "primary_attack_id": "seraphine-mace",
+  "visual": {
+    "armor": "chain-shirt",
+    "main_hand": "mace",
+    "off_hand": "shield",
+    "body_style": "humanoid"
+  },
+  "source": "D&D Beyond Basic Rules 2024: Cleric level 1, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Equipment"
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "id": "kael-stillwater-2014-unarmed-strike",
+  "class_id": "monk",
+  "armor_class": 15,
+  "speed_ft": 30,
+  "save_proficiencies": [
+    "strength",
+    "dexterity"
+  ],
+  "skills": [
+    {
+      "id": "acrobatics",
+      "ability": "dexterity",
+      "proficient": true
+    },
+    {
+      "id": "stealth",
+      "ability": "dexterity",
+      "proficient": true
+    },
+    {
+      "id": "insight",
+      "ability": "wisdom",
+      "proficient": true
+    },
+    {
+      "id": "religion",
+      "ability": "intelligence",
+      "proficient": true
+    }
+  ],
+  "fighting_style": null,
+  "attacks": [
+    {
+      "id": "kael-2014-unarmed",
+      "name": "Unarmed Strike",
+      "weapon_id": "unarmed-strike",
+      "attack_kind": "melee",
+      "ability": "dexterity",
+      "dice_count": 1,
+      "dice_size": 4,
+      "damage_type": "bludgeoning",
+      "animation": "strike",
+      "reach_ft": 5,
+      "mastery_property": null,
+      "heavy": false,
+      "two_handed": false
+    },
+    {
+      "id": "kael-2014-shortsword",
+      "name": "Shortsword",
+      "weapon_id": "shortsword",
+      "attack_kind": "melee",
+      "ability": "dexterity",
+      "dice_count": 1,
+      "dice_size": 6,
+      "damage_type": "piercing",
+      "animation": "slash",
+      "reach_ft": 5,
+      "mastery_property": null,
+      "heavy": false,
+      "two_handed": false
+    }
+  ],
+  "primary_attack_id": "kael-2014-unarmed",
+  "visual": {
+    "armor": "unarmored",
+    "main_hand": "fists",
+    "off_hand": null,
+    "body_style": "humanoid"
+  },
+  "source": "D&D Basic Rules 2014: Human, Acolyte, Equipment; D&D SRD 5.1 (2014): Monk, Way of the Open Hand"
+}

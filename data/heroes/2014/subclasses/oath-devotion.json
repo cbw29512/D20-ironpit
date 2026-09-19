@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "class_id": "paladin",
+  "subclass_id": "oath-devotion",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "sacred-weapon-2014",
+        "turn-unholy-2014"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "aura-of-devotion-2014"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "aura-of-courage-2014"
+      ]
+    }
+  }
+}

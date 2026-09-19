@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "ranger",
+  "subclass_id": "beastmaster",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "beastmaster-primal-companion"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "beastmaster-exceptional-training"
+      ]
+    },
+    "11": {
+      "capabilities_added": [
+        "beastmaster-bestial-fury"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "beastmaster-share-spells"
+      ]
+    }
+  }
+}

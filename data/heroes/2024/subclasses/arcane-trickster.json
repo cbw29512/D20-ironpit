@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "rogue",
+  "subclass_id": "arcane-trickster",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "arcane-trickster-spellcasting",
+        "mage-hand-legerdemain"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "arcane-trickster-magical-ambush"
+      ]
+    },
+    "13": {
+      "capabilities_added": [
+        "arcane-trickster-versatile-trickster"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "arcane-trickster-spell-thief"
+      ]
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "class_id": "barbarian",
+  "source": "D&D Basic Rules 2014: Barbarian",
+  "hit_die": 12,
+  "emit_attack_action_at_one": true,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "attack_count": 1,
+      "resources": {
+        "rage": 2
+      },
+      "capabilities_added": [
+        "rage"
+      ]
+    },
+    {
+      "level": 2,
+      "capabilities_added": [
+        "reckless-attack",
+        "danger-sense"
+      ]
+    },
+    {
+      "level": 3,
+      "resources": {
+        "rage": 3
+      }
+    },
+    {
+      "level": 4
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "attack_count": 2,
+      "capabilities_added": [
+        "extra-attack",
+        "fast-movement"
+      ]
+    },
+    {
+      "level": 6,
+      "resources": {
+        "rage": 4
+      }
+    },
+    {
+      "level": 7,
+      "capabilities_added": [
+        "feral-instinct"
+      ]
+    },
+    {
+      "level": 8
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "capabilities_added": [
+        "brutal-critical"
+      ]
+    },
+    {
+      "level": 10
+    },
+    {
+      "level": 11,
+      "capabilities_added": [
+        "relentless-rage"
+      ]
+    },
+    {
+      "level": 12,
+      "resources": {
+        "rage": 5
+      }
+    },
+    {
+      "level": 13,
+      "proficiency_bonus": 5,
+      "capabilities_added": [
+        "brutal-critical-2"
+      ]
+    }
+  ]
+}

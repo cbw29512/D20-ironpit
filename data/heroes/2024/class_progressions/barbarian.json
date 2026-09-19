@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "barbarian",
+  "source": "D&D Beyond Basic Rules 2024: Barbarian",
+  "hit_die": 12,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "attack_count": 1,
+      "resources": {
+        "rage": 2
+      },
+      "capabilities_added": [
+        "rage"
+      ]
+    },
+    {
+      "level": 2,
+      "resources": {
+        "rage": 2
+      },
+      "capabilities_added": [
+        "danger-sense",
+        "reckless-attack"
+      ]
+    },
+    {
+      "level": 3,
+      "resources": {
+        "rage": 3
+      },
+      "arena_ignored": [
+        "primal-knowledge"
+      ]
+    },
+    {
+      "level": 4,
+      "resources": {
+        "rage": 3
+      }
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "attack_count": 2,
+      "resources": {
+        "rage": 3
+      },
+      "capabilities_added": [
+        "extra-attack",
+        "fast-movement"
+      ]
+    },
+    {
+      "level": 6,
+      "resources": {
+        "rage": 4
+      }
+    },
+    {
+      "level": 7,
+      "resources": {
+        "rage": 4
+      },
+      "capabilities_added": [
+        "feral-instinct",
+        "instinctive-pounce"
+      ]
+    },
+    {
+      "level": 8,
+      "resources": {
+        "rage": 4
+      }
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "resources": {
+        "rage": 4
+      },
+      "capabilities_added": [
+        "brutal-strike"
+      ],
+      "arena_ignored": [
+        "hamstring-blow"
+      ]
+    },
+    {
+      "level": 10,
+      "resources": {
+        "rage": 4
+      }
+    },
+    {
+      "level": 11,
+      "resources": {
+        "rage": 4
+      },
+      "capabilities_added": [
+        "relentless-rage"
+      ]
+    },
+    {
+      "level": 12,
+      "resources": {
+        "rage": 5
+      }
+    },
+    {
+      "level": 13,
+      "proficiency_bonus": 5,
+      "resources": {
+        "rage": 5
+      },
+      "capabilities_added": [
+        "improved-brutal-strike"
+      ]
+    },
+    {
+      "level": 14,
+      "resources": {
+        "rage": 5
+      }
+    },
+    {
+      "level": 15,
+      "resources": {
+        "rage": 5
+      },
+      "capabilities_added": [
+        "persistent-rage"
+      ]
+    },
+    {
+      "level": 16,
+      "resources": {
+        "rage": 5
+      }
+    },
+    {
+      "level": 17,
+      "proficiency_bonus": 6,
+      "resources": {
+        "rage": 6
+      },
+      "capabilities_added": [
+        "brutal-strike-2d10"
+      ],
+      "capabilities_removed": [
+        "brutal-strike"
+      ]
+    },
+    {
+      "level": 18,
+      "resources": {
+        "rage": 6
+      },
+      "capabilities_added": [
+        "indomitable-might"
+      ]
+    },
+    {
+      "level": 19,
+      "resources": {
+        "rage": 6
+      },
+      "capabilities_added": [
+        "boon-irresistible-offense"
+      ]
+    },
+    {
+      "level": 20,
+      "resources": {
+        "rage": 6
+      },
+      "capabilities_added": [
+        "primal-champion"
+      ]
+    }
+  ]
+}

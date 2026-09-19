@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "monk",
+  "subclass_id": "warrior-shadow",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "shadow-arts"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "shadow-step"
+      ]
+    },
+    "11": {
+      "capabilities_added": [
+        "improved-shadow-step"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "cloak-of-shadows"
+      ]
+    }
+  }
+}

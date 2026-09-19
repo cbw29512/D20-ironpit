@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "ranger",
+  "subclass_id": "hunter",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "hunters-lore",
+        "hunter-prey-colossus-slayer"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "hunter-multiattack-defense"
+      ]
+    },
+    "11": {
+      "capabilities_added": [
+        "superior-hunters-prey"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "superior-hunters-defense"
+      ]
+    }
+  }
+}

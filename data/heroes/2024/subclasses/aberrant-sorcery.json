@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "sorcerer",
+  "subclass_id": "aberrant-sorcery",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "psionic-spells",
+        "telepathic-speech"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "psionic-sorcery",
+        "psychic-defenses"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "revelation-in-flesh"
+      ]
+    },
+    "18": {
+      "capabilities_added": [
+        "warping-implosion"
+      ]
+    }
+  }
+}

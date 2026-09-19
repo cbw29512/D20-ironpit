@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "paladin",
+  "subclass_id": "oath-ancients",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "natures-wrath",
+        "ancients-combat-spells-1"
+      ]
+    },
+    "5": {
+      "capabilities_added": [
+        "ancients-combat-spells-2"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "aura-of-warding"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "ancients-combat-spells-3"
+      ]
+    },
+    "13": {
+      "capabilities_added": [
+        "ancients-combat-spells-4"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "undying-sentinel"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "ancients-combat-spells-5"
+      ]
+    },
+    "20": {
+      "capabilities_added": [
+        "elder-champion"
+      ]
+    }
+  }
+}

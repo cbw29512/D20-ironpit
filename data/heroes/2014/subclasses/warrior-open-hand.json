@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "class_id": "monk",
+  "subclass_id": "warrior-open-hand",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "open-hand-technique"
+      ]
+    }
+  }
+}

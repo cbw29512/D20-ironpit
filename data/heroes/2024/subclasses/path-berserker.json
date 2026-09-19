@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "barbarian",
+  "subclass_id": "path-berserker",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "frenzy"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "mindless-rage"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "retaliation"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "intimidating-presence"
+      ]
+    }
+  }
+}

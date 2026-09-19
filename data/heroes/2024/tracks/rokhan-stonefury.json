@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "id": "rokhan-stonefury-path-berserker",
+  "hero_id": "rokhan-stonefury",
+  "class_id": "barbarian",
+  "subclass_id": "path-berserker",
+  "species_id": "orc",
+  "build_id": "rokhan-stonefury-greataxe",
+  "origin_capabilities": [
+    "savage-attacker"
+  ],
+  "ability_scores": {
+    "strength": 17,
+    "dexterity": 13,
+    "constitution": 15,
+    "intelligence": 10,
+    "wisdom": 10,
+    "charisma": 10
+  },
+  "ability_score_improvements": {
+    "4": {
+      "strength": 18,
+      "constitution": 16
+    }
+  },
+  "hp_by_level": [
+    14,
+    23,
+    32,
+    45,
+    55,
+    65
+  ],
+  "ac_by_level": [
+    13,
+    13,
+    13,
+    14,
+    14,
+    14
+  ],
+  "speed_by_level": [
+    30,
+    30,
+    30,
+    30,
+    40,
+    40
+  ],
+  "rage_damage_bonus_by_level": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "weapon_masteries_by_level": {
+    "1": [
+      "flail",
+      "pike"
+    ],
+    "4": [
+      "flail",
+      "pike",
+      "longsword"
+    ]
+  },
+  "fighting_styles_by_level": {
+    "1": []
+  }
+}

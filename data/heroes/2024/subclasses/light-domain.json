@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "cleric",
+  "subclass_id": "light-domain",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "warding-flare",
+        "radiance-of-the-dawn"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "improved-warding-flare"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "corona-of-light"
+      ]
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "class_id": "paladin",
+  "source": "D&D Basic Rules 2014: Paladin",
+  "hit_die": 10,
+  "emit_attack_action_at_one": false,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "attack_count": 1,
+      "resources": {
+        "lay-on-hands": 5
+      },
+      "capabilities_added": [
+        "lay-on-hands",
+        "divine-sense"
+      ]
+    },
+    {
+      "level": 2,
+      "resources": {
+        "lay-on-hands": 10,
+        "spell-slot-1": 2
+      },
+      "capabilities_added": [
+        "divine-smite-2014",
+        "fighting-style"
+      ]
+    },
+    {
+      "level": 3,
+      "resources": {
+        "lay-on-hands": 15,
+        "spell-slot-1": 3,
+        "channel-divinity": 1
+      }
+    },
+    {
+      "level": 4,
+      "resources": {
+        "lay-on-hands": 20
+      }
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "attack_count": 2,
+      "resources": {
+        "lay-on-hands": 25,
+        "spell-slot-1": 4,
+        "spell-slot-2": 2
+      },
+      "capabilities_added": [
+        "extra-attack"
+      ]
+    },
+    {
+      "level": 6,
+      "resources": {
+        "lay-on-hands": 30
+      },
+      "capabilities_added": [
+        "aura-of-protection-2014"
+      ]
+    },
+    {
+      "level": 7,
+      "resources": {
+        "lay-on-hands": 35,
+        "spell-slot-2": 3
+      }
+    },
+    {
+      "level": 8,
+      "resources": {
+        "lay-on-hands": 40
+      }
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "resources": {
+        "lay-on-hands": 45,
+        "spell-slot-3": 2
+      }
+    },
+    {
+      "level": 10,
+      "resources": {
+        "lay-on-hands": 50
+      }
+    }
+  ]
+}

@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "paladin",
+  "source": "D&D Beyond Basic Rules 2024: Paladin",
+  "hit_die": 10,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "resources": {
+        "lay-on-hands": 5,
+        "spell-slot-1": 2
+      },
+      "capabilities_added": [
+        "lay-on-hands",
+        "paladin-spellcasting",
+        "weapon-mastery"
+      ],
+      "attack_count": 1
+    },
+    {
+      "level": 2,
+      "resources": {
+        "lay-on-hands": 10,
+        "spell-slot-1": 2
+      },
+      "capabilities_added": [
+        "fighting-style",
+        "paladins-smite"
+      ]
+    },
+    {
+      "level": 3,
+      "resources": {
+        "channel-divinity": 2,
+        "lay-on-hands": 15,
+        "spell-slot-1": 3
+      },
+      "capabilities_added": [
+        "channel-divinity"
+      ]
+    },
+    {
+      "level": 4,
+      "resources": {
+        "channel-divinity": 2,
+        "lay-on-hands": 20,
+        "spell-slot-1": 3
+      }
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "resources": {
+        "channel-divinity": 2,
+        "lay-on-hands": 25,
+        "spell-slot-1": 4,
+        "spell-slot-2": 2
+      },
+      "capabilities_added": [
+        "extra-attack",
+        "faithful-steed"
+      ]
+    },
+    {
+      "level": 6,
+      "resources": {
+        "channel-divinity": 2,
+        "lay-on-hands": 30,
+        "spell-slot-1": 4,
+        "spell-slot-2": 2
+      },
+      "capabilities_added": [
+        "aura-of-protection"
+      ]
+    },
+    {
+      "level": 7,
+      "resources": {
+        "channel-divinity": 2,
+        "lay-on-hands": 35,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3
+      }
+    },
+    {
+      "level": 8,
+      "resources": {
+        "channel-divinity": 2,
+        "lay-on-hands": 40,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3
+      }
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "resources": {
+        "channel-divinity": 2,
+        "lay-on-hands": 45,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 2
+      },
+      "capabilities_added": [
+        "abjure-foes"
+      ]
+    },
+    {
+      "level": 10,
+      "resources": {
+        "channel-divinity": 2,
+        "lay-on-hands": 50,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 2
+      },
+      "capabilities_added": [
+        "aura-of-courage"
+      ]
+    },
+    {
+      "level": 11,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 55,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3
+      },
+      "capabilities_added": [
+        "radiant-strikes"
+      ]
+    },
+    {
+      "level": 12,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 60,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3
+      }
+    },
+    {
+      "level": 13,
+      "proficiency_bonus": 5,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 65,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 1
+      }
+    },
+    {
+      "level": 14,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 70,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 1
+      },
+      "capabilities_added": [
+        "restoring-touch"
+      ]
+    },
+    {
+      "level": 15,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 75,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 2
+      }
+    },
+    {
+      "level": 16,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 80,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 2
+      }
+    },
+    {
+      "level": 17,
+      "proficiency_bonus": 6,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 85,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 1
+      }
+    },
+    {
+      "level": 18,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 90,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 1
+      },
+      "capabilities_added": [
+        "aura-expansion"
+      ]
+    },
+    {
+      "level": 19,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 95,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2
+      },
+      "capabilities_added": [
+        "paladin-epic-boon"
+      ]
+    },
+    {
+      "level": 20,
+      "resources": {
+        "channel-divinity": 3,
+        "lay-on-hands": 100,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2
+      }
+    }
+  ]
+}

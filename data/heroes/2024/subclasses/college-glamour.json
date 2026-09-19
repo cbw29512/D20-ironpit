@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "bard",
+  "subclass_id": "college-glamour",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "beguiling-magic",
+        "mantle-of-inspiration"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "mantle-of-majesty"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "unbreakable-majesty"
+      ]
+    }
+  }
+}

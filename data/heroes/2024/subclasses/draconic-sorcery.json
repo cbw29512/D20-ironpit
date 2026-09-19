@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "sorcerer",
+  "subclass_id": "draconic-sorcery",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "draconic-resilience",
+        "draconic-spells"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "elemental-affinity-fire"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "dragon-wings"
+      ]
+    },
+    "18": {
+      "capabilities_added": [
+        "dragon-companion"
+      ]
+    }
+  }
+}

@@ -32,6 +32,7 @@ class HeroLevelDelta(BaseModel):
     level: int = Field(ge=1, le=20)
     proficiency_bonus: int | None = Field(default=None, ge=2, le=6)
     attack_count: int | None = Field(default=None, ge=1)
+    unarmed_dice_size: int | None = Field(default=None, ge=4, le=12)
     resources: dict[str, int] = Field(default_factory=dict)
     capabilities_added: list[str] = Field(default_factory=list)
     capabilities_removed: list[str] = Field(default_factory=list)
@@ -50,6 +51,7 @@ class HeroProgressionSource(BaseModel):
     class_id: str
     source: str
     hit_die: int = Field(ge=4, le=12)
+    emit_attack_action_at_one: bool = False
     levels: list[HeroLevelDelta] = Field(min_length=1)
 
     @model_validator(mode="after")
@@ -127,7 +129,12 @@ class HeroTrackSource(BaseModel):
     ability_scores: AbilityScoresSource
     ability_score_improvements: dict[int, AbilityScoreDelta] = Field(default_factory=dict)
     hp_by_level: list[int] = Field(min_length=1)
+    ac_by_level: list[int] = Field(default_factory=list)
+    speed_by_level: list[int] = Field(default_factory=list)
+    rage_damage_bonus_by_level: list[int] = Field(default_factory=list)
     weapon_masteries_by_level: dict[int, list[str]] = Field(default_factory=dict)
+    fighting_styles_by_level: dict[int, list[str]] = Field(default_factory=dict)
+    expertise_by_level: dict[int, list[str]] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def valid_hp_and_asis(self) -> "HeroTrackSource":
@@ -139,6 +146,9 @@ class HeroTrackSource(BaseModel):
         for level in self.weapon_masteries_by_level:
             if not 1 <= int(level) <= 20:
                 raise ValueError(f"Weapon mastery level {level} must be in 1..20.")
+        for level in self.expertise_by_level:
+            if not 1 <= int(level) <= 20:
+                raise ValueError(f"Expertise level {level} must be in 1..20.")
         return self
 
 

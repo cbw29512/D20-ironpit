@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "edition": "2024",
-  "id": "karnok-stoneward-greatsword",
+  "edition": "2014",
+  "id": "karnok-stoneward-2014-greatsword",
   "class_id": "fighter",
   "armor_class": 17,
   "speed_ft": 30,
@@ -24,7 +24,7 @@
   "fighting_style": "Defense",
   "attacks": [
     {
-      "id": "karnok-greatsword",
+      "id": "karnok-2014-greatsword",
       "name": "Greatsword",
       "weapon_id": "greatsword",
       "attack_kind": "melee",
@@ -34,34 +34,34 @@
       "damage_type": "slashing",
       "animation": "heavy-slash",
       "reach_ft": 5,
-      "mastery_property": "Graze",
+      "mastery_property": null,
       "heavy": true,
       "two_handed": true
     },
     {
-      "id": "karnok-shortbow",
-      "name": "Shortbow",
-      "weapon_id": "shortbow",
+      "id": "karnok-2014-longbow",
+      "name": "Longbow",
+      "weapon_id": "longbow",
       "attack_kind": "ranged",
       "ability": "dexterity",
       "dice_count": 1,
-      "dice_size": 6,
+      "dice_size": 8,
       "damage_type": "piercing",
       "animation": "projectile",
       "reach_ft": 5,
-      "mastery_property": "Vex",
-      "heavy": false,
+      "mastery_property": null,
+      "heavy": true,
       "two_handed": true,
-      "normal_range_ft": 80,
-      "long_range_ft": 320
+      "normal_range_ft": 150,
+      "long_range_ft": 600
     }
   ],
-  "primary_attack_id": "karnok-greatsword",
+  "primary_attack_id": "karnok-2014-greatsword",
   "visual": {
     "armor": "chain-mail",
     "main_hand": "greatsword",
     "off_hand": null,
     "body_style": "humanoid"
   },
-  "source": "D&D Beyond Basic Rules 2024: Fighter, Orc, Soldier, Savage Attacker, Equipment"
+  "source": "D&D Basic Rules 2014: Human; Fighter; Champion; Soldier; Equipment"
 }

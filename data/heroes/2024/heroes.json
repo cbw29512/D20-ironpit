@@ -7,11 +7,56 @@
       "name": "Karnok Stoneward",
       "class_id": "fighter",
       "subclass_id": "champion",
-      "build_id": "karnok-stoneward-great-weapon",
+      "build_id": "karnok-stoneward-greatsword",
       "species": "orc",
       "background": "soldier",
-      "track_id": "karnok-stoneward-champion-great-weapon",
-      "level_range": [1, 20]
+      "track_id": "karnok-stoneward-champion",
+      "level_range": [
+        1,
+        14
+      ]
+    },
+    {
+      "id": "rokhan-stonefury",
+      "name": "Rokhan Stonefury",
+      "class_id": "barbarian",
+      "subclass_id": "path-berserker",
+      "build_id": "rokhan-stonefury-greataxe",
+      "species": "orc",
+      "background": "soldier",
+      "track_id": "rokhan-stonefury-path-berserker",
+      "level_range": [
+        1,
+        6
+      ]
+    },
+    {
+      "id": "seraphine-dawnshield",
+      "name": "Seraphine Dawnshield",
+      "class_id": "cleric",
+      "subclass_id": "life-domain",
+      "build_id": "seraphine-dawnshield-mace",
+      "species": "orc",
+      "background": "soldier",
+      "track_id": "seraphine-dawnshield-life-domain",
+      "level_range": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": "mara-quickstep",
+      "name": "Mara Quickstep",
+      "class_id": "rogue",
+      "subclass_id": "thief",
+      "build_id": "mara-quickstep-shortsword",
+      "species": "orc",
+      "background": "soldier",
+      "track_id": "mara-quickstep-thief",
+      "level_range": [
+        1,
+        1
+      ]
     }
   ]
 }

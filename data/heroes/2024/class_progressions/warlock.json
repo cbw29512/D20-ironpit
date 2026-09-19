@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "warlock",
+  "source": "D&D Beyond Basic Rules 2024: Warlock",
+  "hit_die": 8,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "resources": {
+        "pact-slot": 1
+      },
+      "capabilities_added": [
+        "eldritch-invocations",
+        "pact-magic"
+      ],
+      "attack_count": 1
+    },
+    {
+      "level": 2,
+      "resources": {
+        "pact-slot": 2
+      },
+      "capabilities_added": [
+        "magical-cunning"
+      ]
+    },
+    {
+      "level": 3,
+      "resources": {
+        "pact-slot": 2
+      }
+    },
+    {
+      "level": 4,
+      "resources": {
+        "pact-slot": 2
+      }
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "resources": {
+        "pact-slot": 2
+      }
+    },
+    {
+      "level": 6,
+      "resources": {
+        "pact-slot": 2
+      }
+    },
+    {
+      "level": 7,
+      "resources": {
+        "pact-slot": 2
+      }
+    },
+    {
+      "level": 8,
+      "resources": {
+        "pact-slot": 2
+      }
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "resources": {
+        "pact-slot": 2
+      },
+      "arena_ignored": [
+        "contact-patron"
+      ]
+    },
+    {
+      "level": 10,
+      "resources": {
+        "pact-slot": 2
+      }
+    },
+    {
+      "level": 11,
+      "resources": {
+        "pact-slot": 3
+      },
+      "capabilities_added": [
+        "mystic-arcanum-6"
+      ]
+    },
+    {
+      "level": 12,
+      "resources": {
+        "pact-slot": 3
+      }
+    },
+    {
+      "level": 13,
+      "proficiency_bonus": 5,
+      "resources": {
+        "pact-slot": 3
+      },
+      "capabilities_added": [
+        "mystic-arcanum-7"
+      ]
+    },
+    {
+      "level": 14,
+      "resources": {
+        "pact-slot": 3
+      }
+    },
+    {
+      "level": 15,
+      "resources": {
+        "pact-slot": 3
+      },
+      "capabilities_added": [
+        "mystic-arcanum-8"
+      ]
+    },
+    {
+      "level": 16,
+      "resources": {
+        "pact-slot": 3
+      }
+    },
+    {
+      "level": 17,
+      "proficiency_bonus": 6,
+      "resources": {
+        "pact-slot": 4
+      },
+      "capabilities_added": [
+        "mystic-arcanum-9"
+      ]
+    },
+    {
+      "level": 18,
+      "resources": {
+        "pact-slot": 4
+      }
+    },
+    {
+      "level": 19,
+      "resources": {
+        "pact-slot": 4
+      },
+      "capabilities_added": [
+        "warlock-epic-boon"
+      ]
+    },
+    {
+      "level": 20,
+      "resources": {
+        "pact-slot": 4
+      },
+      "capabilities_added": [
+        "eldritch-master"
+      ]
+    }
+  ]
+}

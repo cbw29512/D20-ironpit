@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "id": "mara-quickstep-thief",
+  "hero_id": "mara-quickstep",
+  "class_id": "rogue",
+  "subclass_id": "thief",
+  "species_id": "orc",
+  "build_id": "mara-quickstep-shortsword",
+  "origin_capabilities": [
+    "savage-attacker"
+  ],
+  "ability_scores": {
+    "strength": 12,
+    "dexterity": 16,
+    "constitution": 14,
+    "intelligence": 10,
+    "wisdom": 10,
+    "charisma": 10
+  },
+  "ability_score_improvements": {},
+  "hp_by_level": [
+    10
+  ],
+  "ac_by_level": [
+    14
+  ],
+  "speed_by_level": [
+    30
+  ],
+  "rage_damage_bonus_by_level": [
+    0
+  ],
+  "weapon_masteries_by_level": {
+    "1": [
+      "shortsword",
+      "shortbow"
+    ]
+  },
+  "fighting_styles_by_level": {
+    "1": []
+  }
+}

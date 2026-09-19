@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "wizard",
+  "source": "D&D Beyond Basic Rules 2024: Wizard",
+  "hit_die": 6,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "resources": {
+        "spell-slot-1": 2
+      },
+      "capabilities_added": [
+        "wizard-spellcasting",
+        "arcane-recovery"
+      ],
+      "arena_ignored": [
+        "ritual-adept"
+      ],
+      "attack_count": 1
+    },
+    {
+      "level": 2,
+      "resources": {
+        "spell-slot-1": 3
+      },
+      "arena_ignored": [
+        "scholar"
+      ]
+    },
+    {
+      "level": 3,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 2
+      },
+      "capabilities_added": [
+        "wizard-combat-spells-2"
+      ]
+    },
+    {
+      "level": 4,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3
+      }
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 2
+      },
+      "capabilities_added": [
+        "wizard-combat-spells-3"
+      ],
+      "arena_ignored": [
+        "memorize-spell"
+      ]
+    },
+    {
+      "level": 6,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3
+      }
+    },
+    {
+      "level": 7,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 1
+      },
+      "capabilities_added": [
+        "wizard-combat-spells-4"
+      ]
+    },
+    {
+      "level": 8,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 2
+      }
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 1
+      },
+      "capabilities_added": [
+        "wizard-combat-spells-5"
+      ]
+    },
+    {
+      "level": 10,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2
+      }
+    },
+    {
+      "level": 11,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2,
+        "spell-slot-6": 1
+      },
+      "capabilities_added": [
+        "wizard-combat-spells-6"
+      ]
+    },
+    {
+      "level": 12,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2,
+        "spell-slot-6": 1
+      }
+    },
+    {
+      "level": 13,
+      "proficiency_bonus": 5,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2,
+        "spell-slot-6": 1,
+        "spell-slot-7": 1
+      },
+      "capabilities_added": [
+        "wizard-combat-spells-7"
+      ]
+    },
+    {
+      "level": 14,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2,
+        "spell-slot-6": 1,
+        "spell-slot-7": 1
+      }
+    },
+    {
+      "level": 15,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2,
+        "spell-slot-6": 1,
+        "spell-slot-7": 1,
+        "spell-slot-8": 1
+      },
+      "capabilities_added": [
+        "wizard-combat-spells-8"
+      ]
+    },
+    {
+      "level": 16,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2,
+        "spell-slot-6": 1,
+        "spell-slot-7": 1,
+        "spell-slot-8": 1
+      }
+    },
+    {
+      "level": 17,
+      "proficiency_bonus": 6,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 2,
+        "spell-slot-6": 1,
+        "spell-slot-7": 1,
+        "spell-slot-8": 1,
+        "spell-slot-9": 1
+      },
+      "capabilities_added": [
+        "wizard-combat-spells-9"
+      ]
+    },
+    {
+      "level": 18,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 3,
+        "spell-slot-6": 1,
+        "spell-slot-7": 1,
+        "spell-slot-8": 1,
+        "spell-slot-9": 1
+      },
+      "capabilities_added": [
+        "spell-mastery"
+      ]
+    },
+    {
+      "level": 19,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 3,
+        "spell-slot-6": 2,
+        "spell-slot-7": 1,
+        "spell-slot-8": 1,
+        "spell-slot-9": 1
+      },
+      "capabilities_added": [
+        "wizard-epic-boon"
+      ]
+    },
+    {
+      "level": 20,
+      "resources": {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "spell-slot-4": 3,
+        "spell-slot-5": 3,
+        "spell-slot-6": 2,
+        "spell-slot-7": 2,
+        "spell-slot-8": 1,
+        "spell-slot-9": 1
+      },
+      "capabilities_added": [
+        "signature-spells"
+      ]
+    }
+  ]
+}

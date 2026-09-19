@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "id": "seraphine-dawnshield-life-domain",
+  "hero_id": "seraphine-dawnshield",
+  "class_id": "cleric",
+  "subclass_id": "life-domain",
+  "species_id": "orc",
+  "build_id": "seraphine-dawnshield-mace",
+  "origin_capabilities": [],
+  "ability_scores": {
+    "strength": 10,
+    "dexterity": 10,
+    "constitution": 10,
+    "intelligence": 10,
+    "wisdom": 17,
+    "charisma": 14
+  },
+  "ability_score_improvements": {
+    "4": {
+      "wisdom": 19
+    }
+  },
+  "hp_by_level": [
+    8,
+    13,
+    18,
+    23
+  ],
+  "ac_by_level": [
+    15,
+    15,
+    15,
+    15
+  ],
+  "speed_by_level": [
+    30,
+    30,
+    30,
+    30
+  ],
+  "rage_damage_bonus_by_level": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "weapon_masteries_by_level": {
+    "1": []
+  },
+  "fighting_styles_by_level": {
+    "1": []
+  }
+}

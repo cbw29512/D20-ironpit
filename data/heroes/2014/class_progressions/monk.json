@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "class_id": "monk",
+  "source": "D&D Basic Rules 2014: Monk",
+  "hit_die": 8,
+  "emit_attack_action_at_one": false,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "attack_count": 1,
+      "capabilities_added": [
+        "martial-arts",
+        "unarmored-defense"
+      ],
+      "unarmed_dice_size": 4
+    },
+    {
+      "level": 2,
+      "resources": {
+        "ki": 2
+      },
+      "capabilities_added": [
+        "ki",
+        "unarmored-movement",
+        "flurry-of-blows"
+      ]
+    },
+    {
+      "level": 3,
+      "resources": {
+        "ki": 3
+      },
+      "capabilities_added": [
+        "deflect-missiles"
+      ]
+    },
+    {
+      "level": 4,
+      "resources": {
+        "ki": 4
+      }
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "attack_count": 2,
+      "resources": {
+        "ki": 5
+      },
+      "capabilities_added": [
+        "extra-attack",
+        "stunning-strike"
+      ],
+      "unarmed_dice_size": 6
+    },
+    {
+      "level": 6,
+      "resources": {
+        "ki": 6,
+        "wholeness-of-body": 1
+      }
+    },
+    {
+      "level": 7,
+      "resources": {
+        "ki": 7
+      },
+      "capabilities_added": [
+        "evasion"
+      ]
+    },
+    {
+      "level": 8,
+      "resources": {
+        "ki": 8
+      }
+    },
+    {
+      "level": 9,
+      "proficiency_bonus": 4,
+      "resources": {
+        "ki": 9
+      }
+    },
+    {
+      "level": 10,
+      "resources": {
+        "ki": 10
+      }
+    }
+  ]
+}

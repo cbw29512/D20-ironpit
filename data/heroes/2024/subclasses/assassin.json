@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "rogue",
+  "subclass_id": "assassin",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "assassin-assassinate"
+      ],
+      "arena_ignored": [
+        "assassin-tools"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "assassin-infiltration-expertise"
+      ]
+    },
+    "13": {
+      "capabilities_added": [
+        "assassin-envenom-weapons"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "assassin-death-strike"
+      ]
+    }
+  }
+}

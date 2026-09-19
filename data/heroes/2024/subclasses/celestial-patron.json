@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "warlock",
+  "subclass_id": "celestial-patron",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "healing-light",
+        "celestial-combat-spells-2"
+      ]
+    },
+    "5": {
+      "capabilities_added": [
+        "celestial-combat-spells-3"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "radiant-soul"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "celestial-combat-spells-4"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "celestial-combat-spells-5"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "celestial-resilience"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "searing-vengeance"
+      ]
+    }
+  }
+}

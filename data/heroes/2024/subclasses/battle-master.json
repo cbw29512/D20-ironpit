@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "fighter",
+  "subclass_id": "battle-master",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "battle-master-combat-superiority"
+      ],
+      "arena_ignored": [
+        "battle-master-student-of-war"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "battle-master-know-your-enemy"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "battle-master-improved-combat-superiority"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "battle-master-relentless"
+      ]
+    },
+    "18": {
+      "capabilities_added": [
+        "battle-master-ultimate-combat-superiority"
+      ]
+    }
+  }
+}

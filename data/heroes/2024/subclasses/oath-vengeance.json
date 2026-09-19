@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "paladin",
+  "subclass_id": "oath-vengeance",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "vow-of-enmity",
+        "vengeance-combat-spells-1"
+      ]
+    },
+    "5": {
+      "capabilities_added": [
+        "vengeance-combat-spells-2"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "relentless-avenger"
+      ]
+    },
+    "9": {
+      "capabilities_added": [
+        "vengeance-combat-spells-3"
+      ]
+    },
+    "13": {
+      "capabilities_added": [
+        "vengeance-combat-spells-4"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "soul-of-vengeance"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "vengeance-combat-spells-5"
+      ]
+    },
+    "20": {
+      "capabilities_added": [
+        "avenging-angel"
+      ]
+    }
+  }
+}

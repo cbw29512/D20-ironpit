@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "id": "mara-quickstep-2014-rapier",
+  "class_id": "rogue",
+  "armor_class": 14,
+  "speed_ft": 30,
+  "save_proficiencies": [
+    "dexterity",
+    "intelligence"
+  ],
+  "skills": [
+    {
+      "id": "acrobatics",
+      "ability": "dexterity",
+      "proficient": true
+    },
+    {
+      "id": "stealth",
+      "ability": "dexterity",
+      "proficient": true
+    },
+    {
+      "id": "perception",
+      "ability": "wisdom",
+      "proficient": true
+    },
+    {
+      "id": "deception",
+      "ability": "charisma",
+      "proficient": true
+    }
+  ],
+  "fighting_style": null,
+  "attacks": [
+    {
+      "id": "mara-2014-rapier",
+      "name": "Rapier",
+      "weapon_id": "rapier",
+      "attack_kind": "melee",
+      "ability": "dexterity",
+      "dice_count": 1,
+      "dice_size": 8,
+      "damage_type": "piercing",
+      "animation": "slash",
+      "reach_ft": 5,
+      "mastery_property": null,
+      "heavy": false,
+      "two_handed": false
+    },
+    {
+      "id": "mara-2014-shortbow",
+      "name": "Shortbow",
+      "weapon_id": "shortbow",
+      "attack_kind": "ranged",
+      "ability": "dexterity",
+      "dice_count": 1,
+      "dice_size": 6,
+      "damage_type": "piercing",
+      "animation": "projectile",
+      "reach_ft": 5,
+      "mastery_property": null,
+      "heavy": false,
+      "two_handed": true,
+      "normal_range_ft": 80,
+      "long_range_ft": 320
+    }
+  ],
+  "primary_attack_id": "mara-2014-rapier",
+  "visual": {
+    "armor": "leather",
+    "main_hand": "rapier",
+    "off_hand": null,
+    "body_style": "humanoid"
+  },
+  "source": "D&D Basic Rules 2014: Human; Rogue; Thief; Criminal; Equipment"
+}

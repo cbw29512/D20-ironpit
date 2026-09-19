@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "fighter",
+  "subclass_id": "psi-warrior",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "psi-warrior-psionic-power"
+      ]
+    },
+    "7": {
+      "capabilities_added": [
+        "psi-warrior-telekinetic-adept"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "psi-warrior-guarded-mind"
+      ]
+    },
+    "15": {
+      "capabilities_added": [
+        "psi-warrior-bulwark-of-force"
+      ]
+    },
+    "18": {
+      "capabilities_added": [
+        "psi-warrior-telekinetic-master"
+      ]
+    }
+  }
+}

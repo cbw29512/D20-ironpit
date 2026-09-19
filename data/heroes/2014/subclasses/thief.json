@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "class_id": "rogue",
+  "subclass_id": "thief",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "fast-hands",
+        "second-story-work"
+      ]
+    }
+  }
+}

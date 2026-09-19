@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "id": "rokhan-stonefury-2014-path-berserker",
+  "hero_id": "rokhan-stonefury-2014",
+  "class_id": "barbarian",
+  "subclass_id": "path-berserker",
+  "species_id": "human",
+  "build_id": "rokhan-stonefury-2014-greataxe",
+  "origin_capabilities": [],
+  "ability_scores": {
+    "strength": 16,
+    "dexterity": 14,
+    "constitution": 15,
+    "intelligence": 9,
+    "wisdom": 13,
+    "charisma": 11
+  },
+  "ability_score_improvements": {
+    "4": {
+      "strength": 18
+    },
+    "8": {
+      "strength": 20
+    },
+    "12": {
+      "constitution": 16,
+      "wisdom": 14
+    }
+  },
+  "hp_by_level": [
+    14,
+    23,
+    32,
+    41,
+    50,
+    59,
+    68,
+    77,
+    86,
+    95,
+    104,
+    125,
+    135
+  ],
+  "ac_by_level": [
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    15,
+    15
+  ],
+  "speed_by_level": [
+    30,
+    30,
+    30,
+    30,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40
+  ],
+  "rage_damage_bonus_by_level": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3
+  ],
+  "weapon_masteries_by_level": {
+    "1": []
+  },
+  "fighting_styles_by_level": {
+    "1": []
+  }
+}

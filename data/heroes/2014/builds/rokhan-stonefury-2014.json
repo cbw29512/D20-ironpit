@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "edition": "2024",
-  "id": "karnok-stoneward-greatsword",
-  "class_id": "fighter",
-  "armor_class": 17,
+  "edition": "2014",
+  "id": "rokhan-stonefury-2014-greataxe",
+  "class_id": "barbarian",
+  "armor_class": 14,
   "speed_ft": 30,
   "save_proficiencies": [
     "strength",
@@ -21,47 +21,47 @@
       "proficient": false
     }
   ],
-  "fighting_style": "Defense",
+  "fighting_style": null,
   "attacks": [
     {
-      "id": "karnok-greatsword",
-      "name": "Greatsword",
-      "weapon_id": "greatsword",
+      "id": "rokhan-2014-greataxe",
+      "name": "Greataxe",
+      "weapon_id": "greataxe",
       "attack_kind": "melee",
       "ability": "strength",
-      "dice_count": 2,
-      "dice_size": 6,
+      "dice_count": 1,
+      "dice_size": 12,
       "damage_type": "slashing",
       "animation": "heavy-slash",
       "reach_ft": 5,
-      "mastery_property": "Graze",
+      "mastery_property": null,
       "heavy": true,
       "two_handed": true
     },
     {
-      "id": "karnok-shortbow",
-      "name": "Shortbow",
-      "weapon_id": "shortbow",
+      "id": "rokhan-2014-handaxe",
+      "name": "Handaxe",
+      "weapon_id": "handaxe",
       "attack_kind": "ranged",
-      "ability": "dexterity",
+      "ability": "strength",
       "dice_count": 1,
       "dice_size": 6,
-      "damage_type": "piercing",
+      "damage_type": "slashing",
       "animation": "projectile",
       "reach_ft": 5,
-      "mastery_property": "Vex",
+      "mastery_property": null,
       "heavy": false,
-      "two_handed": true,
-      "normal_range_ft": 80,
-      "long_range_ft": 320
+      "two_handed": false,
+      "normal_range_ft": 20,
+      "long_range_ft": 60
     }
   ],
-  "primary_attack_id": "karnok-greatsword",
+  "primary_attack_id": "rokhan-2014-greataxe",
   "visual": {
-    "armor": "chain-mail",
-    "main_hand": "greatsword",
+    "armor": "unarmored",
+    "main_hand": "greataxe",
     "off_hand": null,
     "body_style": "humanoid"
   },
-  "source": "D&D Beyond Basic Rules 2024: Fighter, Orc, Soldier, Savage Attacker, Equipment"
+  "source": "D&D Basic Rules 2014: Human; Barbarian; Path of the Berserker; Soldier; Equipment"
 }

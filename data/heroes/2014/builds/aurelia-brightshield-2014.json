@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "edition": "2014",
+  "id": "aurelia-brightshield-2014-longsword",
+  "class_id": "paladin",
+  "armor_class": 18,
+  "speed_ft": 30,
+  "save_proficiencies": [
+    "wisdom",
+    "charisma"
+  ],
+  "skills": [
+    {
+      "id": "athletics",
+      "ability": "strength",
+      "proficient": true
+    },
+    {
+      "id": "insight",
+      "ability": "wisdom",
+      "proficient": true
+    },
+    {
+      "id": "history",
+      "ability": "intelligence",
+      "proficient": true
+    },
+    {
+      "id": "persuasion",
+      "ability": "charisma",
+      "proficient": true
+    }
+  ],
+  "fighting_style": null,
+  "attacks": [
+    {
+      "id": "aurelia-2014-longsword",
+      "name": "Longsword",
+      "weapon_id": "longsword",
+      "attack_kind": "melee",
+      "ability": "strength",
+      "dice_count": 1,
+      "dice_size": 8,
+      "damage_type": "slashing",
+      "animation": "slash",
+      "reach_ft": 5,
+      "mastery_property": null,
+      "heavy": false,
+      "two_handed": false
+    },
+    {
+      "id": "aurelia-2014-javelin",
+      "name": "Javelin",
+      "weapon_id": "javelin",
+      "attack_kind": "ranged",
+      "ability": "strength",
+      "dice_count": 1,
+      "dice_size": 6,
+      "damage_type": "piercing",
+      "animation": "projectile",
+      "reach_ft": 5,
+      "mastery_property": null,
+      "heavy": false,
+      "two_handed": false,
+      "normal_range_ft": 30,
+      "long_range_ft": 120
+    }
+  ],
+  "primary_attack_id": "aurelia-2014-longsword",
+  "visual": {
+    "armor": "chain-mail",
+    "main_hand": "longsword",
+    "off_hand": "shield",
+    "body_style": "humanoid"
+  },
+  "source": "D&D SRD 5.1 (2014): Paladin, Oath of Devotion; Basic Rules 2014: Human, Noble, Equipment"
+}

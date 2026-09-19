@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "sorcerer",
+  "subclass_id": "clockwork-sorcery",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "clockwork-spells",
+        "restore-balance"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "bastion-of-law"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "trance-of-order"
+      ]
+    },
+    "18": {
+      "capabilities_added": [
+        "clockwork-cavalcade"
+      ]
+    }
+  }
+}

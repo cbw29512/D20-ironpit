@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "wizard",
+  "subclass_id": "illusionist",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "illusion-savant",
+        "improved-illusions"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "phantasmal-creatures"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "illusory-self"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "illusory-reality"
+      ]
+    }
+  }
+}

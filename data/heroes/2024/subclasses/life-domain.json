@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "cleric",
+  "subclass_id": "life-domain",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "disciple-of-life",
+        "preserve-life"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "blessed-healer"
+      ]
+    },
+    "17": {
+      "capabilities_added": [
+        "supreme-healing"
+      ]
+    }
+  }
+}

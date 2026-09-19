@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "druid",
+  "subclass_id": "circle-land",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "lands-aid",
+        "land-arid-spells"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "natural-recovery"
+      ]
+    },
+    "10": {
+      "capabilities_added": [
+        "natures-ward-fire"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "natures-sanctuary"
+      ]
+    }
+  }
+}

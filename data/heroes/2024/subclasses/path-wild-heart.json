@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "barbarian",
+  "subclass_id": "path-wild-heart",
+  "deltas": {
+    "3": {
+      "capabilities_added": [
+        "wild-heart-rage-of-the-wilds"
+      ],
+      "arena_ignored": [
+        "wild-heart-animal-speaker"
+      ]
+    },
+    "6": {
+      "capabilities_added": [
+        "wild-heart-aspect-of-the-wilds"
+      ]
+    },
+    "10": {
+      "arena_ignored": [
+        "wild-heart-nature-speaker"
+      ]
+    },
+    "14": {
+      "capabilities_added": [
+        "wild-heart-power-of-the-wilds"
+      ]
+    }
+  }
+}
