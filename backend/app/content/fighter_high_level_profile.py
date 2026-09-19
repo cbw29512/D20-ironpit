@@ -74,3 +74,33 @@ def build_karnok_stoneward_level14_profile() -> CharacterBuildProfile:
     except Exception as exc:
         logger.exception("Failed to build Karnok Stoneward level 14 profile.")
         raise RuntimeError("Karnok Stoneward level 14 profile could not be built.") from exc
+
+
+def build_karnok_stoneward_level15_profile() -> CharacterBuildProfile:
+    try:
+        previous = build_karnok_stoneward_level14_profile()
+        data = advance_profile_data(previous, 15)
+        apply_fighter_level_to_profile_data(data, 15)
+        superior_critical = FeatureAudit(
+            feature_id="superior-critical",
+            feature_name="Superior Critical",
+            source_reference="D&D Beyond Basic Rules 2024: Champion Level 15 — Superior Critical",
+            category="subclass",
+            combat_relevant=True,
+            automated=True,
+            notes=(
+                "Weapon attacks score a Critical Hit on a natural 18–20. Iron Pit reuses the "
+                "universal critical_hit_minimum capability already used by Champion critical ranges."
+            ),
+        )
+        data.update(
+            feature_audits=[*data["feature_audits"], superior_critical.model_dump()],
+            source_references=[
+                *data["source_references"],
+                "D&D Beyond Basic Rules 2024: Champion Level 15 — Superior Critical",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        logger.exception("Failed to build Karnok Stoneward level 15 profile.")
+        raise RuntimeError("Karnok Stoneward level 15 profile could not be built.") from exc
