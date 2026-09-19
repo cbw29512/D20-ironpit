@@ -22,7 +22,7 @@ def test_earth_elemental_source_attacks_and_prone_rider() -> None:
 
     assert elemental.source_trait_names == ["Earth Glide", "Siege Monster"]
     assert elemental.size is CreatureSize.LARGE
-    assert (elemental.armor_class, elemental.max_hp, elemental.speed_ft, elemental.initiative_bonus) == (17, 126, 30, -1)
+    assert (elemental.armor_class, elemental.max_hp, elemental.speed_ft, elemental.initiative_bonus) == (17, 147, 30, -1)
 
     slam = attacks["Slam"]
     rock = attacks["Rock Launch"]
