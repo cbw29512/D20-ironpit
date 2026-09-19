@@ -33,3 +33,15 @@ def test_unmodeled_ability_score_reduction_fails_closed() -> None:
     issues = audit_monster_source(_wolf(), row)
 
     assert "unsupported-action-rider:ability-score-reduction" in issues
+
+
+def test_real_srd_stat_reduction_rows_remain_fail_closed() -> None:
+    rows = {str(row["name"]): row for row in load_monster_rows()}
+
+    specter_issues = audit_monster_source(_wolf(), dict(rows["Specter"]))
+    wraith_issues = audit_monster_source(_wolf(), dict(rows["Wraith"]))
+    shadow_issues = audit_monster_source(_wolf(), dict(rows["Shadow"]))
+
+    assert "unsupported-action-rider:hit-point-maximum-reduction" in specter_issues
+    assert "unsupported-action-rider:hit-point-maximum-reduction" in wraith_issues
+    assert "unsupported-action-rider:ability-score-reduction" in shadow_issues
