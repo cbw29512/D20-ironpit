@@ -281,6 +281,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["athletics_advantage"] = True
     if features.critical_move_fraction:
         row["critical_move_fraction"] = features.critical_move_fraction
+    if features.cunning_action:
+        row["cunning_action"] = True
     return row
 
 
