@@ -44,6 +44,7 @@ assert.equal(monster("Hobgoblin Warrior").detail, "hobgoblin");
 assert.equal(monster("Giant Wolf Spider").form, "spider");
 assert.equal(monster("Giant Wasp").form, "winged-insect");
 assert.equal(monster("Giant Centipede").form, "centipede");
+assert.deepEqual({ form: monster("Xorn").form, detail: monster("Xorn").detail }, { form: "xorn", detail: "threefold" });
 assert.equal(monster("Rhinoceros", "large").detail, "horn");
 assert.equal(monster("Giant Goat", "large").detail, "horns");
 assert.equal(monster("Saber-Toothed Tiger", "large").detail, "sabertooth");

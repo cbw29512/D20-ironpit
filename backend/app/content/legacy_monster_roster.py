@@ -22,6 +22,7 @@ from app.content.monster_spellcasting_source_audit import complete_monster_spell
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monster_tyrannosaurus import build_tyrannosaurus_rex
 from app.content.monster_worg import build_worg
+from app.content.monster_xorn import build_xorn
 from app.content.monsters import build_axe_beak, build_bandit, build_commoner, build_giant_lizard
 from app.content.monsters_bears import build_black_bear, build_brown_bear
 from app.content.monsters_batch_three import build_monster_batch_three
@@ -69,7 +70,7 @@ def build_legacy_monster_templates(*, include_capability_migrated: bool = True) 
         build_hippogriff(), *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(),
         *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(), *build_venom_monsters(),
         *build_expansion_four(), build_giant_crocodile(), *snake_entries, build_tyrannosaurus_rex(),
-        *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
+        *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), build_xorn(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)
