@@ -27,6 +27,7 @@ load("browser-attack-roll-context.js");
 load("browser-barbarian2.js");
 load("browser-brutal-strike.js");
 load("browser-bloodied-fury.js");
+load("browser-attack-roll-hook-installation.js");
 
 const H = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
 const API = window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT;
@@ -97,5 +98,16 @@ for (const forbidden of ["IRON_PIT_BROWSER_BRUTAL_STRIKE", "IRON_PIT_BROWSER_BAR
   assert.equal(attackSource.includes(forbidden), false, `named pre-roll branch remains: ${forbidden}`);
 }
 assert.match(attackSource, /PHASES\.BEFORE_ATTACK_ROLL/);
+
+{
+  const installed = window.IRON_PIT_BROWSER_BLOODIED_FURY;
+  H._resetForTests();
+  window.IRON_PIT_BROWSER_BLOODIED_FURY = undefined;
+  assert.throws(
+    () => window.IRON_PIT_BROWSER_ATTACK_ROLL_HOOK_INSTALLATION.install(),
+    /Bloodied Fury before-attack-roll hook installer is not loaded/,
+  );
+  window.IRON_PIT_BROWSER_BLOODIED_FURY = installed;
+}
 
 console.log("Browser beforeAttackRoll hook migration passed.");
