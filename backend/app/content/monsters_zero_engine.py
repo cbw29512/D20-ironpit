@@ -10,6 +10,7 @@ from app.domain.models import (
     CombatantTemplate, DamageType, HitControlEffect, OnHitDamage, VisualLoadout,
     Weapon, WeaponAttack, WeaponAttackKind,
 )
+from app.domain.progression import ProgressionCombatFeatures
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
@@ -47,6 +48,10 @@ _ATTACKS = {
         ("Shortbow", "ranged", 5, 1, 6, 3, "piercing", None, 5, 80, 320, []),
     ],
     "Spider": [("Bite", "melee", 4, 0, 2, 0, "piercing", 1, 5, None, None, [("Poison", 1, 4, 0, "poison")])],
+    "Spy": [
+        ("Shortsword", "melee", 4, 1, 6, 2, "piercing", None, 5, None, None, [("Poison", 2, 6, 0, "poison")]),
+        ("Hand Crossbow", "ranged", 4, 1, 6, 2, "piercing", None, 5, 30, 120, [("Poison", 2, 6, 0, "poison")]),
+    ],
     "Tough": [
         ("Mace", "melee", 4, 1, 6, 2, "bludgeoning", None, 5, None, None, []),
         ("Heavy Crossbow", "ranged", 3, 1, 10, 1, "piercing", None, 5, 100, 400, []),
@@ -153,6 +158,7 @@ def _template(name: str) -> CombatantTemplate:
         initiative_bonus=int(initiative.group(1)), challenge_rating=str(row["challenge"]).split()[0],
         weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(name, attacks),
         combat_traits=_TRAITS.get(name, []),
+        progression_features=ProgressionCombatFeatures(cunning_action=name == "Spy"),
         damage_vulnerabilities=[DamageType(item) for item in sorted(defenses["damage_vulnerabilities"])],
         damage_resistances=[DamageType(item) for item in sorted(defenses["damage_resistances"])],
         damage_immunities=[DamageType(item) for item in sorted(defenses["damage_immunities"])],
