@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.damage_reaction_wrappers import resolve_attack_event_chain
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.weapon_mastery import weapon_mastery_active
 from app.combat.dice import DiceProvider
@@ -83,13 +83,13 @@ def resolve_cleave_extra_attack(
             return [], sequence
         attacker.state.feature_last_turn_keys[CLEAVE_FEATURE_ID] = turn_key
         cleave_attack = cleave_attack_profile(attack)
-        event = resolve_encounter_attack(
+        events, sequence = resolve_attack_event_chain(
             sequence, round_number, attacker, second_target, cleave_attack,
             attack.weapon.reach_ft, dice, setup,
             spend_action=False, feature_id=CLEAVE_FEATURE_ID, turn_key=turn_key, allow_reckless=False,
         )
-        event.description += " Cleave makes the once-per-turn extra attack."
-        return [event], sequence + 1
+        events[0].description += " Cleave makes the once-per-turn extra attack."
+        return events, sequence
     except ValueError:
         raise
     except Exception as exc:
