@@ -145,4 +145,11 @@
     get CATEGORIES() { return CATEGORIES(); }, get PROFILES() { return PROFILES(); }, registerProvider, discoverCandidates, selectCandidate,
     resolveCandidate, _resetForTests,
   };
+
+  const pending = window.IRON_PIT_PENDING_MAIN_ACTION_PROVIDER_INSTALLERS || [];
+  window.IRON_PIT_PENDING_MAIN_ACTION_PROVIDER_INSTALLERS = [];
+  for (const installer of pending) {
+    if (typeof installer !== "function") throw new Error("Pending Main Action provider installer must be a function.");
+    installer();
+  }
 })();
