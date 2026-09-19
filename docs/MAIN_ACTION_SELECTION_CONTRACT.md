@@ -1,6 +1,6 @@
 # Main Action Selection Contract
 
-Status: inert architecture contract. This tranche defines candidate discovery and Arena selection only; it does not move live Action resolution out of `browser-turn.js`.
+Status: provider-registration tranche. Candidate discovery and Arena selection are implemented and wired, but live Action resolution still remains in `browser-turn.js`.
 
 ## Objective
 
@@ -88,6 +88,14 @@ Python and browser currently use the same normal-turn preference:
 9. Dodge fallback.
 
 The migration changes orchestration, not those choices.
+
+## Registered provider families
+
+The browser now registers inert providers for all seven first-migration Action families: spell offense, 2014 Intimidating Presence, Attack/Multiattack, area save, save action, standard attack, and Dodge. Provider discovery reuses the existing pure choice/legality paths and does not route live turns through the selector yet.
+
+`browser-spell-offense.js` exposes a pure `choose()` plus `resolveChoice()` split so discovery can select the same attack-vs-save spell without casting it. `browser-multiattack.js` exposes pure `available()` using the same slot legality checks as live Attack Action resolution.
+
+The existing single-target save fallback is preserved exactly, including its historical behavior after the dedicated area-save opportunity. Policy cleanup is deliberately out of scope for this architecture migration.
 
 ## Migration plan
 
