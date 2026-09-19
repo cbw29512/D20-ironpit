@@ -6,18 +6,28 @@
   const SP = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const SR = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
 
-  function resolve(sequence, round, member, setup, turnKey) {
+  function choose(member, setup, turnKey) {
     const attack = AP()?.choose(member, setup, turnKey) || null;
     const save = SP()?.choose(member, setup, turnKey) || null;
-    if (!attack && !save) return { events: [], sequence };
+    if (!attack && !save) return null;
     const useAttack = !save || (attack && (attack.expectedDamage > save.expectedDamage
       || (attack.expectedDamage === save.expectedDamage && attack.action.level <= save.action.level)));
-    if (useAttack) {
-      const event = AR().resolve(sequence++, round, member, attack.target, attack.action, setup, turnKey);
-      return { events: [event], sequence };
-    }
-    return SR().resolve(sequence, round, member, setup, save, turnKey);
+    return useAttack ? { kind: "attack", choice: attack } : { kind: "save", choice: save };
   }
 
-  window.IRON_PIT_BROWSER_SPELL_OFFENSE = { resolve };
+  function resolveChoice(sequence, round, member, setup, turnKey, selected) {
+    if (!selected) return { events: [], sequence };
+    if (selected.kind === "attack") {
+      const event = AR().resolve(sequence++, round, member, selected.choice.target, selected.choice.action, setup, turnKey);
+      return { events: [event], sequence };
+    }
+    if (selected.kind === "save") return SR().resolve(sequence, round, member, setup, selected.choice, turnKey);
+    throw new Error(`Unknown spell-offense choice kind: ${String(selected.kind)}.`);
+  }
+
+  function resolve(sequence, round, member, setup, turnKey) {
+    return resolveChoice(sequence, round, member, setup, turnKey, choose(member, setup, turnKey));
+  }
+
+  window.IRON_PIT_BROWSER_SPELL_OFFENSE = { choose, resolve, resolveChoice };
 })();
