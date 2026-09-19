@@ -25,7 +25,9 @@ def test_fighter_level_fifteen_reuses_universal_superior_critical_threshold() ->
     assert audit_pregen_combat_stats(karnok, combat_profile) == []
     assert_pregen_combat_stats(karnok, combat_profile)
     assert_character_resources_raw_ready(karnok, profile, combat_profile)
-    assert build_certified_hero_registry()[("fighter", 15, "canonical")] == (
+    registry = build_certified_hero_registry()
+    assert registry[("fighter", 15, "canonical")] == (
         "Karnok Stoneward",
         "karnok-stoneward-l15",
     )
+    assert ("fighter", 16, "canonical") not in registry
