@@ -33,7 +33,6 @@
   const actionById = (member, id) => (member.state.template.saving_throw_actions || [])
     .find((action) => action.id === id) || null;
   const register = (descriptor) => S().registerProvider(descriptor);
-
   function install() {
     const selection = S();
     if (!selection) throw new Error("Main Action provider installation requires browser-main-action-selection.js.");
