@@ -55,34 +55,12 @@ def spellcasting_fingerprint(row: dict[str, object]) -> str | None:
     return hashlib.sha256(text.encode("utf-8")).hexdigest() if text else None
 
 
-def _trim_neighbor_heading(spell: str, current_name: str) -> str:
-    """Remove a page-neighbor monster heading appended to the final spell token."""
-    for monster_name in sorted(
-        (str(item["name"]) for item in load_monster_rows() if str(item["name"]) != current_name),
-        key=len,
-        reverse=True,
-    ):
-        suffix = f" {monster_name}"
-        if spell.endswith(suffix):
-            return spell[:-len(suffix)].rstrip()
-    return spell
-
-
 def _spell_groups(row: dict[str, object]) -> list[tuple[str, list[str]]]:
     text = spellcasting_source_text(row)
-    current_name = str(row.get("name", ""))
     return [
-        (
-            label,
-            [
-                _trim_neighbor_heading(spell.strip(), current_name)
-                for spell in group.split(",")
-                if spell.strip()
-            ],
-        )
+        (label, [spell.strip() for spell in group.split(",") if spell.strip()])
         for label, group in _SPELL_GROUP.findall(text)
     ]
-
 
 def _printed_spell_names(row: dict[str, object]) -> set[str]:
     return {spell for _, spells in _spell_groups(row) for spell in spells}
