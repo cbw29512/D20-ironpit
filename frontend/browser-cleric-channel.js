@@ -7,6 +7,7 @@
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTIONS;
   const TC = () => window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS;
   const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", SPARK = "divine-spark", PRESERVE = "preserve-life";
   const living = (m) => m.state.is_alive && !m.state.is_dead;
@@ -98,12 +99,14 @@
     const type = A().adjustedDamage(target.state, 2, "radiant") >= A().adjustedDamage(target.state, 2, "necrotic") ? "radiant" : "necrotic";
     const raw = save.succeeded ? Math.floor(total / 2) : total, applied = A().adjustedDamage(target.state, raw, type), before = target.state.current_hp;
     if (applied) A().applyDamage(target.state, applied, false, [type], [...setup.heroes, ...setup.monsters].map((m) => m.state));
-    return { events: [{ sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
+    const event = { sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: "constitution", save_dc: dc,
       save_succeeded: save.succeeded, damage_roll: { notation, rolls: [die], modifier: mod, total: applied },
       damage_components: [{ source: "Divine Spark", notation, rolls: [die], modifier: mod, damage_type: type, total: raw, applied_total: applied }],
       hp_before: before, hp_after: target.state.current_hp, feature_id: SPARK, resource_remaining: remaining, animation: SPARK,
-      description: `${target.state.template.name} takes ${applied} ${type} damage from Divine Spark.` + (window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "") }], sequence: sequence + 1 };
+      description: `${target.state.template.name} takes ${applied} ${type} damage from Divine Spark.` + (window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "") };
+    const reactions = DR().resolveAfterDamage(sequence + 1, round, cleric, event, setup);
+    return { events: [event, ...reactions.events], sequence: reactions.sequence };
   }
 
   function resolve(sequence, round, cleric, setup) {
