@@ -91,7 +91,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     ),
     CertifiedHeroProgression(
         class_id="barbarian", template_builder=build_rokhan_stonefury_2014,
-        profile_level_builder=build_rokhan_stonefury_2014_profile, max_level=10,
+        profile_level_builder=build_rokhan_stonefury_2014_profile, max_level=13,
     ),
     CertifiedHeroProgression(
         class_id="cleric", template_builder=build_seraphine_dawnshield_level,
