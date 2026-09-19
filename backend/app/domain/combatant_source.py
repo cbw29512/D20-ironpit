@@ -90,3 +90,43 @@ class HeroCatalogSource(BaseModel):
     schema_version: int = 1
     edition: Literal["2014", "2024"]
     heroes: list[HeroIdentitySource]
+
+
+class HeroAttackSource(BaseModel):
+    id: str
+    name: str
+    weapon_id: str
+    attack_kind: Literal["melee", "ranged"]
+    ability: AbilityName
+    dice_count: int = Field(ge=1)
+    dice_size: int = Field(ge=2)
+    damage_type: str
+    reach_ft: int = Field(default=5, ge=0)
+    normal_range_ft: int | None = Field(default=None, ge=1)
+    long_range_ft: int | None = Field(default=None, ge=1)
+    animation: str
+    mastery_property: str | None = None
+    heavy: bool = False
+    two_handed: bool = False
+
+
+class HeroBuildSource(BaseModel):
+    schema_version: int = 1
+    edition: Literal["2014", "2024"]
+    id: str
+    class_id: str
+    armor_class: int = Field(ge=1)
+    speed_ft: int = Field(ge=0)
+    save_proficiencies: list[AbilityName] = Field(default_factory=list)
+    skill_proficiencies: dict[str, AbilityName] = Field(default_factory=dict)
+    fighting_style: str | None = None
+    attacks: list[HeroAttackSource] = Field(min_length=1)
+    primary_attack_id: str
+    visual: dict[str, str | None]
+    source: str
+
+    @model_validator(mode="after")
+    def valid_primary_attack(self) -> "HeroBuildSource":
+        if self.primary_attack_id not in {attack.id for attack in self.attacks}:
+            raise ValueError("primary_attack_id must reference a declared hero attack.")
+        return self
