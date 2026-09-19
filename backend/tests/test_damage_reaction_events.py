@@ -146,3 +146,21 @@ def test_applied_damage_total_prefers_applied_components() -> None:
     assert event.damage_roll is not None
     assert event.damage_roll.total > 0
     assert applied_damage_total(event) == 0
+
+
+def test_applied_damage_total_treats_zero_loss_snapshots_as_authoritative() -> None:
+    """A raw roll must not resurrect damage that defenses reduced to zero."""
+    hero, monster, setup = _setup()
+    event = _triggering_attack(monster, hero, setup)
+    assert event.damage_roll is not None
+    assert event.damage_roll.total > 0
+
+    event = event.model_copy(update={
+        "damage_components": [],
+        "hp_before": 10,
+        "hp_after": 10,
+        "temporary_hp_before": 0,
+        "temporary_hp_after": 0,
+    })
+
+    assert applied_damage_total(event) == 0
