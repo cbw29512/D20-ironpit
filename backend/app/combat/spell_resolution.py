@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
-from app.combat.saving_throws import resolve_save_action
+from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.spell_policy import SpellChoice
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
@@ -88,15 +88,16 @@ def resolve_spell(
             ))
             sequence += 1
             continue
-        event = resolve_save_action(
+        chain, sequence = resolve_save_event_chain(
             sequence, round_number, caster, target, save_action,
-            abs(caster.position_ft - target.position_ft), dice, spend_action=False,
+            abs(caster.position_ft - target.position_ft), dice, setup,
+            turn_key=turn_key, spend_action=False,
             shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
         )
+        event = chain[0]
         if ward is not None:
             event.description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
-        events.append(event)
+        events.extend(chain)
         if shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)
-        sequence += 1
     return events, sequence
