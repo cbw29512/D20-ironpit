@@ -73,11 +73,11 @@ window.IRON_PIT_BROWSER_ZERO_HP = {
 load("browser-rolls.js");
 load("browser-timed-conditions.js");
 load("browser-weapon-mastery.js");
+load("browser-ability-hooks.js");
+load("browser-attack-outcome.js");
 load("browser-tactical-master.js");
 load("browser-graze.js");
 load("browser-modifiers.js");
-load("browser-ability-hooks.js");
-load("browser-attack-outcome.js");
 load("browser-attack.js");
 load("browser-saves.js");
 load("browser-indomitable.js");
