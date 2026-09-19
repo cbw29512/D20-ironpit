@@ -141,6 +141,8 @@ The Python oracle retains its existing attack orchestration for this tranche. De
 
 The Intimidating Presence module self-registers immediately when the dispatcher is already loaded, or queues its installer when load order is reversed. It is not a mandatory dependency of the shared Bonus Action installer.
 
+The browser production `turnStart` phase now owns declarative Recharge checks. Core turn initialization remains outside the hook registry: grapple cleanup, aura synchronization, `beginTurn()`, action/reaction refresh, movement initialization, and generic condition state are lifecycle primitives rather than named abilities. After `beginTurn()`, `browser-turn.js` runs `turnStart`; the Recharge module self-registers for both rulesets and participates only when the combatant declares Recharge rules. Python parity remains `begin_turn() -> resolve_recharge_checks()` through `begin_turn_with_events()`.
+
 ## Migration order
 
 Migrate one coherent phase per PR.

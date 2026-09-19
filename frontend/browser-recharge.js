@@ -35,5 +35,29 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_RECHARGE = { resolveStartOfTurn };
+  function installAbilityHook() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) {
+      window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= [];
+      window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS.push(installAbilityHook);
+      return;
+    }
+    const phase = hooks.PHASES.TURN_START;
+    if (hooks.abilitiesFor(phase).some((ability) => ability.id === "recharge")) return;
+    hooks.registerAbility(phase, {
+      id: "recharge",
+      priority: 10,
+      rulesets: ["2014", "2024"],
+      appliesTo: (member) => Boolean(member.state.template.recharge_rules?.length),
+      resolve: ({ sequence, round, member }) => {
+        const result = resolveStartOfTurn(sequence, round, member);
+        return result.events.length
+          ? { events: result.events, sequence: result.sequence, claimed: false }
+          : null;
+      },
+    });
+  }
+
+  window.IRON_PIT_BROWSER_RECHARGE = { installAbilityHook, resolveStartOfTurn };
+  installAbilityHook();
 })();

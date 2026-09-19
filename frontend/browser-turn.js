@@ -1,7 +1,6 @@
 (() => {
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE, C = () => window.IRON_PIT_BROWSER_CHARGE;
-  const R = () => window.IRON_PIT_BROWSER_RECHARGE;
   const MA = () => window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
   const AH = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
@@ -73,9 +72,13 @@
     try {
       enablePitRangePolicy();
       const events = []; H().cleanup(setup); PA()?.sync(setup); S().beginTurn(member.state);
-      const recharge = R()?.resolveStartOfTurn(sequence, round, member);
-      if (recharge) { events.push(...recharge.events); sequence = recharge.sequence; }
       const turnKey = `${round}:${member.combatant_id}`;
+      const hooks = AH();
+      if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
+      const start = hooks.runPhase(hooks.PHASES.TURN_START, {
+        sequence, round, member, setup, turnKey, events: [],
+      });
+      events.push(...start.events); sequence = start.sequence;
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
       let bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "beforeEscape");
