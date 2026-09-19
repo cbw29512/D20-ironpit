@@ -20,7 +20,7 @@ earlier outcome-changing feature is unsupported.
 | 15 | Persistent Rage | `persistent_rage_2014=True`; 1-minute maximum remains | Isolated shared Rage primitive is implemented/tested in Python and browser; Rage no longer ends early for lack of attack/damage and ignores other incapacitation; it still ends on unconsciousness/death or maximum duration | Primitive staged safely; Rokhan level 15 remains uncertified because level 14 Retaliation is missing |
 | 16 | ASI | Canonical choice: +2 Constitution (16 -> 18); Rage damage becomes +4 | No new mutable state | Numerically straightforward but not exposed as a runnable Rokhan template while level 14 is unsupported |
 | 17 | Brutal Critical (3 dice), 6 Rages | Existing brutal-critical dice/resource fields can represent both deltas | Existing critical-hit/resource state | Numerically supported by existing primitives but not exposed as a runnable Rokhan template while level 14 is unsupported |
-| 18 | Indomitable Might | Strength-check result has a floor equal to Strength score | Requires a shared ability-check result-replacement primitive | **Additional blocker: missing universal check-floor primitive** |
+| 18 | Indomitable Might | Strength-check result has a floor equal to Strength score | Generic ability-check minimum rule plus auditable total replacement; wired into every currently supported check family in Python/browser | Primitive staged safely; level 18 remains uncertified because level 14 Retaliation is missing |
 | 19 | ASI | Canonical choice: +2 Constitution (18 -> 20) | No new mutable state | Not exposed as a runnable Rokhan template while levels 14 and 18 remain unsupported |
 | 20 | Primal Champion; unlimited Rage | Strength and Constitution +4, maxima become 24; Rage ceases to be finite | Unlimited resource must not be represented by a fake large use count | **Additional blockers: unlimited-resource semantics and feature-aware >20 ability cap audit** |
 
@@ -65,6 +65,12 @@ this primitive with a synthetic level-15 state derived from the certified level-
 This does **not** make Rokhan level 15 runnable or certifiable. The builder remains capped at 13
 because exposing any level 14+ template before Retaliation exists would silently omit a mandatory
 combat feature and violate fail-closed certification.
+
+### Indomitable Might (level 18)
+
+A reusable `AbilityCheckMinimum` rule now declares the affected ability and source feature. The shared resolver compares the completed ability-check total with that ability's score, preserves the original dice/modifier, and records an audit `total_replacement` when the floor changes the accepted total. Python and browser integrations cover both current ability-check families: grapple escape and spell-effect removal. A synthetic level-18 Rokhan regression proves the Strength floor without exposing or registering an invalid level-18 template.
+
+This does **not** widen certification beyond level 13 because level 14 Retaliation is still a mandatory cumulative blocker.
 
 ## Level-14 architectural blocker
 

@@ -2,6 +2,7 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
+  const A = () => window.IRON_PIT_BROWSER_ABILITY_CHECKS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
@@ -63,9 +64,14 @@
     if (athletics == null && acrobatics == null) throw new Error(`${state.template.name} lacks certified grapple escape bonuses.`);
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
+    const ability = useAthletics ? "strength" : "dexterity";
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
     const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
+    if ((state.template.ability_check_minimums || []).some((rule) => rule.ability === ability)) {
+      if (!A()) throw new Error("Ability-check minimum runtime is not loaded.");
+      roll = A().applyMinimum(state, ability, roll);
+    }
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {
       tactical = T().apply(state, roll, source.escape_dc);
