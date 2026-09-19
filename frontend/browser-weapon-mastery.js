@@ -54,13 +54,15 @@
       if (!secondTarget) return { events: [], sequence };
       member.state.feature_last_turn_keys ||= {};
       member.state.feature_last_turn_keys[CLEAVE_FEATURE_ID] = turnKey;
-      const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(
+      const result = window.IRON_PIT_BROWSER_DAMAGE_REACTIONS.resolveAttackChain(
         sequence, round, member, secondTarget, cleaveAttack(attack),
-        window.IRON_PIT_BROWSER_STATE.distance(member, secondTarget),
-        { spendAction: false, featureId: CLEAVE_FEATURE_ID, setup, turnKey, allowReckless: false },
+        window.IRON_PIT_BROWSER_STATE.distance(member, secondTarget), setup,
+        { spendAction: false, featureId: CLEAVE_FEATURE_ID, turnKey, allowReckless: false },
       );
-      if (typeof event.description === "string") event.description += " Cleave makes the once-per-turn extra attack.";
-      return { events: [event], sequence: sequence + 1 };
+      if (typeof result.events[0]?.description === "string") {
+        result.events[0].description += " Cleave makes the once-per-turn extra attack.";
+      }
+      return result;
     } catch (error) {
       console.error("Cleave mastery resolution failed.", error);
       throw error;
