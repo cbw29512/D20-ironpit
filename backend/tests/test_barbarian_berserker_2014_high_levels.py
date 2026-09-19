@@ -14,6 +14,7 @@ from app.content.barbarian_berserker_2014_runtime import (
     _compile_rokhan_stonefury_2014, _damage_reaction, _progression, _scores,
     build_rokhan_stonefury_2014,
 )
+from app.content.build_audit import audit_character_build
 from app.content.character_resource_audit import audit_character_resources
 from app.content.demo import build_demo_fighter
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
@@ -321,3 +322,17 @@ def test_private_2014_candidates_have_exact_derived_values_14_through_20() -> No
         else:
             assert finite == {"rage": values["rages"]}
             assert hero.unlimited_resource_ids == []
+
+
+
+def test_private_level_20_primal_champion_declares_and_uses_24_point_ability_caps() -> None:
+    template = _compile_rokhan_stonefury_2014(20)
+    profile = _compile_rokhan_stonefury_2014_profile(20)
+
+    assert profile.ability_score_maximums == {"strength": 24, "constitution": 24}
+    assert audit_character_build(profile, template) == []
+
+    undeclared = profile.model_copy(update={"ability_score_maximums": {}})
+    issues = audit_character_build(undeclared, template)
+    assert "final-strength-exceeds-20" in issues
+    assert "final-constitution-exceeds-20" in issues
