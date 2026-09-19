@@ -90,7 +90,11 @@ function attack(attacker, target, values) {
 
 {
   const fighter = member("fighter", "heroes", { missingModifier: true }), target = member("target", "monsters", { position: 5 });
-  assert.throws(() => attack(fighter, target, [15, 4]), /explicit attack ability modifier/);
+  let failure = null;
+  try { attack(fighter, target, [15, 4]); } catch (error) { failure = error; }
+  assert.ok(failure instanceof Error);
+  assert.match(failure.message, /Ability hook "topple-mastery" failed during resolve in phase "onHit"/);
+  assert.match(failure.cause?.message || "", /explicit attack ability modifier/);
 }
 
 {
