@@ -336,3 +336,14 @@ def test_private_level_20_primal_champion_declares_and_uses_24_point_ability_cap
     issues = audit_character_build(undeclared, template)
     assert "final-strength-exceeds-20" in issues
     assert "final-constitution-exceeds-20" in issues
+
+
+
+def test_private_2014_candidates_pass_build_and_resource_audits_14_through_20() -> None:
+    for level in range(14, 21):
+        template = _compile_rokhan_stonefury_2014(level)
+        profile = _compile_rokhan_stonefury_2014_profile(level)
+        combat_profile = _compile_rokhan_2014_combat_profile(level)
+
+        assert audit_character_build(profile, template) == []
+        assert audit_character_resources(template, profile, combat_profile) == []
