@@ -49,8 +49,10 @@
     return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || []), appliedTotal, saveDamage: null };
   }
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
-  function runOutcomePhase(phase, sequence, context) {
-    const hooks = AH(); if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
+  function runOutcomePhase(phaseKey, sequence, context) {
+    const hooks = AH(); if (!hooks) return;
+    const phase = hooks.PHASES[phaseKey];
+    if (!phase) throw new Error(`Unknown attack-outcome hook phase key: ${phaseKey}.`);
     const result = hooks.runPhase(phase, { sequence, member: context.attacker, events: [], ...context });
     if (result.events.length) throw new Error(`${phase} attack-outcome hooks must decorate the canonical attack event, not emit sibling events.`);
   }
@@ -112,14 +114,14 @@
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
       hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, attack, attacker.state.template) || null : null; if (hitSave?.appliedCondition && !applied.includes(hitSave.appliedCondition)) applied.push(hitSave.appliedCondition);
-      runOutcomePhase(AH().PHASES.ON_HIT, sequence, {
+      runOutcomePhase("ON_HIT", sequence, {
         attacker, target: actualTarget, originalTarget: target, attack, round, setup: extra.setup,
         living, damageRoll, outcome, adjustedDamage, applyDamage,
       });
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     } else {
       const missOutcome = { damageRoll: null, damageComponents: [], damageOutcome: null, studiedApplied: false };
-      runOutcomePhase(AH().PHASES.ON_MISS, sequence, {
+      runOutcomePhase("ON_MISS", sequence, {
         attacker, target: actualTarget, originalTarget: target, attack, round, setup: extra.setup,
         outcome: missOutcome, adjustedDamage, applyDamage,
       });
