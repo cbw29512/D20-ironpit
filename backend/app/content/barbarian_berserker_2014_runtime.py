@@ -14,8 +14,11 @@ logger = logging.getLogger(__name__)
 
 
 def _scores(level: int) -> AbilityScores:
-    strength = 16 + (2 if level >= 4 else 0) + (2 if level >= 8 else 0)
-    constitution = 15 + (1 if level >= 12 else 0)
+    strength = 16 + (2 if level >= 4 else 0) + (2 if level >= 8 else 0) + (4 if level >= 20 else 0)
+    constitution = (
+        15 + (1 if level >= 12 else 0) + (2 if level >= 16 else 0)
+        + (2 if level >= 19 else 0) + (4 if level >= 20 else 0)
+    )
     wisdom = 13 + (1 if level >= 12 else 0)
     return AbilityScores(strength=strength, dexterity=14, constitution=constitution,
                          intelligence=9, wisdom=wisdom, charisma=11)
@@ -33,7 +36,7 @@ def _attack(level: int, weapon_id: str, scores: AbilityScores, *, rage_eligible:
 
 def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures:
     presence_dc = 8 + proficiency_bonus(level) + scores.modifier("charisma") if level >= 10 else 0
-    brutal_dice = 2 if level >= 13 else 1 if level >= 9 else 0
+    brutal_dice = 3 if level >= 17 else 2 if level >= 13 else 1 if level >= 9 else 0
     relentless = (
         EffectBoundSurvivalSave(
             source_id="relentless-rage", required_effect_id="rage",
@@ -50,6 +53,7 @@ def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures
         ability_check_minimums=check_minimums,
         danger_sense=level >= 2, reckless_attack=level >= 2,
         frenzy_bonus_attack_2014=level >= 3,
+        persistent_rage_2014=level >= 15,
         fast_movement_bonus_ft=10 if level >= 5 else 0, mindless_rage=level >= 6,
         initiative_advantage=level >= 7, brutal_critical_dice=brutal_dice,
         intimidating_presence_2014_dc=presence_dc,

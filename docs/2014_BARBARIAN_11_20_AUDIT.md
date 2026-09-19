@@ -18,11 +18,11 @@ earlier outcome-changing feature is unsupported.
 | 13 | Brutal Critical (2 dice) | `brutal_critical_dice=2`; PB increases to +5 | Existing critical-hit resolution | Supported and eligible for certification |
 | 14 | Retaliation | Reaction trigger: damage from a creature within 5 feet, then one melee weapon attack against that creature | Must consume the Reaction and resolve immediately off-turn | **Blocked: missing universal damage-trigger dispatch** |
 | 15 | Persistent Rage | `persistent_rage_2014=True`; 1-minute maximum remains | Isolated shared Rage primitive is implemented/tested in Python and browser; Rage no longer ends early for lack of attack/damage and ignores other incapacitation; it still ends on unconsciousness/death or maximum duration | Primitive staged safely; Rokhan level 15 remains uncertified because level 14 Retaliation is missing |
-| 16 | ASI | Canonical choice: +2 Constitution (16 -> 18); Rage damage becomes +4 | No new mutable state | Numerically straightforward but not exposed as a runnable Rokhan template while level 14 is unsupported |
-| 17 | Brutal Critical (3 dice), 6 Rages | Existing brutal-critical dice/resource fields can represent both deltas | Existing critical-hit/resource state | Numerically supported by existing primitives but not exposed as a runnable Rokhan template while level 14 is unsupported |
+| 16 | ASI | Canonical choice: +2 Constitution (16 -> 18); Rage damage becomes +4 | No new mutable state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
+| 17 | Brutal Critical (3 dice), 6 Rages | `brutal_critical_dice=3`; finite Rage count = 6 | Existing critical-hit/resource state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
 | 18 | Indomitable Might | Strength-check result has a floor equal to Strength score | Generic ability-check minimum rule plus auditable total replacement; wired into every currently supported check family in Python/browser | Primitive staged safely; level 18 remains uncertified because level 14 Retaliation is missing |
-| 19 | ASI | Canonical choice: +2 Constitution (18 -> 20) | No new mutable state | Not exposed as a runnable Rokhan template while levels 14 and 18 remain unsupported |
-| 20 | Primal Champion; unlimited Rage | Strength and Constitution +4, maxima become 24; Rage ceases to be finite | Unlimited resource must not be represented by a fake large use count | **Additional blockers: unlimited-resource semantics and feature-aware >20 ability cap audit** |
+| 19 | ASI | Canonical choice: +2 Constitution (18 -> 20) | No new mutable state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
+| 20 | Primal Champion; unlimited Rage | Strength and Constitution +4 to 24 are staged explicitly after legal ASIs; Rage ceases to be finite | Stat propagation is tested; Unlimited Rage still requires explicit non-finite resource semantics | **Remaining blocker: unlimited-resource semantics** |
 
 ## Implemented parity map for levels 11-13
 

@@ -36,6 +36,17 @@ def _advancements(level: int) -> list[AbilityIncrease]:
             AbilityIncrease(ability="constitution", amount=1),
             AbilityIncrease(ability="wisdom", amount=1),
         ])
+    if level >= 16:
+        increases.append(AbilityIncrease(ability="constitution", amount=2))
+    if level >= 19:
+        increases.append(AbilityIncrease(ability="constitution", amount=2))
+    if level >= 20:
+        increases.extend([
+            AbilityIncrease(ability="strength", amount=2),
+            AbilityIncrease(ability="strength", amount=2),
+            AbilityIncrease(ability="constitution", amount=2),
+            AbilityIncrease(ability="constitution", amount=2),
+        ])
     return increases
 
 
@@ -84,8 +95,12 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
         audits.append(_audit("intimidating-presence", "Intimidating Presence", "subclass", source=berserker))
     if level >= 11:
         audits.append(_audit("relentless-rage", "Relentless Rage", "class", source=barbarian))
+    if level >= 15:
+        audits.append(_audit("persistent-rage", "Persistent Rage", "class", source=barbarian))
     if level >= 18:
         audits.append(_audit("indomitable-might", "Indomitable Might", "class", source=barbarian))
+    if level >= 20:
+        audits.append(_audit("primal-champion", "Primal Champion", "class", source=barbarian))
     return audits
 
 

@@ -4,7 +4,13 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
-from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
+from app.content.barbarian_berserker_2014_profile import (
+    _advancements, _base_scores, _final_scores, _species_increases,
+)
+from app.content.barbarian_berserker_2014_runtime import (
+    _progression, _scores, build_rokhan_stonefury_2014,
+)
+from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
 from app.domain.progression import AbilityCheckMinimum
 
 
@@ -97,3 +103,31 @@ def test_2014_level_18_indomitable_might_uses_auditable_strength_check_floor() -
     assert revision.kind == "total_replacement"
     assert (revision.original_total, revision.replacement_total) == (11, 20)
     assert revision.accepted == "replacement"
+
+
+
+def test_staged_2014_levels_15_through_19_have_exact_numeric_deltas() -> None:
+    l15 = _progression(15, _scores(15))
+    l16 = _scores(16)
+    l17 = _progression(17, _scores(17))
+    l19 = _scores(19)
+
+    assert l15.persistent_rage_2014 is True
+    assert (l16.strength, l16.constitution, barbarian_rage_damage_bonus(16)) == (20, 18, 4)
+    assert l17.brutal_critical_dice == 3
+    assert barbarian_2014_rage_uses(17) == 6
+    assert (l19.strength, l19.constitution) == (20, 20)
+
+
+def test_staged_2014_level_20_primal_champion_scores_are_24_but_rage_fails_closed() -> None:
+    runtime_scores = _scores(20)
+    profile_scores = _final_scores(_base_scores(), _species_increases(), _advancements(20))
+
+    assert (runtime_scores.strength, runtime_scores.constitution) == (24, 24)
+    assert profile_scores == runtime_scores
+    try:
+        barbarian_2014_rage_uses(20)
+    except ValueError as exc:
+        assert "Unlimited" in str(exc)
+    else:
+        raise AssertionError("2014 level-20 Rage must remain fail-closed until unlimited resources exist.")
