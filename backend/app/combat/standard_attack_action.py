@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.cleave import resolve_cleave_extra_attack
-from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.damage_reactions import resolve_attack_event_chain
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
@@ -28,7 +28,7 @@ def resolve_standard_attack_action(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve one character Attack action plus its optional mastery/Light extra attack."""
     try:
-        event = resolve_encounter_attack(
+        events, sequence = resolve_attack_event_chain(
             sequence,
             round_number,
             attacker,
@@ -42,9 +42,10 @@ def resolve_standard_attack_action(
             turn_key=turn_key,
             allow_reckless=allow_reckless,
         )
-        events = [event]
-        sequence += 1
+        event = events[0]
         if event.event_type == "saving_throw" and event.attack_roll is None:
+            return events, sequence
+        if attacker.state.is_dead or attacker.state.is_unconscious:
             return events, sequence
         cleave, sequence = resolve_cleave_extra_attack(
             sequence, round_number, attacker, event, attack, setup, dice, turn_key,
