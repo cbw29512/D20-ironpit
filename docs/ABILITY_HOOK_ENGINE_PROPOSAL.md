@@ -128,6 +128,18 @@ Rage expiration is deliberately **not** part of the exclusive Bonus Action claim
 
 The Python certification oracle intentionally retains its existing orchestration for this tranche. Permanent parity tests lock its current Bonus Action policy while browser regressions prove the equivalent hook-driven order. No Python combat rule is changed merely to mirror browser source structure.
 
+
+The browser production `onHit` / `onMiss` post-roll sequencing is migrated for the named 2024 ability effects that previously lived directly inside `browser-attack.js`:
+
+- `onHit`: Topple -> Sap/Tactical Master -> Vex;
+- `onMiss`: Graze -> Studied Attacks.
+
+These hooks decorate the one canonical attack event and therefore emit no sibling BattleEvents. The phase-local outcome accumulator carries save/mastery/description fields back to the canonical attack resolver.
+
+Core attack primitives deliberately remain outside this migration: base/bonus damage, printed attack control effects, declarative on-hit saving throws, zero-HP/survival handling, Rage incapacitation cleanup, and Concentration cleanup. Their timing remains owned by the existing shared attack/damage/lifecycle pipeline.
+
+All migrated post-roll registrations are explicitly scoped to `2024`; the 2014 lane continues to bypass Weapon Mastery and Studied Attacks entirely. The Python oracle keeps its established Topple -> Sap/Tactical Master -> Vex and Graze -> Studied Attacks order as parity authority.
+
 ## Migration order
 
 Migrate one coherent phase per PR.
