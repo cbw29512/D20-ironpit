@@ -2,6 +2,8 @@
 
 This is the migration target for mass-producing Iron Pit pregens.
 
+It does not replace `docs/IRON_PIT_RULES_CONTRACT.md`. Combat rules, house rules, and Arena policy stay there. This file only describes how hero source data is split and compiled.
+
 ## Decision
 
 Canonical heroes are data first. Python profile builders are migration scaffolding, not the long-term authoring surface.

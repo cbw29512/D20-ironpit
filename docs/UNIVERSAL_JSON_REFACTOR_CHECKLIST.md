@@ -1,13 +1,13 @@
 # Universal JSON Combatant Refactor Checklist
 
-This checklist is the execution queue for the refactor mandated by `docs/IRON_PIT_RULES_CONTRACT.md`.
-It is intentionally ordered so future work can resume from repository state rather than chat memory.
+This checklist is the execution queue for the JSON combatant authoring path in `docs/CANONICAL_HERO_DATA_ARCHITECTURE.md` and `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`.
+It does not replace `docs/IRON_PIT_RULES_CONTRACT.md`. Pit rules, house rules, and Arena healing/threat policy stay in that contract.
 
 `feat/2024-fighter-15-reanchored` is parked. It mixed live Fighter 15–17 Python builders with a JSON compiler whose "class table" was actually Karnok. This branch starts from current `main` and keeps only the universal JSON path, with source facts split.
 
 ## Phase 0 — Split source facts (this branch)
 
-- [x] Highest-authority universal data-driven combat contract exists.
+- [x] `docs/IRON_PIT_RULES_CONTRACT.md` remains the Pit rules authority; JSON source split does not rewrite it.
 - [x] Class progression JSON contains class deltas only (no ability scores, HP, species, or origin feats).
 - [x] Species JSON exists (`data/heroes/2024/species/orc.json`).
 - [x] Persistent character track JSON exists (ASIs, canonical HP, mastery picks, origin feats).
