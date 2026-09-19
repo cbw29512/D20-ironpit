@@ -34,8 +34,14 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
     if template.source_bonus_action_names != expected:
         issues.append("source-bonus-action-fingerprint-mismatch")
     for name in expected:
+        if name == "Cunning Action":
+            if not template.progression_features.cunning_action:
+                issues.append("bonus-action-runtime-missing:cunning-action")
+            continue
         if not is_arena_neutral_bonus_action(name):
             issues.append(f"uncertified-bonus-action:{_slug(name)}")
+    if template.progression_features.cunning_action and "Cunning Action" not in expected:
+        issues.append("bonus-action-source-missing:cunning-action")
     return issues
 
 
