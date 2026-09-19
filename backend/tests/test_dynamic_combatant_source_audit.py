@@ -22,6 +22,6 @@ def test_immediate_dynamic_combatant_creation_fails_closed() -> None:
 def test_delayed_post_combat_spawn_text_is_not_misclassified() -> None:
     rows = _rows()
 
-    for name in ("Shadow", "Wight"):
+    for name in ("Shadow", "Wight", "Troll Limb"):
         issues = audit_monster_source(_wolf(), rows[name])
         assert "unsupported-dynamic-combatant-lifecycle" not in issues, name
