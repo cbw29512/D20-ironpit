@@ -95,7 +95,7 @@
       if (typeof payload !== "object" || Array.isArray(payload)) {
         throw new Error(`Main Action provider "${provider.id}" candidate payload must be an object.`);
       }
-      candidates.push(Object.freeze({ providerId: provider.id, category: provider.category, payload }));
+      candidates.push(Object.freeze({ providerId: provider.id, category: provider.category, opportunityProfile: profileId, payload }));
     }
     return candidates;
   }
@@ -104,7 +104,7 @@
     const profile = requireProfile(profileId);
     if (!Array.isArray(candidates)) throw new Error("Main Action candidates must be an array.");
     for (const category of profile) {
-      const matching = candidates.filter((candidate) => candidate?.category === category);
+      const matching = candidates.filter((candidate) => candidate?.opportunityProfile === profileId && candidate?.category === category);
       if (matching.length > 1) {
         throw new Error(`Main Action policy found multiple candidates in category "${category}".`);
       }
@@ -116,9 +116,11 @@
   function resolveCandidate(candidate, ctx) {
     const ruleset = rulesetFrom(ctx);
     if (!candidate || typeof candidate !== "object") throw new Error("Main Action resolution requires a candidate.");
+    const profile = requireProfile(candidate.opportunityProfile);
     const provider = providers.get(candidate.providerId);
-    if (!provider || provider.category !== candidate.category || !provider.rulesets.includes(ruleset)) {
-      throw new Error("Main Action candidate does not match a registered provider for this ruleset.");
+    if (!profile.includes(candidate.category)
+      || !provider || provider.category !== candidate.category || !provider.rulesets.includes(ruleset)) {
+      throw new Error("Main Action candidate does not match its opportunity profile/provider/ruleset.");
     }
     let result;
     try { result = provider.resolve({ ...ctx }, candidate); }
