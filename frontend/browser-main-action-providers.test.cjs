@@ -43,9 +43,16 @@ window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014 = {
 window.IRON_PIT_BROWSER_MULTIATTACK = {
   available: (member) => {
     calls.push("attack-discover");
+    return Boolean(member.state.template.attackActionEnabled && member.state.action_available);
+  },
+  legalChoiceAvailable: (member) => {
+    calls.push("attack-discover");
     return Boolean(member.state.template.attackActionEnabled);
   },
-  resolveAttackAction: (sequence) => ({ events: [{ event_type: "attack", feature_id: "attack-action" }], sequence: sequence + 1 }),
+  resolveAttackAction: (sequence, _round, member) => {
+    member.state.action_available = false;
+    return { events: [{ event_type: "attack", feature_id: "attack-action" }], sequence: sequence + 1 };
+  },
 };
 window.IRON_PIT_BROWSER_AREA_SAVES = {
   choose: (member) => {
@@ -128,6 +135,7 @@ const ctx = (actor) => ({
 
 {
   const actor = member("2024");
+  actor.state.action_available = false;
   calls.length = 0;
   const candidates = S.discoverCandidates("actionSurgeAttack", ctx(actor));
   assert.deepEqual(candidates.map((item) => item.providerId), ["attack-action", "standard-attack"]);
@@ -137,10 +145,12 @@ const ctx = (actor) => ({
 
 {
   const actor = member("2024");
+  actor.state.action_available = false;
   actor.state.template.attackActionEnabled = false;
   const candidates = S.discoverCandidates("actionSurgeAttack", ctx(actor));
   const selected = S.selectCandidate("actionSurgeAttack", candidates);
   assert.equal(selected.providerId, "standard-attack");
+  actor.state.action_available = true;
   const resolved = S.resolveCandidate("actionSurgeAttack", selected, ctx(actor));
   assert.equal(resolved.events[0].feature_id, "action-surge");
 }
