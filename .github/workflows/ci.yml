@@ -150,6 +150,7 @@ jobs:
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs
           node frontend/browser-reaction-movement.test.cjs
+          node frontend/browser-damage-triggered-reactions.test.cjs
           node frontend/browser-spell-area.test.cjs
           node frontend/browser-spell-resolution.test.cjs
           node frontend/browser-spell-policy.test.cjs
@@ -236,6 +237,8 @@ jobs:
           grep -q 'browser-ability-hook-installation.js' index.html
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
+          grep -q 'browser-damage-triggered-reactions.js' index.html
+          grep -q 'browser-damage-reaction-dispatch.js' index.html
           grep -q 'browser-activation-movement.js' index.html
           grep -q 'browser-champion.js' index.html
           grep -q 'browser-tactical-shift.js' index.html
@@ -315,6 +318,8 @@ jobs:
           grep -q 'browser-ability-hook-installation.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
           grep -q 'browser-reaction-movement.js' frontend/index.html
+          grep -q 'browser-damage-triggered-reactions.js' frontend/index.html
+          grep -q 'browser-damage-reaction-dispatch.js' frontend/index.html
           grep -q 'browser-activation-movement.js' frontend/index.html
           grep -q 'browser-grapple.js' frontend/index.html
           grep -q 'browser-champion.js' frontend/index.html
