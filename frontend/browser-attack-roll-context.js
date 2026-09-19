@@ -10,6 +10,7 @@
       rangedDisadvantage: Boolean(rangedDisadvantage),
       recklessStarted: false,
       recklessAdvantage: 0,
+      targetRecklessAdvantage: 0,
       brutalStrikeSuppression: 0,
       bloodiedFuryAdvantage: 0,
     };
@@ -21,7 +22,7 @@
       throw new Error("Before-attack-roll hook requires a mutable attackRollContext object.");
     }
     for (const field of [
-      "baseDisadvantageSources", "recklessAdvantage",
+      "baseDisadvantageSources", "recklessAdvantage", "targetRecklessAdvantage",
       "brutalStrikeSuppression", "bloodiedFuryAdvantage",
     ]) {
       if (!Number.isFinite(state[field]) || state[field] < 0) {
