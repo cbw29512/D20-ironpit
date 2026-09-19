@@ -9,6 +9,7 @@ from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import AbilityCheckMinimum, EffectBoundSurvivalSave, ProgressionCombatFeatures
+from app.domain.reactions import DamageReactionAttack
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,10 @@ def _attack(level: int, weapon_id: str, scores: AbilityScores, *, rage_eligible:
         attack_bonus=proficiency_bonus(level) + modifier, damage_bonus=modifier,
         attack_ability="strength", attack_ability_modifier=modifier, rage_eligible=rage_eligible,
     )
+
+
+def _damage_reaction(level: int) -> DamageReactionAttack | None:
+    return DamageReactionAttack(source_feature="retaliation") if level >= 14 else None
 
 
 def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures:
@@ -60,27 +65,27 @@ def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures
     )
 
 
-def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
-    """Compile the certified 2014 Human Path of the Berserker Barbarian through level 13."""
-    try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Berserker certification covers levels 1 through 13.")
-        scores = _scores(level)
-        greataxe = _attack(level, "greataxe", scores, rage_eligible=True)
-        handaxe = _attack(level, "handaxe", scores, rage_eligible=False)
-        attack_count = 2 if level >= 5 else 1
-        action = AttackActionDefinition(
-            id="attack", name="Attack", is_attack_action=True,
-            slots=[AttackActionSlot(attack_ids=[greataxe.id, handaxe.id]) for _ in range(attack_count)],
-        )
-        dexterity = scores.modifier("dexterity"); constitution = scores.modifier("constitution")
-        return CombatantTemplate(
+def _compile_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
+    """Compile Rokhan's audited 2014 progression data without implying public certification."""
+    if level not in range(1, 21):
+        raise ValueError("2014 Berserker progression covers levels 1 through 20.")
+    scores = _scores(level)
+    greataxe = _attack(level, "greataxe", scores, rage_eligible=True)
+    handaxe = _attack(level, "handaxe", scores, rage_eligible=False)
+    attack_count = 2 if level >= 5 else 1
+    action = AttackActionDefinition(
+        id="attack", name="Attack", is_attack_action=True,
+        slots=[AttackActionSlot(attack_ids=[greataxe.id, handaxe.id]) for _ in range(attack_count)],
+    )
+    dexterity = scores.modifier("dexterity"); constitution = scores.modifier("constitution")
+    return CombatantTemplate(
             id=f"rokhan-stonefury-2014-l{level}", name="Rokhan Stonefury", archetype="Barbarian",
             level=level, kind="character", ruleset="2014", ability_scores=scores,
             armor_class=10 + dexterity + constitution,
             max_hp=fixed_hit_points(level, 12, constitution), speed_ft=40 if level >= 5 else 30,
             initiative_bonus=dexterity, weapon_attack=greataxe, alternate_weapon_attacks=[handaxe],
             attack_action=action,
+            damage_reaction_attack=_damage_reaction(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "constitution")),
             skill_bonuses={"athletics": scores.modifier("strength") + proficiency_bonus(level),
                            "acrobatics": dexterity},
@@ -93,7 +98,15 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
             unlimited_resource_ids=["rage"] if level >= 20 else [],
             visual=VisualLoadout(armor="unarmored", main_hand="greataxe", body_style="humanoid"),
             source="D&D Basic Rules 2014: Human; Barbarian; Path of the Berserker; Soldier; Equipment",
-        )
+    )
+
+
+def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
+    """Compile the certified 2014 Human Path of the Berserker Barbarian through level 20."""
+    try:
+        if level not in range(1, 21):
+            raise ValueError("2014 Berserker certification covers levels 1 through 20.")
+        return _compile_rokhan_stonefury_2014(level)
     except Exception:
-        logger.exception("Failed to compile 2014 Rokhan Stonefury at level %s", level)
+        logger.exception("Failed to compile certified 2014 Rokhan Stonefury at level %s", level)
         raise

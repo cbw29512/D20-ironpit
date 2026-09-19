@@ -16,13 +16,13 @@ earlier outcome-changing feature is unsupported.
 | 11 | Relentless Rage | Effect-bound survival save: Rage required, Constitution DC 10, +5 per attempt, success sets HP to 1 | Existing per-fight survival-save attempt map; fresh combat resets attempts | Supported and eligible for certification |
 | 12 | ASI | +1 Constitution, +1 Wisdom; derived AC, HP, saves, attacks and resource count recomputed | No new mutable state | Supported and eligible for certification |
 | 13 | Brutal Critical (2 dice) | `brutal_critical_dice=2`; PB increases to +5 | Existing critical-hit resolution | Supported and eligible for certification |
-| 14 | Retaliation | Reaction trigger: damage from a creature within 5 feet, then one melee weapon attack against that creature | Must consume the Reaction and resolve immediately off-turn | **Blocked: missing universal damage-trigger dispatch** |
-| 15 | Persistent Rage | `persistent_rage_2014=True`; 1-minute maximum remains | Isolated shared Rage primitive is implemented/tested in Python and browser; Rage no longer ends early for lack of attack/damage and ignores other incapacitation; it still ends on unconsciousness/death or maximum duration | Primitive staged safely; Rokhan level 15 remains uncertified because level 14 Retaliation is missing |
-| 16 | ASI | Canonical choice: +2 Constitution (16 -> 18); Rage damage becomes +4 | No new mutable state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
+| 14 | Retaliation | Declarative `DamageReactionAttack(source_feature="retaliation")` from level 14; source range 5 ft; melee-only | Shared Python/browser post-damage reaction chain resolves against the true damaging source and spends Reaction only | Supported on the full producer/browser integration stack |
+| 15 | Persistent Rage | `persistent_rage_2014=True`; 1-minute maximum remains | Isolated shared Rage primitive is implemented/tested in Python and browser; Rage no longer ends early for lack of attack/damage and ignores other incapacitation; it still ends on unconsciousness/death or maximum duration | Supported and certified through the level-20 progression |
+| 16 | ASI | Canonical choice: +2 Constitution (16 -> 18); Rage damage becomes +4 | No new mutable state | Supported and certified |
 | 17 | Brutal Critical (3 dice), 6 Rages | `brutal_critical_dice=3`; finite Rage count = 6 | Existing critical-hit/resource state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
-| 18 | Indomitable Might | Strength-check result has a floor equal to Strength score | Generic ability-check minimum rule plus auditable total replacement; wired into every currently supported check family in Python/browser | Primitive staged safely; level 18 remains uncertified because level 14 Retaliation is missing |
+| 18 | Indomitable Might | Strength-check result has a floor equal to Strength score | Generic ability-check minimum rule plus auditable total replacement; wired into every currently supported check family in Python/browser | Supported and certified |
 | 19 | ASI | Canonical choice: +2 Constitution (18 -> 20) | No new mutable state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
-| 20 | Primal Champion; unlimited Rage | Strength and Constitution +4 to 24 are staged explicitly after legal ASIs; Rage is an explicit unlimited resource ID with no counter | Generic Python/browser resource helpers treat unlimited resources as always available and non-decrementing | Primitive staged and regression-tested; level 20 remains uncertified only because level 14 Retaliation blocks cumulative progression |
+| 20 | Primal Champion; unlimited Rage | Strength and Constitution +4 to 24 are staged explicitly after legal ASIs; Rage is an explicit unlimited resource ID with no counter | Generic Python/browser resource helpers treat unlimited resources as always available and non-decrementing | Supported and certified |
 
 ## Implemented parity map for levels 11-13
 
@@ -62,49 +62,43 @@ early-expiry checkpoint. The ordinary maximum duration, unconsciousness/death cl
 and fresh-combat reset behavior are unchanged. Python and browser regression coverage exercise
 this primitive with a synthetic level-15 state derived from the certified level-13 template.
 
-This does **not** make Rokhan level 15 runnable or certifiable. The builder remains capped at 13
-because exposing any level 14+ template before Retaliation exists would silently omit a mandatory
-combat feature and violate fail-closed certification.
+Rokhan level 15 is now generated from the canonical certified level-15 template; the earlier synthetic-only staging guard has been removed on the full certification stack.
 
 ### Indomitable Might (level 18)
 
 A reusable `AbilityCheckMinimum` rule now declares the affected ability and source feature. The shared resolver compares the completed ability-check total with that ability's score, preserves the original dice/modifier, and records an audit `total_replacement` when the floor changes the accepted total. Python and browser integrations cover both current ability-check families: grapple escape and spell-effect removal. A synthetic level-18 Rokhan regression proves the Strength floor without exposing or registering an invalid level-18 template.
 
-This does **not** widen certification beyond level 13 because level 14 Retaliation is still a mandatory cumulative blocker.
+The certified level-18 template now carries this primitive directly.
 
 ### Unlimited Rage (level 20)
 
 Unlimited resources are modeled without a fake counter. A combatant declares an `unlimited_resource_ids` entry; the shared Python/browser resource helpers report that resource as always available, spending it returns no remaining count, and no mutable finite resource state is created. The staged level-20 Rokhan binding uses `rage` this way. Finite resources retain their existing counters unchanged.
 
-This completes the safe level-20 Rage primitive without widening certification beyond level 13.
+The certified level-20 template uses this unlimited-resource representation directly.
 
-## Level-14 architectural blocker
+## Level-14 Retaliation integration state
 
-Retaliation cannot be implemented correctly as a weapon-hit-only callback.
-The source trigger is **taking damage from a creature within 5 feet**, so the
-universal engine must preserve damage-source creature provenance across every
-supported damage family that can satisfy the trigger.
+The shared engine now provides the state-first schema, runtime eligibility gate, and Python source-bound attack dispatcher. Rokhan's level-14 binding is staged declaratively through `DamageReactionAttack(source_feature="retaliation")`. A focused synthetic encounter regression proves the shared dispatcher:
 
-The required reusable primitive must:
+1. binds the reaction to the actual damaging source rather than normal target order;
+2. enforces the 5-foot source range;
+3. spends the defender's Reaction without spending the Action;
+4. selects Rokhan's declared legal melee attack;
+5. resolves the counterattack immediately through the normal encounter attack resolver;
+6. disables Reckless Attack on the off-turn counterattack.
 
-1. dispatch after qualifying damage is actually applied;
-2. identify the source creature without a Rokhan/Barbarian name check;
-3. use authoritative grid distance and require the source within 5 feet;
-4. check and spend the defender's Reaction;
-5. select a legal melee weapon attack against that source;
-6. resolve the reaction attack immediately through the normal attack resolver;
-7. preserve Python/browser parity and audit ordering;
-8. avoid recursive or duplicate trigger resolution.
+On the stacked certification branch, producer call sites and browser parity are present and Rokhan's public builder is widened through level 20.
 
-Do not approximate this with an `onHit` hook, because damage can arrive through
-other supported families and `onHit` does not mean "took damage from a
-creature."
+Do not approximate the remaining work with an `onHit` hook, because damage can arrive through other supported families and `onHit` does not mean "took damage from a creature."
 
 ## Certification boundary
 
-This tranche registers levels 11-13 only. The connected branch registry therefore contains 63
-certified 2014 snapshots (Fighter 1-20, Barbarian 1-13, Rogue/Monk/Paladin 1-10). Level 15's
-Persistent Rage primitive is staged and tested but intentionally does not widen the registered
-Rokhan progression. Levels 14-20 remain unregistered until their cumulative outcome-changing
-mechanics are supported. Generated counts are authoritative; no hand-authored manifest count
-should be changed.
+The full stacked certification lane registers Rokhan levels 1-20. The resulting 2014 hero registry contains **70 certified snapshots**:
+
+- Fighter 1-20
+- Barbarian 1-20
+- Rogue 1-10
+- Monk 1-10
+- Paladin 1-10
+
+Generated repository state remains authoritative. The certification flip is intentionally stacked on the unmerged shared producer/browser reaction work and must not merge ahead of those dependencies.

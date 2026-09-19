@@ -95,6 +95,8 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
         audits.append(_audit("intimidating-presence", "Intimidating Presence", "subclass", source=berserker))
     if level >= 11:
         audits.append(_audit("relentless-rage", "Relentless Rage", "class", source=barbarian))
+    if level >= 14:
+        audits.append(_audit("retaliation", "Retaliation", "subclass", source=berserker))
     if level >= 15:
         audits.append(_audit("persistent-rage", "Persistent Rage", "class", source=barbarian))
     if level >= 18:
@@ -104,19 +106,20 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
     return audits
 
 
-def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
-    try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Rokhan profile certification covers levels 1 through 13.")
-        base = _base_scores(); species = _species_increases(); advancements = _advancements(level)
-        return CharacterBuildProfile(
+def _compile_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
+    if level not in range(1, 21):
+        raise ValueError("2014 Rokhan profile progression covers levels 1 through 20.")
+    base = _base_scores(); species = _species_increases(); advancements = _advancements(level)
+    return CharacterBuildProfile(
             id=f"build-rokhan-stonefury-2014-l{level}", template_id=f"rokhan-stonefury-2014-l{level}",
             character_name="Rokhan Stonefury", class_id="barbarian", class_name="Barbarian", level=level,
             ruleset="2014", subclass_id="path-berserker" if level >= 3 else None,
             subclass_name="Path of the Berserker" if level >= 3 else None, build_id="berserker-greataxe",
             species_id="human", species_name="Human", background_id="soldier", background_name="Soldier",
             base_ability_scores=base, species_increases=species, advancement_increases=advancements,
-            final_ability_scores=_final_scores(base, species, advancements), class_equipment_option="package",
+            final_ability_scores=_final_scores(base, species, advancements),
+            ability_score_maximums={"strength": 24, "constitution": 24} if level >= 20 else {},
+            class_equipment_option="package",
             class_equipment=["Greataxe", "Two Handaxes", "Explorer's Pack", "Four Javelins"],
             background_equipment_option="package",
             background_equipment=["Rank Insignia", "Trophy", "Gaming Set", "Common Clothes", "10 gp"],
@@ -127,7 +130,14 @@ def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
                 "D&D Basic Rules 2014: Path of the Berserker", "D&D Basic Rules 2014: Soldier",
                 "D&D Basic Rules 2014: Equipment",
             ],
-        )
+    )
+
+
+def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
+    try:
+        if level not in range(1, 21):
+            raise ValueError("2014 Rokhan profile certification covers levels 1 through 20.")
+        return _compile_rokhan_stonefury_2014_profile(level)
     except Exception:
-        logger.exception("Failed to compile 2014 Rokhan build profile at level %s", level)
+        logger.exception("Failed to compile certified 2014 Rokhan build profile at level %s", level)
         raise
