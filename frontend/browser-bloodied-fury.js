@@ -25,7 +25,7 @@
 
   function resolveBeforeAttackRoll(ctx) {
     const roll = C().requireContext(ctx);
-    roll.bloodiedFuryAdvantage = active(ctx.member.state, ctx.attack) ? 1 : 0;
+    C().setAdvantageSource(roll, "bloodied-fury", active(ctx.member.state, ctx.attack) ? 1 : 0);
     return C().noEventResult(ctx.sequence);
   }
 
