@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.cleave import resolve_cleave_extra_attack
+from app.combat.condition_rules import is_incapacitated
+from app.combat.damage_reaction_dispatch import append_event_with_damage_reactions
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -42,14 +44,20 @@ def resolve_standard_attack_action(
             turn_key=turn_key,
             allow_reckless=allow_reckless,
         )
-        events = [event]
-        sequence += 1
+        events: list[BattleEvent] = []
+        sequence = append_event_with_damage_reactions(
+            events, sequence + 1, round_number, attacker, event, setup, dice, turn_key=turn_key,
+        )
         if event.event_type == "saving_throw" and event.attack_roll is None:
+            return events, sequence
+        if attacker.state.is_dead or is_incapacitated(attacker.state):
             return events, sequence
         cleave, sequence = resolve_cleave_extra_attack(
             sequence, round_number, attacker, event, attack, setup, dice, turn_key,
         )
         events.extend(cleave)
+        if attacker.state.is_dead or is_incapacitated(attacker.state):
+            return events, sequence
         if attacker.state.template.kind != "character" or not attack.weapon.light:
             return events, sequence
         more, sequence = resolve_light_extra_attack(
