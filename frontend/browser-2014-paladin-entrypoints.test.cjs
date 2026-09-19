@@ -25,7 +25,7 @@ for (const moduleName of modules) {
 for (const page of [frontend, root]) {
   assert.ok(page.indexOf("browser-defensive-modifier-rules.js") < page.indexOf("browser-condition-immunity.js"));
   assert.ok(page.indexOf("browser-saves.js") < page.indexOf("browser-targeting-wards.js"));
-  assert.ok(page.indexOf("browser-targeting-wards.js") < page.indexOf("browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js"));
+  assert.ok(page.indexOf("browser-targeting-wards.js") < page.indexOf("browser-attack.js"));
   assert.ok(page.indexOf("browser-spellcasting.js") < page.indexOf("browser-effect-removal.js"));
   assert.ok(page.indexOf("browser-effect-removal.js") < page.indexOf("browser-support.js"));
   assert.ok(page.indexOf("browser-turn-creature-effects.js") < page.indexOf("browser-2014-paladin.js"));
