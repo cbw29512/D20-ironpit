@@ -33,7 +33,7 @@ def test_python_miss_keeps_graze_before_studied_attacks() -> None:
 
 def test_python_tactical_master_sap_replaces_native_mastery_on_hit() -> None:
     attacker = _state(build_karnok_stoneward_level(9))
-    target = _state(build_brom_ironmark())
+    target = _state(build_karnok_stoneward_level(9))
 
     event = resolve_attack(
         1, 1, attacker, target, attacker.template.weapon_attack, 5,
