@@ -25,9 +25,9 @@ _ARENA_NEUTRAL_SPELLS = frozenset({
 # real D&D damaging spell at roughly the same spell level for the Iron Pit arena.
 # The replacement is content policy, not a combat-engine special case.
 _ARENA_SPELL_SUBSTITUTIONS: dict[str, tuple[str, int]] = {
-    "Entangle": ("guiding-bolt", 1),
-    "Moonbeam": ("inflict-wounds", 2),
-    "Thunderwave": ("guiding-bolt", 1),
+    "Entangle": ("inflict-wounds-l1-arena", 1),
+    "Moonbeam": ("inflict-wounds-l2-arena", 2),
+    "Thunderwave": ("inflict-wounds-l1-arena", 1),
 }
 # Printed spells whose relevant arena behavior is directly represented by an existing
 # generic spell action.
