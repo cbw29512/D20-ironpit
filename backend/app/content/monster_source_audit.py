@@ -30,6 +30,11 @@ _UNSUPPORTED_HP_MAX_REDUCTION = re.compile(
     r"\bHit Point maximum decreases\b|\bHit Point maximum is reduced\b",
     re.IGNORECASE,
 )
+_UNSUPPORTED_ABILITY_SCORE_REDUCTION = re.compile(
+    r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) score "
+    r"(?:decreases|is reduced)\b",
+    re.IGNORECASE,
+)
 
 
 def _first_int(value: object) -> int:
@@ -118,6 +123,8 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             issues.append("source-save-action-count-mismatch")
         if _UNSUPPORTED_HP_MAX_REDUCTION.search(actions):
             issues.append("unsupported-action-rider:hit-point-maximum-reduction")
+        if _UNSUPPORTED_ABILITY_SCORE_REDUCTION.search(actions):
+            issues.append("unsupported-action-rider:ability-score-reduction")
         for attack in runtime_attacks:
             issues.extend(attack_issues(attack, actions, traits))
         issues.extend(charge_replacement_issues(template, actions))
