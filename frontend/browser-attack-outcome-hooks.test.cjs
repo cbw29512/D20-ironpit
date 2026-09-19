@@ -12,8 +12,13 @@ const load = (name) => vm.runInThisContext(
 
 const callOrder = [];
 window.IRON_PIT_BROWSER_WEAPON_MASTERY = {
-  active: (_state, attack, mastery) => attack.mastery === mastery,
   mastered: (state, attack) => (state.template.weapon_masteries || []).includes(attack.weaponId),
+  active(state, attack, mastery) {
+    const replaced = (state.template.tactical_master_sap_weapon_ids || []).includes(attack.weaponId);
+    return attack.mastery === mastery
+      && (state.template.weapon_masteries || []).includes(attack.weaponId)
+      && !replaced;
+  },
 };
 window.IRON_PIT_BROWSER_SAVES = {
   resolveSavingThrow: () => {
@@ -117,8 +122,27 @@ assert.deepEqual(
     attack, setup: { heroes: [attacker], monsters: [target] }, attackOutcome: outcome, events: [],
   });
   assert.deepEqual(result.events, []);
-  assert.deepEqual(callOrder, ["sap", "weapon-mastery-vex"], "Sap/Tactical Master must resolve before Vex");
+  assert.deepEqual(callOrder, ["sap"], "Tactical Master replacement suppresses the weapon's normal Vex mastery");
   assert.equal(outcome.sapApplied, "tactical");
+  assert.equal(outcome.vexApplied, false);
+}
+
+{
+  callOrder.length = 0;
+  const attacker = member("vex-attacker", { weapon_masteries: ["shortsword"] });
+  const target = member("vex-target");
+  const attack = {
+    id: "shortsword", weaponId: "shortsword", name: "Shortsword",
+    mastery: "Vex", attackAbilityModifier: 4, damageType: "piercing",
+  };
+  const outcome = O.create();
+  outcome.damageRoll = { total: 8 };
+  H.runPhase(H.PHASES.ON_HIT, {
+    sequence: 5, round: 1, member: attacker, target, originalTarget: target,
+    attack, setup: { heroes: [attacker], monsters: [target] }, attackOutcome: outcome, events: [],
+  });
+  assert.deepEqual(callOrder, ["weapon-mastery-vex"]);
+  assert.equal(outcome.sapApplied, "");
   assert.equal(outcome.vexApplied, true);
 }
 
