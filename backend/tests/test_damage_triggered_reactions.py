@@ -1,4 +1,4 @@
-from app.combat.damage_reaction_dispatch import resolve_damage_event_reactions
+from app.combat.damage_reaction_dispatch import applied_damage_total, resolve_damage_event_reactions
 from app.combat.damage_triggered_reactions import resolve_damage_triggered_melee_reaction
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.dice import FixedDiceProvider
@@ -191,3 +191,33 @@ def test_damage_event_dispatch_allows_one_counter_reaction_per_creature() -> Non
     assert sequence == 4
     assert reactor.state.reaction_available is False
     assert source.state.reaction_available is False
+
+
+
+def test_applied_damage_total_prefers_defended_component_amounts() -> None:
+    reactor, source, setup = _setup()
+    event = resolve_encounter_attack(
+        1, 1, source, reactor, source.state.template.weapon_attack, 5,
+        FixedDiceProvider([19, 4]), setup, spend_action=False,
+    )
+    assert event.damage_roll is not None
+    assert event.damage_roll.total > 0
+    event = event.model_copy(update={
+        "damage_components": [
+            part.model_copy(update={"applied_total": 0})
+            for part in event.damage_components
+        ],
+    })
+    assert applied_damage_total(event) == 0
+
+
+def test_damage_triggered_reaction_is_blocked_while_reactor_is_unconscious() -> None:
+    reactor, source, setup = _setup()
+    reactor.state.is_unconscious = True
+
+    event = resolve_damage_triggered_melee_reaction(
+        1, 1, reactor, source, setup, FixedDiceProvider([19, 5]),
+    )
+
+    assert event is None
+    assert reactor.state.reaction_available is True

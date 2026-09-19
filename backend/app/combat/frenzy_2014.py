@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.attacks import resolve_attack
 from app.combat.barbarian import FRENZY_2014_EFFECT_ID, rage_active
+from app.combat.damage_reaction_dispatch import append_event_with_damage_reactions
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.pit_policy import target_order
@@ -58,5 +59,9 @@ def resolve_frenzy_bonus_attack(
             spend_action=False, feature_id="frenzy", turn_key=turn_key,
             affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
         )
-        return [event], sequence + 1
+        events: list[BattleEvent] = []
+        sequence = append_event_with_damage_reactions(
+            events, sequence + 1, round_number, attacker, event, setup, dice, turn_key=turn_key,
+        )
+        return events, sequence
     return [], sequence

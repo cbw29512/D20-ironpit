@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.attacks import resolve_attack
+from app.combat.damage_reaction_dispatch import resolve_damage_event_reactions
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.open_hand_technique_2014 import resolve_open_hand_technique
@@ -77,7 +78,7 @@ def resolve_monk_bonus_attacks(
                 target for target in target_order(actor, setup)
                 if combatant_distance(actor, target) <= attack.weapon.reach_ft
             ]
-            if not legal_targets or state.turn_terminated:
+            if not legal_targets or state.turn_terminated or state.is_dead or state.is_unconscious:
                 break
             target = legal_targets[0]
             event = resolve_attack(
@@ -97,31 +98,34 @@ def resolve_monk_bonus_attacks(
             )
             events.append(event)
             sequence += 1
-            if not event.hit:
-                continue
-            stun = resolve_stunning_strike(
-                sequence,
-                round_number,
-                actor,
-                target,
-                attack,
-                dice,
-                affected_states=affected,
-            )
-            if stun is not None:
-                events.append(stun)
-                sequence += 1
-            if use_flurry:
-                technique = resolve_open_hand_technique(
+            if event.hit:
+                stun = resolve_stunning_strike(
                     sequence,
                     round_number,
                     actor,
                     target,
+                    attack,
                     dice,
+                    affected_states=affected,
                 )
-                if technique is not None:
-                    events.append(technique)
+                if stun is not None:
+                    events.append(stun)
                     sequence += 1
+                if use_flurry:
+                    technique = resolve_open_hand_technique(
+                        sequence,
+                        round_number,
+                        actor,
+                        target,
+                        dice,
+                    )
+                    if technique is not None:
+                        events.append(technique)
+                        sequence += 1
+            reactions, sequence = resolve_damage_event_reactions(
+                sequence, round_number, actor, event, setup, dice, turn_key=turn_key,
+            )
+            events.extend(reactions)
         return events, sequence
     except Exception:
         logger.exception("Failed 2014 Monk bonus attacks for %s", actor.combatant_id)

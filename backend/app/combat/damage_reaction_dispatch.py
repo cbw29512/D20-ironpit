@@ -9,6 +9,28 @@ from app.domain.models import BattleEvent
 logger = logging.getLogger(__name__)
 
 
+def applied_damage_total(event: BattleEvent) -> int:
+    """Return damage actually applied after defenses, including Temporary HP."""
+    try:
+        components = list(event.damage_components)
+        if components and all(part.applied_total is not None for part in components):
+            return sum(int(part.applied_total or 0) for part in components)
+        hp_loss = (
+            max(0, event.hp_before - event.hp_after)
+            if event.hp_before is not None and event.hp_after is not None else 0
+        )
+        temp_loss = (
+            max(0, event.temporary_hp_before - event.temporary_hp_after)
+            if event.temporary_hp_before is not None and event.temporary_hp_after is not None else 0
+        )
+        if hp_loss or temp_loss:
+            return hp_loss + temp_loss
+        return max(0, event.damage_roll.total) if event.damage_roll is not None else 0
+    except Exception as exc:
+        logger.exception("Failed to measure applied damage for event %s.", event.sequence)
+        raise RuntimeError("Applied damage could not be measured.") from exc
+
+
 def _member_by_id(
     setup: EncounterSetup,
     combatant_id: str | None,
@@ -37,8 +59,7 @@ def resolve_damage_event_reactions(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve immediate configured reactions after one completed damage event."""
     try:
-        damage_roll = triggering_event.damage_roll
-        if damage_roll is None or damage_roll.total <= 0:
+        if applied_damage_total(triggering_event) <= 0:
             return [], sequence
         if triggering_event.actor_id != source.combatant_id:
             raise ValueError(
