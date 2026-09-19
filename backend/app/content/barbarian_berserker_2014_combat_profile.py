@@ -38,8 +38,8 @@ def _compile_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Rokhan combat-profile certification covers levels 1 through 13.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Rokhan combat-profile certification covers levels 1 through 20.")
         return _compile_rokhan_2014_combat_profile(level)
     except Exception:
         logger.exception("Failed to build certified 2014 Rokhan combat profile at level %s", level)
@@ -47,4 +47,4 @@ def build_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 
 def build_rokhan_2014_combat_profiles() -> list[PregenCombatProfile]:
-    return [build_rokhan_2014_combat_profile(level) for level in range(1, 14)]
+    return [build_rokhan_2014_combat_profile(level) for level in range(1, 21)]

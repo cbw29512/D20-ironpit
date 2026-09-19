@@ -135,8 +135,8 @@ def _compile_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
 
 def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Rokhan profile certification covers levels 1 through 13.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Rokhan profile certification covers levels 1 through 20.")
         return _compile_rokhan_stonefury_2014_profile(level)
     except Exception:
         logger.exception("Failed to compile certified 2014 Rokhan build profile at level %s", level)

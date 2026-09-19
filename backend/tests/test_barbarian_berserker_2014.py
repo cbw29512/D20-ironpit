@@ -24,8 +24,8 @@ def _member(template, combatant_id: str, side: str, position: int = 0) -> Encoun
     )
 
 
-def test_2014_berserker_levels_one_through_thirteen_are_isolated_from_2024() -> None:
-    for level in range(1, 14):
+def test_2014_berserker_levels_one_through_twenty_are_isolated_from_2024() -> None:
+    for level in range(1, 21):
         hero = build_rokhan_stonefury_2014(level)
         assert hero.ruleset == "2014"
         assert hero.level == level

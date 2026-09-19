@@ -102,10 +102,10 @@ def _compile_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
 
 
 def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
-    """Compile only the currently certified public 2014 Rokhan levels."""
+    """Compile the certified 2014 Human Path of the Berserker Barbarian through level 20."""
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Berserker certification covers levels 1 through 13.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Berserker certification covers levels 1 through 20.")
         return _compile_rokhan_stonefury_2014(level)
     except Exception:
         logger.exception("Failed to compile certified 2014 Rokhan Stonefury at level %s", level)
