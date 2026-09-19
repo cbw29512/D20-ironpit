@@ -126,8 +126,8 @@ const attack = { id: "test-weapon", name: "Test Weapon", damageType: "slashing" 
 }
 
 const attackSource = fs.readFileSync(path.join(__dirname, "browser-attack.js"), "utf8");
-assert.match(attackSource, /PHASES\.ON_HIT/);
-assert.match(attackSource, /PHASES\.ON_MISS/);
+assert.match(attackSource, /runOutcomePhase\("ON_HIT"/);
+assert.match(attackSource, /runOutcomePhase\("ON_MISS"/);
 assert.doesNotMatch(attackSource, /TOP\(\)\.resolve/);
 assert.doesNotMatch(attackSource, /GRZ\(\)\.rawDamage/);
 assert.doesNotMatch(attackSource, /STUDY\(\)\.apply/);
