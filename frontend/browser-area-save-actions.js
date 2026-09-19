@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const T = () => window.IRON_PIT_BROWSER_AREA_TARGETING;
@@ -58,10 +59,14 @@
       for (const id of placement.targetIds) {
         const target = memberById(setup, id);
         if (!target) throw new Error(`Unknown area-save target ${id}.`);
-        events.push(V().resolveAction(sequence++, round, member, target, action, 0, {
+        const event = V().resolveAction(sequence, round, member, target, action, 0, {
           spendAction: false, checkResource: false, spendResource: false,
           resourceRemaining: remaining, sharedDamageRolls: shared, setup,
-        }));
+        });
+        sequence += 1;
+        const chain = DMR()?.chain(sequence, round, member, event, setup)
+          || { events: [event], sequence };
+        events.push(...chain.events); sequence = chain.sequence;
       }
       return { events, sequence, placement };
     } catch (error) {
