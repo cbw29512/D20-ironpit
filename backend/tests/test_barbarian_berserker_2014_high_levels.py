@@ -17,6 +17,7 @@ from app.content.demo import build_demo_fighter
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.progression import AbilityCheckMinimum
+from scripts.export_browser_heroes import _template as export_browser_hero_template
 
 
 def test_2014_level_11_relentless_rage_reuses_effect_bound_survival_save() -> None:
@@ -263,3 +264,16 @@ def test_private_2014_candidate_compilers_cover_levels_14_through_20_without_pub
             assert "certification covers levels 1 through 13" in str(exc)
         else:
             raise AssertionError("Uncertified high-level Rokhan must remain unavailable publicly.")
+
+
+
+def test_private_level_14_retaliation_serializes_for_browser_parity() -> None:
+    template = _compile_rokhan_stonefury_2014(14)
+    row = export_browser_hero_template(("barbarian", 14, "canonical"), template)
+
+    assert row["damage_reaction_attack"] == {
+        "source_feature": "retaliation",
+        "trigger": "damaged-by-creature",
+        "source_range_ft": 5,
+        "attack_kind": "melee",
+    }
