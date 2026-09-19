@@ -101,6 +101,7 @@ jobs:
           node frontend/browser-action-surge-selector.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
+          node frontend/browser-damage-reactions.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs
@@ -233,6 +234,7 @@ jobs:
           grep -q 'browser-main-action-providers.js' index.html
           grep -q 'browser-attack-outcome.js' index.html
           grep -q 'browser-attack-outcome-hook-installation.js' index.html
+          grep -q 'browser-damage-reactions.js' index.html
           grep -q 'browser-ability-hook-installation.js' index.html
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
@@ -312,6 +314,7 @@ jobs:
           grep -q 'browser-main-action-providers.js' frontend/index.html
           grep -q 'browser-attack-outcome.js' frontend/index.html
           grep -q 'browser-attack-outcome-hook-installation.js' frontend/index.html
+          grep -q 'browser-damage-reactions.js' frontend/index.html
           grep -q 'browser-ability-hook-installation.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
           grep -q 'browser-reaction-movement.js' frontend/index.html
