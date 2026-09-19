@@ -55,7 +55,7 @@ function fighter(masteries = ["scimitar"], withAction = false, fightingStyles = 
     combatant_id: "hero-1", side: "heroes", position_ft: 0,
     state: {
       template: {
-        kind: "character", name: "Nick Fighter", attacks: [shortsword, scimitar], weapon_masteries: masteries,
+        kind: "character", name: "Nick Fighter", ruleset: "2024", attacks: [shortsword, scimitar], weapon_masteries: masteries,
         fighting_style: fightingStyles[0] || null, fighting_styles: fightingStyles,
         attack_action: withAction ? {
           id: "extra-attack", isAttackAction: true,
