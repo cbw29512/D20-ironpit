@@ -95,6 +95,8 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
         audits.append(_audit("intimidating-presence", "Intimidating Presence", "subclass", source=berserker))
     if level >= 11:
         audits.append(_audit("relentless-rage", "Relentless Rage", "class", source=barbarian))
+    if level >= 14:
+        audits.append(_audit("retaliation", "Retaliation", "subclass", source=berserker))
     if level >= 15:
         audits.append(_audit("persistent-rage", "Persistent Rage", "class", source=barbarian))
     if level >= 18:
@@ -106,8 +108,8 @@ def _feature_audits(level: int) -> list[FeatureAudit]:
 
 def build_rokhan_stonefury_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Rokhan profile certification covers levels 1 through 13.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Rokhan profile certification covers levels 1 through 20.")
         base = _base_scores(); species = _species_increases(); advancements = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-rokhan-stonefury-2014-l{level}", template_id=f"rokhan-stonefury-2014-l{level}",

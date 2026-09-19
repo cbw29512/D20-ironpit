@@ -9,6 +9,7 @@ from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import AbilityCheckMinimum, EffectBoundSurvivalSave, ProgressionCombatFeatures
+from app.domain.reactions import DamageTriggeredMeleeReaction
 
 logger = logging.getLogger(__name__)
 
@@ -61,10 +62,10 @@ def _progression(level: int, scores: AbilityScores) -> ProgressionCombatFeatures
 
 
 def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
-    """Compile the certified 2014 Human Path of the Berserker Barbarian through level 13."""
+    """Compile the certified 2014 Human Path of the Berserker Barbarian through level 20."""
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Berserker certification covers levels 1 through 13.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Berserker certification covers levels 1 through 20.")
         scores = _scores(level)
         greataxe = _attack(level, "greataxe", scores, rage_eligible=True)
         handaxe = _attack(level, "handaxe", scores, rage_eligible=False)
@@ -91,6 +92,10 @@ def build_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
                 else [ResourceDefinition(id="rage", name="Rage", max_uses=barbarian_2014_rage_uses(level))]
             ),
             unlimited_resource_ids=["rage"] if level >= 20 else [],
+            damage_triggered_melee_reaction=(
+                DamageTriggeredMeleeReaction(id="retaliation", trigger_range_ft=5)
+                if level >= 14 else None
+            ),
             visual=VisualLoadout(armor="unarmored", main_hand="greataxe", body_style="humanoid"),
             source="D&D Basic Rules 2014: Human; Barbarian; Path of the Berserker; Soldier; Equipment",
         )

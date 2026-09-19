@@ -37,6 +37,7 @@ class PregenCombatProfile:
     attacks: tuple[AttackExpectation, ...]
     weapon_masteries: tuple[str, ...]
     resources: tuple[tuple[str, int], ...] = ()
+    unlimited_resources: tuple[str, ...] = ()
     fighting_style: str | None = None
     rage_damage_bonus: int = 0
     sneak_attack_d6: int = 0

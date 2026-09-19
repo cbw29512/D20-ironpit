@@ -19,6 +19,7 @@ def build_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
             AttackExpectation("greataxe", "strength", 1, 12, "slashing"),
             AttackExpectation("handaxe", "strength", 1, 6, "slashing", normal_range_ft=20, long_range_ft=60),
         )
+        resources = () if level >= 20 else (("rage", barbarian_2014_rage_uses(level)),)
         return PregenCombatProfile(
             template_id=source.template_id, archetype="Barbarian", level=level, abilities=scores,
             save_proficiencies=("strength", "constitution"),
@@ -27,7 +28,8 @@ def build_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
             speed_ft=40 if level >= 5 else 30,
             skill_bonuses=(("athletics", scores.modifier("strength") + pb),
                            ("acrobatics", scores.modifier("dexterity"))),
-            attacks=attacks, weapon_masteries=(), resources=(("rage", barbarian_2014_rage_uses(level)),),
+            attacks=attacks, weapon_masteries=(), resources=resources,
+            unlimited_resources=("rage",) if level >= 20 else (),
             rage_damage_bonus=barbarian_rage_damage_bonus(level), initiative_bonus=scores.modifier("dexterity"),
         )
     except Exception:
@@ -36,4 +38,4 @@ def build_rokhan_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 
 def build_rokhan_2014_combat_profiles() -> list[PregenCombatProfile]:
-    return [build_rokhan_2014_combat_profile(level) for level in range(1, 14)]
+    return [build_rokhan_2014_combat_profile(level) for level in range(1, 21)]
