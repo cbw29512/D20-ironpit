@@ -108,7 +108,11 @@ function miss(attacker, target) {
 
 {
   const fighter = member("fighter", "heroes", { missingModifier: true }), target = member("target", "monsters");
-  assert.throws(() => miss(fighter, target), /requires an explicit attack ability modifier/);
+  let failure = null;
+  try { miss(fighter, target); } catch (error) { failure = error; }
+  assert.ok(failure instanceof Error);
+  assert.match(failure.message, /Ability hook "graze-mastery" failed during resolve in phase "onMiss"/);
+  assert.match(failure.cause?.message || "", /requires an explicit attack ability modifier/);
 }
 
 console.log("Browser Graze weapon mastery regressions passed.");
