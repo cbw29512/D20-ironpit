@@ -10554,6 +10554,173 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-earth-elemental",
+    "name": "Earth Elemental",
+    "archetype": "source-certified monster",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "large",
+    "armor_class": 17,
+    "max_hp": 147,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 30,
+      "hover": false
+    },
+    "initiative_bonus": -1,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-earth-elemental-slam",
+        "name": "Slam",
+        "weapon_id": "srd-earth-elemental-slam-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 8,
+        "damage": {
+          "count": 2,
+          "size": 8,
+          "bonus": 5
+        },
+        "damage_type": "bludgeoning",
+        "animation": "strike",
+        "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      },
+      {
+        "id": "srd-earth-elemental-rock-launch",
+        "name": "Rock Launch",
+        "weapon_id": "srd-earth-elemental-rock-launch-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 8,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 5
+        },
+        "damage_type": "bludgeoning",
+        "animation": "strike",
+        "reach_ft": 5,
+        "normal_range_ft": 60,
+        "long_range_ft": 60,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "prone",
+            "max_target_size": "large"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-earth-elemental-slam",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 8,
+      "damage": 6
+    },
+    "attack_action": {
+      "id": "srd-earth-elemental-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-earth-elemental-slam",
+            "srd-earth-elemental-rock-launch"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-earth-elemental-slam",
+            "srd-earth-elemental-rock-launch"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 5,
+      "dexterity": -1,
+      "constitution": 5,
+      "intelligence": -3,
+      "wisdom": 0,
+      "charisma": -3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Earth Glide",
+      "Siege Monster"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [
+      "thunder"
+    ],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "exhaustion",
+      "paralyzed",
+      "petrified",
+      "poisoned",
+      "unconscious"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "recharge_rules": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Slam",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 282",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-awakened-tree",
     "name": "Awakened Tree",
     "archetype": "source-certified monster",
