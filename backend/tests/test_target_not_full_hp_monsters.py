@@ -53,3 +53,24 @@ def test_aquatic_monsters_certify_from_runtime_and_source_audit() -> None:
     except Exception:
         logger.exception("Runtime-derived aquatic monster certification regression failed.")
         raise
+
+
+def test_sahuagin_blood_frenzy_uses_shared_target_hp_advantage() -> None:
+    try:
+        sahuagin = next(
+            monster for monster in build_legacy_monster_templates()
+            if monster.name == "Sahuagin Warrior"
+        )
+        attacks = [sahuagin.weapon_attack, *sahuagin.alternate_weapon_attacks]
+        assert attacks
+        assert all(
+            [spec.trigger for spec in attack.conditional_attack_advantage] == ["target_not_full_hp"]
+            for attack in attacks
+        )
+        card = next(card for card in build_monster_catalog() if card.name == "Sahuagin Warrior")
+        assert card.coverage_status is CoverageStatus.RAW_READY
+        assert card.runnable_template_id == "srd-sahuagin-warrior"
+        assert card.blockers == []
+    except Exception:
+        logger.exception("Sahuagin Blood Frenzy certification regression failed.")
+        raise
