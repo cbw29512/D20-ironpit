@@ -152,6 +152,24 @@ function damageEvent(source, target, applied = 2) {
 }
 
 {
+  const reactor = member("snapshot-zero-reactor", "heroes", 0, true);
+  const source = member("snapshot-zero-source", "monsters", 5, false);
+  const setup = { heroes: [reactor], monsters: [source] };
+  const event = damageEvent(source, reactor, 0);
+  event.damage_roll.total = 10;
+  event.damage_components = [];
+  event.hp_before = reactor.state.current_hp;
+  event.hp_after = reactor.state.current_hp;
+  event.temporary_hp_before = 0;
+  event.temporary_hp_after = 0;
+  const result = window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH.resolve(
+    2, 1, source, event, setup,
+  );
+  assert.deepEqual(result.events, []);
+  assert.equal(reactor.state.reaction_available, true);
+}
+
+{
   const reactor = member("sleeping-reactor", "heroes", 0, true);
   reactor.state.is_unconscious = true;
   const source = member("sleep-source", "monsters", 5, false);

@@ -9,12 +9,13 @@
       if (components.length && components.every((part) => Number.isFinite(part.applied_total))) {
         return components.reduce((sum, part) => sum + Math.max(0, part.applied_total), 0);
       }
-      const hpLoss = Number.isFinite(event?.hp_before) && Number.isFinite(event?.hp_after)
-        ? Math.max(0, event.hp_before - event.hp_after) : 0;
-      const tempLoss = Number.isFinite(event?.temporary_hp_before)
-        && Number.isFinite(event?.temporary_hp_after)
+      const hpKnown = Number.isFinite(event?.hp_before) && Number.isFinite(event?.hp_after);
+      const tempKnown = Number.isFinite(event?.temporary_hp_before)
+        && Number.isFinite(event?.temporary_hp_after);
+      const hpLoss = hpKnown ? Math.max(0, event.hp_before - event.hp_after) : 0;
+      const tempLoss = tempKnown
         ? Math.max(0, event.temporary_hp_before - event.temporary_hp_after) : 0;
-      if (hpLoss || tempLoss) return hpLoss + tempLoss;
+      if (hpKnown || tempKnown) return hpLoss + tempLoss;
       return Number.isFinite(event?.damage_roll?.total) ? Math.max(0, event.damage_roll.total) : 0;
     } catch (error) {
       console.error("Browser applied-damage measurement failed", {
