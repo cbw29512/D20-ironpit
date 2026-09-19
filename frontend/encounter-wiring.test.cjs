@@ -36,6 +36,7 @@ assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-coun
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
 assert.match(html, /browser-ability-hooks\.js/);
 assert.match(html, /browser-attack-roll-context\.js/); assert.match(html, /browser-bloodied-fury\.js/);
+assert.match(html, /browser-brutal-strike\.js/); assert.match(html, /browser-attack-roll-hook-installation\.js/);
 assert.match(html, /browser-main-action-profiles\.js/); assert.match(html, /browser-main-action-selection\.js/); assert.match(html, /browser-main-action-providers\.js/);
 assert.match(html, /browser-attack-outcome\.js/); assert.match(html, /browser-attack-outcome-hook-installation\.js/);
 assert.match(html, /browser-ability-hook-installation\.js/);
@@ -80,6 +81,9 @@ assert.ok(html.indexOf("browser-action-economy.js") < html.indexOf("browser-abil
 assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-attack-roll-context.js"));
 assert.ok(html.indexOf("browser-attack-roll-context.js") < html.indexOf("browser-attack.js"));
 assert.ok(html.indexOf("browser-barbarian2.js") < html.indexOf("browser-bloodied-fury.js"));
+assert.ok(html.indexOf("browser-bloodied-fury.js") < html.indexOf("browser-brutal-strike.js"));
+assert.ok(html.indexOf("browser-brutal-strike.js") < html.indexOf("browser-attack-roll-hook-installation.js"));
+assert.ok(html.indexOf("browser-attack-roll-hook-installation.js") < html.indexOf("browser-attack.js"));
 assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-main-action-profiles.js"));
 assert.ok(html.indexOf("browser-main-action-profiles.js") < html.indexOf("browser-main-action-selection.js"));
 assert.ok(html.indexOf("browser-main-action-selection.js") < html.indexOf("browser-main-action-providers.js"));
