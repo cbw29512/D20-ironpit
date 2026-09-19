@@ -5,6 +5,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.zero_hp import apply_damage
+from app.content.barbarian_berserker_2014_combat_profile import _compile_rokhan_2014_combat_profile
 from app.content.barbarian_berserker_2014_profile import (
     _advancements, _base_scores, _compile_rokhan_stonefury_2014_profile,
     _final_scores, _species_increases,
@@ -13,6 +14,7 @@ from app.content.barbarian_berserker_2014_runtime import (
     _compile_rokhan_stonefury_2014, _damage_reaction, _progression, _scores,
     build_rokhan_stonefury_2014,
 )
+from app.content.character_resource_audit import audit_character_resources
 from app.content.demo import build_demo_fighter
 from app.content.level_resources import barbarian_2014_rage_uses, barbarian_rage_damage_bonus
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -277,3 +279,16 @@ def test_private_level_14_retaliation_serializes_for_browser_parity() -> None:
         "source_range_ft": 5,
         "attack_kind": "melee",
     }
+
+
+
+def test_private_level_20_resource_fingerprint_matches_unlimited_rage_runtime() -> None:
+    template = _compile_rokhan_stonefury_2014(20)
+    profile = _compile_rokhan_stonefury_2014_profile(20)
+    combat_profile = _compile_rokhan_2014_combat_profile(20)
+
+    assert template.resources == []
+    assert template.unlimited_resource_ids == ["rage"]
+    assert combat_profile.resources == ()
+    assert combat_profile.unlimited_resources == ("rage",)
+    assert audit_character_resources(template, profile, combat_profile) == []
