@@ -47,13 +47,40 @@ def parse_limited_use_names(row: dict[str, object]) -> list[str]:
     return names
 
 
+def _recharge_binding_matches(template: CombatantTemplate, source_name: str) -> bool:
+    marker = re.search(r"\(Recharge\s+(\d)(?:\s*[-–]\s*(\d))?\)", source_name, re.I)
+    if marker is None:
+        return False
+    action_name = re.sub(r"\s*\([^)]*\)$", "", source_name.split(":", 1)[-1]).strip()
+    actions = [
+        action for action in template.saving_throw_actions
+        if action.name.casefold() == action_name.casefold()
+    ]
+    if len(actions) != 1 or actions[0].resource_id is None or actions[0].resource_cost != 1:
+        return False
+    resource_id = actions[0].resource_id
+    resources = [
+        resource for resource in template.resources
+        if resource.id == resource_id and resource.max_uses == 1
+    ]
+    rules = [
+        rule for rule in template.recharge_rules
+        if rule.resource_id == resource_id
+        and rule.minimum_roll == int(marker.group(1))
+        and rule.die_size == 6
+    ]
+    return len(resources) == 1 and len(rules) == 1
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """No Recharge/N-per-Day feature is RAW-ready until its use economy is implemented."""
+    """Certify only explicitly bound Recharge save actions; all other limited use fails closed."""
     expected = parse_limited_use_names(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
+        if _recharge_binding_matches(template, name):
+            continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")
     return issues

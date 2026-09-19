@@ -13759,6 +13759,185 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-hell-hound",
+    "name": "Hell Hound",
+    "archetype": "source-certified monster",
+    "challenge_rating": "3",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "medium",
+    "armor_class": 15,
+    "max_hp": 58,
+    "speed_ft": 50,
+    "movement_modes": {
+      "walk_ft": 50,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 1,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-hell-hound-bite",
+        "name": "Bite",
+        "weapon_id": "srd-hell-hound-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "bite",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Fire",
+            "dice": {
+              "count": 1,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "fire",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-hell-hound-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 5,
+      "damage": 4
+    },
+    "attack_action": {
+      "id": "srd-hell-hound-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-hell-hound-bite"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-hell-hound-bite"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-hell-hound-fire-breath",
+        "name": "Fire Breath",
+        "save_ability": "dexterity",
+        "dc": 12,
+        "range_ft": 15,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "damage": {
+          "count": 5,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "fire",
+        "success_damage": "half",
+        "resource_id": "fire-breath",
+        "resource_cost": 1,
+        "requires_no_active_grapple": false,
+        "magical_effect": false,
+        "animation": "save-effect"
+      }
+    ],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 1,
+      "constitution": 2,
+      "intelligence": -2,
+      "wisdom": 1,
+      "charisma": -2
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "pack-tactics"
+    ],
+    "source_trait_names": [
+      "Pack Tactics"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Fire Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "fire"
+    ],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [
+      {
+        "id": "fire-breath",
+        "name": "Fire Breath",
+        "max_uses": 1
+      }
+    ],
+    "recharge_rules": [
+      {
+        "resource_id": "fire-breath",
+        "minimum_roll": 5,
+        "die_size": 6
+      }
+    ],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bite",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 297",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-worg",
     "name": "Worg",
     "archetype": "source-certified pack predator",
