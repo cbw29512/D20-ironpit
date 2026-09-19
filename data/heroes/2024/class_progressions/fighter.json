@@ -1,0 +1,502 @@
+{
+  "schema_version": 1,
+  "edition": "2024",
+  "class_id": "fighter",
+  "source": "D&D Beyond Basic Rules 2024",
+  "levels": {
+    "1": {
+      "proficiency_bonus": 2,
+      "max_hp": 12,
+      "ability_scores": {
+        "strength": 17,
+        "dexterity": 13,
+        "constitution": 15
+      },
+      "attack_count": 1,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear"
+      ],
+      "resources": {
+        "second-wind": 2,
+        "action-surge": 0,
+        "indomitable": 0
+      },
+      "features_added": [
+        "second-wind",
+        "savage-attacker",
+        "adrenaline-rush",
+        "relentless-endurance"
+      ],
+      "arena_ignored": []
+    },
+    "2": {
+      "proficiency_bonus": 2,
+      "max_hp": 20,
+      "ability_scores": {
+        "strength": 17,
+        "dexterity": 13,
+        "constitution": 15
+      },
+      "attack_count": 1,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear"
+      ],
+      "resources": {
+        "second-wind": 2,
+        "action-surge": 1,
+        "indomitable": 0
+      },
+      "features_added": [
+        "action-surge",
+        "tactical-mind"
+      ],
+      "arena_ignored": []
+    },
+    "3": {
+      "proficiency_bonus": 2,
+      "max_hp": 28,
+      "ability_scores": {
+        "strength": 17,
+        "dexterity": 13,
+        "constitution": 15
+      },
+      "attack_count": 1,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear"
+      ],
+      "resources": {
+        "second-wind": 2,
+        "action-surge": 1,
+        "indomitable": 0
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "4": {
+      "proficiency_bonus": 2,
+      "max_hp": 40,
+      "ability_scores": {
+        "strength": 18,
+        "dexterity": 13,
+        "constitution": 16
+      },
+      "attack_count": 1,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 3,
+        "action-surge": 1,
+        "indomitable": 0
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "5": {
+      "proficiency_bonus": 3,
+      "max_hp": 49,
+      "ability_scores": {
+        "strength": 18,
+        "dexterity": 13,
+        "constitution": 16
+      },
+      "attack_count": 2,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 3,
+        "action-surge": 1,
+        "indomitable": 0
+      },
+      "features_added": [
+        "extra-attack",
+        "tactical-shift"
+      ],
+      "arena_ignored": []
+    },
+    "6": {
+      "proficiency_bonus": 3,
+      "max_hp": 58,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 13,
+        "constitution": 16
+      },
+      "attack_count": 2,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 3,
+        "action-surge": 1,
+        "indomitable": 0
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "7": {
+      "proficiency_bonus": 3,
+      "max_hp": 67,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 13,
+        "constitution": 16
+      },
+      "attack_count": 2,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 3,
+        "action-surge": 1,
+        "indomitable": 0
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "8": {
+      "proficiency_bonus": 3,
+      "max_hp": 84,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 13,
+        "constitution": 18
+      },
+      "attack_count": 2,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 3,
+        "action-surge": 1,
+        "indomitable": 0
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "9": {
+      "proficiency_bonus": 4,
+      "max_hp": 94,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 13,
+        "constitution": 18
+      },
+      "attack_count": 2,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword"
+      ],
+      "resources": {
+        "second-wind": 3,
+        "action-surge": 1,
+        "indomitable": 1
+      },
+      "features_added": [
+        "indomitable",
+        "tactical-master"
+      ],
+      "arena_ignored": [
+        "tactical-master-push",
+        "tactical-master-slow"
+      ]
+    },
+    "10": {
+      "proficiency_bonus": 4,
+      "max_hp": 104,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 13,
+        "constitution": 18
+      },
+      "attack_count": 2,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 1,
+        "indomitable": 1
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "11": {
+      "proficiency_bonus": 4,
+      "max_hp": 114,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 13,
+        "constitution": 18
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 1,
+        "indomitable": 1
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "12": {
+      "proficiency_bonus": 4,
+      "max_hp": 136,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 13,
+        "constitution": 20
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 1,
+        "indomitable": 1
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "13": {
+      "proficiency_bonus": 5,
+      "max_hp": 147,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 13,
+        "constitution": 20
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 1,
+        "indomitable": 2
+      },
+      "features_added": [
+        "studied-attacks"
+      ],
+      "arena_ignored": []
+    },
+    "14": {
+      "proficiency_bonus": 5,
+      "max_hp": 158,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 15,
+        "constitution": 20
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 1,
+        "indomitable": 2
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "15": {
+      "proficiency_bonus": 5,
+      "max_hp": 169,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 15,
+        "constitution": 20
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 1,
+        "indomitable": 2
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "16": {
+      "proficiency_bonus": 5,
+      "max_hp": 180,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 17,
+        "constitution": 20
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 1,
+        "indomitable": 2
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "17": {
+      "proficiency_bonus": 6,
+      "max_hp": 191,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 17,
+        "constitution": 20
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 2,
+        "indomitable": 3
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "18": {
+      "proficiency_bonus": 6,
+      "max_hp": 202,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 17,
+        "constitution": 20
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 2,
+        "indomitable": 3
+      },
+      "features_added": [],
+      "arena_ignored": []
+    },
+    "19": {
+      "proficiency_bonus": 6,
+      "max_hp": 213,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 18,
+        "constitution": 20
+      },
+      "attack_count": 3,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 2,
+        "indomitable": 3
+      },
+      "features_added": [
+        "boon-combat-prowess"
+      ],
+      "arena_ignored": []
+    },
+    "20": {
+      "proficiency_bonus": 6,
+      "max_hp": 224,
+      "ability_scores": {
+        "strength": 20,
+        "dexterity": 18,
+        "constitution": 20
+      },
+      "attack_count": 4,
+      "weapon_masteries": [
+        "flail",
+        "javelin",
+        "spear",
+        "greatsword",
+        "shortbow",
+        "longsword"
+      ],
+      "resources": {
+        "second-wind": 4,
+        "action-surge": 2,
+        "indomitable": 3
+      },
+      "features_added": [],
+      "arena_ignored": []
+    }
+  }
+}
