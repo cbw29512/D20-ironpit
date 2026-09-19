@@ -28,17 +28,11 @@
     return null;
   }
 
-  function memberById(setup, id) {
-    return [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === id) || null;
-  }
-
-  function actionById(member, id) {
-    return (member.state.template.saving_throw_actions || []).find((action) => action.id === id) || null;
-  }
-
-  function register(descriptor) {
-    S().registerProvider(descriptor);
-  }
+  const memberById = (setup, id) => [...setup.heroes, ...setup.monsters]
+    .find((member) => member.combatant_id === id) || null;
+  const actionById = (member, id) => (member.state.template.saving_throw_actions || [])
+    .find((action) => action.id === id) || null;
+  const register = (descriptor) => S().registerProvider(descriptor);
 
   function install() {
     const selection = S();
