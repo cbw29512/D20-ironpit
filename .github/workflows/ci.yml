@@ -95,6 +95,7 @@ jobs:
           node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
+          node frontend/browser-turn-end-lifecycle-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs
           node frontend/browser-execution.test.cjs
