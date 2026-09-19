@@ -61,10 +61,12 @@ _ATTACKS = {
 }
 _MULTI = {
     "Animated Armor": (2, ("Slam",)), "Gargoyle": (2, ("Claw",)),
+    "Earth Elemental": (2, ("Slam", "Rock Launch")),
     "Guard Captain": (2, ("Javelin", "Longsword")), "Hill Giant": (2, ("Tree Club", "Trash Lob")),
     "Hippopotamus": (2, ("Bite",)), "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
 }
 _PRONE_MAX_SIZE = {
+    ("Earth Elemental", "Rock Launch"): CreatureSize.LARGE,
     ("Hill Giant", "Tree Club"): CreatureSize.LARGE,
 }
 _CONTROL_EFFECTS = {
