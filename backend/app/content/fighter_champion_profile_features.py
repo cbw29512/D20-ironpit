@@ -31,7 +31,7 @@ _FEATURES = (
     ProfileFeature(10, "heroic-warrior", "Heroic Warrior", "subclass", True),
     ProfileFeature(11, "two-extra-attacks", "Two Extra Attacks", "class", True),
     ProfileFeature(13, "studied-attacks", "Studied Attacks", "class", True),
-    ProfileFeature(15, "superior-critical", "Superior Critical", "subclass", False),
+    ProfileFeature(15, "superior-critical", "Superior Critical", "subclass", True),
     ProfileFeature(17, "action-surge-two-uses", "Action Surge — Two Uses", "class", True),
     ProfileFeature(18, "survivor", "Survivor", "subclass", False),
     ProfileFeature(20, "three-extra-attacks", "Three Extra Attacks", "class", True),
