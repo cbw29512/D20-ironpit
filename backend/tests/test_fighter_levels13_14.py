@@ -54,6 +54,7 @@ def test_fighter_level_fourteen_certifies_dexterity_asi_and_derived_stats() -> N
     assert (shortbow.attack_bonus, shortbow.damage_bonus) == (7, 2)
     assert karnok.skill_bonuses["acrobatics"] == 2
     assert profile.final_ability_scores.dexterity == 15
+    assert karnok.progression_features.critical_hit_minimum == 19
     assert audits["ability-score-improvement-l14"].automated is True
     _assert_certified(14, profile)
     assert ("fighter", 15, "canonical") not in build_certified_hero_registry()
