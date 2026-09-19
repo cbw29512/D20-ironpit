@@ -34,7 +34,12 @@ function member(id, side, options = {}) {
   const template = structuredClone(base);
   Object.assign(template, { id: `template-${id}`, name: id, armor_class: options.armorClass ?? 18,
     studied_attacks: options.studied !== false, traits: [] });
-  if (options.nativeGraze) template.tactical_master_sap_weapon_ids = [];
+  if (options.nativeGraze) {
+    template.tactical_master_sap_weapon_ids = [];
+    const primary = template.attacks.find((item) => item.id === template.primary_attack_id);
+    primary.masteryProperty = "Graze";
+    template.weapon_masteries = [...new Set([...(template.weapon_masteries || []), primary.weaponId])];
+  }
   return { combatant_id: id, side, position_ft: options.position ?? 0, state: S.buildState(template) };
 }
 function attack(attacker, target, values, sequence = 1) {
