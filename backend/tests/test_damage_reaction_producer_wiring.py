@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from app.combat.charge import resolve_charge_closing
 from app.combat.dice import FixedDiceProvider
 from app.combat.save_targets import resolve_save_targets
 from app.combat.standard_attack_action import resolve_standard_attack_action
-from app.combat.state import build_combatant_state
+from app.combat.state import begin_turn, build_combatant_state
+from app.content.audited_fighter import build_karnok_stoneward
 from app.content.demo import build_demo_fighter
+from app.content.monsters_charge_expansion import build_allosaurus
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.reactions import DamageReactionAttack
@@ -100,3 +103,36 @@ def test_save_damage_emits_immediate_damage_reaction() -> None:
     assert events[1].target_id == attacker.combatant_id
     assert target.state.reaction_available is False
     assert sequence == 3
+
+def test_charge_retaliation_can_stop_follow_up_attack() -> None:
+    attacker = _member("allosaurus", "monsters", 5, build_allosaurus())
+    target_template = build_karnok_stoneward()
+    target_template.damage_reaction_attack = DamageReactionAttack(source_feature="retaliation")
+    target = _member("karnok", "heroes", 0, target_template)
+    attacker.state.initiative_total = 20
+    target.state.initiative_total = 10
+    attacker.state.current_hp = 1
+    begin_turn(attacker.state)
+    setup = EncounterSetup(
+        heroes=[target],
+        monsters=[attacker],
+        hero_total_levels=1,
+        monster_total_cr="2",
+    )
+
+    events, sequence, handled = resolve_charge_closing(
+        1,
+        1,
+        attacker,
+        target,
+        FixedDiceProvider([15, 1, 15, 19, 6, 6]),
+        setup,
+    )
+
+    attacks = [event for event in events if event.event_type == "attack"]
+    assert handled is True
+    assert [event.feature_id for event in attacks] == ["charge", "retaliation"]
+    assert not any(event.feature_id == "charge-follow-up" for event in events)
+    assert attacker.state.is_dead is True
+    assert sequence == 3
+
