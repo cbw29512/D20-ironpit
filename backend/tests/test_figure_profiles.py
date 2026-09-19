@@ -90,6 +90,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Piranha": "piranha",
         "Reef Shark": "shark",
         "Scorpion": "scorpion",
+        "Sahuagin Warrior": "sahuagin-warrior",
         "Skeleton": "skeleton",
         "Swarm of Bats": "bats",
         "Swarm of Crawling Claws": "crawling-claws",
@@ -100,6 +101,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Triceratops": "triceratops",
         "Violet Fungus": "violet-fungus",
         "Worg": "canine",
+        "Xorn": "xorn",
     }
     for name, detail in expected.items():
         assert MONSTER_FIGURE_PROFILES[name]["detail"] == detail
