@@ -3,6 +3,7 @@
 
   const FEATURE = "brutal-strike";
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2;
+  const C = () => window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const F = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
@@ -25,6 +26,29 @@
       source: "Brutal Strike", diceCount: state.template.brutal_strike_damage_dice,
       diceSize: 10, damageType: attack.damageType,
     };
+  }
+
+  function resolveBeforeAttackRoll(ctx) {
+    const roll = C().requireContext(ctx);
+    const hasDisadvantage = roll.baseDisadvantageSources > 0 || roll.rangedDisadvantage;
+    const suppression = advantageSuppression(
+      ctx.member.state, ctx.attack, ctx.turnKey, hasDisadvantage,
+    );
+    roll.brutalStrikeSuppression = suppression;
+    roll.recklessAdvantage = Math.max(0, roll.recklessAdvantage - suppression);
+    return C().noEventResult(ctx.sequence);
+  }
+
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Brutal Strike hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.BEFORE_ATTACK_ROLL;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === FEATURE)) return;
+    hooks.registerAbility(phase, {
+      id: FEATURE, priority: 20, rulesets: ["2024"],
+      appliesTo: (member) => (member.state.template.brutal_strike_damage_dice || 0) > 0,
+      resolve: resolveBeforeAttackRoll,
+    });
   }
 
   function hamstring(defender, sourceId) {
@@ -53,5 +77,8 @@
 
   window.IRON_PIT_BROWSER_BRUTAL_STRIKE = {
     advantageSuppression, bonusDamage, eligible, forceful, followForceful, hamstring,
+    installAbilityHooks, resolveBeforeAttackRoll,
   };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();
