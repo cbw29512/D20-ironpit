@@ -7,6 +7,10 @@ const vm = require("node:vm");
 
 global.window = globalThis;
 vm.runInThisContext(
+  fs.readFileSync(path.join(__dirname, "browser-main-action-profiles.js"), "utf8"),
+  { filename: "browser-main-action-profiles.js" },
+);
+vm.runInThisContext(
   fs.readFileSync(path.join(__dirname, "browser-main-action-selection.js"), "utf8"),
   { filename: "browser-main-action-selection.js" },
 );
