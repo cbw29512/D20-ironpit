@@ -100,3 +100,13 @@ def test_compiler_fails_closed_for_declared_unsupported_capability() -> None:
     definition = _definition(unsupported_capabilities=["recharge:5-6"])
     with pytest.raises(UnsupportedCapabilityError, match="recharge:5-6"):
         compile_combatant(definition)
+
+
+def test_compiler_preserves_damage_triggered_melee_reaction() -> None:
+    template = compile_combatant(_definition(
+        damage_triggered_melee_reaction={"id": "retaliation", "trigger_range_ft": 5},
+    ))
+    reaction = template.damage_triggered_melee_reaction
+    assert reaction is not None
+    assert reaction.id == "retaliation"
+    assert reaction.trigger_range_ft == 5
