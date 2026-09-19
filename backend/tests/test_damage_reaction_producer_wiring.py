@@ -125,7 +125,7 @@ def test_charge_retaliation_can_stop_follow_up_attack() -> None:
         1,
         attacker,
         target,
-        FixedDiceProvider([15, 1, 15, 19, 6, 6]),
+        FixedDiceProvider([15, 1, 15, 19, 6, 6, 5, 5]),
         setup,
     )
 
