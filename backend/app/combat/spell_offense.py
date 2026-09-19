@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.damage_reactions import resolve_post_damage_reactions
 from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.combat.spell_policy import choose_spell
@@ -35,6 +36,12 @@ def resolve_best_spell_offense(
         event = resolve_spell_attack(
             sequence, round_number, caster, attack.target, attack.action, setup, turn_key, dice,
         )
-        return [event], sequence + 1
+        events = [event]
+        sequence += 1
+        reactions, sequence = resolve_post_damage_reactions(
+            sequence, round_number, caster, event, setup, dice, turn_key=turn_key,
+        )
+        events.extend(reactions)
+        return events, sequence
     assert save is not None
     return resolve_spell(sequence, round_number, caster, setup, save, turn_key, dice)
