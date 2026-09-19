@@ -9,8 +9,8 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const name of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
-  "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js",
-  "browser-exhaustion.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js",
+  "browser-action-economy.js", "browser-ability-checks.js", "browser-grapple.js", "browser-timed-conditions.js",
+  "browser-exhaustion.js", "browser-modifiers.js", "browser-state.js", "browser-resources.js", "browser-rage.js",
   "browser-barbarian2.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-formation.js", "browser-frenzy-2014.js", "browser-saves.js",
   "browser-intimidating-presence-2014.js",
@@ -93,6 +93,42 @@ for (const hero of [l3, l9, l10, l13]) {
 }
 
 {
+  const minimumTemplate = structuredClone(l13);
+  minimumTemplate.level = 18;
+  minimumTemplate.ability_check_minimums = [
+    { source_id: "indomitable-might", ability: "strength", minimum_source: "ability_score" },
+  ];
+  const hero = member(minimumTemplate, "rokhan-indomitable-might", "heroes", 0);
+  window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+  window.IRON_PIT_BROWSER_GRAPPLE.apply(hero.state, "monster-1", 19, 5, true);
+  window.IRON_PIT_DICE = queuedDice([1]);
+  const event = window.IRON_PIT_BROWSER_GRAPPLE.escape(1, 1, hero);
+  assert.equal(event.check_succeeded, true);
+  assert.equal(event.ability_check_roll.total, 20);
+  const revision = event.ability_check_roll.revisions.at(-1);
+  assert.equal(revision.source_effect_id, "indomitable-might");
+  assert.equal(revision.kind, "total_replacement");
+  assert.deepEqual([revision.original_total, revision.replacement_total], [11, 20]);
+}
+
+{
+  const unlimitedTemplate = structuredClone(l13);
+  unlimitedTemplate.level = 20;
+  unlimitedTemplate.resources = {};
+  unlimitedTemplate.unlimited_resources = ["rage"];
+  unlimitedTemplate.persistent_rage_2014 = true;
+  const hero = member(unlimitedTemplate, "rokhan-unlimited-rage", "heroes", 0);
+  for (const round of [1, 2]) {
+    window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+    const event = window.IRON_PIT_BROWSER_RAGE.enter(round, round, hero);
+    assert.ok(event);
+    assert.equal(event.resource_remaining, null);
+    assert.equal(Object.hasOwn(hero.state.resources, "rage"), false);
+    window.IRON_PIT_BROWSER_RAGE.end(hero.state);
+  }
+}
+
+{
   const state = member(l9, "critical", "heroes").state;
   const greataxe = state.template.attacks.find((attack) => attack.kind === "melee");
   window.IRON_PIT_DICE = queuedDice([6, 7, 8]);
@@ -123,4 +159,4 @@ for (const hero of [l3, l9, l10, l13]) {
   assert.equal(window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014.canUse(actor2, target2), false);
 }
 
-console.log("2014 Berserker browser mechanics stay edition-isolated through the certified boundary, with Persistent Rage parity staged safely.");
+console.log("2014 Berserker browser mechanics stay edition-isolated through the certified boundary, with Persistent Rage and Indomitable Might parity staged safely.");

@@ -2,6 +2,7 @@
   "use strict";
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const A = () => window.IRON_PIT_BROWSER_ABILITY_CHECKS;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
@@ -74,6 +75,10 @@
       if (!Number.isInteger(score)) throw new Error("Effect removal requires a certified casting ability.");
       dc = 10 + effect.spellLevel;
       check = R().d20(Math.floor((score - 10) / 2), "normal");
+      if ((remover.state.template.ability_check_minimums || []).some((rule) => rule.ability === action.castingAbility)) {
+        if (!A()) throw new Error("Ability-check minimum runtime is not loaded.");
+        check = A().applyMinimum(remover.state, action.castingAbility, check);
+      }
       succeeded = check.total >= dc;
     }
     if (succeeded) {

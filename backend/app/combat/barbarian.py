@@ -3,16 +3,13 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import is_incapacitated
 from app.combat.exhaustion import gain_exhaustion
+from app.combat.resources import resource_available, spend_resource
 from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
 
 RAGE_EFFECT_ID = "rage"
 FRENZY_2014_EFFECT_ID = "frenzy-2014"
 _RAGE_RESISTANCES = (DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING)
 _MINDLESS_RAGE_IMMUNITIES = {"charmed", "frightened"}
-
-
-def _rage_resource(state: CombatantState):
-    return next((resource for resource in state.resources if resource.id == "rage"), None)
 
 
 def _rage_max_rounds(state: CombatantState) -> int:
@@ -44,10 +41,9 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
     """Use a Bonus Action and one Rage use, applying edition-correct Rage duration and Berserker policy."""
     if state.template.wearing_heavy_armor or state.template.rage_damage_bonus <= 0 or rage_active(state):
         return None
-    resource = _rage_resource(state)
-    if resource is None or resource.current_uses <= 0 or not is_available(state, "bonus_action"):
+    if not resource_available(state, "rage") or not is_available(state, "bonus_action"):
         return None
-    resource.current_uses -= 1
+    remaining = spend_resource(state, "rage")
     spend(state, "bonus_action")
     state.active_effect_ids.append(RAGE_EFFECT_ID)
     frenzy_2014 = state.template.ruleset == "2014" and state.template.progression_features.frenzy_bonus_attack_2014
@@ -68,7 +64,7 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="feature",
         actor_id=actor_id, actor_name=state.template.name, feature_id=RAGE_EFFECT_ID,
-        removed_condition_ids=removed, resource_remaining=resource.current_uses, animation="rage",
+        removed_condition_ids=removed, resource_remaining=remaining, animation="rage",
         description=description,
     )
 

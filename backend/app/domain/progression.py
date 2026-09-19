@@ -3,6 +3,16 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 from typing import Literal
 
+from app.domain.character_builds import AbilityName
+
+
+class AbilityCheckMinimum(BaseModel):
+    """Declarative floor for one ability-check family; resolution remains name-agnostic."""
+
+    source_id: str
+    ability: AbilityName
+    minimum_source: Literal["ability_score"] = "ability_score"
+
 
 class EffectBoundSurvivalSave(BaseModel):
     """Immutable zero-HP replacement parameters; no class identity enters resolution."""
@@ -19,6 +29,7 @@ class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
+    ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     athletics_advantage: bool = False

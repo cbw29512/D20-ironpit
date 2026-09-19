@@ -40,7 +40,7 @@ Any mechanic that changes or compares a roll preserves both candidates:
 
 ```text
 source_effect_id      stable feature/rule id
-kind                  die_replacement | full_reroll | roll_twice_choose
+kind                  die_replacement | full_reroll | roll_twice_choose | total_replacement
 original_rolls        dice before the revision
 replacement_rolls     replacement/alternate dice
 original_modifier     modifier before revision
@@ -52,6 +52,8 @@ replacement_total     total after revision
 accepted              original | replacement
 replaced_die_index    zero-based die index for a single-die replacement, otherwise null
 ```
+
+A `total_replacement` preserves the original dice and modifier while replacing only the accepted total, for rules such as a minimum ability-check result.
 
 The final `DiceRoll` or damage component still contains the accepted result exactly as combat used it. `revisions` only preserves provenance.
 

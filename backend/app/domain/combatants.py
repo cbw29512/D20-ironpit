@@ -90,6 +90,7 @@ class CombatantTemplate(BaseModel):
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
+    unlimited_resource_ids: list[str] = Field(default_factory=list)
     recharge_rules: list[RechargeRule] = Field(default_factory=list)
     source: str
 
@@ -109,4 +110,12 @@ class CombatantTemplate(BaseModel):
             normalized["fighting_styles"] = [style]
         elif styles and not style:
             normalized["fighting_style"] = styles[0]
+        unlimited = set(normalized.get("unlimited_resource_ids") or [])
+        finite_ids = {
+            getattr(item, "id", None) if not isinstance(item, dict) else item.get("id")
+            for item in (normalized.get("resources") or [])
+        }
+        overlap = sorted(item for item in unlimited.intersection(finite_ids) if item)
+        if overlap:
+            raise ValueError(f"Resources cannot be both finite and unlimited: {overlap}.")
         return normalized

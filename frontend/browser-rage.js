@@ -9,6 +9,7 @@
   };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
+  const U = () => window.IRON_PIT_BROWSER_RESOURCES;
   const active = (state) => state.active_effect_ids.includes(EFFECT);
   const is2014 = (state) => state.template.ruleset === "2014";
   const damageBonus = (state, attack) => active(state) && attack.rageEligible ? (state.template.rage_damage_bonus || 0) : 0;
@@ -25,8 +26,13 @@
   function enter(sequence, round, member) {
     const state = member.state;
     if (state.template.wearing_heavy_armor || !(state.template.rage_damage_bonus > 0) || active(state)) return null;
-    if (!(state.resources.rage > 0) || !E().available(state, "bonus_action")) return null;
-    state.resources.rage -= 1; E().spend(state, "bonus_action"); state.active_effect_ids.push(EFFECT);
+    const resources = U();
+    const hasUnlimitedRage = (state.template.unlimited_resources || []).includes("rage");
+    if (!resources && hasUnlimitedRage) throw new Error("Unlimited Rage requires browser-resources.js.");
+    const available = resources ? resources.available(state, "rage") : state.resources.rage > 0;
+    if (!available || !E().available(state, "bonus_action")) return null;
+    const remaining = resources ? resources.spend(state, "rage") : --state.resources.rage;
+    E().spend(state, "bonus_action"); state.active_effect_ids.push(EFFECT);
     const frenzy2014 = is2014(state) && state.template.frenzy_bonus_attack_2014;
     if (frenzy2014) state.active_effect_ids.push(FRENZY_2014);
     const removed = endMindlessConditions(state);
@@ -38,7 +44,7 @@
     if (removed.length) description += ` Mindless Rage ends ${removed.join(", ")}.`;
     return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id,
       actor_name: state.template.name, feature_id: EFFECT, removed_condition_ids: removed,
-      resource_remaining: state.resources.rage, animation: "rage", description };
+      resource_remaining: remaining, animation: "rage", description };
   }
 
   function extendFromAttack(state, round) {
