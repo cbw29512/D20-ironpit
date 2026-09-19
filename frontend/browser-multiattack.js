@@ -55,12 +55,16 @@
     return [...setup.heroes, ...setup.monsters].find((item) => item.combatant_id === event.target_id) || fallback;
   }
 
+  function available(member, setup) {
+    const slots = member.state.template.attack_action?.slots;
+    return Boolean(slots?.length && E().available(member.state, "action")
+      && F().targetOrder(member, setup).length
+      && slots.some((slot) => slotHasLegalChoice(member, setup, slot)));
+  }
+
   function resolveAttackAction(sequence, round, member, setup) {
     const definition = member.state.template.attack_action, slots = definition?.slots;
-    if (!slots?.length || !E().available(member.state, "action") || !F().targetOrder(member, setup).length) {
-      return { events: [], sequence };
-    }
-    if (!slots.some((slot) => slotHasLegalChoice(member, setup, slot))) return { events: [], sequence };
+    if (!available(member, setup)) return { events: [], sequence };
     const events = [];
     E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
@@ -105,5 +109,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction };
+  window.IRON_PIT_BROWSER_MULTIATTACK = { available, resolveAttackAction };
 })();

@@ -10,6 +10,7 @@
   const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
+  const SV = () => window.IRON_PIT_BROWSER_SAVE_ACTION_POLICY;
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const D = () => window.IRON_PIT_DICE;
@@ -65,13 +66,6 @@
     });
   }
 
-  function saveChoice(member, setup) {
-    for (const target of F().targetOrder(member, setup)) for (const action of member.state.template.saving_throw_actions || []) {
-      const distance = F().saveDistance(member, target, action.range); if (V().legalAction(action, target, distance)) return { target, action, distance };
-    }
-    return null;
-  }
-
   function resolveTurn(sequence, round, member, setup) {
     try {
       enablePitRangePolicy();
@@ -104,7 +98,7 @@
       }
       const area = AS()?.resolve(sequence, round, member, setup, AS()?.choose(member, setup));
       if (area) { events.push(...area.events); return finalize(events, area.sequence, round, member, setup, turnKey); }
-      const saved = saveChoice(member, setup);
+      const saved = SV().choose(member, setup);
       if (saved && E().available(member.state, "action")) { events.push(V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance)); return finalize(events, sequence, round, member, setup, turnKey); }
       const choice = F().chooseStandardAttack(member, setup);
       if (choice && E().available(member.state, "action")) {

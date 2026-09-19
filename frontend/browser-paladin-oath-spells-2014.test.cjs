@@ -27,6 +27,7 @@ load("browser-healing.js");
 load("browser-condition-removal.js");
 load("browser-effect-removal.js");
 load("browser-ability-hooks.js");
+load("browser-save-action-policy.js");
 load("browser-turn.js");
 load("browser-precombat-spells.js");
 

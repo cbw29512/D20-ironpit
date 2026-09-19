@@ -89,6 +89,26 @@ Python and browser currently use the same normal-turn preference:
 
 The migration changes orchestration, not those choices.
 
+## Current migration status
+
+The provider-discovery tranche is intentionally **inert**. Live `browser-turn.js` still owns Main Action ordering.
+
+Registered discovery providers now cover:
+
+- spell offense;
+- 2014 Intimidating Presence;
+- Attack/Multiattack action;
+- area save action;
+- single-target save action;
+- standard attack;
+- Dodge.
+
+Provider discovery delegates to existing family policy rather than duplicating rules. The spell offense module exposes its existing attack-vs-save choice as a side-effect-free `choose()`, Attack/Multiattack exposes side-effect-free availability, and single-target save choice lives in a shared save-action policy used by the current live turn and future provider.
+
+Certified offensive hero spell attacks/save spells are currently all Action-timed. A permanent artifact regression fails if a future certified offensive spell becomes Bonus Action-timed without an explicit architecture change.
+
+The provider layer does not route live turns yet and therefore must not alter combat outcomes or certification counts.
+
 ## Migration plan
 
 1. Land this candidate registry/selector inert with adversarial tests and production wiring.
