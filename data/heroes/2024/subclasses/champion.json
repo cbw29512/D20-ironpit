@@ -5,31 +5,31 @@
   "subclass_id": "champion",
   "deltas": {
     "3": {
-      "features_added": [
+      "capabilities_added": [
         "improved-critical",
         "remarkable-athlete"
       ]
     },
     "7": {
-      "features_added": [
+      "capabilities_added": [
         "great-weapon-fighting"
       ]
     },
     "10": {
-      "features_added": [
+      "capabilities_added": [
         "heroic-warrior"
       ]
     },
     "15": {
-      "features_added": [
+      "capabilities_added": [
         "superior-critical"
       ],
-      "features_removed": [
+      "capabilities_removed": [
         "improved-critical"
       ]
     },
     "18": {
-      "features_added": [
+      "capabilities_added": [
         "survivor-defy-death",
         "survivor-heroic-rally"
       ]
