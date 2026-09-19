@@ -1,4 +1,4 @@
-from app.combat.barbarian import enter_rage
+from app.combat.barbarian import enter_rage, finish_rage_turn, rage_active
 from app.combat.brutal_critical import brutal_critical_bonus_damage
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
@@ -39,6 +39,20 @@ def test_2014_level_12_asi_updates_all_derived_combat_values() -> None:
     assert hero.saving_throw_bonuses["wisdom"] == 2
     assert hero.rage_damage_bonus == 3
     assert {item.id: item.max_uses for item in hero.resources} == {"rage": 5}
+
+
+def test_2014_level_15_persistent_rage_uses_full_duration_without_maintenance() -> None:
+    base = build_rokhan_stonefury_2014(13)
+    features = base.progression_features.model_copy(update={"persistent_rage_2014": True})
+    state = build_combatant_state(base.model_copy(update={"level": 15, "progression_features": features}))
+
+    assert enter_rage(1, 1, state, "rokhan") is not None
+    assert state.rage_expires_round == 11
+    assert state.rage_max_round == 11
+    assert finish_rage_turn(state, 2) is None
+    assert rage_active(state) is True
+    assert finish_rage_turn(state, 11) == 1
+    assert rage_active(state) is False
 
 
 def test_2014_level_13_brutal_critical_adds_two_weapon_dice() -> None:
