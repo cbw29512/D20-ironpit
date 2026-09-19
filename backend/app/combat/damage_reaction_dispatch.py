@@ -32,22 +32,30 @@ def _legal_melee_attack_against_source(
     source: EncounterCombatant,
 ) -> tuple[WeaponAttack, int] | None:
     """Choose the first declared melee attack that is legal against the triggering source."""
-    distance_ft = combatant_distance(reactor, source)
-    attacks = [
-        reactor.state.template.weapon_attack,
-        *reactor.state.template.alternate_weapon_attacks,
-    ]
-    for attack in attacks:
-        if attack.weapon.attack_kind is not WeaponAttackKind.MELEE:
-            continue
-        if not attack_allowed_against(attack, reactor.combatant_id, source.state):
-            continue
-        try:
-            resolve_attack_roll_mode(attack.weapon, distance_ft, close_enemy_active=False)
-        except ValueError:
-            continue
-        return attack, distance_ft
-    return None
+    try:
+        distance_ft = combatant_distance(reactor, source)
+        attacks = [
+            reactor.state.template.weapon_attack,
+            *reactor.state.template.alternate_weapon_attacks,
+        ]
+        for attack in attacks:
+            if attack.weapon.attack_kind is not WeaponAttackKind.MELEE:
+                continue
+            if not attack_allowed_against(attack, reactor.combatant_id, source.state):
+                continue
+            try:
+                resolve_attack_roll_mode(attack.weapon, distance_ft, close_enemy_active=False)
+            except ValueError:
+                continue
+            return attack, distance_ft
+        return None
+    except Exception as exc:
+        logger.exception(
+            "Failed to select source-bound damage reaction attack: reactor=%s source=%s.",
+            reactor.combatant_id,
+            source.combatant_id,
+        )
+        raise RuntimeError("Damage reaction attack selection failed.") from exc
 
 
 def plan_damage_reaction_attack(
@@ -85,9 +93,13 @@ def plan_damage_reaction_attack(
         if not damage_reaction_is_eligible(policy, trigger):
             return None
         return DamageReactionPlan(reactor=reactor, source=source, attack=attack, distance_ft=distance_ft)
-    except Exception:
-        logger.exception("Damage reaction planning failed closed for %s.", reactor.combatant_id)
-        return None
+    except Exception as exc:
+        logger.exception(
+            "Damage reaction planning failed: reactor=%s source=%s.",
+            reactor.combatant_id,
+            source.combatant_id,
+        )
+        raise RuntimeError("Damage reaction planning failed.") from exc
 
 
 def resolve_damage_reaction_attack(
@@ -102,27 +114,36 @@ def resolve_damage_reaction_attack(
     turn_key: str | None = None,
 ) -> BattleEvent | None:
     """Spend the Reaction and immediately resolve the planned off-turn melee attack."""
-    plan = plan_damage_reaction_attack(reactor, source, setup, applied_damage)
-    if plan is None:
-        return None
-    policy = reactor.state.template.damage_reaction_attack
-    if policy is None:
-        raise RuntimeError("Damage reaction policy disappeared after planning.")
+    try:
+        plan = plan_damage_reaction_attack(reactor, source, setup, applied_damage)
+        if plan is None:
+            return None
+        policy = reactor.state.template.damage_reaction_attack
+        if policy is None:
+            raise RuntimeError("Damage reaction policy disappeared after planning.")
 
-    spend(reactor.state, "reaction")
-    return resolve_encounter_attack(
-        sequence,
-        round_number,
-        reactor,
-        source,
-        plan.attack,
-        plan.distance_ft,
-        dice,
-        setup,
-        spend_action=False,
-        feature_id=policy.source_feature,
-        turn_key=turn_key,
-        close_enemy_active=True,
-        allow_reckless=False,
-        off_turn=True,
-    )
+        spend(reactor.state, "reaction")
+        return resolve_encounter_attack(
+            sequence,
+            round_number,
+            reactor,
+            source,
+            plan.attack,
+            plan.distance_ft,
+            dice,
+            setup,
+            spend_action=False,
+            feature_id=policy.source_feature,
+            turn_key=turn_key,
+            close_enemy_active=True,
+            allow_reckless=False,
+            off_turn=True,
+        )
+    except Exception as exc:
+        logger.exception(
+            "Damage reaction resolution failed: reactor=%s source=%s sequence=%s.",
+            reactor.combatant_id,
+            source.combatant_id,
+            sequence,
+        )
+        raise RuntimeError("Damage reaction attack resolution failed.") from exc
