@@ -31,6 +31,14 @@ _EXPECTED_IMMUNITY = {
     "Young White Dragon": "cold",
 }
 
+_EXPECTED_MOVEMENT = {
+    "Young Black Dragon": (40, 80, 0, 40, 0),
+    "Young Blue Dragon": (40, 80, 0, 0, 20),
+    "Young Green Dragon": (40, 80, 0, 40, 0),
+    "Young Red Dragon": (40, 80, 40, 0, 0),
+    "Young White Dragon": (40, 80, 0, 40, 20),
+}
+
 
 def _runtime_by_name():
     return {
@@ -50,6 +58,8 @@ def test_young_dragons_match_source_and_recharge_contract() -> None:
         breath_name, ability, dc, shape, length, width, dice_count, dice_size, damage_type = _EXPECTED[name]
 
         assert monster.size is CreatureSize.LARGE
+        modes = monster.movement_modes
+        assert (modes.walk_ft, modes.fly_ft, modes.climb_ft, modes.swim_ft, modes.burrow_ft) == _EXPECTED_MOVEMENT[name]
         assert audit_monster_source(monster, source[name]) == []
         assert monster.weapon_attack.weapon.name == "Rend"
         assert monster.weapon_attack.weapon.reach_ft == 10
