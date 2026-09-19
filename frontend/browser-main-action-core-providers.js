@@ -58,7 +58,7 @@
       resolve: ({ sequence, round, member, setup }, candidate) => {
         const selected = candidate.payload.selected;
         const event = V().resolveAction(
-          sequence, round, member, selected.target, selected.action, selected.distance, { setup },
+          sequence, round, member, selected.target, selected.action, selected.distance,
         );
         return oneEvent(event, sequence);
       },
