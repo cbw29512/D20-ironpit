@@ -41,6 +41,7 @@
     selector.registerProvider({
       id: "area-save", category: K.AREA_SAVE, rulesets: ["2014", "2024"],
       discover: ({ member, setup }) => {
+        if (!E().available(member.state, "action")) return null;
         const selected = A().choose(member, setup);
         return selected ? { payload: { selected } } : null;
       },
@@ -50,6 +51,7 @@
     selector.registerProvider({
       id: "save-action", category: K.SAVE_ACTION, rulesets: ["2014", "2024"],
       discover: ({ member, setup }) => {
+        if (!E().available(member.state, "action")) return null;
         const selected = SV().choose(member, setup);
         return selected ? { payload: { selected } } : null;
       },
