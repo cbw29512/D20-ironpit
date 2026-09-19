@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTIONS;
 
   function saveAction(choice) {
     const spell = choice.action;
@@ -67,6 +68,8 @@
       if (sharedDamageRolls == null && event.damage_components?.length) {
         sharedDamageRolls = [...event.damage_components[0].rolls];
       }
+      const reactions = DR().resolveAfterDamage(sequence, round, caster, event, setup, turnKey);
+      events.push(...reactions.events); sequence = reactions.sequence;
     }
     return { events, sequence };
   }
