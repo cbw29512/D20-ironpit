@@ -23,7 +23,8 @@ The canonical browser phases are:
 | `turnStart` | No | Start-of-turn effects before an action choice |
 | `bonusActionWindow` | Yes | Competing uses of the single Bonus Action |
 | `mainAction` | Yes | Competing uses of the current Action |
-| `turnFinalize` | No | Post-action/end-of-turn follow-up and cleanup |
+| `turnFinalize` | No | Post-action finalization for a normal resolved turn |
+| `turnEndLifecycle` | No | End-turn lifecycle that must run even when no normal action turn occurred |
 | `beforeAttackRoll` | No | Attack-roll sources before the d20 is resolved |
 | `onHit` | No | Effects triggered by a confirmed hit |
 | `onMiss` | No | Effects triggered by a confirmed miss |
@@ -134,6 +135,12 @@ The preserved hit order is `Topple -> Sap/Tactical Master -> Vex`. The preserved
 
 The Python oracle retains its existing attack orchestration for this tranche. Dedicated parity coverage proves that Graze and Studied Attacks still coexist on one miss, that Tactical Master/Sap correctly replaces a weapon's native mastery on a hit, and that an unreplaced Vex hit still primes the next attack. Browser hook regressions lock the equivalent order and aggregate-event behavior.
 
+`turnFinalize` and `turnEndLifecycle` are intentionally separate. `turnFinalize` covers post-action normal-turn work such as Rage expiry after Bonus Action resolution. `turnEndLifecycle` runs from the encounter engine after every turn slot, including 0-HP/death-save-only turns that never enter `resolveTurn()`.
+
+2014 Intimidating Presence invalidation belongs to `turnEndLifecycle`, matching the Python encounter engine's `end_invalid_presence()` ordering before target/source end-turn condition timing. This fixes the previous browser gap where a 0-HP creature could skip the cleanup because browser cleanup lived only inside `resolveTurn().finalize()`.
+
+The Intimidating Presence module self-registers immediately when the dispatcher is already loaded, or queues its installer when load order is reversed. It is not a mandatory dependency of the shared Bonus Action installer.
+
 ## Migration order
 
 Migrate one coherent phase per PR.
@@ -141,7 +148,7 @@ Migrate one coherent phase per PR.
 1. Land this dispatcher, its tests, documentation, HTML wiring, and CI wiring with zero callers.
 2. Migrate `bonusActionWindow` first. Preserve current Bonus Action policy exactly. Rage, Second Wind, Adrenaline Rush, and other genuine competing actions register; Tactical Shift remains a rider on Second Wind.
 3. Migrate `onHit` / `onMiss` after the first phase is certified.
-4. Migrate `turnFinalize`.
+4. Separate `turnFinalize` from `turnEndLifecycle` and migrate lifecycle-only cleanup such as 2014 Intimidating Presence invalidation.
 5. Migrate `mainAction` and `turnStart` last because they are the most structural.
 6. After a phase is migrated, `resolveTurn()` / `resolveAttack()` may not name individual abilities from that phase. A new named special case is evidence that the phase model or shared policy needs review.
 

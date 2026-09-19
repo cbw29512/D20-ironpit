@@ -100,13 +100,28 @@
     return "active";
   }
   function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
-    const target = L().resolveTargetTiming(sequence, round, member, targetTiming);
-    const source = L().resolveSourceTiming(target.sequence, round, member, setup, sourceTiming);
+    const events = [];
+    let nextSequence = sequence;
+    if (targetTiming === "target_turn_end") {
+      const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+      if (!hooks) throw new Error("Browser end-turn lifecycle requires browser-ability-hooks.js.");
+      const cleanup = hooks.runPhase(hooks.PHASES.TURN_END_LIFECYCLE, {
+        sequence: nextSequence, round, member, setup, events: [],
+      });
+      events.push(...cleanup.events);
+      nextSequence = cleanup.sequence;
+    }
+    const target = L().resolveTargetTiming(nextSequence, round, member, targetTiming);
+    events.push(...target.events);
+    nextSequence = target.sequence;
+    const source = L().resolveSourceTiming(nextSequence, round, member, setup, sourceTiming);
+    events.push(...source.events);
+    nextSequence = source.sequence;
     if (sourceTiming === "source_turn_end") {
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
       window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurn(states, member.combatant_id, round);
     }
-    return { events: [...target.events, ...source.events], sequence: source.sequence };
+    return { events, sequence: nextSequence };
   }
   function runEncounter(selection) {
     if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");

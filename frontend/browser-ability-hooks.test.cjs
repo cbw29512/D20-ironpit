@@ -12,7 +12,7 @@ const member = (ruleset = "2024") => ({ combatant_id: `test-${ruleset}`, state: 
 const event = (id, sequence) => ({ event_type: "feature", feature_id: id, sequence });
 const result = (id, sequence, claimed = false) => ({ events: [event(id, sequence)], sequence: sequence + 1, claimed });
 
-assert.deepEqual(H.knownPhases(), ["turnStart", "bonusActionWindow", "mainAction", "turnFinalize", "beforeAttackRoll", "onHit", "onMiss"]);
+assert.deepEqual(H.knownPhases(), ["turnStart", "bonusActionWindow", "mainAction", "turnFinalize", "turnEndLifecycle", "beforeAttackRoll", "onHit", "onMiss"]);
 assert.throws(() => H.registerAbility("onHti", { id: "typo", rulesets: ["2024"], resolve: () => null }), /Unknown ability-hook phase/);
 assert.throws(() => H.registerAbility(H.PHASES.ON_HIT, { id: "missing-ruleset", resolve: () => null }), /must declare one or more rulesets/);
 assert.throws(() => H.registerAbility(H.PHASES.ON_HIT, { id: "bad-ruleset", rulesets: ["2025"], resolve: () => null }), /unsupported ruleset/);

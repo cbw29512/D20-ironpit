@@ -54,8 +54,6 @@
       sequence, round, member, setup, turnKey, turnEvents: [...events], events: [],
     });
     events.push(...cleanup.events); sequence = cleanup.sequence;
-    const fear = IP()?.cleanupTarget(sequence, round, member, setup);
-    if (fear) { events.push(...fear.events); sequence = fear.sequence; }
     return { events, sequence };
   }
 
