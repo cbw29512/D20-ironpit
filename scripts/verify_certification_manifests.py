@@ -12,7 +12,7 @@ from typing import Any
 from app.content.certified_heroes import build_certified_hero_entries
 from app.content.hero_catalog import build_hero_catalog
 from app.content.hero_progressions import CANONICAL_HEROES
-from app.content.monster_catalog import _READY_BY_NAME, build_monster_catalog, load_monster_rows
+from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
 from export_browser_heroes import render as render_browser_heroes
@@ -206,6 +206,7 @@ def build_monster_manifest() -> dict[str, Any]:
     rows = load_monster_rows()
     cards = {card.name: card for card in build_monster_catalog()}
     runtime = {template.id: template for template in build_arena_roster().monsters}
+    runtime_by_name = {template.name: template for template in runtime.values()}
     monster_names = {str(row["name"]) for row in rows}
     monsters: list[dict[str, Any]] = []
     for row in rows:
@@ -217,7 +218,10 @@ def build_monster_manifest() -> dict[str, Any]:
         detected = _detected_monster_mechanics(row, source_blockers)
         unsupported = [] if ready else sorted(set(source_blockers or card.blockers))
         supported = detected if ready else sorted(set(detected) - set(unsupported))
-        runtime_template_id = card.runnable_template_id or _READY_BY_NAME.get(name)
+        runtime_template = runtime_by_name.get(name)
+        runtime_template_id = card.runnable_template_id or (
+            runtime_template.id if runtime_template is not None else None
+        )
         if runtime_template_id is not None and runtime_template_id not in runtime:
             blockers = sorted(set([*blockers, "missing-runtime-template"]))
         monsters.append({
