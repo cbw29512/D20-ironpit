@@ -4,6 +4,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.cleric_channel_policy import ChannelDivinityChoice
 from app.combat.cleric_divine_spark import resolve_divine_spark
 from app.combat.cleric_preserve_life import resolve_preserve_life
+from app.combat.damage_reactions import resolve_post_damage_reactions
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.turn_creature_effects import resolve_turning_saves
@@ -80,4 +81,10 @@ def resolve_channel_divinity(
         healing=choice.kind == "divine-spark-heal",
         save_dc=_spell_save_dc(cleric), resource_remaining=remaining,
     )
-    return [event], sequence + 1
+    events = [event]
+    sequence += 1
+    reactions, sequence = resolve_post_damage_reactions(
+        sequence, round_number, cleric, event, setup, dice,
+    )
+    events.extend(reactions)
+    return events, sequence
