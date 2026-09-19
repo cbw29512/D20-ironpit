@@ -165,7 +165,7 @@ assert.deepEqual(
   assert.deepEqual(outcome.appliedConditions, ["prone"]);
 }
 
-const attackSource = fs.readFileSync(path.join(__dirname, "browser-attack.js"), "utf8");
+const attackSource = fs.readFileSync(path.join(__dirname, "browser-attack-roll-context.js", "browser-attack.js"), "utf8");
 for (const forbidden of [
   "rawGraze", "STUDY().apply", "TOP().resolve", "TM().apply",
   "IRON_PIT_BROWSER_VEX?.apply",
