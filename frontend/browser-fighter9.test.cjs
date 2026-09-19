@@ -93,14 +93,14 @@ const shortbow = {
   reach: 5, animation: "projectile", masteryProperty: "Vex", attackAbilityModifier: 1,
 };
 const fighterTemplate = {
-  name: "Karnok Stoneward", kind: "character", armor_class: 17, max_hp: 94, speed_ft: 30, size: "medium",
+  name: "Karnok Stoneward", kind: "character", ruleset: "2024", armor_class: 17, max_hp: 94, speed_ft: 30, size: "medium",
   traits: [], damage_immunities: [], damage_resistances: [], damage_vulnerabilities: [],
   critical_hit_minimum: 19, tactical_master_sap_weapon_ids: ["greatsword"], indomitable_bonus: 9,
   weapon_masteries: ["flail", "javelin", "spear", "greatsword"],
   saving_throw_bonuses: { strength: 9, dexterity: 1, constitution: 8, intelligence: 0, wisdom: 0, charisma: 0 },
 };
 const targetTemplate = {
-  name: "Target", kind: "monster", armor_class: 17, max_hp: 100, speed_ft: 30, size: "medium",
+  name: "Target", kind: "monster", ruleset: "2024", armor_class: 17, max_hp: 100, speed_ft: 30, size: "medium",
   traits: [], damage_immunities: [], damage_resistances: [], damage_vulnerabilities: [],
   critical_hit_minimum: 20, tactical_master_sap_weapon_ids: [], weapon_masteries: [],
   saving_throw_bonuses: { strength: 2, dexterity: 2, constitution: 2, intelligence: 0, wisdom: 0, charisma: 0 },
