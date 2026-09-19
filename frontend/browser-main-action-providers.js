@@ -21,7 +21,6 @@
     if (!E().available(member.state, "action")) return null;
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
-        if (action.area) continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };
       }
