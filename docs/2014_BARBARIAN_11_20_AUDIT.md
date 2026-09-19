@@ -22,7 +22,7 @@ earlier outcome-changing feature is unsupported.
 | 17 | Brutal Critical (3 dice), 6 Rages | `brutal_critical_dice=3`; finite Rage count = 6 | Existing critical-hit/resource state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
 | 18 | Indomitable Might | Strength-check result has a floor equal to Strength score | Generic ability-check minimum rule plus auditable total replacement; wired into every currently supported check family in Python/browser | Primitive staged safely; level 18 remains uncertified because level 14 Retaliation is missing |
 | 19 | ASI | Canonical choice: +2 Constitution (18 -> 20) | No new mutable state | Numeric/profile spine staged and regression-tested; not exposed while level 14 is unsupported |
-| 20 | Primal Champion; unlimited Rage | Strength and Constitution +4 to 24 are staged explicitly after legal ASIs; Rage ceases to be finite | Stat propagation is tested; Unlimited Rage still requires explicit non-finite resource semantics | **Remaining blocker: unlimited-resource semantics** |
+| 20 | Primal Champion; unlimited Rage | Strength and Constitution +4 to 24 are staged explicitly after legal ASIs; Rage is an explicit unlimited resource ID with no counter | Generic Python/browser resource helpers treat unlimited resources as always available and non-decrementing | Primitive staged and regression-tested; level 20 remains uncertified only because level 14 Retaliation blocks cumulative progression |
 
 ## Implemented parity map for levels 11-13
 
@@ -71,6 +71,12 @@ combat feature and violate fail-closed certification.
 A reusable `AbilityCheckMinimum` rule now declares the affected ability and source feature. The shared resolver compares the completed ability-check total with that ability's score, preserves the original dice/modifier, and records an audit `total_replacement` when the floor changes the accepted total. Python and browser integrations cover both current ability-check families: grapple escape and spell-effect removal. A synthetic level-18 Rokhan regression proves the Strength floor without exposing or registering an invalid level-18 template.
 
 This does **not** widen certification beyond level 13 because level 14 Retaliation is still a mandatory cumulative blocker.
+
+### Unlimited Rage (level 20)
+
+Unlimited resources are modeled without a fake counter. A combatant declares an `unlimited_resource_ids` entry; the shared Python/browser resource helpers report that resource as always available, spending it returns no remaining count, and no mutable finite resource state is created. The staged level-20 Rokhan binding uses `rage` this way. Finite resources retain their existing counters unchanged.
+
+This completes the safe level-20 Rage primitive without widening certification beyond level 13.
 
 ## Level-14 architectural blocker
 

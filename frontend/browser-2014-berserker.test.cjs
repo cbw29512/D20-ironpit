@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const name of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-ability-checks.js", "browser-grapple.js", "browser-timed-conditions.js",
-  "browser-exhaustion.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js",
+  "browser-exhaustion.js", "browser-modifiers.js", "browser-state.js", "browser-resources.js", "browser-rage.js",
   "browser-barbarian2.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-formation.js", "browser-frenzy-2014.js", "browser-saves.js",
   "browser-intimidating-presence-2014.js",
@@ -109,6 +109,23 @@ for (const hero of [l3, l9, l10, l13]) {
   assert.equal(revision.source_effect_id, "indomitable-might");
   assert.equal(revision.kind, "total_replacement");
   assert.deepEqual([revision.original_total, revision.replacement_total], [11, 20]);
+}
+
+{
+  const unlimitedTemplate = structuredClone(l13);
+  unlimitedTemplate.level = 20;
+  unlimitedTemplate.resources = {};
+  unlimitedTemplate.unlimited_resources = ["rage"];
+  unlimitedTemplate.persistent_rage_2014 = true;
+  const hero = member(unlimitedTemplate, "rokhan-unlimited-rage", "heroes", 0);
+  for (const round of [1, 2]) {
+    window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+    const event = window.IRON_PIT_BROWSER_RAGE.enter(round, round, hero);
+    assert.ok(event);
+    assert.equal(event.resource_remaining, null);
+    assert.equal(Object.hasOwn(hero.state.resources, "rage"), false);
+    window.IRON_PIT_BROWSER_RAGE.end(hero.state);
+  }
 }
 
 {
