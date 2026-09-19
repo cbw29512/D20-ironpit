@@ -57,8 +57,9 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
     for damage_type in _RAGE_RESISTANCES:
         if damage_type not in state.temporary_damage_resistances:
             state.temporary_damage_resistances.append(damage_type)
-    state.rage_expires_round = round_number + 1
     state.rage_max_round = round_number + _rage_max_rounds(state)
+    persistent_2014 = state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014
+    state.rage_expires_round = state.rage_max_round if persistent_2014 else round_number + 1
     description = f"{state.template.name} enters Rage."
     if frenzy_2014:
         description += " The Berserker enters a Frenzy."
@@ -73,6 +74,8 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
 
 
 def extend_rage_from_attack(state: CombatantState, round_number: int) -> None:
+    if state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014:
+        return
     if rage_active(state):
         maximum = state.rage_max_round or round_number + 1
         state.rage_expires_round = min(round_number + 1, maximum)
