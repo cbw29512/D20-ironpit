@@ -84,5 +84,21 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014 = { canUse, cleanupTarget, extend, resolve };
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Intimidating Presence hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.TURN_END_LIFECYCLE;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === FEATURE)) return;
+    hooks.registerAbility(phase, {
+      id: FEATURE, priority: 10, rulesets: ["2014"],
+      resolve: ({ sequence, round, member, setup }) => {
+        const result = cleanupTarget(sequence, round, member, setup);
+        return { ...result, claimed: false };
+      },
+    });
+  }
+
+  window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014 = { canUse, cleanupTarget, extend, installAbilityHooks, resolve };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();
