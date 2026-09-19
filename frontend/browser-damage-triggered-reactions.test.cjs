@@ -55,6 +55,14 @@ window.IRON_PIT_BROWSER_ATTACK = {
 load("browser-damage-triggered-reactions.js");
 load("browser-damage-reaction-dispatch.js");
 
+window.IRON_PIT_BROWSER_LIGHT_ATTACK = {
+  resolve: (sequence) => ({ events: [], sequence }),
+};
+window.IRON_PIT_BROWSER_WEAPON_MASTERY = {
+  resolveCleave: (sequence) => ({ events: [], sequence }),
+};
+load("browser-standard-attack-action.js");
+
 const melee = { id: "greataxe", kind: "melee", reach: 5 };
 function member(id, side, position, reaction = false) {
   return {
@@ -179,6 +187,24 @@ function damageEvent(source, target, applied = 2) {
     ),
     /source must match/,
   );
+}
+
+
+{
+  const reactor = member("wired-reactor", "monsters", 5, true);
+  const source = member("wired-source", "heroes", 0, false);
+  const setup = { heroes: [source], monsters: [reactor] };
+  const result = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
+    10, 1, source, reactor, melee, 5, setup, "1:wired-source",
+    { allowReckless: false },
+  );
+  assert.equal(result.events.length, 2);
+  assert.equal(result.events[0].actor_id, "wired-source");
+  assert.equal(result.events[0].target_id, "wired-reactor");
+  assert.equal(result.events[1].feature_id, "retaliation");
+  assert.equal(result.events[1].actor_id, "wired-reactor");
+  assert.equal(result.events[1].target_id, "wired-source");
+  assert.equal(result.sequence, 12);
 }
 
 console.log("Browser universal post-damage reaction parity passed.");
