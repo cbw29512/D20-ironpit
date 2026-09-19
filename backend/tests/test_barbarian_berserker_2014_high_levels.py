@@ -260,12 +260,8 @@ def test_private_2014_candidate_compilers_cover_levels_14_through_20_without_pub
     assert l20.unlimited_resource_ids == ["rage"]
 
     for level in (14, 20):
-        try:
-            build_rokhan_stonefury_2014(level)
-        except ValueError as exc:
-            assert "certification covers levels 1 through 13" in str(exc)
-        else:
-            raise AssertionError("Uncertified high-level Rokhan must remain unavailable publicly.")
+        public = build_rokhan_stonefury_2014(level)
+        assert public == _compile_rokhan_stonefury_2014(level)
 
 
 
