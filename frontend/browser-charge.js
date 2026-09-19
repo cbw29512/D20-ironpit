@@ -2,6 +2,8 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, cost) => cost === "bonus_action" ? Boolean(s.bonus_action_available) : Boolean(s.action_available),
     spend: (s, cost) => { if (cost === "bonus_action") s.bonus_action_available = false; else s.action_available = false; },
@@ -32,9 +34,12 @@
     const attack = member.state.template.attacks.find((item) => item.id === profile.followUpAttackId);
     if (!attack) throw new Error(`Charge follow-up attack ${profile.followUpAttackId} is missing from ${member.state.template.id}.`);
     if (cost === "bonus_action") E().spend(member.state, "bonus_action");
-    return { events: [A().resolveAttack(sequence++, round, member, actualTarget, attack, attack.reach || 5, {
+    const event = A().resolveAttack(sequence, round, member, actualTarget, attack, attack.reach || 5, {
       spendAction: false, featureId: "charge-follow-up", setup, ignoreCloseThreat: true,
-    })], sequence };
+    });
+    const next = sequence + 1;
+    return DR() ? DR().chain(next, round, member, event, setup)
+      : { events: [event], sequence: next };
   }
   function targetSizeAllowed(target, profile) {
     const maximum = profile.targetMaxSize || profile.proneMaxSize;
@@ -71,8 +76,14 @@
       options.bonusDamage = { source: "Charge", diceCount: profile.diceCount,
         diceSize: profile.diceSize, damageType: profile.damageType };
     }
-    const firstEvent = A().resolveAttack(sequence++, round, member, target, chargedAttack(attack, profile), attack.reach || 5, options);
-    const events = [firstEvent];
+    const firstEvent = A().resolveAttack(sequence, round, member, target, chargedAttack(attack, profile), attack.reach || 5, options);
+    sequence += 1;
+    const chain = DR() ? DR().chain(sequence, round, member, firstEvent, setup)
+      : { events: [firstEvent], sequence };
+    const events = [...chain.events]; sequence = chain.sequence;
+    if (member.state.is_dead || Q()?.incapacitated?.(member.state)) {
+      return { events, sequence, handled: true };
+    }
     const followed = followUp(sequence, round, member, target, profile, firstEvent, setup);
     events.push(...followed.events);
     return { events, sequence: followed.sequence, handled: true };
