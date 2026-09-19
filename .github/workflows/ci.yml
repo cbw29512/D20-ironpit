@@ -93,6 +93,7 @@ jobs:
       - name: Run browser combat regressions
         run: |
           node frontend/browser-ability-hooks.test.cjs
+          node frontend/browser-before-attack-roll-hooks.test.cjs
           node frontend/browser-main-action-selection.test.cjs
           node frontend/browser-main-action-pre-move.test.cjs
           node frontend/browser-main-action-post-move.test.cjs
@@ -229,6 +230,8 @@ jobs:
           grep -q 'browser-condition-rules.js' index.html
           grep -q 'browser-action-economy.js' index.html
           grep -q 'browser-ability-hooks.js' index.html
+          grep -q 'browser-attack-roll-context.js' index.html
+          grep -q 'browser-bloodied-fury.js' index.html
           grep -q 'browser-main-action-profiles.js' index.html
           grep -q 'browser-main-action-selection.js' index.html
           grep -q 'browser-main-action-providers.js' index.html
@@ -310,6 +313,8 @@ jobs:
           grep -q 'browser-condition-rules.js' frontend/index.html
           grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-ability-hooks.js' frontend/index.html
+          grep -q 'browser-attack-roll-context.js' frontend/index.html
+          grep -q 'browser-bloodied-fury.js' frontend/index.html
           grep -q 'browser-main-action-profiles.js' frontend/index.html
           grep -q 'browser-main-action-selection.js' frontend/index.html
           grep -q 'browser-main-action-providers.js' frontend/index.html
