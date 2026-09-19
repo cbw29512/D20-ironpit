@@ -29,6 +29,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -189,6 +190,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -320,6 +322,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -466,6 +469,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -600,6 +604,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -787,6 +792,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -917,6 +923,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1021,6 +1028,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1150,6 +1158,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1256,6 +1265,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1358,6 +1368,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1477,6 +1488,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1579,6 +1591,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1683,6 +1696,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1794,6 +1808,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1905,6 +1920,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2026,6 +2042,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2176,6 +2193,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2282,6 +2300,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2384,6 +2403,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2488,6 +2508,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2590,6 +2611,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2694,6 +2716,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2796,6 +2819,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2903,6 +2927,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3007,6 +3032,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3114,6 +3140,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3249,6 +3276,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3372,6 +3400,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3483,6 +3512,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3613,6 +3643,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3713,6 +3744,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3884,6 +3916,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4007,6 +4040,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4109,6 +4143,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4209,6 +4244,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4307,6 +4343,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4407,6 +4444,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4507,6 +4545,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4608,6 +4647,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4706,6 +4746,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4806,6 +4847,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4906,6 +4948,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5006,6 +5049,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5106,6 +5150,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5204,6 +5249,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5306,6 +5352,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5410,6 +5457,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5514,6 +5562,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5637,6 +5686,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5739,6 +5789,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5843,6 +5894,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5945,6 +5997,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6054,6 +6107,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6160,6 +6214,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6262,6 +6317,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6366,6 +6422,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6474,6 +6531,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6580,6 +6638,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6682,6 +6741,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6789,6 +6849,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6893,6 +6954,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6997,6 +7059,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7101,6 +7164,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7253,6 +7317,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7374,6 +7439,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7499,6 +7565,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7648,6 +7715,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7780,6 +7848,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7894,6 +7963,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8008,6 +8078,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8139,6 +8210,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8313,6 +8385,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8469,6 +8542,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8601,6 +8675,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8714,6 +8789,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8832,6 +8908,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8999,6 +9076,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9118,6 +9196,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9238,6 +9317,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9360,6 +9440,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9483,6 +9564,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9609,6 +9691,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9746,6 +9829,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9866,6 +9950,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10027,6 +10112,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10178,6 +10264,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10337,6 +10424,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10469,6 +10557,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10582,6 +10671,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10689,6 +10779,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10804,6 +10895,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10917,6 +11009,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11046,6 +11139,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11161,6 +11255,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11336,6 +11431,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11459,6 +11555,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11621,6 +11718,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11725,6 +11823,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11838,6 +11937,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11994,6 +12094,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12105,6 +12206,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12220,6 +12322,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12331,6 +12434,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12466,6 +12570,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12552,6 +12657,163 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-spy",
+    "name": "Spy",
+    "archetype": "source-certified monster",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "medium",
+    "armor_class": 12,
+    "max_hp": 27,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 30,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 4,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "cunning_action": true,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-spy-shortsword",
+        "name": "Shortsword",
+        "weapon_id": "srd-spy-shortsword-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 2
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 2,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      },
+      {
+        "id": "srd-spy-hand-crossbow",
+        "name": "Hand Crossbow",
+        "weapon_id": "srd-spy-hand-crossbow-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 4,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 2
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "normal_range_ft": 30,
+        "long_range_ft": 120,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 2,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-spy-shortsword",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 2,
+      "damage": 1
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 0,
+      "dexterity": 2,
+      "constitution": 0,
+      "intelligence": 1,
+      "wisdom": 2,
+      "charisma": 3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [
+      "Cunning Action"
+    ],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "recharge_rules": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Shortsword",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 329",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-tough",
     "name": "Tough",
     "archetype": "source-certified monster",
@@ -12580,6 +12842,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12712,6 +12975,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12827,6 +13091,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12953,6 +13218,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13121,6 +13387,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13232,6 +13499,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13359,6 +13627,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13467,6 +13736,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13571,6 +13841,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13678,6 +13949,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13812,6 +14084,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13949,6 +14222,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -14061,6 +14335,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -14193,6 +14468,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -14325,6 +14601,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -14467,6 +14744,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -14622,6 +14900,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -14805,6 +15084,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -14912,6 +15192,7 @@
       "brutal_strike_damage_dice": 0,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "cunning_action": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
