@@ -38,6 +38,11 @@ def _paladin_2014_channel_uses(level: int) -> int:
     return 1 if level >= 3 else 0
 
 
+def _barbarian_2014_finite_rage_uses(level: int) -> int:
+    """Return only finite 2014 Rage uses; level 20 is audited as Unlimited separately."""
+    return 0 if level >= 20 else barbarian_2014_rage_uses(level)
+
+
 def _paladin_2014_spell_slots(level: int) -> dict[str, int]:
     return {
         f"spell-slot-{spell_level}": uses
@@ -56,7 +61,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "rogue": (),
 }
 _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
-    "barbarian": (("rage", "Rage", barbarian_2014_rage_uses),),
+    "barbarian": (("rage", "Rage", _barbarian_2014_finite_rage_uses),),
     "fighter": (
         ("second-wind", "Second Wind", fighter_2014_second_wind_uses),
         ("action-surge", "Action Surge", fighter_2014_action_surge_uses),
@@ -72,6 +77,9 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     ),
     "rogue": (),
 }
+_2014_UNLIMITED_CLASS_RESOURCES: dict[str, Callable[[int], tuple[str, ...]]] = {
+    "barbarian": lambda level: ("rage",) if level >= 20 else (),
+}
 _2024_SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "orc": (
         ("adrenaline-rush", "Adrenaline Rush", orc_adrenaline_rush_uses),
@@ -85,7 +93,7 @@ def _class_rules(profile: CharacterBuildProfile) -> dict[str, tuple[ResourceRule
 
 
 def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
-    """Return independently certified positive-use resources for this build's edition."""
+    """Return independently certified positive-use finite resources for this build's edition."""
     class_rules = _class_rules(profile)
     species_rules = {} if profile.ruleset == "2014" else _2024_SPECIES_RULES
     rules = [
@@ -98,6 +106,14 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     if profile.ruleset == "2014" and profile.class_id == "paladin":
         resolved.update(_paladin_2014_spell_slots(profile.level))
     return {resource_id: uses for resource_id, uses in resolved.items() if uses > 0}
+
+
+def expected_unlimited_resources(profile: CharacterBuildProfile) -> tuple[str, ...]:
+    """Return independently certified resources that RAW makes unlimited at this level."""
+    if profile.ruleset != "2014":
+        return ()
+    resolver = _2014_UNLIMITED_CLASS_RESOURCES.get(profile.class_id)
+    return resolver(profile.level) if resolver else ()
 
 
 def audit_character_resources(
@@ -117,6 +133,11 @@ def audit_character_resources(
         issues.append("level-derived-runtime-resources-mismatch")
     if fingerprint != expected:
         issues.append("level-derived-combat-profile-resources-mismatch")
+    expected_unlimited = expected_unlimited_resources(build_profile)
+    if tuple(template.unlimited_resource_ids) != expected_unlimited:
+        issues.append("level-derived-runtime-unlimited-resources-mismatch")
+    if tuple(combat_profile.unlimited_resources) != expected_unlimited:
+        issues.append("level-derived-combat-profile-unlimited-resources-mismatch")
     return issues
 
 
