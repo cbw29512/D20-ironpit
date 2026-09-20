@@ -36,6 +36,12 @@ _UNSUPPORTED_ABILITY_SCORE_REDUCTION = re.compile(
     re.IGNORECASE,
 )
 
+_UNSUPPORTED_DYNAMIC_COMBATANT = re.compile(
+    r"\b(?:takes its turn immediately after|acts on its Initiative|splits? into (?:two|three|four) new|"
+    r"spirit rises as a [A-Za-z'-]+ in the space)\b",
+    re.IGNORECASE,
+)
+
 
 def _first_int(value: object) -> int:
     match = re.search(r"-?\d+", str(value))
@@ -116,11 +122,17 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(spellcasting_issues(template, row))
         actions = normalized(row.get("actions", ""))
         traits = normalized(row.get("traits", ""))
+        lifecycle_source = " ".join(
+            normalized(row.get(field, ""))
+            for field in ("traits", "actions", "bonusActions", "reactions")
+        )
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if _source_attack_mode_count(actions) != len(runtime_attacks):
             issues.append("source-attack-count-mismatch")
         if not _save_ownership_matches(template, actions):
             issues.append("source-save-action-count-mismatch")
+        if _UNSUPPORTED_DYNAMIC_COMBATANT.search(lifecycle_source):
+            issues.append("unsupported-dynamic-combatant-lifecycle")
         if _UNSUPPORTED_HP_MAX_REDUCTION.search(actions):
             issues.append("unsupported-action-rider:hit-point-maximum-reduction")
         if _UNSUPPORTED_ABILITY_SCORE_REDUCTION.search(actions):
