@@ -38,7 +38,10 @@ window.IRON_PIT_BROWSER_ATTACK_OUTCOME = {
   noEventResult: (sequence) => ({ events: [], sequence, claimed: false }),
 };
 let recklessMarks = 0;
-window.IRON_PIT_BROWSER_BARBARIAN3 = { markRecklessUse: () => { recklessMarks += 1; } };
+window.IRON_PIT_BROWSER_BARBARIAN3 = {
+  markRecklessUse: () => { recklessMarks += 1; },
+  bonusDamage: () => null,
+};
 
 load("browser-ability-hooks.js");
 load("browser-attack-roll-context.js");
@@ -47,6 +50,11 @@ load("browser-tactical-master.js");
 load("browser-brutal-strike.js");
 load("browser-bloodied-fury.js");
 load("browser-attack-roll-hook-installation.js");
+window.IRON_PIT_DICE = {
+  roll: () => 4,
+  rollMany: (count) => Array.from({ length: count }, () => 4),
+};
+load("browser-rolls.js");
 
 const H = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
 const API = window.IRON_PIT_BROWSER_ATTACK_ROLL_CONTEXT;
@@ -124,6 +132,26 @@ const spell = {
   assert.equal(API.advantageSource(roll, "reckless-attacker"), 1,
     "Sap Disadvantage prevents Brutal Strike from suppressing Reckless Advantage");
   assert.equal(attacker.state.timed_effects.some((effect) => effect.effect_id === "weapon-mastery-sap"), false);
+}
+
+{
+  const attacker = member("cancelled-disadvantage", "2024", {
+    brutal_strike_damage_dice: 1,
+  });
+  attacker.state.active_effect_ids.push("reckless-attack");
+  const damageAttack = {
+    ...weapon, name: "Greataxe", diceCount: 1, diceSize: 12, damageBonus: 5,
+    onHitDamage: [],
+  };
+  const rolled = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(
+    attacker.state, damageAttack, false, "normal", "5:cancelled-disadvantage",
+    null, null, false, true,
+  );
+  assert.equal(
+    rolled.components.some((component) => component.source === "Brutal Strike"),
+    false,
+    "pre-roll Disadvantage must block Brutal Strike even when final mode is normal",
+  );
 }
 
 {
