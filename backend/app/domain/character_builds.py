@@ -72,6 +72,7 @@ class CharacterBuildProfile(BaseModel):
     background_increases: list[AbilityIncrease] = Field(default_factory=list)
     advancement_increases: list[AbilityIncrease] = Field(default_factory=list)
     final_ability_scores: AbilityScores
+    ability_score_maximums: dict[AbilityName, int] = Field(default_factory=dict)
     class_equipment_option: EquipmentOption
     class_equipment: list[str] = Field(min_length=1)
     background_equipment_option: EquipmentOption
