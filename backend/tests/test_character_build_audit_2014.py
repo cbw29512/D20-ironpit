@@ -1,3 +1,5 @@
+from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_2014_profile
+from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
 from app.content.build_audit import audit_character_build
 from app.content.fighter_champion_2014_profile import build_karnok_stoneward_2014_profile
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
@@ -13,6 +15,23 @@ def test_2014_karnok_profiles_match_runtime_through_level_twenty() -> None:
         assert profile.final_ability_scores == template.ability_scores
         assert profile.weapon_masteries == []
         assert audit_character_build(profile, template) == []
+
+
+def test_2014_raw_feature_can_raise_ability_score_maximum() -> None:
+    profile = build_rokhan_stonefury_2014_profile(20)
+    template = build_rokhan_stonefury_2014(20)
+    assert profile.final_ability_scores.strength == 24
+    assert profile.final_ability_scores.constitution == 24
+    assert profile.ability_score_maximums == {"strength": 24, "constitution": 24}
+    assert audit_character_build(profile, template) == []
+
+
+def test_2014_score_above_twenty_fails_without_declared_raw_maximum() -> None:
+    profile = build_rokhan_stonefury_2014_profile(20).model_copy(update={"ability_score_maximums": {}})
+    template = build_rokhan_stonefury_2014(20)
+    issues = audit_character_build(profile, template)
+    assert "final-strength-exceeds-20" in issues
+    assert "final-constitution-exceeds-20" in issues
 
 
 def test_2014_human_uses_species_increases_not_2024_background_increases() -> None:
