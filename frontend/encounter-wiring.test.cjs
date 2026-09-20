@@ -80,6 +80,12 @@ assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-main-
 assert.ok(html.indexOf("browser-main-action-profiles.js") < html.indexOf("browser-main-action-selection.js"));
 assert.ok(html.indexOf("browser-main-action-selection.js") < html.indexOf("browser-main-action-providers.js"));
 assert.ok(html.indexOf("browser-main-action-providers.js") < html.indexOf("browser-attack-outcome.js"));
+assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-attack-roll-context.js"));
+assert.ok(html.indexOf("browser-attack-roll-context.js") < html.indexOf("browser-tactical-master.js"));
+assert.ok(html.indexOf("browser-brutal-strike.js") < html.indexOf("browser-attack-roll-hook-installation.js"));
+assert.ok(html.indexOf("browser-bloodied-fury.js") < html.indexOf("browser-attack-roll-hook-installation.js"));
+assert.ok(html.indexOf("browser-attack-roll-hook-installation.js") < html.indexOf("browser-attack.js"));
+assert.ok(html.indexOf("browser-attack-roll-hook-installation.js") < html.indexOf("browser-spell-attack.js"));
 assert.ok(html.indexOf("browser-attack-outcome.js") < html.indexOf("browser-attack.js"));
 assert.ok(html.indexOf("browser-topple.js") < html.indexOf("browser-attack-outcome-hook-installation.js"));
 assert.ok(html.indexOf("browser-attack-outcome-hook-installation.js") < html.indexOf("browser-ability-hook-installation.js"));
