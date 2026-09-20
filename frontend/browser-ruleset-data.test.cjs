@@ -25,8 +25,8 @@ const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
-assert.equal(heroes2014.length, 63, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-13, and Rogue, Monk, Paladin 1-10");
-levels(fighters2014, 20); levels(barbarians2014, 13); levels(rogues2014, 10); levels(monks2014, 10); levels(paladins2014, 10);
+assert.equal(heroes2014.length, 70, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-20, and Rogue, Monk, Paladin 1-10");
+levels(fighters2014, 20); levels(barbarians2014, 20); levels(rogues2014, 10); levels(monks2014, 10); levels(paladins2014, 10);
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
