@@ -28,14 +28,21 @@ def test_current_canonical_roster_is_entirely_2024() -> None:
     assert {template.ruleset for template in templates} == {"2024"}
 
 
-def test_2014_selection_fails_closed_until_roster_is_admitted() -> None:
+def test_2014_selection_uses_only_certified_2014_roster_entries() -> None:
+    roster = build_arena_roster("2014")
+    hero = roster.characters[0]
+    monster = roster.monsters[0]
     selection = EncounterSelection(
         ruleset="2014",
-        hero_ids=["karnok-stoneward-l1"],
-        monster_ids=["srd-commoner"],
+        hero_ids=[hero.id],
+        monster_ids=[monster.id],
     )
-    with pytest.raises(ValueError, match="2014 roster is not admitted"):
-        build_encounter_setup(selection)
+    setup = build_encounter_setup(selection)
+
+    assert setup.ruleset == "2014"
+    assert {member.state.template.ruleset for member in [*setup.heroes, *setup.monsters]} == {"2014"}
+    assert setup.heroes[0].state.template.id == hero.id
+    assert setup.monsters[0].state.template.id == monster.id
 
 
 def test_unknown_ruleset_is_rejected_by_selection_schema() -> None:
