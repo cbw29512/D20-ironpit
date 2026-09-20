@@ -42,6 +42,8 @@ _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
 )
 _HIDDEN_RIDER = re.compile(
     r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
+    r"|\bHit Point maximum (?:decreases|is reduced)\b"
+    r"|\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) score (?:decreases|is reduced)\b"
     r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
     rf"|\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b",
     re.I,
