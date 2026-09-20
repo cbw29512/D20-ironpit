@@ -85,7 +85,7 @@
     };
   }
 
-  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false) {
+  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false, preRollDisadvantage = mode === "disadvantage") {
     const conditional = attack.conditionalDamage || null;
     const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode)
       ? conditional : null;
@@ -126,7 +126,7 @@
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     const brutalStrike = window.IRON_PIT_BROWSER_BRUTAL_STRIKE?.bonusDamage(
-      attacker, attack, turnKey, mode === "disadvantage",
+      attacker, attack, turnKey, Boolean(preRollDisadvantage),
     );
     if (brutalStrike) components.push(bonusComponent(brutalStrike, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
