@@ -1705,6 +1705,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "dynamic-combatant-lifecycle",
         "reaction",
         "spellcasting",
         "trait"
@@ -1714,6 +1715,7 @@
         "damage-or-condition-defense"
       ],
       "unsupported_mechanics": [
+        "dynamic-combatant-lifecycle",
         "reaction",
         "spellcasting",
         "trait"
@@ -1723,6 +1725,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "dynamic-combatant-lifecycle",
         "monster-combat-mechanics-not-certified",
         "reaction",
         "spellcasting",
@@ -6375,6 +6378,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "dynamic-combatant-lifecycle",
         "reaction",
         "trait"
       ],
@@ -6383,6 +6387,7 @@
         "damage-or-condition-defense"
       ],
       "unsupported_mechanics": [
+        "dynamic-combatant-lifecycle",
         "reaction",
         "trait"
       ],
@@ -6391,6 +6396,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "dynamic-combatant-lifecycle",
         "monster-combat-mechanics-not-certified",
         "reaction",
         "trait"
@@ -8642,6 +8648,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "dynamic-combatant-lifecycle",
         "limited-use",
         "multiattack",
         "trait"
@@ -8653,6 +8660,7 @@
         "trait"
       ],
       "unsupported_mechanics": [
+        "dynamic-combatant-lifecycle",
         "limited-use"
       ],
       "python_certification_status": "blocked",
@@ -8660,6 +8668,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "dynamic-combatant-lifecycle",
         "limited-use",
         "monster-combat-mechanics-not-certified"
       ]
@@ -9537,6 +9546,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "dynamic-combatant-lifecycle",
         "trait",
         "unsupported-action-rider"
       ],
@@ -9545,6 +9555,7 @@
         "damage-or-condition-defense"
       ],
       "unsupported_mechanics": [
+        "dynamic-combatant-lifecycle",
         "trait",
         "unsupported-action-rider"
       ],
@@ -9553,6 +9564,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "dynamic-combatant-lifecycle",
         "monster-combat-mechanics-not-certified",
         "trait",
         "unsupported-action-rider"

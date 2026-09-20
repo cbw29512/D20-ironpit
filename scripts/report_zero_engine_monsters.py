@@ -49,6 +49,11 @@ _HIDDEN_RIDER = re.compile(
     re.I,
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
+_DYNAMIC_COMBATANT = re.compile(
+    r"\b(?:takes its turn immediately after|acts on its Initiative|splits? into (?:two|three|four) new|"
+    r"spirit rises as a [A-Za-z'-]+ in the space)\b",
+    re.I,
+)
 _ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_MODELED_TRAITS)
 _DETAIL_FIELDS = ("name", "size", "armorClass", "hitPoints", "speed", "challenge", "traits", "actions")
 _DETAIL_BLOCKER_LIMIT = 30
@@ -108,6 +113,12 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
     except ValueError:
         blockers.append("defense-clause")
     actions = str(row.get("actions", ""))
+    lifecycle_source = " ".join(
+        str(row.get(field, ""))
+        for field in ("traits", "actions", "bonusActions", "reactions")
+    )
+    if _DYNAMIC_COMBATANT.search(lifecycle_source):
+        blockers.append("dynamic-combatant-lifecycle")
     if not _ATTACK_ROLL.search(actions):
         blockers.append("no-attack-roll")
     if _COMPLEX_ACTION.search(actions):
