@@ -14,25 +14,17 @@ from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_
 from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
 from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level6_profile
 from app.content.barbarian_progression import build_rokhan_stonefury_level
-from app.content.barbarian_progression_profile import (
-    build_rokhan_stonefury_level2_profile, build_rokhan_stonefury_level3_profile,
-    build_rokhan_stonefury_level4_profile, build_rokhan_stonefury_level5_profile,
-)
+from app.content.barbarian_progression_profile import (build_rokhan_stonefury_level2_profile, build_rokhan_stonefury_level3_profile, build_rokhan_stonefury_level4_profile, build_rokhan_stonefury_level5_profile)
 from app.content.fighter_asi_progression_profile import build_karnok_stoneward_level6_profile, build_karnok_stoneward_level8_profile, build_karnok_stoneward_level12_profile
 from app.content.fighter_champion_2014_profile import build_karnok_stoneward_2014_profile
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.fighter_champion_progression_profile import build_karnok_stoneward_level7_profile
 from app.content.fighter_level10_profile import build_karnok_stoneward_level10_profile
 from app.content.fighter_level11_profile import build_karnok_stoneward_level11_profile
-from app.content.fighter_high_level_profile import (
-    build_karnok_stoneward_level13_profile, build_karnok_stoneward_level14_profile,
-)
+from app.content.fighter_high_level_profile import build_karnok_stoneward_level13_profile, build_karnok_stoneward_level14_profile
 from app.content.fighter_level9_profile import build_karnok_stoneward_level9_profile
 from app.content.fighter_progression import build_karnok_stoneward_level
-from app.content.fighter_progression_profile import (
-    build_karnok_stoneward_level2_profile, build_karnok_stoneward_level3_profile,
-    build_karnok_stoneward_level4_profile, build_karnok_stoneward_level5_profile,
-)
+from app.content.fighter_progression_profile import (build_karnok_stoneward_level2_profile, build_karnok_stoneward_level3_profile, build_karnok_stoneward_level4_profile, build_karnok_stoneward_level5_profile)
 from app.content.monk_open_hand_2014_profile import build_kael_stillwater_2014_profile
 from app.content.monk_open_hand_2014_runtime import build_kael_stillwater_2014
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
@@ -61,65 +53,29 @@ class CertifiedHeroProgression:
         return range(1, count + 1)
 
     def profile(self, level: int) -> CharacterBuildProfile:
-        if level not in self.levels:
-            raise ValueError(f"{self.class_id} level {level} is not registered for certification.")
-        if self.profile_level_builder is not None:
-            return self.profile_level_builder(level)
+        if level not in self.levels: raise ValueError(f"{self.class_id} level {level} is not registered for certification.")
+        if self.profile_level_builder is not None: return self.profile_level_builder(level)
         return self.profile_builders[level - 1]()
 
 
 CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
-    CertifiedHeroProgression(
-        class_id="fighter", template_builder=build_karnok_stoneward_level,
-        profile_builders=(
-            build_karnok_stoneward_profile, build_karnok_stoneward_level2_profile,
-            build_karnok_stoneward_level3_profile, build_karnok_stoneward_level4_profile,
-            build_karnok_stoneward_level5_profile, build_karnok_stoneward_level6_profile,
-            build_karnok_stoneward_level7_profile, build_karnok_stoneward_level8_profile,
-            build_karnok_stoneward_level9_profile, build_karnok_stoneward_level10_profile,
-            build_karnok_stoneward_level11_profile, build_karnok_stoneward_level12_profile,
-            build_karnok_stoneward_level13_profile, build_karnok_stoneward_level14_profile,
-        ),
-    ),
-    CertifiedHeroProgression(
-        class_id="fighter", template_builder=build_karnok_stoneward_2014,
-        profile_level_builder=build_karnok_stoneward_2014_profile, max_level=20,
-    ),
-    CertifiedHeroProgression(
-        class_id="barbarian", template_builder=build_rokhan_stonefury_level,
-        profile_builders=(
-            build_rokhan_stonefury_profile, build_rokhan_stonefury_level2_profile,
-            build_rokhan_stonefury_level3_profile, build_rokhan_stonefury_level4_profile,
-            build_rokhan_stonefury_level5_profile, build_rokhan_stonefury_level6_profile,
-        ),
-    ),
-    CertifiedHeroProgression(
-        class_id="barbarian", template_builder=build_rokhan_stonefury_2014,
-        profile_level_builder=build_rokhan_stonefury_2014_profile, max_level=13,
-    ),
-    CertifiedHeroProgression(
-        class_id="cleric", template_builder=build_seraphine_dawnshield_level,
-        profile_builders=(
-            build_seraphine_dawnshield_profile, build_seraphine_dawnshield_level2_profile,
-            build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
-        ),
-    ),
-    CertifiedHeroProgression(
-        class_id="rogue", template_builder=build_mara_quickstep_level,
-        profile_builders=(build_mara_quickstep_profile,),
-    ),
-    CertifiedHeroProgression(
-        class_id="rogue", template_builder=build_mara_quickstep_2014,
-        profile_level_builder=build_mara_quickstep_2014_profile, max_level=10,
-    ),
-    CertifiedHeroProgression(
-        class_id="monk", template_builder=build_kael_stillwater_2014,
-        profile_level_builder=build_kael_stillwater_2014_profile, max_level=10,
-    ),
-    CertifiedHeroProgression(
-        class_id="paladin", template_builder=build_aurelia_brightshield_2014,
-        profile_level_builder=build_aurelia_brightshield_2014_profile, max_level=10,
-    ),
+    CertifiedHeroProgression(class_id="fighter", template_builder=build_karnok_stoneward_level, profile_builders=(
+        build_karnok_stoneward_profile, build_karnok_stoneward_level2_profile, build_karnok_stoneward_level3_profile,
+        build_karnok_stoneward_level4_profile, build_karnok_stoneward_level5_profile, build_karnok_stoneward_level6_profile,
+        build_karnok_stoneward_level7_profile, build_karnok_stoneward_level8_profile, build_karnok_stoneward_level9_profile,
+        build_karnok_stoneward_level10_profile, build_karnok_stoneward_level11_profile, build_karnok_stoneward_level12_profile,
+        build_karnok_stoneward_level13_profile, build_karnok_stoneward_level14_profile)),
+    CertifiedHeroProgression(class_id="fighter", template_builder=build_karnok_stoneward_2014, profile_level_builder=build_karnok_stoneward_2014_profile, max_level=20),
+    CertifiedHeroProgression(class_id="barbarian", template_builder=build_rokhan_stonefury_level, profile_builders=(
+        build_rokhan_stonefury_profile, build_rokhan_stonefury_level2_profile, build_rokhan_stonefury_level3_profile,
+        build_rokhan_stonefury_level4_profile, build_rokhan_stonefury_level5_profile, build_rokhan_stonefury_level6_profile)),
+    CertifiedHeroProgression(class_id="barbarian", template_builder=build_rokhan_stonefury_2014, profile_level_builder=build_rokhan_stonefury_2014_profile, max_level=20),
+    CertifiedHeroProgression(class_id="cleric", template_builder=build_seraphine_dawnshield_level, profile_builders=(
+        build_seraphine_dawnshield_profile, build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile)),
+    CertifiedHeroProgression(class_id="rogue", template_builder=build_mara_quickstep_level, profile_builders=(build_mara_quickstep_profile,)),
+    CertifiedHeroProgression(class_id="rogue", template_builder=build_mara_quickstep_2014, profile_level_builder=build_mara_quickstep_2014_profile, max_level=10),
+    CertifiedHeroProgression(class_id="monk", template_builder=build_kael_stillwater_2014, profile_level_builder=build_kael_stillwater_2014_profile, max_level=10),
+    CertifiedHeroProgression(class_id="paladin", template_builder=build_aurelia_brightshield_2014, profile_level_builder=build_aurelia_brightshield_2014_profile, max_level=10),
 )
 
 
