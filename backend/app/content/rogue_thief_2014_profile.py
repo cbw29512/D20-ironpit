@@ -58,12 +58,18 @@ def _audits(level: int) -> list[FeatureAudit]:
     if level >= 9:
         audits.append(_audit("supreme-sneak", "Supreme Sneak", "subclass", combat=False, automated=False,
                              notes="The open standard arena has no automatic legal Hide position."))
+    if level >= 11:
+        audits.append(_audit(
+            "reliable-talent", "Reliable Talent", "class", combat=False, automated=False,
+            notes=("Audited RAW. The standard arena currently executes no qualifying proficient "
+                   "ability check, so no runtime roll-floor primitive is exercised by this snapshot."),
+        ))
     return audits
 
 
 def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 11): raise ValueError("2014 Mara profile covers levels 1 through 10.")
+        if level not in range(1, 12): raise ValueError("2014 Mara candidate profile covers levels 1 through 11.")
         base = _base(); species = _species(); advances = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-mara-quickstep-2014-l{level}", template_id=f"mara-quickstep-2014-l{level}",
