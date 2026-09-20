@@ -2,6 +2,7 @@ from app.combat.cunning_action import needs_dash, use_dash
 from app.combat.rogue_defenses import apply_uncanny_dodge, evasion_damage
 from app.combat.state import build_combatant_state
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
+from app.content.rogue_thief_2014_profile import build_mara_quickstep_2014_profile
 from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import DamageRollComponent, DamageType
@@ -20,8 +21,8 @@ def _setup(rogue: EncounterCombatant, target: EncounterCombatant) -> EncounterSe
     )
 
 
-def test_2014_thief_levels_one_through_ten_are_isolated_from_2024() -> None:
-    for level in range(1, 11):
+def test_2014_thief_levels_one_through_eleven_are_isolated_from_2024() -> None:
+    for level in range(1, 12):
         hero = build_mara_quickstep_2014(level)
         assert hero.ruleset == "2014"
         assert hero.level == level
@@ -30,6 +31,19 @@ def test_2014_thief_levels_one_through_ten_are_isolated_from_2024() -> None:
         assert all(attack.weapon.mastery_property is None for attack in hero.alternate_weapon_attacks)
         assert hero.progression_features.sneak_attack_d6 == (level + 1) // 2
         assert hero.source.startswith("D&D Basic Rules 2014")
+
+
+def test_level_eleven_reliable_talent_is_audited_without_faking_roll_math() -> None:
+    profile = build_mara_quickstep_2014_profile(11)
+    reliable_talent = next(audit for audit in profile.feature_audits if audit.feature_id == "reliable-talent")
+    assert reliable_talent.source_reference == "D&D Basic Rules 2014: Rogue"
+    assert reliable_talent.combat_relevant is False
+    assert reliable_talent.automated is False
+    assert "no qualifying proficient ability check" in (reliable_talent.notes or "")
+
+    hero = build_mara_quickstep_2014(11)
+    assert hero.progression_features.sneak_attack_d6 == 6
+    assert hero.ability_scores.dexterity == 20
 
 
 def test_cunning_action_dash_is_used_only_when_it_enables_offense() -> None:
