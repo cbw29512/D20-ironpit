@@ -56,7 +56,7 @@
   }
   function legacyHitDamage(attacker, defender, attack, critical, mode, turnKey, options = {}) {
     if (attack.onHitSaveDamage) throw new Error("Save-dependent hit damage requires the browser hit-damage runtime.");
-    const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable), Boolean(options.preRollDisadvantage)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type) }));
+    const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable), Object.hasOwn(options, "preRollDisadvantage") ? Boolean(options.preRollDisadvantage) : mode === "disadvantage"), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type) }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0), damageRoll = { ...base.roll, total: appliedTotal }, appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))];
     return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || []), appliedTotal, saveDamage: null };
   }
