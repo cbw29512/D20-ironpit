@@ -76,7 +76,7 @@ def test_fighter_levels_thirteen_and_fourteen_are_public_and_fifteen_remains_blo
     }
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 25
+    assert manifest["summary"]["public_ready"] == counted_ready == 26
 
     assert level_thirteen["runtime_template_id"] == "karnok-stoneward-l13"
     assert required_thirteen <= set(level_thirteen["expected_combat_features"])
