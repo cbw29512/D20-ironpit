@@ -56,7 +56,7 @@
   }
   function legacyHitDamage(attacker, defender, attack, critical, mode, turnKey, options = {}) {
     if (attack.onHitSaveDamage) throw new Error("Save-dependent hit damage requires the browser hit-damage runtime.");
-    const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type) }));
+    const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable), Boolean(options.preRollDisadvantage)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type) }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0), damageRoll = { ...base.roll, total: appliedTotal }, appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))];
     return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || []), appliedTotal, saveDamage: null };
   }
@@ -85,6 +85,7 @@
     }
     const advantage = RC().advantageTotal(rollContext);
     const disadvantage = RC().disadvantageTotal(rollContext) - Number(rangeDisadvantage);
+    const hadPreRollDisadvantage = RC().disadvantageTotal(rollContext) > 0;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id), mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
@@ -109,7 +110,8 @@
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
-          sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates });
+          sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false,
+          preRollDisadvantage: hadPreRollDisadvantage, affectedStates });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
