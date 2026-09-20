@@ -82,7 +82,7 @@
     const hpBufferBefore = defender.current_hp + defender.temporary_hp;
     const base = R().weaponDamage(
       attacker, attack, critical, mode, turnKey, options.bonusDamage || null,
-      defender, Boolean(options.sneakAttackAllyAvailable),
+      defender, Boolean(options.sneakAttackAllyAvailable), Boolean(options.preRollDisadvantage),
     );
     const rolled = [...base.components];
     const smite = P()?.divineSmiteComponent(attacker, defender, attack, critical) || null;
