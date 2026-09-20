@@ -12,12 +12,28 @@ logger = logging.getLogger(__name__)
 _FIELDS = ("traits", "actions", "bonusActions", "reactions")
 _CASTING = re.compile(r"\bSpellcasting\b|\bcast(?:s|ing)?\b", re.IGNORECASE)
 _SPELL_GROUP = re.compile(
-    r"\b(?:At Will|\d+/Day(?: Each)?):\s*(.*?)(?=\s+(?:At Will|\d+/Day(?: Each)?):|$)",
+    r"\b(At Will|\d+/Day(?: Each)?):\s*(.*?)(?=\s+(?:At Will|\d+/Day(?: Each)?):|$)",
     re.IGNORECASE,
 )
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
 # These spells are never selected as combat actions; unknown additions fail closed.
-_ARENA_NEUTRAL_SPELLS = frozenset({"Detect Evil and Good", "Detect Magic", "Clairvoyance"})
+_ARENA_NEUTRAL_SPELLS = frozenset({
+    "Animal Messenger", "Clairvoyance", "Detect Evil and Good", "Detect Magic",
+    "Druidcraft", "Speak with Animals",
+})
+# Printed spells whose full battlefield semantics are intentionally replaced by a simpler
+# real D&D damaging spell at roughly the same spell level for the Iron Pit arena.
+# The replacement is content policy, not a combat-engine special case.
+_ARENA_SPELL_SUBSTITUTIONS: dict[str, tuple[str, int]] = {
+    "Entangle": ("inflict-wounds-l1-arena", 1),
+    "Moonbeam": ("inflict-wounds-l2-arena", 2),
+    "Thunderwave": ("inflict-wounds-l1-arena", 1),
+}
+# Printed spells whose relevant arena behavior is directly represented by an existing
+# generic spell action.
+_ARENA_MODELED_SPELLS: dict[str, tuple[str, int]] = {
+    "Long-strider": ("longstrider", 1),
+}
 
 
 def _normalized(value: object) -> str:
@@ -39,30 +55,97 @@ def spellcasting_fingerprint(row: dict[str, object]) -> str | None:
     return hashlib.sha256(text.encode("utf-8")).hexdigest() if text else None
 
 
-def _printed_spell_names(row: dict[str, object]) -> set[str]:
+def _spell_groups(row: dict[str, object]) -> list[tuple[str, list[str]]]:
     text = spellcasting_source_text(row)
-    return {
-        spell.strip()
-        for group in _SPELL_GROUP.findall(text)
-        for spell in group.split(",")
-        if spell.strip()
-    }
+    return [
+        (label, [spell.strip() for spell in group.split(",") if spell.strip()])
+        for label, group in _SPELL_GROUP.findall(text)
+    ]
+
+def _printed_spell_names(row: dict[str, object]) -> set[str]:
+    return {spell for _, spells in _spell_groups(row) for spell in spells}
+
+
+def _handled_spell_names() -> set[str]:
+    return set(_ARENA_NEUTRAL_SPELLS) | set(_ARENA_SPELL_SUBSTITUTIONS) | set(_ARENA_MODELED_SPELLS)
 
 
 def arena_neutral_spellcasting(row: dict[str, object]) -> bool:
-    """True only when every parsed printed spell is explicitly certified arena-neutral."""
+    """Compatibility name: true when every printed spell has an explicit Iron Pit arena policy."""
     spells = _printed_spell_names(row)
-    return bool(spells) and spells <= _ARENA_NEUTRAL_SPELLS
+    return bool(spells) and spells <= _handled_spell_names()
+
+
+def _expected_runtime_spell_ids(row: dict[str, object]) -> set[str]:
+    ids = {
+        runtime_id
+        for spell in _printed_spell_names(row)
+        for runtime_id, _ in [
+            _ARENA_SPELL_SUBSTITUTIONS.get(spell)
+            or _ARENA_MODELED_SPELLS.get(spell)
+            or (None, 0)
+        ]
+        if runtime_id is not None
+    }
+    return ids
+
+
+def _uses_from_label(label: str) -> int | None:
+    if label.casefold() == "at will":
+        return None
+    match = re.match(r"(\d+)/Day", label, re.IGNORECASE)
+    if match is None:
+        raise ValueError(f"Unsupported monster spell-use label: {label!r}")
+    return int(match.group(1))
+
+
+def _expected_slot_uses(row: dict[str, object]) -> dict[int, int]:
+    totals: dict[int, int] = {}
+    for label, spells in _spell_groups(row):
+        uses = _uses_from_label(label)
+        for spell in spells:
+            if spell in _ARENA_NEUTRAL_SPELLS:
+                continue
+            binding = _ARENA_SPELL_SUBSTITUTIONS.get(spell) or _ARENA_MODELED_SPELLS.get(spell)
+            if binding is None or uses is None:
+                continue
+            _, level = binding
+            totals[level] = totals.get(level, 0) + uses
+    return totals
+
+
+def _runtime_spell_ids(template: CombatantTemplate) -> set[str]:
+    return {
+        *(action.id for action in template.spell_save_actions),
+        *(action.id for action in template.spell_attack_actions),
+        *(action.id for action in template.defensive_spell_actions),
+    }
+
+
+def _runtime_slot_uses(template: CombatantTemplate) -> dict[int, int]:
+    uses: dict[int, int] = {}
+    for resource in template.resources:
+        match = re.fullmatch(r"spell-slot-(\d+)", resource.id)
+        if match:
+            uses[int(match.group(1))] = resource.max_uses
+    return uses
 
 
 def spellcasting_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Fail closed on combat casting while allowing explicitly certified noncombat spell lists."""
+    """Fail closed unless every printed spell is neutral, modeled, or explicitly substituted."""
     expected = spellcasting_fingerprint(row)
     issues: list[str] = []
     if template.source_spellcasting_fingerprint != expected:
         issues.append("source-spellcasting-fingerprint-mismatch")
-    if expected is not None and not arena_neutral_spellcasting(row):
+    if expected is None:
+        return issues
+    if not arena_neutral_spellcasting(row):
         issues.extend(("uncertified-monster-spellcasting", "spell-concentration-source-not-vendored"))
+        return issues
+    if _runtime_spell_ids(template) != _expected_runtime_spell_ids(row):
+        issues.append("monster-spell-package-mismatch")
+    if _runtime_slot_uses(template) != _expected_slot_uses(row):
+        issues.append("monster-spell-resource-mismatch")
     return issues
 
 

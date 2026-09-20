@@ -3888,6 +3888,248 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-druid",
+    "name": "Druid",
+    "archetype": "source-certified monster",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "ruleset": "2024",
+    "size": "medium",
+    "armor_class": 13,
+    "max_hp": 44,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 1,
+    "progression_features": {
+      "ability_check_minimums": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "brutal_strike_damage_dice": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "cunning_action": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-druid-vine-staff",
+        "name": "Vine Staff",
+        "weapon_id": "srd-druid-vine-staff-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 3
+        },
+        "damage_type": "bludgeoning",
+        "animation": "staff",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 0
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      },
+      {
+        "id": "srd-druid-verdant-wisp",
+        "name": "Verdant Wisp",
+        "weapon_id": "srd-druid-verdant-wisp-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 3,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "radiant",
+        "animation": "spell-projectile",
+        "reach_ft": 5,
+        "normal_range_ft": 90,
+        "long_range_ft": 90,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-druid-vine-staff",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 2,
+      "damage": 1
+    },
+    "attack_action": {
+      "id": "srd-druid-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-druid-vine-staff",
+            "srd-druid-verdant-wisp"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-druid-vine-staff",
+            "srd-druid-verdant-wisp"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [
+      {
+        "id": "inflict-wounds-l1-arena",
+        "name": "Inflict Wounds",
+        "level": 1,
+        "action_cost": "action",
+        "range_ft": 5,
+        "save_ability": "constitution",
+        "dc": 13,
+        "damage_dice_count": 2,
+        "damage_dice_size": 10,
+        "damage_bonus": 0,
+        "damage_type": "necrotic",
+        "success_damage": "half",
+        "upcast_dice_per_level": 1,
+        "concentration": false,
+        "animation": "inflict-wounds"
+      },
+      {
+        "id": "inflict-wounds-l2-arena",
+        "name": "Inflict Wounds",
+        "level": 2,
+        "action_cost": "action",
+        "range_ft": 5,
+        "save_ability": "constitution",
+        "dc": 13,
+        "damage_dice_count": 3,
+        "damage_dice_size": 10,
+        "damage_bonus": 0,
+        "damage_type": "necrotic",
+        "success_damage": "half",
+        "upcast_dice_per_level": 1,
+        "concentration": false,
+        "animation": "inflict-wounds"
+      }
+    ],
+    "defensive_spell_actions": [
+      {
+        "id": "longstrider",
+        "name": "Longstrider",
+        "level": 1,
+        "action_cost": "action",
+        "range_ft": 0,
+        "duration_minutes": 60,
+        "target_policy": "self",
+        "target_count": 1,
+        "target_count_per_slot_above": 0,
+        "temporary_hp": 0,
+        "temporary_hp_per_slot_above": 0,
+        "max_hp_increase": 0,
+        "current_hp_increase": 0,
+        "damage_resistances": [],
+        "modifier_effects": [
+          {
+            "kind": "speed",
+            "flat_bonus": 10,
+            "dice_count": 0,
+            "dice_size": 0,
+            "source_creature_types": [],
+            "consume_on_attack_against": false,
+            "ends_on_owner_attack": false
+          }
+        ],
+        "concentration": false,
+        "priority": 20,
+        "animation": "longstrider",
+        "source": "Iron Pit arena modeling of SRD Longstrider"
+      }
+    ],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 0,
+      "dexterity": 1,
+      "constitution": 1,
+      "intelligence": 1,
+      "wisdom": 3,
+      "charisma": 0
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "source_spellcasting_fingerprint": "f787c723a527cca44d6a9dac1410ec83802b1fd013fde16d9d23fdc1eb1dbc3c",
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [
+      {
+        "id": "spell-slot-1",
+        "name": "Level 1 Arena Spell Uses",
+        "max_uses": 5
+      },
+      {
+        "id": "spell-slot-2",
+        "name": "Level 2 Arena Spell Uses",
+        "max_uses": 1
+      }
+    ],
+    "recharge_rules": [],
+    "visual": {
+      "armor": "studded-leather",
+      "main_hand": "Vine Staff",
+      "body_style": "humanoid"
+    },
+    "source": "SRD 5.2.1 p. 282",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-hippogriff",
     "name": "Hippogriff",
     "archetype": "Hippogriff",
