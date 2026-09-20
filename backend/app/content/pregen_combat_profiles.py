@@ -46,6 +46,7 @@ class PregenCombatProfile:
     damage_vulnerabilities: tuple[str, ...] = ()
     damage_immunities: tuple[str, ...] = ()
     condition_immunities: tuple[str, ...] = ()
+    unlimited_resources: tuple[str, ...] = ()
 
 def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> AbilityScores:
     return AbilityScores(strength=strength, dexterity=dexterity, constitution=constitution,
