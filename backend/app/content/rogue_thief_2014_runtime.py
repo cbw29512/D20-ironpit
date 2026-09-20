@@ -42,10 +42,15 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
-    """Compile the 2014 Human Thief Rogue through level 10 from Basic Rules data."""
+    """Compile the 2014 Human Thief Rogue through level 11 from Basic Rules data.
+
+    Reliable Talent is recorded by the build audit at level 11, but the standard
+    arena currently executes no qualifying proficient ability-check path. The
+    runtime therefore needs no Rogue-specific roll mutation to represent level 11.
+    """
     try:
-        if level not in range(1, 11):
-            raise ValueError("2014 Thief Rogue certification covers levels 1 through 10.")
+        if level not in range(1, 12):
+            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 11.")
         scores = _scores(level); dex = scores.modifier("dexterity")
         rapier = _attack(level, "rapier", scores); shortbow = _attack(level, "shortbow", scores)
         return CombatantTemplate(
