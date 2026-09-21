@@ -7,6 +7,7 @@ from app.combat.conditions import DODGE_EFFECT_ID, stand_from_prone
 from app.combat.grapple import speed_is_zero
 from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
 from app.combat.modifier_stack import effective_speed
+from app.combat.opening_modifiers import opening_modifiers
 from app.combat.survivor import apply_survivor_start_turn_heal
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 
@@ -23,6 +24,7 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
                 ResourceState(id=r.id, name=r.name, current_uses=r.max_uses, max_uses=r.max_uses)
                 for r in template.resources
             ],
+            active_modifiers=opening_modifiers(template),
         )
     except Exception as exc:
         logger.exception("Failed to build runtime state for %s.", template.name)
