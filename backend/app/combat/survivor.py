@@ -8,9 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 def apply_survivor_start_turn_heal(state: CombatantState) -> int:
-    """Apply start-turn healing when a compiled Survivor-style feature is active."""
+    """Apply universal start-turn healing while alive and at or below half Hit Points."""
     try:
-        amount = state.template.progression_features.survivor_heal_amount
+        features = state.template.progression_features
+        amount = features.bloodied_start_turn_heal_amount or features.survivor_heal_amount
         if amount <= 0 or state.current_hp <= 0:
             return 0
         maximum = state.template.max_hp + state.max_hp_bonus
