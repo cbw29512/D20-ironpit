@@ -22,6 +22,7 @@ class AttackExpectation:
     mastery_property: str | None = None
     sneak_attack_eligible: bool = False
     conditional_damage: tuple[tuple[int, int, str], ...] = ()
+    on_hit_damage: tuple[tuple[str, int, int, int, str], ...] = ()
 
 @dataclass(frozen=True)
 class PregenCombatProfile:
