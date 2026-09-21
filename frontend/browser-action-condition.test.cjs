@@ -88,6 +88,23 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(S.active(ally), true, "partially debuffed ally remains active");
   assert.equal(S.packTactics(attacker, target, setup), true, "partially debuffed ally can still enable Pack Tactics");
 }
+{
+  const elusiveTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["mara-quickstep-2014-l18"]);
+  assert.ok(elusiveTemplate, "Level-18 2014 Mara must be present in the generated browser roster");
+  const attacker = member("elusive-attacker");
+  const elusive = { combatant_id: "mara-elusive", side: "monsters", position_ft: 0, state: S.buildState(elusiveTemplate) };
+  const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
+
+  const normal = A.resolveAttack(20, 1, attacker, elusive, attack, 5, { spendAction: false, advantage: 1 });
+  assert.equal(normal.attack_roll.mode, "normal", "Elusive suppresses attack Advantage while Mara is not incapacitated");
+
+  const attacker2 = member("elusive-attacker-2");
+  const incapacitated = { combatant_id: "mara-stunned", side: "monsters", position_ft: 0, state: S.buildState(elusiveTemplate) };
+  incapacitated.state.active_effect_ids.push("stunned");
+  const advantaged = A.resolveAttack(21, 1, attacker2, incapacitated, attack, 5, { spendAction: false, advantage: 1 });
+  assert.equal(advantaged.attack_roll.mode, "advantage", "Elusive stops suppressing Advantage while Mara is incapacitated");
+}
+
 console.log("Browser condition/action-economy integration regressions passed.");
 
 // Keep newer condition/class subsystems inside an already mandatory CI entry point.
