@@ -79,6 +79,66 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ])
         if level >= 10:
             audits.append(_audit("purity-of-body", "Purity of Body", "class"))
+        if level >= 11:
+            audits.append(_audit(
+                "tranquility", "Tranquility", "subclass",
+                notes="Installed as a passive Sanctuary-style Wisdom targeting gate at combat start; ends when Kael attacks.",
+            ))
+        if level >= 12:
+            audits.append(_audit(
+                "ability-score-improvement-l12", "Ability Score Improvement (+2 Wisdom)", "class",
+                notes="Canonical Iron Pit progression: Wisdom 15→17 for AC, Monk save DCs, and Wisdom defenses.",
+            ))
+        if level >= 13:
+            audits.append(_audit(
+                "tongue-of-the-sun-and-moon", "Tongue of the Sun and Moon", "class",
+                combat=False, automated=False,
+                notes="Language communication does not change a one-on-one Iron Pit combat outcome.",
+            ))
+        if level >= 14:
+            audits.append(_audit(
+                "diamond-soul", "Diamond Soul", "class",
+                notes="All saving throws gain proficiency; failed saves automatically spend 1 Ki to reroll through the shared failed-save reroll primitive.",
+            ))
+        if level >= 15:
+            audits.append(_audit(
+                "timeless-body", "Timeless Body", "class",
+                combat=False, automated=False,
+                notes="Aging and food/water requirements do not change an Iron Pit duel.",
+            ))
+        if level >= 16:
+            audits.append(_audit(
+                "ability-score-improvement-l16", "Ability Score Improvement (+2 Wisdom)", "class",
+                notes="Canonical Iron Pit progression: Wisdom 17→19 for AC, Monk save DCs, and Wisdom defenses.",
+            ))
+        if level >= 17:
+            audits.append(_audit(
+                "quivering-palm", "Quivering Palm", "subclass",
+                notes="Uses the shared deferred-save effect primitive: 3 Ki on an unarmed hit, later Action, Constitution save, 0 HP on failure or 10d10 necrotic on success.",
+            ))
+        if level >= 18:
+            audits.extend([
+                _audit(
+                    "empty-body", "Empty Body", "class",
+                    notes="Uses the shared timed self-buff primitive: Action + 4 Ki, Invisible, and source-owned resistance to all supported damage types except Force for 10 rounds.",
+                ),
+                _audit(
+                    "astral-projection", "Astral Projection (Empty Body)", "class",
+                    combat=False, automated=False,
+                    notes="Self-only planar travel does not change an Iron Pit duel.",
+                ),
+            ])
+        if level >= 19:
+            audits.append(_audit(
+                "ability-score-improvement-l19", "Ability Score Improvement (+1 Wisdom, +1 Strength)", "class",
+                notes="Canonical Iron Pit progression: Wisdom 19→20 and Strength 13→14; both improve combat-relevant derived values.",
+            ))
+        if level >= 20:
+            audits.append(_audit(
+                "perfect-self", "Perfect Self", "class",
+                combat=False, automated=False,
+                notes="Arena-inert under the immutable-card reset contract: every Iron Pit match begins with full Ki before initiative is rolled, so the trigger condition of 0 Ki cannot occur.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
