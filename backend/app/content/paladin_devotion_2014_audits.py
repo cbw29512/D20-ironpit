@@ -96,6 +96,11 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "improved-divine-smite", "Improved Divine Smite", "class",
                 notes="Every hit with Aurelia's melee-weapon loadout carries a declarative 1d8 radiant on-hit rider.",
             ))
+        if level >= 12:
+            audits.append(_audit(
+                "ability-score-improvement-l12", "Ability Score Improvement (+1 Charisma, +1 Wisdom)", "class",
+                notes="Canonical Iron Pit progression: Charisma 17→18 and Wisdom 13→14, improving Aura of Protection, Sacred Weapon, spell DCs, and Wisdom defenses.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)
