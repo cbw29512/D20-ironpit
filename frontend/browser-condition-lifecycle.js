@@ -21,6 +21,7 @@
       if (repeatSaveDue(effect, round, timing)) {
         const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
         const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        if (removed.length && effect.source_effect_id) M()?.removeSource([target.state], effect.source_id, effect.source_effect_id);
         events.push({
           sequence: sequence++, round_number: round, event_type: "saving_throw",
           actor_id: target.combatant_id, actor_name: target.state.template.name,
@@ -34,7 +35,9 @@
         if (save.succeeded) continue;
       }
       if (expiryDue(effect, round, timing)) {
-        const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
+        const removed = T().removeGroup(target.state, effect);
+        if (removed.length && effect.source_effect_id) M()?.removeSource([target.state], effect.source_id, effect.source_effect_id);
+        if (!removed.length) continue;
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: target.combatant_id, actor_name: target.state.template.name,
