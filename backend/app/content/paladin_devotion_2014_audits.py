@@ -91,6 +91,11 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "aura-of-courage", "Aura of Courage", "class",
                 notes="Fear immunity propagates dynamically to allies within 10 feet.",
             ))
+        if level >= 11:
+            audits.append(_audit(
+                "improved-divine-smite", "Improved Divine Smite", "class",
+                notes="Every hit with Aurelia's melee-weapon loadout carries a declarative 1d8 radiant on-hit rider.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)
