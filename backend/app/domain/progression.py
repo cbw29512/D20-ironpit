@@ -14,6 +14,15 @@ class AbilityCheckMinimum(BaseModel):
     minimum_source: Literal["ability_score"] = "ability_score"
 
 
+class OpeningTargetingWard(BaseModel):
+    """A passive targeting save gate installed when combat state is created."""
+
+    source_id: str
+    save_ability: AbilityName = "wisdom"
+    save_dc: int = Field(ge=1, le=40)
+    ends_on_owner_attack: bool = True
+
+
 class EffectBoundSurvivalSave(BaseModel):
     """Immutable zero-HP replacement parameters; no class identity enters resolution."""
 
@@ -29,6 +38,7 @@ class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
+    opening_targeting_ward: OpeningTargetingWard | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
