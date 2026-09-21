@@ -23,6 +23,7 @@ class ModifierKind(StrEnum):
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
+    DAMAGE_RESISTANCE = "damage-resistance"
     SPEED = "speed"
     OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
 
@@ -60,9 +61,10 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} requires certified dice.")
         if not die_kind and (self.dice_count or self.dice_size):
             raise ValueError(f"{self.kind.value} does not accept dice.")
-        if self.kind is ModifierKind.BONUS_DAMAGE and self.damage_type is None:
-            raise ValueError("Bonus damage requires a damage type.")
-        if self.kind is not ModifierKind.BONUS_DAMAGE and self.damage_type is not None:
+        typed_kinds = {ModifierKind.BONUS_DAMAGE, ModifierKind.DAMAGE_RESISTANCE}
+        if self.kind in typed_kinds and self.damage_type is None:
+            raise ValueError(f"{self.kind.value} requires a damage type.")
+        if self.kind not in typed_kinds and self.damage_type is not None:
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
         advantage_kinds = {
             ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.ATTACKS_AGAINST_DISADVANTAGE,
