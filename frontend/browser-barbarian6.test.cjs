@@ -15,7 +15,10 @@ for (const file of [
 const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l6"]);
 assert.ok(template, "Barbarian 6 must be generated as a browser-ready hero");
 assert.equal(template.level, 6);
-assert.equal(template.armor_class, 14);
+const defenseBonus = (template.combat_treasure_awards || [])
+  .filter((item) => item.effect === "armor-class")
+  .reduce((sum, item) => sum + item.bonus, 0);
+assert.equal(template.armor_class, 14 + defenseBonus);
 assert.equal(template.max_hp, 65);
 assert.equal(template.speed_ft, 40);
 assert.equal(template.resources.rage, 4);
