@@ -29,6 +29,17 @@ class DeferredSaveEffect(BaseModel):
     success_damage_type: str | None = None
 
 
+class TimedSelfBuff(BaseModel):
+    """Action/resource-driven self effect with source-owned timed conditions/modifiers."""
+
+    source_id: str
+    resource_id: str
+    resource_cost: int = Field(default=1, ge=1)
+    duration_rounds: int = Field(ge=1, le=600)
+    effect_ids: list[str] = Field(default_factory=list)
+    damage_resistances: list[str] = Field(default_factory=list)
+
+
 class OpeningTargetingWard(BaseModel):
     """A passive targeting save gate installed when combat state is created."""
 
@@ -54,6 +65,7 @@ class ProgressionCombatFeatures(BaseModel):
 
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
+    timed_self_buff: TimedSelfBuff | None = None
     opening_targeting_ward: OpeningTargetingWard | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
