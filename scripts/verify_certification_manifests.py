@@ -90,6 +90,12 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("evasion")
     if features.survivor_heal_amount:
         mechanics.add("survivor")
+    if features.bloodied_start_turn_heal_amount:
+        mechanics.add("bloodied-start-turn-healing")
+    if features.death_save_advantage:
+        mechanics.add("death-save-advantage")
+    if features.death_save_recovery_minimum != 20:
+        mechanics.add("death-save-recovery-threshold")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
