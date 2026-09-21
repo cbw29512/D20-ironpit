@@ -8,7 +8,7 @@ from app.combat.death_saves import resolve_death_save
 from app.combat.dice import DiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_events import build_encounter_result, build_finish_event, build_initiative_events
-from app.combat.encounter_initiative import roll_encounter_initiative
+from app.combat.encounter_initiative import roll_encounter_initiative, turn_order_for_round
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
@@ -76,7 +76,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
         events.extend(initiative_events)
 
         for round_number in range(1, MAX_ENCOUNTER_ROUNDS + 1):
-            for combatant_id in initiative.turn_order:
+            for combatant_id in turn_order_for_round(round_number, initiative, by_id):
                 outcome = resolve_encounter_outcome(setup)
                 if outcome != "active":
                     events.append(build_finish_event(sequence, round_number, outcome))
