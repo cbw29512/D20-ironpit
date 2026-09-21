@@ -39,4 +39,9 @@ def build_mara_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 
 def build_mara_2014_combat_profiles() -> list[PregenCombatProfile]:
-    return [build_mara_2014_combat_profile(level) for level in range(1, 11)]
+    """Return only the audited/certification-eligible 2014 Mara fingerprints."""
+    try:
+        return [build_mara_2014_combat_profile(level) for level in range(1, 12)]
+    except Exception:
+        logger.exception("Failed to compile 2014 Mara combat-profile progression through level 11")
+        raise
