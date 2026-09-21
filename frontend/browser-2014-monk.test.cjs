@@ -20,7 +20,7 @@ load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const monk = (level) => heroes.find((hero) => hero.id === `kael-stillwater-2014-l${level}`);
-for (let level = 1; level <= 18; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
+for (let level = 1; level <= 20; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
 
 assert.deepEqual(monk(1).ability_scores, { strength: 13, dexterity: 16, constitution: 14, intelligence: 11, wisdom: 15, charisma: 9 });
 assert.equal(monk(1).armor_class, 15);
@@ -56,6 +56,12 @@ assert.equal(monk(16).opening_targeting_ward.save_dc, 17);
 assert.equal(monk(17).resources.ki, 17);
 assert.equal(monk(17).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 10);
 assert.equal(monk(18).speed_ft, 60);
+assert.equal(monk(19).ability_scores.wisdom, 20);
+assert.equal(monk(19).ability_scores.strength, 14);
+assert.equal(monk(19).armor_class, 20);
+assert.equal(monk(19).resources.ki, 19);
+assert.equal(monk(20).resources.ki, 20);
+assert.equal(monk(20).armor_class, 20);
 assert.deepEqual(monk(18).timed_self_buff, {
   source_id: "empty-body",
   resource_id: "ki",
@@ -159,4 +165,4 @@ assert.ok(result.events.every((event) => event.feature_id === "flurry-of-blows")
 assert.equal(flurryActor.state.resources.ki, 1);
 assert.equal(flurryActor.state.bonus_action_available, false);
 
-console.log("2014 Open Hand Monk browser mechanics preserve progression through level 18 including Tranquility, Diamond Soul, Quivering Palm, and Empty Body.");
+console.log("2014 Open Hand Monk browser mechanics preserve progression through level 20 including Tranquility, Diamond Soul, Quivering Palm, Empty Body, and final ASI progression.");
