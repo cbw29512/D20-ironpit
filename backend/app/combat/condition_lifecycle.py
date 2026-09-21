@@ -1,21 +1,14 @@
 from __future__ import annotations
-
 import logging
-
 from app.combat.modifier_stack import expire_target_turn_modifiers, remove_source_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-
 logger = logging.getLogger(__name__)
-
-
 def _condition_name(effect_id: str) -> str:
     return effect_id.replace("_", " ").title()
-
-
 def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool:
     if effect.repeat_save_timing != timing:
         return False
@@ -24,14 +17,10 @@ def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool
         and effect.applied_round is not None
         and round_number <= effect.applied_round
     )
-
-
 def _expiry_due(effect, round_number: int, timing: ConditionTiming) -> bool:
     return effect.expiry_timing == timing and (
         effect.expires_round is None or round_number >= effect.expires_round
     )
-
-
 def resolve_target_condition_timing(
     sequence: int,
     round_number: int,
@@ -106,8 +95,6 @@ def resolve_target_condition_timing(
     except Exception as exc:
         logger.exception("Target condition lifecycle failed for %s at %s.", target.combatant_id, timing)
         raise RuntimeError("Target condition lifecycle could not be resolved.") from exc
-
-
 def resolve_source_condition_timing(
     sequence: int,
     round_number: int,
