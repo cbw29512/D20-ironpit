@@ -311,7 +311,6 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
             "traits": sorted(traits), "resources": {item.id: item.max_uses for item in template.resources},
-            "combat_treasure_awards": [item.model_dump(mode="json") for item in template.combat_treasure_awards],
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
@@ -320,6 +319,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.combat_treasure_awards:
+            row["combat_treasure_awards"] = [item.model_dump(mode="json") for item in template.combat_treasure_awards]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
