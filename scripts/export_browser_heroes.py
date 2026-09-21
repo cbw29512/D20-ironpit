@@ -227,6 +227,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
     if progression.indomitable_bonus: row["indomitable_bonus"] = progression.indomitable_bonus
+    if progression.failed_save_reroll_source_id: row["failed_save_reroll_source_id"] = progression.failed_save_reroll_source_id
+    if progression.failed_save_reroll_resource_id: row["failed_save_reroll_resource_id"] = progression.failed_save_reroll_resource_id
+    if progression.failed_save_reroll_bonus: row["failed_save_reroll_bonus"] = progression.failed_save_reroll_bonus
     if progression.tactical_master_sap_weapon_ids: row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)
     if progression.heroic_warrior: row["heroic_warrior"] = True
     if progression.studied_attacks: row["studied_attacks"] = True
