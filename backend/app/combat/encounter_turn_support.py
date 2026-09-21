@@ -6,6 +6,7 @@ from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
+from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.effect_removal import choose_effect_removal_action, resolve_effect_removal
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
