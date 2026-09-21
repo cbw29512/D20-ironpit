@@ -91,9 +91,9 @@ def test_complete_table_can_outrun_engine_without_silently_running_unsupported_r
     assert unsupported_fighter_engine_features(15) == ()
     assert unsupported_fighter_engine_features(16) == ()
     assert unsupported_fighter_engine_features(17) == ()
-    assert unsupported_fighter_engine_features(18) == ("survivor-defy-death", "survivor-heroic-rally")
+    assert unsupported_fighter_engine_features(18) == ()
     assert FIGHTER_COMBAT_LEVELS[13].max_hp == 147
     assert FIGHTER_COMBAT_LEVELS[14].max_hp == 158
     assert build_karnok_stoneward_level(15).progression_features.critical_hit_minimum == 18
-    with pytest.raises(ValueError, match="survivor-defy-death, survivor-heroic-rally"):
-        build_karnok_stoneward_level(18)
+    assert build_karnok_stoneward_level(18).level == 18
+    assert unsupported_fighter_engine_features(19) == ("boon-combat-prowess",)
