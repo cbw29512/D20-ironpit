@@ -7,6 +7,8 @@ from app.content.certified_hero_progressions import iter_certified_progression_l
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.hero_progressions import CANONICAL_BUILD_ID
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
+from app.content.pregen_combat_treasure import canonical_treasure_roll, resolve_combat_treasure
+from app.content.pregen_treasure_application import apply_combat_treasure_history
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
@@ -29,6 +31,11 @@ def _validated(
     assert_character_resources_raw_ready(template, profile, combat_profile)
     template = complete_unarmed_opportunity_profiles([template])[0]
     build_id = CANONICAL_BUILD_ID if profile.ruleset == "2024" else f"{CANONICAL_BUILD_ID}-2014"
+    awards = []
+    for treasure_level in range(2, profile.level + 1):
+        roll = canonical_treasure_roll(profile.ruleset, profile.class_id, build_id, treasure_level)
+        awards.extend(resolve_combat_treasure(template, treasure_level, roll))
+    template = apply_combat_treasure_history(template, awards)
     return (profile.class_id, profile.level, build_id), template
 
 

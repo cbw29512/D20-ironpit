@@ -34,3 +34,16 @@ def test_pregen_audit_catches_attack_bonus_and_hp_drift() -> None:
     issues = audit_pregen_combat_stats(template, profile)
     assert "ac-hp-or-speed-mismatch" in issues
     assert any(issue.endswith("attack-bonus-mismatch") for issue in issues)
+
+
+def test_treasure_aware_audit_accepts_recorded_loot_but_rejects_unrecorded_bonus() -> None:
+    characters = [item for item in build_arena_roster().characters if item.combat_treasure_awards]
+    assert characters, "At least one certified arena pregen should have canonical combat treasure."
+
+    template = deepcopy(characters[0])
+    profile = build_pregen_combat_profiles()[template.id]
+    assert audit_pregen_combat_stats(template, profile) == []
+
+    template.armor_class += 1
+    issues = audit_pregen_combat_stats(template, profile)
+    assert "ac-hp-or-speed-mismatch" in issues
