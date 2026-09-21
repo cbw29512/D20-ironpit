@@ -24,8 +24,8 @@ def _setup(rogue: EncounterCombatant, target: EncounterCombatant) -> EncounterSe
     )
 
 
-def test_2014_thief_levels_one_through_nineteen_are_isolated_from_2024() -> None:
-    for level in range(1, 20):
+def test_2014_thief_levels_one_through_twenty_are_isolated_from_2024() -> None:
+    for level in range(1, 21):
         hero = build_mara_quickstep_2014(level)
         assert hero.ruleset == "2014"
         assert hero.level == level
@@ -212,3 +212,39 @@ def test_level_nineteen_applies_final_constitution_asi_and_sneak_attack_ten_d6()
     assert hero19.saving_throw_bonuses["constitution"] == 5
     assert hero19.saving_throw_bonuses["wisdom"] == 8
     assert hero19.progression_features.sneak_attack_d6 == 10
+
+
+def test_level_twenty_stroke_of_luck_overrides_natural_one_and_spends_resource() -> None:
+    profile20 = build_mara_quickstep_2014_profile(20)
+    stroke = next(audit for audit in profile20.feature_audits if audit.feature_id == "stroke-of-luck")
+    hero20 = build_mara_quickstep_2014(20)
+
+    assert stroke.combat_relevant is True
+    assert stroke.automated is True
+    assert hero20.progression_features.miss_to_hit_override_resource_id == "stroke-of-luck"
+    assert {item.id: item.max_uses for item in hero20.resources} == {"stroke-of-luck": 1}
+    assert hero20.progression_features.sneak_attack_d6 == 10
+
+    attacker = build_combatant_state(hero20)
+    defender = build_combatant_state(build_karnok_stoneward_2014(20))
+    event = resolve_attack(
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([1, 4]), spend_action=False,
+    )
+
+    assert event.attack_roll.selected_roll == 1
+    assert event.hit is True
+    assert event.critical is False
+    assert event.turn_terminated is False
+    assert event.turn_termination_reason is None
+    assert event.feature_id == "stroke-of-luck"
+    assert "Stroke Of Luck turns the miss into a hit." in event.description
+    assert next(item for item in attacker.resources if item.id == "stroke-of-luck").current_uses == 0
+
+    second = resolve_attack(
+        2, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([1]), spend_action=False,
+    )
+    assert second.hit is False
+    assert second.turn_terminated is True
+    assert second.turn_termination_reason == "iron-pit-natural-1-attack"
