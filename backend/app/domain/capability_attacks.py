@@ -64,6 +64,7 @@ class AttackCapabilityDefinition(BaseModel):
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
     rage_eligible: bool = False
+    sneak_attack_eligible: bool = False
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     charge_profile: ChargeProfileDefinition | None = None
