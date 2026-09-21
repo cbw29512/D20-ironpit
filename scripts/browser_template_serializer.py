@@ -281,6 +281,12 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["initiative_advantage"] = True
     if features.athletics_advantage:
         row["athletics_advantage"] = True
+    if features.bloodied_start_turn_heal_amount:
+        row["bloodied_start_turn_heal_amount"] = features.bloodied_start_turn_heal_amount
+    if features.death_save_advantage:
+        row["death_save_advantage"] = True
+    if features.death_save_recovery_minimum != 20:
+        row["death_save_recovery_minimum"] = features.death_save_recovery_minimum
     if features.critical_move_fraction:
         row["critical_move_fraction"] = features.critical_move_fraction
     if features.cunning_action:
