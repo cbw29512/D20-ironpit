@@ -365,7 +365,10 @@ Separate RAW legality from tactical policy.
 - During a fight, revealed resistance/immunity/vulnerability may be remembered; that knowledge resets after the match.
 - Melee/frontline constraints are enforced before threat heuristics.
 - Ranged/spell attackers may target any legal visible/ranged enemy subject to arena effects.
-- Prefer strongest useful legal source-defined attacks/signature abilities without a deep hidden-stat expected-value solver.
+- Prefer the strongest useful legal source-defined action across action families without a deep hidden-stat expected-value solver.
+- Legal resource-backed/recharge offensive signature abilities take priority over ordinary Attack/Multiattack when they have a meaningful target; if no legal/useful target exists, fall through normally.
+- When multiple legal weapons satisfy the same tactical role, choose by source-visible offensive value rather than storage/list order; a backup dagger must not displace a stronger two-handed primary weapon.
+- Spell offense uses expected combat impact; equal-value choices prefer the higher native spell level because Iron Pit has no later encounter to conserve for.
 - Avoid obviously wasteful attacks once an immunity is known when alternatives exist.
 - Signature monster abilities should actually be used when legal/useful.
 - Bloodied is an AI label at <=50% effective maximum HP, not a fake RAW condition unless a source rule uses Bloodied mechanically.
