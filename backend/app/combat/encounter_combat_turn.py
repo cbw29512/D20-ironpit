@@ -10,7 +10,10 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
-from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
+from app.combat.encounter_turn_support import (
+    finish_turn, resolve_area_save_turn, resolve_signature_save_turn,
+    resolve_support_actions, save_choice,
+)
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
@@ -106,6 +109,18 @@ def resolve_combat_turn(
         if presence is not None:
             events.append(presence); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        signature_area = resolve_area_save_turn(
+            events, sequence, round_number, attacker, setup, dice, turn_key, resource_only=True,
+        )
+        if signature_area is not None:
+            return signature_area
+
+        signature_save = resolve_signature_save_turn(
+            events, sequence, round_number, attacker, setup, dice, turn_key,
+        )
+        if signature_save is not None:
+            return signature_save
 
         if attacker.state.template.attack_action is not None:
             action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
