@@ -89,6 +89,33 @@
     };
   }
 
+  function turnOrderForRound(roundNumber, initiative, members) {
+    try {
+      if (roundNumber !== 1) return [...initiative.turn_order];
+      const byId = new Map(members.map((member) => [member.combatant_id, member]));
+      const baseIndex = new Map(initiative.turn_order.map((id, index) => [id, index]));
+      const groupById = new Map();
+      for (const group of initiative.groups) {
+        for (const id of group.combatant_ids) groupById.set(id, group);
+      }
+      const slots = [];
+      for (const id of initiative.turn_order) {
+        const group = groupById.get(id);
+        const index = baseIndex.get(id);
+        slots.push({ priority: priority(group), count: group.initiative_count, regular: 1, index: -index, id });
+        const offset = byId.get(id)?.state?.template?.progression_features?.first_round_extra_turn_initiative_offset;
+        if (Number.isInteger(offset)) {
+          slots.push({ priority: 1, count: group.initiative_count + offset, regular: 0, index: -index, id });
+        }
+      }
+      slots.sort((a, b) => b.priority - a.priority || b.count - a.count || b.regular - a.regular || b.index - a.index);
+      return slots.map((slot) => slot.id);
+    } catch (error) {
+      console.error("Failed to build browser encounter turn schedule", { roundNumber, error });
+      throw error;
+    }
+  }
+
   function events(initiative, setup, startSequence = 1) {
     const members = [...setup.heroes, ...setup.monsters];
     const names = new Map(members.map((member) => [member.combatant_id, member.state.template.name]));
@@ -107,5 +134,5 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_INITIATIVE = { events, priority, resolve };
+  window.IRON_PIT_BROWSER_INITIATIVE = { events, priority, resolve, turnOrderForRound };
 })();
