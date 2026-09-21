@@ -3,6 +3,7 @@
 
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const O = () => window.IRON_PIT_BROWSER_OFFENSE_PRIORITY;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
 
@@ -78,7 +79,9 @@
   }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
     const allowed = new Set(ids);
-    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
+    const profiles = attacks(member.state.template)
+      .filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind))
+      .sort(O().compareWeapons);
     for (const target of targetOrder(member, setup, preferBackline)) {
       const distance = attackDistance(member, target);
       const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
