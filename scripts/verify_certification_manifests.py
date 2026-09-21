@@ -128,6 +128,11 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("aura-of-devotion-2014")
     if features.aura_of_courage_2014:
         mechanics.add("aura-of-courage-2014")
+    # The durable hero certification manifest records RAW class/build mechanics.
+    # Iron Pit treasure is a post-RAW arena overlay and is audited separately on the hero card.
+    if any(item.effect == "healing-potion" for item in template.combat_treasure_awards):
+        mechanics.discard("resource:combat-healing-potion")
+        mechanics.discard("healing-action:combat-healing-potion")
     return sorted(mechanics)
 
 
