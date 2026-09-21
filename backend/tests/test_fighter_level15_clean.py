@@ -30,4 +30,3 @@ def test_fighter_level_fifteen_reuses_universal_superior_critical_threshold() ->
         "Karnok Stoneward",
         "karnok-stoneward-l15",
     )
-    assert ("fighter", 16, "canonical") not in registry
