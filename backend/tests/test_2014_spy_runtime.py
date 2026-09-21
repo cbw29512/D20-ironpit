@@ -27,7 +27,7 @@ def test_2014_spy_compiles_shared_cunning_action_and_sneak_attack_data() -> None
     spy = _runtime_spy()
     attacks = [spy.weapon_attack, *spy.alternate_weapon_attacks]
 
-    assert spy.ruleset == "2014"
+    assert (spy.id, spy.name, spy.ruleset) == ("2014-spy", "Spy", "2014")
     assert spy.progression_features.cunning_action is True
     assert spy.progression_features.sneak_attack_d6 == 2
     assert {attack.weapon.name for attack in attacks} == {"Shortsword", "Hand Crossbow"}
