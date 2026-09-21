@@ -25,6 +25,7 @@ from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
+from app.combat.timed_self_buff import resolve_timed_self_buff
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -75,6 +76,11 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
+
+        self_buff = resolve_timed_self_buff(sequence, round_number, attacker)
+        if self_buff is not None:
+            events.append(self_buff); sequence += 1
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
