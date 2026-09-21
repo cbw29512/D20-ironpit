@@ -1,3 +1,4 @@
+from app.combat.attacks import resolve_attack
 from app.combat.cunning_action import needs_dash, use_dash
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_initiative import roll_encounter_initiative, turn_order_for_round
@@ -7,7 +8,7 @@ from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_201
 from app.content.rogue_thief_2014_profile import build_mara_quickstep_2014_profile
 from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import DamageRollComponent, DamageType
+from app.domain.models import DamageRollComponent, DamageType, RollMode
 
 
 def _member(template, combatant_id: str, side: str, position: int) -> EncounterCombatant:
@@ -23,8 +24,8 @@ def _setup(rogue: EncounterCombatant, target: EncounterCombatant) -> EncounterSe
     )
 
 
-def test_2014_thief_levels_one_through_seventeen_are_isolated_from_2024() -> None:
-    for level in range(1, 18):
+def test_2014_thief_levels_one_through_eighteen_are_isolated_from_2024() -> None:
+    for level in range(1, 19):
         hero = build_mara_quickstep_2014(level)
         assert hero.ruleset == "2014"
         assert hero.level == level
@@ -168,3 +169,31 @@ def test_thiefs_reflexes_schedules_second_round_one_turn_at_initiative_minus_ten
     assert initiative.turn_order == ["mara", "target"]
     assert turn_order_for_round(1, initiative, by_id) == ["mara", "target", "mara"]
     assert turn_order_for_round(2, initiative, by_id) == ["mara", "target"]
+
+
+def test_level_eighteen_elusive_suppresses_only_advantage_while_not_incapacitated() -> None:
+    profile18 = build_mara_quickstep_2014_profile(18)
+    elusive = next(audit for audit in profile18.feature_audits if audit.feature_id == "elusive")
+    hero18 = build_mara_quickstep_2014(18)
+
+    assert elusive.combat_relevant is True
+    assert elusive.automated is True
+    assert hero18.progression_features.suppress_attack_advantage_while_not_incapacitated is True
+    assert hero18.progression_features.sneak_attack_d6 == 9
+
+    attacker = build_combatant_state(build_karnok_stoneward_2014(18))
+    defender = build_combatant_state(hero18)
+    normal = resolve_attack(
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([3]), spend_action=False, advantage_sources=1,
+    )
+    assert normal.attack_roll.mode is RollMode.NORMAL
+
+    attacker2 = build_combatant_state(build_karnok_stoneward_2014(18))
+    defender2 = build_combatant_state(hero18)
+    defender2.active_effect_ids.append("stunned")
+    advantaged = resolve_attack(
+        2, 1, attacker2, defender2, attacker2.template.weapon_attack, 5,
+        FixedDiceProvider([3, 17, 4, 4]), spend_action=False, advantage_sources=1,
+    )
+    assert advantaged.attack_roll.mode is RollMode.ADVANTAGE
