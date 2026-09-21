@@ -116,6 +116,18 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "quivering-palm", "Quivering Palm", "subclass",
                 notes="Uses the shared deferred-save effect primitive: 3 Ki on an unarmed hit, later Action, Constitution save, 0 HP on failure or 10d10 necrotic on success.",
             ))
+        if level >= 18:
+            audits.extend([
+                _audit(
+                    "empty-body", "Empty Body", "class",
+                    notes="Uses the shared timed self-buff primitive: Action + 4 Ki, Invisible, and source-owned resistance to all supported damage types except Force for 10 rounds.",
+                ),
+                _audit(
+                    "astral-projection", "Astral Projection (Empty Body)", "class",
+                    combat=False, automated=False,
+                    notes="Self-only planar travel does not change an Iron Pit duel.",
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
