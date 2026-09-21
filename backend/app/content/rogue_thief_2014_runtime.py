@@ -43,16 +43,20 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
-    """Compile the 2014 Human Thief Rogue through level 13 from Basic Rules data.
+    """Compile the 2014 Human Thief Rogue through level 16 from Basic Rules data.
 
-    Reliable Talent remains arena-inert for the current standard combat path.
-    Level 12 applies the approved +2 Constitution ASI; level 13 Use Magic Device
-    is arena-inert with Mara\'s canonical mundane loadout.
+    Reliable Talent, Use Magic Device, and Blindsense remain arena-inert for the
+    current certified combat path. Level 15 adds Wisdom save proficiency through
+    the shared save compiler; level 16 applies the approved +2 Constitution ASI.
     """
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 13.")
+        if level not in range(1, 17):
+            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 16.")
         scores = _scores(level); dex = scores.modifier("dexterity")
+        save_proficiencies = (
+            ("dexterity", "intelligence", "wisdom")
+            if level >= 15 else ("dexterity", "intelligence")
+        )
         rapier = _attack(level, "rapier", scores); shortbow = _attack(level, "shortbow", scores)
         return CombatantTemplate(
             id=f"mara-quickstep-2014-l{level}", name="Mara Quickstep", archetype="Rogue",
@@ -60,7 +64,7 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
             armor_class=11 + dex, max_hp=fixed_hit_points(level, 8, scores.modifier("constitution")),
             speed_ft=30, initiative_bonus=dex, weapon_attack=rapier,
             alternate_weapon_attacks=[shortbow],
-            saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "intelligence")),
+            saving_throw_bonuses=saving_throw_bonuses(scores, level, save_proficiencies),
             skill_bonuses=_skill_bonuses(level, scores), weapon_masteries=[],
             progression_features=ProgressionCombatFeatures(
                 sneak_attack_d6=(level + 1) // 2, cunning_action=level >= 2,
