@@ -89,10 +89,20 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         raise
 
 
-def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
+def save_choice(
+    attacker: EncounterCombatant,
+    setup: EncounterSetup,
+    *,
+    resource_only: bool = False,
+    exclude_area: bool = False,
+):
     try:
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
+                if resource_only and action.resource_id is None:
+                    continue
+                if exclude_area and action.area is not None:
+                    continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance):
                     return target, action, distance
@@ -102,9 +112,11 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
         raise
 
 
-def resolve_area_save_turn(events, sequence, round_number, member, setup, dice, turn_key):
+def resolve_area_save_turn(
+    events, sequence, round_number, member, setup, dice, turn_key, *, resource_only=False,
+):
     try:
-        choice = choose_area_save(member, setup)
+        choice = choose_area_save(member, setup, resource_only=resource_only)
         if choice is None:
             return None
         action, placement = choice
@@ -115,4 +127,22 @@ def resolve_area_save_turn(events, sequence, round_number, member, setup, dice, 
         return finish_turn(events, sequence, round_number, member, setup, dice, turn_key)
     except Exception:
         logger.exception("Failed area-save turn stage for %s.", member.combatant_id)
+        raise
+
+
+def resolve_signature_save_turn(events, sequence, round_number, member, setup, dice, turn_key):
+    try:
+        chosen = save_choice(member, setup, resource_only=True, exclude_area=True)
+        if chosen is None:
+            return None
+        target, action, distance = chosen
+        affected = [item.state for item in [*setup.heroes, *setup.monsters]]
+        more, sequence = resolve_save_event_chain(
+            sequence, round_number, member, target, action, distance, dice, setup,
+            turn_key=turn_key, affected_states=affected,
+        )
+        events.extend(more)
+        return finish_turn(events, sequence, round_number, member, setup, dice, turn_key)
+    except Exception:
+        logger.exception("Failed signature save-action turn stage for %s.", member.combatant_id)
         raise
