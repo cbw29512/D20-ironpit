@@ -25,9 +25,18 @@ class EffectBoundSurvivalSave(BaseModel):
     replacement_hp: int = Field(ge=1)
 
 
+class ScheduledExtraTurn(BaseModel):
+    """Declarative extra-turn placement; scheduling stays class/name agnostic."""
+
+    source_id: str = Field(min_length=1)
+    round_number: int = Field(default=1, ge=1)
+    initiative_offset: int = Field(ge=-100, le=100)
+
+
 class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
+    scheduled_extra_turns: list[ScheduledExtraTurn] = Field(default_factory=list)
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
