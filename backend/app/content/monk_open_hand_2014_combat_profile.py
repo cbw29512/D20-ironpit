@@ -10,7 +10,13 @@ logger = logging.getLogger(__name__)
 
 
 def _martial_arts_die(level: int) -> int:
-    return 4 if level < 5 else 6
+    if level < 5:
+        return 4
+    if level < 11:
+        return 6
+    if level < 17:
+        return 8
+    return 10
 
 
 def _speed(level: int) -> int:
@@ -83,7 +89,7 @@ def build_kael_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_kael_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_kael_2014_combat_profile(level) for level in range(1, 11)]
+        return [build_kael_2014_combat_profile(level) for level in range(1, 12)]
     except Exception:
         logger.exception("Failed to compile 2014 Kael combat fingerprints")
         raise
