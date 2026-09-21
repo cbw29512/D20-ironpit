@@ -4,6 +4,7 @@ import logging
 
 from app.combat.condition_rules import has_condition
 from app.domain.models import CombatantState, DamageRollComponent, DamageType
+from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,8 @@ def adjusted_damage_amount(
         resistances = {
             *template.damage_resistances,
             *target.temporary_damage_resistances,
+            *(item.damage_type for item in target.active_modifiers
+              if item.kind is ModifierKind.DAMAGE_RESISTANCE and item.damage_type is not None),
         }
         if damage_type in resistances or has_condition(target, "petrified"):
             adjusted //= 2
