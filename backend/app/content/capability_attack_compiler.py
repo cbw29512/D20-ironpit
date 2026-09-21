@@ -114,6 +114,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         attack_ability=definition.attack_ability,
         attack_ability_modifier=definition.attack_ability_modifier,
         rage_eligible=definition.rage_eligible,
+        sneak_attack_eligible=definition.sneak_attack_eligible,
         fixed_damage=definition.fixed_damage,
         conditional_damage=conditional,
         conditional_attack_advantage=definition.conditional_attack_advantage,
