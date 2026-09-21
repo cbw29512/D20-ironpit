@@ -113,12 +113,21 @@ def _audits(level: int) -> list[FeatureAudit]:
             "ability-score-improvement-l19", "Ability Score Improvement (+2 Constitution)", "class",
             notes="Canonical Iron Pit progression decision: Constitution 18→20 for survivability and Constitution checks/saves.",
         ))
+    if level >= 20:
+        audits.append(_audit(
+            "stroke-of-luck", "Stroke of Luck", "subclass",
+            notes=(
+                "Uses the shared miss-to-hit override resource once per fresh Iron Pit fight. "
+                "Iron Pit policy: the first missed in-range attack spends the resource automatically; "
+                "a natural 1 is overridden immediately before the house-rule turn termination can fire."
+            ),
+        ))
     return audits
 
 
 def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 20): raise ValueError("2014 Mara candidate profile covers levels 1 through 19.")
+        if level not in range(1, 21): raise ValueError("2014 Mara candidate profile covers levels 1 through 20.")
         base = _base(); species = _species(); advances = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-mara-quickstep-2014-l{level}", template_id=f"mara-quickstep-2014-l{level}",
