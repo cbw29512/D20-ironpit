@@ -111,7 +111,7 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   attacker.state.resources["stroke-of-luck"] = 1;
   const target = member("stroke-target");
   const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
-  const values = [1, 4];
+  const values = [1, 4, 4];
   window.IRON_PIT_DICE = {
     roll: () => values.shift(),
     rollMany: (count) => Array.from({ length: count }, () => values.shift()),
