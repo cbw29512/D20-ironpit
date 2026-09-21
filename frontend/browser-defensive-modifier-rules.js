@@ -23,6 +23,12 @@
   }
   const deathSaveAdvantage = (state) => (state.active_modifiers || [])
     .some((item) => item.kind === "death-save-advantage");
+  const deathSaveNat20Threshold = (state) => {
+    const thresholds = (state.active_modifiers || [])
+      .filter((item) => item.kind === "death-save-nat20-threshold")
+      .map((item) => item.flat_bonus);
+    return thresholds.length ? Math.min(...thresholds) : 20;
+  };
   const healingMaximized = (state) => (state.active_modifiers || [])
     .some((item) => item.kind === "healing-maximize");
   const conditionImmune = (state, conditionId, sourceTemplate = null) => (state.active_modifiers || [])
@@ -40,7 +46,7 @@
   }
 
   window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = {
-    attacksAgainstDisadvantage, conditionImmune, consumeSavingThrowModifiers, deathSaveAdvantage, healingMaximized,
-    removeOwnerAttackEnding, saveAdvantage, saveDisadvantage, targetingGate,
+    attacksAgainstDisadvantage, conditionImmune, consumeSavingThrowModifiers, deathSaveAdvantage,
+    deathSaveNat20Threshold, healingMaximized, removeOwnerAttackEnding, saveAdvantage, saveDisadvantage, targetingGate,
   };
 })();
