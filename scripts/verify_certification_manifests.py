@@ -54,6 +54,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("miss-to-hit-override")
     if features.deferred_save_effect:
         mechanics.add(features.deferred_save_effect.source_id)
+    if features.timed_self_buff:
+        mechanics.add(features.timed_self_buff.source_id)
     if features.opening_targeting_ward:
         mechanics.add(features.opening_targeting_ward.source_id)
     if features.athletics_advantage:
