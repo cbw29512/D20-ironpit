@@ -103,7 +103,7 @@
         const group = groupById.get(id);
         const index = baseIndex.get(id);
         slots.push({ priority: priority(group), count: group.initiative_count, regular: 1, index: -index, id });
-        const offset = byId.get(id)?.state?.template?.progression_features?.first_round_extra_turn_initiative_offset;
+        const offset = byId.get(id)?.state?.template?.first_round_extra_turn_initiative_offset;
         if (Number.isInteger(offset)) {
           slots.push({ priority: 1, count: group.initiative_count + offset, regular: 0, index: -index, id });
         }
