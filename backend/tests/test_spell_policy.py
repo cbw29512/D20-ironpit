@@ -101,3 +101,12 @@ def test_higher_level_slot_does_not_upcast_lower_level_spell() -> None:
     assert choice.action.id == "spark"
     assert choice.slot_level == 0
     assert next(item for item in caster.state.resources if item.id == "spell-slot-4").current_uses == 1
+
+
+def test_equal_damage_spell_prefers_higher_native_level() -> None:
+    caster = _caster([_spell("low", 1), _spell("high", 3)], {1: 1, 3: 1})
+    setup = _setup(caster, [_monster(0, 30)])
+    choice = choose_spell(caster, setup, "1:caster")
+    assert choice is not None
+    assert choice.action.id == "high"
+    assert choice.slot_level == 3
