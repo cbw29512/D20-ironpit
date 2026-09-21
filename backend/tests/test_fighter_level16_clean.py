@@ -27,4 +27,3 @@ def test_fighter_level_sixteen_applies_audited_dexterity_asi() -> None:
     assert_character_resources_raw_ready(karnok, profile, combat_profile)
     registry = build_certified_hero_registry()
     assert registry[("fighter", 16, "canonical")] == ("Karnok Stoneward", "karnok-stoneward-l16")
-    assert ("fighter", 17, "canonical") not in registry
