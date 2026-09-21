@@ -16,10 +16,12 @@
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
 
   const BOTH = Object.freeze(["2014", "2024"]);
-  function saveChoice(member, setup) {
+  function saveChoice(member, setup, { resourceOnly = false, excludeArea = false } = {}) {
     if (!E().available(member.state, "action")) return null;
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
+        if (resourceOnly && !action.resourceId) continue;
+        if (excludeArea && action.area) continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };
       }
@@ -64,6 +66,38 @@
         const event = runtime.resolve(sequence, round, member, target);
         if (!event) throw new Error("Intimidating Presence candidate became illegal before resolution.");
         return { events: [event], sequence: sequence + 1 };
+      },
+    });
+
+    register({
+      id: "signature-area-save", category: C().SIGNATURE_AREA_SAVE, rulesets: BOTH,
+      discover: ({ member, setup }) => {
+        if (!E().available(member.state, "action")) return null;
+        const selected = AS()?.choose(member, setup, true) || null;
+        return selected ? { payload: { selected } } : null;
+      },
+      resolve: ({ sequence, round, member, setup }, candidate) => {
+        const result = AS().resolve(sequence, round, member, setup, candidate.payload.selected);
+        if (!result) throw new Error("Signature area-save candidate became illegal before resolution.");
+        return { events: result.events, sequence: result.sequence };
+      },
+    });
+
+    register({
+      id: "signature-save-action", category: C().SIGNATURE_SAVE_ACTION, rulesets: BOTH,
+      discover: ({ member, setup }) => {
+        const selected = saveChoice(member, setup, { resourceOnly: true, excludeArea: true });
+        return selected ? { payload: {
+          targetId: selected.target.combatant_id, actionId: selected.action.id, distance: selected.distance,
+        } } : null;
+      },
+      resolve: ({ sequence, round, member, setup }, candidate) => {
+        const target = memberById(setup, candidate.payload.targetId);
+        const action = actionById(member, candidate.payload.actionId);
+        if (!target || !action) throw new Error("Signature save-action candidate target/action is unavailable.");
+        const event = V().resolveAction(sequence, round, member, target, action, candidate.payload.distance, { setup });
+        const next = sequence + 1;
+        return DR() ? DR().chain(next, round, member, event, setup) : { events: [event], sequence: next };
       },
     });
 
