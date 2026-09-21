@@ -142,7 +142,8 @@
     const attackSave = saveDamage?.saveDc != null ? saveDamage : hitSave;
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(actualTarget.state) || "";
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
-    if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
+    if (override.featureId) description += ` ${override.featureId.replaceAll("-", " ").replace(/\\b\\w/g, (char) => char.toUpperCase())} turns the miss into a hit.`;
+    else if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
     else if (naturalOne) description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn.";
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
     if (!hit && damageRoll !== null) description += ` Graze deals ${damageRoll.total} ${attack.damageType} damage.`;
