@@ -21,8 +21,8 @@ def _setup(rogue: EncounterCombatant, target: EncounterCombatant) -> EncounterSe
     )
 
 
-def test_2014_thief_levels_one_through_sixteen_are_isolated_from_2024() -> None:
-    for level in range(1, 17):
+def test_2014_thief_levels_one_through_seventeen_are_isolated_from_2024() -> None:
+    for level in range(1, 18):
         hero = build_mara_quickstep_2014(level)
         assert hero.ruleset == "2014"
         assert hero.level == level
@@ -141,3 +141,14 @@ def test_evasion_uses_2014_success_zero_failure_half_rule() -> None:
     assert evasion_damage(rogue, "dexterity", True, "half", 21) == 0
     assert evasion_damage(rogue, "dexterity", False, "half", 21) == 10
     assert evasion_damage(rogue, "constitution", True, "half", 21) == 10
+
+
+def test_level_seventeen_thiefs_reflexes_is_declarative_and_scales_sneak_attack() -> None:
+    profile17 = build_mara_quickstep_2014_profile(17)
+    reflexes = next(audit for audit in profile17.feature_audits if audit.feature_id == "thiefs-reflexes")
+    hero17 = build_mara_quickstep_2014(17)
+
+    assert reflexes.combat_relevant is True
+    assert reflexes.automated is True
+    assert hero17.progression_features.first_round_extra_turn_initiative_offset == -10
+    assert hero17.progression_features.sneak_attack_d6 == 9
