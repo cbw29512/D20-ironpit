@@ -12,6 +12,7 @@ from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.conditional_attack_advantage import conditional_attack_advantage_sources
 from app.combat.damage import BonusDamageSpec
+from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
@@ -101,6 +102,7 @@ def resolve_attack(
         damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []
         topple = None; on_hit_save = None; save_damage = None; applied_total = 0
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
+        deferred_armed: str | None = None
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
             hit_damage = resolve_attack_hit_damage(
@@ -119,6 +121,8 @@ def resolve_attack(
             weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             if not weapon_sap_applied: tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total)
+            if actual_defender.is_alive and not actual_defender.is_dead and actual_defender.current_hp > 0:
+                deferred_armed = arm_deferred_save_effect(attacker, actual_event_id, attack.id)
             end_rage_if_incapacitated(actual_defender)
         else:
             graze = resolve_graze_miss(attacker, actual_defender, attack, dice, affected_states)
@@ -137,6 +141,7 @@ def resolve_attack(
         if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
         if tactical_sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
         if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
+        if deferred_armed: description += f" {deferred_armed.replace('-', ' ').title()} is armed on {actual_defender.template.name}."
         if save_damage and save_damage.save_dc is not None: description += f" {save_damage.save_ability.title()} save DC {save_damage.save_dc}: {actual_defender.template.name} {'succeeds' if save_damage.save_succeeded else 'fails'}."
         if on_hit_save and on_hit_save.save_dc is not None: description += f" {on_hit_save.save_ability.title()} save DC {on_hit_save.save_dc}: {actual_defender.template.name} {'succeeds' if on_hit_save.save_succeeded else 'fails'}."
         if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
