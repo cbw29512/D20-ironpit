@@ -20,7 +20,7 @@ load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const monk = (level) => heroes.find((hero) => hero.id === `kael-stillwater-2014-l${level}`);
-for (let level = 1; level <= 16; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
+for (let level = 1; level <= 17; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
 
 assert.deepEqual(monk(1).ability_scores, { strength: 13, dexterity: 16, constitution: 14, intelligence: 11, wisdom: 15, charisma: 9 });
 assert.equal(monk(1).armor_class, 15);
@@ -53,6 +53,20 @@ assert.equal(monk(16).ability_scores.wisdom, 19);
 assert.equal(monk(16).armor_class, 19);
 assert.equal(monk(16).resources.ki, 16);
 assert.equal(monk(16).opening_targeting_ward.save_dc, 17);
+assert.equal(monk(17).resources.ki, 17);
+assert.equal(monk(17).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 10);
+assert.deepEqual(monk(17).deferred_save_effect, {
+  source_id: "quivering-palm",
+  trigger_attack_ids: ["unarmed-strike"],
+  resource_id: "ki",
+  resource_cost: 3,
+  save_ability: "constitution",
+  save_dc: 18,
+  failure_sets_zero_hp: true,
+  success_damage_dice_count: 10,
+  success_damage_dice_size: 10,
+  success_damage_type: "necrotic",
+});
 assert.deepEqual(monk(11).opening_targeting_ward, {
   source_id: "tranquility", save_ability: "wisdom", save_dc: 14, ends_on_owner_attack: true,
 });
@@ -136,4 +150,4 @@ assert.ok(result.events.every((event) => event.feature_id === "flurry-of-blows")
 assert.equal(flurryActor.state.resources.ki, 1);
 assert.equal(flurryActor.state.bonus_action_available, false);
 
-console.log("2014 Open Hand Monk browser mechanics preserve progression through level 16 including Tranquility, Diamond Soul, and Wisdom ASIs.");
+console.log("2014 Open Hand Monk browser mechanics preserve progression through level 17 including Tranquility, Diamond Soul, Wisdom ASIs, and Quivering Palm.");
