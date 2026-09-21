@@ -89,7 +89,7 @@ def build_kael_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_kael_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_kael_2014_combat_profile(level) for level in range(1, 12)]
+        return [build_kael_2014_combat_profile(level) for level in range(1, 14)]
     except Exception:
         logger.exception("Failed to compile 2014 Kael combat fingerprints")
         raise
