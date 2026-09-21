@@ -5,7 +5,7 @@ import logging
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.weapon_catalog import build_weapon
 from app.domain.character_builds import AbilityScores
-from app.domain.models import CombatantTemplate, VisualLoadout, WeaponAttack, WeaponAttackKind
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,8 @@ def _scores(level: int) -> AbilityScores:
     dexterity = 16 + (2 if level >= 4 else 0) + (2 if level >= 8 else 0)
     charisma = 15 + (1 if level >= 10 else 0)
     wisdom = 13 + (1 if level >= 10 else 0)
-    return AbilityScores(strength=9, dexterity=dexterity, constitution=14,
+    constitution = 14 + (2 if level >= 12 else 0) + (2 if level >= 16 else 0) + (2 if level >= 19 else 0)
+    return AbilityScores(strength=9, dexterity=dexterity, constitution=constitution,
                          intelligence=11, wisdom=wisdom, charisma=charisma)
 
 
@@ -42,16 +43,20 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
-    """Compile the 2014 Human Thief Rogue through level 11 from Basic Rules data.
+    """Compile the 2014 Human Thief Rogue through level 20 from Basic Rules data.
 
-    Reliable Talent is recorded by the build audit at level 11, but the standard
-    arena currently executes no qualifying proficient ability-check path. The
-    runtime therefore needs no Rogue-specific roll mutation to represent level 11.
+    Reliable Talent, Use Magic Device, and Blindsense remain arena-inert for the
+    current certified combat path. Level 15 adds Wisdom save proficiency through
+    the shared save compiler; level 16 applies the approved +2 Constitution ASI; level 17 adds Thief's Reflexes through the shared first-round scheduler; level 18 adds Elusive through shared defender Advantage suppression; level 19 applies the approved +2 Constitution ASI; level 20 adds Stroke of Luck through the shared miss-to-hit override resource.
     """
     try:
-        if level not in range(1, 12):
-            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 11.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 20.")
         scores = _scores(level); dex = scores.modifier("dexterity")
+        save_proficiencies = (
+            ("dexterity", "intelligence", "wisdom")
+            if level >= 15 else ("dexterity", "intelligence")
+        )
         rapier = _attack(level, "rapier", scores); shortbow = _attack(level, "shortbow", scores)
         return CombatantTemplate(
             id=f"mara-quickstep-2014-l{level}", name="Mara Quickstep", archetype="Rogue",
@@ -59,12 +64,16 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
             armor_class=11 + dex, max_hp=fixed_hit_points(level, 8, scores.modifier("constitution")),
             speed_ft=30, initiative_bonus=dex, weapon_attack=rapier,
             alternate_weapon_attacks=[shortbow],
-            saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "intelligence")),
+            saving_throw_bonuses=saving_throw_bonuses(scores, level, save_proficiencies),
             skill_bonuses=_skill_bonuses(level, scores), weapon_masteries=[],
             progression_features=ProgressionCombatFeatures(
                 sneak_attack_d6=(level + 1) // 2, cunning_action=level >= 2,
                 uncanny_dodge=level >= 5, evasion=level >= 7,
+                first_round_extra_turn_initiative_offset=(-10 if level >= 17 else None),
+                suppress_attack_advantage_while_not_incapacitated=level >= 18,
+                miss_to_hit_override_resource_id=("stroke-of-luck" if level >= 20 else None),
             ),
+            resources=([ResourceDefinition(id="stroke-of-luck", name="Stroke of Luck", max_uses=1)] if level >= 20 else []),
             visual=VisualLoadout(armor="leather", main_hand="rapier", body_style="humanoid"),
             source="D&D Basic Rules 2014: Human; Rogue; Thief; Criminal; Equipment",
         )
