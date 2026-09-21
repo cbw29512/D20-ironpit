@@ -18,19 +18,19 @@ logger = logging.getLogger(__name__)
 _SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
-    11: (4, 3, 3),
+    11: (4, 3, 3), 12: (4, 3, 3),
 }
 
 
 def _scores(level: int) -> AbilityScores:
     strength = 16 + (2 if level >= 4 else 0)
-    charisma = 15 + (2 if level >= 8 else 0)
+    charisma = 15 + (2 if level >= 8 else 0) + (1 if level >= 12 else 0)
     return AbilityScores(
         strength=strength,
         dexterity=11,
         constitution=14,
         intelligence=9,
-        wisdom=13,
+        wisdom=13 + (1 if level >= 12 else 0),
         charisma=charisma,
     )
 
@@ -69,8 +69,8 @@ def _improved_divine_smite(level: int) -> list[OnHitDamage]:
 
 def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 12):
-            raise ValueError("2014 Devotion Paladin certification covers levels 1 through 11.")
+        if level not in range(1, 13):
+            raise ValueError("2014 Devotion Paladin certification covers levels 1 through 12.")
         scores = _scores(level)
         charisma_modifier = scores.modifier("charisma")
         aura_bonus = charisma_modifier if level >= 6 else 0

@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 _SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
-    11: (4, 3, 3),
+    11: (4, 3, 3), 12: (4, 3, 3),
 }
 
 
@@ -20,8 +20,8 @@ def _scores(level: int) -> AbilityScores:
         dexterity=11,
         constitution=14,
         intelligence=9,
-        wisdom=13,
-        charisma=15 + (2 if level >= 8 else 0),
+        wisdom=13 + (1 if level >= 12 else 0),
+        charisma=15 + (2 if level >= 8 else 0) + (1 if level >= 12 else 0),
     )
 
 
@@ -38,8 +38,8 @@ def _resources(level: int) -> tuple[tuple[str, int], ...]:
 
 def build_aurelia_brightshield_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level not in range(1, 12):
-            raise ValueError("2014 Aurelia combat fingerprint covers levels 1 through 11.")
+        if level not in range(1, 13):
+            raise ValueError("2014 Aurelia combat fingerprint covers levels 1 through 12.")
         scores = _scores(level)
         pb = proficiency_bonus(level)
         return PregenCombatProfile(
@@ -81,7 +81,7 @@ def build_aurelia_brightshield_2014_combat_profile(level: int) -> PregenCombatPr
 
 def build_aurelia_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_aurelia_brightshield_2014_combat_profile(level) for level in range(1, 12)]
+        return [build_aurelia_brightshield_2014_combat_profile(level) for level in range(1, 13)]
     except Exception:
         logger.exception("Failed to compile Aurelia's 2014 combat fingerprint progression")
         raise
