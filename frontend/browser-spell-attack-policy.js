@@ -23,7 +23,7 @@
         candidates.push({ spell, target, index, score: O().spellAttack(member, target, spell, setup) });
       }
     }
-    candidates.sort((a, b) => b.score - a.score || a.spell.level - b.spell.level
+    candidates.sort((a, b) => b.score - a.score || b.spell.level - a.spell.level
       || a.target.state.current_hp - b.target.state.current_hp || a.index - b.index
       || a.target.combatant_id.localeCompare(b.target.combatant_id));
     return candidates.length ? { action: candidates[0].spell, target: candidates[0].target, expectedDamage: candidates[0].score } : null;
