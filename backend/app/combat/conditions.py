@@ -20,6 +20,7 @@ from app.domain.size import size_at_most
 BLINDED_EFFECT_ID = "blinded"
 FRIGHTENED_EFFECT_ID = "frightened"
 POISONED_EFFECT_ID = "poisoned"
+INVISIBLE_EFFECT_ID = "invisible"
 PRONE_EFFECT_ID = "prone"
 
 
@@ -33,6 +34,8 @@ def attack_roll_condition_sources(
     advantage = 0
     disadvantage = attack_disadvantage_sources(attacker)
     disadvantage += attacks_against_disadvantage_sources(defender, attacker.template)
+    if has_condition(attacker, INVISIBLE_EFFECT_ID):
+        advantage += 1
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
@@ -46,6 +49,8 @@ def attack_roll_condition_sources(
     if target_id is not None:
         disadvantage += grapple_attack_disadvantage(attacker, target_id)
     if dodge_benefits_active(defender) and not attacks_have_advantage_against(defender):
+        disadvantage += 1
+    if has_condition(defender, INVISIBLE_EFFECT_ID):
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1
