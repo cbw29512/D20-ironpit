@@ -103,12 +103,17 @@ def _audits(level: int) -> list[FeatureAudit]:
             "thiefs-reflexes", "Thief's Reflexes", "subclass",
             notes="Uses the shared first-round extra-turn scheduler at Mara's rolled initiative count minus 10.",
         ))
+    if level >= 18:
+        audits.append(_audit(
+            "elusive", "Elusive", "class",
+            notes="Uses shared defender attack-Advantage suppression while Mara is not incapacitated.",
+        ))
     return audits
 
 
 def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 18): raise ValueError("2014 Mara candidate profile covers levels 1 through 17.")
+        if level not in range(1, 19): raise ValueError("2014 Mara candidate profile covers levels 1 through 18.")
         base = _base(); species = _species(); advances = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-mara-quickstep-2014-l{level}", template_id=f"mara-quickstep-2014-l{level}",
