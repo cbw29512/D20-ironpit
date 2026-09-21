@@ -1,4 +1,6 @@
 from app.combat.cunning_action import needs_dash, use_dash
+from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_initiative import roll_encounter_initiative, turn_order_for_round
 from app.combat.rogue_defenses import apply_uncanny_dodge, evasion_damage
 from app.combat.state import build_combatant_state
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
@@ -152,3 +154,17 @@ def test_level_seventeen_thiefs_reflexes_is_declarative_and_scales_sneak_attack(
     assert reflexes.automated is True
     assert hero17.progression_features.first_round_extra_turn_initiative_offset == -10
     assert hero17.progression_features.sneak_attack_d6 == 9
+
+
+def test_thiefs_reflexes_schedules_second_round_one_turn_at_initiative_minus_ten() -> None:
+    rogue = _member(build_mara_quickstep_2014(17), "mara", "heroes", 0)
+    target = _member(build_karnok_stoneward_2014(17), "target", "monsters", 5)
+    setup = EncounterSetup(
+        heroes=[rogue], monsters=[target], hero_total_levels=17, monster_total_cr="17", ruleset="2014",
+    )
+    initiative = roll_encounter_initiative(setup, FixedDiceProvider([15, 12]))
+    by_id = {member.combatant_id: member for member in [rogue, target]}
+
+    assert initiative.turn_order == ["mara", "target"]
+    assert turn_order_for_round(1, initiative, by_id) == ["mara", "target", "mara"]
+    assert turn_order_for_round(2, initiative, by_id) == ["mara", "target"]
