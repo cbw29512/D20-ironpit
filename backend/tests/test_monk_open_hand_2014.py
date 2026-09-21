@@ -48,8 +48,8 @@ def _qualifying_event(actor: EncounterCombatant) -> BattleEvent:
     )
 
 
-def test_2014_open_hand_levels_one_through_eleven_compile_with_expected_breakpoints() -> None:
-    for level in range(1, 12):
+def test_2014_open_hand_levels_one_through_thirteen_compile_with_expected_breakpoints() -> None:
+    for level in range(1, 14):
         profile = build_kael_stillwater_2014_profile(level)
         combat = build_kael_2014_combat_profile(level)
         hero = build_kael_stillwater_2014(level)
@@ -158,12 +158,12 @@ def test_evasion_reuses_shared_rogue_primitive() -> None:
     assert evasion_damage(monk, "dexterity", False, "half", 21) == 10
 
 
-def test_2014_certified_catalog_reaches_eighty_three_hero_snapshots() -> None:
+def test_2014_certified_catalog_reaches_eighty_five_hero_snapshots() -> None:
     entries = [entry for entry in build_all_certified_hero_entries() if entry[1].ruleset == "2014"]
     monks = [entry for entry in entries if entry[0][0] == "monk"]
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
-    assert len(entries) == 83
-    assert [entry[0][1] for entry in monks] == list(range(1, 12))
+    assert len(entries) == 85
+    assert [entry[0][1] for entry in monks] == list(range(1, 14))
     assert [entry[0][1] for entry in paladins] == list(range(1, 13))
 
 
@@ -190,3 +190,28 @@ def test_level_eleven_tranquility_uses_shared_opening_targeting_ward() -> None:
 
     assert check_targeting_ward(monk, attacker, FixedDiceProvider([20])) is None
     assert monk.state.active_modifiers == []
+
+
+def test_levels_twelve_and_thirteen_are_incremental_monk_progression() -> None:
+    level11 = build_kael_stillwater_2014(11)
+    level12 = build_kael_stillwater_2014(12)
+    level13 = build_kael_stillwater_2014(13)
+
+    assert level12.max_hp == level11.max_hp + 7
+    assert level13.max_hp == level12.max_hp + 7
+    assert level12.ability_scores.wisdom == 17
+    assert level13.ability_scores.wisdom == 17
+    assert level12.armor_class == 18
+    assert level13.armor_class == 18
+    assert next(item for item in level12.resources if item.id == "ki").max_uses == 12
+    assert next(item for item in level13.resources if item.id == "ki").max_uses == 13
+    assert level13.weapon_attack.attack_bonus == level12.weapon_attack.attack_bonus + 1
+    assert level13.progression_features.opening_targeting_ward is not None
+    assert level13.progression_features.opening_targeting_ward.save_dc == 16
+
+    profile12 = build_kael_stillwater_2014_profile(12)
+    profile13 = build_kael_stillwater_2014_profile(13)
+    assert profile12.final_ability_scores.wisdom == 17
+    assert any(item.feature_id == "ability-score-improvement-l12" for item in profile12.feature_audits)
+    tongue = next(item for item in profile13.feature_audits if item.feature_id == "tongue-of-the-sun-and-moon")
+    assert tongue.combat_relevant is False
