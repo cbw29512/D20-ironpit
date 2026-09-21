@@ -90,6 +90,15 @@ assert.throws(
 
 
 actor.state.template.intimidating_presence_2014_dc = 0;
+actor.state.template.deferred_save_effect = { source_id: "test-deferred" };
+delete window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT;
+assert.throws(
+  () => selector.discoverCandidates("normalPostMove", ctx),
+  /Deferred-save effect runtime is not loaded/,
+  "deferred-effect owners must fail closed when the runtime is missing",
+);
+delete actor.state.template.deferred_save_effect;
+
 actor.state.template.attack_action = null;
 delete window.IRON_PIT_BROWSER_MULTIATTACK;
 assert.deepEqual(
