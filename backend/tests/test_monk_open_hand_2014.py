@@ -54,8 +54,8 @@ def _qualifying_event(actor: EncounterCombatant) -> BattleEvent:
     )
 
 
-def test_2014_open_hand_levels_one_through_eighteen_compile_with_expected_breakpoints() -> None:
-    for level in range(1, 19):
+def test_2014_open_hand_levels_one_through_twenty_compile_with_expected_breakpoints() -> None:
+    for level in range(1, 21):
         profile = build_kael_stillwater_2014_profile(level)
         combat = build_kael_2014_combat_profile(level)
         hero = build_kael_stillwater_2014(level)
@@ -164,12 +164,12 @@ def test_evasion_reuses_shared_rogue_primitive() -> None:
     assert evasion_damage(monk, "dexterity", False, "half", 21) == 10
 
 
-def test_2014_certified_catalog_reaches_ninety_hero_snapshots() -> None:
+def test_2014_certified_catalog_reaches_ninety_two_hero_snapshots() -> None:
     entries = [entry for entry in build_all_certified_hero_entries() if entry[1].ruleset == "2014"]
     monks = [entry for entry in entries if entry[0][0] == "monk"]
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
-    assert len(entries) == 90
-    assert [entry[0][1] for entry in monks] == list(range(1, 19))
+    assert len(entries) == 92
+    assert [entry[0][1] for entry in monks] == list(range(1, 21))
     assert [entry[0][1] for entry in paladins] == list(range(1, 13))
 
 
@@ -362,3 +362,28 @@ def test_level_eighteen_empty_body_reuses_timed_buff_invisibility_and_resistance
     assert events
     assert "invisible" not in monk.state.active_effect_ids
     assert adjusted_damage_amount(20, DamageType.FIRE, monk.state) == 20
+
+
+def test_levels_nineteen_and_twenty_are_small_incremental_deltas() -> None:
+    level18 = build_kael_stillwater_2014(18)
+    level19 = build_kael_stillwater_2014(19)
+    level20 = build_kael_stillwater_2014(20)
+
+    assert level19.max_hp == level18.max_hp + 7
+    assert level20.max_hp == level19.max_hp + 7
+    assert next(item for item in level19.resources if item.id == "ki").max_uses == 19
+    assert next(item for item in level20.resources if item.id == "ki").max_uses == 20
+
+    assert level19.ability_scores.wisdom == 20
+    assert level19.ability_scores.strength == 14
+    assert level19.armor_class == 20
+    assert level20.ability_scores == level19.ability_scores
+    assert level20.armor_class == 20
+
+    profile19 = build_kael_stillwater_2014_profile(19)
+    asi = next(item for item in profile19.feature_audits if item.feature_id == "ability-score-improvement-l19")
+    assert asi.combat_relevant is True
+    profile20 = build_kael_stillwater_2014_profile(20)
+    perfect = next(item for item in profile20.feature_audits if item.feature_id == "perfect-self")
+    assert perfect.combat_relevant is False
+    assert "full Ki" in perfect.notes
