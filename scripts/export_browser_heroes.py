@@ -128,7 +128,8 @@ def _defense(action: Any) -> dict[str, Any]:
 
 def _healing(action: Any) -> dict[str, Any]:
     return {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
-            "targetMode": action.target_mode, "diceCount": action.dice_count, "diceSize": action.dice_size,
+            "targetMode": action.target_mode, "maxTargets": action.max_targets,
+            "diceCount": action.dice_count, "diceSize": action.dice_size,
             "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
             "resourceCost": action.resource_cost, "animation": action.animation}
 
@@ -218,6 +219,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
+    if progression.turning_failure_damage:
+        row["turning_failure_damage"] = progression.turning_failure_damage.model_dump()
+    if progression.slot_healing_other_self_rider:
+        row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
