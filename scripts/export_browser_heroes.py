@@ -186,6 +186,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "healingActions": [_healing(item) for item in template.healing_actions],
         "condition_immunities": list(template.condition_immunities),
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
+        "combat_treasure_awards": [item.model_dump(mode="json") for item in template.combat_treasure_awards],
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
         "fighting_style": template.fighting_style, "fighting_styles": list(template.fighting_styles),
         "weapon_masteries": list(template.weapon_masteries), "critical_hit_minimum": progression.critical_hit_minimum,
