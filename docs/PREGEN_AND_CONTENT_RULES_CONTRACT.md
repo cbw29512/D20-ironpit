@@ -59,7 +59,35 @@ The canonical twelve pregen concepts are:
 11. Fiend Warlock
 12. Evoker Wizard
 
-Target progression is levels 1 through 10 in both 2014 and 2024. A level is certified independently; one legal level does not imply the rest of the progression is legal.
+Target progression is levels 1 through 20 in both 2014 and 2024.
+
+Construction is incremental, not twenty independent builds. Every canonical pregen is one persistent character: level N derives from level N-1 plus that level's HP gain, proficiency/resource changes, class/subclass feature additions, ASI/feat choices, spell progression, equipment changes, and other explicit deltas. Certification remains level-specific, so a legal level does not silently certify later levels, but the implementation must not rebuild the same character from scratch at every level.
+
+## 4A. Iron Pit combat treasure progression
+
+Before each new canonical level from 2 through 20, that persistent pregen receives exactly one stable d100 combat-treasure roll. The result is part of the canonical level history and is never rerolled by CI, deployment, replay, or a new fight.
+
+Single-roll table:
+
+- 1–50: no item;
+- 51–60: class-usable magic armor/defense item;
+- 61–70: class-usable magic weapon or offensive spell focus;
+- 71–80: combat healing potion;
+- 81–90: class-usable magic armor/defense item;
+- 91–99: combat-impacting accessory such as boots, helm, cloak, belt, amulet, or ring;
+- 100: two useful items from different slots, guaranteed without a second random roll.
+
+Treasure power scales with the level gained:
+
+- levels 2–4: +1 tier;
+- levels 5–8: +2 tier;
+- levels 9–12: +3 tier;
+- levels 13–16: +4 tier;
+- levels 17–20: +5 tier.
+
+All generated treasure must affect Iron Pit combat. Do not award arena-useless utility items. Generic weapon/armor results adapt to the character's actual combat loadout: for example, a weapon result becomes the weapon the build actually attacks with rather than an unrelated longsword. Caster offense results may become an appropriate combat focus. The treasure overlay is an explicit Iron Pit house system applied after the edition-legal RAW character build is validated.
+
+Persistent treasure carries forward with the same character. When a later item competes for the same slot, the stronger/current item is used rather than stacking arbitrary enhancement bonuses. Combat consumables are card-defined resources and reset with the immutable card after each Iron Pit match, consistent with the arena reset contract.
 
 ## 5. One universal combat engine
 
