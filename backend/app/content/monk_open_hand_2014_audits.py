@@ -84,6 +84,17 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "tranquility", "Tranquility", "subclass",
                 notes="Installed as a passive Sanctuary-style Wisdom targeting gate at combat start; ends when Kael attacks.",
             ))
+        if level >= 12:
+            audits.append(_audit(
+                "ability-score-improvement-l12", "Ability Score Improvement (+2 Wisdom)", "class",
+                notes="Canonical Iron Pit progression: Wisdom 15→17 for AC, Monk save DCs, and Wisdom defenses.",
+            ))
+        if level >= 13:
+            audits.append(_audit(
+                "tongue-of-the-sun-and-moon", "Tongue of the Sun and Moon", "class",
+                combat=False, automated=False,
+                notes="Language communication does not change a one-on-one Iron Pit combat outcome.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
