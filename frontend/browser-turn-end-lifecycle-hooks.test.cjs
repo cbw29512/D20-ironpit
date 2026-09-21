@@ -69,6 +69,7 @@ window.IRON_PIT_BROWSER_GRID_PLACEMENT = {
 window.IRON_PIT_BROWSER_INITIATIVE = {
   resolve: () => ({ turn_order: ["hero-1:target", "monster-1:source"] }),
   events: () => [],
+  turnOrderForRound: (_round, initiative) => [...initiative.turn_order],
 };
 window.IRON_PIT_BROWSER_TURN = {
   deathSave(sequence, round, member) {
