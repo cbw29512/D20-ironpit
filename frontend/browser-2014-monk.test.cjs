@@ -20,7 +20,7 @@ load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const monk = (level) => heroes.find((hero) => hero.id === `kael-stillwater-2014-l${level}`);
-for (let level = 1; level <= 13; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
+for (let level = 1; level <= 16; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
 
 assert.deepEqual(monk(1).ability_scores, { strength: 13, dexterity: 16, constitution: 14, intelligence: 11, wisdom: 15, charisma: 9 });
 assert.equal(monk(1).armor_class, 15);
@@ -43,6 +43,16 @@ assert.equal(monk(13).max_hp, 94);
 assert.equal(monk(13).attacks.find((attack) => attack.weaponId === "unarmed-strike").bonus,
   monk(12).attacks.find((attack) => attack.weaponId === "unarmed-strike").bonus + 1);
 assert.equal(monk(13).opening_targeting_ward.save_dc, 16);
+assert.equal(monk(14).speed_ft, 55);
+assert.equal(monk(14).failed_save_reroll_source_id, "diamond-soul");
+assert.equal(monk(14).failed_save_reroll_resource_id, "ki");
+assert.deepEqual(monk(14).saving_throw_bonuses, {
+  strength: 6, dexterity: 10, constitution: 7, intelligence: 5, wisdom: 8, charisma: 4,
+});
+assert.equal(monk(16).ability_scores.wisdom, 19);
+assert.equal(monk(16).armor_class, 19);
+assert.equal(monk(16).resources.ki, 16);
+assert.equal(monk(16).opening_targeting_ward.save_dc, 17);
 assert.deepEqual(monk(11).opening_targeting_ward, {
   source_id: "tranquility", save_ability: "wisdom", save_dc: 14, ends_on_owner_attack: true,
 });
@@ -126,4 +136,4 @@ assert.ok(result.events.every((event) => event.feature_id === "flurry-of-blows")
 assert.equal(flurryActor.state.resources.ki, 1);
 assert.equal(flurryActor.state.bonus_action_available, false);
 
-console.log("2014 Open Hand Monk browser mechanics preserve progression through level 13 including Tranquility and the level-12 Wisdom ASI.");
+console.log("2014 Open Hand Monk browser mechanics preserve progression through level 16 including Tranquility, Diamond Soul, and Wisdom ASIs.");
