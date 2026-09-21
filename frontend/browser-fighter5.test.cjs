@@ -17,11 +17,15 @@ for (const file of [
   "browser-formation.js", "browser-multiattack.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
 ]) load(file);
 
+const treasureBonus = (template, effect, targetId = null) => (template.combat_treasure_awards || [])
+  .filter((item) => item.effect === effect && (targetId == null || item.target_id === targetId))
+  .reduce((sum, item) => sum + item.bonus, 0);
+
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l5"];
 assert.ok(fighter, "generated Fighter 5 card must exist");
 assert.equal(fighter.level, 5);
 assert.equal(fighter.max_hp, 49);
-assert.equal(fighter.armor_class, 17);
+assert.equal(fighter.armor_class, 17 + treasureBonus(fighter, "armor-class"));
 assert.equal(fighter.fighting_style, "Defense");
 assert.equal(fighter.critical_hit_minimum, 19);
 assert.equal(fighter.initiative_advantage, true);
@@ -29,8 +33,8 @@ assert.equal(fighter.athletics_advantage, true);
 assert.equal(fighter.critical_move_fraction, 0.5);
 assert.equal(fighter.tactical_shift_fraction, 0.5);
 assert.deepEqual(fighter.weapon_masteries, ["flail", "javelin", "spear", "longsword"]);
-assert.equal(fighter.saving_throw_bonuses.strength, 7);
-assert.equal(fighter.saving_throw_bonuses.constitution, 6);
+assert.equal(fighter.saving_throw_bonuses.strength, 7 + treasureBonus(fighter, "saving-throws"));
+assert.equal(fighter.saving_throw_bonuses.constitution, 6 + treasureBonus(fighter, "saving-throws"));
 assert.equal(fighter.skill_bonuses.athletics, 7);
 assert.deepEqual(fighter.resources, {
   "second-wind": 3,
