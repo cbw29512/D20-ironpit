@@ -13,6 +13,7 @@ from app.content.audited_rogue_profile import build_mara_quickstep_profile
 from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_2014_profile
 from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
 from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level6_profile, build_rokhan_stonefury_level7_profile
+from app.content.barbarian_high_level_profile import build_rokhan_stonefury_level8_profile, build_rokhan_stonefury_level9_profile
 from app.content.barbarian_progression import build_rokhan_stonefury_level
 from app.content.barbarian_progression_profile import (
     build_rokhan_stonefury_level2_profile, build_rokhan_stonefury_level3_profile,
@@ -96,7 +97,8 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_rokhan_stonefury_profile, build_rokhan_stonefury_level2_profile,
             build_rokhan_stonefury_level3_profile, build_rokhan_stonefury_level4_profile,
             build_rokhan_stonefury_level5_profile, build_rokhan_stonefury_level6_profile,
-            build_rokhan_stonefury_level7_profile,
+            build_rokhan_stonefury_level7_profile, build_rokhan_stonefury_level8_profile,
+            build_rokhan_stonefury_level9_profile,
         ),
     ),
     CertifiedHeroProgression(
