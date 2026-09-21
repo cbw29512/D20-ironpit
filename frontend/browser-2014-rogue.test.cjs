@@ -19,7 +19,9 @@ const rogue5 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l5");
 const rogue7 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l7");
 const rogue10 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l10");
 const rogue11 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l11");
-assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11);
+const rogue12 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l12");
+const rogue13 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l13");
+assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11 && rogue12 && rogue13);
 assert.equal(rogue2.ruleset, "2014");
 assert.equal(rogue2.cunning_action, true);
 assert.equal(rogue5.uncanny_dodge, true);
@@ -27,8 +29,12 @@ assert.equal(rogue7.evasion, true);
 assert.equal(rogue10.sneak_attack_d6, 5);
 assert.equal(rogue11.ruleset, "2014");
 assert.equal(rogue11.sneak_attack_d6, 6);
-assert.deepEqual(rogue11.weapon_masteries, []);
-assert.ok(rogue11.attacks.every((attack) => attack.masteryProperty == null));
+assert.equal(rogue12.ability_scores.constitution, 16);
+assert.equal(rogue12.max_hp, 99);
+assert.equal(rogue12.saving_throw_bonuses.constitution, 3);
+assert.equal(rogue13.sneak_attack_d6, 7);
+assert.deepEqual(rogue13.weapon_masteries, []);
+assert.ok(rogue13.attacks.every((attack) => attack.masteryProperty == null));
 
 function state(template) {
   return {
@@ -78,4 +84,4 @@ assert.equal(dash.feature_id, "cunning-action-dash");
 assert.equal(runner.state.movement_remaining_ft, 60);
 assert.equal(runner.state.bonus_action_available, false);
 
-console.log("2014 Thief Rogue browser mechanics preserve Cunning Action, Uncanny Dodge, Evasion, level-11 Sneak Attack, and edition isolation.");
+console.log("2014 Thief Rogue browser mechanics preserve Cunning Action, Uncanny Dodge, Evasion, approved Constitution ASI, level-13 Sneak Attack, and edition isolation.");
