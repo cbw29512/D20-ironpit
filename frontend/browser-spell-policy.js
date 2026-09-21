@@ -40,7 +40,7 @@
           targetIds: [target.combatant_id], placement: null, hp: target.state.current_hp });
       }
     }
-    candidates.sort((a, b) => b.score - a.score || a.action.level - b.action.level
+    candidates.sort((a, b) => b.score - a.score || b.action.level - a.action.level
       || (a.hp ?? Number.MAX_SAFE_INTEGER) - (b.hp ?? Number.MAX_SAFE_INTEGER) || a.index - b.index);
     if (!candidates.length) return null;
     const best = candidates[0];
