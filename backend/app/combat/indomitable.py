@@ -8,17 +8,26 @@ from app.domain.models import CombatantState, DiceRoll
 from app.domain.modifiers import ModifierKind
 
 
-def _resource(state: CombatantState):
-    return next((item for item in state.resources if item.id == "indomitable"), None)
-
-
-def use_indomitable(state: CombatantState, ability: str, dice: DiceProvider) -> DiceRoll | None:
-    """Resolve the edition-correct reroll after policy chooses to spend Indomitable."""
+def _config(state: CombatantState) -> tuple[str, str, int] | None:
     progression = state.template.progression_features
-    bonus = progression.indomitable_bonus
-    enabled = progression.indomitable_reroll or bonus > 0
-    resource = _resource(state)
-    if not enabled or resource is None or resource.current_uses <= 0:
+    if progression.failed_save_reroll_resource_id:
+        source = progression.failed_save_reroll_source_id or progression.failed_save_reroll_resource_id
+        return source, progression.failed_save_reroll_resource_id, progression.failed_save_reroll_bonus
+    if progression.indomitable_reroll or progression.indomitable_bonus > 0:
+        return "indomitable", "indomitable", progression.indomitable_bonus
+    return None
+
+
+def use_failed_save_reroll(
+    state: CombatantState, ability: str, dice: DiceProvider,
+) -> tuple[DiceRoll, str] | None:
+    """Spend the configured resource and reroll one failed saving throw."""
+    config = _config(state)
+    if config is None:
+        return None
+    source_id, resource_id, bonus = config
+    resource = next((item for item in state.resources if item.id == resource_id), None)
+    if resource is None or resource.current_uses <= 0:
         return None
     if ability not in state.template.saving_throw_bonuses:
         raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
@@ -34,4 +43,14 @@ def use_indomitable(state: CombatantState, ability: str, dice: DiceProvider) -> 
         dice,
     )
     suffix = f" +{bonus}" if bonus else ""
-    return roll.model_copy(update={"notation": f"{roll.notation} [Indomitable{suffix}]"})
+    label = source_id.replace("-", " ").title()
+    return roll.model_copy(update={"notation": f"{roll.notation} [{label}{suffix}]"}), source_id
+
+
+def use_indomitable(state: CombatantState, ability: str, dice: DiceProvider) -> DiceRoll | None:
+    """Compatibility wrapper for direct Fighter Indomitable callers."""
+    progression = state.template.progression_features
+    if not (progression.indomitable_reroll or progression.indomitable_bonus > 0):
+        return None
+    result = use_failed_save_reroll(state, ability, dice)
+    return result[0] if result is not None else None
