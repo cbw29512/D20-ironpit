@@ -39,6 +39,10 @@ def _paladin_2014_channel_uses(level: int) -> int:
     return 1 if level >= 3 else 0
 
 
+def _rogue_2014_stroke_of_luck_uses(level: int) -> int:
+    return 1 if level >= 20 else 0
+
+
 def _barbarian_2014_finite_rage_uses(level: int) -> int:
     """Return only finite 2014 Rage uses; level 20 is audited as Unlimited separately."""
     return 0 if level >= 20 else barbarian_2014_rage_uses(level)
@@ -76,7 +80,7 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("lay-on-hands", "Lay on Hands", lambda level: 5 * level),
         ("channel-divinity", "Channel Divinity", _paladin_2014_channel_uses),
     ),
-    "rogue": (),
+    "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_2014_stroke_of_luck_uses),),
 }
 _2014_UNLIMITED_CLASS_RESOURCES: dict[str, Callable[[int], tuple[str, ...]]] = {
     "barbarian": lambda level: ("rage",) if level >= 20 else (),
