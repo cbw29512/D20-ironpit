@@ -16,7 +16,7 @@
     effectiveArmorClass: (state) => state.template.armor_class, effectiveSpeed: (state) => state.template.speed_ft, attackRollFlat: () => 0, applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { attackDisadvantage: () => 0 };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
-    has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious };
+    has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
@@ -72,9 +72,10 @@
     const brutalSuppression = BS()?.advantageSuppression(
       attacker.state, attack, extra.turnKey, disadvantage > 0 || rangedDisadvantage,
     ) || 0;
-    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
+    const unsuppressedAdvantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state)
       + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+    const advantage = Q().suppressAttackAdvantage(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id), mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
