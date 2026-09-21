@@ -111,6 +111,11 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "ability-score-improvement-l16", "Ability Score Improvement (+2 Wisdom)", "class",
                 notes="Canonical Iron Pit progression: Wisdom 17→19 for AC, Monk save DCs, and Wisdom defenses.",
             ))
+        if level >= 17:
+            audits.append(_audit(
+                "quivering-palm", "Quivering Palm", "subclass",
+                notes="Uses the shared deferred-save effect primitive: 3 Ki on an unarmed hit, later Action, Constitution save, 0 HP on failure or 10d10 necrotic on success.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
