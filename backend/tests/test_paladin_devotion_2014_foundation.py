@@ -124,3 +124,34 @@ def test_divine_smite_uses_highest_slot_scales_for_undead_and_doubles_on_critica
     )
     critical_smite = next(component for component in critical_components if component.source == "Divine Smite")
     assert critical_smite.notation == "4d8+0"
+
+
+def test_aurelia_level_twelve_split_asi_improves_aura_and_defenses() -> None:
+    profile = build_aurelia_brightshield_2014_profile(12)
+    runtime = build_aurelia_brightshield_2014(12)
+    fingerprint = build_aurelia_brightshield_2014_combat_profile(12)
+    asi = next(item for item in profile.feature_audits if item.feature_id == "ability-score-improvement-l12")
+
+    assert [(item.ability, item.amount) for item in profile.advancement_increases[-2:]] == [
+        ("charisma", 1), ("wisdom", 1),
+    ]
+    assert profile.final_ability_scores.charisma == 18
+    assert profile.final_ability_scores.wisdom == 14
+    assert runtime.ability_scores == profile.final_ability_scores == fingerprint.abilities
+    assert runtime.max_hp == 100
+    assert runtime.saving_throw_bonuses["wisdom"] == 6
+    assert runtime.saving_throw_bonuses["charisma"] == 8
+    assert runtime.progression_features.aura_of_protection_2014_bonus == 4
+    assert runtime.progression_features.sacred_weapon_2014_bonus == 4
+    assert {item.id: item.max_uses for item in runtime.resources} == {
+        "lay-on-hands": 60,
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "spell-slot-3": 3,
+        "channel-divinity": 1,
+    }
+    assert asi.combat_relevant is True
+    assert asi.automated is True
+    assert_pregen_combat_stats(runtime, fingerprint)
+    assert_character_resources_raw_ready(runtime, profile, fingerprint)
+    assert audit_character_build(profile, runtime) == []
