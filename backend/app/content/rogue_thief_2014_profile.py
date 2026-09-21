@@ -108,12 +108,17 @@ def _audits(level: int) -> list[FeatureAudit]:
             "elusive", "Elusive", "class",
             notes="Uses shared defender attack-Advantage suppression while Mara is not incapacitated.",
         ))
+    if level >= 19:
+        audits.append(_audit(
+            "ability-score-improvement-l19", "Ability Score Improvement (+2 Constitution)", "class",
+            notes="Canonical Iron Pit progression decision: Constitution 18→20 for survivability and Constitution checks/saves.",
+        ))
     return audits
 
 
 def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 19): raise ValueError("2014 Mara candidate profile covers levels 1 through 18.")
+        if level not in range(1, 20): raise ValueError("2014 Mara candidate profile covers levels 1 through 19.")
         base = _base(); species = _species(); advances = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-mara-quickstep-2014-l{level}", template_id=f"mara-quickstep-2014-l{level}",
