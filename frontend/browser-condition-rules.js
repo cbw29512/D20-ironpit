@@ -12,7 +12,8 @@
   const autoFailStrDex = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
   const attackAdvantage = (state) => state.is_unconscious || has(state, "blinded") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
   const autoCritical = (state) => state.is_unconscious || has(state, "paralyzed");
+  const suppressAttackAdvantage = (state) => Boolean(state.template?.progression_features?.suppress_attack_advantage_while_not_incapacitated) && !incapacitated(state);
   const speedZero = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "restrained");
 
-  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, has, incapacitated, speedZero };
+  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, has, incapacitated, speedZero, suppressAttackAdvantage };
 })();
