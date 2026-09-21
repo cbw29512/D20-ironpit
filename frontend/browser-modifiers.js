@@ -3,7 +3,7 @@
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set([
-    "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
+    "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", "damage-resistance", ...DIE_KINDS,
     "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed",
   ]);
@@ -14,7 +14,8 @@
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
     const count = item.dice_count || 0, sides = item.dice_size || 0;
     if (DIE_KINDS.has(item.kind) ? count < 1 || sides < 2 : count || sides) throw new Error(`Invalid dice for ${item.kind}.`);
-    if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
+    const typedKinds = new Set(["bonus-damage", "damage-resistance"]);
+    if (typedKinds.has(item.kind) ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
     if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
     if (item.kind === "attack-roll-flat" && (!(item.flat_bonus || 0) || !item.weapon_id)) throw new Error("Flat attack modifiers require a bonus and weapon id.");
     if (item.kind !== "attack-roll-flat" && item.weapon_id) throw new Error(`${item.kind} does not accept a weapon id.`);
@@ -133,12 +134,14 @@
       total: roll.total + exhaustion + bonusRolls.reduce((a, b) => a + b, 0) };
   }
 
+  const damageResistance = (state, type) => (state.active_modifiers || [])
+    .some((item) => item.kind === "damage-resistance" && item.damage_type === type);
   const bonusDamage = (state, targetId) => (state.active_modifiers || []).filter((item) => item.kind === "bonus-damage"
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
-    consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
+    consumeNextAttackAgainstAdvantage, damageResistance, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     expireTargetTurn, nextAttackAgainstAdvantage, removeSource, savingThrowFlat, validate,
   };
 })();
