@@ -6,7 +6,6 @@ from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
-from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.effect_removal import choose_effect_removal_action, resolve_effect_removal
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
@@ -90,20 +89,10 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         raise
 
 
-def save_choice(
-    attacker: EncounterCombatant,
-    setup: EncounterSetup,
-    *,
-    resource_only: bool = False,
-    exclude_area: bool = False,
-):
+def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     try:
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
-                if resource_only and action.resource_id is None:
-                    continue
-                if exclude_area and action.area is not None:
-                    continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance):
                     return target, action, distance
@@ -113,11 +102,9 @@ def save_choice(
         raise
 
 
-def resolve_area_save_turn(
-    events, sequence, round_number, member, setup, dice, turn_key, *, resource_only=False,
-):
+def resolve_area_save_turn(events, sequence, round_number, member, setup, dice, turn_key):
     try:
-        choice = choose_area_save(member, setup, resource_only=resource_only)
+        choice = choose_area_save(member, setup)
         if choice is None:
             return None
         action, placement = choice
@@ -128,22 +115,4 @@ def resolve_area_save_turn(
         return finish_turn(events, sequence, round_number, member, setup, dice, turn_key)
     except Exception:
         logger.exception("Failed area-save turn stage for %s.", member.combatant_id)
-        raise
-
-
-def resolve_signature_save_turn(events, sequence, round_number, member, setup, dice, turn_key):
-    try:
-        chosen = save_choice(member, setup, resource_only=True, exclude_area=True)
-        if chosen is None:
-            return None
-        target, action, distance = chosen
-        affected = [item.state for item in [*setup.heroes, *setup.monsters]]
-        more, sequence = resolve_save_event_chain(
-            sequence, round_number, member, target, action, distance, dice, setup,
-            turn_key=turn_key, affected_states=affected,
-        )
-        events.extend(more)
-        return finish_turn(events, sequence, round_number, member, setup, dice, turn_key)
-    except Exception:
-        logger.exception("Failed signature save-action turn stage for %s.", member.combatant_id)
         raise
