@@ -46,6 +46,11 @@ def test_survivor_heroic_rally_reuses_bloodied_start_turn_healing() -> None:
 
 def test_survivor_defy_death_reuses_universal_death_save_rules() -> None:
     state = build_combatant_state(build_karnok_stoneward_level(18))
+
+    # Karnok also has Relentless Endurance. Exhaust it first so this test isolates
+    # the Champion Survivor death-save path instead of triggering the racial feature.
+    relentless = next(item for item in state.resources if item.id == "relentless-endurance")
+    relentless.current_uses = 0
     assert apply_damage(state, state.current_hp) == "unconscious"
 
     event = resolve_death_save(1, 1, "karnok18", state, FixedDiceProvider([5, 18]))
