@@ -7,7 +7,11 @@ from app.content.monster_basic_candidates_2014 import (
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
-from app.content.monster_trait_bindings_2014 import conditional_attack_advantage_2014
+from app.content.monster_trait_bindings_2014 import (
+    conditional_attack_advantage_2014,
+    progression_features_2014,
+    sneak_attack_eligible_2014,
+)
 from app.content.monster_save_capabilities_2014 import (
     recharge_rules_2014, save_capabilities_2014, save_resources_2014,
 )
@@ -73,6 +77,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "attack_kind": attack.kind,
         "attack_bonus": attack.attack_bonus,
         "attack_ability": attack.attack_ability,
+        "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
         "conditional_attack_advantage": conditional_attack_advantage_2014(monster, attack),
         "damage_type": str(attack.damage.type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
@@ -125,6 +130,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         save_actions=save_capabilities_2014(monster),
         resources=save_resources_2014(monster), recharge_rules=recharge_rules_2014(monster),
         combat_traits=modeled_combat_traits_2014(monster),
+        progression_features=progression_features_2014(monster),
         saving_throw_bonuses=_save_bonuses(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),

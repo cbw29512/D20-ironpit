@@ -70,6 +70,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["fixedDamage"] = attack.fixed_damage
         if attack.rage_eligible:
             row["rageEligible"] = True
+        if attack.sneak_attack_eligible:
+            row["sneakAttackEligible"] = True
         if attack.knocks_prone_max_size is not None:
             row["proneMaxSize"] = attack.knocks_prone_max_size.value
         if attack.forbid_target_grappled_by_self:
@@ -283,6 +285,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["critical_move_fraction"] = features.critical_move_fraction
     if features.cunning_action:
         row["cunning_action"] = True
+    if features.sneak_attack_d6:
+        row["sneak_attack_d6"] = features.sneak_attack_d6
     return row
 
 
