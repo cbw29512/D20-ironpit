@@ -52,6 +52,10 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("defender-attack-advantage-suppression")
     if features.miss_to_hit_override_resource_id:
         mechanics.add("miss-to-hit-override")
+    if features.deferred_save_effect:
+        mechanics.add(features.deferred_save_effect.source_id)
+    if features.opening_targeting_ward:
+        mechanics.add(features.opening_targeting_ward.source_id)
     if features.athletics_advantage:
         mechanics.add("athletics-advantage")
     if features.danger_sense:
@@ -80,6 +84,12 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("great-weapon-fighting")
     if features.indomitable_reroll or features.indomitable_bonus:
         mechanics.add("indomitable")
+    if features.failed_save_reroll_source_id:
+        mechanics.add(features.failed_save_reroll_source_id)
+    if features.failed_save_reroll_resource_id:
+        mechanics.add(f"failed-save-reroll-resource:{features.failed_save_reroll_resource_id}")
+    if features.failed_save_reroll_bonus:
+        mechanics.add("failed-save-reroll-bonus")
     if features.tactical_master_sap_weapon_ids:
         mechanics.add("tactical-master")
     if features.heroic_warrior:
