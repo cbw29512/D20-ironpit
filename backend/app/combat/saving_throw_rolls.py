@@ -51,10 +51,10 @@ def saving_throw_mode(
         raise RuntimeError("Saving-throw mode could not be resolved.") from exc
 
 
-def _indomitable_revision(original: DiceRoll, replacement: DiceRoll) -> RollRevision:
+def _failed_save_reroll_revision(original: DiceRoll, replacement: DiceRoll, source_id: str) -> RollRevision:
     try:
         return RollRevision(
-            source_effect_id="indomitable",
+            source_effect_id=source_id,
             kind="full_reroll",
             original_rolls=list(original.rolls),
             replacement_rolls=list(replacement.rolls),
@@ -67,8 +67,8 @@ def _indomitable_revision(original: DiceRoll, replacement: DiceRoll) -> RollRevi
             accepted="replacement",
         )
     except Exception as exc:
-        logger.exception("Failed to build Indomitable revision evidence.")
-        raise RuntimeError("Indomitable revision could not be recorded.") from exc
+        logger.exception("Failed to build failed-save reroll revision evidence.")
+        raise RuntimeError("Failed-save reroll revision could not be recorded.") from exc
 
 
 def resolve_saving_throw(
@@ -93,11 +93,12 @@ def resolve_saving_throw(
         )
         consume_saving_throw_modifiers(state)
         if roll.total < dc:
-            from app.combat.indomitable import use_indomitable
+            from app.combat.indomitable import use_failed_save_reroll
 
-            reroll = use_indomitable(state, ability, dice)
-            if reroll is not None:
-                revision = _indomitable_revision(roll, reroll)
+            reroll_result = use_failed_save_reroll(state, ability, dice)
+            if reroll_result is not None:
+                reroll, source_id = reroll_result
+                revision = _failed_save_reroll_revision(roll, reroll, source_id)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
         return roll, roll.total >= dc
     except ValueError:
