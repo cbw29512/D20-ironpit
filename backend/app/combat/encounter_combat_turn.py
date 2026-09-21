@@ -10,10 +10,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
-from app.combat.encounter_turn_support import (
-    finish_turn, resolve_area_save_turn, resolve_signature_save_turn,
-    resolve_support_actions, save_choice,
-)
+from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
@@ -24,6 +21,7 @@ from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
 from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
 from app.combat.spell_offense import resolve_best_spell_offense
+from app.combat.signature_offense import resolve_signature_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
@@ -110,17 +108,10 @@ def resolve_combat_turn(
             events.append(presence); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-        signature_area = resolve_area_save_turn(
-            events, sequence, round_number, attacker, setup, dice, turn_key, resource_only=True,
-        )
-        if signature_area is not None:
-            return signature_area
-
-        signature_save = resolve_signature_save_turn(
-            events, sequence, round_number, attacker, setup, dice, turn_key,
-        )
-        if signature_save is not None:
-            return signature_save
+        signature = resolve_signature_offense(sequence, round_number, attacker, setup, dice, turn_key)
+        if signature is not None:
+            more, sequence = signature; events.extend(more)
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         if attacker.state.template.attack_action is not None:
             action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
