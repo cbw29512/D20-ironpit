@@ -32,17 +32,20 @@ def resolve_death_save(
         if state.current_hp != 0 or state.is_dead or state.is_stable:
             raise ValueError("This character does not currently make a Death Saving Throw.")
 
-        mode = RollMode.ADVANTAGE if death_save_advantage_sources(state) else RollMode.NORMAL
+        features = state.template.progression_features
+        advantage = features.death_save_advantage or bool(death_save_advantage_sources(state))
+        mode = RollMode.ADVANTAGE if advantage else RollMode.NORMAL
         roll = roll_d20(dice, 0, mode)
         natural = roll.selected_roll or 0
+        recovery_minimum = features.death_save_recovery_minimum
         hp_before = state.current_hp
         successes_before = state.death_save_successes
         failures_before = state.death_save_failures
         result = "failure"
 
-        if natural == 20:
+        if natural >= recovery_minimum:
             restore_hit_points(state, 1)
-            result = "natural 20; regains 1 HP"
+            result = f"{natural} triggers death-save recovery; regains 1 HP"
         elif natural == 1:
             state.death_save_failures = min(3, state.death_save_failures + 2)
             result = "natural 1; two failures"
