@@ -6,12 +6,20 @@ from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.models import RollMode
+from app.domain.modifiers import CombatModifier, ModifierKind
 
 
 def _downed_character():
     state = build_combatant_state(build_demo_fighter())
     assert apply_damage(state, state.current_hp) == "unconscious"
     return state
+
+
+def _death_save_threshold(state, threshold: int) -> None:
+    state.active_modifiers.append(CombatModifier(
+        id="test-death-save-threshold", source_id="hero-1", source_effect_id="test-defy-death",
+        kind=ModifierKind.DEATH_SAVE_NAT20_THRESHOLD, flat_bonus=threshold,
+    ))
 
 
 def test_monster_dies_at_zero_hp_by_default() -> None:
@@ -132,6 +140,32 @@ def test_natural_twenty_restores_one_hp_resets_saves_and_leaves_prone() -> None:
     assert state.death_save_successes == 0
     assert state.death_save_failures == 0
     assert event.hp_after == 1
+
+
+def test_default_death_save_threshold_does_not_upgrade_nineteen() -> None:
+    state = _downed_character()
+    resolve_death_save(1, 1, "hero-1", state, FixedDiceProvider([19]))
+    assert state.current_hp == 0
+    assert state.death_save_successes == 1
+
+
+def test_configured_death_save_threshold_upgrades_eighteen_and_nineteen() -> None:
+    for natural in (18, 19):
+        state = _downed_character()
+        _death_save_threshold(state, 18)
+        event = resolve_death_save(1, 1, "hero-1", state, FixedDiceProvider([natural]))
+        assert state.current_hp == 1
+        assert event.death_save_roll is not None
+        assert event.death_save_roll.selected_roll == natural
+        assert "natural 20 result" in event.description
+
+
+def test_death_save_threshold_preserves_natural_one_two_failures() -> None:
+    state = _downed_character()
+    _death_save_threshold(state, 18)
+    resolve_death_save(1, 1, "hero-1", state, FixedDiceProvider([1]))
+    assert state.death_save_failures == 2
+    assert state.current_hp == 0
 
 
 def test_three_successes_make_character_stable_and_reset_trackers() -> None:
