@@ -12,12 +12,15 @@ load("browser-heroes.js");
 load("browser-condition-rules.js");
 load("browser-condition-immunity.js");
 load("browser-action-economy.js");
+load("browser-opening-modifiers.js");
+load("browser-state.js");
+load("browser-defensive-modifier-rules.js");
 load("browser-timed-conditions.js");
 load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const monk = (level) => heroes.find((hero) => hero.id === `kael-stillwater-2014-l${level}`);
-for (let level = 1; level <= 10; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
+for (let level = 1; level <= 20; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
 
 assert.deepEqual(monk(1).ability_scores, { strength: 13, dexterity: 16, constitution: 14, intelligence: 11, wisdom: 15, charisma: 9 });
 assert.equal(monk(1).armor_class, 15);
@@ -29,6 +32,65 @@ assert.equal(monk(6).speed_ft, 45);
 assert.equal(monk(10).speed_ft, 50);
 assert.equal(monk(4).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 4);
 assert.equal(monk(5).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 6);
+assert.equal(monk(11).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 8);
+assert.equal(monk(11).max_hp, 80);
+assert.equal(monk(11).resources.ki, 11);
+assert.equal(monk(12).resources.ki, 12);
+assert.equal(monk(13).resources.ki, 13);
+assert.equal(monk(12).ability_scores.wisdom, 17);
+assert.equal(monk(12).armor_class, 18);
+assert.equal(monk(13).max_hp, 94);
+assert.equal(monk(13).attacks.find((attack) => attack.weaponId === "unarmed-strike").bonus,
+  monk(12).attacks.find((attack) => attack.weaponId === "unarmed-strike").bonus + 1);
+assert.equal(monk(13).opening_targeting_ward.save_dc, 16);
+assert.equal(monk(14).speed_ft, 55);
+assert.equal(monk(14).failed_save_reroll_source_id, "diamond-soul");
+assert.equal(monk(14).failed_save_reroll_resource_id, "ki");
+assert.deepEqual(monk(14).saving_throw_bonuses, {
+  strength: 6, dexterity: 10, constitution: 7, intelligence: 5, wisdom: 8, charisma: 4,
+});
+assert.equal(monk(16).ability_scores.wisdom, 19);
+assert.equal(monk(16).armor_class, 19);
+assert.equal(monk(16).resources.ki, 16);
+assert.equal(monk(16).opening_targeting_ward.save_dc, 17);
+assert.equal(monk(17).resources.ki, 17);
+assert.equal(monk(17).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 10);
+assert.equal(monk(18).speed_ft, 60);
+assert.equal(monk(19).ability_scores.wisdom, 20);
+assert.equal(monk(19).ability_scores.strength, 14);
+assert.equal(monk(19).armor_class, 20);
+assert.equal(monk(19).resources.ki, 19);
+assert.equal(monk(20).resources.ki, 20);
+assert.equal(monk(20).armor_class, 20);
+assert.deepEqual(monk(18).timed_self_buff, {
+  source_id: "empty-body",
+  resource_id: "ki",
+  resource_cost: 4,
+  duration_rounds: 10,
+  effect_ids: ["invisible"],
+  damage_resistances: ["acid","bludgeoning","cold","fire","lightning","necrotic","piercing","poison","psychic","radiant","slashing","thunder"],
+});
+assert.deepEqual(monk(17).deferred_save_effect, {
+  source_id: "quivering-palm",
+  trigger_attack_ids: ["unarmed-strike"],
+  resource_id: "ki",
+  resource_cost: 3,
+  save_ability: "constitution",
+  save_dc: 18,
+  failure_sets_zero_hp: true,
+  success_damage_dice_count: 10,
+  success_damage_dice_size: 10,
+  success_damage_type: "necrotic",
+});
+assert.deepEqual(monk(11).opening_targeting_ward, {
+  source_id: "tranquility", save_ability: "wisdom", save_dc: 14, ends_on_owner_attack: true,
+});
+const tranquilityState = window.IRON_PIT_BROWSER_STATE.buildState(monk(11));
+assert.equal(tranquilityState.active_modifiers.length, 1);
+assert.equal(tranquilityState.active_modifiers[0].source_effect_id, "tranquility");
+assert.equal(tranquilityState.active_modifiers[0].save_dc, 14);
+window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS.removeOwnerAttackEnding(tranquilityState);
+assert.equal(tranquilityState.active_modifiers.length, 0);
 assert.equal(monk(2).resources.ki, 2);
 assert.equal(monk(6).resources["wholeness-of-body"], 1);
 assert.equal(monk(3).deflect_missiles, true);
@@ -103,4 +165,4 @@ assert.ok(result.events.every((event) => event.feature_id === "flurry-of-blows")
 assert.equal(flurryActor.state.resources.ki, 1);
 assert.equal(flurryActor.state.bonus_action_available, false);
 
-console.log("2014 Open Hand Monk browser mechanics preserve progression, Ki, Flurry, Deflect Missiles, Stunning Strike, Open Hand Technique, and static defenses.");
+console.log("2014 Open Hand Monk browser mechanics preserve progression through level 20 including Tranquility, Diamond Soul, Quivering Palm, Empty Body, and final ASI progression.");
