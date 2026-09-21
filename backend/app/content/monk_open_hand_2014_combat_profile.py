@@ -20,6 +20,8 @@ def _martial_arts_die(level: int) -> int:
 
 
 def _speed(level: int) -> int:
+    if level >= 18:
+        return 60
     if level >= 14:
         return 55
     if level >= 10:
@@ -91,7 +93,7 @@ def build_kael_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_kael_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_kael_2014_combat_profile(level) for level in range(1, 18)]
+        return [build_kael_2014_combat_profile(level) for level in range(1, 19)]
     except Exception:
         logger.exception("Failed to compile 2014 Kael combat fingerprints")
         raise
