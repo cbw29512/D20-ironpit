@@ -46,6 +46,12 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("expanded-critical-range")
     if features.initiative_advantage:
         mechanics.add("initiative-advantage")
+    if features.first_round_extra_turn_initiative_offset is not None:
+        mechanics.add("first-round-extra-turn")
+    if features.suppress_attack_advantage_while_not_incapacitated:
+        mechanics.add("defender-attack-advantage-suppression")
+    if features.miss_to_hit_override_resource_id:
+        mechanics.add("miss-to-hit-override")
     if features.athletics_advantage:
         mechanics.add("athletics-advantage")
     if features.danger_sense:
