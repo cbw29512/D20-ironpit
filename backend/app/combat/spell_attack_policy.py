@@ -47,7 +47,7 @@ def choose_spell_attack(
             ):
                 continue
             score = spell_attack_expected_damage(caster, target, action, setup)
-            candidates.append((score, -action.level, -target.state.current_hp, target.combatant_id, action, target))
+            candidates.append((score, action.level, -target.state.current_hp, target.combatant_id, action, target))
     if not candidates:
         return None
     score, _, _, _, action, target = max(candidates, key=lambda item: item[:4])
