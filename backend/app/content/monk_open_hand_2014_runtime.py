@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 def _scores(level: int) -> AbilityScores:
     dexterity = 16 + (2 if level >= 4 else 0) + (2 if level >= 8 else 0)
     return AbilityScores(
-        strength=13,
+        strength=13 + (1 if level >= 19 else 0),
         dexterity=dexterity,
         constitution=14,
         intelligence=11,
-        wisdom=15 + (2 if level >= 12 else 0) + (2 if level >= 16 else 0),
+        wisdom=15 + (2 if level >= 12 else 0) + (2 if level >= 16 else 0) + (1 if level >= 19 else 0),
         charisma=9,
     )
 
@@ -99,10 +99,10 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
-    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 18."""
+    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 20."""
     try:
-        if level not in range(1, 19):
-            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 18.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 20.")
         scores = _scores(level)
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
