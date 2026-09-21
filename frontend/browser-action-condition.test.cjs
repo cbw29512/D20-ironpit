@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saves.js",
+  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-miss-to-hit-override.js", "browser-attack.js", "browser-saves.js",
 ]) load(file);
 
 const Q = window.IRON_PIT_BROWSER_CONDITION_RULES;
@@ -88,6 +88,44 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(S.active(ally), true, "partially debuffed ally remains active");
   assert.equal(S.packTactics(attacker, target, setup), true, "partially debuffed ally can still enable Pack Tactics");
 }
+{
+  const elusiveTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["mara-quickstep-2014-l18"]);
+  assert.ok(elusiveTemplate, "Level-18 2014 Mara must be present in the generated browser roster");
+  const attacker = member("elusive-attacker");
+  const elusive = { combatant_id: "mara-elusive", side: "monsters", position_ft: 0, state: S.buildState(elusiveTemplate) };
+  const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
+
+  const normal = A.resolveAttack(20, 1, attacker, elusive, attack, 5, { spendAction: false, advantage: 1 });
+  assert.equal(normal.attack_roll.mode, "normal", "Elusive suppresses attack Advantage while Mara is not incapacitated");
+
+  const attacker2 = member("elusive-attacker-2");
+  const incapacitated = { combatant_id: "mara-stunned", side: "monsters", position_ft: 0, state: S.buildState(elusiveTemplate) };
+  incapacitated.state.active_effect_ids.push("stunned");
+  const advantaged = A.resolveAttack(21, 1, attacker2, incapacitated, attack, 5, { spendAction: false, advantage: 1 });
+  assert.equal(advantaged.attack_roll.mode, "advantage", "Elusive stops suppressing Advantage while Mara is incapacitated");
+}
+
+{
+  const attacker = member("stroke-attacker");
+  attacker.state.template.miss_to_hit_override_resource_id = "stroke-of-luck";
+  attacker.state.resources["stroke-of-luck"] = 1;
+  const target = member("stroke-target");
+  const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
+  const values = [1, 4, 4];
+  window.IRON_PIT_DICE = {
+    roll: () => values.shift(),
+    rollMany: (count) => Array.from({ length: count }, () => values.shift()),
+  };
+  const event = A.resolveAttack(30, 1, attacker, target, attack, 5, { spendAction: false });
+  assert.equal(event.attack_roll.selected_roll, 1);
+  assert.equal(event.hit, true);
+  assert.equal(event.critical, false);
+  assert.equal(event.turn_terminated, false);
+  assert.equal(event.feature_id, "stroke-of-luck");
+  assert.equal(attacker.state.resources["stroke-of-luck"], 0);
+  assert.match(event.description, /Stroke Of Luck turns the miss into a hit/);
+}
+
 console.log("Browser condition/action-economy integration regressions passed.");
 
 // Keep newer condition/class subsystems inside an already mandatory CI entry point.

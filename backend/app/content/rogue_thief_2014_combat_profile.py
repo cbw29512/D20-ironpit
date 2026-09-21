@@ -15,9 +15,13 @@ def build_mara_2014_combat_profile(level: int) -> PregenCombatProfile:
         scores = source.final_ability_scores; pb = proficiency_bonus(level)
         acrobatics_pb = 2 * pb if level >= 6 else pb
         deception_pb = 2 * pb if level >= 6 else pb
+        save_proficiencies = (
+            ("dexterity", "intelligence", "wisdom")
+            if level >= 15 else ("dexterity", "intelligence")
+        )
         return PregenCombatProfile(
             template_id=source.template_id, archetype="Rogue", level=level, abilities=scores,
-            save_proficiencies=("dexterity", "intelligence"), armor_class=11 + scores.modifier("dexterity"),
+            save_proficiencies=save_proficiencies, armor_class=11 + scores.modifier("dexterity"),
             max_hp=fixed_hit_points(level, 8, scores.modifier("constitution")), speed_ft=30,
             skill_bonuses=(
                 ("acrobatics", scores.modifier("dexterity") + acrobatics_pb),
@@ -30,7 +34,7 @@ def build_mara_2014_combat_profile(level: int) -> PregenCombatProfile:
                 AttackExpectation("shortbow", "dexterity", 1, 6, "piercing", normal_range_ft=80,
                                   long_range_ft=320, sneak_attack_eligible=True),
             ),
-            weapon_masteries=(), resources=(), sneak_attack_d6=(level + 1) // 2,
+            weapon_masteries=(), resources=(("stroke-of-luck", 1),) if level >= 20 else (), sneak_attack_d6=(level + 1) // 2,
             initiative_bonus=scores.modifier("dexterity"),
         )
     except Exception:
@@ -41,7 +45,7 @@ def build_mara_2014_combat_profile(level: int) -> PregenCombatProfile:
 def build_mara_2014_combat_profiles() -> list[PregenCombatProfile]:
     """Return only the audited/certification-eligible 2014 Mara fingerprints."""
     try:
-        return [build_mara_2014_combat_profile(level) for level in range(1, 12)]
+        return [build_mara_2014_combat_profile(level) for level in range(1, 21)]
     except Exception:
-        logger.exception("Failed to compile 2014 Mara combat-profile progression through level 11")
+        logger.exception("Failed to compile 2014 Mara combat-profile progression through level 20")
         raise

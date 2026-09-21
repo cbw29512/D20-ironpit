@@ -6,7 +6,7 @@ This audit is intentionally implementation-first and fail-closed. It inventories
 
 Rules authority: D&D Basic Rules 2014 / SRD 5.1 Rogue and Thief. The existing Iron Pit rules contract remains authoritative for certification policy and edition isolation.
 
-No READY flags, registry entries, generated browser heroes, or manifest counts are changed by this audit.
+Current certification boundary on this branch: **level 20 candidate-complete**. Exact-head certification gates remain authoritative before merge.
 
 ## Existing universal capability baseline
 
@@ -17,19 +17,19 @@ The current Mara runtime already reuses universal weapon attacks, proficiency/ab
 | Level | RAW addition | Combat relevance in Iron Pit | Existing equivalent / required primitive | Disposition before certification |
 | ---: | --- | --- | --- | --- |
 | 11 | Reliable Talent; Sneak Attack 6d6 | Ability checks can affect Hide/arena decisions; damage progression is direct | Sneak Attack die scaling already exists. No verified generic proficient-check d20 floor was found in the current engine search. | **BLOCKED** on reusable proficient ability-check minimum-roll primitive if an arena path invokes a qualifying check. Do not fake by adding a flat bonus. |
-| 12 | Ability Score Improvement | Changes derived combat statistics depending on canonical choice | Existing build-audit/ability-score machinery | **CONTENT DECISION REQUIRED**: canonical level-12 ASI must be explicitly selected and audited; do not guess. |
+| 12 | Ability Score Improvement | Changes derived combat statistics depending on canonical choice | Existing build-audit/ability-score machinery | **APPROVED**: +2 Constitution (14→16) for survivability and improved Constitution checks/saves. |
 | 13 | Use Magic Device; Sneak Attack 7d6 | Magic-item permission is only relevant if canonical arena loadout contains such an item | Existing loadout has no qualifying magic item; Sneak Attack scaling already exists | Treat Use Magic Device as audited but arena-inert for the current mundane loadout; no engine primitive is justified solely for this snapshot. |
-| 14 | Blindsense | Hidden/invisible opponents within 10 ft. are combat-relevant | No verified generic short-range hidden/invisible location-awareness capability found in the current engine search | **BLOCKED** on reusable awareness/sense primitive; must use authoritative distance and hearing state. |
+| 14 | Blindsense | Provides location awareness for hidden/invisible creatures within 10 ft. while Mara can hear; it does **not** grant sight | The certified arena has no Hide/location-guess loop and no certified opponent path that creates unresolved creature-location state | **AUDITED / ARENA-INERT** for the current certified matrix. Do not use it to bypass invisible-attacker visibility rules or Uncanny Dodge's "can see" requirement. |
 | 15 | Slippery Mind; Sneak Attack 8d6 | Adds Wisdom saving-throw proficiency | Existing saving-throw bonus compiler can represent proficiency if supplied the RAW proficiency set | Reuse saving-throw machinery; add Wisdom at level 15. No Rogue-specific engine branch needed. |
-| 16 | Ability Score Improvement | Changes derived combat statistics depending on canonical choice | Existing build-audit/ability-score machinery | **CONTENT DECISION REQUIRED**: canonical level-16 ASI must be explicitly selected and audited; do not guess. |
-| 17 | Thief's Reflexes; Sneak Attack 9d6 | A second turn in round 1 at initiative -10 materially changes combat | No verified generic extra-first-round-turn scheduler capability found in the current engine search | **BLOCKED** on reusable extra-turn scheduling primitive. Must preserve action/bonus/reaction accounting and browser parity. |
-| 18 | Elusive | Suppresses attack-roll Advantage against Mara while she is not incapacitated | No verified generic defender advantage-suppression primitive found in the current engine search | **BLOCKED** on reusable conditional attack-advantage suppression primitive. It must not suppress Disadvantage or operate while incapacitated. |
-| 19 | Ability Score Improvement; Sneak Attack 10d6 | Changes derived combat statistics depending on canonical choice | Existing build-audit/ability-score machinery | **CONTENT DECISION REQUIRED**: canonical level-19 ASI must be explicitly selected and audited; do not guess. |
-| 20 | Stroke of Luck | Once per short/long rest, a missed in-range attack can become a hit; failed ability check can become d20=20 | No verified generic post-roll miss-to-hit / failed-check override resource primitive found in the current engine search | **BLOCKED** on reusable post-roll outcome override plus rest-recharging resource. Attack path is arena-relevant even if ability checks are not. |
+| 16 | Ability Score Improvement | Changes derived combat statistics depending on canonical choice | Existing build-audit/ability-score machinery | **APPROVED**: +2 Constitution (16→18). |
+| 17 | Thief's Reflexes; Sneak Attack 9d6 | A second turn in round 1 at initiative -10 materially changes combat | Shared declarative first-round extra-turn scheduler with backend/browser parity | **IMPLEMENTED / CERTIFICATION CANDIDATE**: offset is data-driven at -10; no Rogue-specific turn-loop branch. |
+| 18 | Elusive | Suppresses attack-roll Advantage against Mara while she is not incapacitated | Shared defender attack-Advantage suppression primitive with backend/browser parity | **IMPLEMENTED / CERTIFICATION CANDIDATE**: suppresses Advantage sources only while not incapacitated and preserves Disadvantage. |
+| 19 | Ability Score Improvement; Sneak Attack 10d6 | Changes derived combat statistics depending on canonical choice | Existing build-audit/ability-score machinery | **IMPLEMENTED / CERTIFICATION CANDIDATE**: approved +2 Constitution (18→20), CON 20, and Sneak Attack 10d6. |
+| 20 | Stroke of Luck | Once per short/long rest, a missed in-range attack can become a hit; failed ability check can become d20=20 | Shared declarative miss-to-hit override resource with backend/browser parity | **IMPLEMENTED / CERTIFICATION CANDIDATE**: first missed in-range arena attack spends the resource automatically; if the miss is a natural 1, Stroke of Luck overrides it before Iron Pit turn termination, producing a normal hit rather than a critical. Ability-check branch remains arena-inert while no qualifying check path exists. |
 
 ## Required implementation order
 
-1. Lock the canonical level-12/16/19 advancement choices in the character build profile using an authoritative project decision; until then, do not compile those levels as certified snapshots.
+1. Preserve the approved canonical Constitution progression: +2 CON at levels 12, 16, and 19.
 2. Extend the private candidate/profile progression without registering it, preserving 2014-only data.
 3. Reuse current saving-throw machinery for Slippery Mind and current Sneak Attack scaling for 11/13/15/17/19.
 4. Inventory engine code again at implementation time for semantic equivalents to Reliable Talent, Blindsense, Thief's Reflexes, Elusive, and Stroke of Luck. Add a primitive only when no equivalent exists.
@@ -38,8 +38,8 @@ The current Mara runtime already reuses universal weapon attacks, proficiency/ab
 
 ## Certification blockers
 
-Technical blockers currently identified by this audit: Reliable Talent check-floor semantics (when exercised), Blindsense awareness, Thief's Reflexes first-round extra turn, Elusive advantage suppression, and Stroke of Luck post-roll override/resource semantics.
+Deferred general engine gaps: Reliable Talent check-floor semantics if a future certified path invokes a qualifying proficient ability check, Blindsense location-awareness semantics if a future arena path introduces unresolved creature location, and Stroke of Luck's failed-ability-check branch while no qualifying arena check path exists. No active 2014 Rogue combat blocker remains through level 20.
 
-Content blockers: the canonical level-12, level-16, and level-19 ASI choices are not encoded in the current level-1-10 profile. These choices affect combat statistics and therefore must not be inferred.
+Content blockers: **none for the level-12/16/19 ASIs**. The approved canonical progression is +2 Constitution at each of those levels.
 
-The fastest safe next implementation tranche is level 11 only if the engine audit proves Reliable Talent is arena-inert for every certified combat path; otherwise implement the generic proficient-check floor first. Level 13 can follow once level 12's canonical advancement is explicitly established.
+Levels 12-20 are safe in the current certification candidate matrix: level 12 applies CON 16; level 13 Use Magic Device is arena-inert with the mundane loadout; level 14 Blindsense is location-awareness only and the arena has no unresolved-location loop; level 15 reuses the shared saving-throw compiler for Wisdom proficiency and Sneak Attack 8d6; level 16 applies CON 18. Levels 17-20 now use reusable engine primitives or existing build math. Stroke of Luck uses a one-use fresh-fight resource and the shared miss-to-hit interrupt; Chris explicitly approved overriding a natural 1 immediately when the resource is available.

@@ -134,7 +134,7 @@
     let sequence = events.length + 1, resolvedRound = 0;
     for (let round = 1; round <= 100; round += 1) {
       resolvedRound = round;
-      for (const id of init.turn_order) {
+      for (const id of I().turnOrderForRound(round, init, members)) {
         const current = outcome(setup);
         if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
