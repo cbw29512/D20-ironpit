@@ -6,6 +6,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE;
+  const TB = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFF;
   const IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
   const DS = () => window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
@@ -37,6 +38,23 @@
   function install() {
     const selection = S();
     if (!selection) throw new Error("Main Action provider installation requires browser-main-action-selection.js.");
+
+    register({
+      id: "timed-self-buff", category: C().TIMED_SELF_BUFF, rulesets: BOTH,
+      discover: ({ member }) => {
+        if (!member.state.template.timed_self_buff) return null;
+        const runtime = TB();
+        if (!runtime) throw new Error("Timed self-buff runtime is not loaded.");
+        return runtime.canActivate(member) ? { payload: {} } : null;
+      },
+      resolve: ({ sequence, round, member }) => {
+        const runtime = TB();
+        if (!runtime) throw new Error("Timed self-buff runtime is not loaded.");
+        const event = runtime.resolve(sequence, round, member);
+        if (!event) throw new Error("Timed self-buff candidate became illegal before resolution.");
+        return { events: [event], sequence: sequence + 1 };
+      },
+    });
 
     register({
       id: "spell-offense", category: C().SPELL_OFFENSE, rulesets: BOTH,
