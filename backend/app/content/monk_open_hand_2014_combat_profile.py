@@ -20,6 +20,8 @@ def _martial_arts_die(level: int) -> int:
 
 
 def _speed(level: int) -> int:
+    if level >= 14:
+        return 55
     if level >= 10:
         return 50
     if level >= 6:
@@ -51,7 +53,7 @@ def build_kael_2014_combat_profile(level: int) -> PregenCombatProfile:
             archetype="Monk",
             level=level,
             abilities=scores,
-            save_proficiencies=("strength", "dexterity"),
+            save_proficiencies=("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma") if level >= 14 else ("strength", "dexterity"),
             armor_class=10 + dexterity + wisdom,
             max_hp=fixed_hit_points(level, 8, scores.modifier("constitution")),
             speed_ft=_speed(level),
@@ -89,7 +91,7 @@ def build_kael_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_kael_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_kael_2014_combat_profile(level) for level in range(1, 14)]
+        return [build_kael_2014_combat_profile(level) for level in range(1, 17)]
     except Exception:
         logger.exception("Failed to compile 2014 Kael combat fingerprints")
         raise
