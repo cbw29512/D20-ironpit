@@ -14,6 +14,21 @@ class AbilityCheckMinimum(BaseModel):
     minimum_source: Literal["ability_score"] = "ability_score"
 
 
+class DeferredSaveEffect(BaseModel):
+    """A mark armed by a qualifying hit and later activated as an Action."""
+
+    source_id: str
+    trigger_attack_ids: list[str] = Field(min_length=1)
+    resource_id: str
+    resource_cost: int = Field(default=1, ge=1)
+    save_ability: AbilityName
+    save_dc: int = Field(ge=1, le=40)
+    failure_sets_zero_hp: bool = False
+    success_damage_dice_count: int = Field(default=0, ge=0, le=40)
+    success_damage_dice_size: int = Field(default=10, ge=2, le=100)
+    success_damage_type: str | None = None
+
+
 class OpeningTargetingWard(BaseModel):
     """A passive targeting save gate installed when combat state is created."""
 
@@ -38,6 +53,7 @@ class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
+    deferred_save_effect: DeferredSaveEffect | None = None
     opening_targeting_ward: OpeningTargetingWard | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
