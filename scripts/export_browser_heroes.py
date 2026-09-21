@@ -221,6 +221,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
+    if progression.deferred_save_effect:
+        row["deferred_save_effect"] = progression.deferred_save_effect.model_dump()
     if progression.opening_targeting_ward:
         row["opening_targeting_ward"] = progression.opening_targeting_ward.model_dump()
     if progression.ability_check_minimums:
