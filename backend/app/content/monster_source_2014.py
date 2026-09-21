@@ -88,6 +88,7 @@ class SourceMonster2014(BaseModel):
     rest_recharge_action_ids: list[str] = Field(default_factory=list)
     action_names: list[str] = Field(default_factory=list)
     trait_names: list[str] = Field(default_factory=list)
+    source_traits: str | None = None
     reaction_names: list[str] = Field(default_factory=list)
     legendary_action_names: list[str] = Field(default_factory=list)
     parry_ac_bonus: int | None = None
