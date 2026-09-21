@@ -57,4 +57,7 @@ def test_fighter_level_fourteen_certifies_dexterity_asi_and_derived_stats() -> N
     assert karnok.progression_features.critical_hit_minimum == 19
     assert audits["ability-score-improvement-l14"].automated is True
     _assert_certified(14, profile)
-    assert ("fighter", 15, "canonical") not in build_certified_hero_registry()
+    assert build_certified_hero_registry()[("fighter", 15, "canonical")] == (
+        "Karnok Stoneward", "karnok-stoneward-l15",
+    )
+    assert ("fighter", 16, "canonical") not in build_certified_hero_registry()
