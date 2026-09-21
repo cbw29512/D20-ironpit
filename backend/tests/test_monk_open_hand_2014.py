@@ -5,6 +5,7 @@ from app.combat.open_hand_technique_2014 import resolve_open_hand_technique
 from app.combat.rogue_defenses import evasion_damage
 from app.combat.state import build_combatant_state
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
+from app.combat.targeting_wards import check_targeting_ward
 from app.content.certified_heroes import build_all_certified_hero_entries
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.monk_open_hand_2014_combat_profile import build_kael_2014_combat_profile
@@ -47,15 +48,15 @@ def _qualifying_event(actor: EncounterCombatant) -> BattleEvent:
     )
 
 
-def test_2014_open_hand_levels_one_through_ten_compile_with_expected_breakpoints() -> None:
-    for level in range(1, 11):
+def test_2014_open_hand_levels_one_through_eleven_compile_with_expected_breakpoints() -> None:
+    for level in range(1, 12):
         profile = build_kael_stillwater_2014_profile(level)
         combat = build_kael_2014_combat_profile(level)
         hero = build_kael_stillwater_2014(level)
         assert profile.ruleset == hero.ruleset == "2014"
         assert profile.final_ability_scores == hero.ability_scores == combat.abilities
         assert hero.weapon_masteries == []
-        assert hero.weapon_attack.weapon.dice_size == (4 if level < 5 else 6)
+        assert hero.weapon_attack.weapon.dice_size == (4 if level < 5 else 6 if level < 11 else 8)
         assert hero.speed_ft == (30 if level == 1 else 40 if level < 6 else 45 if level < 10 else 50)
         assert hero.progression_features.flurry_of_blows is (level >= 2)
         assert hero.progression_features.deflect_missiles is (level >= 3)
@@ -157,10 +158,35 @@ def test_evasion_reuses_shared_rogue_primitive() -> None:
     assert evasion_damage(monk, "dexterity", False, "half", 21) == 10
 
 
-def test_2014_certified_catalog_reaches_eighty_two_hero_snapshots() -> None:
+def test_2014_certified_catalog_reaches_eighty_three_hero_snapshots() -> None:
     entries = [entry for entry in build_all_certified_hero_entries() if entry[1].ruleset == "2014"]
     monks = [entry for entry in entries if entry[0][0] == "monk"]
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
-    assert len(entries) == 82
-    assert [entry[0][1] for entry in monks] == list(range(1, 11))
+    assert len(entries) == 83
+    assert [entry[0][1] for entry in monks] == list(range(1, 12))
     assert [entry[0][1] for entry in paladins] == list(range(1, 13))
+
+
+def test_level_eleven_tranquility_uses_shared_opening_targeting_ward() -> None:
+    monk = _member(build_kael_stillwater_2014(11), "kael11", "heroes", 0)
+    attacker = _member(build_karnok_stoneward_2014(11), "attacker", "monsters", 5)
+
+    assert monk.state.template.max_hp == 80
+    assert next(item for item in monk.state.resources if item.id == "ki").max_uses == 11
+    assert monk.state.template.weapon_attack.weapon.dice_size == 8
+
+    ward = monk.state.template.progression_features.opening_targeting_ward
+    assert ward is not None
+    assert (ward.source_id, ward.save_ability, ward.save_dc, ward.ends_on_owner_attack) == (
+        "tranquility", "wisdom", 14, True,
+    )
+    assert len(monk.state.active_modifiers) == 1
+    assert monk.state.active_modifiers[0].source_effect_id == "tranquility"
+
+    blocked = check_targeting_ward(attacker, monk, FixedDiceProvider([1]))
+    assert blocked is not None
+    assert blocked.succeeded is False
+    assert blocked.gate.save_dc == 14
+
+    assert check_targeting_ward(monk, attacker, FixedDiceProvider([20])) is None
+    assert monk.state.active_modifiers == []
