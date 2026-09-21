@@ -59,11 +59,47 @@ The canonical twelve pregen concepts are:
 11. Fiend Warlock
 12. Evoker Wizard
 
-Target progression is levels 1 through 10 in both 2014 and 2024. A level is certified independently; one legal level does not imply the rest of the progression is legal.
+Target progression is levels 1 through 20 in both 2014 and 2024.
+
+Construction is incremental, not twenty independent builds. Every canonical pregen is one persistent character: level N derives from level N-1 plus that level's HP gain, proficiency/resource changes, class/subclass feature additions, ASI/feat choices, spell progression, equipment changes, treasure, and other explicit deltas. The implementation must not rebuild the same character from scratch at every level.
+
+Certification is split into two layers:
+- every generated level must pass cheap structural/stat/resource/ruleset invariants;
+- deep bespoke behavior tests are required at progression breakpoints where a combat-relevant mechanic is added, removed, upgraded, or materially changes behavior.
+
+A level whose only changes are already-proven arithmetic deltas such as HP, proficiency, resource count, spell-slot count, or an established ASI compiler does not require a new one-off engine implementation or bespoke combat test. The shared progression compiler plus invariant tests certify those changes. This rule applies to every class in both editions.
+
+## 4A. Iron Pit combat treasure progression
+
+Before each new canonical level from 2 through 20, that persistent pregen receives exactly one stable d100 combat-treasure roll. The result is part of the canonical level history and is never rerolled by CI, deployment, replay, or a new fight.
+
+Single-roll table:
+
+- 1–50: no item;
+- 51–60: class-usable magic armor/defense item;
+- 61–70: class-usable magic weapon or offensive spell focus;
+- 71–80: combat healing potion;
+- 81–90: class-usable magic armor/defense item;
+- 91–99: combat-impacting accessory such as boots, helm, cloak, belt, amulet, or ring;
+- 100: two useful items from different slots, guaranteed without a second random roll.
+
+Treasure power scales with the level gained:
+
+- levels 2–4: +1 tier;
+- levels 5–8: +2 tier;
+- levels 9–12: +3 tier;
+- levels 13–16: +4 tier;
+- levels 17–20: +5 tier.
+
+All generated treasure must affect Iron Pit combat. Do not award arena-useless utility items. Generic weapon/armor results adapt to the character's actual combat loadout: for example, a weapon result becomes the weapon the build actually attacks with rather than an unrelated longsword. Caster offense results may become an appropriate combat focus. The treasure overlay is an explicit Iron Pit house system applied after the edition-legal RAW character build is validated.
+
+Persistent treasure carries forward with the same character. Treasure is slot-based for progression purposes: a weapon award stays attached to the character's primary combat-weapon role and is represented by the weapon that build actually uses at the current level, so normal optimization or mastery changes do not strand a previously earned magic weapon as useless inventory. When a later item competes for the same slot, the stronger/current item is used rather than stacking arbitrary enhancement bonuses. Combat consumables are card-defined resources and reset with the immutable card after each Iron Pit match, consistent with the arena reset contract.
 
 ## 5. One universal combat engine
 
 Monsters and pregens use the same canonical combat resolver. Do not create a separate hero simulator, monster simulator, or edition-specific duplicate engine.
+
+Before adding any new engine mechanic, research whether the ability's combat function is already represented by an existing primitive. Ability, spell, feat, subclass, monster trait, and magic-item names do not define engine behavior; their mechanical effect does. If two effects have the same core combat function, they must use the same universal trigger/resolver with source-specific data for audit and logging. Examples include resistance, advantage/disadvantage, failed-save rerolls, attack-roll suppression, extra turns, condition immunity, damage riders, healing, and resource spending. Do not create duplicate mechanics solely because the printed feature names differ.
 
 Content compiles into reusable combat primitives such as:
 

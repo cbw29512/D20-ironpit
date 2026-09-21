@@ -2,11 +2,15 @@
 
 const assert = require("node:assert/strict");
 
+const treasureBonus = (template, effect, targetId = null) => (template.combat_treasure_awards || [])
+  .filter((item) => item.effect === effect && (targetId == null || item.target_id === targetId))
+  .reduce((sum, item) => sum + item.bonus, 0);
+
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l6"];
 assert.ok(fighter, "generated Fighter 6 card must exist");
 assert.equal(fighter.level, 6);
 assert.equal(fighter.max_hp, 58);
-assert.equal(fighter.armor_class, 17);
+assert.equal(fighter.armor_class, 17 + treasureBonus(fighter, "armor-class"));
 assert.equal(fighter.speed_ft, 30);
 assert.equal(fighter.fighting_style, "Defense");
 assert.equal(fighter.critical_hit_minimum, 19);
@@ -15,8 +19,8 @@ assert.equal(fighter.athletics_advantage, true);
 assert.equal(fighter.critical_move_fraction, 0.5);
 assert.equal(fighter.tactical_shift_fraction, 0.5);
 assert.deepEqual(fighter.weapon_masteries, ["flail", "javelin", "spear", "longsword"]);
-assert.equal(fighter.saving_throw_bonuses.strength, 8);
-assert.equal(fighter.saving_throw_bonuses.constitution, 6);
+assert.equal(fighter.saving_throw_bonuses.strength, 8 + treasureBonus(fighter, "saving-throws"));
+assert.equal(fighter.saving_throw_bonuses.constitution, 6 + treasureBonus(fighter, "saving-throws"));
 assert.equal(fighter.skill_bonuses.athletics, 8);
 assert.deepEqual(fighter.resources, {
   "second-wind": 3,

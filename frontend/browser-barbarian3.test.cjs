@@ -25,6 +25,12 @@ function queuedDice(values, fallback = 10) {
   return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
 }
 
+function treasureBonus(template, effect, targetId = null) {
+  return (template.combat_treasure_awards || [])
+    .filter((item) => item.effect === effect && (targetId == null || item.target_id === targetId))
+    .reduce((sum, item) => sum + item.bonus, 0);
+}
+
 function setup() {
   const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l3"]);
   assert.ok(template, "Barbarian 3 must be generated as a browser-ready hero");
@@ -55,7 +61,7 @@ function rage(hero) {
   const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l4"]);
   assert.ok(template, "Barbarian 4 must be generated as a browser-ready hero");
   assert.equal(template.level, 4);
-  assert.equal(template.armor_class, 14);
+  assert.equal(template.armor_class, 14 + treasureBonus(template, "armor-class"));
   assert.equal(template.max_hp, 45);
   assert.equal(template.resources.rage, 3);
   assert.equal(template.danger_sense, true);
@@ -64,8 +70,9 @@ function rage(hero) {
   assert.equal(template.saving_throw_bonuses.strength, 6);
   assert.equal(template.saving_throw_bonuses.constitution, 5);
   assert.equal(template.skill_bonuses.athletics, 6);
-  assert.equal(template.attacks[0].bonus, 6);
-  assert.equal(template.attacks[0].damageBonus, 4);
+  const primaryTreasure = treasureBonus(template, "weapon-enhancement", template.attacks[0].id);
+  assert.equal(template.attacks[0].bonus, 6 + primaryTreasure);
+  assert.equal(template.attacks[0].damageBonus, 4 + primaryTreasure);
   assert.equal(template.attacks[1].bonus, 6);
   assert.equal(template.attacks[1].damageBonus, 4);
 }
@@ -74,7 +81,7 @@ function rage(hero) {
   const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l5"]);
   assert.ok(template, "Barbarian 5 must be generated as a browser-ready hero");
   assert.equal(template.level, 5);
-  assert.equal(template.armor_class, 14);
+  assert.equal(template.armor_class, 14 + treasureBonus(template, "armor-class"));
   assert.equal(template.max_hp, 55);
   assert.equal(template.speed_ft, 40);
   assert.equal(template.fast_movement_bonus_ft, 10);
@@ -86,8 +93,9 @@ function rage(hero) {
   assert.equal(template.saving_throw_bonuses.strength, 7);
   assert.equal(template.saving_throw_bonuses.constitution, 6);
   assert.equal(template.skill_bonuses.athletics, 7);
-  assert.equal(template.attacks[0].bonus, 7);
-  assert.equal(template.attacks[0].damageBonus, 4);
+  const primaryTreasure = treasureBonus(template, "weapon-enhancement", template.attacks[0].id);
+  assert.equal(template.attacks[0].bonus, 7 + primaryTreasure);
+  assert.equal(template.attacks[0].damageBonus, 4 + primaryTreasure);
   assert.equal(template.attacks[1].bonus, 7);
   assert.equal(template.attacks[1].damageBonus, 4);
   assert.equal(template.attack_action.slots.length, 2);
