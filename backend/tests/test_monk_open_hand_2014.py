@@ -1,6 +1,9 @@
 from app.combat.deflect_missiles import apply_deflect_missiles
 from app.combat.dice import FixedDiceProvider
 from app.combat.deferred_save_effect import arm_deferred_save_effect, resolve_deferred_save_effect
+from app.combat.condition_lifecycle import resolve_source_condition_timing
+from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.timed_self_buff import resolve_timed_self_buff
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.open_hand_technique_2014 import resolve_open_hand_technique
 from app.combat.rogue_defenses import evasion_damage
@@ -51,8 +54,8 @@ def _qualifying_event(actor: EncounterCombatant) -> BattleEvent:
     )
 
 
-def test_2014_open_hand_levels_one_through_seventeen_compile_with_expected_breakpoints() -> None:
-    for level in range(1, 18):
+def test_2014_open_hand_levels_one_through_eighteen_compile_with_expected_breakpoints() -> None:
+    for level in range(1, 19):
         profile = build_kael_stillwater_2014_profile(level)
         combat = build_kael_2014_combat_profile(level)
         hero = build_kael_stillwater_2014(level)
@@ -60,7 +63,7 @@ def test_2014_open_hand_levels_one_through_seventeen_compile_with_expected_break
         assert profile.final_ability_scores == hero.ability_scores == combat.abilities
         assert hero.weapon_masteries == []
         assert hero.weapon_attack.weapon.dice_size == (4 if level < 5 else 6 if level < 11 else 8 if level < 17 else 10)
-        assert hero.speed_ft == (30 if level == 1 else 40 if level < 6 else 45 if level < 10 else 50 if level < 14 else 55)
+        assert hero.speed_ft == (30 if level == 1 else 40 if level < 6 else 45 if level < 10 else 50 if level < 14 else 55 if level < 18 else 60)
         assert hero.progression_features.flurry_of_blows is (level >= 2)
         assert hero.progression_features.deflect_missiles is (level >= 3)
         assert hero.progression_features.open_hand_technique is (level >= 3)
@@ -161,12 +164,12 @@ def test_evasion_reuses_shared_rogue_primitive() -> None:
     assert evasion_damage(monk, "dexterity", False, "half", 21) == 10
 
 
-def test_2014_certified_catalog_reaches_eighty_nine_hero_snapshots() -> None:
+def test_2014_certified_catalog_reaches_ninety_hero_snapshots() -> None:
     entries = [entry for entry in build_all_certified_hero_entries() if entry[1].ruleset == "2014"]
     monks = [entry for entry in entries if entry[0][0] == "monk"]
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
-    assert len(entries) == 89
-    assert [entry[0][1] for entry in monks] == list(range(1, 18))
+    assert len(entries) == 90
+    assert [entry[0][1] for entry in monks] == list(range(1, 19))
     assert [entry[0][1] for entry in paladins] == list(range(1, 13))
 
 
@@ -328,3 +331,34 @@ def test_quivering_palm_success_uses_shared_necrotic_damage_path() -> None:
     assert event.damage_components[0].damage_type is DamageType.NECROTIC
     assert target.state.current_hp == hp_before - 50
     assert monk.state.deferred_effects == []
+
+
+def test_level_eighteen_empty_body_reuses_timed_buff_invisibility_and_resistance() -> None:
+    monk = _member(build_kael_stillwater_2014(18), "kael18", "heroes", 0)
+    target = _member(build_karnok_stoneward_2014(18), "target18", "monsters", 5)
+    setup = _setup(monk, target)
+
+    rule = monk.state.template.progression_features.timed_self_buff
+    assert rule is not None
+    assert (rule.source_id, rule.resource_id, rule.resource_cost, rule.duration_rounds) == (
+        "empty-body", "ki", 4, 10,
+    )
+    assert rule.effect_ids == ["invisible"]
+    assert "force" not in rule.damage_resistances
+
+    event = resolve_timed_self_buff(1, 1, monk)
+    assert event is not None
+    assert event.feature_id == "empty-body"
+    assert monk.state.action_available is False
+    assert next(item for item in monk.state.resources if item.id == "ki").current_uses == 14
+    assert "invisible" in monk.state.active_effect_ids
+
+    assert adjusted_damage_amount(20, DamageType.FIRE, monk.state) == 10
+    assert adjusted_damage_amount(20, DamageType.FORCE, monk.state) == 20
+
+    events, _ = resolve_source_condition_timing(
+        2, 11, monk, setup, "source_turn_start",
+    )
+    assert events
+    assert "invisible" not in monk.state.active_effect_ids
+    assert adjusted_damage_amount(20, DamageType.FIRE, monk.state) == 20
