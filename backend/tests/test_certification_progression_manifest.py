@@ -58,7 +58,7 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["public_ready_status"] == "ready"
 
 
-def test_fighter_levels_thirteen_through_seventeen_are_public() -> None:
+def test_fighter_levels_thirteen_through_eighteen_are_public() -> None:
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
     levels = {level["level"]: level for level in fighter["levels"]}
@@ -74,9 +74,11 @@ def test_fighter_levels_thirteen_through_seventeen_are_public() -> None:
     }
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 29
+    # The summary should reconcile to the manifest itself. Avoid pinning an unrelated
+    # global count here so adding a certified hero does not break this Fighter test.
+    assert manifest["summary"]["public_ready"] == counted_ready
 
-    for level_number in (13, 14, 15, 16, 17):
+    for level_number in (13, 14, 15, 16, 17, 18):
         level = levels[level_number]
         assert level["runtime_template_id"] == f"karnok-stoneward-l{level_number}"
         assert required_thirteen <= set(level["expected_combat_features"])
@@ -86,7 +88,16 @@ def test_fighter_levels_thirteen_through_seventeen_are_public() -> None:
         assert level["public_ready_status"] == "ready"
         assert f"karnok-stoneward-l{level_number}" in browser
 
-    for level_number in (15, 16, 17):
+    for level_number in (15, 16, 17, 18):
         level = levels[level_number]
         assert "expanded-critical-range" in level["expected_combat_features"]
         assert "expanded-critical-range" in level["supported_mechanics"]
+
+    level_eighteen = levels[18]
+    survivor_mechanics = {
+        "bloodied-start-turn-healing",
+        "death-save-advantage",
+        "death-save-recovery-threshold",
+    }
+    assert survivor_mechanics <= set(level_eighteen["expected_combat_features"])
+    assert survivor_mechanics <= set(level_eighteen["supported_mechanics"])
