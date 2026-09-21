@@ -25,7 +25,11 @@ def _species() -> list[AbilityIncrease]:
 
 
 def _advancements(level: int) -> list[AbilityIncrease]:
-    milestones = ((4, "dexterity", 2), (8, "dexterity", 2), (10, "charisma", 1), (10, "wisdom", 1))
+    milestones = (
+        (4, "dexterity", 2), (8, "dexterity", 2),
+        (10, "charisma", 1), (10, "wisdom", 1),
+        (12, "constitution", 2), (16, "constitution", 2), (19, "constitution", 2),
+    )
     return [AbilityIncrease(ability=ability, amount=amount)
             for required, ability, amount in milestones if level >= required]
 
@@ -64,12 +68,66 @@ def _audits(level: int) -> list[FeatureAudit]:
             notes=("Audited RAW. The standard arena currently executes no qualifying proficient "
                    "ability check, so no runtime roll-floor primitive is exercised by this snapshot."),
         ))
+    if level >= 12:
+        audits.append(_audit(
+            "ability-score-improvement-l12", "Ability Score Improvement (+2 Constitution)", "class",
+            notes="Canonical Iron Pit progression decision: Constitution 14→16 for survivability and Constitution checks/saves.",
+        ))
+    if level >= 13:
+        audits.append(_audit(
+            "use-magic-device", "Use Magic Device", "subclass", combat=False, automated=False,
+            notes="Audited RAW; arena-inert while Mara uses the canonical mundane loadout.",
+        ))
+    if level >= 14:
+        audits.append(_audit(
+            "blindsense", "Blindsense", "class", combat=False, automated=False,
+            notes=(
+                "Audited RAW: Blindsense provides location awareness within 10 feet while Mara can hear; "
+                "it does not grant sight. The certified arena currently has no Hide/location-guess loop "
+                "or certified opponent path that creates unresolved creature-location state, so no runtime "
+                "awareness primitive is exercised by this snapshot."
+            ),
+        ))
+    if level >= 15:
+        audits.append(_audit(
+            "slippery-mind", "Slippery Mind", "class",
+            notes="Uses the existing saving-throw proficiency compiler; Wisdom proficiency begins at level 15.",
+        ))
+    if level >= 16:
+        audits.append(_audit(
+            "ability-score-improvement-l16", "Ability Score Improvement (+2 Constitution)", "class",
+            notes="Canonical Iron Pit progression decision: Constitution 16→18 for survivability and Constitution checks/saves.",
+        ))
+    if level >= 17:
+        audits.append(_audit(
+            "thiefs-reflexes", "Thief's Reflexes", "subclass",
+            notes="Uses the shared first-round extra-turn scheduler at Mara's rolled initiative count minus 10.",
+        ))
+    if level >= 18:
+        audits.append(_audit(
+            "elusive", "Elusive", "class",
+            notes="Uses shared defender attack-Advantage suppression while Mara is not incapacitated.",
+        ))
+    if level >= 19:
+        audits.append(_audit(
+            "ability-score-improvement-l19", "Ability Score Improvement (+2 Constitution)", "class",
+            notes="Canonical Iron Pit progression decision: Constitution 18→20 for survivability and Constitution checks/saves.",
+        ))
+    if level >= 20:
+        audits.append(_audit(
+            "stroke-of-luck", "Stroke of Luck", "subclass",
+            notes=(
+                "Uses the shared miss-to-hit override resource once per fresh Iron Pit fight. "
+                "Iron Pit policy: the first missed in-range attack spends the resource automatically; "
+                "a natural 1 is overridden immediately before the house-rule turn termination can fire."
+            ),
+        ))
     return audits
 
 
 def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 12): raise ValueError("2014 Mara candidate profile covers levels 1 through 11.")
+        if level not in range(1, 21): raise ValueError("2014 Mara candidate profile covers levels 1 through 20.")
         base = _base(); species = _species(); advances = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-mara-quickstep-2014-l{level}", template_id=f"mara-quickstep-2014-l{level}",
