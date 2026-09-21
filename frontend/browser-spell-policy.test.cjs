@@ -89,4 +89,12 @@ function caster(spells, slots) {
   assert.equal(c.state.resources["spell-slot-4"], 1);
 }
 
+{
+  const c = caster([spell("low", 1), spell("high", 3)], { 1: 1, 3: 1 });
+  const monsters = [member("monster-tie", "monsters", 30)];
+  const choice = P.choose(c, { heroes: [c], monsters }, "1:caster");
+  assert.equal(choice.action.id, "high");
+  assert.equal(choice.slotLevel, 3);
+}
+
 console.log("Browser spell priority, ally-safe AoE, and printed-level slot regressions passed.");
