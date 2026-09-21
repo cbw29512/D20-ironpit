@@ -6,7 +6,7 @@ This audit is intentionally implementation-first and fail-closed. It inventories
 
 Rules authority: D&D Basic Rules 2014 / SRD 5.1 Rogue and Thief. The existing Iron Pit rules contract remains authoritative for certification policy and edition isolation.
 
-Current certification boundary on this branch: **level 19**. Level 20 remains fail-closed on Stroke of Luck post-roll override semantics.
+Current certification boundary on this branch: **level 20 candidate-complete**. Exact-head certification gates remain authoritative before merge.
 
 ## Existing universal capability baseline
 
@@ -25,7 +25,7 @@ The current Mara runtime already reuses universal weapon attacks, proficiency/ab
 | 17 | Thief's Reflexes; Sneak Attack 9d6 | A second turn in round 1 at initiative -10 materially changes combat | Shared declarative first-round extra-turn scheduler with backend/browser parity | **IMPLEMENTED / CERTIFICATION CANDIDATE**: offset is data-driven at -10; no Rogue-specific turn-loop branch. |
 | 18 | Elusive | Suppresses attack-roll Advantage against Mara while she is not incapacitated | Shared defender attack-Advantage suppression primitive with backend/browser parity | **IMPLEMENTED / CERTIFICATION CANDIDATE**: suppresses Advantage sources only while not incapacitated and preserves Disadvantage. |
 | 19 | Ability Score Improvement; Sneak Attack 10d6 | Changes derived combat statistics depending on canonical choice | Existing build-audit/ability-score machinery | **IMPLEMENTED / CERTIFICATION CANDIDATE**: approved +2 Constitution (18→20), CON 20, and Sneak Attack 10d6. |
-| 20 | Stroke of Luck | Once per short/long rest, a missed in-range attack can become a hit; failed ability check can become d20=20 | No verified generic post-roll miss-to-hit / failed-check override resource primitive found in the current engine search | **BLOCKED** on reusable post-roll outcome override plus rest-recharging resource. Attack path is arena-relevant even if ability checks are not. |
+| 20 | Stroke of Luck | Once per short/long rest, a missed in-range attack can become a hit; failed ability check can become d20=20 | Shared declarative miss-to-hit override resource with backend/browser parity | **IMPLEMENTED / CERTIFICATION CANDIDATE**: first missed in-range arena attack spends the resource automatically; if the miss is a natural 1, Stroke of Luck overrides it before Iron Pit turn termination, producing a normal hit rather than a critical. Ability-check branch remains arena-inert while no qualifying check path exists. |
 
 ## Required implementation order
 
@@ -38,8 +38,8 @@ The current Mara runtime already reuses universal weapon attacks, proficiency/ab
 
 ## Certification blockers
 
-Deferred general engine gaps: Reliable Talent check-floor semantics if a future certified path invokes a qualifying proficient ability check, and Blindsense location-awareness semantics if a future arena path introduces unresolved creature location. The active post-level-19 blocker is Stroke of Luck post-roll override/resource semantics.
+Deferred general engine gaps: Reliable Talent check-floor semantics if a future certified path invokes a qualifying proficient ability check, Blindsense location-awareness semantics if a future arena path introduces unresolved creature location, and Stroke of Luck's failed-ability-check branch while no qualifying arena check path exists. No active 2014 Rogue combat blocker remains through level 20.
 
 Content blockers: **none for the level-12/16/19 ASIs**. The approved canonical progression is +2 Constitution at each of those levels.
 
-Levels 12-19 are safe in the current certification candidate matrix: level 12 applies CON 16; level 13 Use Magic Device is arena-inert with the mundane loadout; level 14 Blindsense is location-awareness only and the arena has no unresolved-location loop; level 15 reuses the shared saving-throw compiler for Wisdom proficiency and Sneak Attack 8d6; level 16 applies CON 18. Levels 17-19 now use reusable engine primitives or existing build math. Level 20 is the next active blocker because Stroke of Luck requires a reusable post-roll miss-to-hit override with a rest-recharging resource.
+Levels 12-20 are safe in the current certification candidate matrix: level 12 applies CON 16; level 13 Use Magic Device is arena-inert with the mundane loadout; level 14 Blindsense is location-awareness only and the arena has no unresolved-location loop; level 15 reuses the shared saving-throw compiler for Wisdom proficiency and Sneak Attack 8d6; level 16 applies CON 18. Levels 17-20 now use reusable engine primitives or existing build math. Stroke of Luck uses a one-use fresh-fight resource and the shared miss-to-hit interrupt; Chris explicitly approved overriding a natural 1 immediately when the resource is available.
