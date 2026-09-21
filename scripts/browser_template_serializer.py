@@ -281,6 +281,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.deferred_save_effect:
         row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
+    if features.timed_self_buff:
+        row["timed_self_buff"] = features.timed_self_buff.model_dump()
     if features.initiative_advantage:
         row["initiative_advantage"] = True
     if features.athletics_advantage:
