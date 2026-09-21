@@ -33,7 +33,7 @@ _FEATURES = (
     ProfileFeature(13, "studied-attacks", "Studied Attacks", "class", True),
     ProfileFeature(15, "superior-critical", "Superior Critical", "subclass", True),
     ProfileFeature(17, "action-surge-two-uses", "Action Surge — Two Uses", "class", True),
-    ProfileFeature(18, "survivor", "Survivor", "subclass", False),
+    ProfileFeature(18, "survivor", "Survivor", "subclass", True),
     ProfileFeature(20, "three-extra-attacks", "Three Extra Attacks", "class", True),
 )
 

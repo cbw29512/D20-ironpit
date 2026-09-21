@@ -37,6 +37,4 @@ def test_shared_feature_registry_fails_closed_for_unimplemented_combat_mechanics
     assert unsupported_hero_engine_features(("heroic-warrior", "studied-attacks")) == ()
     assert unsupported_hero_engine_features(("rage", "instinctive-pounce", "brutal-strike")) == ()
     assert unsupported_hero_engine_features(("studied-attacks", "superior-critical")) == ()
-    assert unsupported_hero_engine_features(("survivor-defy-death", "survivor-heroic-rally")) == (
-        "survivor-defy-death", "survivor-heroic-rally",
-    )
+    assert unsupported_hero_engine_features(("survivor-defy-death", "survivor-heroic-rally")) == ()

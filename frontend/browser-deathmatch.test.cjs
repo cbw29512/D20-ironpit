@@ -83,6 +83,18 @@ function scoutAtFive() {
 
 {
   const member = downedHero();
+  member.state.template.death_save_advantage = true;
+  member.state.template.death_save_recovery_minimum = 18;
+  window.IRON_PIT_DICE = queuedDice([5, 18]);
+  const event = T.deathSave(1, 1, member);
+  assert.equal(event.death_save_roll.mode, "advantage");
+  assert.equal(event.death_save_roll.selected_roll, 18);
+  assert.equal(member.state.current_hp, 1);
+  assert.equal(member.state.is_unconscious, false);
+}
+
+{
+  const member = downedHero();
   member.state.death_save_failures = 1;
   window.IRON_PIT_DICE = queuedDice([1]);
   const event = T.deathSave(1, 1, member);

@@ -44,3 +44,12 @@ const template = (amount = 9) => ({
 }
 
 console.log("Browser Survivor start-turn healing matches compiled RAW thresholds.");
+
+
+{
+  const generic = { ...template(0), survivor_heal_amount: 0, bloodied_start_turn_heal_amount: 10 };
+  const state = S.buildState(generic);
+  state.current_hp = 50;
+  S.beginTurn(state);
+  assert.equal(state.current_hp, 60, "generic bloodied start-turn healing reuses Survivor trigger");
+}

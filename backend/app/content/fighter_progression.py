@@ -67,6 +67,8 @@ def _apply_row(data: dict[str, object], level: int) -> None:
     progression = compile_progression_feature_fields(features, level)
     if level >= 9:
         progression["tactical_master_sap_weapon_ids"] = ["greatsword"]
+    if "survivor-heroic-rally" in features:
+        progression["bloodied_start_turn_heal_amount"] = 5 + constitution_mod
     data.update(
         ability_scores={
             "strength": row.strength, "dexterity": row.dexterity,
