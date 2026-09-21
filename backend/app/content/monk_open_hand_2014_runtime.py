@@ -24,7 +24,7 @@ def _scores(level: int) -> AbilityScores:
         dexterity=dexterity,
         constitution=14,
         intelligence=11,
-        wisdom=15,
+        wisdom=15 + (2 if level >= 12 else 0),
         charisma=9,
     )
 
@@ -95,10 +95,10 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
-    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 11."""
+    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 13."""
     try:
-        if level not in range(1, 12):
-            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 11.")
+        if level not in range(1, 14):
+            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 13.")
         scores = _scores(level)
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
