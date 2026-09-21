@@ -24,8 +24,8 @@ def _setup(rogue: EncounterCombatant, target: EncounterCombatant) -> EncounterSe
     )
 
 
-def test_2014_thief_levels_one_through_eighteen_are_isolated_from_2024() -> None:
-    for level in range(1, 19):
+def test_2014_thief_levels_one_through_nineteen_are_isolated_from_2024() -> None:
+    for level in range(1, 20):
         hero = build_mara_quickstep_2014(level)
         assert hero.ruleset == "2014"
         assert hero.level == level
@@ -197,3 +197,18 @@ def test_level_eighteen_elusive_suppresses_only_advantage_while_not_incapacitate
         FixedDiceProvider([3, 17, 4, 4]), spend_action=False, advantage_sources=1,
     )
     assert advantaged.attack_roll.mode is RollMode.ADVANTAGE
+
+
+def test_level_nineteen_applies_final_constitution_asi_and_sneak_attack_ten_d6() -> None:
+    profile19 = build_mara_quickstep_2014_profile(19)
+    hero19 = build_mara_quickstep_2014(19)
+    asi = next(audit for audit in profile19.feature_audits if audit.feature_id == "ability-score-improvement-l19")
+
+    assert asi.combat_relevant is True
+    assert asi.automated is True
+    assert profile19.final_ability_scores.constitution == 20
+    assert hero19.ability_scores.constitution == 20
+    assert hero19.max_hp == 193
+    assert hero19.saving_throw_bonuses["constitution"] == 5
+    assert hero19.saving_throw_bonuses["wisdom"] == 8
+    assert hero19.progression_features.sneak_attack_d6 == 10
