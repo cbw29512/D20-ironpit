@@ -11,7 +11,7 @@ from app.content.audited_cleric_life_profile import (
 from app.content.build_audit import assert_character_build_raw_ready
 from app.content.canonical_hero_policy import canonical_spell_package
 from app.content.character_resource_audit import assert_character_resources_raw_ready
-from app.content.monster_capability_compiler import build_combatant_from_capabilities
+from app.content.capability_registry import build_combatant_from_capabilities
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.domain.encounters import EncounterCombatant, EncounterSetup
