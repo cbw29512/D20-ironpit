@@ -99,6 +99,8 @@ Persistent treasure carries forward with the same character. Treasure is slot-ba
 
 Monsters and pregens use the same canonical combat resolver. Do not create a separate hero simulator, monster simulator, or edition-specific duplicate engine.
 
+Before adding any new engine mechanic, research whether the ability's combat function is already represented by an existing primitive. Ability, spell, feat, subclass, monster trait, and magic-item names do not define engine behavior; their mechanical effect does. If two effects have the same core combat function, they must use the same universal trigger/resolver with source-specific data for audit and logging. Examples include resistance, advantage/disadvantage, failed-save rerolls, attack-roll suppression, extra turns, condition immunity, damage riders, healing, and resource spending. Do not create duplicate mechanics solely because the printed feature names differ.
+
 Content compiles into reusable combat primitives such as:
 
 - attacks and damage components;
