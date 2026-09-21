@@ -21,12 +21,14 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker.template) || 0);
+    if (Q().has(attacker, "invisible")) advantage += 1;
     if (Q().has(attacker, "blinded")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
     disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
+    if (Q().has(defender, "invisible")) disadvantage += 1;
     if (Q().attackAdvantage(defender)) advantage += 1;
     if (defender.active_effect_ids.includes("restrained")) advantage += 1;
     if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
@@ -42,7 +44,7 @@
   function adjustedDamage(target, amount, type, allowVulnerability = true) {
     if (target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
-    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
+    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || M().damageResistance?.(target, type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
@@ -94,6 +96,7 @@
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
     const outcome = O().create();
+    let deferredArmed = null;
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied } = outcome;
     const applied = outcome.appliedConditions;
     if (hit) {
@@ -122,6 +125,9 @@
       });
       if (phase.events.length) throw new Error("Attack outcome hooks must not emit standalone battle events.");
       ({ damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied } = outcome);
+      if (actualTarget.state.is_alive && !actualTarget.state.is_dead && actualTarget.state.current_hp > 0) {
+        deferredArmed = window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.arm(attacker.state, actualTarget.combatant_id, attack.id) || null;
+      }
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     } else {
       const phase = H().runPhase(H().PHASES.ON_MISS, {
@@ -149,6 +155,7 @@
     if (sapApplied === "weapon") description += ` Sap mastery affects ${actualTarget.state.template.name}.`;
     if (sapApplied === "tactical") description += ` Tactical Master applies Sap to ${actualTarget.state.template.name}.`;
     if (vexApplied) description += ` Vex primes the next attack against ${actualTarget.state.template.name}.`;
+    if (deferredArmed) description += ` ${deferredArmed.replaceAll("-", " ")} is armed on ${actualTarget.state.template.name}.`;
     if (attackSave) description += ` ${attackSave.saveAbility} save DC ${attackSave.saveDc}: ${actualTarget.state.template.name} ${attackSave.saveSucceeded ? "succeeds" : "fails"}.`; if (topple.saveDc !== null) description += ` Topple save DC ${topple.saveDc}: ${actualTarget.state.template.name} ${topple.saveSucceeded ? "succeeds" : "fails"}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
