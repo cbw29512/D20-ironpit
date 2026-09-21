@@ -61,7 +61,7 @@ def choose_spell(
             score = sum(save_spell_expected_damage(members[target_id], action) for target_id in placement.enemy_ids)
             score -= sum(save_spell_expected_damage(members[target_id], action) for target_id in placement.friendly_ids)
             choice = SpellChoice(action, slot_level, target_ids, placement, score)
-            candidates.append((score, -action.level, -index, choice))
+            candidates.append((score, action.level, -index, choice))
             continue
         legal = _legal_single_targets(caster, setup, action)
         if not legal:
@@ -72,5 +72,5 @@ def choose_spell(
         )
         score = save_spell_expected_damage(target, action)
         choice = SpellChoice(action, slot_level, (target.combatant_id,), expected_damage=score)
-        candidates.append((score, -action.level, -index, choice))
+        candidates.append((score, action.level, -index, choice))
     return max(candidates, key=lambda item: item[:3])[3] if candidates else None
