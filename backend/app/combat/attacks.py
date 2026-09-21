@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.undead_fortitude import consume_survival_save_log
 import logging
 from app.combat.action_economy import is_available, spend
+from app.combat.attack_advantage_suppression import apply_defender_advantage_suppression
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
@@ -57,13 +58,16 @@ def resolve_attack(
             reckless_advantage=reckless_advantage,
             disadvantage_sources=disadvantage_total,
         )
+        advantage_total = apply_defender_advantage_suppression(
+            defender,
+            advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
+            + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
+            + reckless_advantage + conditional_attack_advantage_sources(attack, defender)
+            + next_attack_against_advantage_sources(attacker, defender_event_id),
+        )
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
-            advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
-                               + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
-                               + reckless_advantage
-                               + conditional_attack_advantage_sources(attack, defender)
-                               + next_attack_against_advantage_sources(attacker, defender_event_id)),
+            advantage_sources=advantage_total,
             other_disadvantage_sources=disadvantage_total,
             close_enemy_active=close_enemy_active,
         )
