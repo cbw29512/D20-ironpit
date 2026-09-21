@@ -99,6 +99,36 @@ def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> 
     return _mark_unconscious(state)
 
 
+
+def reduce_to_zero_hit_points(
+    state: CombatantState,
+    *,
+    dice: DiceProvider | None = None,
+    affected_states: list[CombatantState] | None = None,
+) -> ZeroHpOutcome:
+    """Set true HP to zero without treating the effect as damage."""
+    try:
+        if state.is_dead or state.current_hp == 0:
+            return "unchanged"
+        state.current_hp = 0
+        if state.template.kind == "monster":
+            outcome = _mark_dead(state)
+        elif resolve_effect_bound_survival_save(state, dice):
+            outcome = "survival_save"
+        elif use_relentless_endurance(state, 0):
+            outcome = "relentless_endurance"
+        else:
+            outcome = _mark_unconscious(state)
+        if state.is_dead or state.is_unconscious:
+            from app.combat.concentration import end_concentration_if_incapacitated
+            end_concentration_if_incapacitated(state, affected_states)
+        return outcome
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Zero-HP reduction failed for %s.", state.template.name)
+        raise RuntimeError("Zero-HP reduction could not be resolved.") from exc
+
 def apply_damage(
     state: CombatantState,
     amount: int,
