@@ -108,5 +108,5 @@ def test_2014_mvp_slice_is_isolated_from_2024_and_admitted_to_2014_roster() -> N
     assert mvp_ids.issubset(ids_2014)
     assert all(item.ruleset == "2024" for item in production_2024.monsters)
     assert all(item.ruleset == "2014" for item in production_2014.monsters)
-    assert len(production_2014.monsters) == 127
+    assert len(production_2014.monsters) == 128
     assert len(production_2014.characters) >= 63
