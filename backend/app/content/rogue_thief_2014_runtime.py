@@ -15,7 +15,8 @@ def _scores(level: int) -> AbilityScores:
     dexterity = 16 + (2 if level >= 4 else 0) + (2 if level >= 8 else 0)
     charisma = 15 + (1 if level >= 10 else 0)
     wisdom = 13 + (1 if level >= 10 else 0)
-    return AbilityScores(strength=9, dexterity=dexterity, constitution=14,
+    constitution = 14 + (2 if level >= 12 else 0) + (2 if level >= 16 else 0) + (2 if level >= 19 else 0)
+    return AbilityScores(strength=9, dexterity=dexterity, constitution=constitution,
                          intelligence=11, wisdom=wisdom, charisma=charisma)
 
 
@@ -42,15 +43,15 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
-    """Compile the 2014 Human Thief Rogue through level 11 from Basic Rules data.
+    """Compile the 2014 Human Thief Rogue through level 13 from Basic Rules data.
 
-    Reliable Talent is recorded by the build audit at level 11, but the standard
-    arena currently executes no qualifying proficient ability-check path. The
-    runtime therefore needs no Rogue-specific roll mutation to represent level 11.
+    Reliable Talent remains arena-inert for the current standard combat path.
+    Level 12 applies the approved +2 Constitution ASI; level 13 Use Magic Device
+    is arena-inert with Mara\'s canonical mundane loadout.
     """
     try:
-        if level not in range(1, 12):
-            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 11.")
+        if level not in range(1, 14):
+            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 13.")
         scores = _scores(level); dex = scores.modifier("dexterity")
         rapier = _attack(level, "rapier", scores); shortbow = _attack(level, "shortbow", scores)
         return CombatantTemplate(
