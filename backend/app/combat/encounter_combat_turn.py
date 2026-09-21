@@ -10,6 +10,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
+from app.combat.deferred_save_effect import resolve_deferred_save_effect
 from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
@@ -24,6 +25,7 @@ from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
+from app.combat.timed_self_buff import resolve_timed_self_buff
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -75,6 +77,12 @@ def resolve_combat_turn(
                 events.append(adrenaline_event)
                 sequence += 1
 
+        self_buff = resolve_timed_self_buff(sequence, round_number, attacker)
+        if self_buff is not None:
+            events.append(self_buff)
+            sequence += 1
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
@@ -105,6 +113,12 @@ def resolve_combat_turn(
         presence = resolve_intimidating_presence(sequence, round_number, attacker, target, dice)
         if presence is not None:
             events.append(presence); sequence += 1
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        deferred = resolve_deferred_save_effect(sequence, round_number, attacker, setup, dice)
+        if deferred is not None:
+            events.append(deferred)
+            sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         if attacker.state.template.attack_action is not None:
