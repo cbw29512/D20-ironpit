@@ -47,11 +47,11 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
 
     Reliable Talent, Use Magic Device, and Blindsense remain arena-inert for the
     current certified combat path. Level 15 adds Wisdom save proficiency through
-    the shared save compiler; level 16 applies the approved +2 Constitution ASI; level 18 adds Thief's Reflexes through the shared first-round scheduler.
+    the shared save compiler; level 16 applies the approved +2 Constitution ASI; level 17 adds Thief's Reflexes through the shared first-round scheduler; level 18 adds Elusive through shared defender Advantage suppression.
     """
     try:
         if level not in range(1, 19):
-            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 17.")
+            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 18.")
         scores = _scores(level); dex = scores.modifier("dexterity")
         save_proficiencies = (
             ("dexterity", "intelligence", "wisdom")
