@@ -79,6 +79,38 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ])
         if level >= 10:
             audits.append(_audit("purity-of-body", "Purity of Body", "class"))
+        if level >= 11:
+            audits.append(_audit(
+                "tranquility", "Tranquility", "subclass",
+                notes="Installed as a passive Sanctuary-style Wisdom targeting gate at combat start; ends when Kael attacks.",
+            ))
+        if level >= 12:
+            audits.append(_audit(
+                "ability-score-improvement-l12", "Ability Score Improvement (+2 Wisdom)", "class",
+                notes="Canonical Iron Pit progression: Wisdom 15→17 for AC, Monk save DCs, and Wisdom defenses.",
+            ))
+        if level >= 13:
+            audits.append(_audit(
+                "tongue-of-the-sun-and-moon", "Tongue of the Sun and Moon", "class",
+                combat=False, automated=False,
+                notes="Language communication does not change a one-on-one Iron Pit combat outcome.",
+            ))
+        if level >= 14:
+            audits.append(_audit(
+                "diamond-soul", "Diamond Soul", "class",
+                notes="All saving throws gain proficiency; failed saves automatically spend 1 Ki to reroll through the shared failed-save reroll primitive.",
+            ))
+        if level >= 15:
+            audits.append(_audit(
+                "timeless-body", "Timeless Body", "class",
+                combat=False, automated=False,
+                notes="Aging and food/water requirements do not change an Iron Pit duel.",
+            ))
+        if level >= 16:
+            audits.append(_audit(
+                "ability-score-improvement-l16", "Ability Score Improvement (+2 Wisdom)", "class",
+                notes="Canonical Iron Pit progression: Wisdom 17→19 for AC, Monk save DCs, and Wisdom defenses.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
