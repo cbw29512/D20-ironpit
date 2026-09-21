@@ -32,7 +32,7 @@ def _species() -> list[AbilityIncrease]:
 
 
 def _advancements(level: int) -> list[AbilityIncrease]:
-    milestones = ((4, "dexterity", 2), (8, "dexterity", 2))
+    milestones = ((4, "dexterity", 2), (8, "dexterity", 2), (12, "wisdom", 2), (16, "wisdom", 2), (19, "wisdom", 1), (19, "strength", 1))
     return [
         AbilityIncrease(ability=ability, amount=amount)
         for required, ability, amount in milestones
@@ -53,8 +53,8 @@ def _final(
 
 def build_kael_stillwater_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 11):
-            raise ValueError("2014 Kael profile covers levels 1 through 10.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Kael profile covers levels 1 through 20.")
         base = _base()
         species = _species()
         advances = _advancements(level)
