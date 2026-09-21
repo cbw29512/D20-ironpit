@@ -70,3 +70,18 @@ def test_canonical_rolls_are_reproducible_and_history_persists_forward() -> None
     history = canonical_combat_treasure_history(fighter, "fighter", "champion", 12)
     assert all(2 <= item.level <= 12 for item in history)
     assert all(item.roll == canonical_treasure_roll("2024", "fighter", "champion", item.level) for item in history)
+
+
+def test_level_one_has_no_treasure_history_and_later_history_is_prefix_stable() -> None:
+    fighter1 = build_karnok_stoneward_level(1)
+    assert canonical_combat_treasure_history(fighter1, "fighter", "champion", 1) == []
+
+    fighter8 = build_karnok_stoneward_level(8)
+    fighter9 = build_karnok_stoneward_level(9)
+    history8 = canonical_combat_treasure_history(fighter8, "fighter", "champion", 8)
+    history9 = canonical_combat_treasure_history(fighter9, "fighter", "champion", 9)
+
+    prefix9 = [item for item in history9 if item.level <= 8]
+    assert [(item.level, item.roll, item.slot, item.effect) for item in prefix9] == [
+        (item.level, item.roll, item.slot, item.effect) for item in history8
+    ]
