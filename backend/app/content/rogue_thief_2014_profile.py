@@ -78,12 +78,32 @@ def _audits(level: int) -> list[FeatureAudit]:
             "use-magic-device", "Use Magic Device", "subclass", combat=False, automated=False,
             notes="Audited RAW; arena-inert while Mara uses the canonical mundane loadout.",
         ))
+    if level >= 14:
+        audits.append(_audit(
+            "blindsense", "Blindsense", "class", combat=False, automated=False,
+            notes=(
+                "Audited RAW: Blindsense provides location awareness within 10 feet while Mara can hear; "
+                "it does not grant sight. The certified arena currently has no Hide/location-guess loop "
+                "or certified opponent path that creates unresolved creature-location state, so no runtime "
+                "awareness primitive is exercised by this snapshot."
+            ),
+        ))
+    if level >= 15:
+        audits.append(_audit(
+            "slippery-mind", "Slippery Mind", "class",
+            notes="Uses the existing saving-throw proficiency compiler; Wisdom proficiency begins at level 15.",
+        ))
+    if level >= 16:
+        audits.append(_audit(
+            "ability-score-improvement-l16", "Ability Score Improvement (+2 Constitution)", "class",
+            notes="Canonical Iron Pit progression decision: Constitution 16→18 for survivability and Constitution checks/saves.",
+        ))
     return audits
 
 
 def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 14): raise ValueError("2014 Mara candidate profile covers levels 1 through 13.")
+        if level not in range(1, 17): raise ValueError("2014 Mara candidate profile covers levels 1 through 16.")
         base = _base(); species = _species(); advances = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-mara-quickstep-2014-l{level}", template_id=f"mara-quickstep-2014-l{level}",
