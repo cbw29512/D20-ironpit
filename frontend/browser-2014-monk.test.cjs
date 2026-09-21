@@ -20,7 +20,7 @@ load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const monk = (level) => heroes.find((hero) => hero.id === `kael-stillwater-2014-l${level}`);
-for (let level = 1; level <= 11; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
+for (let level = 1; level <= 13; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
 
 assert.deepEqual(monk(1).ability_scores, { strength: 13, dexterity: 16, constitution: 14, intelligence: 11, wisdom: 15, charisma: 9 });
 assert.equal(monk(1).armor_class, 15);
@@ -35,6 +35,14 @@ assert.equal(monk(5).attacks.find((attack) => attack.weaponId === "unarmed-strik
 assert.equal(monk(11).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 8);
 assert.equal(monk(11).max_hp, 80);
 assert.equal(monk(11).resources.ki, 11);
+assert.equal(monk(12).resources.ki, 12);
+assert.equal(monk(13).resources.ki, 13);
+assert.equal(monk(12).ability_scores.wisdom, 17);
+assert.equal(monk(12).armor_class, 18);
+assert.equal(monk(13).max_hp, 94);
+assert.equal(monk(13).attacks.find((attack) => attack.weaponId === "unarmed-strike").bonus,
+  monk(12).attacks.find((attack) => attack.weaponId === "unarmed-strike").bonus + 1);
+assert.equal(monk(13).opening_targeting_ward.save_dc, 16);
 assert.deepEqual(monk(11).opening_targeting_ward, {
   source_id: "tranquility", save_ability: "wisdom", save_dc: 14, ends_on_owner_attack: true,
 });
@@ -118,4 +126,4 @@ assert.ok(result.events.every((event) => event.feature_id === "flurry-of-blows")
 assert.equal(flurryActor.state.resources.ki, 1);
 assert.equal(flurryActor.state.bonus_action_available, false);
 
-console.log("2014 Open Hand Monk browser mechanics preserve progression through level 11 including Tranquility.");
+console.log("2014 Open Hand Monk browser mechanics preserve progression through level 13 including Tranquility and the level-12 Wisdom ASI.");
