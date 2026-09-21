@@ -69,11 +69,26 @@ def choose_healing_target(
     return self_target if self_target is not None and _self_heal_worthwhile(healer, action) else None
 
 
-def _choice_priority(healer: EncounterCombatant, action: HealingAction, target: EncounterCombatant) -> tuple[int, int, float]:
+def _worthwhile_target_count(
+    healer: EncounterCombatant, setup: EncounterSetup, action: HealingAction,
+) -> int:
+    allies = setup.heroes if healer.side == "heroes" else setup.monsters
+    return sum(
+        1 for target in allies
+        if _target_allowed(healer, target, action)
+        and (target.state.current_hp == 0 or is_bloodied(target.state))
+    )
+
+
+def _choice_priority(
+    healer: EncounterCombatant, setup: EncounterSetup, action: HealingAction, target: EncounterCombatant,
+) -> tuple[int, int, int, float]:
     ally = target.combatant_id != healer.combatant_id
     urgency = 0 if ally and target.state.current_hp == 0 else 1 if ally else 2
     cost = 0 if action.action_cost == "bonus_action" else 1
-    return urgency, cost, target.state.current_hp / effective_max_hp(target.state)
+    useful_targets = min(action.max_targets, _worthwhile_target_count(healer, setup, action))
+    group_value = -useful_targets if useful_targets >= 2 else 0
+    return urgency, cost, group_value, target.state.current_hp / effective_max_hp(target.state)
 
 
 def choose_healing_action(
@@ -83,7 +98,7 @@ def choose_healing_action(
         (action, target) for action in healer.state.template.healing_actions
         if (target := choose_healing_target(healer, setup, action, turn_key)) is not None
     ]
-    return min(choices, key=lambda choice: _choice_priority(healer, choice[0], choice[1])) if choices else None
+    return min(choices, key=lambda choice: _choice_priority(healer, setup, choice[0], choice[1])) if choices else None
 
 
 def resolve_healing(
