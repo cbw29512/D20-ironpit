@@ -63,8 +63,7 @@ def test_high_level_character_truth_marks_only_certified_features_automated() ->
     assert audits["heroic-warrior"].automated is True
     assert audits["studied-attacks"].automated is True
     assert audits["superior-critical"].automated is True
-    assert "survivor" in audits
-    assert audits["survivor"].automated is False
+    assert audits["survivor"].automated is True
 
 
 def test_variant_builder_fails_closed_outside_champion_branch() -> None:
