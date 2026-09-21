@@ -57,6 +57,26 @@ assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.suppressAttackAdvantage(elu
 elusiveState.active_effect_ids.push("stunned");
 assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.suppressAttackAdvantage(elusiveState), false);
 
+const scheduledMembers = [
+  { combatant_id: "mara17", state: { template: rogue17 } },
+  { combatant_id: "target17", state: { template: {} } },
+];
+const scheduledInitiative = {
+  turn_order: ["mara17", "target17"],
+  groups: [
+    { combatant_ids: ["mara17"], natural_roll: 15, initiative_count: 20 },
+    { combatant_ids: ["target17"], natural_roll: 12, initiative_count: 17 },
+  ],
+};
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_INITIATIVE.turnOrderForRound(1, scheduledInitiative, scheduledMembers),
+  ["mara17", "target17", "mara17"],
+);
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_INITIATIVE.turnOrderForRound(2, scheduledInitiative, scheduledMembers),
+  ["mara17", "target17"],
+);
+
 function state(template) {
   return {
     template, active_effect_ids: [], is_dead: false, is_unconscious: false,
