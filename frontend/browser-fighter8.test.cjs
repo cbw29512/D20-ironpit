@@ -2,14 +2,18 @@
 
 const assert = require("node:assert/strict");
 
+const treasureBonus = (template, effect, targetId = null) => (template.combat_treasure_awards || [])
+  .filter((item) => item.effect === effect && (targetId == null || item.target_id === targetId))
+  .reduce((sum, item) => sum + item.bonus, 0);
+
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l8"];
 assert.ok(fighter, "generated Fighter 8 card must exist");
 assert.equal(fighter.level, 8);
 assert.equal(fighter.max_hp, 84);
-assert.equal(fighter.armor_class, 17);
+assert.equal(fighter.armor_class, 17 + treasureBonus(fighter, "armor-class"));
 assert.equal(fighter.speed_ft, 30);
-assert.equal(fighter.saving_throw_bonuses.strength, 8);
-assert.equal(fighter.saving_throw_bonuses.constitution, 7);
+assert.equal(fighter.saving_throw_bonuses.strength, 8 + treasureBonus(fighter, "saving-throws"));
+assert.equal(fighter.saving_throw_bonuses.constitution, 7 + treasureBonus(fighter, "saving-throws"));
 assert.equal(fighter.skill_bonuses.athletics, 8);
 assert.equal(fighter.great_weapon_fighting, true);
 assert.equal(fighter.critical_hit_minimum, 19);
