@@ -23,7 +23,7 @@
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
       grapple_sources: [], timed_effects: [], active_modifiers: OM().build(template), concentration: null,
       survival_save_uses: {}, pending_survival_save_logs: [],
-      feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
+      feature_last_turn_keys: {}, deferred_effects: [], spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
   }
