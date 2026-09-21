@@ -289,6 +289,12 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["suppress_attack_advantage_while_not_incapacitated"] = True
     if features.miss_to_hit_override_resource_id:
         row["miss_to_hit_override_resource_id"] = features.miss_to_hit_override_resource_id
+    if features.failed_save_reroll_source_id:
+        row["failed_save_reroll_source_id"] = features.failed_save_reroll_source_id
+    if features.failed_save_reroll_resource_id:
+        row["failed_save_reroll_resource_id"] = features.failed_save_reroll_resource_id
+    if features.failed_save_reroll_bonus:
+        row["failed_save_reroll_bonus"] = features.failed_save_reroll_bonus
     if features.critical_move_fraction:
         row["critical_move_fraction"] = features.critical_move_fraction
     if features.cunning_action:
