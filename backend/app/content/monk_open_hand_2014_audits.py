@@ -79,6 +79,11 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ])
         if level >= 10:
             audits.append(_audit("purity-of-body", "Purity of Body", "class"))
+        if level >= 11:
+            audits.append(_audit(
+                "tranquility", "Tranquility", "subclass",
+                notes="Installed as a passive Sanctuary-style Wisdom targeting gate at combat start; ends when Kael attacks.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
