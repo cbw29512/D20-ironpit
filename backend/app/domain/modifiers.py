@@ -16,6 +16,7 @@ class ModifierKind(StrEnum):
     SAVING_THROW_ADVANTAGE = "saving-throw-advantage"
     SAVING_THROW_DISADVANTAGE = "saving-throw-disadvantage"
     DEATH_SAVE_ADVANTAGE = "death-save-advantage"
+    DEATH_SAVE_NAT20_THRESHOLD = "death-save-nat20-threshold"
     HEALING_MAXIMIZE = "healing-maximize"
     CONDITION_IMMUNITY = "condition-immunity"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
@@ -76,6 +77,8 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a weapon id.")
         if self.kind is ModifierKind.SAVING_THROW_FLAT and self.flat_bonus == 0:
             raise ValueError("Flat saving-throw modifiers require a nonzero bonus.")
+        if self.kind is ModifierKind.DEATH_SAVE_NAT20_THRESHOLD and not 2 <= self.flat_bonus <= 20:
+            raise ValueError("Death Save natural-20 threshold must be between 2 and 20.")
         if self.kind is ModifierKind.CONDITION_IMMUNITY and self.condition_id is None:
             raise ValueError("Condition-immunity modifiers require a condition id.")
         if self.kind is not ModifierKind.CONDITION_IMMUNITY and self.condition_id is not None:
