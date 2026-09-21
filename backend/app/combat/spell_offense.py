@@ -27,7 +27,7 @@ def resolve_best_spell_offense(
             attack.expected_damage > save.expected_damage
             or (
                 attack.expected_damage == save.expected_damage
-                and attack.action.level <= save.action.level
+                and attack.action.level >= save.action.level
             )
         )
     )
