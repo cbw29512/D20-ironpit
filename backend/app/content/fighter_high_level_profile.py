@@ -141,3 +141,21 @@ def build_karnok_stoneward_level16_profile() -> CharacterBuildProfile:
     except Exception as exc:
         logger.exception("Failed to build Karnok Stoneward level 16 profile.")
         raise RuntimeError("Karnok Stoneward level 16 profile could not be built.") from exc
+
+
+def build_karnok_stoneward_level17_profile() -> CharacterBuildProfile:
+    """Advance Karnok to Fighter 17 through the shared Fighter resource progression."""
+    try:
+        previous = build_karnok_stoneward_level16_profile()
+        data = advance_profile_data(previous, 17)
+        apply_fighter_level_to_profile_data(data, 17)
+        data.update(
+            source_references=[
+                *data["source_references"],
+                "D&D Beyond Basic Rules 2024: Fighter Level 17 — Action Surge and Indomitable",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        logger.exception("Failed to build Karnok Stoneward level 17 profile.")
+        raise RuntimeError("Karnok Stoneward level 17 profile could not be built.") from exc
