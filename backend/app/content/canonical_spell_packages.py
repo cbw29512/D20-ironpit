@@ -73,6 +73,22 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             "lesser-restoration", "Lesser Restoration", 2, "healing", 3,
             "condition-removal", "bonus-action", always_prepared_from_level=3,
         ),
+        _later_spell(
+            "dispel-magic", "Dispel Magic", 3, "utility", 5,
+            "effect-removal",
+        ),
+        _later_spell(
+            "create-food-and-water", "Create Food and Water", 3, "utility", 5,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
+            "mass-healing-word", "Mass Healing Word", 3, "healing", 5,
+            "healing", "bonus-action", "multi-target-healing", always_prepared_from_level=5,
+        ),
+        _later_spell(
+            "revivify", "Revivify", 3, "healing", 5,
+            "arena-out-of-scope", always_prepared_from_level=5,
+        ),
     ),
     "druid": (
         _spell("animal-friendship", "Animal Friendship", "control", "charmed"),
