@@ -21,6 +21,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -184,6 +185,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -318,6 +320,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -467,6 +470,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -604,6 +608,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -794,6 +799,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -927,6 +933,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1033,6 +1040,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1165,6 +1173,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1273,6 +1282,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1377,6 +1387,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1498,6 +1509,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1602,6 +1614,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1708,6 +1721,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1821,6 +1835,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -1934,6 +1949,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2057,6 +2073,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2210,6 +2227,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2318,6 +2336,7 @@
     },
     "initiative_bonus": -1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2422,6 +2441,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2528,6 +2548,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2632,6 +2653,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2738,6 +2760,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2842,6 +2865,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -2951,6 +2975,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -3057,6 +3082,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -3166,6 +3192,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -3304,6 +3331,7 @@
     },
     "initiative_bonus": -1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -3429,6 +3457,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -3542,6 +3571,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -3675,6 +3705,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -3777,6 +3808,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -3951,6 +3983,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -4195,6 +4228,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -4320,6 +4354,7 @@
     },
     "initiative_bonus": -1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -4424,6 +4459,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -4526,6 +4562,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -4626,6 +4663,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -4728,6 +4766,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -4830,6 +4869,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -4933,6 +4973,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5033,6 +5074,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5135,6 +5177,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5237,6 +5280,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5339,6 +5383,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5441,6 +5486,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5541,6 +5587,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5645,6 +5692,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5751,6 +5799,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5857,6 +5906,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -5982,6 +6032,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6086,6 +6137,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6192,6 +6244,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6296,6 +6349,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6407,6 +6461,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6515,6 +6570,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6619,6 +6675,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6725,6 +6782,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6835,6 +6893,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -6943,6 +7002,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -7047,6 +7107,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -7156,6 +7217,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -7262,6 +7324,7 @@
     },
     "initiative_bonus": -1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -7368,6 +7431,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -7474,6 +7538,7 @@
     },
     "initiative_bonus": -1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -7630,6 +7695,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -7753,6 +7819,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -7880,6 +7947,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -8032,6 +8100,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -8167,6 +8236,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -8283,6 +8353,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -8399,6 +8470,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -8532,6 +8604,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -8709,6 +8782,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -8868,6 +8942,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -9002,6 +9077,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -9117,6 +9193,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -9237,6 +9314,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -9407,6 +9485,7 @@
     },
     "initiative_bonus": 4,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -9528,6 +9607,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -9650,6 +9730,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -9774,6 +9855,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -9899,6 +9981,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -10027,6 +10110,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -10166,6 +10250,7 @@
     },
     "initiative_bonus": 6,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -10288,6 +10373,7 @@
     },
     "initiative_bonus": -1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -10452,6 +10538,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -10605,6 +10692,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -10767,6 +10855,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -10901,6 +10990,7 @@
     },
     "initiative_bonus": 4,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -11016,6 +11106,7 @@
     },
     "initiative_bonus": -1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -11186,6 +11277,7 @@
     },
     "initiative_bonus": -2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -11295,6 +11387,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -11412,6 +11505,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -11527,6 +11621,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -11658,6 +11753,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -11775,6 +11871,7 @@
     },
     "initiative_bonus": 4,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -11954,6 +12051,7 @@
     },
     "initiative_bonus": -2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -12079,6 +12177,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -12244,6 +12343,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -12350,6 +12450,7 @@
     },
     "initiative_bonus": -3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -12465,6 +12566,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -12624,6 +12726,7 @@
     },
     "initiative_bonus": -2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -12737,6 +12840,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -12854,6 +12958,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -12967,6 +13072,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -13105,6 +13211,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -13221,6 +13328,7 @@
     },
     "initiative_bonus": 4,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -13380,6 +13488,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -13515,6 +13624,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -13632,6 +13742,7 @@
     },
     "initiative_bonus": -5,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -13760,6 +13871,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -13931,6 +14043,7 @@
     },
     "initiative_bonus": -2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -14044,6 +14157,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -14173,6 +14287,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -14283,6 +14398,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -14389,6 +14505,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -14498,6 +14615,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -14634,6 +14752,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -14773,6 +14892,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -14954,6 +15074,7 @@
     },
     "initiative_bonus": 4,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -15134,6 +15255,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -15312,6 +15434,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -15493,6 +15616,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -15670,6 +15794,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -15849,6 +15974,7 @@
     },
     "initiative_bonus": 5,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -16035,6 +16161,7 @@
     },
     "initiative_bonus": 4,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -16219,6 +16346,7 @@
     },
     "initiative_bonus": 4,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -16406,6 +16534,7 @@
     },
     "initiative_bonus": 4,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -16589,6 +16718,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -16774,6 +16904,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -16888,6 +17019,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -17022,6 +17154,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -17156,6 +17289,7 @@
     },
     "initiative_bonus": 2,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -17300,6 +17434,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -17458,6 +17593,7 @@
     },
     "initiative_bonus": 0,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -17644,6 +17780,7 @@
     },
     "initiative_bonus": 1,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
@@ -17753,6 +17890,7 @@
     },
     "initiative_bonus": 3,
     "progression_features": {
+      "scheduled_extra_turns": [],
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
