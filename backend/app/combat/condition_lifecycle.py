@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.modifier_stack import expire_target_turn_modifiers
+from app.combat.modifier_stack import expire_target_turn_modifiers, remove_source_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
 from app.domain.actions import ConditionTiming
@@ -53,6 +53,8 @@ def resolve_target_condition_timing(
                     dice,
                 )
                 removed = remove_effect_group(target.state, effect) if succeeded else []
+                if removed and effect.source_effect_id is not None:
+                    remove_source_modifiers([target.state], effect.source_id, effect.source_effect_id)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
@@ -79,6 +81,8 @@ def resolve_target_condition_timing(
                     continue
             if _expiry_due(effect, round_number, timing):
                 removed = remove_effect_group(target.state, effect)
+                if removed and effect.source_effect_id is not None:
+                    remove_source_modifiers([target.state], effect.source_id, effect.source_effect_id)
                 if removed:
                     events.append(BattleEvent(
                         sequence=sequence,
@@ -123,6 +127,8 @@ def resolve_source_condition_timing(
                 if effect not in target.state.timed_effects:
                     continue
                 removed = remove_effect_group(target.state, effect)
+                if removed and effect.source_effect_id is not None:
+                    remove_source_modifiers([target.state], effect.source_id, effect.source_effect_id)
                 if not removed:
                     continue
                 events.append(BattleEvent(
