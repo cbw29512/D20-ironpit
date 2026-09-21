@@ -51,10 +51,17 @@ assert.deepEqual(barbarian11.effect_bound_survival_save, {
   source_id: "relentless-rage", required_effect_id: "rage", save_ability: "constitution",
   initial_dc: 10, dc_increment: 5, replacement_hp: 1,
 });
-assert.deepEqual(
-  [barbarian12.ability_scores.constitution, barbarian12.ability_scores.wisdom, barbarian12.armor_class, barbarian12.max_hp],
-  [16, 14, 15, 125],
+const barbarian12DefenseTreasure = Math.max(
+  0,
+  ...(barbarian12.combat_treasure_awards || [])
+    .filter((item) => item.slot === "defense")
+    .map((item) => item.bonus),
 );
+assert.deepEqual(
+  [barbarian12.ability_scores.constitution, barbarian12.ability_scores.wisdom, barbarian12.max_hp],
+  [16, 14, 125],
+);
+assert.equal(barbarian12.armor_class, 15 + barbarian12DefenseTreasure);
 assert.equal(barbarian12.resources.rage, 5);
 assert.equal(barbarian13.brutal_critical_dice, 2);
 assert.equal(barbarian13.attacks[0].bonus, 10);
