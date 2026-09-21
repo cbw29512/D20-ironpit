@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import spend
 from app.combat.defensive_modifier_rules import healing_is_maximized
 from app.combat.healing import _resource_available, _slot_heal, _target_allowed
+from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -21,13 +22,13 @@ def choose_group_healing_targets(
     legal = [target for target in allies if _target_allowed(healer, target, action)]
     legal.sort(key=lambda target: (
         target.state.current_hp > 0,
-        target.state.current_hp / max(1, target.state.template.max_hp),
+        target.state.current_hp / max(1, effective_max_hp(target.state)),
         target.combatant_id,
     ))
     worthwhile = [
         target for target in legal
         if target.state.current_hp == 0
-        or target.state.current_hp * 2 <= target.state.template.max_hp
+        or target.state.current_hp * 2 <= effective_max_hp(target.state)
     ]
     return worthwhile[:action.max_targets]
 
@@ -52,11 +53,6 @@ def resolve_group_healing(
             raise ValueError("Spell-slot group healing requires an active turn key.")
         mark_slot_spell_cast(healer.state, turn_key)
     spend(healer.state, action.action_cost)
-    maximized = any(healing_is_maximized(target.state) for target in targets)
-    rolls = [action.dice_size for _ in range(action.dice_count)] if maximized else [
-        dice.roll(action.dice_size) for _ in range(action.dice_count)
-    ]
-    total = sum(rolls) + action.healing_bonus
     remaining = None
     if action.resource_id is not None:
         resource = next(item for item in healer.state.resources if item.id == action.resource_id)
@@ -65,6 +61,10 @@ def resolve_group_healing(
     events: list[BattleEvent] = []
     notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}"
     for target in targets:
+        rolls = [action.dice_size for _ in range(action.dice_count)] if healing_is_maximized(target.state) else [
+            dice.roll(action.dice_size) for _ in range(action.dice_count)
+        ]
+        total = sum(rolls) + action.healing_bonus
         before = target.state.current_hp
         healed = restore_hit_points(target.state, total)
         events.append(BattleEvent(
