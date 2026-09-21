@@ -11,13 +11,14 @@ from app.content.paladin_devotion_2014_spells import (
     dispel_magic_2014,
 )
 from app.domain.character_builds import AbilityScores
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
+from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, ResourceDefinition, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
 _SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
+    11: (4, 3, 3),
 }
 
 
@@ -55,22 +56,39 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
     }
 
 
+def _improved_divine_smite(level: int) -> list[OnHitDamage]:
+    if level < 11:
+        return []
+    return [OnHitDamage(
+        source="Improved Divine Smite",
+        dice_count=1,
+        dice_size=8,
+        damage_type=DamageType.RADIANT,
+    )]
+
+
 def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 11):
-            raise ValueError("2014 Devotion Paladin certification covers levels 1 through 10.")
+        if level not in range(1, 12):
+            raise ValueError("2014 Devotion Paladin certification covers levels 1 through 11.")
         scores = _scores(level)
         charisma_modifier = scores.modifier("charisma")
         aura_bonus = charisma_modifier if level >= 6 else 0
         saves = saving_throw_bonuses(scores, level, ("wisdom", "charisma"))
+        longsword = build_longsword_attack(level, scores).model_copy(
+            update={"on_hit_damage": _improved_divine_smite(level)},
+        )
+        javelin = build_javelin_attack(level, scores).model_copy(
+            update={"on_hit_damage": _improved_divine_smite(level)},
+        )
         return CombatantTemplate(
             id=f"aurelia-brightshield-2014-l{level}", name="Aurelia Brightshield",
             archetype="Paladin", level=level, kind="character", ruleset="2014",
             ability_scores=scores, armor_class=18 + int(level >= 2),
             max_hp=fixed_hit_points(level, 10, scores.modifier("constitution")),
             speed_ft=30, initiative_bonus=scores.modifier("dexterity"),
-            weapon_attack=build_longsword_attack(level, scores),
-            alternate_weapon_attacks=[build_javelin_attack(level, scores)],
+            weapon_attack=longsword,
+            alternate_weapon_attacks=[javelin],
             attack_action=build_extra_attack(level),
             defensive_spell_actions=build_paladin_defensive_spells_2014(level, charisma_modifier),
             healing_actions=build_paladin_healing_actions_2014(level, charisma_modifier),
