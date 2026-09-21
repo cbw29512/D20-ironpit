@@ -125,10 +125,12 @@ Normal initiative bonuses and ruleset-specific initiative mechanics apply, with 
 
 A natural 1 on an attack roll:
 
-1. is an automatic miss;
-2. immediately terminates that creature's current turn;
-3. loses all remaining attacks, Bonus Action, and other voluntary turn actions;
+1. is an automatic miss unless a specific supported post-roll feature legally turns that miss into a hit before turn termination resolves;
+2. immediately terminates that creature's current turn if no such override succeeds;
+3. loses all remaining attacks, Bonus Action, and other voluntary turn actions when the turn termination applies;
 4. does not undo anything already resolved earlier in the turn.
+
+Specific-beats-general applies at this interrupt window. A supported miss-to-hit feature such as 2014 Rogue Stroke of Luck may override the natural-1 miss. If its resource is available, Iron Pit uses Stroke of Luck immediately on a natural 1, spends the resource, treats the attack as a normal hit rather than a critical hit, and does **not** terminate the turn.
 
 Turn termination must be a universal combat-state/control primitive consumed by Extra Attack, Multiattack, Light/Nick attacks, Action Surge follow-ups, spell follow-ups, and all other voluntary turn actions.
 
