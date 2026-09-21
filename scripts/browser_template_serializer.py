@@ -279,6 +279,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["critical_hit_minimum"] = features.critical_hit_minimum
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
+    if features.deferred_save_effect:
+        row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
     if features.initiative_advantage:
         row["initiative_advantage"] = True
     if features.athletics_advantage:
