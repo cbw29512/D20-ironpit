@@ -50,7 +50,7 @@ def test_barbarian_features_accumulate_while_noncombat_and_slow_are_ignored() ->
 
 
 def test_existing_barbarian_runtime_levels_are_compiled_from_the_table() -> None:
-    for level in range(1, 7):
+    for level in range(1, 10):
         row = BARBARIAN_COMBAT_LEVELS[level]
         template = build_rokhan_stonefury_level(level)
         strength_mod = _modifier(row.strength)
@@ -76,4 +76,12 @@ def test_complete_barbarian_table_blocks_only_on_missing_combat_engine_feature()
     assert unsupported_barbarian_engine_features(8) == ()
     assert unsupported_barbarian_engine_features(9) == ()
     assert (build_rokhan_stonefury_level(7).max_hp, build_rokhan_stonefury_level(8).max_hp) == (75, 85)
-    assert build_rokhan_stonefury_level(9).progression_features.brutal_strike_damage_dice == 1
+    level8 = build_rokhan_stonefury_level(8)
+    level9 = build_rokhan_stonefury_level(9)
+    assert level8.ability_scores.strength == 20
+    assert level8.max_hp == 85
+    assert level9.max_hp == 95
+    assert level9.rage_damage_bonus == 3
+    assert level9.progression_features.brutal_strike_damage_dice == 1
+    assert "hamstring-blow" in barbarian_arena_ignored(9)
+    assert unsupported_barbarian_engine_features(10) == ("retaliation",)
