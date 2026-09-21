@@ -53,7 +53,13 @@ assert.deepEqual(barbarian11.effect_bound_survival_save, {
 });
 assert.deepEqual(
   [barbarian12.ability_scores.constitution, barbarian12.ability_scores.wisdom, barbarian12.armor_class, barbarian12.max_hp],
-  [16, 14, 15, 125],
+  [16, 14, 18, 125],
+);
+assert.ok(
+  barbarian12.combat_treasure_awards.some((award) =>
+    award.level === 9 && award.effect === "armor-class" && award.bonus === 3
+  ),
+  "2014 Barbarian level 12 must carry forward its level-9 +3 defense treasure",
 );
 assert.equal(barbarian12.resources.rage, 5);
 assert.equal(barbarian13.brutal_critical_dice, 2);
