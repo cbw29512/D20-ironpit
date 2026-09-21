@@ -58,12 +58,10 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["public_ready_status"] == "ready"
 
 
-def test_fighter_levels_thirteen_through_fifteen_are_public() -> None:
+def test_fighter_levels_thirteen_through_seventeen_are_public() -> None:
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
-    level_thirteen = next(level for level in fighter["levels"] if level["level"] == 13)
-    level_fourteen = next(level for level in fighter["levels"] if level["level"] == 14)
-    level_fifteen = next(level for level in fighter["levels"] if level["level"] == 15)
+    levels = {level["level"]: level for level in fighter["levels"]}
     counted_ready = sum(
         1
         for hero in manifest["heroes"]
@@ -76,29 +74,19 @@ def test_fighter_levels_thirteen_through_fifteen_are_public() -> None:
     }
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 27
+    assert manifest["summary"]["public_ready"] == counted_ready == 29
 
-    assert level_thirteen["runtime_template_id"] == "karnok-stoneward-l13"
-    assert required_thirteen <= set(level_thirteen["expected_combat_features"])
-    assert required_thirteen <= set(level_thirteen["supported_mechanics"])
-    assert level_thirteen["unsupported_mechanics"] == []
-    assert level_thirteen["blockers"] == []
-    assert level_thirteen["public_ready_status"] == "ready"
-    assert "karnok-stoneward-l13" in browser
+    for level_number in (13, 14, 15, 16, 17):
+        level = levels[level_number]
+        assert level["runtime_template_id"] == f"karnok-stoneward-l{level_number}"
+        assert required_thirteen <= set(level["expected_combat_features"])
+        assert required_thirteen <= set(level["supported_mechanics"])
+        assert level["unsupported_mechanics"] == []
+        assert level["blockers"] == []
+        assert level["public_ready_status"] == "ready"
+        assert f"karnok-stoneward-l{level_number}" in browser
 
-    assert level_fourteen["runtime_template_id"] == "karnok-stoneward-l14"
-    assert required_thirteen <= set(level_fourteen["expected_combat_features"])
-    assert required_thirteen <= set(level_fourteen["supported_mechanics"])
-    assert level_fourteen["unsupported_mechanics"] == []
-    assert level_fourteen["blockers"] == []
-    assert level_fourteen["public_ready_status"] == "ready"
-    assert "karnok-stoneward-l14" in browser
-
-    assert level_fifteen["runtime_template_id"] == "karnok-stoneward-l15"
-    assert required_thirteen <= set(level_fifteen["expected_combat_features"])
-    assert "expanded-critical-range" in level_fifteen["expected_combat_features"]
-    assert "expanded-critical-range" in level_fifteen["supported_mechanics"]
-    assert level_fifteen["unsupported_mechanics"] == []
-    assert level_fifteen["blockers"] == []
-    assert level_fifteen["public_ready_status"] == "ready"
-    assert "karnok-stoneward-l15" in browser
+    for level_number in (15, 16, 17):
+        level = levels[level_number]
+        assert "expanded-critical-range" in level["expected_combat_features"]
+        assert "expanded-critical-range" in level["supported_mechanics"]
