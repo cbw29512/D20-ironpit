@@ -638,7 +638,7 @@
       "owners": [
         "cleric/life-domain"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -870,7 +870,7 @@
       "owners": [
         "cleric/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -3538,7 +3538,7 @@
       "owners": [
         "cleric/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4952,7 +4952,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 371,
-    "supported": 45
+    "planned": 368,
+    "supported": 48
   }
 }
