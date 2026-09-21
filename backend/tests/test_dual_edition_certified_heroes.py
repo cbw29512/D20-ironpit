@@ -45,7 +45,7 @@ def test_arena_fingerprints_stay_2024_while_all_edition_registry_adds_2014() -> 
     all_profiles = build_all_pregen_combat_profiles()
     fighter_ids = {f"karnok-stoneward-2014-l{level}" for level in range(1, 21)}
     barbarian_ids = {f"rokhan-stonefury-2014-l{level}" for level in range(1, 21)}
-    rogue_ids = {f"mara-quickstep-2014-l{level}" for level in range(1, 17)}
+    rogue_ids = {f"mara-quickstep-2014-l{level}" for level in range(1, 21)}
     monk_ids = {f"kael-stillwater-2014-l{level}" for level in range(1, 11)}
     paladin_ids = {f"aurelia-brightshield-2014-l{level}" for level in range(1, 12)}
     ids_2014 = fighter_ids | barbarian_ids | rogue_ids | monk_ids | paladin_ids
