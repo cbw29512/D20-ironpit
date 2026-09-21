@@ -82,6 +82,10 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             "arena-out-of-scope",
         ),
         _later_spell(
+            "daylight", "Daylight", 3, "utility", 6,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
             "mass-healing-word", "Mass Healing Word", 3, "healing", 5,
             "healing", "bonus-action", "multi-target-healing", always_prepared_from_level=5,
         ),
