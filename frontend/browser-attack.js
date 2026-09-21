@@ -45,7 +45,7 @@
   function adjustedDamage(target, amount, type, allowVulnerability = true) {
     if (target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
-    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
+    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || M().damageResistance?.(target, type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
