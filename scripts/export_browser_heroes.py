@@ -192,6 +192,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "initiative_advantage": progression.initiative_advantage, "athletics_advantage": progression.athletics_advantage,
         "first_round_extra_turn_initiative_offset": progression.first_round_extra_turn_initiative_offset,
         "suppress_attack_advantage_while_not_incapacitated": progression.suppress_attack_advantage_while_not_incapacitated,
+        "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "danger_sense": progression.danger_sense, "reckless_attack": progression.reckless_attack,
         "frenzy": progression.frenzy, "frenzy_bonus_attack_2014": progression.frenzy_bonus_attack_2014,
         "persistent_rage_2014": progression.persistent_rage_2014,
