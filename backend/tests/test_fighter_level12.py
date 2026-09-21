@@ -51,4 +51,5 @@ def test_fighter_level_twelve_passes_profile_fingerprint_and_registry_gates() ->
     assert registry[("fighter", 12, "canonical")] == (
         "Karnok Stoneward", "karnok-stoneward-l12",
     )
-    assert ("fighter", 15, "canonical") not in registry
+    assert registry[("fighter", 15, "canonical")] == ("Karnok Stoneward", "karnok-stoneward-l15")
+    assert ("fighter", 16, "canonical") not in registry
