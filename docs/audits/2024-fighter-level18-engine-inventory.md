@@ -11,51 +11,49 @@ Survivor has two independent combat-relevant benefits:
 
 The Fighter class table adds no separate level-18 base-class feature beyond the subclass feature. Existing level-17 Action Surge, Indomitable, Second Wind, Weapon Mastery, Studied Attacks, and Superior Critical must remain inherited unchanged.
 
-## Existing universal-engine inventory
+## Corrected universal-engine inventory
 
-### Heroic Rally
+The first inventory pass was fail-closed, but repository inspection found existing equivalent capabilities that must be reused rather than rebuilt.
 
-`data/combat_engine_coverage_v1.json` currently marks `regeneration` **unsupported** with the blocker: `No universal conditional start-turn regeneration primitive is certified.`
+### Heroic Rally — existing equivalent capability
 
-Monster content already carries a generic `regeneration` data field (`backend/app/content/monster_source_2014.py`) and the 2014 candidate classifier recognizes it. This is strong evidence that Survivor must not receive a Fighter-name special case. The correct implementation is a reusable conditional start-of-turn healing primitive that can later unlock monster regeneration as well.
+`backend/app/combat/survivor.py` already implements the required start-turn Survivor healing semantics through `survivor_heal_amount`: positive HP, Bloodied (`current_hp * 2 <= maximum`), and healing capped at effective maximum HP. The shared start-turn path already invokes it.
 
-Required semantics for the reusable primitive:
+Browser parity exists in `frontend/browser-state.js`, with permanent coverage in `frontend/browser-survivor.test.cjs`. The 2014 Champion runtime already compiles its edition-specific Survivor amount into the same neutral runtime field.
 
-- trigger: start of creature turn;
-- amount: data-driven fixed/base amount plus optional ability modifier;
-- HP predicate: data-driven threshold (Survivor uses Bloodied / at or below half maximum HP);
-- minimum-current-HP predicate: Survivor requires at least 1 HP;
-- cap healing at maximum HP;
-- emit structured combat logging for trigger, amount, before/after HP, and source feature;
-- Python/browser behavior must be equivalent;
-- certification coverage must prove the primitive rather than bypassing it.
+**Decision:** do not add a second regeneration primitive merely to rename this behavior. For 2024 Heroic Rally, compile the edition-specific `5 + Constitution modifier` value into existing `survivor_heal_amount`. Keep 2014 and 2024 declarations separate while reusing equivalent runtime behavior.
 
-### Defy Death
+Monster `regeneration` remains a separate certification concern because monster regeneration can carry suppression conditions Survivor does not model. Do not broaden this Fighter change into monster regeneration unless later inventory proves semantic equivalence.
 
-No existing repository search result exposes a certified generic Death Saving Throw capability. This must be treated as **missing until proven otherwise**, not inferred from ordinary saving-throw advantage.
+### Defy Death — existing Death Save engine, one genuine gap
 
-Required reusable semantics:
+`backend/app/combat/death_saves.py` already provides the generic Death Saving Throw state/resolver, ordinary natural-1/natural-20 behavior, success/failure accumulation, stabilization, death, structured `BattleEvent` output, and error-first logging.
 
-- generic Death Saving Throw resolver/state, not Fighter-specific code;
-- data-driven advantage on death saves;
-- data-driven natural-roll success upgrade range (Survivor: 18–20 behaves as natural 20);
-- preserve ordinary natural-1/natural-20 death-save semantics;
-- structured logging of dice, advantage source, natural result, upgraded result, and death-save state transition;
-- Python/browser parity and permanent tests.
+`backend/app/combat/defensive_modifier_rules.py` already provides data-driven Death Save advantage through `ModifierKind.DEATH_SAVE_ADVANTAGE` and `death_save_advantage_sources()`. Defy Death therefore does **not** justify a second resolver or Fighter-specific advantage branch.
 
-## Decision
+The genuine missing reusable capability is only the **natural-roll upgrade threshold**: a data-driven way for a feature to make a configured natural range (2024 Survivor: 18–20) receive the existing natural-20 Death Save result.
 
-**Do not register or certify Karnok L18 yet.** Level 18 introduces genuinely missing universal engine behavior. READY must be earned only after both Survivor halves are implemented and exercised through the normal certification path.
+Required semantics:
 
-The fastest safe implementation order is:
+- default threshold remains natural 20 so existing content is unchanged;
+- threshold is data-driven and reusable, never keyed to Fighter/Karnok/Survivor names;
+- 2024 Survivor declares threshold 18 and Death Save advantage through edition-specific feature data;
+- natural 1 remains two failures;
+- qualifying 18–20 results reuse existing `restore_hit_points(state, 1)` behavior;
+- Python and browser Death Save paths agree;
+- events preserve the actual natural die while describing the feature upgrade;
+- permanent tests cover default 20, upgraded 18/19/20, advantage selection, natural 1, and edition isolation.
 
-1. implement/test generic conditional start-turn regeneration and reuse the existing monster-facing regeneration data concept where schemas can be shared safely;
-2. implement/test generic Death Saving Throw state/resolution and configurable Survivor modifiers;
-3. add browser parity and structured logs for both;
-4. build the L18 canonical profile using data declarations only;
-5. run canonical/build/combat/resource audits and certification generation;
-6. add permanent CI regressions and only then allow the generated manifest to advance.
+## Revised implementation order
+
+1. Reuse `survivor_heal_amount` for 2024 Heroic Rally; do not duplicate healing architecture.
+2. Add the smallest reusable data declaration for Death Save natural-20-result threshold, defaulting to 20.
+3. Teach the existing Python Death Save resolver to consume it.
+4. Add equivalent behavior to the existing browser Death Save path.
+5. Add Python/browser regressions proving ordinary Death Saves are unchanged and 2024 Defy Death works.
+6. Build Karnok L18 using edition-specific data declarations only.
+7. Run canonical/build/combat/resource audits and generated certification; READY advances only if those gates pass.
 
 ## Edition separation
 
-Do not reuse 2014 Champion Survivor semantics as the 2024 declaration. 2014 Survivor has start-turn healing but does not contain the 2024 Defy Death benefit. The universal primitives may be shared; edition-specific feature data must remain separate.
+2014 Champion Survivor may continue using shared `survivor_heal_amount`, but it must not receive 2024 Defy Death. The reusable Death Save threshold defaults to 20 and only the 2024 L18 declaration may lower it to 18. Shared runtime primitives are allowed; RAW declarations remain hard-separated by edition.
