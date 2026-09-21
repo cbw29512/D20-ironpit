@@ -1,10 +1,17 @@
 from app.combat.deflect_missiles import apply_deflect_missiles
 from app.combat.dice import FixedDiceProvider
+from app.combat.deferred_save_effect import arm_deferred_save_effect, resolve_deferred_save_effect
+from app.combat.condition_lifecycle import resolve_source_condition_timing
+from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.timed_self_buff import resolve_timed_self_buff
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.open_hand_technique_2014 import resolve_open_hand_technique
 from app.combat.rogue_defenses import evasion_damage
+from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.state import build_combatant_state
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
+from app.combat.attacks import resolve_attack
+from app.combat.targeting_wards import check_targeting_ward
 from app.content.certified_heroes import build_all_certified_hero_entries
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.monk_open_hand_2014_combat_profile import build_kael_2014_combat_profile
@@ -47,16 +54,16 @@ def _qualifying_event(actor: EncounterCombatant) -> BattleEvent:
     )
 
 
-def test_2014_open_hand_levels_one_through_ten_compile_with_expected_breakpoints() -> None:
-    for level in range(1, 11):
+def test_2014_open_hand_levels_one_through_twenty_compile_with_expected_breakpoints() -> None:
+    for level in range(1, 21):
         profile = build_kael_stillwater_2014_profile(level)
         combat = build_kael_2014_combat_profile(level)
         hero = build_kael_stillwater_2014(level)
         assert profile.ruleset == hero.ruleset == "2014"
         assert profile.final_ability_scores == hero.ability_scores == combat.abilities
         assert hero.weapon_masteries == []
-        assert hero.weapon_attack.weapon.dice_size == (4 if level < 5 else 6)
-        assert hero.speed_ft == (30 if level == 1 else 40 if level < 6 else 45 if level < 10 else 50)
+        assert hero.weapon_attack.weapon.dice_size == (4 if level < 5 else 6 if level < 11 else 8 if level < 17 else 10)
+        assert hero.speed_ft == (30 if level == 1 else 40 if level < 6 else 45 if level < 10 else 50 if level < 14 else 55 if level < 18 else 60)
         assert hero.progression_features.flurry_of_blows is (level >= 2)
         assert hero.progression_features.deflect_missiles is (level >= 3)
         assert hero.progression_features.open_hand_technique is (level >= 3)
@@ -157,10 +164,226 @@ def test_evasion_reuses_shared_rogue_primitive() -> None:
     assert evasion_damage(monk, "dexterity", False, "half", 21) == 10
 
 
-def test_2014_certified_catalog_reaches_seventy_two_hero_snapshots() -> None:
+def test_2014_certified_catalog_reaches_ninety_two_hero_snapshots() -> None:
     entries = [entry for entry in build_all_certified_hero_entries() if entry[1].ruleset == "2014"]
     monks = [entry for entry in entries if entry[0][0] == "monk"]
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
-    assert len(entries) == 72
-    assert [entry[0][1] for entry in monks] == list(range(1, 11))
-    assert [entry[0][1] for entry in paladins] == list(range(1, 12))
+    assert len(entries) == 92
+    assert [entry[0][1] for entry in monks] == list(range(1, 21))
+    assert [entry[0][1] for entry in paladins] == list(range(1, 13))
+
+
+def test_level_eleven_tranquility_uses_shared_opening_targeting_ward() -> None:
+    monk = _member(build_kael_stillwater_2014(11), "kael11", "heroes", 0)
+    attacker = _member(build_karnok_stoneward_2014(8), "attacker", "monsters", 5)
+
+    assert monk.state.template.max_hp == 80
+    assert next(item for item in monk.state.resources if item.id == "ki").max_uses == 11
+    assert monk.state.template.weapon_attack.weapon.dice_size == 8
+
+    ward = monk.state.template.progression_features.opening_targeting_ward
+    assert ward is not None
+    assert (ward.source_id, ward.save_ability, ward.save_dc, ward.ends_on_owner_attack) == (
+        "tranquility", "wisdom", 14, True,
+    )
+    assert len(monk.state.active_modifiers) == 1
+    assert monk.state.active_modifiers[0].source_effect_id == "tranquility"
+
+    blocked = check_targeting_ward(attacker, monk, FixedDiceProvider([1]))
+    assert blocked is not None
+    assert blocked.succeeded is False
+    assert blocked.gate.save_dc == 14
+
+    assert check_targeting_ward(monk, attacker, FixedDiceProvider([20])) is None
+    assert monk.state.active_modifiers == []
+
+
+def test_levels_twelve_and_thirteen_are_incremental_monk_progression() -> None:
+    level11 = build_kael_stillwater_2014(11)
+    level12 = build_kael_stillwater_2014(12)
+    level13 = build_kael_stillwater_2014(13)
+
+    assert level12.max_hp == level11.max_hp + 7
+    assert level13.max_hp == level12.max_hp + 7
+    assert level12.ability_scores.wisdom == 17
+    assert level13.ability_scores.wisdom == 17
+    assert level12.armor_class == 18
+    assert level13.armor_class == 18
+    assert next(item for item in level12.resources if item.id == "ki").max_uses == 12
+    assert next(item for item in level13.resources if item.id == "ki").max_uses == 13
+    assert level13.weapon_attack.attack_bonus == level12.weapon_attack.attack_bonus + 1
+    assert level13.progression_features.opening_targeting_ward is not None
+    assert level13.progression_features.opening_targeting_ward.save_dc == 16
+
+    profile12 = build_kael_stillwater_2014_profile(12)
+    profile13 = build_kael_stillwater_2014_profile(13)
+    assert profile12.final_ability_scores.wisdom == 17
+    assert any(item.feature_id == "ability-score-improvement-l12" for item in profile12.feature_audits)
+    tongue = next(item for item in profile13.feature_audits if item.feature_id == "tongue-of-the-sun-and-moon")
+    assert tongue.combat_relevant is False
+
+
+def test_level_fourteen_diamond_soul_proficiency_and_ki_reroll() -> None:
+    hero = build_kael_stillwater_2014(14)
+    assert hero.speed_ft == 55
+    assert hero.saving_throw_bonuses == {
+        "strength": 6,
+        "dexterity": 10,
+        "constitution": 7,
+        "intelligence": 5,
+        "wisdom": 8,
+        "charisma": 4,
+    }
+    assert hero.progression_features.failed_save_reroll_source_id == "diamond-soul"
+    assert hero.progression_features.failed_save_reroll_resource_id == "ki"
+
+    state = build_combatant_state(hero)
+    roll, succeeded = resolve_saving_throw(
+        state, "constitution", 20, FixedDiceProvider([1, 20]),
+    )
+    assert succeeded is True
+    assert roll is not None
+    assert roll.total == 27
+    assert roll.revisions[-1].source_effect_id == "diamond-soul"
+    assert next(item for item in state.resources if item.id == "ki").current_uses == 13
+
+
+def test_levels_fifteen_and_sixteen_continue_incrementally() -> None:
+    level14 = build_kael_stillwater_2014(14)
+    level15 = build_kael_stillwater_2014(15)
+    level16 = build_kael_stillwater_2014(16)
+
+    assert level15.max_hp == level14.max_hp + 7
+    assert level16.max_hp == level15.max_hp + 7
+    assert level16.ability_scores.wisdom == 19
+    assert level16.armor_class == 19
+    assert next(item for item in level16.resources if item.id == "ki").max_uses == 16
+    assert level16.progression_features.opening_targeting_ward is not None
+    assert level16.progression_features.opening_targeting_ward.save_dc == 17
+
+    profile15 = build_kael_stillwater_2014_profile(15)
+    timeless = next(item for item in profile15.feature_audits if item.feature_id == "timeless-body")
+    assert timeless.combat_relevant is False
+    profile16 = build_kael_stillwater_2014_profile(16)
+    assert profile16.final_ability_scores.wisdom == 19
+
+
+def test_level_seventeen_quivering_palm_uses_universal_deferred_effect() -> None:
+    hero = build_kael_stillwater_2014(17)
+    rule = hero.progression_features.deferred_save_effect
+    assert rule is not None
+    assert rule.source_id == "quivering-palm"
+    assert rule.trigger_attack_ids == ["unarmed-strike"]
+    assert (rule.resource_id, rule.resource_cost) == ("ki", 3)
+    assert (rule.save_ability, rule.save_dc) == ("constitution", 18)
+    assert rule.failure_sets_zero_hp is True
+    assert (rule.success_damage_dice_count, rule.success_damage_dice_size, rule.success_damage_type) == (
+        10, 10, "necrotic",
+    )
+
+    monk = _member(hero, "kael17", "heroes", 0)
+    target = _member(build_karnok_stoneward_2014(17), "target17", "monsters", 5)
+    setup = _setup(monk, target)
+    attack = resolve_attack(
+        1, 1, monk.state, target.state, monk.state.template.weapon_attack, 5,
+        FixedDiceProvider([15, 4]),
+        actor_event_id=monk.combatant_id,
+        target_event_id=target.combatant_id,
+        spend_action=False,
+        affected_states=[monk.state, target.state],
+    )
+    assert attack.hit is True
+    assert "quivering palm is armed" in attack.description.lower()
+    assert next(item for item in monk.state.resources if item.id == "ki").current_uses == 14
+    assert [(item.source_id, item.target_id) for item in monk.state.deferred_effects] == [
+        ("quivering-palm", "target17"),
+    ]
+
+    assert arm_deferred_save_effect(monk.state, "someone-else", "unarmed-strike") is None
+    assert next(item for item in monk.state.resources if item.id == "ki").current_uses == 14
+
+    indomitable = next(item for item in target.state.resources if item.id == "indomitable")
+    indomitable.current_uses = 0
+    event = resolve_deferred_save_effect(2, 2, monk, setup, FixedDiceProvider([1]))
+    assert event is not None
+    assert event.feature_id == "quivering-palm"
+    assert event.save_succeeded is False
+    assert target.state.current_hp == 0
+    assert target.state.is_unconscious is True
+    assert monk.state.action_available is False
+    assert monk.state.deferred_effects == []
+
+
+def test_quivering_palm_success_uses_shared_necrotic_damage_path() -> None:
+    monk = _member(build_kael_stillwater_2014(17), "kael17-success", "heroes", 0)
+    target = _member(build_karnok_stoneward_2014(17), "target17-success", "monsters", 5)
+    setup = _setup(monk, target)
+    assert arm_deferred_save_effect(monk.state, target.combatant_id, "unarmed-strike") == "quivering-palm"
+
+    hp_before = target.state.current_hp
+    event = resolve_deferred_save_effect(
+        1, 1, monk, setup, FixedDiceProvider([20, *([5] * 10)]),
+    )
+    assert event is not None
+    assert event.save_succeeded is True
+    assert event.damage_roll is not None
+    assert event.damage_roll.total == 50
+    assert event.damage_components[0].damage_type is DamageType.NECROTIC
+    assert target.state.current_hp == hp_before - 50
+    assert monk.state.deferred_effects == []
+
+
+def test_level_eighteen_empty_body_reuses_timed_buff_invisibility_and_resistance() -> None:
+    monk = _member(build_kael_stillwater_2014(18), "kael18", "heroes", 0)
+    target = _member(build_karnok_stoneward_2014(18), "target18", "monsters", 5)
+    setup = _setup(monk, target)
+
+    rule = monk.state.template.progression_features.timed_self_buff
+    assert rule is not None
+    assert (rule.source_id, rule.resource_id, rule.resource_cost, rule.duration_rounds) == (
+        "empty-body", "ki", 4, 10,
+    )
+    assert rule.effect_ids == ["invisible"]
+    assert "force" not in rule.damage_resistances
+
+    event = resolve_timed_self_buff(1, 1, monk)
+    assert event is not None
+    assert event.feature_id == "empty-body"
+    assert monk.state.action_available is False
+    assert next(item for item in monk.state.resources if item.id == "ki").current_uses == 14
+    assert "invisible" in monk.state.active_effect_ids
+
+    assert adjusted_damage_amount(20, DamageType.FIRE, monk.state) == 10
+    assert adjusted_damage_amount(20, DamageType.FORCE, monk.state) == 20
+
+    events, _ = resolve_source_condition_timing(
+        2, 11, monk, setup, "source_turn_start",
+    )
+    assert events
+    assert "invisible" not in monk.state.active_effect_ids
+    assert adjusted_damage_amount(20, DamageType.FIRE, monk.state) == 20
+
+
+def test_levels_nineteen_and_twenty_are_small_incremental_deltas() -> None:
+    level18 = build_kael_stillwater_2014(18)
+    level19 = build_kael_stillwater_2014(19)
+    level20 = build_kael_stillwater_2014(20)
+
+    assert level19.max_hp == level18.max_hp + 7
+    assert level20.max_hp == level19.max_hp + 7
+    assert next(item for item in level19.resources if item.id == "ki").max_uses == 19
+    assert next(item for item in level20.resources if item.id == "ki").max_uses == 20
+
+    assert level19.ability_scores.wisdom == 20
+    assert level19.ability_scores.strength == 14
+    assert level19.armor_class == 20
+    assert level20.ability_scores == level19.ability_scores
+    assert level20.armor_class == 20
+
+    profile19 = build_kael_stillwater_2014_profile(19)
+    asi = next(item for item in profile19.feature_audits if item.feature_id == "ability-score-improvement-l19")
+    assert asi.combat_relevant is True
+    profile20 = build_kael_stillwater_2014_profile(20)
+    perfect = next(item for item in profile20.feature_audits if item.feature_id == "perfect-self")
+    assert perfect.combat_relevant is False
+    assert "full Ki" in perfect.notes
