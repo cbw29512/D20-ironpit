@@ -31,6 +31,16 @@ const provider = (id, category, rulesets, discover = () => ({ payload: { id } })
 
 assert.deepEqual(S.PROFILES.normalPreMove, ["spell-offense"]);
 assert.deepEqual(S.PROFILES.actionSurgeAttack, ["attack-action", "standard-attack"]);
+assert.ok(
+  S.PROFILES.normalPostMove.indexOf("signature-area-save")
+    < S.PROFILES.normalPostMove.indexOf("attack-action"),
+  "signature area saves must outrank ordinary Attack/Multiattack",
+);
+assert.ok(
+  S.PROFILES.normalPostMove.indexOf("signature-save-action")
+    < S.PROFILES.normalPostMove.indexOf("attack-action"),
+  "signature single-target saves must outrank ordinary Attack/Multiattack",
+);
 assert.throws(() => S.discoverCandidates("unknown", ctx()), /Unknown Main Action opportunity profile/);
 assert.throws(
   () => S.discoverCandidates("normalPreMove", { sequence: 1, member: member() }),
