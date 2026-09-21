@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.defensive_modifier_rules import death_save_advantage_sources
+from app.combat.defensive_modifier_rules import death_save_advantage_sources, death_save_nat20_threshold
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.combat.zero_hp import restore_hit_points, reset_death_saves
@@ -35,14 +35,15 @@ def resolve_death_save(
         mode = RollMode.ADVANTAGE if death_save_advantage_sources(state) else RollMode.NORMAL
         roll = roll_d20(dice, 0, mode)
         natural = roll.selected_roll or 0
+        nat20_threshold = death_save_nat20_threshold(state)
         hp_before = state.current_hp
         successes_before = state.death_save_successes
         failures_before = state.death_save_failures
         result = "failure"
 
-        if natural == 20:
+        if natural >= nat20_threshold:
             restore_hit_points(state, 1)
-            result = "natural 20; regains 1 HP"
+            result = "natural 20 result; regains 1 HP" if natural != 20 else "natural 20; regains 1 HP"
         elif natural == 1:
             state.death_save_failures = min(3, state.death_save_failures + 2)
             result = "natural 1; two failures"
