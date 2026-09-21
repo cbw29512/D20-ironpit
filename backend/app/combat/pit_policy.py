@@ -5,6 +5,7 @@ import logging
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
+from app.combat.offense_priority import weapon_attack_value
 from app.combat.range import resolve_attack_roll_mode
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
@@ -100,7 +101,11 @@ def choose_attack(
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Choose an actually legal attack at the combatants' current battlefield positions."""
     try:
-        profiles = _attack_profiles(attacker, allowed_ids, kind)
+        profiles = sorted(
+            _attack_profiles(attacker, allowed_ids, kind),
+            key=weapon_attack_value,
+            reverse=True,
+        )
         for target in target_order(attacker, setup, prefer_backline=prefer_backline):
             distance = combatant_distance(attacker, target)
             for attack in profiles:
