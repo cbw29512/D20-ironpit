@@ -60,6 +60,9 @@ class ProgressionCombatFeatures(BaseModel):
     great_weapon_fighting: bool = False
     indomitable_reroll: bool = False
     indomitable_bonus: int = Field(default=0, ge=0, le=20)
+    failed_save_reroll_source_id: str | None = None
+    failed_save_reroll_resource_id: str | None = None
+    failed_save_reroll_bonus: int = Field(default=0, ge=0, le=20)
     tactical_master_sap_weapon_ids: list[str] = Field(default_factory=list)
     heroic_warrior: bool = False
     studied_attacks: bool = False
