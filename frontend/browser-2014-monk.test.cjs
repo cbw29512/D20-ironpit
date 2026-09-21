@@ -12,12 +12,15 @@ load("browser-heroes.js");
 load("browser-condition-rules.js");
 load("browser-condition-immunity.js");
 load("browser-action-economy.js");
+load("browser-opening-modifiers.js");
+load("browser-state.js");
+load("browser-defensive-modifier-rules.js");
 load("browser-timed-conditions.js");
 load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const monk = (level) => heroes.find((hero) => hero.id === `kael-stillwater-2014-l${level}`);
-for (let level = 1; level <= 10; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
+for (let level = 1; level <= 11; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
 
 assert.deepEqual(monk(1).ability_scores, { strength: 13, dexterity: 16, constitution: 14, intelligence: 11, wisdom: 15, charisma: 9 });
 assert.equal(monk(1).armor_class, 15);
@@ -29,6 +32,18 @@ assert.equal(monk(6).speed_ft, 45);
 assert.equal(monk(10).speed_ft, 50);
 assert.equal(monk(4).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 4);
 assert.equal(monk(5).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 6);
+assert.equal(monk(11).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 8);
+assert.equal(monk(11).max_hp, 80);
+assert.equal(monk(11).resources.ki, 11);
+assert.deepEqual(monk(11).opening_targeting_ward, {
+  source_id: "tranquility", save_ability: "wisdom", save_dc: 14, ends_on_owner_attack: true,
+});
+const tranquilityState = window.IRON_PIT_BROWSER_STATE.buildState(monk(11));
+assert.equal(tranquilityState.active_modifiers.length, 1);
+assert.equal(tranquilityState.active_modifiers[0].source_effect_id, "tranquility");
+assert.equal(tranquilityState.active_modifiers[0].save_dc, 14);
+window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS.removeOwnerAttackEnding(tranquilityState);
+assert.equal(tranquilityState.active_modifiers.length, 0);
 assert.equal(monk(2).resources.ki, 2);
 assert.equal(monk(6).resources["wholeness-of-body"], 1);
 assert.equal(monk(3).deflect_missiles, true);
@@ -103,4 +118,4 @@ assert.ok(result.events.every((event) => event.feature_id === "flurry-of-blows")
 assert.equal(flurryActor.state.resources.ki, 1);
 assert.equal(flurryActor.state.bonus_action_available, false);
 
-console.log("2014 Open Hand Monk browser mechanics preserve progression, Ki, Flurry, Deflect Missiles, Stunning Strike, Open Hand Technique, and static defenses.");
+console.log("2014 Open Hand Monk browser mechanics preserve progression through level 11 including Tranquility.");
