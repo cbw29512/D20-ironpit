@@ -12,7 +12,7 @@ from app.content.monk_open_hand_2014_attacks import (
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
-from app.domain.progression import DeferredSaveEffect, OpeningTargetingWard, ProgressionCombatFeatures
+from app.domain.progression import DeferredSaveEffect, OpeningTargetingWard, ProgressionCombatFeatures, TimedSelfBuff
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +30,8 @@ def _scores(level: int) -> AbilityScores:
 
 
 def _speed(level: int) -> int:
+    if level >= 18:
+        return 60
     if level >= 14:
         return 55
     if level >= 10:
@@ -97,10 +99,10 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
-    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 17."""
+    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 18."""
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 17.")
+        if level not in range(1, 19):
+            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 18.")
         scores = _scores(level)
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
@@ -124,6 +126,14 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
                 martial_arts_die_size=martial_arts_die(level), flurry_of_blows=level >= 2,
                 deflect_missiles=level >= 3, open_hand_technique=level >= 3,
                 stunning_strike=level >= 5,
+                timed_self_buff=(TimedSelfBuff(
+                    source_id="empty-body",
+                    resource_id="ki",
+                    resource_cost=4,
+                    duration_rounds=10,
+                    effect_ids=["invisible"],
+                    damage_resistances=["acid","bludgeoning","cold","fire","lightning","necrotic","piercing","poison","psychic","radiant","slashing","thunder"],
+                ) if level >= 18 else None),
                 deferred_save_effect=(DeferredSaveEffect(
                     source_id="quivering-palm",
                     trigger_attack_ids=["unarmed-strike"],
