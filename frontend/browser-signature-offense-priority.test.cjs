@@ -54,6 +54,7 @@ window.IRON_PIT_BROWSER_CHARGE = { openingFeature: () => null };
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
 load("browser-main-action-providers.js");
+load("browser-signature-offense-providers.js");
 
 const actor = {
   combatant_id: "dragon", side: "heroes",
