@@ -31,3 +31,26 @@ def build_healing_word(spellcasting_modifier: int, extra_healing_bonus: int = 0)
         "healing-word", "Healing Word", "bonus_action", 60, 2, 4,
         spellcasting_modifier, extra_healing_bonus,
     )
+
+
+def build_mass_healing_word(
+    spellcasting_modifier: int,
+    extra_healing_bonus: int = 0,
+) -> HealingAction:
+    """Printed-level 2024 Mass Healing Word as a shared multi-target healing action."""
+    if spellcasting_modifier < 0 or extra_healing_bonus < 0:
+        raise ValueError("Certified Mass Healing Word requires nonnegative healing modifiers.")
+    return HealingAction(
+        id="mass-healing-word",
+        name="Mass Healing Word",
+        action_cost="bonus_action",
+        range_ft=60,
+        target_mode="self_or_ally",
+        max_targets=6,
+        dice_count=2,
+        dice_size=4,
+        healing_bonus=spellcasting_modifier + extra_healing_bonus,
+        resource_id="spell-slot-3",
+        resource_cost=1,
+        animation="healing",
+    )
