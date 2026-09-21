@@ -5,7 +5,7 @@ import logging
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.weapon_catalog import build_weapon
 from app.domain.character_builds import AbilityScores
-from app.domain.models import CombatantTemplate, VisualLoadout, WeaponAttack, WeaponAttackKind
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
@@ -43,15 +43,15 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
-    """Compile the 2014 Human Thief Rogue through level 19 from Basic Rules data.
+    """Compile the 2014 Human Thief Rogue through level 20 from Basic Rules data.
 
     Reliable Talent, Use Magic Device, and Blindsense remain arena-inert for the
     current certified combat path. Level 15 adds Wisdom save proficiency through
-    the shared save compiler; level 16 applies the approved +2 Constitution ASI; level 17 adds Thief's Reflexes through the shared first-round scheduler; level 18 adds Elusive through shared defender Advantage suppression; level 19 applies the approved +2 Constitution ASI.
+    the shared save compiler; level 16 applies the approved +2 Constitution ASI; level 17 adds Thief's Reflexes through the shared first-round scheduler; level 18 adds Elusive through shared defender Advantage suppression; level 19 applies the approved +2 Constitution ASI; level 20 adds Stroke of Luck through the shared miss-to-hit override resource.
     """
     try:
-        if level not in range(1, 20):
-            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 19.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Thief Rogue candidate covers levels 1 through 20.")
         scores = _scores(level); dex = scores.modifier("dexterity")
         save_proficiencies = (
             ("dexterity", "intelligence", "wisdom")
@@ -71,7 +71,9 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
                 uncanny_dodge=level >= 5, evasion=level >= 7,
                 first_round_extra_turn_initiative_offset=(-10 if level >= 17 else None),
                 suppress_attack_advantage_while_not_incapacitated=level >= 18,
+                miss_to_hit_override_resource_id=("stroke-of-luck" if level >= 20 else None),
             ),
+            resources=([ResourceDefinition(id="stroke-of-luck", name="Stroke of Luck", max_uses=1)] if level >= 20 else []),
             visual=VisualLoadout(armor="leather", main_hand="rapier", body_style="humanoid"),
             source="D&D Basic Rules 2014: Human; Rogue; Thief; Criminal; Equipment",
         )
