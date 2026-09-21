@@ -18,12 +18,16 @@ assert.equal(fighter.skill_bonuses.athletics, 8);
 assert.equal(fighter.great_weapon_fighting, true);
 assert.equal(fighter.critical_hit_minimum, 19);
 assert.equal(fighter.tactical_shift_fraction, 0.5);
-assert.deepEqual(fighter.resources, {
+const expectedResources = {
   "second-wind": 3,
   "action-surge": 1,
   "adrenaline-rush": 3,
   "relentless-endurance": 1,
-});
+};
+if ((fighter.combat_treasure_awards || []).some((item) => item.effect === "healing-potion")) {
+  expectedResources["combat-healing-potion"] = 1;
+}
+assert.deepEqual(fighter.resources, expectedResources);
 
 const greatsword = fighter.attacks.find((attack) => attack.id === "karnok-greatsword");
 const shortbow = fighter.attacks.find((attack) => attack.id === "karnok-shortbow");
