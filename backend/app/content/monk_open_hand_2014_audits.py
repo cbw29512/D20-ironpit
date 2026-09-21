@@ -128,6 +128,17 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     notes="Self-only planar travel does not change an Iron Pit duel.",
                 ),
             ])
+        if level >= 19:
+            audits.append(_audit(
+                "ability-score-improvement-l19", "Ability Score Improvement (+1 Wisdom, +1 Strength)", "class",
+                notes="Canonical Iron Pit progression: Wisdom 19→20 and Strength 13→14; both improve combat-relevant derived values.",
+            ))
+        if level >= 20:
+            audits.append(_audit(
+                "perfect-self", "Perfect Self", "class",
+                combat=False, automated=False,
+                notes="Arena-inert under the immutable-card reset contract: every Iron Pit match begins with full Ki before initiative is rolled, so the trigger condition of 0 Ki cannot occur.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
