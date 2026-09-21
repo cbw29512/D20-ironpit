@@ -43,14 +43,14 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
-    """Compile the 2014 Human Thief Rogue through level 17 from Basic Rules data.
+    """Compile the 2014 Human Thief Rogue through level 18 from Basic Rules data.
 
     Reliable Talent, Use Magic Device, and Blindsense remain arena-inert for the
     current certified combat path. Level 15 adds Wisdom save proficiency through
-    the shared save compiler; level 16 applies the approved +2 Constitution ASI; level 17 adds Thief's Reflexes through the shared first-round scheduler.
+    the shared save compiler; level 16 applies the approved +2 Constitution ASI; level 18 adds Thief's Reflexes through the shared first-round scheduler.
     """
     try:
-        if level not in range(1, 18):
+        if level not in range(1, 19):
             raise ValueError("2014 Thief Rogue candidate covers levels 1 through 17.")
         scores = _scores(level); dex = scores.modifier("dexterity")
         save_proficiencies = (
@@ -70,6 +70,7 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
                 sneak_attack_d6=(level + 1) // 2, cunning_action=level >= 2,
                 uncanny_dodge=level >= 5, evasion=level >= 7,
                 first_round_extra_turn_initiative_offset=(-10 if level >= 17 else None),
+                suppress_attack_advantage_while_not_incapacitated=level >= 18,
             ),
             visual=VisualLoadout(armor="leather", main_hand="rapier", body_style="humanoid"),
             source="D&D Basic Rules 2014: Human; Rogue; Thief; Criminal; Equipment",
