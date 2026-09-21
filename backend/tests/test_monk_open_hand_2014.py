@@ -1,11 +1,13 @@
 from app.combat.deflect_missiles import apply_deflect_missiles
 from app.combat.dice import FixedDiceProvider
+from app.combat.deferred_save_effect import arm_deferred_save_effect, resolve_deferred_save_effect
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.open_hand_technique_2014 import resolve_open_hand_technique
 from app.combat.rogue_defenses import evasion_damage
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.state import build_combatant_state
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
+from app.combat.attacks import resolve_attack
 from app.combat.targeting_wards import check_targeting_ward
 from app.content.certified_heroes import build_all_certified_hero_entries
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
@@ -49,15 +51,15 @@ def _qualifying_event(actor: EncounterCombatant) -> BattleEvent:
     )
 
 
-def test_2014_open_hand_levels_one_through_sixteen_compile_with_expected_breakpoints() -> None:
-    for level in range(1, 17):
+def test_2014_open_hand_levels_one_through_seventeen_compile_with_expected_breakpoints() -> None:
+    for level in range(1, 18):
         profile = build_kael_stillwater_2014_profile(level)
         combat = build_kael_2014_combat_profile(level)
         hero = build_kael_stillwater_2014(level)
         assert profile.ruleset == hero.ruleset == "2014"
         assert profile.final_ability_scores == hero.ability_scores == combat.abilities
         assert hero.weapon_masteries == []
-        assert hero.weapon_attack.weapon.dice_size == (4 if level < 5 else 6 if level < 11 else 8)
+        assert hero.weapon_attack.weapon.dice_size == (4 if level < 5 else 6 if level < 11 else 8 if level < 17 else 10)
         assert hero.speed_ft == (30 if level == 1 else 40 if level < 6 else 45 if level < 10 else 50 if level < 14 else 55)
         assert hero.progression_features.flurry_of_blows is (level >= 2)
         assert hero.progression_features.deflect_missiles is (level >= 3)
@@ -159,12 +161,12 @@ def test_evasion_reuses_shared_rogue_primitive() -> None:
     assert evasion_damage(monk, "dexterity", False, "half", 21) == 10
 
 
-def test_2014_certified_catalog_reaches_eighty_eight_hero_snapshots() -> None:
+def test_2014_certified_catalog_reaches_eighty_nine_hero_snapshots() -> None:
     entries = [entry for entry in build_all_certified_hero_entries() if entry[1].ruleset == "2014"]
     monks = [entry for entry in entries if entry[0][0] == "monk"]
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
-    assert len(entries) == 88
-    assert [entry[0][1] for entry in monks] == list(range(1, 17))
+    assert len(entries) == 89
+    assert [entry[0][1] for entry in monks] == list(range(1, 18))
     assert [entry[0][1] for entry in paladins] == list(range(1, 13))
 
 
@@ -261,3 +263,68 @@ def test_levels_fifteen_and_sixteen_continue_incrementally() -> None:
     assert timeless.combat_relevant is False
     profile16 = build_kael_stillwater_2014_profile(16)
     assert profile16.final_ability_scores.wisdom == 19
+
+
+def test_level_seventeen_quivering_palm_uses_universal_deferred_effect() -> None:
+    hero = build_kael_stillwater_2014(17)
+    rule = hero.progression_features.deferred_save_effect
+    assert rule is not None
+    assert rule.source_id == "quivering-palm"
+    assert rule.trigger_attack_ids == ["unarmed-strike"]
+    assert (rule.resource_id, rule.resource_cost) == ("ki", 3)
+    assert (rule.save_ability, rule.save_dc) == ("constitution", 18)
+    assert rule.failure_sets_zero_hp is True
+    assert (rule.success_damage_dice_count, rule.success_damage_dice_size, rule.success_damage_type) == (
+        10, 10, "necrotic",
+    )
+
+    monk = _member(hero, "kael17", "heroes", 0)
+    target = _member(build_karnok_stoneward_2014(17), "target17", "monsters", 5)
+    setup = _setup(monk, target)
+    attack = resolve_attack(
+        1, 1, monk.state, target.state, monk.state.template.weapon_attack, 5,
+        FixedDiceProvider([15, 4]),
+        actor_event_id=monk.combatant_id,
+        target_event_id=target.combatant_id,
+        spend_action=False,
+        affected_states=[monk.state, target.state],
+    )
+    assert attack.hit is True
+    assert "quivering palm is armed" in attack.description.lower()
+    assert next(item for item in monk.state.resources if item.id == "ki").current_uses == 14
+    assert [(item.source_id, item.target_id) for item in monk.state.deferred_effects] == [
+        ("quivering-palm", "target17"),
+    ]
+
+    assert arm_deferred_save_effect(monk.state, "someone-else", "unarmed-strike") is None
+    assert next(item for item in monk.state.resources if item.id == "ki").current_uses == 14
+
+    indomitable = next(item for item in target.state.resources if item.id == "indomitable")
+    indomitable.current_uses = 0
+    event = resolve_deferred_save_effect(2, 2, monk, setup, FixedDiceProvider([1]))
+    assert event is not None
+    assert event.feature_id == "quivering-palm"
+    assert event.save_succeeded is False
+    assert target.state.current_hp == 0
+    assert target.state.is_unconscious is True
+    assert monk.state.action_available is False
+    assert monk.state.deferred_effects == []
+
+
+def test_quivering_palm_success_uses_shared_necrotic_damage_path() -> None:
+    monk = _member(build_kael_stillwater_2014(17), "kael17-success", "heroes", 0)
+    target = _member(build_karnok_stoneward_2014(17), "target17-success", "monsters", 5)
+    setup = _setup(monk, target)
+    assert arm_deferred_save_effect(monk.state, target.combatant_id, "unarmed-strike") == "quivering-palm"
+
+    hp_before = target.state.current_hp
+    event = resolve_deferred_save_effect(
+        1, 1, monk, setup, FixedDiceProvider([20, *([5] * 10)]),
+    )
+    assert event is not None
+    assert event.save_succeeded is True
+    assert event.damage_roll is not None
+    assert event.damage_roll.total == 50
+    assert event.damage_components[0].damage_type is DamageType.NECROTIC
+    assert target.state.current_hp == hp_before - 50
+    assert monk.state.deferred_effects == []
