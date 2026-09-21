@@ -93,7 +93,7 @@ Treasure power scales with the level gained:
 
 All generated treasure must affect Iron Pit combat. Do not award arena-useless utility items. Generic weapon/armor results adapt to the character's actual combat loadout: for example, a weapon result becomes the weapon the build actually attacks with rather than an unrelated longsword. Caster offense results may become an appropriate combat focus. The treasure overlay is an explicit Iron Pit house system applied after the edition-legal RAW character build is validated.
 
-Persistent treasure carries forward with the same character. When a later item competes for the same slot, the stronger/current item is used rather than stacking arbitrary enhancement bonuses. Combat consumables are card-defined resources and reset with the immutable card after each Iron Pit match, consistent with the arena reset contract.
+Persistent treasure carries forward with the same character. Treasure is slot-based for progression purposes: a weapon award stays attached to the character's primary combat-weapon role and is represented by the weapon that build actually uses at the current level, so normal optimization or mastery changes do not strand a previously earned magic weapon as useless inventory. When a later item competes for the same slot, the stronger/current item is used rather than stacking arbitrary enhancement bonuses. Combat consumables are card-defined resources and reset with the immutable card after each Iron Pit match, consistent with the arena reset contract.
 
 ## 5. One universal combat engine
 
