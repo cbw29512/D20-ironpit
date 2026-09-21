@@ -22,12 +22,14 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker.template) || 0);
+    if (Q().has(attacker, "invisible")) advantage += 1;
     if (Q().has(attacker, "blinded")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
     disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
+    if (Q().has(defender, "invisible")) disadvantage += 1;
     if (Q().attackAdvantage(defender)) advantage += 1;
     if (defender.active_effect_ids.includes("restrained")) advantage += 1;
     if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
