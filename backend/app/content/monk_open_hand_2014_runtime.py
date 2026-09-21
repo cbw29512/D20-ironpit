@@ -12,7 +12,7 @@ from app.content.monk_open_hand_2014_attacks import (
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
-from app.domain.progression import ProgressionCombatFeatures
+from app.domain.progression import OpeningTargetingWard, ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
 
@@ -24,12 +24,14 @@ def _scores(level: int) -> AbilityScores:
         dexterity=dexterity,
         constitution=14,
         intelligence=11,
-        wisdom=15,
+        wisdom=15 + (2 if level >= 12 else 0) + (2 if level >= 16 else 0),
         charisma=9,
     )
 
 
 def _speed(level: int) -> int:
+    if level >= 14:
+        return 55
     if level >= 10:
         return 50
     if level >= 6:
@@ -95,10 +97,10 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
-    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 10."""
+    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 16."""
     try:
-        if level not in range(1, 11):
-            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 10.")
+        if level not in range(1, 17):
+            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 16.")
         scores = _scores(level)
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
@@ -113,7 +115,7 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
             attack_action=build_extra_attack(level),
             healing_actions=_healing_actions(level),
             condition_removal_actions=_condition_removal_actions(level),
-            saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "dexterity")),
+            saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma") if level >= 14 else ("strength", "dexterity")),
             skill_bonuses=_skill_bonuses(level, scores), weapon_masteries=[],
             condition_immunities=["poisoned"] if level >= 10 else [],
             resources=_resources(level),
@@ -122,6 +124,12 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
                 martial_arts_die_size=martial_arts_die(level), flurry_of_blows=level >= 2,
                 deflect_missiles=level >= 3, open_hand_technique=level >= 3,
                 stunning_strike=level >= 5,
+                failed_save_reroll_source_id=("diamond-soul" if level >= 14 else None),
+                failed_save_reroll_resource_id=("ki" if level >= 14 else None),
+                opening_targeting_ward=(OpeningTargetingWard(
+                    source_id="tranquility", save_ability="wisdom",
+                    save_dc=8 + proficiency_bonus(level) + wisdom,
+                ) if level >= 11 else None),
             ),
             visual=VisualLoadout(armor="unarmored", main_hand="fists", body_style="humanoid"),
             source=("D&D Basic Rules 2014: Human, Acolyte, Equipment; "
