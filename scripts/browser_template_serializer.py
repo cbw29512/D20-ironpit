@@ -281,6 +281,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["initiative_advantage"] = True
     if features.athletics_advantage:
         row["athletics_advantage"] = True
+    if features.first_round_extra_turn_initiative_offset is not None:
+        row["first_round_extra_turn_initiative_offset"] = features.first_round_extra_turn_initiative_offset
+    if features.suppress_attack_advantage_while_not_incapacitated:
+        row["suppress_attack_advantage_while_not_incapacitated"] = True
     if features.critical_move_fraction:
         row["critical_move_fraction"] = features.critical_move_fraction
     if features.cunning_action:
