@@ -12,6 +12,12 @@ const assertRuleset = (items, expected, label) => {
   for (const item of items) assert.equal(item.ruleset, expected, `${item.id} must carry explicit ${expected} ruleset identity`);
 };
 const levels = (items, count) => assert.deepEqual(items.map((item) => item.level).sort((a, b) => a - b), Array.from({ length: count }, (_, i) => i + 1));
+const treasureBonus = (hero, effect, targetId = null) => Math.max(
+  0,
+  ...(hero.combat_treasure_awards || [])
+    .filter((item) => item.effect === effect && (targetId == null || item.target_id === targetId))
+    .map((item) => item.bonus),
+);
 
 load("browser-heroes.js");
 load("browser-monsters-generated.js");
@@ -58,13 +64,14 @@ const barbarian12DefenseTreasure = Math.max(
     .map((item) => item.bonus),
 );
 assert.deepEqual(
-  [barbarian12.ability_scores.constitution, barbarian12.ability_scores.wisdom, barbarian12.max_hp],
-  [16, 14, 125],
+  [barbarian12.ability_scores.constitution, barbarian12.ability_scores.wisdom],
+  [16, 14],
 );
+assert.equal(barbarian12.max_hp, 125 + 5 * treasureBonus(barbarian12, "max-hp"));
 assert.equal(barbarian12.armor_class, 15 + barbarian12DefenseTreasure);
 assert.equal(barbarian12.resources.rage, 5);
 assert.equal(barbarian13.brutal_critical_dice, 2);
-assert.equal(barbarian13.attacks[0].bonus, 10);
+assert.equal(barbarian13.attacks[0].bonus, 10 + treasureBonus(barbarian13, "weapon-enhancement", barbarian13.attacks[0].id));
 const rogue2 = rogues2014.find((hero) => hero.level === 2);
 const rogue5 = rogues2014.find((hero) => hero.level === 5);
 const rogue7 = rogues2014.find((hero) => hero.level === 7);
@@ -81,16 +88,16 @@ assert.equal(rogue7.evasion, true);
 assert.equal(rogue10.sneak_attack_d6, 5);
 assert.equal(rogue11.sneak_attack_d6, 6);
 assert.equal(rogue12.ability_scores.constitution, 16);
-assert.equal(rogue12.max_hp, 99);
-assert.equal(rogue12.saving_throw_bonuses.constitution, 3);
+assert.equal(rogue12.max_hp, 99 + 5 * treasureBonus(rogue12, "max-hp"));
+assert.equal(rogue12.saving_throw_bonuses.constitution, 3 + treasureBonus(rogue12, "saving-throws"));
 assert.equal(rogue13.sneak_attack_d6, 7);
 assert.equal(rogue14.sneak_attack_d6, 7);
 assert.equal(rogue15.sneak_attack_d6, 8);
-assert.equal(rogue15.saving_throw_bonuses.wisdom, 7);
+assert.equal(rogue15.saving_throw_bonuses.wisdom, 7 + treasureBonus(rogue15, "saving-throws"));
 assert.equal(rogue16.ability_scores.constitution, 18);
-assert.equal(rogue16.max_hp, 147);
-assert.equal(rogue16.saving_throw_bonuses.constitution, 4);
-assert.equal(rogue16.saving_throw_bonuses.wisdom, 7);
+assert.equal(rogue16.max_hp, 147 + 5 * treasureBonus(rogue16, "max-hp"));
+assert.equal(rogue16.saving_throw_bonuses.constitution, 4 + treasureBonus(rogue16, "saving-throws"));
+assert.equal(rogue16.saving_throw_bonuses.wisdom, 7 + treasureBonus(rogue16, "saving-throws"));
 const monk2 = monks2014.find((hero) => hero.level === 2);
 const monk5 = monks2014.find((hero) => hero.level === 5);
 const monk7 = monks2014.find((hero) => hero.level === 7);
