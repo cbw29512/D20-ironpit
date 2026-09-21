@@ -85,3 +85,17 @@ def test_level_one_has_no_treasure_history_and_later_history_is_prefix_stable() 
     assert [(item.level, item.roll, item.slot, item.effect) for item in prefix9] == [
         (item.level, item.roll, item.slot, item.effect) for item in history8
     ]
+
+
+def test_stronger_same_slot_treasure_replaces_weaker_and_tier_five_is_plus_five() -> None:
+    fighter = build_karnok_stoneward_level(17)
+    early = resolve_combat_treasure(fighter, 2, 61)[0]
+    endgame = resolve_combat_treasure(fighter, 17, 61)[0]
+    upgraded = apply_combat_treasure_history(fighter, [early, endgame])
+
+    assert early.bonus == 1
+    assert endgame.bonus == 5
+    assert endgame.name.endswith("+5")
+    assert upgraded.combat_treasure_awards == [endgame]
+    assert upgraded.weapon_attack.attack_bonus == fighter.weapon_attack.attack_bonus + 5
+    assert upgraded.weapon_attack.damage_bonus == fighter.weapon_attack.damage_bonus + 5
