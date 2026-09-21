@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from app.content.pregen_combat_profiles import PregenCombatProfile
+from app.content.pregen_treasure_audit import (
+    expected_defense_stats, expected_initiative as treasure_expected_initiative,
+    expected_resources, expected_saves as treasure_expected_saves, weapon_bonus,
+)
 from app.domain.models import CombatantTemplate
 
 _ABILITIES = ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")
@@ -37,9 +41,10 @@ def _attack_issues(template: CombatantTemplate, profile: PregenCombatProfile) ->
             expected.dice_count, expected.dice_size, expected.damage_type,
         ):
             issues.append(f"{prefix}:damage-dice-or-type-mismatch")
-        if attack.attack_bonus != ability_mod + pb + expected.style_attack_bonus:
+        treasure_bonus = weapon_bonus(template, attack.id)
+        if attack.attack_bonus != ability_mod + pb + expected.style_attack_bonus + treasure_bonus:
             issues.append(f"{prefix}:attack-bonus-mismatch")
-        if attack.damage_bonus != ability_mod:
+        if attack.damage_bonus != ability_mod + treasure_bonus:
             issues.append(f"{prefix}:damage-bonus-mismatch")
         if attack.damage_die_minimum != expected.damage_die_minimum:
             issues.append(f"{prefix}:damage-die-minimum-mismatch")
@@ -91,8 +96,8 @@ def audit_pregen_combat_stats(template: CombatantTemplate, profile: PregenCombat
         issues.append("identity-or-level-mismatch")
     if template.kind != "character":
         issues.append("kind-mismatch")
-    if (template.armor_class, template.max_hp, template.speed_ft) != (
-        profile.armor_class, profile.max_hp, profile.speed_ft,
+    if (template.armor_class, template.max_hp, template.speed_ft) != expected_defense_stats(
+        template, profile.armor_class, profile.max_hp, profile.speed_ft,
     ):
         issues.append("ac-hp-or-speed-mismatch")
     expected_initiative = (
@@ -100,9 +105,9 @@ def audit_pregen_combat_stats(template: CombatantTemplate, profile: PregenCombat
         if profile.initiative_bonus is not None
         else profile.abilities.modifier("dexterity")
     )
-    if template.initiative_bonus != expected_initiative:
+    if template.initiative_bonus != treasure_expected_initiative(template, expected_initiative):
         issues.append("initiative-mismatch")
-    if template.saving_throw_bonuses != _expected_saves(profile):
+    if template.saving_throw_bonuses != treasure_expected_saves(template, _expected_saves(profile)):
         issues.append("saving-throws-mismatch")
     if template.skill_bonuses != dict(profile.skill_bonuses):
         issues.append("combat-skill-bonuses-mismatch")
@@ -115,7 +120,7 @@ def audit_pregen_combat_stats(template: CombatantTemplate, profile: PregenCombat
     if template.rage_damage_bonus != profile.rage_damage_bonus:
         issues.append("rage-damage-mismatch")
     resources = {item.id: item.max_uses for item in template.resources}
-    if resources != dict(profile.resources):
+    if resources != expected_resources(template, dict(profile.resources)):
         issues.append("resources-mismatch")
     issues.extend(_defense_issues(template, profile))
     if not template.source.strip():
