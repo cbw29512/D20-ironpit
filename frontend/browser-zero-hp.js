@@ -71,6 +71,22 @@
     return outcome;
   }
 
+  function reduceToZero(state, affectedStates = []) {
+    if (state.is_dead || state.current_hp === 0) return "unchanged";
+    state.current_hp = 0;
+    let outcome;
+    if (state.template.kind === "monster") {
+      markDead(state); outcome = "dead";
+    } else if (state.template.effect_bound_survival_save) {
+      if (!U()) throw new Error("Effect-bound survival save runtime is not loaded.");
+      if (U().resolveEffectBound(state)) outcome = "survival_save";
+    }
+    if (!outcome && useRelentless(state, 0)) outcome = "relentless_endurance";
+    if (!outcome) { markUnconscious(state); outcome = "unconscious"; }
+    if ((state.is_dead || state.is_unconscious) && C()) C().endIfIncapacitated(state, affectedStates);
+    return outcome;
+  }
+
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
@@ -103,5 +119,5 @@
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, stabilizeAtZero };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, reduceToZero, stabilizeAtZero };
 })();
