@@ -76,7 +76,7 @@
     const unsuppressedAdvantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state)
       + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
-    const advantage = Q().suppressAttackAdvantage(target.state) ? 0 : unsuppressedAdvantage;
+    const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id), mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
