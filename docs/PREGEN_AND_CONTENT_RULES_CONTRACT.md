@@ -61,7 +61,13 @@ The canonical twelve pregen concepts are:
 
 Target progression is levels 1 through 20 in both 2014 and 2024.
 
-Construction is incremental, not twenty independent builds. Every canonical pregen is one persistent character: level N derives from level N-1 plus that level's HP gain, proficiency/resource changes, class/subclass feature additions, ASI/feat choices, spell progression, equipment changes, and other explicit deltas. Certification remains level-specific, so a legal level does not silently certify later levels, but the implementation must not rebuild the same character from scratch at every level.
+Construction is incremental, not twenty independent builds. Every canonical pregen is one persistent character: level N derives from level N-1 plus that level's HP gain, proficiency/resource changes, class/subclass feature additions, ASI/feat choices, spell progression, equipment changes, treasure, and other explicit deltas. The implementation must not rebuild the same character from scratch at every level.
+
+Certification is split into two layers:
+- every generated level must pass cheap structural/stat/resource/ruleset invariants;
+- deep bespoke behavior tests are required at progression breakpoints where a combat-relevant mechanic is added, removed, upgraded, or materially changes behavior.
+
+A level whose only changes are already-proven arithmetic deltas such as HP, proficiency, resource count, spell-slot count, or an established ASI compiler does not require a new one-off engine implementation or bespoke combat test. The shared progression compiler plus invariant tests certify those changes. This rule applies to every class in both editions.
 
 ## 4A. Iron Pit combat treasure progression
 
