@@ -12,6 +12,7 @@ _BLOOD_FRENZY = "Blood Frenzy"
 _RECKLESS = "Reckless"
 _CUNNING_ACTION = "Cunning Action"
 _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
+_FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
     re.IGNORECASE | re.DOTALL,
@@ -36,7 +37,9 @@ def supports_cunning_action_2014(monster: SourceMonster2014) -> bool:
 
 
 def _base_sneak_attack_eligible(attack: SourceAttack2014) -> bool:
-    return attack.kind == "ranged" or attack.attack_ability == "dexterity"
+    return attack.kind == "ranged" or (
+        attack.kind == "melee" and attack.name in _FINESSE_WEAPON_NAMES_2014
+    )
 
 
 def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
