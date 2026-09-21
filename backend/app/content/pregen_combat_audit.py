@@ -59,6 +59,12 @@ def _attack_issues(template: CombatantTemplate, profile: PregenCombatProfile) ->
             issues.append(f"{prefix}:conditional-damage-mismatch")
         if any(item.trigger != "attack_advantage" for item in attack.conditional_damage):
             issues.append(f"{prefix}:conditional-trigger-mismatch")
+        on_hit = tuple(
+            (item.source, item.dice_count, item.dice_size, item.damage_bonus, item.damage_type.value)
+            for item in attack.on_hit_damage
+        )
+        if on_hit != expected.on_hit_damage:
+            issues.append(f"{prefix}:on-hit-damage-mismatch")
     return issues
 
 
