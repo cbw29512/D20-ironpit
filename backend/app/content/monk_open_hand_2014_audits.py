@@ -95,6 +95,22 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 combat=False, automated=False,
                 notes="Language communication does not change a one-on-one Iron Pit combat outcome.",
             ))
+        if level >= 14:
+            audits.append(_audit(
+                "diamond-soul", "Diamond Soul", "class",
+                notes="All saving throws gain proficiency; failed saves automatically spend 1 Ki to reroll through the shared failed-save reroll primitive.",
+            ))
+        if level >= 15:
+            audits.append(_audit(
+                "timeless-body", "Timeless Body", "class",
+                combat=False, automated=False,
+                notes="Aging and food/water requirements do not change an Iron Pit duel.",
+            ))
+        if level >= 16:
+            audits.append(_audit(
+                "ability-score-improvement-l16", "Ability Score Improvement (+2 Wisdom)", "class",
+                notes="Canonical Iron Pit progression: Wisdom 17→19 for AC, Monk save DCs, and Wisdom defenses.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
