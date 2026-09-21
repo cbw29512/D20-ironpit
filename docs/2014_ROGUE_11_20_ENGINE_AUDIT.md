@@ -6,7 +6,7 @@ This audit is intentionally implementation-first and fail-closed. It inventories
 
 Rules authority: D&D Basic Rules 2014 / SRD 5.1 Rogue and Thief. The existing Iron Pit rules contract remains authoritative for certification policy and edition isolation.
 
-No READY flags, registry entries, generated browser heroes, or manifest counts are changed by this audit.
+Current certification boundary on this branch: **level 16**. Level 17 remains fail-closed on Thief's Reflexes scheduling semantics.
 
 ## Existing universal capability baseline
 
