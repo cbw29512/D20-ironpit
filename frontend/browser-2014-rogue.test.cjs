@@ -11,6 +11,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 load("browser-heroes.js");
 load("browser-condition-rules.js");
 load("browser-action-economy.js");
+load("browser-initiative.js");
 load("browser-rogue-defenses.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
@@ -47,9 +48,9 @@ assert.equal(rogue16.saving_throw_bonuses.constitution, 4);
 assert.equal(rogue16.saving_throw_bonuses.wisdom, 7);
 assert.deepEqual(rogue16.weapon_masteries, []);
 assert.ok(rogue16.attacks.every((attack) => attack.masteryProperty == null));
-assert.equal(rogue17.progression_features.first_round_extra_turn_initiative_offset, -10);
+assert.equal(rogue17.first_round_extra_turn_initiative_offset, -10);
 assert.equal(rogue17.sneak_attack_d6, 9);
-assert.equal(rogue18.progression_features.suppress_attack_advantage_while_not_incapacitated, true);
+assert.equal(rogue18.suppress_attack_advantage_while_not_incapacitated, true);
 assert.equal(rogue18.sneak_attack_d6, 9);
 const elusiveState = state(rogue18);
 assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.suppressAttackAdvantage(elusiveState), true);
