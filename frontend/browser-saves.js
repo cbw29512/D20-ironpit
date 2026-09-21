@@ -41,9 +41,9 @@
     return R().modeFromSources(advantage, disadvantage);
   }
 
-  function indomitableRevision(original, replacement) {
+  function failedSaveRerollRevision(original, replacement, sourceId) {
     return {
-      source_effect_id: "indomitable", kind: "full_reroll",
+      source_effect_id: sourceId, kind: "full_reroll",
       original_rolls: [...original.rolls], replacement_rolls: [...replacement.rolls],
       original_modifier: original.modifier || 0, replacement_modifier: replacement.modifier || 0,
       original_selected: original.selected_roll, replacement_selected: replacement.selected_roll,
@@ -65,7 +65,7 @@
     DF().consumeSavingThrowModifiers?.(state);
     if (roll.total < dc) {
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
-      if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
+      if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), failedSaveRerollRevision(roll, reroll, reroll.sourceId || "indomitable")] };
     }
     return { roll, succeeded: roll.total >= dc };
   }
