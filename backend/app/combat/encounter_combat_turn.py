@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 import logging
-
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
@@ -30,10 +28,7 @@ from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-
 logger = logging.getLogger(__name__)
-
-
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
@@ -76,17 +71,14 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
-
         self_buff = resolve_timed_self_buff(sequence, round_number, attacker)
         if self_buff is not None:
             events.append(self_buff); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         targets = target_order(attacker, setup)
         if not targets:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
@@ -96,7 +88,6 @@ def resolve_combat_turn(
         events.extend(charge_events)
         if charged or attacker.state.is_dead or attacker.state.is_unconscious:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         movement_events, sequence = move_to_enable_offense(
             sequence, round_number, attacker, setup, turn_key, dice,
         )
@@ -104,7 +95,6 @@ def resolve_combat_turn(
         sync_paladin_auras_2014(setup)
         if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
@@ -113,22 +103,18 @@ def resolve_combat_turn(
         if presence is not None:
             events.append(presence); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         deferred = resolve_deferred_save_effect(sequence, round_number, attacker, setup, dice)
         if deferred is not None:
             events.append(deferred); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         if attacker.state.template.attack_action is not None:
             action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
             events.extend(action_events)
             if action_events or not is_available(attacker.state, "action"):
                 return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         area_result = resolve_area_save_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if area_result is not None:
             return area_result
-
         chosen_save = save_choice(attacker, setup)
         if chosen_save is not None and is_available(attacker.state, "action"):
             save_target, save_action, distance = chosen_save
@@ -139,7 +125,6 @@ def resolve_combat_turn(
             )
             events.extend(more)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         attack_choice = choose_standard_attack(attacker, setup)
         if attack_choice is not None and is_available(attacker.state, "action"):
             attack_target, attack, distance = attack_choice
