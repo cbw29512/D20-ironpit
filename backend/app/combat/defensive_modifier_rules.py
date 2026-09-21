@@ -50,6 +50,15 @@ def death_save_advantage_sources(state: CombatantState) -> int:
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.DEATH_SAVE_ADVANTAGE)
 
 
+def death_save_nat20_threshold(state: CombatantState) -> int:
+    """Return the lowest active threshold that receives the natural-20 Death Save result."""
+    thresholds = [
+        item.flat_bonus for item in state.active_modifiers
+        if item.kind is ModifierKind.DEATH_SAVE_NAT20_THRESHOLD
+    ]
+    return min(thresholds, default=20)
+
+
 def healing_is_maximized(state: CombatantState) -> bool:
     return any(item.kind is ModifierKind.HEALING_MAXIMIZE for item in state.active_modifiers)
 
