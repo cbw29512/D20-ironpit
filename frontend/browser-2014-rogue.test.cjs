@@ -24,7 +24,9 @@ const rogue13 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l13");
 const rogue14 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l14");
 const rogue15 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l15");
 const rogue16 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l16");
-assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11 && rogue12 && rogue13 && rogue14 && rogue15 && rogue16);
+const rogue17 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l17");
+const rogue18 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l18");
+assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11 && rogue12 && rogue13 && rogue14 && rogue15 && rogue16 && rogue17 && rogue18);
 assert.equal(rogue2.ruleset, "2014");
 assert.equal(rogue2.cunning_action, true);
 assert.equal(rogue5.uncanny_dodge, true);
@@ -45,6 +47,14 @@ assert.equal(rogue16.saving_throw_bonuses.constitution, 4);
 assert.equal(rogue16.saving_throw_bonuses.wisdom, 7);
 assert.deepEqual(rogue16.weapon_masteries, []);
 assert.ok(rogue16.attacks.every((attack) => attack.masteryProperty == null));
+assert.equal(rogue17.progression_features.first_round_extra_turn_initiative_offset, -10);
+assert.equal(rogue17.sneak_attack_d6, 9);
+assert.equal(rogue18.progression_features.suppress_attack_advantage_while_not_incapacitated, true);
+assert.equal(rogue18.sneak_attack_d6, 9);
+const elusiveState = state(rogue18);
+assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.suppressAttackAdvantage(elusiveState), true);
+elusiveState.active_effect_ids.push("stunned");
+assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.suppressAttackAdvantage(elusiveState), false);
 
 function state(template) {
   return {
@@ -94,4 +104,4 @@ assert.equal(dash.feature_id, "cunning-action-dash");
 assert.equal(runner.state.movement_remaining_ft, 60);
 assert.equal(runner.state.bonus_action_available, false);
 
-console.log("2014 Thief Rogue browser mechanics preserve Cunning Action, Uncanny Dodge, Evasion, Slippery Mind, approved Constitution ASIs, level-16 progression, and edition isolation.");
+console.log("2014 Thief Rogue browser mechanics preserve Cunning Action, Uncanny Dodge, Evasion, Slippery Mind, approved Constitution ASIs, level-18 progression, and edition isolation.");
