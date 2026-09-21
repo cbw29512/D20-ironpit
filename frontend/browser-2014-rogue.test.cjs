@@ -11,6 +11,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 load("browser-heroes.js");
 load("browser-condition-rules.js");
 load("browser-action-economy.js");
+load("browser-initiative.js");
 load("browser-rogue-defenses.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
@@ -19,7 +20,16 @@ const rogue5 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l5");
 const rogue7 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l7");
 const rogue10 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l10");
 const rogue11 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l11");
-assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11);
+const rogue12 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l12");
+const rogue13 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l13");
+const rogue14 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l14");
+const rogue15 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l15");
+const rogue16 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l16");
+const rogue17 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l17");
+const rogue18 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l18");
+const rogue19 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l19");
+const rogue20 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l20");
+assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11 && rogue12 && rogue13 && rogue14 && rogue15 && rogue16 && rogue17 && rogue18 && rogue19 && rogue20);
 assert.equal(rogue2.ruleset, "2014");
 assert.equal(rogue2.cunning_action, true);
 assert.equal(rogue5.uncanny_dodge, true);
@@ -27,8 +37,55 @@ assert.equal(rogue7.evasion, true);
 assert.equal(rogue10.sneak_attack_d6, 5);
 assert.equal(rogue11.ruleset, "2014");
 assert.equal(rogue11.sneak_attack_d6, 6);
-assert.deepEqual(rogue11.weapon_masteries, []);
-assert.ok(rogue11.attacks.every((attack) => attack.masteryProperty == null));
+assert.equal(rogue12.ability_scores.constitution, 16);
+assert.equal(rogue12.max_hp, 99);
+assert.equal(rogue12.saving_throw_bonuses.constitution, 3);
+assert.equal(rogue13.sneak_attack_d6, 7);
+assert.equal(rogue14.sneak_attack_d6, 7);
+assert.equal(rogue15.sneak_attack_d6, 8);
+assert.equal(rogue15.saving_throw_bonuses.wisdom, 7);
+assert.equal(rogue16.ability_scores.constitution, 18);
+assert.equal(rogue16.max_hp, 147);
+assert.equal(rogue16.saving_throw_bonuses.constitution, 4);
+assert.equal(rogue16.saving_throw_bonuses.wisdom, 7);
+assert.deepEqual(rogue16.weapon_masteries, []);
+assert.ok(rogue16.attacks.every((attack) => attack.masteryProperty == null));
+assert.equal(rogue17.first_round_extra_turn_initiative_offset, -10);
+assert.equal(rogue17.sneak_attack_d6, 9);
+assert.equal(rogue18.suppress_attack_advantage_while_not_incapacitated, true);
+assert.equal(rogue18.sneak_attack_d6, 9);
+assert.equal(rogue19.ability_scores.constitution, 20);
+assert.equal(rogue19.max_hp, 193);
+assert.equal(rogue19.saving_throw_bonuses.constitution, 5);
+assert.equal(rogue19.saving_throw_bonuses.wisdom, 8);
+assert.equal(rogue19.sneak_attack_d6, 10);
+assert.equal(rogue20.sneak_attack_d6, 10);
+assert.equal(rogue20.miss_to_hit_override_resource_id, "stroke-of-luck");
+assert.equal(rogue20.resources["stroke-of-luck"], 1);
+const elusiveState = state(rogue18);
+assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.suppressAttackAdvantage(elusiveState), true);
+elusiveState.active_effect_ids.push("stunned");
+assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.suppressAttackAdvantage(elusiveState), false);
+
+const scheduledMembers = [
+  { combatant_id: "mara17", state: { template: rogue17 } },
+  { combatant_id: "target17", state: { template: {} } },
+];
+const scheduledInitiative = {
+  turn_order: ["mara17", "target17"],
+  groups: [
+    { combatant_ids: ["mara17"], natural_roll: 15, initiative_count: 20 },
+    { combatant_ids: ["target17"], natural_roll: 12, initiative_count: 17 },
+  ],
+};
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_INITIATIVE.turnOrderForRound(1, scheduledInitiative, scheduledMembers),
+  ["mara17", "target17", "mara17"],
+);
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_INITIATIVE.turnOrderForRound(2, scheduledInitiative, scheduledMembers),
+  ["mara17", "target17"],
+);
 
 function state(template) {
   return {
@@ -78,4 +135,4 @@ assert.equal(dash.feature_id, "cunning-action-dash");
 assert.equal(runner.state.movement_remaining_ft, 60);
 assert.equal(runner.state.bonus_action_available, false);
 
-console.log("2014 Thief Rogue browser mechanics preserve Cunning Action, Uncanny Dodge, Evasion, level-11 Sneak Attack, and edition isolation.");
+console.log("2014 Thief Rogue browser mechanics preserve Cunning Action, Uncanny Dodge, Evasion, Slippery Mind, approved Constitution ASIs, level-20 progression, and edition isolation.");
