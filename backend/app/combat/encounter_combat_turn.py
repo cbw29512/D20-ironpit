@@ -10,6 +10,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
+from app.combat.deferred_save_effect import resolve_deferred_save_effect
 from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
@@ -105,6 +106,11 @@ def resolve_combat_turn(
         presence = resolve_intimidating_presence(sequence, round_number, attacker, target, dice)
         if presence is not None:
             events.append(presence); sequence += 1
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        deferred = resolve_deferred_save_effect(sequence, round_number, attacker, setup, dice)
+        if deferred is not None:
+            events.append(deferred); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         if attacker.state.template.attack_action is not None:
