@@ -170,7 +170,7 @@ def test_2014_certified_catalog_reaches_eighty_eight_hero_snapshots() -> None:
 
 def test_level_eleven_tranquility_uses_shared_opening_targeting_ward() -> None:
     monk = _member(build_kael_stillwater_2014(11), "kael11", "heroes", 0)
-    attacker = _member(build_karnok_stoneward_2014(11), "attacker", "monsters", 5)
+    attacker = _member(build_karnok_stoneward_2014(8), "attacker", "monsters", 5)
 
     assert monk.state.template.max_hp == 80
     assert next(item for item in monk.state.resources if item.id == "ki").max_uses == 11
