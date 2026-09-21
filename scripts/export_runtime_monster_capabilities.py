@@ -13,9 +13,11 @@ _OUTPUT = Path("backend/app/content/data/combatant_capabilities_v1.json")
 _HERO_ONLY_PROGRESSION_FIELDS = {
     "danger_sense", "reckless_attack", "frenzy", "frenzy_bonus_attack_2014", "intimidating_presence_2014_dc",
     "brutal_critical_dice", "fast_movement_bonus_ft", "mindless_rage", "instinctive_pounce_fraction",
-    "great_weapon_fighting", "indomitable_reroll", "indomitable_bonus", "tactical_master_sap_weapon_ids",
+    "great_weapon_fighting", "indomitable_reroll", "indomitable_bonus", "failed_save_reroll_source_id",
+    "failed_save_reroll_resource_id", "failed_save_reroll_bonus", "tactical_master_sap_weapon_ids",
     "sneak_attack_d6", "uncanny_dodge", "evasion",
     "martial_arts_bonus_attack", "martial_arts_die_size", "flurry_of_blows", "deflect_missiles",
+    "deferred_save_effect", "timed_self_buff", "opening_targeting_ward",
     "open_hand_technique", "stunning_strike", "divine_smite_2014", "turn_unholy_2014",
     "aura_of_protection_2014_bonus", "aura_of_devotion_2014", "aura_of_courage_2014",
     "sacred_weapon_2014_bonus", "survivor_heal_amount",
