@@ -42,7 +42,7 @@ def test_improved_divine_smite_rolls_and_critically_doubles_without_spending_a_r
 
     _, critical_components = resolve_weapon_damage(
         state, state.template.alternate_weapon_attacks[0],
-        FixedDiceProvider([4, 7, 8]), True, RollMode.NORMAL, "1:aurelia-crit",
+        FixedDiceProvider([4, 5, 7, 8]), True, RollMode.NORMAL, "1:aurelia-crit",
     )
     critical_rider = next(item for item in critical_components if item.source == "Improved Divine Smite")
     assert critical_rider.notation == "2d8+0"
