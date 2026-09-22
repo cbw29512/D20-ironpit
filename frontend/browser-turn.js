@@ -74,7 +74,7 @@
   function resolveTurn(sequence, round, member, setup) {
     try {
       enablePitRangePolicy();
-      const events = []; H().cleanup(setup); PA()?.sync(setup); S().beginTurn(member.state);
+      const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); PA()?.sync(setup); S().beginTurn(member.state);
       const turnKey = `${round}:${member.combatant_id}`;
       const hooks = AH();
       if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
