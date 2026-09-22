@@ -20,6 +20,29 @@
     };
   }
 
+  function damageTempHp(sequence, round, caster, spell, events) {
+    const rule = caster.state.template.damaging_action_temporary_hp_rider;
+    if (!rule || !(rule.action_ids || []).includes(spell.id)) return null;
+    const dealt = events.some((event) => (event.damage_components || []).some((part) =>
+      (part.applied_total ?? part.appliedTotal ?? part.total ?? 0) > 0));
+    if (!dealt) return null;
+    const score = caster.state.template.ability_scores?.[rule.ability];
+    if (!Number.isInteger(score)) throw new Error("Ability-scaled Temporary HP requires ability scores.");
+    const amount = Math.max(0, Math.floor((score - 10) / 2) * (rule.multiplier || 1));
+    const before = caster.state.temporary_hp || 0;
+    const after = S().grantTemporaryHp(caster.state, amount);
+    if (after <= before) return null;
+    return {
+      sequence, round_number: round, event_type: "feature",
+      actor_id: caster.combatant_id, actor_name: caster.state.template.name,
+      target_id: caster.combatant_id, target_name: caster.state.template.name,
+      temporary_hp_before: before, temporary_hp_after: after,
+      feature_id: rule.source_id, animation: "temporary-hp",
+      description: caster.state.template.name + " gains " + (after - before)
+        + " Temporary HP from " + rule.source_id.replaceAll("-", " ") + ".",
+    };
+  }
+
   function resolve(sequence, round, caster, setup, choice, turnKey) {
     const spell = choice.action;
     if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
@@ -72,6 +95,8 @@
         sharedDamageRolls = [...event.damage_components[0].rolls];
       }
     }
+    const rider = damageTempHp(sequence, round, caster, spell, events);
+    if (rider) { events.push(rider); sequence += 1; }
     return { events, sequence };
   }
 
