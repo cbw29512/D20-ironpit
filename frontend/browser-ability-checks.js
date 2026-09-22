@@ -26,5 +26,36 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_ABILITY_CHECKS = { applyMinimum };
+  function applySkillMinimum(state, skillId, roll) {
+    try {
+      const rules = (state.template.skill_check_d20_minimums || [])
+        .filter((rule) => (rule.skill_ids || []).includes(skillId))
+        .sort((a, b) => b.minimum_roll - a.minimum_roll || a.source_id.localeCompare(b.source_id));
+      if (!rules.length) return roll;
+      if (!Number.isInteger(roll.selected_roll)) throw new Error("Skill-check d20 minimum requires a selected d20 roll.");
+      const rule = rules[0];
+      if (roll.selected_roll >= rule.minimum_roll) return roll;
+      const replacementRolls = (roll.rolls || []).map((value) => Math.max(value, rule.minimum_roll));
+      const replacementSelected = rule.minimum_roll;
+      const replacementTotal = replacementSelected + (roll.modifier || 0);
+      const revision = {
+        source_effect_id: rule.source_id, kind: "die_replacement",
+        original_rolls: [...(roll.rolls || [])], replacement_rolls: replacementRolls,
+        original_modifier: roll.modifier || 0, replacement_modifier: roll.modifier || 0,
+        original_selected: roll.selected_roll, replacement_selected: replacementSelected,
+        original_total: roll.total, replacement_total: replacementTotal,
+        accepted: "replacement", replaced_die_index: null,
+      };
+      return {
+        ...roll, rolls: replacementRolls, selected_roll: replacementSelected, total: replacementTotal,
+        notation: `${roll.notation} [${rule.source_id}]`,
+        revisions: [...(roll.revisions || []), revision],
+      };
+    } catch (error) {
+      console.error("Browser skill-check d20 minimum failed", { skillId, combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_ABILITY_CHECKS = { applyMinimum, applySkillMinimum };
 })();
