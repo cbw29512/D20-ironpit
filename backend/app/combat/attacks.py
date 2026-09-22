@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_advantage_suppression import apply_defender_advantage_suppression
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
+from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.brutal_strike import brutal_strike_attack_sources
@@ -14,15 +15,12 @@ from app.combat.conditional_attack_advantage import conditional_attack_advantage
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
-from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
-from app.combat.miss_to_hit_override import apply_miss_to_hit_override
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice, attack_roll_flat_bonus, attacks_against_advantage_sources, consume_attacks_against_advantage,
     consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
 )
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
-from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
@@ -83,30 +81,25 @@ def resolve_attack(
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        natural = attack_roll.selected_roll or 0
-        target_ac = effective_armor_class(actual_defender)
-        hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
-        hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
-        if parry_used:
-            target_ac += actual_defender.template.parry_reaction.ac_bonus
-
-        attack_roll, d20_override_feature_id, d20_override_name = apply_failed_d20_test_override(
-            attacker, attack_roll, failed=not hit, test_kind="attack",
+        d20_outcome = resolve_attack_d20_outcome(
+            attacker, actual_defender, attack, attack_roll, effective_armor_class(actual_defender),
         )
-        natural = attack_roll.selected_roll or 0
-        if d20_override_feature_id is not None:
-            hit = natural == 20 or attack_roll.total >= target_ac
-
-        hit, miss_override_feature_id, miss_override_name = apply_miss_to_hit_override(attacker, hit=hit)
-        natural_20 = natural == 20
+        attack_roll = d20_outcome.roll
+        target_ac = d20_outcome.target_ac
+        hit = d20_outcome.hit
+        natural = d20_outcome.natural
+        parry_used = d20_outcome.parry_used
+        d20_override_feature_id = d20_outcome.d20_override_feature_id
+        d20_override_name = d20_outcome.d20_override_source_name
+        miss_override_feature_id = d20_outcome.miss_override_feature_id
+        miss_override_name = d20_outcome.miss_override_source_name
         natural_1 = natural == 1
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
-        natural_1_ends_turn = (
-            natural_1 and not off_turn
-            and d20_override_feature_id is None
-            and miss_override_feature_id is None
+        natural_1_ends_turn = natural_1 and not off_turn and not (
+            d20_override_feature_id or miss_override_feature_id
         )
-        if natural_1_ends_turn: terminate_turn(attacker, "iron-pit-natural-1-attack")
+        if natural_1_ends_turn:
+            terminate_turn(attacker, "iron-pit-natural-1-attack")
         critical = bool(hit and miss_override_feature_id is None and (
             expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)
         ))
