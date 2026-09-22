@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.domain.progression import (
     AbilityScaledDamageRider,
     ProgressionCombatFeatures,
@@ -10,6 +11,7 @@ from app.domain.progression_riders import DamagingActionTemporaryHpRider
 
 def build_seraphine_progression_features(level: int) -> ProgressionCombatFeatures:
     return ProgressionCombatFeatures(
+        divine_spark_dice=CLERIC_COMBAT_LEVELS[level].divine_spark_dice if level >= 2 else 0,
         turning_failure_damage=(
             AbilityScaledDamageRider(
                 source_id="sear-undead",
