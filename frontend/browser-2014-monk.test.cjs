@@ -12,12 +12,20 @@ load("browser-heroes.js");
 load("browser-condition-rules.js");
 load("browser-condition-immunity.js");
 load("browser-action-economy.js");
+load("browser-rolls.js");
+load("browser-modifiers.js");
+load("browser-exhaustion.js");
+load("browser-dodge.js");
+load("browser-defensive-modifier-rules.js");
+load("browser-d20-test-override.js");
+load("browser-failed-save-reroll.js");
+load("browser-saves.js");
 load("browser-timed-conditions.js");
 load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const monk = (level) => heroes.find((hero) => hero.id === `kael-stillwater-2014-l${level}`);
-for (let level = 1; level <= 10; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
+for (let level = 1; level <= 14; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
 
 assert.deepEqual(monk(1).ability_scores, { strength: 13, dexterity: 16, constitution: 14, intelligence: 11, wisdom: 15, charisma: 9 });
 assert.equal(monk(1).armor_class, 15);
@@ -41,6 +49,27 @@ assert.equal(monk(6).healingActions[0].healingBonus, 18);
 assert.deepEqual(monk(7).condition_removal_actions[0].removableConditions, ["charmed", "frightened"]);
 assert.deepEqual(monk(10).weapon_masteries, []);
 assert.ok(monk(10).attacks.every((attack) => attack.masteryProperty == null));
+assert.equal(monk(11).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 8);
+assert.equal(monk(12).ability_scores.wisdom, 17);
+assert.equal(monk(14).speed_ft, 55);
+assert.deepEqual(monk(14).saving_throw_proficiency_grants, [
+  { source_id: "diamond-soul", abilities: ["constitution", "intelligence", "wisdom", "charisma"] },
+]);
+assert.deepEqual(monk(14).failed_save_reroll_grants, [
+  { source_id: "diamond-soul", source_name: "Diamond Soul", resource_id: "ki", resource_cost: 1 },
+]);
+
+{
+  const diamond = state(monk(14));
+  const queued = [1, 20];
+  window.IRON_PIT_DICE = { roll: () => queued.shift() };
+  const save = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(diamond, "constitution", 20);
+  assert.equal(save.succeeded, true);
+  assert.equal(save.roll.total, 27);
+  assert.equal(save.roll.revisions.at(-1).source_effect_id, "diamond-soul");
+  assert.match(save.roll.notation, /Diamond Soul/);
+  assert.equal(diamond.resources.ki, 13);
+}
 
 function state(template) {
   return {

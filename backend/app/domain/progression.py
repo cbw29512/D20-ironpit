@@ -66,6 +66,15 @@ class SavingThrowProficiencyGrant(BaseModel):
     abilities: list[AbilityName] = Field(min_length=1)
 
 
+class FailedSaveRerollGrant(BaseModel):
+    """Source-tagged, resource-backed reroll of a failed saving throw."""
+
+    source_id: str
+    source_name: str
+    resource_id: str
+    resource_cost: int = Field(default=1, ge=1)
+
+
 class FailedD20TestOverrideGrant(BaseModel):
     """Resource-backed replacement of a failed eligible D20 Test roll."""
 
@@ -86,6 +95,7 @@ class ProgressionCombatFeatures(BaseModel):
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     opening_targeting_ward: OpeningTargetingWard | None = None
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
+    failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
