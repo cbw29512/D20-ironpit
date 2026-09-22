@@ -72,9 +72,14 @@ function state(uses = 1) {
 for (const htmlName of ["index.html", path.join("..", "index.html")]) {
   const html = fs.readFileSync(path.join(__dirname, htmlName), "utf8");
   assert.match(html, /browser-d20-outcome-override\.js/);
+  assert.match(html, /browser-attack-post-roll\.js/);
   assert.ok(
-    html.indexOf("browser-d20-outcome-override.js") < html.indexOf("browser-attack.js"),
-    "D20 result override must load before attack resolution",
+    html.indexOf("browser-d20-outcome-override.js") < html.indexOf("browser-attack-post-roll.js"),
+    "D20 result override must load before post-roll attack sequencing",
+  );
+  assert.ok(
+    html.indexOf("browser-attack-post-roll.js") < html.indexOf("browser-attack.js"),
+    "post-roll sequencing must load before attack resolution",
   );
   assert.ok(
     html.indexOf("browser-d20-outcome-override.js") < html.indexOf("browser-saves.js"),
