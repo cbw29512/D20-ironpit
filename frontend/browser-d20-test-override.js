@@ -43,5 +43,13 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE = { apply };
+  function sourceNameForRoll(state, roll) {
+    const revision = [...(roll?.revisions || [])].reverse().find((item) =>
+      (state.template?.failed_d20_test_override_grants || []).some((grant) => grant.source_id === item.source_effect_id));
+    if (!revision) return null;
+    const grant = (state.template.failed_d20_test_override_grants || []).find((item) => item.source_id === revision.source_effect_id);
+    return grant?.source_name || revision.source_effect_id;
+  }
+
+  window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE = { apply, sourceNameForRoll };
 })();
