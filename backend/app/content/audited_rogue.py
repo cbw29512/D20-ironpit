@@ -74,7 +74,7 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
             "athletics": row.proficiency_bonus + strength_mod,
             "acrobatics": row.proficiency_bonus + dexterity_mod,
         },
-        progression_features=compile_progression_feature_fields(mara_rogue_features(level), level),
+        progression_features=_progression_fields(level),
         resources=[
             ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus).model_dump(),
             ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1).model_dump(),
