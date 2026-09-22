@@ -13,7 +13,10 @@ from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.offensive_spell_effects import build_guiding_bolt, build_inflict_wounds, build_sacred_flame
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.character_builds import AbilityScores
-from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
+from app.domain.progression import (
+    AbilityScaledDamageRider, DamagingActionTemporaryHpRider,
+    ProgressionCombatFeatures, SlotHealingSelfRider,
+)
 from app.domain.models import (
     CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout,
     Weapon, WeaponAttack, WeaponAttackKind,
@@ -70,6 +73,8 @@ def _source(level: int) -> str:
         + ("Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, " if level >= 9 else "")
         + ("Divine Intervention, Contagion, Spare the Dying, " if level >= 10 else "")
         + ("Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, " if level >= 11 else "")
+        + ("Fire Storm, seventh-level Inflict Wounds and Mass Cure Wounds upcasts, " if level >= 13 else "")
+        + ("Improved Blessed Strikes, " if level >= 14 else "")
         + "Equipment"
     )
 
@@ -108,6 +113,12 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             disciple_of_life_bonus(6) if "disciple-of-life" in features else 0,
             6,
         ))
+    if level >= 13:
+        healing.append(build_mass_cure_wounds(
+            wisdom_modifier,
+            disciple_of_life_bonus(7) if "disciple-of-life" in features else 0,
+            7,
+        ))
     if level >= 10:
         healing.append(build_divine_intervention_healing(
             wisdom_modifier,
@@ -125,6 +136,8 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         save_spells.append(build_inflict_wounds(save_dc, 5))
     if level >= 11:
         save_spells.append(build_inflict_wounds(save_dc, 6))
+    if level >= 13:
+        save_spells.append(build_inflict_wounds(save_dc, 7))
     traits = [CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE]
     if "disciple-of-life" in features:
         traits.append(CombatTrait.LIFE_DOMAIN)
@@ -149,6 +162,12 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             slot_healing_other_self_rider=(SlotHealingSelfRider(
                 source_id="blessed-healer", flat_bonus=2, per_slot_level=1,
             ) if level >= 6 else None),
+            damaging_action_temporary_hp_rider=(DamagingActionTemporaryHpRider(
+                source_id="improved-blessed-strikes",
+                action_ids=["sacred-flame"],
+                ability="wisdom",
+                multiplier=2,
+            ) if level >= 14 else None),
         ),
         saving_throw_bonuses={
             "strength": 0, "dexterity": 0, "constitution": 0, "intelligence": intelligence_modifier,
