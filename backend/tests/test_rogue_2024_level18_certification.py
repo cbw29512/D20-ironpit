@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.content.audited_rogue import build_mara_quickstep_level, unsupported_mara_rogue_features
+from app.content.audited_rogue import build_mara_quickstep_level, mara_rogue_features, unsupported_mara_rogue_features
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.rogue_combat_fingerprint import build_mara_quickstep_level18_combat_profile
 from app.content.rogue_final_progression_profile import build_mara_quickstep_level18_profile
@@ -17,7 +17,7 @@ def test_2024_rogue_level18_reuses_universal_elusive_advantage_suppression() -> 
     assert template.max_hp == 183
     assert template.max_hp - level17.max_hp == 10
     assert template.progression_features.sneak_attack_d6 == 9
-    assert "elusive" in __import__("app.content.audited_rogue", fromlist=["mara_rogue_features"]).mara_rogue_features(18)
+    assert "elusive" in mara_rogue_features(18)
     assert template.progression_features.suppress_attack_advantage_while_not_incapacitated is True
     assert (
         template.progression_features.suppress_attack_advantage_while_not_incapacitated
