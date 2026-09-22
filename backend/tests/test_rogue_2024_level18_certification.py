@@ -17,6 +17,7 @@ def test_2024_rogue_level18_reuses_universal_elusive_advantage_suppression() -> 
     assert template.max_hp == 183
     assert template.max_hp - level17.max_hp == 10
     assert template.progression_features.sneak_attack_d6 == 9
+    assert "elusive" in __import__("app.content.audited_rogue", fromlist=["mara_rogue_features"]).mara_rogue_features(18)
     assert template.progression_features.suppress_attack_advantage_while_not_incapacitated is True
     assert (
         template.progression_features.suppress_attack_advantage_while_not_incapacitated
