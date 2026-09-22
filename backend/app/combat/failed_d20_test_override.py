@@ -74,3 +74,18 @@ def apply_failed_d20_test_override(
     except Exception as exc:
         logger.exception("Failed to apply D20 Test override for %s.", state.template.name)
         raise RuntimeError("Failed D20 Test override could not be resolved.") from exc
+
+
+def source_name_for_roll(state: CombatantState, roll: DiceRoll | None) -> str | None:
+    """Recover the player-facing source name from a recorded override revision."""
+    try:
+        if roll is None:
+            return None
+        source_ids = {item.source_effect_id for item in roll.revisions}
+        for grant in reversed(state.template.progression_features.failed_d20_test_override_grants):
+            if grant.source_id in source_ids:
+                return grant.source_name
+        return None
+    except Exception as exc:
+        logger.exception("Failed to recover D20 override source name for %s.", state.template.name)
+        raise RuntimeError("D20 override source name could not be resolved.") from exc
