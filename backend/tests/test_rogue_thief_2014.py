@@ -84,6 +84,10 @@ def test_levels_fourteen_through_sixteen_reuse_existing_engine_primitives() -> N
     hero15 = build_mara_quickstep_2014(15)
     assert slippery_mind.combat_relevant is True
     assert slippery_mind.automated is True
+    grants = hero15.progression_features.saving_throw_proficiency_grants
+    assert len(grants) == 1
+    assert grants[0].source_id == "slippery-mind"
+    assert grants[0].abilities == ["wisdom"]
     assert hero15.saving_throw_bonuses["wisdom"] == 7
     assert hero15.progression_features.sneak_attack_d6 == 8
 
