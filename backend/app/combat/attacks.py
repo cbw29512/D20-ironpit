@@ -14,6 +14,7 @@ from app.combat.conditional_attack_advantage import conditional_attack_advantage
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
+from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.miss_to_hit_override import apply_miss_to_hit_override
 from app.combat.modifier_stack import (
@@ -82,15 +83,29 @@ def resolve_attack(
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        natural = attack_roll.selected_roll or 0; natural_20 = natural == 20
+        natural = attack_roll.selected_roll or 0
+        target_ac = effective_armor_class(actual_defender)
+        hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
+        hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
+        if parry_used:
+            target_ac += actual_defender.template.parry_reaction.ac_bonus
+
+        attack_roll, d20_override_feature_id, d20_override_name = apply_failed_d20_test_override(
+            attacker, attack_roll, failed=not hit, test_kind="attack",
+        )
+        natural = attack_roll.selected_roll or 0
+        if d20_override_feature_id is not None:
+            hit = natural == 20 or attack_roll.total >= target_ac
+
+        hit, miss_override_feature_id, miss_override_name = apply_miss_to_hit_override(attacker, hit=hit)
+        natural_20 = natural == 20
         natural_1 = natural == 1
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
-        target_ac = effective_armor_class(actual_defender)
-        hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
-        hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
-        if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
-        hit, miss_override_feature_id, miss_override_name = apply_miss_to_hit_override(attacker, hit=hit)
-        natural_1_ends_turn = natural_1 and not off_turn and miss_override_feature_id is None
+        natural_1_ends_turn = (
+            natural_1 and not off_turn
+            and d20_override_feature_id is None
+            and miss_override_feature_id is None
+        )
         if natural_1_ends_turn: terminate_turn(attacker, "iron-pit-natural-1-attack")
         critical = bool(hit and miss_override_feature_id is None and (
             expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)
@@ -132,7 +147,10 @@ def resolve_attack(
             studied_applied = apply_studied_attack_miss(attacker, attacker_event_id, defender_event_id, round_number)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
-        if miss_override_feature_id is not None: description += f" {miss_override_name or miss_override_feature_id} turns the miss into a hit."
+        if d20_override_feature_id is not None:
+            description += f" {d20_override_name or d20_override_feature_id} turns the failed attack roll into a 20."
+        elif miss_override_feature_id is not None:
+            description += f" {miss_override_name or miss_override_feature_id} turns the miss into a hit."
         elif natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
@@ -188,7 +206,7 @@ def resolve_attack(
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
-            feature_id=miss_override_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
+            feature_id=d20_override_feature_id or miss_override_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
             animation=weapon.animation, description=description + consume_survival_save_log(actual_defender),
         )
     except Exception as exc:
