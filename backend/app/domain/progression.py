@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from typing import Literal
 
 from app.domain.character_builds import AbilityName
+from app.domain.progression_riders import DamagingActionTemporaryHpRider
 
 
 class AbilityCheckMinimum(BaseModel):
@@ -48,6 +49,7 @@ class ProgressionCombatFeatures(BaseModel):
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
     turning_failure_damage: AbilityScaledDamageRider | None = None
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
+    damaging_action_temporary_hp_rider: DamagingActionTemporaryHpRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
