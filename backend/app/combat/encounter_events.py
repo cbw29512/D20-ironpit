@@ -1,60 +1,67 @@
 from __future__ import annotations
 
+import logging
 import uuid
 
 from app.domain.encounters import EncounterBattleResult, EncounterInitiative, EncounterSetup
 from app.domain.models import BattleEvent
+
+logger = logging.getLogger(__name__)
 
 
 def build_initiative_events(
     initiative: EncounterInitiative,
     sequence: int,
 ) -> tuple[list[BattleEvent], int]:
-    events: list[BattleEvent] = []
-    for group in initiative.groups:
-        description = f"{', '.join(group.combatant_ids)} act at Initiative {group.initiative_count}."
-        if group.natural_roll == 20:
-            description += " Natural 20: top initiative priority."
-        elif group.natural_roll == 1:
-            description += " Natural 1: bottom initiative priority."
-        if group.tie_break_rolls:
-            history = " → ".join(str(value) for value in group.tie_break_rolls)
-            suffix = "s" if len(group.tie_break_rolls) > 1 else ""
-            description += f" Tie reroll{suffix}: {history}."
-        events.append(BattleEvent(
-            sequence=sequence,
-            round_number=0,
-            event_type="initiative",
-            actor_id=group.combatant_ids[0],
-            actor_name=group.template_id,
-            attack_roll=group.initiative_roll,
-            animation="initiative",
-            description=description,
-        ))
-        sequence += 1
-    for extra in initiative.first_round_extra_turns:
-        actor_name = next(
-            (
-                event.actor_name for event in events
-                if event.event_type == "initiative" and event.actor_id == extra.combatant_id
-            ),
-            extra.combatant_id,
-        )
-        events.append(BattleEvent(
-            sequence=sequence,
-            round_number=0,
-            event_type="feature",
-            actor_id=extra.combatant_id,
-            actor_name=actor_name,
-            feature_id=extra.source_id,
-            animation="initiative",
-            description=(
-                f"{actor_name} gains an extra first-round turn "
-                f"at Initiative {extra.initiative_count} from {extra.source_name}."
-            ),
-        ))
-        sequence += 1
-    return events, sequence
+    try:
+        events: list[BattleEvent] = []
+        for group in initiative.groups:
+            description = f"{', '.join(group.combatant_ids)} act at Initiative {group.initiative_count}."
+            if group.natural_roll == 20:
+                description += " Natural 20: top initiative priority."
+            elif group.natural_roll == 1:
+                description += " Natural 1: bottom initiative priority."
+            if group.tie_break_rolls:
+                history = " → ".join(str(value) for value in group.tie_break_rolls)
+                suffix = "s" if len(group.tie_break_rolls) > 1 else ""
+                description += f" Tie reroll{suffix}: {history}."
+            events.append(BattleEvent(
+                sequence=sequence,
+                round_number=0,
+                event_type="initiative",
+                actor_id=group.combatant_ids[0],
+                actor_name=group.template_id,
+                attack_roll=group.initiative_roll,
+                animation="initiative",
+                description=description,
+            ))
+            sequence += 1
+        for extra in initiative.first_round_extra_turns:
+            actor_name = next(
+                (
+                    event.actor_name for event in events
+                    if event.event_type == "initiative" and event.actor_id == extra.combatant_id
+                ),
+                extra.combatant_id,
+            )
+            events.append(BattleEvent(
+                sequence=sequence,
+                round_number=0,
+                event_type="feature",
+                actor_id=extra.combatant_id,
+                actor_name=actor_name,
+                feature_id=extra.source_id,
+                animation="initiative",
+                description=(
+                    f"{actor_name} gains an extra first-round turn "
+                    f"at Initiative {extra.initiative_count} from {extra.source_name}."
+                ),
+            ))
+            sequence += 1
+        return events, sequence
+    except Exception as exc:
+        logger.exception("Failed to build initiative and extra-turn audit events.")
+        raise RuntimeError("Initiative audit events could not be built.") from exc
 
 
 def build_finish_event(sequence: int, round_number: int, outcome: str) -> BattleEvent:
