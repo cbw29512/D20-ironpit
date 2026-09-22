@@ -50,6 +50,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("first-round-extra-turn")
     if features.suppress_attack_advantage_while_not_incapacitated:
         mechanics.add("defender-attack-advantage-suppression")
+    if features.miss_to_hit_override_grants:
+        mechanics.update(rule.source_id for rule in features.miss_to_hit_override_grants)
     if features.miss_to_hit_override_resource_id:
         mechanics.add("miss-to-hit-override")
     if features.miss_to_hit_override_source_name and not features.miss_to_hit_override_resource_id:
