@@ -22,7 +22,7 @@
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
       grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
       survival_save_uses: {}, pending_survival_save_logs: [],
-      feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
+      feature_last_turn_keys: {}, turn_start_feature_cooldowns: [], spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
   }
@@ -41,6 +41,7 @@
 
   function refreshReaction(state) { state.reaction_available = true; }
   function refreshStartOfTurn(state) {
+    state.turn_start_feature_cooldowns = [];
     refreshReaction(state);
     const survivor = state.template.bloodied_start_turn_heal_amount || state.template.survivor_heal_amount || 0;
     const maximum = effectiveMaxHp(state);
