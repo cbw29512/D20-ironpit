@@ -11,6 +11,8 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 load("browser-heroes.js");
 load("browser-condition-rules.js");
 load("browser-action-economy.js");
+load("browser-rolls.js");
+load("browser-initiative.js");
 load("browser-rogue-defenses.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
@@ -19,7 +21,15 @@ const rogue5 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l5");
 const rogue7 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l7");
 const rogue10 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l10");
 const rogue11 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l11");
-assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11);
+const rogue12 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l12");
+const rogue15 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l15");
+const rogue16 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l16");
+const rogue17 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l17");
+const rogue18 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l18");
+const rogue19 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l19");
+const rogue20 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l20");
+const fighter17 = heroes.find((hero) => hero.id === "karnok-stoneward-2014-l17");
+assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11 && rogue12 && rogue15 && rogue16 && rogue17 && rogue18 && rogue19 && rogue20 && fighter17);
 assert.equal(rogue2.ruleset, "2014");
 assert.equal(rogue2.cunning_action, true);
 assert.equal(rogue5.uncanny_dodge, true);
@@ -27,8 +37,28 @@ assert.equal(rogue7.evasion, true);
 assert.equal(rogue10.sneak_attack_d6, 5);
 assert.equal(rogue11.ruleset, "2014");
 assert.equal(rogue11.sneak_attack_d6, 6);
-assert.deepEqual(rogue11.weapon_masteries, []);
-assert.ok(rogue11.attacks.every((attack) => attack.masteryProperty == null));
+assert.equal(rogue12.ability_scores.constitution, 16);
+assert.equal(rogue15.saving_throw_bonuses.wisdom, 7);
+assert.equal(rogue16.ability_scores.constitution, 18);
+assert.equal(rogue17.first_round_extra_turn_initiative_offset, -10);
+assert.equal(rogue17.sneak_attack_d6, 9);
+assert.equal(rogue18.suppress_attack_advantage_while_not_incapacitated, true);
+assert.equal(rogue19.ability_scores.constitution, 20);
+assert.equal(rogue19.sneak_attack_d6, 10);
+assert.equal(rogue20.miss_to_hit_override_resource_id, "stroke-of-luck");
+assert.equal(rogue20.resources["stroke-of-luck"], 1);
+assert.equal(rogue20.resource_names["stroke-of-luck"], "Stroke of Luck");
+assert.deepEqual(rogue20.weapon_masteries, []);
+assert.ok(rogue20.attacks.every((attack) => attack.masteryProperty == null));
+
+const initiativeValues = [15, 12];
+window.IRON_PIT_DICE = { roll: () => initiativeValues.shift() };
+const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve({
+  heroes: [{ combatant_id: "mara17", side: "heroes", state: { template: rogue17, active_effect_ids: [], is_unconscious: false, exhaustion_level: 0 } }],
+  monsters: [{ combatant_id: "target17", side: "monsters", state: { template: fighter17, active_effect_ids: [], is_unconscious: false, exhaustion_level: 0 } }],
+});
+assert.deepEqual(initiative.turn_order, ["mara17", "target17"]);
+assert.deepEqual(initiative.first_round_turn_order, ["mara17", "target17", "mara17"]);
 
 function state(template) {
   return {
@@ -78,4 +108,4 @@ assert.equal(dash.feature_id, "cunning-action-dash");
 assert.equal(runner.state.movement_remaining_ft, 60);
 assert.equal(runner.state.bonus_action_available, false);
 
-console.log("2014 Thief Rogue browser mechanics preserve Cunning Action, Uncanny Dodge, Evasion, level-11 Sneak Attack, and edition isolation.");
+console.log("2014 Thief Rogue browser mechanics preserve shared defenses, save proficiency, endgame scheduling/Advantage suppression/miss override data, and edition isolation.");
