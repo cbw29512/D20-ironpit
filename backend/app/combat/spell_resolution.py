@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
+from app.combat.damaging_action_riders import resolve_damaging_action_temporary_hp
 from app.combat.spell_policy import SpellChoice
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
@@ -100,4 +101,10 @@ def resolve_spell(
         events.extend(chain)
         if shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)
+    rider_event = resolve_damaging_action_temporary_hp(
+        sequence, round_number, caster, spell.id, events,
+    )
+    if rider_event is not None:
+        events.append(rider_event)
+        sequence += 1
     return events, sequence
