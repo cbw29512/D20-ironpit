@@ -1,5 +1,5 @@
 (() => {
-  "use strict"; const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
+  "use strict"; const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0, suppress: (total) => total };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const H = () => {
     const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
@@ -72,9 +72,12 @@
     const brutalSuppression = BS()?.advantageSuppression(
       attacker.state, attack, extra.turnKey, disadvantage > 0 || rangedDisadvantage,
     ) || 0;
-    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
-      + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state)
-      + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+    const advantage = A().suppress(
+      (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
+        + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state)
+        + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id),
+      target.state,
+    );
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id), mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
