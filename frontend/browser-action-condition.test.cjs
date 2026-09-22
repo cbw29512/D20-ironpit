@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saves.js",
+  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-miss-to-hit-override.js", "browser-attack.js", "browser-saves.js",
 ]) load(file);
 
 const Q = window.IRON_PIT_BROWSER_CONDITION_RULES;
@@ -88,6 +88,46 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(S.active(ally), true, "partially debuffed ally remains active");
   assert.equal(S.packTactics(attacker, target, setup), true, "partially debuffed ally can still enable Pack Tactics");
 }
+{
+  const elusiveTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["mara-quickstep-2014-l18"]);
+  const attacker = member("generic-suppression-attacker");
+  const defender = { combatant_id: "generic-suppression-defender", side: "monsters", position_ft: 0, state: S.buildState(elusiveTemplate) };
+  const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
+  window.IRON_PIT_DICE = { roll: () => 19, rollMany: (count) => Array.from({ length: count }, () => 1) };
+
+  const normal = A.resolveAttack(20, 1, attacker, defender, attack, 5, { spendAction: false, advantage: 1 });
+  assert.equal(normal.attack_roll.mode, "normal", "generic defender Advantage suppression cancels the Advantage source");
+
+  const attacker2 = member("generic-suppression-attacker-2");
+  const incapacitated = { combatant_id: "generic-suppression-incapacitated", side: "monsters", position_ft: 0, state: S.buildState(elusiveTemplate) };
+  incapacitated.state.active_effect_ids.push("stunned");
+  const advantaged = A.resolveAttack(21, 1, attacker2, incapacitated, attack, 5, { spendAction: false, advantage: 1 });
+  assert.equal(advantaged.attack_roll.mode, "advantage", "generic suppression stops while defender is incapacitated");
+}
+
+{
+  const attacker = member("generic-miss-override-attacker");
+  attacker.state.template.miss_to_hit_override_resource_id = "test-luck";
+  attacker.state.template.resources = { "test-luck": 1 };
+  attacker.state.template.resource_names = { "test-luck": "Test Luck" };
+  attacker.state.resources["test-luck"] = 1;
+  const target = member("generic-miss-override-target");
+  const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
+  const values = [1, 4, 4];
+  window.IRON_PIT_DICE = {
+    roll: () => values.shift(),
+    rollMany: (count) => Array.from({ length: count }, () => values.shift()),
+  };
+  const event = A.resolveAttack(30, 1, attacker, target, attack, 5, { spendAction: false });
+  assert.equal(event.attack_roll.selected_roll, 1);
+  assert.equal(event.hit, true);
+  assert.equal(event.critical, false);
+  assert.equal(event.turn_terminated, false);
+  assert.equal(event.feature_id, "test-luck");
+  assert.equal(attacker.state.resources["test-luck"], 0);
+  assert.match(event.description, /Test Luck turns the miss into a hit/);
+}
+
 console.log("Browser condition/action-economy integration regressions passed.");
 
 // Keep newer condition/class subsystems inside an already mandatory CI entry point.
