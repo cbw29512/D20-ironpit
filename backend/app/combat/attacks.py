@@ -90,7 +90,8 @@ def resolve_attack(
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
         damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []
-        topple = None; cunning_strike = None; on_hit_save = None; save_damage = None; applied_total = 0
+        topple = None; cunning_strike_trip = None; cunning_strike_obscure = None
+        on_hit_save = None; save_damage = None; applied_total = 0
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
@@ -102,9 +103,12 @@ def resolve_attack(
             damage_roll = hit_damage.damage_roll; damage_components = hit_damage.damage_components
             damage_outcome = hit_damage.damage_outcome; applied_total = hit_damage.applied_total
             save_damage = hit_damage.save_damage
-            cunning_strike = hit_damage.cunning_strike_trip
-            if cunning_strike.applied:
+            cunning_strike_trip = hit_damage.cunning_strike_trip
+            cunning_strike_obscure = hit_damage.cunning_strike_obscure
+            if cunning_strike_trip.applied:
                 applied_conditions.append("prone")
+            if cunning_strike_obscure.applied:
+                applied_conditions.append("blinded")
             applied_conditions.extend(apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states, attacker.template))
             on_hit_save = resolve_on_hit_condition_save(actual_defender, attack, dice, attacker.template)
             if on_hit_save.applied_condition and on_hit_save.applied_condition not in applied_conditions: applied_conditions.append(on_hit_save.applied_condition)
@@ -132,7 +136,8 @@ def resolve_attack(
         if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
         if save_damage and save_damage.save_dc is not None: description += f" {save_damage.save_ability.title()} save DC {save_damage.save_dc}: {actual_defender.template.name} {'succeeds' if save_damage.save_succeeded else 'fails'}."
         if on_hit_save and on_hit_save.save_dc is not None: description += f" {on_hit_save.save_ability.title()} save DC {on_hit_save.save_dc}: {actual_defender.template.name} {'succeeds' if on_hit_save.save_succeeded else 'fails'}."
-        if cunning_strike and cunning_strike.save_dc is not None: description += f" Cunning Strike Trip save DC {cunning_strike.save_dc}: {actual_defender.template.name} {'succeeds' if cunning_strike.save_succeeded else 'fails'}."
+        if cunning_strike_obscure and cunning_strike_obscure.save_dc is not None: description += f" Devious Strike Obscure save DC {cunning_strike_obscure.save_dc}: {actual_defender.template.name} {'succeeds' if cunning_strike_obscure.save_succeeded else 'fails'}."
+        elif cunning_strike_trip and cunning_strike_trip.save_dc is not None: description += f" Cunning Strike Trip save DC {cunning_strike_trip.save_dc}: {actual_defender.template.name} {'succeeds' if cunning_strike_trip.save_succeeded else 'fails'}."
         if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
@@ -140,17 +145,23 @@ def resolve_attack(
         if "grappled" in applied_conditions: description += f" {actual_defender.template.name} is Grappled."
         if "restrained" in applied_conditions: description += f" {actual_defender.template.name} is Restrained while Grappled."
         if "poisoned" in applied_conditions: description += f" {actual_defender.template.name} is Poisoned."
+        if "blinded" in applied_conditions: description += f" {actual_defender.template.name} is Blinded."
         primary_save = save_damage if save_damage and save_damage.save_dc is not None else on_hit_save
         if primary_save and primary_save.save_dc is not None:
             save_roll = primary_save.save_roll
             save_ability = primary_save.save_ability
             save_dc = primary_save.save_dc
             save_succeeded = primary_save.save_succeeded
-        elif cunning_strike and cunning_strike.save_dc is not None:
-            save_roll = cunning_strike.save_roll
+        elif cunning_strike_obscure and cunning_strike_obscure.save_dc is not None:
+            save_roll = cunning_strike_obscure.save_roll
             save_ability = "dexterity"
-            save_dc = cunning_strike.save_dc
-            save_succeeded = cunning_strike.save_succeeded
+            save_dc = cunning_strike_obscure.save_dc
+            save_succeeded = cunning_strike_obscure.save_succeeded
+        elif cunning_strike_trip and cunning_strike_trip.save_dc is not None:
+            save_roll = cunning_strike_trip.save_roll
+            save_ability = "dexterity"
+            save_dc = cunning_strike_trip.save_dc
+            save_succeeded = cunning_strike_trip.save_succeeded
         else:
             save_roll = topple.save_roll if topple else None
             save_ability = "constitution" if topple and topple.save_dc is not None else None
