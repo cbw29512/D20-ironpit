@@ -6,6 +6,7 @@ from app.content.level_resources import (
     barbarian_2014_rage_uses,
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
+    cleric_divine_intervention_uses,
     fighter_2014_action_surge_uses,
     fighter_2014_indomitable_uses,
     fighter_2014_second_wind_uses,
@@ -53,7 +54,10 @@ def _paladin_2014_spell_slots(level: int) -> dict[str, int]:
 
 _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", barbarian_rage_uses),),
-    "cleric": (("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),),
+    "cleric": (
+        ("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),
+        ("divine-intervention", "Divine Intervention", cleric_divine_intervention_uses),
+    ),
     "fighter": (
         ("second-wind", "Second Wind", fighter_second_wind_uses),
         ("action-surge", "Action Surge", fighter_action_surge_uses),
