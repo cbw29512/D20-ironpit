@@ -61,5 +61,5 @@ def test_fighter_candidate_progression_fails_closed_on_first_missing_engine_feat
     assert build_karnok_stoneward_level(16).level == 16
     assert build_karnok_stoneward_level(17).level == 17
     assert build_karnok_stoneward_level(18).level == 18
-    with pytest.raises(ValueError, match="level 19 awaits engine support for: boon-combat-prowess"):
-        build_karnok_stoneward_level(19)
+    assert build_karnok_stoneward_level(19).progression_features.miss_to_hit_override_source_name == "Boon of Combat Prowess"
+    assert build_karnok_stoneward_level(20).level == 20
