@@ -7,6 +7,7 @@
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const FATE = () => window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS;
 
   function spellLevel(source, effectId) {
     const template = source.state.template;
@@ -80,6 +81,10 @@
         check = A().applyMinimum(remover.state, action.castingAbility, check);
       }
       succeeded = check.total >= dc;
+      if (FATE()) {
+        const adjusted = FATE().adjust(check, succeeded, dc, remover, setup);
+        check = adjusted.roll; succeeded = adjusted.succeeded;
+      }
     }
     if (succeeded) {
       M().removeSource([effect.target.state], effect.source.combatant_id, effect.effectId);

@@ -34,6 +34,7 @@ def _resolve_zero_hp_turn(
     sequence: int,
     round_number: int,
     combatant: EncounterCombatant,
+    setup: EncounterSetup,
     dice: DiceProvider,
 ) -> tuple[BattleEvent | None, int]:
     state = combatant.state
@@ -41,7 +42,10 @@ def _resolve_zero_hp_turn(
         return None, sequence
     if state.is_dead or state.is_stable:
         return None, sequence
-    event = resolve_death_save(sequence, round_number, combatant.combatant_id, state, dice)
+    event = resolve_death_save(
+        sequence, round_number, combatant.combatant_id, state, dice,
+        roller=combatant, setup=setup,
+    )
     return event, sequence + 1
 
 
@@ -96,7 +100,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 )
                 events.extend(lifecycle_events)
 
-                death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
+                death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, setup, dice)
                 if death_event is not None:
                     events.append(death_event)
                 if member.state.current_hp <= 0 or member.state.is_dead:

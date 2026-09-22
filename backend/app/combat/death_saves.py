@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.d20_outcome_adjustments import adjust_d20_outcome
 from app.combat.defensive_modifier_rules import death_save_advantage_sources
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.combat.zero_hp import restore_hit_points, reset_death_saves
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, CombatantState, RollMode
 
 logger = logging.getLogger(__name__)
@@ -24,6 +26,7 @@ def resolve_death_save(
     combatant_id: str,
     state: CombatantState,
     dice: DiceProvider,
+    *, roller: EncounterCombatant | None = None, setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     """Resolve one SRD 5.2.1 Death Saving Throw at the start of a character turn."""
     try:
@@ -49,11 +52,15 @@ def resolve_death_save(
         elif natural == 1:
             state.death_save_failures = min(3, state.death_save_failures + 2)
             result = "natural 1; two failures"
-        elif natural >= 10:
-            state.death_save_successes = min(3, state.death_save_successes + 1)
-            result = "success"
         else:
-            state.death_save_failures = min(3, state.death_save_failures + 1)
+            succeeded = roll.total >= 10
+            if roller is not None:
+                roll, succeeded, _ = adjust_d20_outcome(roll, succeeded, 10, roller, setup, dice)
+            if succeeded:
+                state.death_save_successes = min(3, state.death_save_successes + 1)
+                result = "success"
+            else:
+                state.death_save_failures = min(3, state.death_save_failures + 1)
 
         if state.death_save_failures >= 3:
             _mark_dead(state)

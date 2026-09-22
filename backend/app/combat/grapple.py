@@ -5,11 +5,13 @@ from app.combat.ability_checks import apply_ability_check_minimum
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
+from app.combat.d20_outcome_adjustments import adjust_d20_outcome
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.modifier_stack import effective_speed
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
+from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
 FRIGHTENED_EFFECT_ID = "frightened"
@@ -104,6 +106,7 @@ def _escape_choice(state: CombatantState) -> tuple[str, str, int, RollMode]:
 
 def resolve_escape_grapple(
     sequence: int, round_number: int, actor_id: str, state: CombatantState, dice: DiceProvider,
+    *, roller: EncounterCombatant | None = None, setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     if not is_available(state, "action"):
         raise ValueError("Action is not available to escape a grapple.")
@@ -115,6 +118,8 @@ def resolve_escape_grapple(
     tactical_used = False
     if not success:
         check, tactical_used, success = apply_tactical_mind(state, check, source.escape_dc, dice)
+    if roller is not None:
+        check, success, _ = adjust_d20_outcome(check, success, source.escape_dc, roller, setup, dice)
     spend(state, "action")
     if success:
         release_grapple(state, source.source_id)

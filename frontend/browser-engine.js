@@ -144,7 +144,7 @@
         C()?.endIfExpired(member.state, round, states);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
-        if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
+        if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member, setup));
         if (member.state.current_hp > 0 && !member.state.is_dead) {
           const turn = T().resolveTurn(sequence, round, member, setup);
           events.push(...turn.events); sequence = turn.sequence;

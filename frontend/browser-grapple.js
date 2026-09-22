@@ -6,6 +6,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
+  const FATE = () => window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -55,7 +56,7 @@
   }
 
   const shouldEscape = (state) => E().available(state, "action") && state.grapple_sources.some((source) => source.restrains);
-  function escape(sequence, round, member) {
+  function escape(sequence, round, member, setup = null) {
     const state = member.state;
     if (!E().available(state, "action")) throw new Error("Action is unavailable to escape grapple.");
     const source = state.grapple_sources.find((item) => item.restrains) || state.grapple_sources[0];
@@ -76,6 +77,10 @@
     if (!success && T()) {
       tactical = T().apply(state, roll, source.escape_dc);
       roll = tactical.roll; success = tactical.succeeded;
+    }
+    if (FATE() && setup) {
+      const adjusted = FATE().adjust(roll, success, source.escape_dc, member, setup);
+      roll = adjusted.roll; success = adjusted.succeeded;
     }
     E().spend(state, "action");
     if (success) {

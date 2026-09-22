@@ -19,7 +19,7 @@
     rolls.fixedFormationActive = true;
   }
 
-  function deathSave(sequence, round, member) {
+  function deathSave(sequence, round, member, setup = null) {
     const state = member.state;
     const advantage = Boolean(state.template.death_save_advantage)
       || Boolean(window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.deathSaveAdvantage(state));
@@ -29,8 +29,16 @@
     let result = "failure";
     if (natural >= recoveryMinimum) { state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; result = `${natural} triggers death-save recovery; regains 1 HP`; }
     else if (natural === 1) { state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures"; }
-    else if (natural >= 10) { state.death_save_successes = Math.min(3, state.death_save_successes + 1); result = "success"; }
-    else state.death_save_failures = Math.min(3, state.death_save_failures + 1);
+    else {
+      let succeeded = deathRoll.total >= 10, resolvedRoll = deathRoll;
+      if (window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS && setup) {
+        const adjusted = window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS.adjust(resolvedRoll, succeeded, 10, member, setup);
+        resolvedRoll = adjusted.roll; succeeded = adjusted.succeeded;
+      }
+      Object.assign(deathRoll, resolvedRoll);
+      if (succeeded) { state.death_save_successes = Math.min(3, state.death_save_successes + 1); result = "success"; }
+      else state.death_save_failures = Math.min(3, state.death_save_failures + 1);
+    }
     if (state.death_save_failures >= 3) result += "; dies";
     if (state.death_save_failures >= 3) { state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false; }
     else if (state.death_save_successes >= 3) { state.is_stable = true; state.is_unconscious = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable"; }
@@ -86,7 +94,7 @@
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
       let bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "beforeEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
-      if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
+      if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member, setup)); return finalize(events, sequence, round, member, setup, turnKey); }
       bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "afterEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
       const preMove = resolveMainActionOpportunity("normalPreMove", sequence, round, member, setup, turnKey);
