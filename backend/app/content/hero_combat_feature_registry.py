@@ -13,7 +13,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "survivor-defy-death", "survivor-heroic-rally",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
-    "sneak-attack", "weapon-mastery", "cunning-action", "steady-aim", "cunning-strike", "improved-cunning-strike", "devious-strikes", "slippery-mind", "thiefs-reflexes", "uncanny-dodge", "evasion",
+    "sneak-attack", "weapon-mastery", "cunning-action", "steady-aim", "cunning-strike", "improved-cunning-strike", "devious-strikes", "slippery-mind", "thiefs-reflexes", "elusive", "uncanny-dodge", "evasion",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
     "blessed-strikes", "cleric-combat-spells-5", "divine-intervention", "cleric-combat-spells-6",
@@ -55,6 +55,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
             {"source_id": "thiefs-reflexes", "initiative_offset": -10},
         ],
     },
+    "elusive": {"attack_advantage_suppressed_unless_incapacitated": True},
     "uncanny-dodge": {"uncanny_dodge": True},
     "evasion": {"evasion": True},
 }
