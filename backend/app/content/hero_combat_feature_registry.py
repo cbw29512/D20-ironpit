@@ -13,7 +13,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "survivor-defy-death", "survivor-heroic-rally",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
-    "sneak-attack", "weapon-mastery",
+    "sneak-attack", "weapon-mastery", "cunning-action",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
     "blessed-strikes", "cleric-combat-spells-5", "divine-intervention", "cleric-combat-spells-6",
@@ -40,6 +40,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "feral-instinct": {"initiative_advantage": True},
     "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
     "brutal-strike": {"brutal_strike_damage_dice": 1},
+    "cunning-action": {"cunning_action": True},
 }
 
 

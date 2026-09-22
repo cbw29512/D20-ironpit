@@ -28,9 +28,6 @@ def build_mara_quickstep_level(level: int) -> CombatantTemplate:
     unsupported = unsupported_mara_rogue_features(level)
     if unsupported:
         raise ValueError(f"Mara Rogue level {level} awaits combat support for: {', '.join(unsupported)}")
-    if level != 1:
-        raise ValueError("Mara Rogue build progression beyond level 1 is not yet compiled from the build overlay.")
-
     row = ROGUE_COMBAT_LEVELS[level]
     hero = HERO_BY_CLASS["rogue"]
     return CombatantTemplate(
@@ -40,7 +37,7 @@ def build_mara_quickstep_level(level: int) -> CombatantTemplate:
         level=level,
         kind="character",
         armor_class=14,
-        max_hp=10,
+        max_hp=10 + ((level - 1) * 7),
         speed_ft=30,
         initiative_bonus=3,
         weapon_attack=build_mara_shortsword_attack(),
@@ -66,5 +63,5 @@ def build_mara_quickstep_level(level: int) -> CombatantTemplate:
             ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
             ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
         ],
-        source="D&D Beyond Basic Rules 2024: Rogue 1, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex",
+        source=f"D&D Beyond Basic Rules 2024: Rogue {level}, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex",
     )
