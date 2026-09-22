@@ -127,10 +127,9 @@
       });
       slots.sort((a, b) => b.bucket - a.bucket
         || b.count - a.count
-        || compareTieHistory(a.group.tie_break_rolls, b.group.tie_break_rolls)
+        || b.normal - a.normal
         || a.groupIndex - b.groupIndex
-        || a.memberIndex - b.memberIndex
-        || b.normal - a.normal);
+        || a.memberIndex - b.memberIndex);
       return { order: slots.map((slot) => slot.id), extras };
     } catch (error) {
       console.error("Failed to build browser first-round extra-turn schedule", { error });
