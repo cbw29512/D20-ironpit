@@ -183,6 +183,7 @@ jobs:
           node frontend/browser-dodge.test.cjs
           node frontend/browser-grid-dodge-fallback.test.cjs
           node frontend/browser-turbo.test.cjs
+          node frontend/browser-miss-to-hit.test.cjs
       - name: Prove production fight path is backend-free
         run: |
           ! grep -R -q 'IRON_PIT_API_BASE' frontend scripts
