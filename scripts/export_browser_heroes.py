@@ -196,6 +196,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
         "start_of_turn_resource_refresh_ids": list(progression.start_of_turn_resource_refresh_ids),
+        "failed_d20_test_replacements": [
+            item.model_dump() for item in progression.failed_d20_test_replacements
+        ],
         "danger_sense": progression.danger_sense, "reckless_attack": progression.reckless_attack,
         "frenzy": progression.frenzy, "frenzy_bonus_attack_2014": progression.frenzy_bonus_attack_2014,
         "persistent_rage_2014": progression.persistent_rage_2014,
