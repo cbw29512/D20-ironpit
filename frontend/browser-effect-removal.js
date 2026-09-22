@@ -75,11 +75,10 @@
       if (!Number.isInteger(score)) throw new Error("Effect removal requires a certified casting ability.");
       dc = 10 + effect.spellLevel;
       check = R().d20(Math.floor((score - 10) / 2), "normal");
-      if ((remover.state.template.ability_check_minimums || []).some((rule) => rule.ability === action.castingAbility)) {
-        if (!A()) throw new Error("Ability-check minimum runtime is not loaded.");
-        check = A().applyMinimum(remover.state, action.castingAbility, check);
-      }
-      const resolved = A()?.resolve ? A().resolve(remover.state, action.castingAbility, check, dc) : { roll: check, succeeded: check.total >= dc };
+      if (!A()) throw new Error("Ability-check runtime is not loaded.");
+      const resolved = A().resolve
+        ? A().resolve(remover.state, action.castingAbility, check, dc)
+        : { roll: A().applyMinimum(remover.state, action.castingAbility, check), succeeded: A().applyMinimum(remover.state, action.castingAbility, check).total >= dc };
       check = resolved.roll;
       succeeded = resolved.succeeded;
     }
