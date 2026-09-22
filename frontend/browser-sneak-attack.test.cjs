@@ -21,6 +21,16 @@ function rogue(dice = 1) {
   return { template: { sneak_attack_d6: dice, traits: [] }, feature_last_turn_keys: {} };
 }
 
+window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+window.IRON_PIT_BROWSER_SAVES = {
+  resolveSavingThrow: (_state, ability, dc) => ({
+    roll: { notation: "1d20", rolls: [1], modifier: 0, selected_roll: 1, mode: "normal", total: 1 },
+    succeeded: false,
+    ability,
+    dc,
+  }),
+};
+
 const attack = {
   id: "test-shortsword", name: "Shortsword", kind: "melee", diceCount: 1, diceSize: 6,
   damageBonus: 3, damageType: "piercing", sneakAttackEligible: true,
@@ -67,6 +77,28 @@ const ineligible = { ...attack, id: "test-club", name: "Club", sneakAttackEligib
   assert.equal(sneak.notation, "2d6+0", "critical hit must double Sneak Attack dice");
   assert.deepEqual(sneak.rolls, [2, 6]);
   assert.equal(damage.components.filter((part) => part.source === "Sneak Attack").length, 1);
+}
+
+{
+  const state = rogue(3);
+  state.template.cunning_strike_trip_die_cost = 1;
+  state.template.ability_scores = { dexterity: 18 };
+  state.template.level = 5;
+  const target = {
+    template: { size: "medium" },
+    active_effect_ids: [],
+    is_dead: false,
+  };
+  const spec = window.IRON_PIT_BROWSER_SNEAK_ATTACK.bonusDamage(
+    state, attack, "advantage", "5:rogue", false, target,
+  );
+  assert.equal(spec.diceCount, 2, "Cunning Strike Trip must trade 1d6 before Sneak Attack rolls");
+  assert.equal(state.feature_last_turn_keys["cunning-strike-trip"], "5:rogue");
+  const trip = window.IRON_PIT_BROWSER_SNEAK_ATTACK.resolveTrip(state, target, "5:rogue");
+  assert.equal(trip.saveDc, 15);
+  assert.equal(trip.saveSucceeded, false);
+  assert.equal(trip.applied, true);
+  assert.ok(target.active_effect_ids.includes("prone"));
 }
 
 assert.throws(
