@@ -62,9 +62,12 @@ def test_level_nine_uses_simple_upcast_damage_and_mass_healing() -> None:
     assert_character_resources_raw_ready(hero, profile, combat)
 
 
-def test_certified_registry_exposes_cleric_level_nine_only() -> None:
+def test_certified_registry_exposes_cleric_levels_nine_and_ten() -> None:
     registry = build_certified_hero_registry()
     assert registry[("cleric", 9, "canonical")] == (
         "Seraphine Dawnshield", "seraphine-dawnshield-l9",
     )
-    assert ("cleric", 10, "canonical") not in registry
+    assert registry[("cleric", 10, "canonical")] == (
+        "Seraphine Dawnshield", "seraphine-dawnshield-l10",
+    )
+    assert ("cleric", 11, "canonical") not in registry
