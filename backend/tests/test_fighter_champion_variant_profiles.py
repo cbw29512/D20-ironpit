@@ -52,8 +52,8 @@ def test_level_nineteen_is_epic_boon_not_an_ordinary_asi() -> None:
     profile = build_fighter_champion_variant_profile("great-weapon", 19)
     audits = {audit.feature_id: audit for audit in profile.feature_audits}
     assert "boon-combat-prowess" in audits
-    assert audits["boon-combat-prowess"].automated is False
-    assert "Peerless Aim remains runtime-blocked" in (audits["boon-combat-prowess"].notes or "")
+    assert audits["boon-combat-prowess"].automated is True
+    assert "shared miss-to-hit and start-turn refresh primitives" in (audits["boon-combat-prowess"].notes or "")
 
 
 def test_high_level_character_truth_marks_only_certified_features_automated() -> None:
