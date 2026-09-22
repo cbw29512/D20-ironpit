@@ -24,6 +24,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -36,8 +37,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -193,6 +194,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -205,8 +207,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -333,6 +335,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -345,8 +348,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -488,6 +491,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -500,8 +504,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -631,6 +635,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -643,8 +648,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -827,6 +832,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -839,8 +845,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -966,6 +972,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -978,8 +985,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1078,6 +1085,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -1090,8 +1098,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1216,6 +1224,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -1228,8 +1237,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1330,6 +1339,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -1342,8 +1352,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1440,6 +1450,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -1452,8 +1463,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1567,6 +1578,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -1579,8 +1591,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1677,6 +1689,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -1689,8 +1702,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1789,6 +1802,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -1801,8 +1815,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1908,6 +1922,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -1920,8 +1935,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2027,6 +2042,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2039,8 +2055,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2156,6 +2172,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2168,8 +2185,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2315,6 +2332,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2327,8 +2345,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2429,6 +2447,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2441,8 +2460,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2539,6 +2558,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2551,8 +2571,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2651,6 +2671,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2663,8 +2684,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2761,6 +2782,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2773,8 +2795,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2873,6 +2895,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2885,8 +2908,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2983,6 +3006,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -2995,8 +3019,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3098,6 +3122,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -3110,8 +3135,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3210,6 +3235,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -3222,8 +3248,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3325,6 +3351,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -3337,8 +3364,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3469,6 +3496,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -3481,8 +3509,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3600,6 +3628,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -3612,8 +3641,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3719,6 +3748,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -3731,8 +3761,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3858,6 +3888,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -3870,8 +3901,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3966,6 +3997,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -3978,8 +4010,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4146,6 +4178,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -4158,8 +4191,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4396,6 +4429,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -4408,8 +4442,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4527,6 +4561,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -4539,8 +4574,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4637,6 +4672,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -4649,8 +4685,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4745,6 +4781,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -4757,8 +4794,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4851,6 +4888,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -4863,8 +4901,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4959,6 +4997,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -4971,8 +5010,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5067,6 +5106,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5079,8 +5119,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5176,6 +5216,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5188,8 +5229,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5282,6 +5323,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5294,8 +5336,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5390,6 +5432,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5402,8 +5445,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5498,6 +5541,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5510,8 +5554,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5606,6 +5650,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5618,8 +5663,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5714,6 +5759,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5726,8 +5772,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5820,6 +5866,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5832,8 +5879,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5930,6 +5977,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -5942,8 +5990,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6042,6 +6090,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6054,8 +6103,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6154,6 +6203,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6166,8 +6216,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6285,6 +6335,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6297,8 +6348,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6395,6 +6446,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6407,8 +6459,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6507,6 +6559,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6519,8 +6572,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6617,6 +6670,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6629,8 +6683,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6734,6 +6788,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6746,8 +6801,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6848,6 +6903,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6860,8 +6916,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6958,6 +7014,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -6970,8 +7027,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7070,6 +7127,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -7082,8 +7140,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7186,6 +7244,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -7198,8 +7257,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7300,6 +7359,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -7312,8 +7372,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7410,6 +7470,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -7422,8 +7483,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7525,6 +7586,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -7537,8 +7599,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7637,6 +7699,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -7649,8 +7712,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7749,6 +7812,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -7761,8 +7825,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7861,6 +7925,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -7873,8 +7938,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8023,6 +8088,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -8035,8 +8101,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8152,6 +8218,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -8164,8 +8231,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8285,6 +8352,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -8297,8 +8365,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8443,6 +8511,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -8455,8 +8524,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8584,6 +8653,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -8596,8 +8666,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8706,6 +8776,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -8718,8 +8789,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8828,6 +8899,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -8840,8 +8912,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8967,6 +9039,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -8979,8 +9052,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9150,6 +9223,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -9162,8 +9236,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9315,6 +9389,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -9327,8 +9402,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9455,6 +9530,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -9467,8 +9543,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9576,6 +9652,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -9588,8 +9665,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9702,6 +9779,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -9714,8 +9792,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9878,6 +9956,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -9890,8 +9969,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10005,6 +10084,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -10017,8 +10097,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10133,6 +10213,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -10145,8 +10226,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10263,6 +10344,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -10275,8 +10357,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10394,6 +10476,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -10406,8 +10489,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10528,6 +10611,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -10540,8 +10624,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10673,6 +10757,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -10685,8 +10770,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10801,6 +10886,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -10813,8 +10899,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10971,6 +11057,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -10983,8 +11070,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11130,6 +11217,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -11142,8 +11230,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11298,6 +11386,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -11310,8 +11399,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11438,6 +11527,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -11450,8 +11540,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11559,6 +11649,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -11571,8 +11662,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11735,6 +11826,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -11747,8 +11839,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11850,6 +11942,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -11862,8 +11955,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11973,6 +12066,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -11985,8 +12079,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12094,6 +12188,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -12106,8 +12201,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12231,6 +12326,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -12243,8 +12339,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12354,6 +12450,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -12366,8 +12463,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12539,6 +12636,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -12551,8 +12649,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12670,6 +12768,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -12682,8 +12781,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12841,6 +12940,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -12853,8 +12953,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12953,6 +13053,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -12965,8 +13066,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13074,6 +13175,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -13086,8 +13188,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13239,6 +13341,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -13251,8 +13354,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13358,6 +13461,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -13370,8 +13474,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13481,6 +13585,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -13493,8 +13598,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13600,6 +13705,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -13612,8 +13718,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13744,6 +13850,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -13756,8 +13863,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13866,6 +13973,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -13878,8 +13986,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14031,6 +14139,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -14043,8 +14152,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14172,6 +14281,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -14184,8 +14294,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14295,6 +14405,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -14307,8 +14418,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14429,6 +14540,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -14441,8 +14553,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14606,6 +14718,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -14618,8 +14731,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14725,6 +14838,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -14737,8 +14851,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14860,6 +14974,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -14872,8 +14987,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14976,6 +15091,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -14988,8 +15104,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15088,6 +15204,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -15100,8 +15217,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15203,6 +15320,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -15215,8 +15333,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15345,6 +15463,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -15357,8 +15476,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15490,6 +15609,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -15502,8 +15622,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15677,6 +15797,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -15689,8 +15810,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15863,6 +15984,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -15875,8 +15997,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16047,6 +16169,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -16059,8 +16182,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16234,6 +16357,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -16246,8 +16370,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16417,6 +16541,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -16429,8 +16554,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16602,6 +16727,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -16614,8 +16740,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16794,6 +16920,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -16806,8 +16933,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16984,6 +17111,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -16996,8 +17124,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17177,6 +17305,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -17189,8 +17318,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17366,6 +17495,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -17378,8 +17508,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17557,6 +17687,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -17569,8 +17700,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17677,6 +17808,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -17689,8 +17821,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17817,6 +17949,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -17829,8 +17962,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17957,6 +18090,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -17969,8 +18103,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18107,6 +18241,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -18119,8 +18254,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18271,6 +18406,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -18283,8 +18419,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18463,6 +18599,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -18475,8 +18612,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18578,6 +18715,7 @@
       "ability_check_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
       "athletics_advantage": false,
       "persistent_rage_2014": false,
       "brutal_strike_damage_dice": 0,
@@ -18590,8 +18728,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
