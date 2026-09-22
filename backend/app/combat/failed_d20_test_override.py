@@ -13,9 +13,9 @@ def _selected_index(roll: DiceRoll) -> int:
     if not roll.rolls or roll.selected_roll is None:
         raise ValueError("Failed D20 override requires a concrete selected d20 roll.")
     if roll.mode.value == "advantage":
-        return max(range(len(roll.rolls)), key=roll.rolls.__getitem__)
+        return max((0, 1), key=roll.rolls.__getitem__)
     if roll.mode.value == "disadvantage":
-        return min(range(len(roll.rolls)), key=roll.rolls.__getitem__)
+        return min((0, 1), key=roll.rolls.__getitem__)
     return 0
 
 
