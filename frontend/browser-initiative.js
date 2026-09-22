@@ -94,37 +94,48 @@
   }
 
   function firstRoundSchedule(groups) {
-    const slots = [], extras = [];
-    groups.forEach((group, groupIndex) => {
-      group.members.forEach((member, memberIndex) => {
-        slots.push({ group, groupIndex, memberIndex, count: group.initiative_count, normal: 1, id: member.combatant_id });
-        let grants = member.state.template.first_round_extra_turn_grants || [];
-        if (!grants.length && Number.isInteger(member.state.template.first_round_extra_turn_initiative_offset)) {
-          grants = [{
-            source_id: "first-round-extra-turn",
-            source_name: "Extra First-Round Turn",
-            initiative_offset: member.state.template.first_round_extra_turn_initiative_offset,
-          }];
-        }
-        for (const grant of grants) {
-          const count = group.initiative_count + grant.initiative_offset;
-          slots.push({ group, groupIndex, memberIndex, count, normal: 0, id: member.combatant_id });
-          extras.push({
-            combatant_id: member.combatant_id,
-            initiative_count: count,
-            source_id: grant.source_id,
-            source_name: grant.source_name,
+    try {
+      const slots = [], extras = [];
+      groups.forEach((group, groupIndex) => {
+        group.members.forEach((member, memberIndex) => {
+          slots.push({
+            group, groupIndex, memberIndex, count: group.initiative_count,
+            bucket: priority(group), normal: 1, id: member.combatant_id,
           });
-        }
+          let grants = member.state.template.first_round_extra_turn_grants || [];
+          if (!grants.length && Number.isInteger(member.state.template.first_round_extra_turn_initiative_offset)) {
+            grants = [{
+              source_id: "first-round-extra-turn",
+              source_name: "Extra First-Round Turn",
+              initiative_offset: member.state.template.first_round_extra_turn_initiative_offset,
+            }];
+          }
+          for (const grant of grants) {
+            const count = group.initiative_count + grant.initiative_offset;
+            slots.push({
+              group, groupIndex, memberIndex, count,
+              bucket: 1, normal: 0, id: member.combatant_id,
+            });
+            extras.push({
+              combatant_id: member.combatant_id,
+              initiative_count: count,
+              source_id: grant.source_id,
+              source_name: grant.source_name,
+            });
+          }
+        });
       });
-    });
-    slots.sort((a, b) => priority(b.group) - priority(a.group)
-      || b.count - a.count
-      || compareTieHistory(a.group.tie_break_rolls, b.group.tie_break_rolls)
-      || a.groupIndex - b.groupIndex
-      || a.memberIndex - b.memberIndex
-      || b.normal - a.normal);
-    return { order: slots.map((slot) => slot.id), extras };
+      slots.sort((a, b) => b.bucket - a.bucket
+        || b.count - a.count
+        || compareTieHistory(a.group.tie_break_rolls, b.group.tie_break_rolls)
+        || a.groupIndex - b.groupIndex
+        || a.memberIndex - b.memberIndex
+        || b.normal - a.normal);
+      return { order: slots.map((slot) => slot.id), extras };
+    } catch (error) {
+      console.error("Failed to build browser first-round extra-turn schedule", { error });
+      throw error;
+    }
   }
 
   function turnOrderForRound(roundNumber, initiative, _members) {
