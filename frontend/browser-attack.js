@@ -95,12 +95,15 @@
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
     const outcome = O().create();
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied } = outcome;
+    let cunningStrikeTrip = null;
     const applied = outcome.appliedConditions;
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
           sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
+      cunningStrikeTrip = damage.cunningStrikeTrip || null;
+      if (cunningStrikeTrip?.applied && !applied.includes("prone")) applied.push("prone");
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
@@ -135,7 +138,13 @@
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
       }
     }
-    const attackSave = saveDamage?.saveDc != null ? saveDamage : hitSave;
+    const attackSave = saveDamage?.saveDc != null ? saveDamage
+      : hitSave?.saveDc != null ? hitSave
+      : cunningStrikeTrip?.saveDc != null ? {
+          saveRoll: cunningStrikeTrip.saveRoll, saveAbility: "dexterity",
+          saveDc: cunningStrikeTrip.saveDc, saveSucceeded: cunningStrikeTrip.saveSucceeded,
+        }
+      : null;
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(actualTarget.state) || "";
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
     if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
