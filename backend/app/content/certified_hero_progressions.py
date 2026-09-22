@@ -8,6 +8,7 @@ from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.audited_cleric_life_profile import (
     build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
     build_seraphine_dawnshield_level5_profile, build_seraphine_dawnshield_level6_profile,
+    build_seraphine_dawnshield_level7_profile, build_seraphine_dawnshield_level8_profile,
 )
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_profile
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
@@ -112,6 +113,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_seraphine_dawnshield_profile, build_seraphine_dawnshield_level2_profile,
             build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
             build_seraphine_dawnshield_level5_profile, build_seraphine_dawnshield_level6_profile,
+            build_seraphine_dawnshield_level7_profile, build_seraphine_dawnshield_level8_profile,
         ),
     ),
     CertifiedHeroProgression(
