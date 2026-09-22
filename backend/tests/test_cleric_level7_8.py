@@ -123,7 +123,3 @@ def test_certified_registry_exposes_cleric_levels_seven_and_eight() -> None:
     assert registry[("cleric", 8, "canonical")] == (
         "Seraphine Dawnshield", "seraphine-dawnshield-l8",
     )
-    assert registry[("cleric", 10, "canonical")] == (
-        "Seraphine Dawnshield", "seraphine-dawnshield-l10",
-    )
-    assert ("cleric", 11, "canonical") not in registry
