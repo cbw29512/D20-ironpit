@@ -4,6 +4,7 @@ import logging
 
 from app.combat.barbarian import rage_active
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
+from app.combat.d20_outcome_override import replace_failed_d20_with_natural_20
 from app.combat.danger_sense import danger_sense_advantage
 from app.combat.defensive_modifier_rules import (
     consume_saving_throw_modifiers,
@@ -99,6 +100,7 @@ def resolve_saving_throw(
             if reroll is not None:
                 revision = _indomitable_revision(roll, reroll)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
+        roll, _ = replace_failed_d20_with_natural_20(state, roll, dc)
         return roll, roll.total >= dc
     except ValueError:
         raise
