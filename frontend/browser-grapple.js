@@ -68,11 +68,10 @@
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
     const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
-    if ((state.template.ability_check_minimums || []).some((rule) => rule.ability === ability)) {
-      if (!A()) throw new Error("Ability-check minimum runtime is not loaded.");
-      roll = A().applyMinimum(state, ability, roll);
-    }
-    const resolved = A()?.resolve ? A().resolve(state, ability, roll, source.escape_dc) : { roll, succeeded: roll.total >= source.escape_dc };
+    if (!A()) throw new Error("Ability-check runtime is not loaded.");
+    const resolved = A().resolve
+      ? A().resolve(state, ability, roll, source.escape_dc)
+      : { roll: A().applyMinimum(state, ability, roll), succeeded: A().applyMinimum(state, ability, roll).total >= source.escape_dc };
     roll = resolved.roll;
     let success = resolved.succeeded, tactical = null;
     if (!success && T()) {
