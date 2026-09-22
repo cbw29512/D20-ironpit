@@ -19,7 +19,7 @@ _ROWS = {
     4: (2, 2, (), ()),
     5: (3, 3, ("cunning-strike", "uncanny-dodge"), ()),
     6: (3, 3, (), ("expertise",)),
-    7: (3, 4, ("evasion",), ("reliable-talent",)),
+    7: (3, 4, ("evasion", "reliable-talent"), ()),
     8: (3, 4, (), ()),
     9: (4, 5, (), ()),
     10: (4, 5, (), ()),
