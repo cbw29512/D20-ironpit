@@ -230,6 +230,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
+    if progression.skill_check_d20_minimums:
+        row["skill_check_d20_minimums"] = [item.model_dump() for item in progression.skill_check_d20_minimums]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
     if progression.indomitable_bonus: row["indomitable_bonus"] = progression.indomitable_bonus
     if progression.tactical_master_sap_weapon_ids: row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)
