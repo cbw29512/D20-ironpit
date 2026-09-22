@@ -1600,7 +1600,7 @@
       "owners": [
         "rogue/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
