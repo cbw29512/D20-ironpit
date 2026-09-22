@@ -133,3 +133,8 @@ def build_mara_quickstep_combat_profiles(max_level: int) -> list[PregenCombatPro
 
 def build_mara_quickstep_level17_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(17)
+
+
+
+def build_mara_quickstep_level18_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(18)
