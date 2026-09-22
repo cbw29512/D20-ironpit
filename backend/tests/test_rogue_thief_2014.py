@@ -24,8 +24,8 @@ def _setup(rogue: EncounterCombatant, target: EncounterCombatant) -> EncounterSe
     )
 
 
-def test_2014_thief_levels_one_through_sixteen_are_isolated_from_2024() -> None:
-    for level in range(1, 17):
+def test_2014_thief_levels_one_through_twenty_are_isolated_from_2024() -> None:
+    for level in range(1, 21):
         hero = build_mara_quickstep_2014(level)
         assert hero.ruleset == "2014"
         assert hero.level == level
