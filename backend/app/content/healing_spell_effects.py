@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import logging
+
 from app.domain.actions import HealingAction
+
+logger = logging.getLogger(__name__)
 
 
 def _spell_heal(
@@ -54,3 +58,30 @@ def build_mass_healing_word(
         resource_cost=1,
         animation="healing",
     )
+
+
+def build_mass_cure_wounds(
+    spellcasting_modifier: int,
+    extra_healing_bonus: int = 0,
+) -> HealingAction:
+    """Printed-level 2024 Mass Cure Wounds using the shared group-healing primitive."""
+    try:
+        if spellcasting_modifier < 0 or extra_healing_bonus < 0:
+            raise ValueError("Certified Mass Cure Wounds requires nonnegative healing modifiers.")
+        return HealingAction(
+            id="mass-cure-wounds",
+            name="Mass Cure Wounds",
+            action_cost="action",
+            range_ft=60,
+            target_mode="self_or_ally",
+            max_targets=6,
+            dice_count=5,
+            dice_size=8,
+            healing_bonus=spellcasting_modifier + extra_healing_bonus,
+            resource_id="spell-slot-5",
+            resource_cost=1,
+            animation="healing",
+        )
+    except Exception:
+        logger.exception("Failed to build Mass Cure Wounds.")
+        raise
