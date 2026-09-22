@@ -68,6 +68,11 @@
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
     }
+    const d20Grants = state.template.failed_d20_test_override_grants || [];
+    if (d20Grants.some((grant) => (grant.test_kinds || []).includes("saving_throw"))
+      && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
+      throw new Error("Failed-D20 override runtime is not loaded for a declared saving-throw capability.");
+    }
     roll = DO().apply(state, roll, roll.total < dc, "saving_throw").roll;
     return { roll, succeeded: roll.total >= dc };
   }
