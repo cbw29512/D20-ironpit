@@ -40,6 +40,10 @@ def _paladin_2014_channel_uses(level: int) -> int:
     return 1 if level >= 3 else 0
 
 
+def _rogue_stroke_of_luck_uses(level: int) -> int:
+    return 1 if level >= 20 else 0
+
+
 def _barbarian_2014_finite_rage_uses(level: int) -> int:
     """Return only finite 2014 Rage uses; level 20 is audited as Unlimited separately."""
     return 0 if level >= 20 else barbarian_2014_rage_uses(level)
@@ -63,7 +67,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("action-surge", "Action Surge", fighter_action_surge_uses),
         ("indomitable", "Indomitable", fighter_indomitable_uses),
     ),
-    "rogue": (),
+    "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke_of_luck_uses),),
 }
 _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", _barbarian_2014_finite_rage_uses),),
