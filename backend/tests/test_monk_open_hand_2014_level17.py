@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.attacks import resolve_attack
 from app.combat.deferred_save_effect import (
+    cleanup_deferred_effects,
     deferred_save_effect_candidate,
     resolve_deferred_save_effect,
 )
@@ -171,4 +172,22 @@ def test_successful_quivering_palm_save_deals_typed_damage_through_defenses() ->
     assert event.damage_components[0].total == 10
     assert event.damage_components[0].applied_total == 5
     assert target.state.current_hp == hp_before - 5
+    assert monk.state.deferred_effects == []
+
+
+def test_deferred_candidate_discovery_is_read_only_and_lifecycle_cleanup_prunes_stale_marks() -> None:
+    monk, target, setup = _setup()
+    _arm(monk, target, setup)
+    begin_turn(monk.state)
+
+    before = list(monk.state.deferred_effects)
+    assert deferred_save_effect_candidate(monk, setup) is target
+    assert monk.state.deferred_effects == before
+
+    target.state.current_hp = 0
+    target.state.is_unconscious = True
+    assert deferred_save_effect_candidate(monk, setup) is None
+    assert monk.state.deferred_effects == before
+
+    cleanup_deferred_effects(setup)
     assert monk.state.deferred_effects == []
