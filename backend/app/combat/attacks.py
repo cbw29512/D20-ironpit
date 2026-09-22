@@ -9,7 +9,10 @@ from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.brutal_strike import brutal_strike_attack_sources
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
-from app.combat.conditional_attack_advantage import conditional_attack_advantage_sources
+from app.combat.conditional_attack_advantage import (
+    conditional_attack_advantage_sources,
+    suppress_attack_advantage_sources,
+)
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
@@ -57,13 +60,16 @@ def resolve_attack(
             reckless_advantage=reckless_advantage,
             disadvantage_sources=disadvantage_total,
         )
+        total_advantage_sources = (
+            advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
+            + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
+            + reckless_advantage + conditional_attack_advantage_sources(attack, defender)
+            + next_attack_against_advantage_sources(attacker, defender_event_id)
+        )
+        total_advantage_sources = suppress_attack_advantage_sources(total_advantage_sources, defender)
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
-            advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
-                               + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
-                               + reckless_advantage
-                               + conditional_attack_advantage_sources(attack, defender)
-                               + next_attack_against_advantage_sources(attacker, defender_event_id)),
+            advantage_sources=total_advantage_sources,
             other_disadvantage_sources=disadvantage_total,
             close_enemy_active=close_enemy_active,
         )
