@@ -42,7 +42,8 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "brutal-strike": {"brutal_strike_damage_dice": 1},
     "cunning-action": {"cunning_action": True},
     "steady-aim": {"stationary_bonus_action_next_attack_advantage": True},
-    "cunning-strike": {"cunning_strike_trip_die_cost": 1},
+    "cunning-strike": {"cunning_strike_trip_die_cost": 1, "cunning_strike_max_effects": 1},
+    "improved-cunning-strike": {"cunning_strike_max_effects": 2},
     "uncanny-dodge": {"uncanny_dodge": True},
     "evasion": {"evasion": True},
 }
