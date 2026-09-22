@@ -5,6 +5,7 @@ from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modif
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.spell_policy import SpellChoice
 from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.temporary_hp import grant_temporary_hit_points
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -27,6 +28,41 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
         damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
         damage_type=spell.damage_type, success_damage=spell.success_damage,
         animation=spell.animation,
+    )
+
+
+def _damage_temp_hp_event(
+    sequence: int,
+    round_number: int,
+    caster: EncounterCombatant,
+    spell_id: str,
+    events: list[BattleEvent],
+) -> BattleEvent | None:
+    rule = caster.state.template.progression_features.damaging_action_temporary_hp_rider
+    if rule is None or spell_id not in rule.action_ids:
+        return None
+    dealt_damage = any(
+        (component.applied_total or 0) > 0
+        for event in events
+        for component in event.damage_components
+    )
+    if not dealt_damage:
+        return None
+    scores = caster.state.template.ability_scores
+    if scores is None:
+        raise ValueError("Ability-scaled Temporary HP requires ability scores.")
+    amount = max(0, scores.modifier(rule.ability) * rule.multiplier)
+    before = caster.state.temporary_hp
+    after = grant_temporary_hit_points(caster.state, amount)
+    if after <= before:
+        return None
+    return BattleEvent(
+        sequence=sequence, round_number=round_number, event_type="feature",
+        actor_id=caster.combatant_id, actor_name=caster.state.template.name,
+        target_id=caster.combatant_id, target_name=caster.state.template.name,
+        temporary_hp_before=before, temporary_hp_after=after,
+        feature_id=rule.source_id, animation="temporary-hp",
+        description=f"{caster.state.template.name} gains {after - before} Temporary HP from {rule.source_id.replace('-', ' ').title()}.",
     )
 
 
@@ -100,4 +136,8 @@ def resolve_spell(
         events.extend(chain)
         if shared_damage_rolls is None and event.damage_components:
             shared_damage_rolls = list(event.damage_components[0].rolls)
+    rider_event = _damage_temp_hp_event(sequence, round_number, caster, spell.id, events)
+    if rider_event is not None:
+        events.append(rider_event)
+        sequence += 1
     return events, sequence
