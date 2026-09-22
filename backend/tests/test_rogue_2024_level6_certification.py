@@ -22,6 +22,7 @@ def test_2024_rogue_level6_is_level5_plus_hp_and_arena_inert_expertise() -> None
     assert template.progression_features.cunning_strike_trip_die_cost == 1
     assert template.progression_features.uncanny_dodge is True
     assert {item.id: item.max_uses for item in template.resources}["adrenaline-rush"] == 3
+    assert "Rogue 6" in template.source
 
 
 def test_2024_rogue_level6_profile_records_expertise_without_fake_combat_math() -> None:
