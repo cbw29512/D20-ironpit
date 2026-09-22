@@ -65,3 +65,30 @@ def build_mara_quickstep_level10_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 10 profile could not be created.") from exc
+
+
+def build_mara_quickstep_level11_profile() -> CharacterBuildProfile:
+    """Level 11 inherits level 10 and raises Cunning Strike's legal effect cap to two."""
+    try:
+        previous = build_mara_quickstep_level10_profile()
+        data = advance_profile_data(previous, 11)
+        data.update(
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "improved-cunning-strike", "Improved Cunning Strike", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Shared capability raises the maximum Cunning Strike effects from one to two. "
+                        "Mara's non-kiting loadout policy still auto-selects only Trip when eligible."
+                    ),
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 11 — Improved Cunning Strike",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 11 profile could not be created.") from exc
