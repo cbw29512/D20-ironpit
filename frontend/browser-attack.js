@@ -87,8 +87,7 @@
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
     const natural = attackRoll.selected_roll, naturalTwenty = natural === 20, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
-    const naturalOne = natural === 1, naturalOneEndsTurn = naturalOne && extra.offTurn !== true;
-    if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
+    const naturalOne = natural === 1;
     const initialHit = !naturalOne && (naturalTwenty || attackRoll.total >= baseTargetAc);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
     let hit = parry.hit;
@@ -96,6 +95,8 @@
     const turnKey = extra.turnKey || `${round}:${attacker.combatant_id}`;
     const missToHit = MH().resolve(attacker.state, hit, turnKey);
     hit = missToHit.hit;
+    const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !hit;
+    if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
