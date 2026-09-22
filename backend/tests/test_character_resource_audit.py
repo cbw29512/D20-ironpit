@@ -3,6 +3,8 @@ from dataclasses import replace
 from app.content.audited_barbarian import build_rokhan_stonefury
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.character_resource_audit import audit_character_resources
+from app.content.audited_rogue import build_mara_quickstep_level
+from app.content.rogue_final_progression_profile import build_mara_quickstep_level20_profile
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.domain.models import ResourceDefinition
 
@@ -48,3 +50,14 @@ def test_class_without_independent_level_resource_rules_fails_closed() -> None:
     assert "class-level-resource-rules-not-certified" in audit_character_resources(
         template, build_profile, combat_profile
     )
+
+
+
+def test_2024_rogue_level20_stroke_of_luck_resource_matches_independent_audit() -> None:
+    template = build_mara_quickstep_level(20)
+    build_profile = build_mara_quickstep_level20_profile()
+    combat_profile = build_pregen_combat_profiles()[template.id]
+
+    assert {item.id: item.max_uses for item in template.resources}["stroke-of-luck"] == 1
+    assert dict(combat_profile.resources)["stroke-of-luck"] == 1
+    assert audit_character_resources(template, build_profile, combat_profile) == []
