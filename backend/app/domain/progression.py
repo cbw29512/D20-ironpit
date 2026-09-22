@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Literal
 
 from app.domain.character_builds import AbilityName
@@ -67,6 +67,23 @@ class FailedD20TestOverrideGrant(BaseModel):
     test_kinds: list[Literal["attack", "saving_throw", "ability_check"]] = Field(min_length=1)
 
 
+class MissToHitOverrideGrant(BaseModel):
+    """Convert one miss to a normal hit using a declarative usage lifecycle."""
+
+    source_id: str
+    source_name: str
+    usage_policy: Literal["resource", "refresh_at_turn_start"]
+    resource_id: str | None = None
+
+    @model_validator(mode="after")
+    def validate_usage_policy(self) -> "MissToHitOverrideGrant":
+        if self.usage_policy == "resource" and not self.resource_id:
+            raise ValueError("Resource-backed miss-to-hit override requires resource_id.")
+        if self.usage_policy == "refresh_at_turn_start" and self.resource_id is not None:
+            raise ValueError("Turn-start miss-to-hit override cannot declare resource_id.")
+        return self
+
+
 class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
@@ -77,6 +94,7 @@ class ProgressionCombatFeatures(BaseModel):
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
+    miss_to_hit_override_grants: list[MissToHitOverrideGrant] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
