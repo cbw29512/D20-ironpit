@@ -16,7 +16,7 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
             archetype="Rogue",
             level=level,
             abilities=AbilityScores(
-                strength=13, dexterity=dexterity, constitution=constitution,
+                strength=(14 if level >= 19 else 13), dexterity=dexterity, constitution=constitution,
                 intelligence=10, wisdom=(12 if level >= 16 else 10), charisma=10,
             ),
             save_proficiencies=(("dexterity", "intelligence", "wisdom", "charisma") if level >= 15 else ("dexterity", "intelligence")),
@@ -120,7 +120,11 @@ def build_mara_quickstep_level18_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(18)
 
 
-def build_mara_quickstep_combat_profiles(max_level: int = 18) -> list[PregenCombatProfile]:
+def build_mara_quickstep_level19_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(19)
+
+
+def build_mara_quickstep_combat_profiles(max_level: int = 19) -> list[PregenCombatProfile]:
     if max_level < 1 or max_level > 20:
         raise ValueError("Rogue combat fingerprint max_level must be between 1 and 20.")
     return [_build_mara_quickstep_combat_profile(level) for level in range(1, max_level + 1)]
