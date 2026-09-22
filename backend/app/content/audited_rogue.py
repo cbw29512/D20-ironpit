@@ -24,7 +24,6 @@ def mara_rogue_features(level: int) -> tuple[str, ...]:
 
 _MARA_ARENA_INERT_FEATURES = frozenset({
     "thief-fast-hands", "thief-supreme-sneak", "thief-use-magic-device",
-    "rogue-epic-boon",
 })
 
 
