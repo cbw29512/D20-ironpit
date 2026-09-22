@@ -3,8 +3,8 @@
 
   function selectedIndex(roll) {
     if (!roll?.rolls?.length || roll.selected_roll == null) throw new Error("Failed D20 override requires a selected d20 roll.");
-    if (roll.mode === "advantage") return roll.rolls.indexOf(Math.max(...roll.rolls));
-    if (roll.mode === "disadvantage") return roll.rolls.indexOf(Math.min(...roll.rolls));
+    if (roll.mode === "advantage") return roll.rolls[0] >= roll.rolls[1] ? 0 : 1;
+    if (roll.mode === "disadvantage") return roll.rolls[0] <= roll.rolls[1] ? 0 : 1;
     return 0;
   }
 
