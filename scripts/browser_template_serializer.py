@@ -289,6 +289,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["miss_to_hit_override_resource_id"] = features.miss_to_hit_override_resource_id
     if features.miss_to_hit_override_source_name:
         row["miss_to_hit_override_source_name"] = features.miss_to_hit_override_source_name
+    if features.start_of_turn_resource_refresh_ids:
+        row["start_of_turn_resource_refresh_ids"] = list(features.start_of_turn_resource_refresh_ids)
     if features.athletics_advantage:
         row["athletics_advantage"] = True
     if features.saving_throw_proficiency_grants:
