@@ -42,6 +42,13 @@ class EffectBoundSurvivalSave(BaseModel):
     replacement_hp: int = Field(ge=1)
 
 
+class SavingThrowProficiencyGrant(BaseModel):
+    """Source-tagged saving throw proficiencies granted by progression data."""
+
+    source_id: str
+    abilities: list[AbilityName] = Field(min_length=1)
+
+
 class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
@@ -49,6 +56,7 @@ class ProgressionCombatFeatures(BaseModel):
     turning_failure_damage: AbilityScaledDamageRider | None = None
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
+    saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
