@@ -127,6 +127,17 @@
     return { order: slots.map((slot) => slot.id), extras };
   }
 
+  function turnOrderForRound(roundNumber, initiative, _members) {
+    try {
+      return roundNumber === 1
+        ? [...(initiative.first_round_turn_order || initiative.turn_order)]
+        : [...initiative.turn_order];
+    } catch (error) {
+      console.error("Failed to read browser encounter turn schedule", { roundNumber, error });
+      throw error;
+    }
+  }
+
   function events(initiative, setup, startSequence = 1) {
     const members = [...setup.heroes, ...setup.monsters];
     const names = new Map(members.map((member) => [member.combatant_id, member.state.template.name]));
@@ -155,5 +166,5 @@
     return result;
   }
 
-  window.IRON_PIT_BROWSER_INITIATIVE = { events, firstRoundSchedule, priority, resolve };
+  window.IRON_PIT_BROWSER_INITIATIVE = { events, firstRoundSchedule, priority, resolve, turnOrderForRound };
 })();
