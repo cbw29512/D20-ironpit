@@ -114,8 +114,11 @@
     const cunningStrikeTrip = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.resolveTrip(
       attacker, defender, turnKey,
     ) || { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false };
+    const cunningStrikeObscure = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.resolveObscure(
+      attacker, defender, turnKey,
+    ) || { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false };
     return {
-      damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage, cunningStrikeTrip,
+      damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage, cunningStrikeTrip, cunningStrikeObscure,
       uncannyDodgeUsed: uncanny.used, deflectMissilesUsed: deflect.used,
       deflectMissilesReduction: deflect.reduction,
     };
