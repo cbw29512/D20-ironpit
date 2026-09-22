@@ -279,6 +279,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["critical_hit_minimum"] = features.critical_hit_minimum
     if features.initiative_advantage:
         row["initiative_advantage"] = True
+    if features.first_round_extra_turn_grants:
+        row["first_round_extra_turn_grants"] = [item.model_dump() for item in features.first_round_extra_turn_grants]
     if features.first_round_extra_turn_initiative_offset is not None:
         row["first_round_extra_turn_initiative_offset"] = features.first_round_extra_turn_initiative_offset
     if features.suppress_attack_advantage_while_not_incapacitated:
