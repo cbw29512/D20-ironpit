@@ -226,6 +226,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["turning_failure_damage"] = progression.turning_failure_damage.model_dump()
     if progression.slot_healing_other_self_rider:
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
+    if progression.damaging_action_temporary_hp_rider:
+        row["damaging_action_temporary_hp_rider"] = progression.damaging_action_temporary_hp_rider.model_dump()
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
