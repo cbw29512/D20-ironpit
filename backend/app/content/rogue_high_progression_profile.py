@@ -93,3 +93,37 @@ def build_mara_quickstep_level11_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 11 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level12_profile() -> CharacterBuildProfile:
+    """Level 12 inherits level 11 and applies the canonical +2 Constitution ASI."""
+    try:
+        previous = build_mara_quickstep_level11_profile()
+        data = advance_profile_data(previous, 12)
+        data.update(
+            advancement_increases=[
+                *[item.model_dump() for item in previous.advancement_increases],
+                AbilityIncrease(ability="constitution", amount=2).model_dump(),
+            ],
+            final_ability_scores=AbilityScores(
+                strength=13, dexterity=20, constitution=20,
+                intelligence=10, wisdom=10, charisma=10,
+            ).model_dump(),
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "ability-score-improvement-l12", "Ability Score Improvement", "feat",
+                    combat_relevant=True, automated=True,
+                    notes="Canonical combat choice increases Constitution 18→20 after Dexterity reached 20.",
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 12 — Ability Score Improvement",
+                "Basic Rules 2024: Feats — Ability Score Improvement (+2 Constitution)",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 12 profile could not be created.") from exc
