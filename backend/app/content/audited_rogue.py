@@ -98,6 +98,10 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
         resources=[
             ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus).model_dump(),
             ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1).model_dump(),
+            *(
+                [ResourceDefinition(id="stroke-of-luck", name="Stroke of Luck", max_uses=1).model_dump()]
+                if level >= 20 else []
+            ),
         ],
         source=f"D&D Beyond Basic Rules 2024: Rogue {level}, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex",
     )
