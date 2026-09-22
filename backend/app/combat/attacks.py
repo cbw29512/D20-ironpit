@@ -14,6 +14,7 @@ from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.modifier_stack import effective_armor_class
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
+from app.combat.sap import apply_weapon_sap
 from app.combat.state import terminate_turn
 from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
