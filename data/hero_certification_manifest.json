@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 32
+    "public_ready": 34
   },
   "heroes": [
     {
@@ -1493,24 +1493,68 @@
             "id": "life-domain",
             "name": "Life Domain"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "seraphine-dawnshield-l7",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Cleric level 7, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:seraphine-mace",
+            "blessed-healer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:shield-of-faith",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "healing-action:mass-healing-word",
+            "resource:adrenaline-rush",
+            "resource:channel-divinity",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "sear-undead",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:inflict-wounds",
+            "spell-save-action:sacred-flame",
+            "trait:adrenaline-rush",
+            "trait:life-domain",
+            "trait:relentless-endurance"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:seraphine-mace",
+            "blessed-healer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:shield-of-faith",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "healing-action:mass-healing-word",
+            "resource:adrenaline-rush",
+            "resource:channel-divinity",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "sear-undead",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:inflict-wounds",
+            "spell-save-action:sacred-flame",
+            "trait:adrenaline-rush",
+            "trait:life-domain",
+            "trait:relentless-endurance"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 8,
@@ -1518,24 +1562,68 @@
             "id": "life-domain",
             "name": "Life Domain"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "seraphine-dawnshield-l8",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Cleric level 8, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:seraphine-mace",
+            "blessed-healer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:shield-of-faith",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "healing-action:mass-healing-word",
+            "resource:adrenaline-rush",
+            "resource:channel-divinity",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "sear-undead",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:inflict-wounds",
+            "spell-save-action:sacred-flame",
+            "trait:adrenaline-rush",
+            "trait:life-domain",
+            "trait:relentless-endurance"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:seraphine-mace",
+            "blessed-healer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:shield-of-faith",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "healing-action:mass-healing-word",
+            "resource:adrenaline-rush",
+            "resource:channel-divinity",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "sear-undead",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:inflict-wounds",
+            "spell-save-action:sacred-flame",
+            "trait:adrenaline-rush",
+            "trait:life-domain",
+            "trait:relentless-endurance"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 9,
