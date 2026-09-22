@@ -48,7 +48,7 @@ def test_2024_rogue_level11_canonical_policy_may_legally_use_only_trip() -> None
     assert spec[1] == 5
     assert attacker.template.progression_features.cunning_strike_max_effects == 2
 
-    trip = resolve_trip(attacker, defender, FixedDiceProvider([1]), turn_key)
+    trip = resolve_trip(attacker, defender, FixedDiceProvider([1, 1]), turn_key)
     assert trip.save_dc == 17
     assert trip.save_succeeded is False
     assert trip.applied is True
