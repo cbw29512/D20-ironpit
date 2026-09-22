@@ -201,6 +201,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "great_weapon_fighting": progression.great_weapon_fighting, "sneak_attack_d6": progression.sneak_attack_d6,
         "cunning_action": progression.cunning_action,
         "stationary_bonus_action_next_attack_advantage": progression.stationary_bonus_action_next_attack_advantage,
+        "cunning_strike_trip_die_cost": progression.cunning_strike_trip_die_cost,
         "uncanny_dodge": progression.uncanny_dodge, "evasion": progression.evasion, "martial_arts_bonus_attack": progression.martial_arts_bonus_attack,
         "martial_arts_die_size": progression.martial_arts_die_size, "flurry_of_blows": progression.flurry_of_blows,
         "deflect_missiles": progression.deflect_missiles, "open_hand_technique": progression.open_hand_technique,
