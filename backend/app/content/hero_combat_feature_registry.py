@@ -55,7 +55,8 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
             {"source_id": "thiefs-reflexes", "source_name": "Thief's Reflexes", "initiative_offset": -10},
         ],
     },
-    "elusive": {"suppress_attack_advantage_while_not_incapacitated": True},\n    "uncanny-dodge": {"uncanny_dodge": True},
+    "elusive": {"suppress_attack_advantage_while_not_incapacitated": True},
+    "uncanny-dodge": {"uncanny_dodge": True},
     "evasion": {"evasion": True},
 }
 
