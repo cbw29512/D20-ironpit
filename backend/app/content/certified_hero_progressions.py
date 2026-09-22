@@ -20,9 +20,10 @@ from app.content.audited_cleric_life_profile import (
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_profile
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.audited_rogue import build_mara_quickstep_level
-from app.content.audited_rogue_profile import (
+from app.content.audited_rogue_profile import build_mara_quickstep_profile
+from app.content.rogue_progression_profile import (
     build_mara_quickstep_level2_profile, build_mara_quickstep_level3_profile,
-    build_mara_quickstep_level4_profile, build_mara_quickstep_profile,
+    build_mara_quickstep_level4_profile,
 )
 from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_2014_profile
 from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
