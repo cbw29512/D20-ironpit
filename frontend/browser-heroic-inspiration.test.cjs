@@ -102,6 +102,7 @@ window.IRON_PIT_BROWSER_CHAMPION = { criticalMove: (_attacker, _setup, event) =>
 load("browser-rolls.js");
 load("browser-ability-hooks.js");
 load("browser-attack-outcome.js");
+load("browser-attack-roll-context.js");
 load("browser-attack.js");
 
 {

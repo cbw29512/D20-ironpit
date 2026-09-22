@@ -42,6 +42,17 @@
     return applyEffect(attacker.combatant_id, target, round, TACTICAL_EFFECT_ID, "tactical-master");
   }
 
+  function resolveBeforeAttackRoll(ctx) {
+    const api = ctx.attackRollApi;
+    if (!api) throw new Error("Before-attack-roll hook requires attackRollApi.");
+    const roll = api.requireContext(ctx);
+    const active = disadvantage(ctx.member.state);
+    if (!active) return null;
+    api.setDisadvantageSource(roll, "sap", active);
+    consume(ctx.member.state);
+    return api.noEventResult(ctx.sequence);
+  }
+
   function resolveHit(ctx) {
     const outcome = O().requireOutcome(ctx);
     if (ctx.target.state.is_dead || ctx.target.state.current_hp <= 0) return null;
@@ -53,17 +64,26 @@
   function installAbilityHooks() {
     const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
     if (!hooks) throw new Error("Sap hook installation requires browser-ability-hooks.js.");
-    const phase = hooks.PHASES.ON_HIT;
-    if (hooks.abilitiesFor(phase).some((item) => item.id === "sap-outcome")) return;
-    hooks.registerAbility(phase, {
-      id: "sap-outcome", priority: 20, rulesets: ["2024"],
-      appliesTo: (member, ctx) => weaponEligible(member.state, ctx.attack) || selected(member.state, ctx.attack),
-      resolve: resolveHit,
-    });
+    const pre = hooks.PHASES.BEFORE_ATTACK_ROLL;
+    if (!hooks.abilitiesFor(pre).some((item) => item.id === "sap-disadvantage")) {
+      hooks.registerAbility(pre, {
+        id: "sap-disadvantage", priority: 15, rulesets: ["2024"],
+        appliesTo: (member) => disadvantage(member.state) > 0,
+        resolve: resolveBeforeAttackRoll,
+      });
+    }
+    const hit = hooks.PHASES.ON_HIT;
+    if (!hooks.abilitiesFor(hit).some((item) => item.id === "sap-outcome")) {
+      hooks.registerAbility(hit, {
+        id: "sap-outcome", priority: 20, rulesets: ["2024"],
+        appliesTo: (member, ctx) => weaponEligible(member.state, ctx.attack) || selected(member.state, ctx.attack),
+        resolve: resolveHit,
+      });
+    }
   }
 
   window.IRON_PIT_BROWSER_SAP = {
-    applyEffect, applyWeapon, consume, disadvantage, installAbilityHooks, resolveHit, weaponEligible,
+    applyEffect, applyWeapon, consume, disadvantage, installAbilityHooks, resolveBeforeAttackRoll, resolveHit, weaponEligible,
   };
   window.IRON_PIT_BROWSER_TACTICAL_MASTER = { apply: applyTactical, eligible: selected, selected };
   if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();

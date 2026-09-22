@@ -27,6 +27,29 @@
     };
   }
 
+  function resolveBeforeAttackRoll(ctx) {
+    const api = ctx.attackRollApi;
+    if (!api) throw new Error("Before-attack-roll hook requires attackRollApi.");
+    const roll = api.requireContext(ctx);
+    const hasDisadvantage = api.disadvantageTotal(roll) > 0;
+    const suppression = advantageSuppression(ctx.member.state, ctx.attack, ctx.turnKey, hasDisadvantage);
+    const reckless = api.advantageSource(roll, "reckless-attacker");
+    api.setAdvantageSource(roll, "reckless-attacker", Math.max(0, reckless - suppression));
+    return api.noEventResult(ctx.sequence);
+  }
+
+  function installAbilityHooks() {
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    if (!hooks) throw new Error("Brutal Strike hook installation requires browser-ability-hooks.js.");
+    const phase = hooks.PHASES.BEFORE_ATTACK_ROLL;
+    if (hooks.abilitiesFor(phase).some((item) => item.id === FEATURE)) return;
+    hooks.registerAbility(phase, {
+      id: FEATURE, priority: 20, rulesets: ["2024"],
+      appliesTo: (member) => (member.state.template.brutal_strike_damage_dice || 0) > 0,
+      resolve: resolveBeforeAttackRoll,
+    });
+  }
+
   function hamstring(defender, sourceId) {
     M().add(defender, {
       id: `hamstring-blow:${sourceId}`, source_id: sourceId, source_effect_id: "hamstring-blow",
@@ -53,5 +76,8 @@
 
   window.IRON_PIT_BROWSER_BRUTAL_STRIKE = {
     advantageSuppression, bonusDamage, eligible, forceful, followForceful, hamstring,
+    installAbilityHooks, resolveBeforeAttackRoll,
   };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();

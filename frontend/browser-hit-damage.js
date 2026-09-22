@@ -83,6 +83,7 @@
     const base = R().weaponDamage(
       attacker, attack, critical, mode, turnKey, options.bonusDamage || null,
       defender, Boolean(options.sneakAttackAllyAvailable),
+      Object.hasOwn(options, "preRollDisadvantage") ? Boolean(options.preRollDisadvantage) : mode === "disadvantage",
     );
     const rolled = [...base.components];
     const smite = P()?.divineSmiteComponent(attacker, defender, attack, critical) || null;
