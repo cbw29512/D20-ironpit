@@ -69,6 +69,7 @@ def _source(level: int) -> str:
         + ("Guardian of Faith, Ability Score Improvement, " if level >= 8 else "")
         + ("Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, " if level >= 9 else "")
         + ("Divine Intervention, Contagion, Spare the Dying, " if level >= 10 else "")
+        + ("Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, " if level >= 11 else "")
         + "Equipment"
     )
 
@@ -101,6 +102,12 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             wisdom_modifier,
             disciple_of_life_bonus(5) if "disciple-of-life" in features else 0,
         ))
+    if level >= 11:
+        healing.append(build_mass_cure_wounds(
+            wisdom_modifier,
+            disciple_of_life_bonus(6) if "disciple-of-life" in features else 0,
+            6,
+        ))
     if level >= 10:
         healing.append(build_divine_intervention_healing(
             wisdom_modifier,
@@ -116,6 +123,8 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         save_spells.append(build_inflict_wounds(save_dc))
     if level >= 9:
         save_spells.append(build_inflict_wounds(save_dc, 5))
+    if level >= 11:
+        save_spells.append(build_inflict_wounds(save_dc, 6))
     traits = [CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE]
     if "disciple-of-life" in features:
         traits.append(CombatTrait.LIFE_DOMAIN)
