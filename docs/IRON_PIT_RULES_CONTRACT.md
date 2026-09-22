@@ -13,6 +13,46 @@ If implementation and this contract disagree, either fix the implementation or m
 - Python is the reference/certification oracle. The browser engine is the production fight engine. Supported capabilities require behavioral parity and permanent regression coverage.
 - Noncombat-only rules may be omitted from runtime only when they cannot alter an Iron Pit combat outcome.
 
+### 1.1 Mandatory semantic-mechanic reuse gate
+
+This gate applies to **every** class feature, subclass feature, species feature, feat, spell, item, monster trait, monster action, reaction, legendary action, lair action, and future homebrew mechanic.
+
+Before writing a new resolver or special handler, decompose the source ability into its actual combat semantics:
+
+- trigger/timing window;
+- action-economy cost;
+- legal target/range/geometry;
+- attack/check/save/recharge/resource requirement;
+- damage/healing/state change;
+- condition/buff/debuff;
+- duration/expiry/repeat-save timing;
+- resource/charge/use limit;
+- interruption/reaction/override behavior.
+
+Then search the existing universal capability inventory and current engine implementation.
+
+**Required decision:**
+
+1. If the behavior is mechanically equivalent to an existing primitive, **reuse that exact primitive**.
+2. If the behavior differs only by numbers, damage type, DC formula, range, duration, target count, resource count, trigger, or ruleset-specific parameter, **reuse the primitive and parameterize the difference**.
+3. If one named source ability is a combination of existing mechanics, **compose it from those existing primitives** rather than creating a monolithic source-specific resolver.
+4. Only the genuinely unmatched semantic remainder may justify a new universal primitive.
+5. A new primitive is not permitted merely because the source ability has a different name, comes from a different class, comes from a monster instead of a hero, or appears in a different edition.
+
+Ability names are **presentation and audit metadata**. The original RAW/source ability name must appear accurately in logs, cards, and audit evidence, but engine dispatch must not depend on that display name when the behavior can be expressed through universal capability data.
+
+A capability discovered while implementing a hero must be reusable by monsters, spells, items, and other heroes when their semantics match. A capability discovered while implementing a monster must likewise be reusable by pregens and other content.
+
+Before adding new mechanic code, the implementation audit must classify the feature as one of:
+
+- `ENGINE_EXISTS_BINDING_MISSING`
+- `ENGINE_EXISTS_PARAMETER_DELTA`
+- `ENGINE_EXISTS_COMPOSITION`
+- `ARENA_NEUTRAL`
+- `ENGINE_TRULY_MISSING`
+
+`ENGINE_TRULY_MISSING` requires evidence that the existing primitive inventory cannot represent the outcome correctly. After adding any new universal primitive, re-audit all classes and monsters for additional content that can now bind to it.
+
 ## 2. Ruleset isolation
 
 The current certified public ruleset is D&D 2024 / SRD 5.2.1.
