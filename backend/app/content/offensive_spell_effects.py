@@ -9,7 +9,7 @@ def cantrip_damage_dice(character_level: int) -> int:
     return 1 + int(character_level >= 5) + int(character_level >= 11) + int(character_level >= 17)
 
 
-def build_sacred_flame(save_dc: int, character_level: int) -> SpellSaveAction:
+def build_sacred_flame(save_dc: int, character_level: int, damage_bonus: int = 0) -> SpellSaveAction:
     return SpellSaveAction(
         id="sacred-flame",
         name="Sacred Flame",
@@ -20,6 +20,7 @@ def build_sacred_flame(save_dc: int, character_level: int) -> SpellSaveAction:
         dc=save_dc,
         damage_dice_count=cantrip_damage_dice(character_level),
         damage_dice_size=8,
+        damage_bonus=damage_bonus,
         damage_type="radiant",
         success_damage="none",
         animation="sacred-flame",
