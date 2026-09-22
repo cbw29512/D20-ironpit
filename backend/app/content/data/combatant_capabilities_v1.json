@@ -34,12 +34,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -205,12 +206,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -347,12 +349,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -504,12 +507,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -649,12 +653,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -847,12 +852,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -988,12 +994,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1102,12 +1109,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1242,12 +1250,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1358,12 +1367,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1470,12 +1480,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1599,12 +1610,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1711,12 +1723,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1825,12 +1838,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1946,12 +1960,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2067,12 +2082,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2198,12 +2214,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2359,12 +2376,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2475,12 +2493,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2587,12 +2606,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2701,12 +2721,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2813,12 +2834,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2927,12 +2949,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3039,12 +3062,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3156,12 +3180,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3270,12 +3295,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3387,12 +3413,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3533,12 +3560,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3666,12 +3694,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3787,12 +3816,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3928,12 +3958,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4038,12 +4069,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4220,12 +4252,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4472,12 +4505,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4605,12 +4639,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4717,12 +4752,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4827,12 +4863,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4935,12 +4972,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5045,12 +5083,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5155,12 +5194,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5266,12 +5306,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5374,12 +5415,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5484,12 +5526,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5594,12 +5637,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5704,12 +5748,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5814,12 +5859,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5922,12 +5968,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6034,12 +6081,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6148,12 +6196,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6262,12 +6311,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6395,12 +6445,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6507,12 +6558,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6621,12 +6673,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6733,12 +6786,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6852,12 +6906,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6968,12 +7023,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7080,12 +7136,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7194,12 +7251,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7312,12 +7370,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7428,12 +7487,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7540,12 +7600,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7657,12 +7718,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7771,12 +7833,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7885,12 +7948,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7999,12 +8063,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8163,12 +8228,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8294,12 +8360,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8429,12 +8496,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8589,12 +8657,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8732,12 +8801,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8856,12 +8926,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8980,12 +9051,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9121,12 +9193,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9306,12 +9379,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9473,12 +9547,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9615,12 +9690,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9738,12 +9814,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9866,12 +9943,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10044,12 +10122,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10173,12 +10252,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10303,12 +10383,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10435,12 +10516,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10568,12 +10650,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10704,12 +10787,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10851,12 +10935,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10981,12 +11066,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11153,12 +11239,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11314,12 +11401,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11484,12 +11572,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11626,12 +11715,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11749,12 +11839,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11927,12 +12018,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12044,12 +12136,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12169,12 +12262,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12292,12 +12386,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12431,12 +12526,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12556,12 +12652,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12743,12 +12840,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12876,12 +12974,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13049,12 +13148,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13163,12 +13263,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13286,12 +13387,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13453,12 +13555,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13574,12 +13677,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13699,12 +13803,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13820,12 +13925,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13966,12 +14072,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14090,12 +14197,13 @@
       "cunning_action": true,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14257,12 +14365,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14400,12 +14509,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14525,12 +14635,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14661,12 +14772,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14840,12 +14952,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14961,12 +15074,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15098,12 +15212,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15216,12 +15331,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15330,12 +15446,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15447,12 +15564,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15591,12 +15709,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15738,12 +15857,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15927,12 +16047,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16115,12 +16236,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16301,12 +16423,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16490,12 +16613,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16675,12 +16799,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16862,12 +16987,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17056,12 +17182,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17248,12 +17375,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17443,12 +17571,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17634,12 +17763,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17827,12 +17957,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17949,12 +18080,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18091,12 +18223,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18233,12 +18366,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18385,12 +18519,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18551,12 +18686,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18745,12 +18881,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18862,12 +18999,13 @@
       "cunning_action": false,
       "stationary_bonus_action_next_attack_advantage": false,
       "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
       "cunning_strike_max_effects": 0,
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
