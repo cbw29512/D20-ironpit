@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.content.audited_rogue_profile import _feature
 from app.content.canonical_progression import advance_profile_data
 from app.content.rogue_endgame_progression_profile import build_mara_quickstep_level16_profile
-from app.domain.character_builds import CharacterBuildProfile
+from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile
 
 
 def build_mara_quickstep_level17_profile() -> CharacterBuildProfile:
@@ -60,3 +60,40 @@ def build_mara_quickstep_level18_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 18 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level19_profile() -> CharacterBuildProfile:
+    """Level 19 inherits level 18 and takes Boon of Combat Prowess."""
+    try:
+        previous = build_mara_quickstep_level18_profile()
+        data = advance_profile_data(previous, 19)
+        data.update(
+            advancement_increases=[
+                *[item.model_dump() for item in previous.advancement_increases],
+                AbilityIncrease(ability="strength", amount=1).model_dump(),
+            ],
+            final_ability_scores=AbilityScores(
+                strength=14, dexterity=20, constitution=20,
+                intelligence=10, wisdom=12, charisma=10,
+            ).model_dump(),
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "boon-combat-prowess", "Boon of Combat Prowess", "feat",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Canonical boon increases Strength 13→14 for an immediate modifier gain. "
+                        "Peerless Aim reuses the generic once-per-turn miss-to-hit capability."
+                    ),
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 19 — Epic Boon",
+                "Basic Rules 2024: Boon of Combat Prowess — Ability Score Increase; Peerless Aim",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 19 profile could not be created.") from exc
