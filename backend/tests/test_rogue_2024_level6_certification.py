@@ -7,6 +7,7 @@ from app.content.rogue_mid_progression_profile import build_mara_quickstep_level
 
 
 def test_2024_rogue_level6_is_level5_plus_hp_and_arena_inert_expertise() -> None:
+    """Level 6 must preserve level 5 and add only its researched Expertise/HP delta."""
     template = build_mara_quickstep_level(6)
     assert unsupported_mara_rogue_features(6) == ()
     assert template.id == "mara-quickstep-l6"
