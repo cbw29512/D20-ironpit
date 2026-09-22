@@ -207,6 +207,33 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(result.roll.revisions.at(-1).replaced_die_index, 1);
 }
 
+
+{
+  const attacker = member("turn-refresh-miss-override");
+  attacker.state.template.miss_to_hit_override_grants = [{
+    source_id: "test-peerless-aim",
+    source_name: "Test Peerless Aim",
+    usage_policy: "refresh_at_turn_start",
+    resource_id: null,
+  }];
+  const override = window.IRON_PIT_BROWSER_MISS_TO_HIT_OVERRIDE;
+
+  const first = override.apply(attacker.state, false);
+  const blocked = override.apply(attacker.state, false);
+
+  assert.deepEqual(first, { hit: true, featureId: "test-peerless-aim", sourceName: "Test Peerless Aim" });
+  assert.deepEqual(blocked, { hit: false, featureId: null, sourceName: null });
+  assert.deepEqual(attacker.state.turn_start_feature_cooldowns, ["test-peerless-aim"]);
+
+  S.beginTurn(attacker.state);
+
+  assert.deepEqual(attacker.state.turn_start_feature_cooldowns, []);
+  assert.deepEqual(
+    override.apply(attacker.state, false),
+    { hit: true, featureId: "test-peerless-aim", sourceName: "Test Peerless Aim" },
+  );
+}
+
 console.log("Browser condition/action-economy integration regressions passed.");
 
 // Keep newer condition/class subsystems inside an already mandatory CI entry point.
