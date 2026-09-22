@@ -35,6 +35,8 @@ def refresh_reaction(state: CombatantState) -> None:
 
 
 def refresh_start_of_turn(state: CombatantState) -> None:
+    """Refresh mechanics whose reuse window opens at this creature's own turn start."""
+    state.turn_start_feature_cooldowns.clear()
     refresh_reaction(state)
     apply_survivor_start_turn_heal(state)
     grant_heroic_warrior_inspiration(state)
