@@ -93,6 +93,9 @@
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && !override.featureId && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
+    if (attacker.state.template.deferred_save_effect && !window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT) {
+      throw new Error("Declared deferred-save effect requires browser-deferred-save-effect.js.");
+    }
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
