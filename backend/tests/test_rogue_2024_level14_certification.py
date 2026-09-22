@@ -48,7 +48,7 @@ def test_devious_strike_obscure_trades_three_dice_and_applies_timed_blinded() ->
     assert spec[1] == 4
     assert attacker.feature_last_turn_keys[OBSCURE_FEATURE_ID] == turn_key
 
-    result = resolve_obscure(attacker, defender, FixedDiceProvider([1]), turn_key)
+    result = resolve_obscure(attacker, defender, FixedDiceProvider([1, 1]), turn_key)
     assert result.save_dc == 18
     assert result.save_succeeded is False
     assert result.applied is True
