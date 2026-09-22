@@ -4,6 +4,7 @@ from app.combat.undead_fortitude import consume_survival_save_log
 import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
+from app.combat.attack_post_roll import resolve_post_roll_attack_outcome
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.brutal_strike import brutal_strike_attack_sources
@@ -13,23 +14,19 @@ from app.combat.conditional_attack_advantage import (
     conditional_attack_advantage_sources,
     suppress_attack_advantage_sources,
 )
-from app.combat.d20_outcome_override import replace_failed_d20_with_natural_20
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
-from app.combat.miss_to_hit import resolve_miss_to_hit
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice, attack_roll_flat_bonus, attacks_against_advantage_sources, consume_attacks_against_advantage,
     consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
 )
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
-from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
 from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
-from app.combat.state import terminate_turn
 from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
@@ -85,26 +82,19 @@ def resolve_attack(
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        target_ac = effective_armor_class(actual_defender)
-        natural = attack_roll.selected_roll or 0
-        natural_1 = natural == 1
-        hit = not natural_1 and (natural == 20 or attack_roll.total >= target_ac)
-        hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
-        if parry_used:
-            target_ac += actual_defender.template.parry_reaction.ac_bonus
         active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
-        hit, miss_to_hit_used = resolve_miss_to_hit(attacker, hit, active_turn_key)
-        d20_override_used = False
-        if not hit:
-            attack_roll, d20_override_used = replace_failed_d20_with_natural_20(
-                attacker, attack_roll, target_ac,
-            )
-            natural = attack_roll.selected_roll or 0
-            natural_1 = natural == 1
-            hit = not natural_1 and (natural == 20 or attack_roll.total >= target_ac)
-        natural_1_ends_turn = natural_1 and not off_turn and not hit
-        if natural_1_ends_turn:
-            terminate_turn(attacker, "iron-pit-natural-1-attack")
+        post_roll = resolve_post_roll_attack_outcome(
+            attacker, actual_defender, attack, attack_roll,
+            effective_armor_class(actual_defender), active_turn_key, off_turn=off_turn,
+        )
+        attack_roll = post_roll.roll
+        hit = post_roll.hit
+        target_ac = post_roll.target_ac
+        natural = post_roll.natural
+        parry_used = post_roll.parry_used
+        miss_to_hit_used = post_roll.miss_to_hit_used
+        d20_override_used = post_roll.d20_override_used
+        natural_1_ends_turn = post_roll.natural_1_ends_turn
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
