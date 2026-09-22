@@ -205,6 +205,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "cunning_strike_obscure_die_cost": progression.cunning_strike_obscure_die_cost,
         "cunning_strike_max_effects": progression.cunning_strike_max_effects,
         "attack_advantage_suppressed_unless_incapacitated": progression.attack_advantage_suppressed_unless_incapacitated,
+        "miss_to_hit_once_per_turn": progression.miss_to_hit_once_per_turn,
         "saving_throw_proficiency_grants": [
             item.model_dump() for item in progression.saving_throw_proficiency_grants
         ],
