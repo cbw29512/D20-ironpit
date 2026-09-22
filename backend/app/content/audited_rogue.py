@@ -17,8 +17,17 @@ def mara_rogue_features(level: int) -> tuple[str, ...]:
     return compose_class_subclass_features("rogue", "thief", level, ROGUE_COMBAT_LEVELS)
 
 
+_MARA_LOADOUT_INERT_FEATURES = frozenset({"thief-fast-hands"})
+
+
 def unsupported_mara_rogue_features(level: int) -> tuple[str, ...]:
-    return unsupported_hero_engine_features(mara_rogue_features(level))
+    """Fail closed on real engine gaps, excluding features inert for Mara's certified loadout."""
+    active = tuple(
+        feature
+        for feature in mara_rogue_features(level)
+        if feature not in _MARA_LOADOUT_INERT_FEATURES
+    )
+    return unsupported_hero_engine_features(active)
 
 
 def build_mara_quickstep_level(level: int) -> CombatantTemplate:

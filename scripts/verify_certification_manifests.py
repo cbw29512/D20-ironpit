@@ -88,6 +88,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("sneak-attack")
     if features.cunning_action:
         mechanics.add("cunning-action")
+    if features.stationary_bonus_action_next_attack_advantage:
+        mechanics.add("steady-aim")
     if features.uncanny_dodge:
         mechanics.add("uncanny-dodge")
     if features.evasion:

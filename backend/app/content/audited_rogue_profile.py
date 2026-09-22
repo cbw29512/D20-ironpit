@@ -117,3 +117,47 @@ def build_mara_quickstep_level2_profile() -> CharacterBuildProfile:
         })
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 2 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level3_profile() -> CharacterBuildProfile:
+    """Level 3 adds Steady Aim and the Thief subclass without inventing utility-item combat."""
+    try:
+        base = build_mara_quickstep_level2_profile()
+        return base.model_copy(update={
+            "id": "build-mara-quickstep-l3",
+            "template_id": canonical_template_id("rogue", 3),
+            "level": 3,
+            "subclass_id": "thief",
+            "subclass_name": "Thief",
+            "feature_audits": [
+                *base.feature_audits,
+                _feature(
+                    "steady-aim", "Steady Aim", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Uses the shared stationary Bonus Action to grant Advantage "
+                        "on the next legal attack this turn."
+                    ),
+                ),
+                _feature(
+                    "thief-fast-hands", "Fast Hands", "subclass",
+                    combat_relevant=False, automated=False,
+                    notes=(
+                        "Arena-inert for the current certified loadout: Mara has no "
+                        "qualifying combat item whose Utilize or Magic action is modeled."
+                    ),
+                ),
+                _feature(
+                    "thief-second-story-work", "Second-Story Work", "subclass",
+                    combat_relevant=False, automated=False,
+                    notes="Arena-inert in the standard Iron Pit battlefield.",
+                ),
+            ],
+            "source_references": [
+                *base.source_references,
+                "Basic Rules 2024: Rogue 3 — Steady Aim; Thief — Fast Hands and Second-Story Work",
+            ],
+        })
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 3 profile could not be created.") from exc
