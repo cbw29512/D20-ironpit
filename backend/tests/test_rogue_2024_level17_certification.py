@@ -47,6 +47,20 @@ def test_thiefs_reflexes_uses_shared_round_one_schedule_and_exact_log_name() -> 
     assert "Thief's Reflexes" in feature.description
 
 
+def test_thiefs_reflexes_extra_turn_does_not_inherit_natural_twenty_priority() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["mara-quickstep-l17"],
+        monster_ids=["srd-commoner"],
+    ))
+    initiative = roll_encounter_initiative(setup, FixedDiceProvider([20, 19]))
+    mara_id = setup.heroes[0].combatant_id
+    monster_id = setup.monsters[0].combatant_id
+
+    assert initiative.turn_order == [mara_id, monster_id]
+    assert initiative.first_round_turn_order == [mara_id, monster_id, mara_id]
+    assert initiative.first_round_extra_turns[0].initiative_count == 15
+
+
 def test_2024_rogue_level17_profile_fingerprint_and_registry_match() -> None:
     profile = build_mara_quickstep_level17_profile()
     fingerprint = build_mara_quickstep_level17_combat_profile()
