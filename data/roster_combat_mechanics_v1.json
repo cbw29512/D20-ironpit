@@ -663,15 +663,16 @@
       "status": "planned"
     },
     {
-      "demand_count": 1,
+      "demand_count": 2,
       "id": "boon-combat-prowess",
       "kinds": [
         "base-feature"
       ],
       "owners": [
-        "fighter/base"
+        "fighter/base",
+        "rogue/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -3449,17 +3450,6 @@
     },
     {
       "demand_count": 1,
-      "id": "rogue-epic-boon",
-      "kinds": [
-        "base-feature"
-      ],
-      "owners": [
-        "rogue/base"
-      ],
-      "status": "planned"
-    },
-    {
-      "demand_count": 1,
       "id": "roving",
       "kinds": [
         "base-feature"
@@ -4952,7 +4942,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 29,
-    "planned": 350,
-    "supported": 65
+    "planned": 348,
+    "supported": 66
   }
 }

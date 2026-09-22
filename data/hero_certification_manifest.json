@@ -6092,6 +6092,7 @@
           "expected_combat_features": [
             "attack:mara-shortbow",
             "attack:mara-shortsword",
+            "boon-combat-prowess",
             "cunning-action",
             "cunning-strike",
             "defender-attack-advantage-suppression",
@@ -6112,6 +6113,7 @@
           "supported_mechanics": [
             "attack:mara-shortbow",
             "attack:mara-shortsword",
+            "boon-combat-prowess",
             "cunning-action",
             "cunning-strike",
             "defender-attack-advantage-suppression",
@@ -6149,6 +6151,7 @@
           "expected_combat_features": [
             "attack:mara-shortbow",
             "attack:mara-shortsword",
+            "boon-combat-prowess",
             "cunning-action",
             "cunning-strike",
             "defender-attack-advantage-suppression",
@@ -6171,6 +6174,7 @@
           "supported_mechanics": [
             "attack:mara-shortbow",
             "attack:mara-shortsword",
+            "boon-combat-prowess",
             "cunning-action",
             "cunning-strike",
             "defender-attack-advantage-suppression",
