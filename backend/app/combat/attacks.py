@@ -3,23 +3,14 @@ from __future__ import annotations
 from app.combat.undead_fortitude import consume_survival_save_log
 import logging
 from app.combat.action_economy import is_available, spend
-from app.combat.attack_hit_damage import resolve_attack_hit_damage
 from app.combat.attack_roll_resolution import resolve_attack_roll
-from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
+from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.condition_rules import close_hit_is_automatic_critical
-from app.combat.conditions import apply_hit_conditions
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
-from app.combat.graze import resolve_graze_miss
 from app.combat.modifier_stack import effective_armor_class
-from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
-from app.combat.sap import apply_weapon_sap
 from app.combat.state import terminate_turn
-from app.combat.studied_attacks import apply_studied_attack_miss
-from app.combat.tactical_master import apply_tactical_master_sap
-from app.combat.topple import resolve_topple_hit
-from app.combat.vex import apply_vex_mastery
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 logger = logging.getLogger(__name__)
 
@@ -86,38 +77,37 @@ def resolve_attack(
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
-        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []
-        topple = None; cunning_strike = None; cunning_strike_obscure = None; on_hit_save = None; save_damage = None; applied_total = 0
-        weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
-        if hit:
-            active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
-            hit_damage = resolve_attack_hit_damage(
-                attacker, actual_defender, attack, dice, critical, mode, active_turn_key,
-                bonus_damage, affected_states, sneak_attack_ally_available,
-                brutal_strike_disadvantage=brutal_strike_disadvantage,
-            )
-            damage_roll = hit_damage.damage_roll; damage_components = hit_damage.damage_components
-            damage_outcome = hit_damage.damage_outcome; applied_total = hit_damage.applied_total
-            save_damage = hit_damage.save_damage
-            cunning_strike = hit_damage.cunning_strike_trip
-            cunning_strike_obscure = hit_damage.cunning_strike_obscure
-            if cunning_strike.applied:
-                applied_conditions.append("prone")
-            if cunning_strike_obscure.applied:
-                applied_conditions.append("blinded")
-            applied_conditions.extend(apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states, attacker.template))
-            on_hit_save = resolve_on_hit_condition_save(actual_defender, attack, dice, attacker.template)
-            if on_hit_save.applied_condition and on_hit_save.applied_condition not in applied_conditions: applied_conditions.append(on_hit_save.applied_condition)
-            topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
-            if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
-            weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
-            if not weapon_sap_applied: tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
-            vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total)
-            end_rage_if_incapacitated(actual_defender)
-        else:
-            graze = resolve_graze_miss(attacker, actual_defender, attack, dice, affected_states)
-            if graze is not None: damage_roll, damage_components, damage_outcome = graze; end_rage_if_incapacitated(actual_defender)
-            studied_applied = apply_studied_attack_miss(attacker, attacker_event_id, defender_event_id, round_number)
+        effects = resolve_attack_effects(
+            attacker,
+            actual_defender,
+            attack,
+            dice,
+            hit=hit,
+            critical=critical,
+            mode=mode,
+            round_number=round_number,
+            attacker_event_id=attacker_event_id,
+            defender_event_id=defender_event_id,
+            actual_event_id=actual_event_id,
+            turn_key=turn_key,
+            bonus_damage=bonus_damage,
+            affected_states=affected_states,
+            sneak_attack_ally_available=sneak_attack_ally_available,
+            brutal_strike_disadvantage=brutal_strike_disadvantage,
+        )
+        damage_roll = effects.damage_roll
+        damage_components = effects.damage_components
+        damage_outcome = effects.damage_outcome
+        applied_conditions = effects.applied_conditions
+        save_damage = effects.save_damage
+        on_hit_save = effects.on_hit_save
+        cunning_strike = effects.cunning_strike
+        cunning_strike_obscure = effects.cunning_strike_obscure
+        topple = effects.topple
+        weapon_sap_applied = effects.weapon_sap_applied
+        tactical_sap_applied = effects.tactical_sap_applied
+        vex_applied = effects.vex_applied
+        studied_applied = effects.studied_applied
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
         if d20_override_feature_id is not None:
