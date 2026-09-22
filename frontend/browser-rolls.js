@@ -121,7 +121,9 @@
     if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
       components.push(damageComponent({ ...conditional, source: "Conditional bonus damage" }, critical));
     }
-    const sneak = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.bonusDamage(attacker, attack, mode, turnKey, sneakAllyAvailable);
+    const sneak = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.bonusDamage(
+      attacker, attack, mode, turnKey, sneakAllyAvailable, target,
+    );
     if (sneak) components.push(bonusComponent(sneak, critical));
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));

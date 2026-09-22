@@ -108,7 +108,9 @@ def resolve_weapon_damage(
 
         _append_bonus_component(
             components, dice,
-            sneak_attack_bonus_damage(attacker, attack, attack_mode, turn_key, sneak_attack_ally_available),
+            sneak_attack_bonus_damage(
+                attacker, attack, attack_mode, turn_key, sneak_attack_ally_available, target,
+            ),
             critical=critical,
         )
         _append_bonus_component(components, dice, frenzy_bonus_damage(attacker, attack, turn_key), critical=critical)
