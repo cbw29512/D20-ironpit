@@ -10,6 +10,7 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
         constitution = 20 if level >= 12 else (18 if level >= 10 else (16 if level >= 4 else 15))
         dexterity_mod = (dexterity - 10) // 2
         constitution_mod = (constitution - 10) // 2
+        wisdom = 12 if level >= 16 else 10
         proficiency_bonus = 2 + (level - 1) // 4
         return PregenCombatProfile(
             template_id=f"mara-quickstep-l{level}",
@@ -17,7 +18,7 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
             level=level,
             abilities=AbilityScores(
                 strength=13, dexterity=dexterity, constitution=constitution,
-                intelligence=10, wisdom=10, charisma=10,
+                intelligence=10, wisdom=wisdom, charisma=10,
             ),
             save_proficiencies=(
                 ("dexterity", "intelligence", "wisdom", "charisma")
@@ -114,6 +115,11 @@ def build_mara_quickstep_level14_combat_profile() -> PregenCombatProfile:
 
 def build_mara_quickstep_level15_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(15)
+
+
+
+def build_mara_quickstep_level16_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(16)
 
 
 
