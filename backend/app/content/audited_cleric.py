@@ -11,15 +11,17 @@ from app.content.cleric_runtime_loadout import (
     build_seraphine_save_spells,
     seraphine_source,
 )
+from app.content.cleric_runtime_stats import (
+    build_seraphine_mace_attack,
+    seraphine_saving_throw_bonuses,
+    seraphine_skill_bonuses,
+)
 from app.content.hero_combat_feature_registry import unsupported_hero_engine_features
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.offensive_spell_effects import build_guiding_bolt
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.character_builds import AbilityScores
-from app.domain.models import (
-    CombatantTemplate, DamageType, VisualLoadout,
-    Weapon, WeaponAttack, WeaponAttackKind,
-)
+from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
 from app.domain.traits import CombatTrait
 
@@ -30,19 +32,6 @@ def _modifier(score: int) -> int:
 
 def _features(level: int) -> tuple[str, ...]:
     return canonical_combat_features("cleric", level, "life-domain")
-
-
-def _mace_attack(attack_bonus: int) -> WeaponAttack:
-    return WeaponAttack(
-        id="seraphine-mace",
-        weapon=Weapon(
-            id="mace", name="Mace", attack_kind=WeaponAttackKind.MELEE,
-            dice_count=1, dice_size=6, damage_type=DamageType.BLUDGEONING,
-            animation="blunt-strike", reach_ft=5,
-        ),
-        attack_bonus=attack_bonus,
-        damage_bonus=0,
-    )
 
 
 def _build_seraphine(level: int) -> CombatantTemplate:
@@ -58,7 +47,6 @@ def _build_seraphine(level: int) -> CombatantTemplate:
     row = CLERIC_COMBAT_LEVELS[level]
     hero = HERO_BY_CLASS["cleric"]
     wisdom_modifier = _modifier(row.wisdom)
-    intelligence_modifier = 2
     charisma_modifier = _modifier(row.charisma)
     save_dc = 8 + row.proficiency_bonus + wisdom_modifier
     spell_attack_bonus = row.proficiency_bonus + wisdom_modifier
@@ -85,7 +73,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         max_hp=row.max_hp,
         speed_ft=30,
         initiative_bonus=0,
-        weapon_attack=_mace_attack(row.proficiency_bonus),
+        weapon_attack=build_seraphine_mace_attack(row.proficiency_bonus),
         saving_throw_actions=[build_divine_intervention_damage(save_dc)] if level >= 10 else [],
         spell_save_actions=build_seraphine_save_spells(level, save_dc, wisdom_modifier, features),
         spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
@@ -108,22 +96,12 @@ def _build_seraphine(level: int) -> CombatantTemplate:
                 if level >= 6 else None
             ),
         ),
-        saving_throw_bonuses={
-            "strength": 0,
-            "dexterity": 0,
-            "constitution": 0,
-            "intelligence": intelligence_modifier,
-            "wisdom": row.proficiency_bonus + wisdom_modifier,
-            "charisma": row.proficiency_bonus + charisma_modifier,
-        },
-        skill_bonuses={
-            "athletics": 0,
-            "acrobatics": 0,
-            "arcana": row.proficiency_bonus + intelligence_modifier,
-            "history": row.proficiency_bonus + intelligence_modifier,
-            "medicine": row.proficiency_bonus + wisdom_modifier,
-            "persuasion": row.proficiency_bonus + charisma_modifier,
-        },
+        saving_throw_bonuses=seraphine_saving_throw_bonuses(
+            row.proficiency_bonus, wisdom_modifier, charisma_modifier,
+        ),
+        skill_bonuses=seraphine_skill_bonuses(
+            row.proficiency_bonus, wisdom_modifier, charisma_modifier,
+        ),
         combat_traits=traits,
         visual=VisualLoadout(
             armor="chain-shirt", main_hand="mace",
