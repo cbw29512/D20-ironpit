@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
-from app.combat.ability_checks import apply_ability_check_minimum
+from app.combat.ability_checks import apply_ability_check_minimum, apply_skill_check_d20_minimum
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
@@ -92,14 +92,14 @@ def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
 
 
-def _escape_choice(state: CombatantState) -> tuple[str, str, int, RollMode]:
+def _escape_choice(state: CombatantState) -> tuple[str, str, str, int, RollMode]:
     athletics = state.template.skill_bonuses.get("athletics")
     acrobatics = state.template.skill_bonuses.get("acrobatics")
     if athletics is None and acrobatics is None:
         raise ValueError(f"{state.template.name} lacks certified Athletics/Acrobatics bonuses.")
     if athletics is not None and (acrobatics is None or athletics >= acrobatics):
-        return "strength", "strength (athletics)", athletics, _check_mode(state, True)
-    return "dexterity", "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False)
+        return "strength", "athletics", "strength (athletics)", athletics, _check_mode(state, True)
+    return "dexterity", "acrobatics", "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False)
 
 
 def resolve_escape_grapple(
@@ -108,9 +108,10 @@ def resolve_escape_grapple(
     if not is_available(state, "action"):
         raise ValueError("Action is not available to escape a grapple.")
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
-    check_ability, check_name, bonus, mode = _escape_choice(state)
+    check_ability, check_skill, check_name, bonus, mode = _escape_choice(state)
     check = roll_d20(dice, bonus + d20_modifier(state), mode)
     check = apply_ability_check_minimum(state, check_ability, check)
+    check = apply_skill_check_d20_minimum(state, check_skill, check)
     success = check.total >= source.escape_dc
     tactical_used = False
     if not success:
