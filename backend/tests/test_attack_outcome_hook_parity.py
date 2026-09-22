@@ -31,6 +31,29 @@ def test_python_miss_keeps_graze_before_studied_attacks() -> None:
     assert next_attack_against_advantage_sources(attacker, target.template.id) == 1
 
 
+def test_python_miss_to_hit_preempts_miss_only_graze_and_studied_attacks() -> None:
+    template = build_karnok_stoneward_level(12)
+    features = template.progression_features.model_copy(update={
+        "miss_to_hit_once_per_turn": True,
+        "studied_attacks": True,
+        "tactical_master_sap_weapon_ids": [],
+    })
+    attacker = _state(template.model_copy(update={"progression_features": features}))
+    target = _state(build_brom_ironmark())
+
+    event = resolve_attack(
+        1, 1, attacker, target, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([2, 4, 4]), spend_action=False, turn_key="1:karnok",
+    )
+
+    assert event.hit is True
+    assert event.damage_roll is not None and event.damage_roll.total > 0
+    assert "Miss converted to hit" in event.description
+    assert "Graze deals" not in event.description
+    assert "Studied Attacks primes" not in event.description
+    assert next_attack_against_advantage_sources(attacker, target.template.id) == 0
+
+
 def test_python_tactical_master_sap_replaces_native_mastery_on_hit() -> None:
     attacker = _state(build_karnok_stoneward_level(9))
     target = _state(build_karnok_stoneward_level(9))
