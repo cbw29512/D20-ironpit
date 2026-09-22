@@ -7,6 +7,7 @@ from app.content.rogue_combat_fingerprint import build_mara_quickstep_level4_com
 
 
 def test_2024_rogue_level4_applies_canonical_asi_to_all_derived_combat_stats() -> None:
+    """Level 4 must inherit level 3 and change only the researched ASI-derived combat values."""
     template = build_mara_quickstep_level(4)
     assert unsupported_mara_rogue_features(4) == ()
     assert template.id == "mara-quickstep-l4"
