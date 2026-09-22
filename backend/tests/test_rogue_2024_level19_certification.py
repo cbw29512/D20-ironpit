@@ -19,6 +19,7 @@ def test_2024_rogue_level19_applies_night_spirit_asi_and_sneak_attack_scaling() 
     assert template.max_hp - level18.max_hp == 10
     assert template.skill_bonuses["athletics"] == 8
     assert template.progression_features.sneak_attack_d6 == 10
+    assert template.damage_resistances == [], "Night Spirit resistance is not fabricated without Dim Light/Darkness state"
 
 
 def test_2024_rogue_level19_night_spirit_shadow_riders_are_explicitly_arena_inert() -> None:
