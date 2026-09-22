@@ -31,7 +31,7 @@ def test_2024_rogue_level9_pb_updates_cunning_strike_dc() -> None:
     attacker = build_combatant_state(build_mara_quickstep_level(9))
     defender = build_combatant_state(build_karnok_stoneward_level(9))
     attacker.feature_last_turn_keys["cunning-strike-trip"] = "9:mara"
-    result = resolve_trip(attacker, defender, FixedDiceProvider([1]), "9:mara")
+    result = resolve_trip(attacker, defender, FixedDiceProvider([1, 1]), "9:mara")
     assert result.save_dc == 17
 
 
