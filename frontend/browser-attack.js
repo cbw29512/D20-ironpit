@@ -88,6 +88,11 @@
     const originalNatural = attackRoll.selected_roll, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
     const initialHit = originalNatural !== 1 && (originalNatural === 20 || attackRoll.total >= baseTargetAc);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
+    const d20Grants = attacker.state.template.failed_d20_test_override_grants || [];
+    if (d20Grants.some((grant) => (grant.test_kinds || []).includes("attack"))
+      && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
+      throw new Error("Failed-D20 override runtime is not loaded for a declared attack capability.");
+    }
     const d20Override = DO().apply(attacker.state, attackRoll, !parry.hit, "attack");
     const resolvedAttackRoll = d20Override.roll;
     const natural = resolvedAttackRoll.selected_roll, naturalTwenty = natural === 20, naturalOne = natural === 1;
