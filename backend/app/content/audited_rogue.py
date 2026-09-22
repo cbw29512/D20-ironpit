@@ -4,9 +4,11 @@ from app.content.canonical_hero_policy import canonical_template_id
 from app.content.class_subclass_composer import base_class_combat_features, compose_class_subclass_features
 from app.content.hero_combat_feature_registry import compile_progression_feature_fields, unsupported_hero_engine_features
 from app.content.hero_progressions import HERO_BY_CLASS
+from app.content.character_math import fixed_hit_points
 from app.content.rogue_attacks import build_mara_shortbow_attack, build_mara_shortsword_attack
 from app.content.rogue_combat_levels import ROGUE_COMBAT_LEVELS
 from app.content.rogue_equipment import build_rogue_visual_loadout
+from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition
 from app.domain.traits import CombatTrait
 
@@ -30,6 +32,18 @@ def unsupported_mara_rogue_features(level: int) -> tuple[str, ...]:
     return unsupported_hero_engine_features(active)
 
 
+def _ability_scores(level: int) -> AbilityScores:
+    if level >= 4:
+        return AbilityScores(
+            strength=13, dexterity=18, constitution=16,
+            intelligence=10, wisdom=10, charisma=10,
+        )
+    return AbilityScores(
+        strength=13, dexterity=17, constitution=15,
+        intelligence=10, wisdom=10, charisma=10,
+    )
+
+
 def build_mara_quickstep_level(level: int) -> CombatantTemplate:
     """Compile Mara from Rogue base + Thief overlay + canonical Orc/Soldier combat build."""
     if level not in ROGUE_COMBAT_LEVELS:
@@ -39,27 +53,41 @@ def build_mara_quickstep_level(level: int) -> CombatantTemplate:
         raise ValueError(f"Mara Rogue level {level} awaits combat support for: {', '.join(unsupported)}")
     row = ROGUE_COMBAT_LEVELS[level]
     hero = HERO_BY_CLASS["rogue"]
+    scores = _ability_scores(level)
+    dexterity_mod = scores.modifier("dexterity")
+    constitution_mod = scores.modifier("constitution")
+    strength_mod = scores.modifier("strength")
+    intelligence_mod = scores.modifier("intelligence")
+    attack_bonus = row.proficiency_bonus + dexterity_mod
     return CombatantTemplate(
         id=canonical_template_id("rogue", level),
         name=hero.hero_name,
         archetype=hero.class_name,
         level=level,
         kind="character",
-        armor_class=14,
-        max_hp=10 + ((level - 1) * 7),
+        ability_scores=scores,
+        armor_class=11 + dexterity_mod,
+        max_hp=fixed_hit_points(level, 8, constitution_mod),
         speed_ft=30,
-        initiative_bonus=3,
-        weapon_attack=build_mara_shortsword_attack(),
-        alternate_weapon_attacks=[build_mara_shortbow_attack()],
+        initiative_bonus=dexterity_mod,
+        weapon_attack=build_mara_shortsword_attack(
+            attack_bonus=attack_bonus, damage_bonus=dexterity_mod,
+        ),
+        alternate_weapon_attacks=[build_mara_shortbow_attack(
+            attack_bonus=attack_bonus, damage_bonus=dexterity_mod,
+        )],
         saving_throw_bonuses={
-            "strength": 1,
-            "dexterity": 5,
-            "constitution": 2,
-            "intelligence": 2,
-            "wisdom": 0,
-            "charisma": 0,
+            "strength": strength_mod,
+            "dexterity": row.proficiency_bonus + dexterity_mod,
+            "constitution": constitution_mod,
+            "intelligence": row.proficiency_bonus + intelligence_mod,
+            "wisdom": scores.modifier("wisdom"),
+            "charisma": scores.modifier("charisma"),
         },
-        skill_bonuses={"athletics": 3, "acrobatics": 5},
+        skill_bonuses={
+            "athletics": row.proficiency_bonus + strength_mod,
+            "acrobatics": row.proficiency_bonus + dexterity_mod,
+        },
         combat_traits=[
             CombatTrait.SAVAGE_ATTACKER,
             CombatTrait.ADRENALINE_RUSH,
