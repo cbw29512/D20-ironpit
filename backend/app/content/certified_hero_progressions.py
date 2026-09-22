@@ -20,7 +20,10 @@ from app.content.audited_cleric_life_profile import (
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_profile
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.audited_rogue import build_mara_quickstep_level
-from app.content.audited_rogue_profile import build_mara_quickstep_level2_profile, build_mara_quickstep_profile
+from app.content.audited_rogue_profile import (
+    build_mara_quickstep_level2_profile, build_mara_quickstep_level3_profile,
+    build_mara_quickstep_profile,
+)
 from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_2014_profile
 from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
 from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level6_profile, build_rokhan_stonefury_level7_profile
@@ -127,7 +130,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     ),
     CertifiedHeroProgression(
         class_id="rogue", template_builder=build_mara_quickstep_level,
-        profile_builders=(build_mara_quickstep_profile, build_mara_quickstep_level2_profile),
+        profile_builders=(
+            build_mara_quickstep_profile, build_mara_quickstep_level2_profile,
+            build_mara_quickstep_level3_profile,
+        ),
     ),
     CertifiedHeroProgression(
         class_id="rogue", template_builder=build_mara_quickstep_2014,
