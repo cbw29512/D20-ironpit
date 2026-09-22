@@ -69,6 +69,27 @@ def arm_deferred_save_effect(
         raise RuntimeError("Deferred save effect could not be armed.") from exc
 
 
+def cleanup_deferred_effects(setup: EncounterSetup) -> None:
+    """Remove armed marks whose target no longer exists or can no longer be affected."""
+    try:
+        members = [*setup.heroes, *setup.monsters]
+        by_id = {member.combatant_id: member for member in members}
+        for source in members:
+            source.state.deferred_effects = [
+                mark
+                for mark in source.state.deferred_effects
+                if (
+                    (target := by_id.get(mark.target_id)) is not None
+                    and target.state.is_alive
+                    and not target.state.is_dead
+                    and target.state.current_hp > 0
+                )
+            ]
+    except Exception as exc:
+        logger.exception("Failed deferred-effect lifecycle cleanup.")
+        raise RuntimeError("Deferred-effect lifecycle cleanup failed.") from exc
+
+
 def deferred_save_effect_candidate(
     actor: EncounterCombatant,
     setup: EncounterSetup,
@@ -80,20 +101,13 @@ def deferred_save_effect_candidate(
             return None
         members = [*setup.heroes, *setup.monsters]
         by_id = {member.combatant_id: member for member in members}
-        retained: list[DeferredEffectState] = []
-        selected: EncounterCombatant | None = None
         for mark in actor.state.deferred_effects:
             if mark.source_id != rule.source_id:
-                retained.append(mark)
                 continue
             target = by_id.get(mark.target_id)
-            if target is None or target.state.is_dead or not target.state.is_alive or target.state.current_hp <= 0:
-                continue
-            retained.append(mark)
-            if selected is None:
-                selected = target
-        actor.state.deferred_effects = retained
-        return selected
+            if target is not None and target.state.is_alive and not target.state.is_dead and target.state.current_hp > 0:
+                return target
+        return None
     except Exception as exc:
         logger.exception("Failed to select deferred save effect target for %s.", actor.combatant_id)
         raise RuntimeError("Deferred save effect target could not be selected.") from exc
