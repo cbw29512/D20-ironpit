@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
+from app.content.progression_saves import saving_throw_proficiencies
 from app.content.weapon_catalog import build_weapon
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
@@ -53,10 +54,19 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
         if level not in range(1, 21):
             raise ValueError("2014 Thief Rogue candidate covers levels 1 through 20.")
         scores = _scores(level); dex = scores.modifier("dexterity")
-        save_proficiencies = (
-            ("dexterity", "intelligence", "wisdom")
-            if level >= 15 else ("dexterity", "intelligence")
+        progression = ProgressionCombatFeatures(
+            sneak_attack_d6=(level + 1) // 2, cunning_action=level >= 2,
+            uncanny_dodge=level >= 5, evasion=level >= 7,
+            saving_throw_proficiency_grants=(
+                [{"source_id": "slippery-mind", "abilities": ["wisdom"]}]
+                if level >= 15 else []
+            ),
+            first_round_extra_turn_initiative_offset=(-10 if level >= 17 else None),
+            suppress_attack_advantage_while_not_incapacitated=level >= 18,
+            miss_to_hit_override_resource_id=("stroke-of-luck" if level >= 20 else None),
+            miss_to_hit_override_source_name=("Stroke of Luck" if level >= 20 else None),
         )
+        save_proficiencies = saving_throw_proficiencies(("dexterity", "intelligence"), progression)
         rapier = _attack(level, "rapier", scores); shortbow = _attack(level, "shortbow", scores)
         return CombatantTemplate(
             id=f"mara-quickstep-2014-l{level}", name="Mara Quickstep", archetype="Rogue",
@@ -66,14 +76,7 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
             alternate_weapon_attacks=[shortbow],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, save_proficiencies),
             skill_bonuses=_skill_bonuses(level, scores), weapon_masteries=[],
-            progression_features=ProgressionCombatFeatures(
-                sneak_attack_d6=(level + 1) // 2, cunning_action=level >= 2,
-                uncanny_dodge=level >= 5, evasion=level >= 7,
-                first_round_extra_turn_initiative_offset=(-10 if level >= 17 else None),
-                suppress_attack_advantage_while_not_incapacitated=level >= 18,
-                miss_to_hit_override_resource_id=("stroke-of-luck" if level >= 20 else None),
-                miss_to_hit_override_source_name=("Stroke of Luck" if level >= 20 else None),
-            ),
+            progression_features=progression,
             resources=(
                 [ResourceDefinition(id="stroke-of-luck", name="Stroke of Luck", max_uses=1)]
                 if level >= 20 else []
