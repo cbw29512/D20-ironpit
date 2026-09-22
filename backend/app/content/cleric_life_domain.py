@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.domain.actions import ConditionRemovalAction
+from app.domain.effect_removal import EffectRemovalAction
 from app.domain.spells import DefensiveSpellAction
 
 
@@ -39,3 +40,19 @@ def disciple_of_life_bonus(spell_slot_level: int) -> int:
     if not 1 <= spell_slot_level <= 9:
         raise ValueError("Disciple of Life requires a valid spell-slot level.")
     return 2 + spell_slot_level
+
+
+DISPEL_MAGIC = EffectRemovalAction(
+    id="dispel-magic",
+    name="Dispel Magic",
+    level=3,
+    action_cost="action",
+    range_ft=120,
+    casting_ability="wisdom",
+    target_mode="enemy",
+    auto_remove_max_level=3,
+    resource_id="spell-slot-3",
+    resource_cost=1,
+    expends_spell_slot=True,
+    animation="dispel-magic",
+)
