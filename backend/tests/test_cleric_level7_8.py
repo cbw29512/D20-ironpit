@@ -1,5 +1,5 @@
 from app.content.audited_cleric import build_seraphine_dawnshield_level
-from app.content.audited_cleric_life_profile import (
+from app.content.audited_cleric_life_high_profile import (
     build_seraphine_dawnshield_level7_profile,
     build_seraphine_dawnshield_level8_profile,
 )
