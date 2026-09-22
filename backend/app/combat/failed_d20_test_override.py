@@ -81,9 +81,13 @@ def source_name_for_roll(state: CombatantState, roll: DiceRoll | None) -> str | 
     try:
         if roll is None:
             return None
-        source_ids = {item.source_effect_id for item in roll.revisions}
-        for grant in reversed(state.template.progression_features.failed_d20_test_override_grants):
-            if grant.source_id in source_ids:
+        grants = {
+            grant.source_id: grant
+            for grant in state.template.progression_features.failed_d20_test_override_grants
+        }
+        for revision in reversed(roll.revisions):
+            grant = grants.get(revision.source_effect_id)
+            if grant is not None:
                 return grant.source_name
         return None
     except Exception as exc:
