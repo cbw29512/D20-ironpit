@@ -1495,7 +1495,7 @@
           },
           "runtime_template_id": "seraphine-dawnshield-l7",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Cleric level 7, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, Equipment"
+            "D&D Beyond Basic Rules 2024: Cleric level 7, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes, Aura of Life, Death Ward, Prayer of Healing, Equipment"
           ],
           "expected_combat_features": [
             "attack:seraphine-mace",
@@ -1564,7 +1564,7 @@
           },
           "runtime_template_id": "seraphine-dawnshield-l8",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Cleric level 8, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Equipment"
+            "D&D Beyond Basic Rules 2024: Cleric level 8, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes, Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Equipment"
           ],
           "expected_combat_features": [
             "attack:seraphine-mace",
@@ -1633,7 +1633,7 @@
           },
           "runtime_template_id": "seraphine-dawnshield-l9",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Cleric level 9, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Equipment"
+            "D&D Beyond Basic Rules 2024: Cleric level 9, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes, Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Equipment"
           ],
           "expected_combat_features": [
             "attack:seraphine-mace",
@@ -1708,7 +1708,7 @@
           },
           "runtime_template_id": "seraphine-dawnshield-l10",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Cleric level 10, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Divine Intervention, Contagion, Spare the Dying, Equipment"
+            "D&D Beyond Basic Rules 2024: Cleric level 10, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes, Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Divine Intervention, Contagion, Spare the Dying, Equipment"
           ],
           "expected_combat_features": [
             "attack:seraphine-mace",
@@ -1789,7 +1789,7 @@
           },
           "runtime_template_id": "seraphine-dawnshield-l11",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Cleric level 11, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Divine Intervention, Contagion, Spare the Dying, Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, Equipment"
+            "D&D Beyond Basic Rules 2024: Cleric level 11, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes, Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Divine Intervention, Contagion, Spare the Dying, Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, Equipment"
           ],
           "expected_combat_features": [
             "attack:seraphine-mace",
@@ -1876,7 +1876,7 @@
           },
           "runtime_template_id": "seraphine-dawnshield-l12",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Cleric level 12, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Divine Intervention, Contagion, Spare the Dying, Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, Equipment"
+            "D&D Beyond Basic Rules 2024: Cleric level 12, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes, Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Divine Intervention, Contagion, Spare the Dying, Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, Equipment"
           ],
           "expected_combat_features": [
             "attack:seraphine-mace",
