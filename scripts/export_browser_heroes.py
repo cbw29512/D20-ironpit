@@ -128,7 +128,7 @@ def _defense(action: Any) -> dict[str, Any]:
 
 def _healing(action: Any) -> dict[str, Any]:
     return {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
-            "targetMode": action.target_mode, "diceCount": action.dice_count, "diceSize": action.dice_size,
+            "targetMode": action.target_mode, "maxTargets": action.max_targets,\n            "diceCount": action.dice_count, "diceSize": action.dice_size,
             "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
             "resourceCost": action.resource_cost, "animation": action.animation}
 
