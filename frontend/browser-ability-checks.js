@@ -26,5 +26,18 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_ABILITY_CHECKS = { applyMinimum };
+  function resolve(state, ability, roll, dc) {
+    try {
+      let revised = applyMinimum(state, ability, roll);
+      revised = window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE?.apply(
+        state, revised, revised.total < dc, "ability_check",
+      ).roll || revised;
+      return { roll: revised, succeeded: revised.total >= dc };
+    } catch (error) {
+      console.error("Browser ability-check outcome failed", { ability, combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_ABILITY_CHECKS = { applyMinimum, resolve };
 })();
