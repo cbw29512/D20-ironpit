@@ -119,3 +119,62 @@ def build_seraphine_dawnshield_level8_profile() -> CharacterBuildProfile:
         ],
     )
     return CharacterBuildProfile.model_validate(data)
+
+
+def build_seraphine_dawnshield_level9_profile() -> CharacterBuildProfile:
+    base = build_seraphine_dawnshield_level8_profile()
+    data = advance_profile_data(base, 9)
+    apply_cleric_level_to_profile_data(data, 9)
+    additions = [
+        _class_feature(
+            "cleric-combat-spells-5",
+            "Level 5 Cleric Spells",
+            notes=(
+                "Iron Pit caster policy prefers simple proven actions: Seraphine uses "
+                "Inflict Wounds upcast with a level-5 slot for damage and Mass Cure Wounds "
+                "for healing. Complex fifth-level options remain legal prepared spells but "
+                "are not preferred arena actions."
+            ),
+        ),
+        _class_feature(
+            "mass-cure-wounds",
+            "Mass Cure Wounds",
+            notes=(
+                "Always-prepared Life Domain spell; shared group-healing primitive heals "
+                "up to six legal creatures for 5d8 + Wisdom + Disciple of Life."
+            ),
+        ),
+        _class_feature(
+            "greater-restoration",
+            "Greater Restoration",
+            combat=False,
+            notes=(
+                "Always prepared for RAW Life Domain progression; broad restoration semantics "
+                "remain outside the simple arena action set."
+            ),
+        ),
+        _class_feature(
+            "inflict-wounds-upcast-l5",
+            "Inflict Wounds — 5th-Level Slot",
+            notes=(
+                "RAW upcast of the existing simple damage spell: 6d10 Necrotic damage, "
+                "Constitution save for half. Reuses the existing spell-save pipeline."
+            ),
+        ),
+    ]
+    data.update(
+        feature_audits=[
+            *data["feature_audits"],
+            *(feature.model_dump() for feature in additions),
+        ],
+        source_references=[
+            *data["source_references"],
+            (
+                "D&D Beyond Basic Rules 2024: Cleric level 9 — 14 prepared spells, "
+                "4/3/3/3/1 spell slots"
+            ),
+            "D&D Beyond Basic Rules 2024: Life Domain Spells — Greater Restoration, Mass Cure Wounds",
+            "D&D Beyond Basic Rules 2024: Spells — Inflict Wounds higher-level casting",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
