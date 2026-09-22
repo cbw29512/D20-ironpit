@@ -72,6 +72,8 @@ Two differently named abilities with the same semantics use the same engine capa
 
 A named ability that consists of multiple known effects must be assembled from the corresponding universal primitives. Do not create a monolithic ability-specific resolver simply to preserve the source name. Preserve the exact source name in event metadata and logs so the player sees the correct ability name while the engine executes reusable mechanics underneath.
 
+The content card owns **parameters**, not mechanics. For example, a monster action that knocks a target Prone supplies the source ability name, attack/save trigger, save ability, DC or DC formula, damage, range, duration, and resource/recharge facts. It invokes the same universal Prone behavior used by a hero feature, spell, mastery, or another monster. Do not create separate `monster-prone`, `rogue-prone`, or `spell-prone` implementations.
+
 Before new mechanic code is allowed, record why existing primitives cannot represent the behavior. If that cannot be shown, reuse wins.
 
 ## Primitive versus trigger contract
