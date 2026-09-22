@@ -178,3 +178,53 @@ def build_seraphine_dawnshield_level9_profile() -> CharacterBuildProfile:
         ],
     )
     return CharacterBuildProfile.model_validate(data)
+
+
+def build_seraphine_dawnshield_level10_profile() -> CharacterBuildProfile:
+    base = build_seraphine_dawnshield_level9_profile()
+    data = advance_profile_data(base, 10)
+    apply_cleric_level_to_profile_data(data, 10)
+    additions = [
+        _class_feature(
+            "divine-intervention",
+            "Divine Intervention",
+            notes=(
+                "Once per Long Rest, Iron Pit exposes two simple RAW choices using the same "
+                "generic resource: a free 5th-level Inflict Wounds damage cast or a free "
+                "Mass Cure Wounds healing cast. Neither expends a spell slot."
+            ),
+        ),
+        _class_feature(
+            "spare-the-dying",
+            "Spare the Dying",
+            combat=False,
+            notes=(
+                "Fifth Cleric cantrip at level 10; retained for RAW progression but not "
+                "needed in the 1v1 arena action set."
+            ),
+        ),
+        _class_feature(
+            "contagion",
+            "Contagion",
+            combat=False,
+            notes=(
+                "Legal prepared fifth-level damage spell retained on the sheet; Iron Pit "
+                "prefers the simpler 5th-level Inflict Wounds upcast for arena damage."
+            ),
+        ),
+    ]
+    data.update(
+        feature_audits=[
+            *data["feature_audits"],
+            *(feature.model_dump() for feature in additions),
+        ],
+        source_references=[
+            *data["source_references"],
+            (
+                "D&D Beyond Basic Rules 2024: Cleric level 10 — Divine Intervention, "
+                "15 prepared spells, 5 cantrips"
+            ),
+            "D&D Beyond Basic Rules 2024: Spells — Spare the Dying, Contagion",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
