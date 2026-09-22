@@ -104,6 +104,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("elusive")
     if features.miss_to_hit_once_per_turn:
         mechanics.add("boon-combat-prowess")
+    if features.failed_d20_to_natural_20_resource_id:
+        mechanics.add("stroke-of-luck")
     if features.uncanny_dodge:
         mechanics.add("uncanny-dodge")
     if features.evasion:
