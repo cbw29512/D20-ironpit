@@ -7,7 +7,9 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.rolls import resolve_roll_mode, roll_d20
-from app.domain.encounters import EncounterCombatant, EncounterInitiative, EncounterSetup, InitiativeGroup
+from app.domain.encounters import (
+    EncounterCombatant, EncounterInitiative, EncounterSetup, FirstRoundExtraTurn, InitiativeGroup,
+)
 from app.domain.models import RollMode
 
 logger = logging.getLogger(__name__)
@@ -76,6 +78,37 @@ def _resolve_ties(groups: list[InitiativeGroup], dice: DiceProvider) -> None:
                 group.tie_break_roll = value
 
 
+def _first_round_schedule(
+    groups: list[InitiativeGroup],
+    setup: EncounterSetup,
+) -> tuple[list[str], list[FirstRoundExtraTurn]]:
+    members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
+    slots: list[tuple[tuple[object, ...], str]] = []
+    extras: list[FirstRoundExtraTurn] = []
+    for group_index, group in enumerate(groups):
+        for member_index, combatant_id in enumerate(group.combatant_ids):
+            normal_key = (
+                _priority(group), group.initiative_count, tuple(group.tie_break_rolls),
+                -group_index, -member_index, 1,
+            )
+            slots.append((normal_key, combatant_id))
+            member = members[combatant_id]
+            for grant in member.state.template.progression_features.first_round_extra_turn_grants:
+                count = group.initiative_count + grant.initiative_offset
+                extra_key = (
+                    _priority(group), count, tuple(group.tie_break_rolls),
+                    -group_index, -member_index, 0,
+                )
+                slots.append((extra_key, combatant_id))
+                extras.append(FirstRoundExtraTurn(
+                    combatant_id=combatant_id,
+                    initiative_count=count,
+                    source_id=grant.source_id,
+                ))
+    slots.sort(key=lambda item: item[0], reverse=True)
+    return [combatant_id for _, combatant_id in slots], extras
+
+
 def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> EncounterInitiative:
     """Resolve initiative with Iron Pit natural-20/natural-1 buckets and pure d20 tie rerolls."""
     try:
@@ -91,9 +124,13 @@ def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> Enco
             ),
             reverse=True,
         )
+        turn_order = [combatant_id for group in groups for combatant_id in group.combatant_ids]
+        first_round_turn_order, extra_turns = _first_round_schedule(groups, setup)
         return EncounterInitiative(
             groups=groups,
-            turn_order=[combatant_id for group in groups for combatant_id in group.combatant_ids],
+            turn_order=turn_order,
+            first_round_turn_order=first_round_turn_order,
+            first_round_extra_turns=extra_turns,
         )
     except Exception as exc:
         logger.exception("Encounter initiative failed.")
