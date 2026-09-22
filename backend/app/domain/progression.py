@@ -93,6 +93,7 @@ class ProgressionCombatFeatures(BaseModel):
     cunning_strike_max_effects: int = Field(default=0, ge=0, le=2)
     attack_advantage_suppressed_unless_incapacitated: bool = False
     miss_to_hit_once_per_turn: bool = False
+    failed_d20_to_natural_20_resource_id: str | None = None
     uncanny_dodge: bool = False
     evasion: bool = False
     martial_arts_bonus_attack: bool = False
