@@ -6,6 +6,7 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
+  const RR = () => window.IRON_PIT_BROWSER_RESOURCE_REFRESH || { startOfTurn: () => {} };
   const GEOM = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const effectiveMaxHp = (state) => X()?.effectiveMaxHp(state, state.template.max_hp + (state.max_hp_bonus || 0))
     ?? state.template.max_hp + (state.max_hp_bonus || 0);
@@ -42,6 +43,7 @@
   function refreshReaction(state) { state.reaction_available = true; }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
+    RR().startOfTurn(state);
     const survivor = state.template.bloodied_start_turn_heal_amount || state.template.survivor_heal_amount || 0;
     const maximum = effectiveMaxHp(state);
     if (survivor > 0 && state.current_hp > 0 && state.current_hp * 2 <= maximum) state.current_hp = Math.min(maximum, state.current_hp + survivor);
