@@ -4457,7 +4457,7 @@
       "owners": [
         "rogue/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4952,7 +4952,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 29,
-    "planned": 359,
-    "supported": 56
+    "planned": 358,
+    "supported": 57
   }
 }
