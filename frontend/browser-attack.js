@@ -95,7 +95,7 @@
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
     const outcome = O().create();
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied } = outcome;
-    let cunningStrikeTrip = null;
+    let cunningStrikeTrip = null, cunningStrikeObscure = null;
     const applied = outcome.appliedConditions;
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
@@ -103,7 +103,9 @@
           sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
       cunningStrikeTrip = damage.cunningStrikeTrip || null;
+      cunningStrikeObscure = damage.cunningStrikeObscure || null;
       if (cunningStrikeTrip?.applied && !applied.includes("prone")) applied.push("prone");
+      if (cunningStrikeObscure?.applied && !applied.includes("blinded")) applied.push("blinded");
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
@@ -140,6 +142,10 @@
     }
     const attackSave = saveDamage?.saveDc != null ? saveDamage
       : hitSave?.saveDc != null ? hitSave
+      : cunningStrikeObscure?.saveDc != null ? {
+          saveRoll: cunningStrikeObscure.saveRoll, saveAbility: "dexterity",
+          saveDc: cunningStrikeObscure.saveDc, saveSucceeded: cunningStrikeObscure.saveSucceeded,
+        }
       : cunningStrikeTrip?.saveDc != null ? {
           saveRoll: cunningStrikeTrip.saveRoll, saveAbility: "dexterity",
           saveDc: cunningStrikeTrip.saveDc, saveSucceeded: cunningStrikeTrip.saveSucceeded,
@@ -161,7 +167,7 @@
     if (attackSave) description += ` ${attackSave.saveAbility} save DC ${attackSave.saveDc}: ${actualTarget.state.template.name} ${attackSave.saveSucceeded ? "succeeds" : "fails"}.`; if (topple.saveDc !== null) description += ` Topple save DC ${topple.saveDc}: ${actualTarget.state.template.name} ${topple.saveSucceeded ? "succeeds" : "fails"}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
-    for (const condition of ["prone", "grappled", "restrained", "poisoned"]) if (applied.includes(condition)) description += ` ${actualTarget.state.template.name} is ${condition === "prone" ? "knocked Prone" : condition[0].toUpperCase() + condition.slice(1)}.`;
+    for (const condition of ["prone", "grappled", "restrained", "poisoned", "blinded"]) if (applied.includes(condition)) description += ` ${actualTarget.state.template.name} is ${condition === "prone" ? "knocked Prone" : condition[0].toUpperCase() + condition.slice(1)}.`;
     const event = { sequence, round_number: round, event_type: "attack", actor_id: attacker.combatant_id, actor_name: attacker.state.template.name,
       target_id: actualTarget.combatant_id, target_name: actualTarget.state.template.name, attack_name: attack.name, target_ac: targetAc,
       attack_roll: attackRoll, saving_throw_roll: attackSave?.saveRoll || topple.saveRoll, save_ability: attackSave?.saveAbility || (topple.saveDc === null ? null : "constitution"), save_dc: attackSave?.saveDc || topple.saveDc, save_succeeded: attackSave?.saveSucceeded ?? topple.saveSucceeded,
