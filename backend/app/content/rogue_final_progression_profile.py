@@ -97,3 +97,32 @@ def build_mara_quickstep_level19_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 19 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level20_profile() -> CharacterBuildProfile:
+    """Level 20 inherits level 19 and gains Stroke of Luck."""
+    try:
+        previous = build_mara_quickstep_level19_profile()
+        data = advance_profile_data(previous, 20)
+        data.update(
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "stroke-of-luck", "Stroke of Luck", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Uses a generic one-use failed-D20-to-natural-20 resource override. "
+                        "Iron Pit initializes the resource fresh each fight, matching a recovered "
+                        "Short/Long Rest use for arena combat."
+                    ),
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 20 — Stroke of Luck",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 20 profile could not be created.") from exc
