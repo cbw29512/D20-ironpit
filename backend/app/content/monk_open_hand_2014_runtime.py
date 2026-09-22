@@ -9,10 +9,16 @@ from app.content.monk_open_hand_2014_attacks import (
     build_unarmed_attack,
     martial_arts_die,
 )
+from app.content.progression_saves import saving_throw_proficiencies
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
-from app.domain.progression import OpeningTargetingWard, ProgressionCombatFeatures
+from app.domain.progression import (
+    FailedSaveRerollGrant,
+    OpeningTargetingWard,
+    ProgressionCombatFeatures,
+    SavingThrowProficiencyGrant,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -95,13 +101,47 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
-    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 13."""
+    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 14."""
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 13.")
+        if level not in range(1, 15):
+            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 14.")
         scores = _scores(level)
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
+        progression = ProgressionCombatFeatures(
+            evasion=level >= 7,
+            martial_arts_bonus_attack=True,
+            martial_arts_die_size=martial_arts_die(level),
+            flurry_of_blows=level >= 2,
+            deflect_missiles=level >= 3,
+            open_hand_technique=level >= 3,
+            stunning_strike=level >= 5,
+            opening_targeting_ward=(
+                OpeningTargetingWard(
+                    source_id="tranquility",
+                    save_ability="wisdom",
+                    save_dc=8 + proficiency_bonus(level) + wisdom,
+                )
+                if level >= 11 else None
+            ),
+            saving_throw_proficiency_grants=(
+                [SavingThrowProficiencyGrant(
+                    source_id="diamond-soul",
+                    abilities=["constitution", "intelligence", "wisdom", "charisma"],
+                )]
+                if level >= 14 else []
+            ),
+            failed_save_reroll_grants=(
+                [FailedSaveRerollGrant(
+                    source_id="diamond-soul",
+                    source_name="Diamond Soul",
+                    resource_id="ki",
+                    resource_cost=1,
+                )]
+                if level >= 14 else []
+            ),
+        )
+        save_proficiencies = saving_throw_proficiencies(("strength", "dexterity"), progression)
         return CombatantTemplate(
             id=f"kael-stillwater-2014-l{level}", name="Kael Stillwater",
             archetype="Monk", level=level, kind="character", ruleset="2014",
@@ -113,24 +153,11 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
             attack_action=build_extra_attack(level),
             healing_actions=_healing_actions(level),
             condition_removal_actions=_condition_removal_actions(level),
-            saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "dexterity")),
+            saving_throw_bonuses=saving_throw_bonuses(scores, level, save_proficiencies),
             skill_bonuses=_skill_bonuses(level, scores), weapon_masteries=[],
             condition_immunities=["poisoned"] if level >= 10 else [],
             resources=_resources(level),
-            progression_features=ProgressionCombatFeatures(
-                evasion=level >= 7, martial_arts_bonus_attack=True,
-                martial_arts_die_size=martial_arts_die(level), flurry_of_blows=level >= 2,
-                deflect_missiles=level >= 3, open_hand_technique=level >= 3,
-                stunning_strike=level >= 5,
-                opening_targeting_ward=(
-                    OpeningTargetingWard(
-                        source_id="tranquility",
-                        save_ability="wisdom",
-                        save_dc=8 + proficiency_bonus(level) + wisdom,
-                    )
-                    if level >= 11 else None
-                ),
-            ),
+            progression_features=progression,
             visual=VisualLoadout(armor="unarmored", main_hand="fists", body_style="humanoid"),
             source=("D&D Basic Rules 2014: Human, Acolyte, Equipment; "
                     "D&D SRD 5.1 (2014): Monk, Way of the Open Hand"),
