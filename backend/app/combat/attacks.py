@@ -56,15 +56,10 @@ def resolve_attack(
         d20_outcome = resolve_attack_d20_outcome(
             attacker, actual_defender, attack, attack_roll, effective_armor_class(actual_defender),
         )
-        attack_roll = d20_outcome.roll
-        target_ac = d20_outcome.target_ac
-        hit = d20_outcome.hit
-        natural = d20_outcome.natural
-        parry_used = d20_outcome.parry_used
-        d20_override_feature_id = d20_outcome.d20_override_feature_id
-        d20_override_name = d20_outcome.d20_override_source_name
-        miss_override_feature_id = d20_outcome.miss_override_feature_id
-        miss_override_name = d20_outcome.miss_override_source_name
+        attack_roll, target_ac, hit = d20_outcome.roll, d20_outcome.target_ac, d20_outcome.hit
+        natural, parry_used = d20_outcome.natural, d20_outcome.parry_used
+        d20_override_feature_id, d20_override_name = d20_outcome.d20_override_feature_id, d20_outcome.d20_override_source_name
+        miss_override_feature_id, miss_override_name = d20_outcome.miss_override_feature_id, d20_outcome.miss_override_source_name
         natural_1 = natural == 1
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         natural_1_ends_turn = natural_1 and not off_turn and not (
@@ -96,19 +91,11 @@ def resolve_attack(
             sneak_attack_ally_available=sneak_attack_ally_available,
             brutal_strike_disadvantage=brutal_strike_disadvantage,
         )
-        damage_roll = effects.damage_roll
-        damage_components = effects.damage_components
-        damage_outcome = effects.damage_outcome
-        applied_conditions = effects.applied_conditions
-        save_damage = effects.save_damage
-        on_hit_save = effects.on_hit_save
-        cunning_strike = effects.cunning_strike
-        cunning_strike_obscure = effects.cunning_strike_obscure
-        topple = effects.topple
-        weapon_sap_applied = effects.weapon_sap_applied
-        tactical_sap_applied = effects.tactical_sap_applied
-        vex_applied = effects.vex_applied
-        studied_applied = effects.studied_applied
+        damage_roll, damage_components, damage_outcome = effects.damage_roll, effects.damage_components, effects.damage_outcome
+        applied_conditions, save_damage, on_hit_save = effects.applied_conditions, effects.save_damage, effects.on_hit_save
+        cunning_strike, cunning_strike_obscure, topple = effects.cunning_strike, effects.cunning_strike_obscure, effects.topple
+        weapon_sap_applied, tactical_sap_applied = effects.weapon_sap_applied, effects.tactical_sap_applied
+        vex_applied, studied_applied = effects.vex_applied, effects.studied_applied
         description = build_attack_description(
             attacker_name=attacker.template.name,
             defender_name=defender.template.name,
