@@ -395,3 +395,15 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 - Python/browser parity stays mandatory.
 - Production source-size limits stay enforced.
 - Active means executable and certified.
+
+
+## Miss-to-hit override lifecycle
+
+Miss-to-hit behavior is a universal outcome capability, not a class/feat/monster resolver.
+
+- Source data supplies a source id, exact source name for logs, and a usage policy.
+- `resource` grants consume a declared runtime resource.
+- `refresh_at_turn_start` grants enter a runtime cooldown when used and become available again only at the start of that combatant's own turn.
+- Do not model own-turn-start refresh with the encounter's active turn key. Off-turn attacks and reactions occur during another combatant's turn and must not incorrectly refresh or duplicate the user's feature.
+- Multiple source abilities with equivalent miss-to-hit behavior reuse the same resolver; only their data and usage lifecycle differ.
+- A miss converted by this primitive is a normal hit unless another universal rule explicitly changes the d20 roll itself. A failed-D20 replacement such as a roll-to-20 effect remains a separate primitive because it can change critical-hit and non-attack outcomes.
