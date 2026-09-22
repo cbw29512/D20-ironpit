@@ -86,18 +86,26 @@ def resolve_attack(
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
         target_ac = effective_armor_class(actual_defender)
-        attack_roll, d20_override_used = replace_failed_d20_with_natural_20(
-            attacker, attack_roll, target_ac,
-        )
-        natural = attack_roll.selected_roll or 0; natural_20 = natural == 20
-        natural_1 = natural == 1; natural_1_ends_turn = natural_1 and not off_turn
-        if natural_1_ends_turn: terminate_turn(attacker, "iron-pit-natural-1-attack")
-        expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
-        hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
+        natural = attack_roll.selected_roll or 0
+        natural_1 = natural == 1
+        hit = not natural_1 and (natural == 20 or attack_roll.total >= target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
-        if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
+        if parry_used:
+            target_ac += actual_defender.template.parry_reaction.ac_bonus
         active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
         hit, miss_to_hit_used = resolve_miss_to_hit(attacker, hit, active_turn_key)
+        d20_override_used = False
+        if not hit:
+            attack_roll, d20_override_used = replace_failed_d20_with_natural_20(
+                attacker, attack_roll, target_ac,
+            )
+            natural = attack_roll.selected_roll or 0
+            natural_1 = natural == 1
+            hit = not natural_1 and (natural == 20 or attack_roll.total >= target_ac)
+        natural_1_ends_turn = natural_1 and not off_turn and not hit
+        if natural_1_ends_turn:
+            terminate_turn(attacker, "iron-pit-natural-1-attack")
+        expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
