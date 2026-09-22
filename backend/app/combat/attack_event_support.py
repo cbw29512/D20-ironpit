@@ -73,6 +73,7 @@ def build_attack_description(
     topple: Any,
     damage_outcome: str | None,
     applied_conditions: list[str],
+    deferred_effect_armed: Any = None,
 ) -> str:
     """Build player-facing attack text from already-resolved generic mechanics."""
     try:
@@ -102,6 +103,11 @@ def build_attack_description(
             description += f" Tactical Master applies Sap to {actual_defender_name}."
         if vex_applied:
             description += f" Vex primes the next attack against {actual_defender_name}."
+        if deferred_effect_armed is not None:
+            description += (
+                f" {deferred_effect_armed.source_name} is armed on {actual_defender_name}; "
+                f"{deferred_effect_armed.resource_remaining} uses remain."
+            )
 
         for label, resolution in (
             ("", save_damage),
