@@ -5,7 +5,10 @@ from dataclasses import dataclass
 
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_cleric import build_seraphine_dawnshield_level
-from app.content.audited_cleric_life_profile import (\n    build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,\n    build_seraphine_dawnshield_level5_profile, build_seraphine_dawnshield_level6_profile,\n)
+from app.content.audited_cleric_life_profile import (
+    build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
+    build_seraphine_dawnshield_level5_profile, build_seraphine_dawnshield_level6_profile,
+)
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_profile
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.audited_rogue import build_mara_quickstep_level
@@ -108,6 +111,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         profile_builders=(
             build_seraphine_dawnshield_profile, build_seraphine_dawnshield_level2_profile,
             build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
+            build_seraphine_dawnshield_level5_profile, build_seraphine_dawnshield_level6_profile,
         ),
     ),
     CertifiedHeroProgression(
