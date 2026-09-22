@@ -106,6 +106,18 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     "resource-backed failed-save reroll. The reroll preserves existing bonus dice."
                 ),
             ))
+        if level >= 15:
+            audits.append(_audit(
+                "timeless-body", "Timeless Body", "class",
+                combat=False, automated=False,
+                notes="Aging and food/water requirements do not change an Iron Pit duel.",
+            ))
+        if level >= 16:
+            audits.append(_audit(
+                "ability-score-improvement-l16", "Ability Score Improvement (+2 Wisdom)", "class",
+                notes="Canonical progression raises Wisdom 17 to 19, updating AC, Wisdom saves, and Monk save DCs.",
+            ))
+
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
