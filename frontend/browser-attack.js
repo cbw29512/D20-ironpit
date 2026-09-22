@@ -88,18 +88,26 @@
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
     const baseTargetAc = M().effectiveArmorClass(actualTarget.state);
-    const d20Override = D20O().apply(attacker.state, attackRoll, baseTargetAc);
-    const resolvedAttackRoll = d20Override.roll;
-    const natural = resolvedAttackRoll.selected_roll, naturalTwenty = natural === 20;
-    const naturalOne = natural === 1, naturalOneEndsTurn = naturalOne && extra.offTurn !== true;
-    if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
-    const initialHit = !naturalOne && (naturalTwenty || resolvedAttackRoll.total >= baseTargetAc);
+    let resolvedAttackRoll = attackRoll;
+    let natural = resolvedAttackRoll.selected_roll;
+    let naturalOne = natural === 1;
+    const initialHit = !naturalOne && (natural === 20 || resolvedAttackRoll.total >= baseTargetAc);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, resolvedAttackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
     let hit = parry.hit;
     const targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
     const turnKey = extra.turnKey || `${round}:${attacker.combatant_id}`;
     const missToHit = MH().resolve(attacker.state, hit, turnKey);
     hit = missToHit.hit;
+    let d20Override = { roll: resolvedAttackRoll, used: false };
+    if (!hit) {
+      d20Override = D20O().apply(attacker.state, resolvedAttackRoll, targetAc);
+      resolvedAttackRoll = d20Override.roll;
+      natural = resolvedAttackRoll.selected_roll;
+      naturalOne = natural === 1;
+      hit = !naturalOne && (natural === 20 || resolvedAttackRoll.total >= targetAc);
+    }
+    const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !hit;
+    if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
