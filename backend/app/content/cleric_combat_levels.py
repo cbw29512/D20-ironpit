@@ -39,7 +39,7 @@ CLERIC_COMBAT_LEVELS: dict[int, ClericCombatLevel] = {
     4: _r(4, 2, 23, 19, 14, 2, 1, _slots(4, 3), ignored=("mending",), source="D&D Beyond Basic Rules 2024: Cleric 4 Ability Score Improvement (+2 Wisdom)"),
     5: _r(5, 3, 28, 19, 14, 2, 1, _slots(4, 3, 2), add=("sear-undead", "cleric-combat-spells-3"), source="D&D Beyond Basic Rules 2024: Cleric 5 Sear Undead and level 3 spells"),
     6: _r(6, 3, 33, 19, 14, 3, 1, _slots(4, 3, 3), source="D&D Beyond Basic Rules 2024: Cleric 6 subclass feature"),
-    7: _r(7, 3, 38, 19, 14, 3, 2, _slots(4, 3, 3, 1), add=("blessed-strikes", "cleric-combat-spells-4"), source="D&D Beyond Basic Rules 2024: Cleric 7 Blessed Strikes and level 4 spells"),
+    7: _r(7, 3, 38, 19, 14, 3, 2, _slots(4, 3, 3, 1), add=("blessed-strikes",), ignored=("cleric-combat-spells-4",), source="D&D Beyond Basic Rules 2024: Cleric 7 Blessed Strikes and level 4 spells"),
     8: _r(8, 3, 43, 20, 15, 3, 2, _slots(4, 3, 3, 2), source="D&D Beyond Basic Rules 2024: Cleric 8 Ability Score Improvement (+1 Wisdom, +1 Charisma)"),
     9: _r(9, 4, 48, 20, 15, 3, 2, _slots(4, 3, 3, 3, 1), add=("cleric-combat-spells-5",), source="D&D Beyond Basic Rules 2024: Cleric 9 level 5 spells"),
     10: _r(10, 4, 53, 20, 15, 3, 2, _slots(4, 3, 3, 3, 2), add=("divine-intervention",), source="D&D Beyond Basic Rules 2024: Cleric 10 Divine Intervention"),

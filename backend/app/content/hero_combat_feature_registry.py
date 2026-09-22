@@ -15,7 +15,8 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
     "sneak-attack", "weapon-mastery",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
-    "disciple-of-life", "preserve-life",
+    "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
+    "blessed-strikes",
 }
 
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {

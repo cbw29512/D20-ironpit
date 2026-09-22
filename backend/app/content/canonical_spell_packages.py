@@ -73,6 +73,42 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             "lesser-restoration", "Lesser Restoration", 2, "healing", 3,
             "condition-removal", "bonus-action", always_prepared_from_level=3,
         ),
+        _later_spell(
+            "dispel-magic", "Dispel Magic", 3, "utility", 5,
+            "effect-removal",
+        ),
+        _later_spell(
+            "create-food-and-water", "Create Food and Water", 3, "utility", 5,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
+            "daylight", "Daylight", 3, "utility", 6,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
+            "mass-healing-word", "Mass Healing Word", 3, "healing", 5,
+            "healing", "bonus-action", "multi-target-healing", always_prepared_from_level=5,
+        ),
+        _later_spell(
+            "revivify", "Revivify", 3, "healing", 5,
+            "arena-out-of-scope", always_prepared_from_level=5,
+        ),
+        _later_spell(
+            "aura-of-life", "Aura of Life", 4, "healing", 7,
+            "arena-out-of-scope", always_prepared_from_level=7,
+        ),
+        _later_spell(
+            "death-ward", "Death Ward", 4, "healing", 7,
+            "arena-out-of-scope", always_prepared_from_level=7,
+        ),
+        _later_spell(
+            "prayer-of-healing", "Prayer of Healing", 2, "healing", 7,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
+            "guardian-of-faith", "Guardian of Faith", 4, "damage", 8,
+            "arena-out-of-scope",
+        ),
     ),
     "druid": (
         _spell("animal-friendship", "Animal Friendship", "control", "charmed"),

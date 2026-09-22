@@ -87,3 +87,60 @@ def build_seraphine_dawnshield_level4_profile() -> CharacterBuildProfile:
         ],
     )
     return CharacterBuildProfile.model_validate(data)
+
+
+def build_seraphine_dawnshield_level5_profile() -> CharacterBuildProfile:
+    base = build_seraphine_dawnshield_level4_profile()
+    data = advance_profile_data(base, 5)
+    apply_cleric_level_to_profile_data(data, 5)
+    additions = [
+        _class_feature(
+            "sear-undead", "Sear Undead",
+            notes="Failed Turn Undead saves take one shared radiant roll using d8s equal to Wisdom modifier before the turned effect is applied.",
+        ),
+        _class_feature(
+            "mass-healing-word", "Mass Healing Word",
+            notes="Always prepared Life Domain spell; shared multi-target healing primitive heals up to six legal creatures with one Bonus Action and one level-3 slot.",
+        ),
+        _class_feature(
+            "dispel-magic", "Dispel Magic",
+            notes="Uses the shared effect-removal primitive with Wisdom as the casting ability.",
+        ),
+        _class_feature(
+            "revivify", "Revivify", combat=False,
+            notes="Always prepared but not runnable by the canonical arena loadout because its consumed 300 GP diamond component is not present.",
+        ),
+        _class_feature(
+            "create-food-and-water", "Create Food and Water", combat=False,
+            notes="Legal prepared level-3 Cleric utility spell; arena-neutral.",
+        ),
+    ]
+    data.update(
+        feature_audits=[*data["feature_audits"], *(feature.model_dump() for feature in additions)],
+        source_references=[
+            *data["source_references"],
+            "D&D Beyond Basic Rules 2024: Cleric level 5 — Sear Undead, level 3 spells",
+            "D&D Beyond Basic Rules 2024: Life Domain Spells — Mass Healing Word, Revivify",
+            "D&D Beyond Basic Rules 2024: Spells — Dispel Magic, Create Food and Water",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
+
+
+def build_seraphine_dawnshield_level6_profile() -> CharacterBuildProfile:
+    base = build_seraphine_dawnshield_level5_profile()
+    data = advance_profile_data(base, 6)
+    apply_cleric_level_to_profile_data(data, 6)
+    addition = _class_feature(
+        "blessed-healer", "Blessed Healer",
+        notes="Shared post-healing rider restores the caster for 2 + spell-slot level after a slotted healing spell actually restores HP to another creature.",
+    )
+    data.update(
+        feature_audits=[*data["feature_audits"], addition.model_dump()],
+        source_references=[
+            *data["source_references"],
+            "D&D Beyond Basic Rules 2024: Life Domain level 6 — Blessed Healer",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
+

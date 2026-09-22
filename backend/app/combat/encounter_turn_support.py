@@ -9,7 +9,7 @@ from app.combat.condition_removal import choose_condition_removal_action, resolv
 from app.combat.effect_removal import choose_effect_removal_action, resolve_effect_removal
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
-from app.combat.healing import choose_healing_action, resolve_healing
+from app.combat.healing_support import resolve_healing_support
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
 from app.combat.pit_policy import save_distance, target_order
@@ -55,21 +55,19 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
 def resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     try:
         events: list[BattleEvent] = []
-        healing_choice = choose_healing_action(member, setup, turn_key)
-        if healing_choice is not None and healing_choice[1].state.current_hp == 0:
-            action, target = healing_choice
-            events.append(resolve_healing(sequence, round_number, member, target, action, dice, turn_key))
-            sequence += 1
+        healing_events, sequence = resolve_healing_support(
+            sequence, round_number, member, setup, dice, turn_key, downed_only=True,
+        )
+        events.extend(healing_events)
         removal_choice = choose_condition_removal_action(member, setup, turn_key)
         if removal_choice is not None:
             action, target, conditions = removal_choice
             events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions, turn_key))
             sequence += 1
-        healing_choice = choose_healing_action(member, setup, turn_key)
-        if healing_choice is not None:
-            action, target = healing_choice
-            events.append(resolve_healing(sequence, round_number, member, target, action, dice, turn_key))
-            sequence += 1
+        healing_events, sequence = resolve_healing_support(
+            sequence, round_number, member, setup, dice, turn_key,
+        )
+        events.extend(healing_events)
         effect_choice = choose_effect_removal_action(member, setup, turn_key)
         if effect_choice is not None:
             action, effect = effect_choice

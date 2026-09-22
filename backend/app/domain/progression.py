@@ -14,6 +14,23 @@ class AbilityCheckMinimum(BaseModel):
     minimum_source: Literal["ability_score"] = "ability_score"
 
 
+class AbilityScaledDamageRider(BaseModel):
+    """Damage dice count derived from one ability modifier."""
+
+    source_id: str
+    ability: AbilityName
+    dice_size: int = Field(ge=2, le=100)
+    damage_type: str
+
+
+class SlotHealingSelfRider(BaseModel):
+    """Heal the source after a slotted healing spell restores HP to another creature."""
+
+    source_id: str
+    flat_bonus: int = Field(default=0, ge=0)
+    per_slot_level: int = Field(default=0, ge=0)
+
+
 class EffectBoundSurvivalSave(BaseModel):
     """Immutable zero-HP replacement parameters; no class identity enters resolution."""
 
@@ -29,6 +46,8 @@ class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
+    turning_failure_damage: AbilityScaledDamageRider | None = None
+    slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
