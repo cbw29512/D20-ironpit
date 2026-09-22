@@ -4,7 +4,11 @@ from pydantic import BaseModel, Field
 from typing import Literal
 
 from app.domain.character_builds import AbilityName
-from app.domain.progression_riders import DamagingActionTemporaryHpRider, HealingDiceMaximizer
+from app.domain.progression_riders import (
+    D20OutcomeAdjustmentRule,
+    DamagingActionTemporaryHpRider,
+    HealingDiceMaximizer,
+)
 
 
 class AbilityCheckMinimum(BaseModel):
@@ -52,6 +56,7 @@ class ProgressionCombatFeatures(BaseModel):
     damaging_action_temporary_hp_rider: DamagingActionTemporaryHpRider | None = None
     feature_dice_counts: dict[str, int] = Field(default_factory=dict)
     healing_dice_maximizer: HealingDiceMaximizer | None = None
+    d20_outcome_adjustment: D20OutcomeAdjustmentRule | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False

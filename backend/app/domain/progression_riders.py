@@ -5,6 +5,16 @@ from pydantic import BaseModel, Field
 from app.domain.character_builds import AbilityName
 
 
+class D20OutcomeAdjustmentRule(BaseModel):
+    """Post-result D20 adjustment available to creatures within a declared range."""
+
+    source_id: str
+    resource_id: str
+    range_ft: int = Field(ge=0)
+    dice_count: int = Field(ge=1, le=10)
+    dice_size: int = Field(ge=2, le=100)
+
+
 class HealingDiceMaximizer(BaseModel):
     """Maximize healing dice for an explicit set of healing source ids."""
 
