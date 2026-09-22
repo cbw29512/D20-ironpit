@@ -61,7 +61,10 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
                 [{"source_id": "slippery-mind", "abilities": ["wisdom"]}]
                 if level >= 15 else []
             ),
-            first_round_extra_turn_initiative_offset=(-10 if level >= 17 else None),
+            first_round_extra_turn_grants=(
+                [{"source_id": "thiefs-reflexes", "source_name": "Thief's Reflexes", "initiative_offset": -10}]
+                if level >= 17 else []
+            ),
             suppress_attack_advantage_while_not_incapacitated=level >= 18,
             miss_to_hit_override_resource_id=("stroke-of-luck" if level >= 20 else None),
             miss_to_hit_override_source_name=("Stroke of Luck" if level >= 20 else None),
