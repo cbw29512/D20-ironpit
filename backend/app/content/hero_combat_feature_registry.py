@@ -39,7 +39,8 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "mindless-rage": {"mindless_rage": True},
     "feral-instinct": {"initiative_advantage": True},
     "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
-    "brutal-strike": {"brutal_strike_damage_dice": 1},\n    "cunning-action": {"cunning_action": True},
+    "brutal-strike": {"brutal_strike_damage_dice": 1},
+    "cunning-action": {"cunning_action": True},
 }
 
 
