@@ -6,8 +6,10 @@ from app.domain.character_builds import AbilityScores
 
 def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
     try:
+        strength = 14 if level >= 19 else 13
         dexterity = 20 if level >= 8 else (18 if level >= 4 else 17)
         constitution = 20 if level >= 12 else (18 if level >= 10 else (16 if level >= 4 else 15))
+        strength_mod = (strength - 10) // 2
         dexterity_mod = (dexterity - 10) // 2
         constitution_mod = (constitution - 10) // 2
         proficiency_bonus = 2 + (level - 1) // 4
@@ -16,7 +18,7 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
             archetype="Rogue",
             level=level,
             abilities=AbilityScores(
-                strength=13, dexterity=dexterity, constitution=constitution,
+                strength=strength, dexterity=dexterity, constitution=constitution,
                 intelligence=10, wisdom=(12 if level >= 16 else 10), charisma=10,
             ),
             save_proficiencies=(("dexterity", "intelligence", "wisdom", "charisma") if level >= 15 else ("dexterity", "intelligence")),
@@ -24,7 +26,7 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
             max_hp=8 + constitution_mod + (level - 1) * (5 + constitution_mod),
             speed_ft=30,
             skill_bonuses=(
-                ("athletics", proficiency_bonus + 1),
+                ("athletics", proficiency_bonus + strength_mod),
                 ("acrobatics", proficiency_bonus + dexterity_mod),
             ),
             attacks=(
@@ -39,7 +41,10 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
                 ),
             ),
             weapon_masteries=("shortsword", "shortbow"),
-            resources=(("adrenaline-rush", proficiency_bonus), ("relentless-endurance", 1)),
+            resources=(
+                ("adrenaline-rush", proficiency_bonus), ("relentless-endurance", 1),
+                *((("boon-combat-prowess", 1),) if level >= 19 else ()),
+            ),
             sneak_attack_d6=(level + 1) // 2,
         )
     except Exception as exc:
@@ -120,7 +125,11 @@ def build_mara_quickstep_level18_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(18)
 
 
-def build_mara_quickstep_combat_profiles(max_level: int = 18) -> list[PregenCombatProfile]:
+def build_mara_quickstep_level19_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(19)
+
+
+def build_mara_quickstep_combat_profiles(max_level: int = 19) -> list[PregenCombatProfile]:
     if max_level < 1 or max_level > 20:
         raise ValueError("Rogue combat fingerprint max_level must be between 1 and 20.")
     return [_build_mara_quickstep_combat_profile(level) for level in range(1, max_level + 1)]
