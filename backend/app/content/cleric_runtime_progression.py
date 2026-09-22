@@ -24,23 +24,23 @@ def build_seraphine_progression_features(level: int) -> ProgressionCombatFeature
     try:
         row = CLERIC_COMBAT_LEVELS[level]
         return ProgressionCombatFeatures(
-        turning_failure_damage=(
-            AbilityScaledDamageRider(
-                source_id="sear-undead",
-                ability="wisdom",
-                dice_size=8,
-                damage_type="radiant",
-            )
-            if level >= 5 else None
-        ),
-        slot_healing_other_self_rider=(
-            SlotHealingSelfRider(
-                source_id="blessed-healer",
-                flat_bonus=2,
-                per_slot_level=1,
-            )
-            if level >= 6 else None
-        ),
+            turning_failure_damage=(
+                AbilityScaledDamageRider(
+                    source_id="sear-undead",
+                    ability="wisdom",
+                    dice_size=8,
+                    damage_type="radiant",
+                )
+                if level >= 5 else None
+            ),
+            slot_healing_other_self_rider=(
+                SlotHealingSelfRider(
+                    source_id="blessed-healer",
+                    flat_bonus=2,
+                    per_slot_level=1,
+                )
+                if level >= 6 else None
+            ),
             damaging_action_temporary_hp_rider=(
                 DamagingActionTemporaryHpRider(
                     source_id="improved-blessed-strikes",

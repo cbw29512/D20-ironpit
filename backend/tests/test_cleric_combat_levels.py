@@ -49,7 +49,7 @@ def test_cleric_features_only_track_combat_content_and_mending_is_ignored() -> N
 
 
 def test_existing_cleric_runtime_levels_compile_from_table() -> None:
-    for level in range(1, 17):
+    for level in range(1, 19):
         row = CLERIC_COMBAT_LEVELS[level]
         template = build_seraphine_dawnshield_level(level)
         wisdom_mod = _modifier(row.wisdom)
@@ -66,14 +66,15 @@ def test_existing_cleric_runtime_levels_compile_from_table() -> None:
             assert resources.get(f"spell-slot-{spell_level}", 0) == uses
 
 
-def test_complete_cleric_table_advances_through_level_sixteen_then_fails_closed_at_seventeen() -> None:
-    for level in range(1, 17):
+def test_complete_cleric_table_advances_through_level_eighteen_then_fails_closed_at_nineteen() -> None:
+    for level in range(1, 19):
         assert unsupported_hero_engine_features(cleric_combat_features(level)) == ()
+        assert unsupported_hero_engine_features(canonical_combat_features("cleric", level)) == ()
         assert build_seraphine_dawnshield_level(level).level == level
 
-    # Level 17 data is present; admission fails specifically because 9th-level combat support is not certified yet.
     assert CLERIC_COMBAT_LEVELS[16].spell_slots[-1] == 0
     assert CLERIC_COMBAT_LEVELS[17].spell_slots[-1] == 1
-    assert unsupported_hero_engine_features(cleric_combat_features(17)) == ("cleric-combat-spells-9",)
-    with pytest.raises(ValueError, match="cleric-combat-spells-9"):
-        build_seraphine_dawnshield_level(17)
+    assert CLERIC_COMBAT_LEVELS[18].channel_divinity_uses == 4
+    assert unsupported_hero_engine_features(cleric_combat_features(19)) == ("boon-of-fate",)
+    with pytest.raises(ValueError, match="boon-of-fate"):
+        build_seraphine_dawnshield_level(19)
