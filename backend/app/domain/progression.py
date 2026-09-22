@@ -51,6 +51,9 @@ class ProgressionCombatFeatures(BaseModel):
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
+    first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
+    suppress_attack_advantage_while_not_incapacitated: bool = False
+    miss_to_hit_override_resource_id: str | None = None
     athletics_advantage: bool = False
     danger_sense: bool = False
     reckless_attack: bool = False
