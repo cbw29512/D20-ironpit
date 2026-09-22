@@ -113,6 +113,8 @@ Before any new engine code is written for a monster or pregen ability:
 
 This rule is symmetric: hero mechanics may power monsters, and monster mechanics may power heroes. No separate namespace or duplicate resolver is justified solely by content type.
 
+The source content record/card supplies the source-specific facts: exact ability name for logs/UI, DC or DC formula, save/check ability, attack parameters, damage, range/area, duration, timing, resource/recharge limits, and other printed qualifiers. Universal mechanics consume those parameters. A condition such as Prone has one mechanical implementation regardless of source.
+
 ## 7. Blocker classification
 
 Before writing new engine code, classify a blocked monster or pregen as exactly one of:
