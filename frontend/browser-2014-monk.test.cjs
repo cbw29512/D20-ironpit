@@ -25,7 +25,7 @@ load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);
 const monk = (level) => heroes.find((hero) => hero.id === `kael-stillwater-2014-l${level}`);
-for (let level = 1; level <= 14; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
+for (let level = 1; level <= 16; level += 1) assert.ok(monk(level), `missing Monk level ${level}`);
 
 assert.deepEqual(monk(1).ability_scores, { strength: 13, dexterity: 16, constitution: 14, intelligence: 11, wisdom: 15, charisma: 9 });
 assert.equal(monk(1).armor_class, 15);
@@ -52,6 +52,10 @@ assert.ok(monk(10).attacks.every((attack) => attack.masteryProperty == null));
 assert.equal(monk(11).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 8);
 assert.equal(monk(12).ability_scores.wisdom, 17);
 assert.equal(monk(14).speed_ft, 55);
+assert.equal(monk(15).ability_scores.wisdom, 17);
+assert.equal(monk(16).ability_scores.wisdom, 19);
+assert.equal(monk(16).armor_class, 19);
+assert.equal(monk(16).resources.ki, 16);
 assert.deepEqual(monk(14).saving_throw_proficiency_grants, [
   { source_id: "diamond-soul", abilities: ["constitution", "intelligence", "wisdom", "charisma"] },
 ]);
