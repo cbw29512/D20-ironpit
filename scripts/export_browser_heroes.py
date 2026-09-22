@@ -191,6 +191,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "fighting_style": template.fighting_style, "fighting_styles": list(template.fighting_styles),
         "weapon_masteries": list(template.weapon_masteries), "critical_hit_minimum": progression.critical_hit_minimum,
         "initiative_advantage": progression.initiative_advantage, "athletics_advantage": progression.athletics_advantage,
+        "first_round_extra_turn_initiative_offset": progression.first_round_extra_turn_initiative_offset,
+        "suppress_attack_advantage_while_not_incapacitated": progression.suppress_attack_advantage_while_not_incapacitated,
+        "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
+        "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
         "danger_sense": progression.danger_sense, "reckless_attack": progression.reckless_attack,
         "frenzy": progression.frenzy, "frenzy_bonus_attack_2014": progression.frenzy_bonus_attack_2014,
         "persistent_rage_2014": progression.persistent_rage_2014,
@@ -203,6 +207,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "stationary_bonus_action_next_attack_advantage": progression.stationary_bonus_action_next_attack_advantage,
         "cunning_strike_trip_die_cost": progression.cunning_strike_trip_die_cost,
         "cunning_strike_max_effects": progression.cunning_strike_max_effects,
+        "saving_throw_proficiency_grants": [
+            item.model_dump() for item in progression.saving_throw_proficiency_grants
+        ],
         "uncanny_dodge": progression.uncanny_dodge, "evasion": progression.evasion, "martial_arts_bonus_attack": progression.martial_arts_bonus_attack,
         "martial_arts_die_size": progression.martial_arts_die_size, "flurry_of_blows": progression.flurry_of_blows,
         "deflect_missiles": progression.deflect_missiles, "open_hand_technique": progression.open_hand_technique,

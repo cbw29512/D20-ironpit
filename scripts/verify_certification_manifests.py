@@ -46,6 +46,14 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("expanded-critical-range")
     if features.initiative_advantage:
         mechanics.add("initiative-advantage")
+    if features.first_round_extra_turn_initiative_offset is not None:
+        mechanics.add("first-round-extra-turn")
+    if features.suppress_attack_advantage_while_not_incapacitated:
+        mechanics.add("defender-attack-advantage-suppression")
+    if features.miss_to_hit_override_resource_id:
+        mechanics.add("miss-to-hit-override")
+    if features.miss_to_hit_override_source_name and not features.miss_to_hit_override_resource_id:
+        raise ValueError("Miss-to-hit source name requires a configured miss-to-hit resource.")
     if features.athletics_advantage:
         mechanics.add("athletics-advantage")
     if features.danger_sense:
@@ -66,6 +74,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.slot_healing_other_self_rider.source_id)
     if features.ability_check_minimums:
         mechanics.update(rule.source_id for rule in features.ability_check_minimums)
+    if features.saving_throw_proficiency_grants:
+        mechanics.update(rule.source_id for rule in features.saving_throw_proficiency_grants)
     if features.brutal_strike_damage_dice:
         mechanics.add("brutal-strike")
     if features.fast_movement_bonus_ft:

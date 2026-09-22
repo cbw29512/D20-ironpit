@@ -28,7 +28,7 @@ def _advancements(level: int) -> list[AbilityIncrease]:
     milestones = (
         (4, "dexterity", 2), (8, "dexterity", 2),
         (10, "charisma", 1), (10, "wisdom", 1),
-        (12, "constitution", 2), (16, "constitution", 2),
+        (12, "constitution", 2), (16, "constitution", 2), (19, "constitution", 2),
     )
     return [AbilityIncrease(ability=ability, amount=amount)
             for required, ability, amount in milestones if level >= required]
@@ -96,12 +96,38 @@ def _audits(level: int) -> list[FeatureAudit]:
             "ability-score-improvement-l16", "Ability Score Improvement (+2 Constitution)", "class",
             notes="Canonical Iron Pit progression decision: Constitution 16→18 for survivability.",
         ))
+    if level >= 17:
+        audits.append(_audit(
+            "thiefs-reflexes", "Thief's Reflexes", "subclass",
+            notes=(
+                "Uses the shared first-round extra-turn scheduler at initiative minus 10. "
+                "2014's surprised exception remains source-specific; the certified standard arena currently has no surprise-producing path."
+            ),
+        ))
+    if level >= 18:
+        audits.append(_audit(
+            "elusive", "Elusive", "class",
+            notes="Uses shared defender attack-Advantage suppression while Mara is not incapacitated.",
+        ))
+    if level >= 19:
+        audits.append(_audit(
+            "ability-score-improvement-l19", "Ability Score Improvement (+2 Constitution)", "class",
+            notes="Canonical Iron Pit progression decision: Constitution 18→20 for survivability.",
+        ))
+    if level >= 20:
+        audits.append(_audit(
+            "stroke-of-luck", "Stroke of Luck", "subclass",
+            notes=(
+                "Uses the shared resource-backed miss-to-hit override. "
+                "The player-facing log preserves the source name Stroke of Luck."
+            ),
+        ))
     return audits
 
 
 def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 17): raise ValueError("2014 Mara candidate profile covers levels 1 through 16.")
+        if level not in range(1, 21): raise ValueError("2014 Mara candidate profile covers levels 1 through 20.")
         base = _base(); species = _species(); advances = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-mara-quickstep-2014-l{level}", template_id=f"mara-quickstep-2014-l{level}",
