@@ -5,19 +5,7 @@ from dataclasses import dataclass
 
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_cleric import build_seraphine_dawnshield_level
-from app.content.audited_cleric_life_high_profile import (
-    build_seraphine_dawnshield_level7_profile,
-    build_seraphine_dawnshield_level8_profile,
-    build_seraphine_dawnshield_level9_profile,
-    build_seraphine_dawnshield_level10_profile,
-    build_seraphine_dawnshield_level11_profile,
-    build_seraphine_dawnshield_level12_profile,
-)
-from app.content.audited_cleric_life_profile import (
-    build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
-    build_seraphine_dawnshield_level5_profile, build_seraphine_dawnshield_level6_profile,
-)
-from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_profile
+from app.content.cleric_certified_profiles import build_seraphine_dawnshield_certified_profile
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.audited_rogue import build_mara_quickstep_level
 from app.content.audited_rogue_profile import build_mara_quickstep_profile
@@ -115,15 +103,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         profile_level_builder=build_rokhan_stonefury_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(
-        class_id="cleric", template_builder=build_seraphine_dawnshield_level,
-        profile_builders=(
-            build_seraphine_dawnshield_profile, build_seraphine_dawnshield_level2_profile,
-            build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
-            build_seraphine_dawnshield_level5_profile, build_seraphine_dawnshield_level6_profile,
-            build_seraphine_dawnshield_level7_profile, build_seraphine_dawnshield_level8_profile,
-            build_seraphine_dawnshield_level9_profile, build_seraphine_dawnshield_level10_profile,
-            build_seraphine_dawnshield_level11_profile, build_seraphine_dawnshield_level12_profile,
-        ),
+        class_id="cleric",
+        template_builder=build_seraphine_dawnshield_level,
+        profile_level_builder=build_seraphine_dawnshield_certified_profile,
+        max_level=14,
     ),
     CertifiedHeroProgression(
         class_id="rogue", template_builder=build_mara_quickstep_level,
