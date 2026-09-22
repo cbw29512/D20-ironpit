@@ -67,7 +67,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("action-surge", "Action Surge", fighter_action_surge_uses),
         ("indomitable", "Indomitable", fighter_indomitable_uses),
     ),
-    "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_2014_stroke_of_luck_uses),),
+    "rogue": (),
 }
 _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", _barbarian_2014_finite_rage_uses),),
@@ -84,7 +84,7 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("lay-on-hands", "Lay on Hands", lambda level: 5 * level),
         ("channel-divinity", "Channel Divinity", _paladin_2014_channel_uses),
     ),
-    "rogue": (),
+    "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_2014_stroke_of_luck_uses),),
 }
 _2014_UNLIMITED_CLASS_RESOURCES: dict[str, Callable[[int], tuple[str, ...]]] = {
     "barbarian": lambda level: ("rage",) if level >= 20 else (),
