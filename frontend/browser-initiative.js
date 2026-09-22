@@ -77,6 +77,22 @@
       || b.initiative_count - a.initiative_count
       || compareTieHistory(a.tie_break_rolls, b.tie_break_rolls)
       || a.index - b.index);
+    const turnOrder = groups.flatMap((group) => group.members.map((member) => member.combatant_id));
+    const baseIndex = new Map(turnOrder.map((id, index) => [id, index]));
+    const groupById = new Map();
+    for (const group of groups) {
+      for (const member of group.members) groupById.set(member.combatant_id, group);
+    }
+    const firstRoundSlots = [];
+    for (const id of turnOrder) {
+      const group = groupById.get(id), index = baseIndex.get(id);
+      firstRoundSlots.push({ priority: priority(group), count: group.initiative_count, regular: 1, index: -index, id });
+      const offset = group.members.find((member) => member.combatant_id === id)?.state?.template?.first_round_extra_turn_initiative_offset;
+      if (Number.isInteger(offset)) firstRoundSlots.push({
+        priority: 1, count: group.initiative_count + offset, regular: 0, index: -index, id,
+      });
+    }
+    firstRoundSlots.sort((a, b) => b.priority - a.priority || b.count - a.count || b.regular - a.regular || b.index - a.index);
     return {
       groups: groups.map((group) => ({
         side: group.side, template_id: group.template_id,
@@ -85,7 +101,8 @@
         initiative_bonus: group.initiative_bonus, initiative_count: group.initiative_count,
         tie_break_roll: group.tie_break_roll, tie_break_rolls: [...group.tie_break_rolls],
       })),
-      turn_order: groups.flatMap((group) => group.members.map((member) => member.combatant_id)),
+      turn_order: turnOrder,
+      first_round_turn_order: firstRoundSlots.map((slot) => slot.id),
     };
   }
 
