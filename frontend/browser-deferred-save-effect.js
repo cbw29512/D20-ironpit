@@ -40,25 +40,33 @@
     }
   }
 
+  function cleanup(setup) {
+    try {
+      const all = members(setup);
+      const byId = new Map(all.map((item) => [item.combatant_id, item]));
+      for (const source of all) {
+        source.state.deferred_effects = (source.state.deferred_effects || []).filter((mark) => {
+          const target = byId.get(mark.target_id) || null;
+          return Boolean(target && target.state.is_alive && !target.state.is_dead && target.state.current_hp > 0);
+        });
+      }
+    } catch (error) {
+      console.error("Browser deferred-effect lifecycle cleanup failed", { error });
+      throw error;
+    }
+  }
+
   function candidate(actor, setup) {
     try {
       const rule = ruleFor(actor.state);
       if (!rule || !E().available(actor.state, "action")) return null;
       const byId = new Map(members(setup).map((item) => [item.combatant_id, item]));
-      let selected = null;
-      const retained = [];
       for (const mark of actor.state.deferred_effects || []) {
-        if (mark.source_id !== rule.source_id) {
-          retained.push(mark);
-          continue;
-        }
+        if (mark.source_id !== rule.source_id) continue;
         const target = byId.get(mark.target_id) || null;
-        if (!target || target.state.is_dead || !target.state.is_alive || target.state.current_hp <= 0) continue;
-        retained.push(mark);
-        if (!selected) selected = target;
+        if (target && target.state.is_alive && !target.state.is_dead && target.state.current_hp > 0) return target;
       }
-      actor.state.deferred_effects = retained;
-      return selected;
+      return null;
     } catch (error) {
       console.error("Browser deferred effect candidate failed", { combatant: actor?.combatant_id, error });
       throw error;
@@ -184,6 +192,7 @@
   window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT = {
     arm,
     candidate,
+    cleanup,
     resolve,
     installAbilityHooks,
   };
