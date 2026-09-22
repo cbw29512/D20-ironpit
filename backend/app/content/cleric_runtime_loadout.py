@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
+from app.content.cleric_divine_intervention import build_divine_intervention_healing
 from app.content.cleric_life_domain import disciple_of_life_bonus
 from app.content.healing_spell_effects import (
     build_cure_wounds,
@@ -59,6 +60,10 @@ def build_seraphine_healing(
         ))
     if level >= 9:
         actions.append(build_mass_cure_wounds(
+            wisdom_modifier, disciple_of_life_bonus(5) if life else 0,
+        ))
+    if level >= 10:
+        actions.append(build_divine_intervention_healing(
             wisdom_modifier, disciple_of_life_bonus(5) if life else 0,
         ))
     if level >= 11:
