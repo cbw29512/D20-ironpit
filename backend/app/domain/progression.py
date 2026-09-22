@@ -42,6 +42,14 @@ class EffectBoundSurvivalSave(BaseModel):
     replacement_hp: int = Field(ge=1)
 
 
+class SkillCheckD20Minimum(BaseModel):
+    """Minimum selected d20 result for one or more proficient skill checks."""
+
+    source_id: str
+    skill_ids: list[str] = Field(min_length=1)
+    minimum_roll: int = Field(ge=1, le=20)
+
+
 class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
@@ -49,6 +57,7 @@ class ProgressionCombatFeatures(BaseModel):
     turning_failure_damage: AbilityScaledDamageRider | None = None
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
+    skill_check_d20_minimums: list[SkillCheckD20Minimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     athletics_advantage: bool = False
