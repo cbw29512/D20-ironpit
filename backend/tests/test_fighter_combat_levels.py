@@ -96,4 +96,9 @@ def test_complete_table_can_outrun_engine_without_silently_running_unsupported_r
     assert FIGHTER_COMBAT_LEVELS[14].max_hp == 158
     assert build_karnok_stoneward_level(15).progression_features.critical_hit_minimum == 18
     assert build_karnok_stoneward_level(18).level == 18
-    assert unsupported_fighter_engine_features(19) == ("boon-combat-prowess",)
+    assert unsupported_fighter_engine_features(19) == ()
+    fighter19 = build_karnok_stoneward_level(19)
+    grants = fighter19.progression_features.miss_to_hit_override_grants
+    assert len(grants) == 1
+    assert grants[0].source_id == "boon-combat-prowess"
+    assert grants[0].usage_policy == "refresh_at_turn_start"
