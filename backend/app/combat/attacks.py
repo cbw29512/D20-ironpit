@@ -13,6 +13,7 @@ from app.combat.conditional_attack_advantage import (
     conditional_attack_advantage_sources,
     suppress_attack_advantage_sources,
 )
+from app.combat.d20_outcome_override import replace_failed_d20_with_natural_20
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
@@ -84,11 +85,14 @@ def resolve_attack(
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
+        target_ac = effective_armor_class(actual_defender)
+        attack_roll, d20_override_used = replace_failed_d20_with_natural_20(
+            attacker, attack_roll, target_ac,
+        )
         natural = attack_roll.selected_roll or 0; natural_20 = natural == 20
         natural_1 = natural == 1; natural_1_ends_turn = natural_1 and not off_turn
         if natural_1_ends_turn: terminate_turn(attacker, "iron-pit-natural-1-attack")
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
-        target_ac = effective_armor_class(actual_defender)
         hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
@@ -135,6 +139,7 @@ def resolve_attack(
         if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
+        if d20_override_used: description += " Stroke of Luck turns the failed d20 into a natural 20."
         if miss_to_hit_used: description += " A miss-to-hit feature converts the miss into a hit."
         if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
         if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
