@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 from collections import Counter
 import json
 from pathlib import Path
@@ -47,8 +48,15 @@ def main() -> int:
     args = parser.parse_args()
     rendered = json.dumps(_payload(), indent=2, sort_keys=True) + "\n"
     if args.check:
-        if not OUTPUT.is_file() or OUTPUT.read_text(encoding="utf-8") != rendered:
+        current = OUTPUT.read_text(encoding="utf-8") if OUTPUT.is_file() else ""
+        if current != rendered:
             print(f"Roster mechanic checklist is stale: {OUTPUT.relative_to(ROOT)}", file=sys.stderr)
+            print("".join(difflib.unified_diff(
+                current.splitlines(keepends=True),
+                rendered.splitlines(keepends=True),
+                fromfile="committed",
+                tofile="generated",
+            )), file=sys.stderr)
             return 1
     else:
         OUTPUT.write_text(rendered, encoding="utf-8")
