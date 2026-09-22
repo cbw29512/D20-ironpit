@@ -4,6 +4,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.saving_throws import legal_save_action, resolve_save_action, resolve_saving_throw
 from app.domain.models import DamageType, EncounterSelection, RollMode
+from app.domain.runtime import ResourceState
 
 
 def _state(hero_id="karnok-stoneward-l1"):
@@ -119,3 +120,28 @@ def test_constrict_rejects_large_target() -> None:
     action = snake.state.template.saving_throw_actions[0]
     assert legal_save_action(action, setup.heroes[0], 5) is True
     assert legal_save_action(action, crocodile, 5) is False
+
+
+def test_single_target_save_action_spends_generic_resource_once() -> None:
+    _, hero, snake = _constrict_setup()
+    snake.state.resources.append(ResourceState(
+        id="test-save", name="Test Save", current_uses=1, max_uses=1,
+    ))
+    action = snake.state.template.saving_throw_actions[0].model_copy(update={
+        "id": "resource-save",
+        "resource_id": "test-save",
+        "resource_cost": 1,
+    })
+
+    event = resolve_save_action(
+        1, 1, snake, hero, action, 5, FixedDiceProvider([10]),
+    )
+
+    assert event.resource_remaining == 0
+    assert next(item.current_uses for item in snake.state.resources if item.id == "test-save") == 0
+
+    snake.state.action_available = True
+    with pytest.raises(ValueError, match="resource is unavailable"):
+        resolve_save_action(
+            2, 1, snake, hero, action, 5, FixedDiceProvider([10]),
+        )

@@ -47,6 +47,7 @@ CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _cantrip("light", "Light", "utility", "arena-out-of-scope"),
         _cantrip("thaumaturgy", "Thaumaturgy", "utility", "arena-out-of-scope"),
         _later_cantrip("mending", "Mending", "utility", 4, "arena-out-of-scope"),
+        _later_cantrip("spare-the-dying", "Spare the Dying", "healing", 10, "arena-out-of-scope"),
     ),
 }
 
@@ -108,6 +109,26 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _later_spell(
             "guardian-of-faith", "Guardian of Faith", 4, "damage", 8,
             "arena-out-of-scope",
+        ),
+        _later_spell(
+            "flame-strike", "Flame Strike", 5, "damage", 9,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
+            "insect-plague", "Insect Plague", 5, "damage", 9,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
+            "contagion", "Contagion", 5, "damage", 10,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
+            "greater-restoration", "Greater Restoration", 5, "healing", 9,
+            "arena-out-of-scope", always_prepared_from_level=9,
+        ),
+        _later_spell(
+            "mass-cure-wounds", "Mass Cure Wounds", 5, "healing", 9,
+            "healing", "multi-target-healing", always_prepared_from_level=9,
         ),
     ),
     "druid": (
