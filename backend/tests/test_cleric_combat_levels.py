@@ -66,10 +66,14 @@ def test_existing_cleric_runtime_levels_compile_from_table() -> None:
             assert resources.get(f"spell-slot-{spell_level}", 0) == uses
 
 
-def test_complete_cleric_table_fails_closed_at_first_new_combat_spell_tier() -> None:
-    assert unsupported_hero_engine_features(cleric_combat_features(4)) == ()
-    assert unsupported_hero_engine_features(cleric_combat_features(5)) == (
-        "sear-undead", "cleric-combat-spells-3",
+def test_complete_cleric_table_advances_through_level_six_then_fails_closed_at_level_seven() -> None:
+    assert unsupported_hero_engine_features(cleric_combat_features(5)) == ()
+    assert unsupported_hero_engine_features(cleric_combat_features(6)) == ()
+    assert build_seraphine_dawnshield_level(5).level == 5
+    assert build_seraphine_dawnshield_level(6).level == 6
+
+    assert unsupported_hero_engine_features(cleric_combat_features(7)) == (
+        "blessed-strikes", "cleric-combat-spells-4",
     )
-    with pytest.raises(ValueError, match="sear-undead, cleric-combat-spells-3"):
-        build_seraphine_dawnshield_level(5)
+    with pytest.raises(ValueError, match="blessed-strikes, cleric-combat-spells-4"):
+        build_seraphine_dawnshield_level(7)
