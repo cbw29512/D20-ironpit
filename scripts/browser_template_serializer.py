@@ -295,6 +295,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["sneak_attack_d6"] = features.sneak_attack_d6
     if features.damaging_action_temporary_hp_rider:
         row["damaging_action_temporary_hp_rider"] = features.damaging_action_temporary_hp_rider.model_dump()
+    if features.divine_spark_dice:
+        row["divine_spark_dice"] = features.divine_spark_dice
     return row
 
 
