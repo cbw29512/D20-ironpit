@@ -32,3 +32,32 @@ def build_mara_quickstep_level13_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 13 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level14_profile() -> CharacterBuildProfile:
+    """Level 14 inherits level 13 and adds the supported Obscure Devious Strike option."""
+    try:
+        previous = build_mara_quickstep_level13_profile()
+        data = advance_profile_data(previous, 14)
+        data.update(
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "devious-strikes", "Devious Strikes", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Canonical arena automation selects Obscure when Blinded can affect the target. "
+                        "The source trades 3d6 Sneak Attack; resolution reuses the shared Dexterity save "
+                        "and universal timed Blinded condition mechanics."
+                    ),
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 14 — Devious Strikes",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 14 profile could not be created.") from exc
