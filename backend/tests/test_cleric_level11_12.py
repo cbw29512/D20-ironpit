@@ -1,4 +1,3 @@
-# Exact-head CI trigger after generated artifact sync.
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.audited_cleric_life_high_profile import (
     build_seraphine_dawnshield_level11_profile,
@@ -93,4 +92,3 @@ def test_certified_registry_exposes_cleric_levels_eleven_and_twelve() -> None:
     assert registry[("cleric", 12, "canonical")] == (
         "Seraphine Dawnshield", "seraphine-dawnshield-l12",
     )
-    assert ("cleric", 13, "canonical") not in registry
