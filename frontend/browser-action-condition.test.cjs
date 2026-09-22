@@ -185,6 +185,28 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(checking.state.resources["stroke-of-luck"], 0);
 }
 
+
+{
+  const checking = member("stroke-bonus-die-safety");
+  checking.state.template.failed_d20_test_override_grants = [{
+    source_id: "stroke-of-luck", source_name: "Stroke of Luck",
+    resource_id: "stroke-of-luck", replacement_roll: 20,
+    test_kinds: ["attack", "saving_throw", "ability_check"],
+  }];
+  checking.state.resources["stroke-of-luck"] = 1;
+  const roll = {
+    notation: "2d20 + 1d4", rolls: [1, 2, 4], selected_roll: 2,
+    modifier: 0, total: 6, mode: "advantage", revisions: [],
+  };
+  const result = window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE.apply(
+    checking.state, roll, true, "attack",
+  );
+  assert.deepEqual(result.roll.rolls, [1, 20, 4], "replacement must target the selected d20, not the appended bonus die");
+  assert.equal(result.roll.selected_roll, 20);
+  assert.equal(result.roll.total, 24);
+  assert.equal(result.roll.revisions.at(-1).replaced_die_index, 1);
+}
+
 console.log("Browser condition/action-economy integration regressions passed.");
 
 // Keep newer condition/class subsystems inside an already mandatory CI entry point.
