@@ -110,3 +110,6 @@ def build_mara_quickstep_level15_combat_profile() -> PregenCombatProfile:
 
 def build_mara_quickstep_level16_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(16)
+
+def build_mara_quickstep_level17_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(17)
