@@ -74,3 +74,20 @@ def test_2024_rogue_level19_profile_fingerprint_and_registry_match() -> None:
 
     registry = build_certified_hero_registry()
     assert registry[("rogue", 19, "canonical")] == ("Mara Quickstep", "mara-quickstep-l19")
+
+
+
+def test_boon_of_combat_prowess_rescues_natural_one_before_turn_termination() -> None:
+    attacker = build_combatant_state(build_mara_quickstep_level(19))
+    defender = build_combatant_state(build_karnok_stoneward_level(18))
+
+    event = resolve_attack(
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]),
+        spend_action=False, turn_key="1:mara",
+    )
+
+    assert event.hit is True
+    assert event.turn_terminated is False
+    assert attacker.turn_terminated is False
+    assert "miss-to-hit feature converts" in event.description
