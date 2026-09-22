@@ -111,8 +111,11 @@
       applyZeroHpSaveDamageRider(defender, effect, turnKey);
       damageOutcome = "unconscious";
     }
+    const cunningStrikeTrip = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.resolveTrip(
+      attacker, defender, turnKey,
+    ) || { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false };
     return {
-      damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage,
+      damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage, cunningStrikeTrip,
       uncannyDodgeUsed: uncanny.used, deflectMissilesUsed: deflect.used,
       deflectMissilesReduction: deflect.reduction,
     };
