@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
+from app.combat.ability_checks import resolve_ability_check_outcome
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.state import build_combatant_state
 from app.content.audited_rogue import build_mara_quickstep_level
@@ -60,3 +61,21 @@ def test_failed_d20_override_does_not_spend_on_success_or_ineligible_test() -> N
     assert unchanged == roll
     assert feature_id is None
     assert next(item for item in state.resources if item.id == "stroke-of-luck").current_uses == 1
+
+
+def test_failed_ability_check_uses_same_universal_d20_override() -> None:
+    state = build_combatant_state(build_mara_quickstep_level(20))
+    original = DiceRoll(
+        notation="1d20+2", rolls=[3], selected_roll=3,
+        modifier=2, total=5, mode=RollMode.NORMAL,
+    )
+
+    revised, succeeded = resolve_ability_check_outcome(
+        state, "strength", original, 20,
+    )
+
+    assert revised.selected_roll == 20
+    assert revised.total == 22
+    assert succeeded is True
+    assert revised.revisions[-1].source_effect_id == "stroke-of-luck"
+    assert next(item for item in state.resources if item.id == "stroke-of-luck").current_uses == 0
