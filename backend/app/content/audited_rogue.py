@@ -22,15 +22,16 @@ def mara_rogue_features(level: int) -> tuple[str, ...]:
     return compose_class_subclass_features("rogue", "thief", level, ROGUE_COMBAT_LEVELS)
 
 
-_MARA_LOADOUT_INERT_FEATURES = frozenset({
+_MARA_ARENA_INERT_FEATURES = frozenset({
     "thief-fast-hands", "thief-supreme-sneak", "thief-use-magic-device",
+    "rogue-epic-boon",
 })
 
 
 def unsupported_mara_rogue_features(level: int) -> tuple[str, ...]:
     active = tuple(
         feature for feature in mara_rogue_features(level)
-        if feature not in _MARA_LOADOUT_INERT_FEATURES
+        if feature not in _MARA_ARENA_INERT_FEATURES
     )
     return unsupported_hero_engine_features(active)
 
@@ -53,6 +54,8 @@ def _scores_after_level_delta(previous: AbilityScores, level: int) -> AbilitySco
         return previous.model_copy(update={"constitution": 20})
     if level == 16:
         return previous.model_copy(update={"wisdom": 12})
+    if level == 19:
+        return previous.model_copy(update={"strength": 14})
     return previous.model_copy()
 
 
