@@ -72,6 +72,12 @@
       if (!A()) throw new Error("Ability-check minimum runtime is not loaded.");
       roll = A().applyMinimum(state, ability, roll);
     }
+    const skillId = useAthletics ? "athletics" : "acrobatics";
+    if ((state.template.skill_check_d20_minimums || [])
+      .some((rule) => (rule.skill_ids || []).includes(skillId))) {
+      if (!A()) throw new Error("Skill-check d20 minimum runtime is not loaded.");
+      roll = A().applySkillMinimum(state, skillId, roll);
+    }
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {
       tactical = T().apply(state, roll, source.escape_dc);
