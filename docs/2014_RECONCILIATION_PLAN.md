@@ -107,3 +107,25 @@ The purpose is architectural coverage, not re-authoring these monsters. Once the
 ## Coordination rule
 
 While reconciliation is active, new 2014 work that requires a shared-engine change belongs on the reconciliation/current-main architecture, not on the old beta lineage. The beta lineage may preserve ruleset-specific source/catalog/test corrections, but it is not allowed to silently define new universal engine behavior.
+
+## Cross-edition pregen build strategy
+
+This is the default workflow for canonical pregens going forward.
+
+1. **Build and certify the 2014 progression first.** Complete the canonical character level-by-level in 2014 before duplicating equivalent work for 2024, unless a newer-edition feature is already safely merged and must be preserved.
+2. **Map every 2014 combat feature to the universal engine.** If the mechanic is edition-agnostic in behavior (for example attack rolls, saving throws, resistance, advantage/disadvantage, Sneak Attack, Extra Attack, Evasion, Uncanny Dodge, healing, conditions, rerolls, spell slots, reactions, resource use, or timed effects), implement or reuse one generic engine primitive.
+3. **Do not duplicate compatible mechanics in 2024.** When the 2024 version uses the same combat behavior, reuse the same engine primitive and change only ruleset data, parameters, scaling, availability, naming, or resource counts as required by the 2024 rules.
+4. **Implement only true 2024 deltas after the compatible 2014 behavior is mapped.** New 2024-only abilities or materially changed semantics get the smallest ruleset-specific extension necessary. Avoid parallel class-specific combat engines.
+5. **Prefer data over identity checks.** Shared mechanics must be driven by declarative fields/capabilities rather than class names, character names, monster names, or edition-name conditionals scattered through resolvers.
+6. **Use overlap to accelerate both pregens and monsters.** A universal capability added for a pregen should be reused by monsters whenever their underlying combat behavior is equivalent, and vice versa.
+7. **Preserve edition isolation at the content layer.** 2014 and 2024 source data, legal options, progression choices, and certification remain ruleset-specific even when they invoke the same universal runtime primitive.
+8. **Certify in sequence.** For each class: finish 2014 progression and regressions first, then derive the 2024 progression from the compatible mechanics, add only the edition differences, regenerate artifacts, and run Python/browser parity plus full CI.
+9. **Never rebuild working mechanics from scratch merely because the edition changed.** Reconcile and reuse first; rewrite only when semantics actually differ or the old implementation violates current engine contracts.
+
+### Practical class workflow
+
+For a class with overlapping 2014 and 2024 mechanics:
+
+`2014 canonical progression → shared mechanic inventory → universal engine capability → 2014 certification → 2024 compatible carryover → 2024-only deltas → 2024 certification`
+
+The goal is one universal Iron Pit combat engine with two ruleset data layers, not two independently implemented games.
