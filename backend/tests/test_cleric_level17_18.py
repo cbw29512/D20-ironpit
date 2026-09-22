@@ -74,9 +74,13 @@ def test_level_seventeen_certifies_ninth_level_upcasts_and_supreme_healing() -> 
     spark_cleric = _member(hero, "spark-cleric", "heroes", 0)
     spark_ally = _member(build_karnok_stoneward(), "spark-ally", "heroes", 5)
     spark_ally.state.current_hp = 1
-    setup = EncounterSetup(heroes=[spark_cleric, spark_ally], monsters=[], hero_total_levels=18, monster_total_cr="0")
+    enemy = _member(build_karnok_stoneward(), "enemy", "monsters", 10)
+    setup = EncounterSetup(
+        heroes=[spark_cleric, spark_ally], monsters=[enemy],
+        hero_total_levels=18, monster_total_cr="1",
+    )
     spark = resolve_divine_spark(
-        2, 1, spark_cleric, spark_ally, setup, FixedDiceProvider([]),
+        2, 1, spark_cleric, spark_ally, setup, FixedDiceProvider([1]),
         healing=True, save_dc=19, resource_remaining=2,
     )
     assert spark.healing_roll.rolls == [8, 8, 8]
