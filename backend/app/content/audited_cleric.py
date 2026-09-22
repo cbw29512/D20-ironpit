@@ -1,10 +1,18 @@
 from __future__ import annotations
 
-from app.content.canonical_class_combat_spines import canonical_combat_features
+import logging
+
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.cleric_divine_intervention import build_divine_intervention_damage, build_divine_intervention_healing
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION, disciple_of_life_bonus
+from app.content.cleric_runtime_support import (
+    ability_modifier,
+    build_cleric_resources,
+    build_mace_attack,
+    cleric_features,
+    cleric_source,
+)
 from app.content.healing_spell_effects import (
     build_cure_wounds, build_healing_word, build_mass_cure_wounds, build_mass_healing_word,
 )
@@ -14,78 +22,24 @@ from app.content.offensive_spell_effects import build_guiding_bolt, build_inflic
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.character_builds import AbilityScores
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
-from app.domain.models import (
-    CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout,
-    Weapon, WeaponAttack, WeaponAttackKind,
-)
+from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.traits import CombatTrait
 
-
-def _modifier(score: int) -> int:
-    return (score - 10) // 2
-
-
-def _features(level: int) -> tuple[str, ...]:
-    return canonical_combat_features("cleric", level, "life-domain")
-
-
-def _mace_attack(attack_bonus: int) -> WeaponAttack:
-    return WeaponAttack(
-        id="seraphine-mace",
-        weapon=Weapon(
-            id="mace", name="Mace", attack_kind=WeaponAttackKind.MELEE,
-            dice_count=1, dice_size=6, damage_type=DamageType.BLUDGEONING,
-            animation="blunt-strike", reach_ft=5,
-        ),
-        attack_bonus=attack_bonus, damage_bonus=0,
-    )
-
-
-def _resources(level: int) -> list[ResourceDefinition]:
-    row = CLERIC_COMBAT_LEVELS[level]
-    slots = [
-        ResourceDefinition(id=f"spell-slot-{spell_level}", name=f"Level {spell_level} Spell Slot", max_uses=uses)
-        for spell_level, uses in enumerate(row.spell_slots, start=1) if uses
-    ]
-    channel = [ResourceDefinition(id="channel-divinity", name="Channel Divinity", max_uses=row.channel_divinity_uses)] if row.channel_divinity_uses else []
-    intervention = [ResourceDefinition(id="divine-intervention", name="Divine Intervention", max_uses=1)] if level >= 10 else []
-    return [
-        *slots, *channel, *intervention,
-        ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
-        ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
-    ]
-
-
-def _source(level: int) -> str:
-    return (
-        f"D&D Beyond Basic Rules 2024: Cleric level {level}, Orc, Sage, Protector, "
-        "Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, "
-        + ("Healing Word, Channel Divinity, " if level >= 2 else "")
-        + ("Life Domain, Aid, Lesser Restoration, Disciple of Life, " if level >= 3 else "")
-        + ("Ability Score Improvement, Mending, Inflict Wounds, " if level >= 4 else "")
-        + ("Sear Undead, Mass Healing Word, Revivify, Dispel Magic, " if level >= 5 else "")
-        + ("Blessed Healer, " if level >= 6 else "")
-        + ("Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, " if level >= 7 else "")
-        + ("Guardian of Faith, Ability Score Improvement, " if level >= 8 else "")
-        + ("Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, " if level >= 9 else "")
-        + ("Divine Intervention, Contagion, Spare the Dying, " if level >= 10 else "")
-        + ("Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, " if level >= 11 else "")
-        + "Equipment"
-    )
+logger = logging.getLogger(__name__)
 
 
 def _build_seraphine(level: int) -> CombatantTemplate:
     if level not in CLERIC_COMBAT_LEVELS:
         raise ValueError(f"Seraphine Cleric level {level} must be between 1 and 20.")
-    features = _features(level)
+    features = cleric_features(level)
     unsupported = unsupported_hero_engine_features(features)
     if unsupported:
         raise ValueError(f"Seraphine Cleric level {level} awaits combat support for: {', '.join(unsupported)}")
     row = CLERIC_COMBAT_LEVELS[level]
     hero = HERO_BY_CLASS["cleric"]
-    wisdom_modifier = _modifier(row.wisdom)
+    wisdom_modifier = ability_modifier(row.wisdom)
     intelligence_modifier = 2
-    charisma_modifier = _modifier(row.charisma)
+    charisma_modifier = ability_modifier(row.charisma)
     save_dc = 8 + row.proficiency_bonus + wisdom_modifier
     spell_attack_bonus = row.proficiency_bonus + wisdom_modifier
     life_bonus = disciple_of_life_bonus(1) if "disciple-of-life" in features else 0
@@ -136,7 +90,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             wisdom=row.wisdom, charisma=row.charisma,
         ),
         armor_class=row.armor_class, max_hp=row.max_hp,
-        speed_ft=30, initiative_bonus=0, weapon_attack=_mace_attack(row.proficiency_bonus),
+        speed_ft=30, initiative_bonus=0, weapon_attack=build_mace_attack(row.proficiency_bonus),
         saving_throw_actions=[build_divine_intervention_damage(save_dc)] if level >= 10 else [],
         spell_save_actions=save_spells, spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
         defensive_spell_actions=defenses, healing_actions=healing,
@@ -164,13 +118,17 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         },
         combat_traits=traits,
         visual=VisualLoadout(armor="chain-shirt", main_hand="mace", off_hand="shield", body_style="humanoid"),
-        resources=_resources(level), source=_source(level),
+        resources=build_cleric_resources(level), source=cleric_source(level),
     )
 
 
 def build_seraphine_dawnshield_level(level: int) -> CombatantTemplate:
     """Compile Seraphine from Cleric base + Life Domain overlay; missing combat content fails closed."""
-    return _build_seraphine(level)
+    try:
+        return _build_seraphine(level)
+    except Exception:
+        logger.exception("Failed to build Seraphine Dawnshield at Cleric level %s.", level)
+        raise
 
 
 def build_seraphine_dawnshield() -> CombatantTemplate:
