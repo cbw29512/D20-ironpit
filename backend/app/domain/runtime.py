@@ -91,6 +91,7 @@ class CombatantState(BaseModel):
     survival_save_uses: dict[str, int] = Field(default_factory=dict)
     pending_survival_save_logs: list[str] = Field(default_factory=list)
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
+    turn_start_feature_cooldowns: list[str] = Field(default_factory=list)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
