@@ -177,28 +177,12 @@ def build_seraphine_dawnshield_level12_combat_profile() -> PregenCombatProfile:
 
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
-    from app.content.rogue_combat_fingerprint import (
-        build_mara_quickstep_combat_profile, build_mara_quickstep_level2_combat_profile,
-        build_mara_quickstep_level3_combat_profile, build_mara_quickstep_level4_combat_profile,
-        build_mara_quickstep_level5_combat_profile, build_mara_quickstep_level6_combat_profile,
-        build_mara_quickstep_level7_combat_profile, build_mara_quickstep_level8_combat_profile,
-        build_mara_quickstep_level9_combat_profile, build_mara_quickstep_level10_combat_profile,
-        build_mara_quickstep_level11_combat_profile, build_mara_quickstep_level12_combat_profile,
-        build_mara_quickstep_level13_combat_profile, build_mara_quickstep_level14_combat_profile,
-        build_mara_quickstep_level15_combat_profile, build_mara_quickstep_level16_combat_profile,
-        build_mara_quickstep_level17_combat_profile,
-    )
+    from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profiles
+
     profiles = [
         *(_karnok_profile(level) for level in range(1, 19)),
-        *(_rokhan_profile(level) for level in range(1, 8)), *(_seraphine_profile(level) for level in range(1, 13)),
-        build_mara_quickstep_combat_profile(), build_mara_quickstep_level2_combat_profile(),
-        build_mara_quickstep_level3_combat_profile(), build_mara_quickstep_level4_combat_profile(),
-        build_mara_quickstep_level5_combat_profile(), build_mara_quickstep_level6_combat_profile(),
-        build_mara_quickstep_level7_combat_profile(), build_mara_quickstep_level8_combat_profile(),
-        build_mara_quickstep_level9_combat_profile(), build_mara_quickstep_level10_combat_profile(),
-        build_mara_quickstep_level11_combat_profile(), build_mara_quickstep_level12_combat_profile(),
-        build_mara_quickstep_level13_combat_profile(), build_mara_quickstep_level14_combat_profile(),
-        build_mara_quickstep_level15_combat_profile(), build_mara_quickstep_level16_combat_profile(),
-        build_mara_quickstep_level17_combat_profile(),
+        *(_rokhan_profile(level) for level in range(1, 8)),
+        *(_seraphine_profile(level) for level in range(1, 13)),
+        *build_mara_quickstep_combat_profiles(17),
     ]
     return {profile.template_id: profile for profile in profiles}
