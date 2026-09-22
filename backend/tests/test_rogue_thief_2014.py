@@ -21,8 +21,8 @@ def _setup(rogue: EncounterCombatant, target: EncounterCombatant) -> EncounterSe
     )
 
 
-def test_2014_thief_levels_one_through_eleven_are_isolated_from_2024() -> None:
-    for level in range(1, 12):
+def test_2014_thief_levels_one_through_sixteen_are_isolated_from_2024() -> None:
+    for level in range(1, 17):
         hero = build_mara_quickstep_2014(level)
         assert hero.ruleset == "2014"
         assert hero.level == level
@@ -44,6 +44,57 @@ def test_level_eleven_reliable_talent_is_audited_without_faking_roll_math() -> N
     hero = build_mara_quickstep_2014(11)
     assert hero.progression_features.sneak_attack_d6 == 6
     assert hero.ability_scores.dexterity == 20
+
+
+def test_levels_twelve_and_thirteen_apply_approved_constitution_progression() -> None:
+    profile12 = build_mara_quickstep_2014_profile(12)
+    hero12 = build_mara_quickstep_2014(12)
+    hero13 = build_mara_quickstep_2014(13)
+
+    assert profile12.final_ability_scores.constitution == 16
+    assert [(item.ability, item.amount) for item in profile12.advancement_increases if item.ability == "constitution"] == [
+        ("constitution", 2),
+    ]
+    assert hero12.ability_scores.constitution == 16
+    assert hero12.max_hp == 99
+    assert hero12.saving_throw_bonuses["constitution"] == 3
+    assert hero13.ability_scores.constitution == 16
+    assert hero13.progression_features.sneak_attack_d6 == 7
+
+    profile13 = build_mara_quickstep_2014_profile(13)
+    use_magic_device = next(audit for audit in profile13.feature_audits if audit.feature_id == "use-magic-device")
+    assert use_magic_device.combat_relevant is False
+    assert use_magic_device.automated is False
+    assert "arena-inert" in (use_magic_device.notes or "")
+
+
+def test_levels_fourteen_through_sixteen_reuse_existing_engine_primitives() -> None:
+    profile14 = build_mara_quickstep_2014_profile(14)
+    blindsense = next(audit for audit in profile14.feature_audits if audit.feature_id == "blindsense")
+    assert blindsense.combat_relevant is False
+    assert blindsense.automated is False
+    assert "location awareness within 10 feet" in (blindsense.notes or "")
+    assert "no unresolved hidden-creature location loop" in (blindsense.notes or "")
+
+    profile15 = build_mara_quickstep_2014_profile(15)
+    slippery_mind = next(audit for audit in profile15.feature_audits if audit.feature_id == "slippery-mind")
+    hero15 = build_mara_quickstep_2014(15)
+    assert slippery_mind.combat_relevant is True
+    assert slippery_mind.automated is True
+    assert hero15.saving_throw_bonuses["wisdom"] == 7
+    assert hero15.progression_features.sneak_attack_d6 == 8
+
+    profile16 = build_mara_quickstep_2014_profile(16)
+    hero16 = build_mara_quickstep_2014(16)
+    assert profile16.final_ability_scores.constitution == 18
+    assert [(item.ability, item.amount) for item in profile16.advancement_increases if item.ability == "constitution"] == [
+        ("constitution", 2), ("constitution", 2),
+    ]
+    assert hero16.ability_scores.constitution == 18
+    assert hero16.max_hp == 147
+    assert hero16.saving_throw_bonuses["constitution"] == 4
+    assert hero16.saving_throw_bonuses["wisdom"] == 7
+    assert hero16.progression_features.sneak_attack_d6 == 8
 
 
 def test_cunning_action_dash_is_used_only_when_it_enables_offense() -> None:

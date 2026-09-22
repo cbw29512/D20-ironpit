@@ -25,7 +25,11 @@ def _species() -> list[AbilityIncrease]:
 
 
 def _advancements(level: int) -> list[AbilityIncrease]:
-    milestones = ((4, "dexterity", 2), (8, "dexterity", 2), (10, "charisma", 1), (10, "wisdom", 1))
+    milestones = (
+        (4, "dexterity", 2), (8, "dexterity", 2),
+        (10, "charisma", 1), (10, "wisdom", 1),
+        (12, "constitution", 2), (16, "constitution", 2),
+    )
     return [AbilityIncrease(ability=ability, amount=amount)
             for required, ability, amount in milestones if level >= required]
 
@@ -64,12 +68,40 @@ def _audits(level: int) -> list[FeatureAudit]:
             notes=("Audited RAW. The standard arena currently executes no qualifying proficient "
                    "ability check, so no runtime roll-floor primitive is exercised by this snapshot."),
         ))
+    if level >= 12:
+        audits.append(_audit(
+            "ability-score-improvement-l12", "Ability Score Improvement (+2 Constitution)", "class",
+            notes="Canonical Iron Pit progression decision: Constitution 14→16 for survivability.",
+        ))
+    if level >= 13:
+        audits.append(_audit(
+            "use-magic-device", "Use Magic Device", "subclass", combat=False, automated=False,
+            notes="Audited RAW; arena-inert while Mara uses the canonical mundane loadout.",
+        ))
+    if level >= 14:
+        audits.append(_audit(
+            "blindsense", "Blindsense", "class", combat=False, automated=False,
+            notes=(
+                "Audited RAW: location awareness within 10 feet while Mara can hear. "
+                "The certified arena has no unresolved hidden-creature location loop, so no runtime primitive is exercised."
+            ),
+        ))
+    if level >= 15:
+        audits.append(_audit(
+            "slippery-mind", "Slippery Mind", "class",
+            notes="Uses the shared saving-throw proficiency compiler; Wisdom proficiency begins at level 15.",
+        ))
+    if level >= 16:
+        audits.append(_audit(
+            "ability-score-improvement-l16", "Ability Score Improvement (+2 Constitution)", "class",
+            notes="Canonical Iron Pit progression decision: Constitution 16→18 for survivability.",
+        ))
     return audits
 
 
 def build_mara_quickstep_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 12): raise ValueError("2014 Mara candidate profile covers levels 1 through 11.")
+        if level not in range(1, 17): raise ValueError("2014 Mara candidate profile covers levels 1 through 16.")
         base = _base(); species = _species(); advances = _advancements(level)
         return CharacterBuildProfile(
             id=f"build-mara-quickstep-2014-l{level}", template_id=f"mara-quickstep-2014-l{level}",
