@@ -17,6 +17,7 @@ from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.miss_to_hit import resolve_miss_to_hit
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice, attack_roll_flat_bonus, attacks_against_advantage_sources, consume_attacks_against_advantage,
     consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
@@ -91,6 +92,8 @@ def resolve_attack(
         hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
+        active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
+        hit, miss_to_hit_used = resolve_miss_to_hit(attacker, hit, active_turn_key)
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
@@ -100,7 +103,6 @@ def resolve_attack(
         on_hit_save = None; save_damage = None; applied_total = 0
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
-            active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
             hit_damage = resolve_attack_hit_damage(
                 attacker, actual_defender, attack, dice, critical, mode, active_turn_key,
                 bonus_damage, affected_states, sneak_attack_ally_available,
@@ -133,6 +135,7 @@ def resolve_attack(
         if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
+        if miss_to_hit_used: description += " A miss-to-hit feature converts the miss into a hit."
         if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
         if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
