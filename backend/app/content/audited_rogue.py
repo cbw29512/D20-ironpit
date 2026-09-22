@@ -59,6 +59,14 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
     strength_mod = scores.modifier("strength")
     intelligence_mod = scores.modifier("intelligence")
     attack_bonus = row.proficiency_bonus + dexterity_mod
+    progression_fields = compile_progression_feature_fields(mara_rogue_features(level), level)
+    save_proficiencies = {"dexterity", "intelligence"}
+    for grant in progression_fields.get("saving_throw_proficiency_grants", []):
+        save_proficiencies.update(grant["abilities"])
+
+    def save_bonus(ability: str, modifier: int) -> int:
+        return modifier + (row.proficiency_bonus if ability in save_proficiencies else 0)
+
     data.update(
         ability_scores=scores.model_dump(),
         armor_class=11 + dexterity_mod,
@@ -71,18 +79,18 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
             attack_bonus=attack_bonus, damage_bonus=dexterity_mod,
         ).model_dump()],
         saving_throw_bonuses={
-            "strength": strength_mod,
-            "dexterity": row.proficiency_bonus + dexterity_mod,
-            "constitution": constitution_mod,
-            "intelligence": row.proficiency_bonus + intelligence_mod,
-            "wisdom": scores.modifier("wisdom"),
-            "charisma": scores.modifier("charisma"),
+            "strength": save_bonus("strength", strength_mod),
+            "dexterity": save_bonus("dexterity", dexterity_mod),
+            "constitution": save_bonus("constitution", constitution_mod),
+            "intelligence": save_bonus("intelligence", intelligence_mod),
+            "wisdom": save_bonus("wisdom", scores.modifier("wisdom")),
+            "charisma": save_bonus("charisma", scores.modifier("charisma")),
         },
         skill_bonuses={
             "athletics": row.proficiency_bonus + strength_mod,
             "acrobatics": row.proficiency_bonus + dexterity_mod,
         },
-        progression_features=compile_progression_feature_fields(mara_rogue_features(level), level),
+        progression_features=progression_fields,
         resources=[
             ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus).model_dump(),
             ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1).model_dump(),
