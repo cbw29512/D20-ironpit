@@ -22,6 +22,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -190,6 +191,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -329,6 +331,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -483,6 +486,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -625,6 +629,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -820,6 +825,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -958,6 +964,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -1069,6 +1076,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -1206,6 +1214,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -1319,6 +1328,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -1428,6 +1438,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -1554,6 +1565,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -1663,6 +1675,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -1774,6 +1787,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -1892,6 +1906,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2010,6 +2025,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2138,6 +2154,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2296,6 +2313,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2409,6 +2427,7 @@
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2518,6 +2537,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2629,6 +2649,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2738,6 +2759,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2849,6 +2871,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -2958,6 +2981,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -3072,6 +3096,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -3183,6 +3208,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -3297,6 +3323,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -3440,6 +3467,7 @@
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -3570,6 +3598,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -3688,6 +3717,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -3826,6 +3856,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -3933,6 +3964,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -4112,6 +4144,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -4361,6 +4394,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -4491,6 +4525,7 @@
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -4600,6 +4635,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -4707,6 +4743,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -4812,6 +4849,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -4919,6 +4957,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5026,6 +5065,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5134,6 +5174,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5239,6 +5280,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5346,6 +5388,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5453,6 +5496,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5560,6 +5604,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5667,6 +5712,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5772,6 +5818,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5881,6 +5928,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -5992,6 +6040,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -6103,6 +6152,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -6233,6 +6283,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -6342,6 +6393,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -6453,6 +6505,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -6562,6 +6615,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -6678,6 +6732,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -6791,6 +6846,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -6900,6 +6956,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7011,6 +7068,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7126,6 +7184,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7239,6 +7298,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7348,6 +7408,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7462,6 +7523,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7573,6 +7635,7 @@
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7684,6 +7747,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7795,6 +7859,7 @@
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -7956,6 +8021,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -8084,6 +8150,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -8216,6 +8283,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -8373,6 +8441,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -8513,6 +8582,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -8634,6 +8704,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -8755,6 +8826,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -8893,6 +8965,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -9075,6 +9148,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -9239,6 +9313,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -9378,6 +9453,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -9498,6 +9574,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -9623,6 +9700,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -9798,6 +9876,7 @@
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -9924,6 +10003,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -10051,6 +10131,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -10180,6 +10261,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -10310,6 +10392,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -10443,6 +10526,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -10587,6 +10671,7 @@
     "initiative_bonus": 6,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -10714,6 +10799,7 @@
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -10883,6 +10969,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -11041,6 +11128,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -11208,6 +11296,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -11347,6 +11436,7 @@
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -11467,6 +11557,7 @@
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -11642,6 +11733,7 @@
     "initiative_bonus": -2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -11756,6 +11848,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -11878,6 +11971,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -11998,6 +12092,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -12134,6 +12229,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -12256,6 +12352,7 @@
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -12440,6 +12537,7 @@
     "initiative_bonus": -2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -12570,6 +12668,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -12740,6 +12839,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -12851,6 +12951,7 @@
     "initiative_bonus": -3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -12971,6 +13072,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -13135,6 +13237,7 @@
     "initiative_bonus": -2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -13253,6 +13356,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -13375,6 +13479,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -13493,6 +13598,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -13636,6 +13742,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -13757,6 +13864,7 @@
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -13921,6 +14029,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -14061,6 +14170,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -14183,6 +14293,7 @@
     "initiative_bonus": -5,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -14316,6 +14427,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -14492,6 +14604,7 @@
     "initiative_bonus": -2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -14610,6 +14723,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -14744,6 +14858,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -14859,6 +14974,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -14970,6 +15086,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -15084,6 +15201,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -15225,6 +15343,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -15369,6 +15488,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -15555,6 +15675,7 @@
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -15740,6 +15861,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -15923,6 +16045,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -16109,6 +16232,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -16291,6 +16415,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -16475,6 +16600,7 @@
     "initiative_bonus": 5,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -16666,6 +16792,7 @@
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -16855,6 +16982,7 @@
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -17047,6 +17175,7 @@
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -17235,6 +17364,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -17425,6 +17555,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -17544,6 +17675,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -17683,6 +17815,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -17822,6 +17955,7 @@
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -17971,6 +18105,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -18134,6 +18269,7 @@
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -18325,6 +18461,7 @@
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
@@ -18439,6 +18576,7 @@
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
+      "skill_check_d20_minimums": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
