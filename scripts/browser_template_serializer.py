@@ -293,6 +293,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["failed_d20_test_override_grants"] = [
             item.model_dump() for item in features.failed_d20_test_override_grants
         ]
+    if features.opening_targeting_ward:
+        row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.athletics_advantage:
         row["athletics_advantage"] = True
     if features.saving_throw_proficiency_grants:
