@@ -21,6 +21,7 @@ def test_2024_rogue_level4_applies_canonical_asi_to_all_derived_combat_stats() -
     assert template.saving_throw_bonuses["constitution"] == 3
     assert template.skill_bonuses == {"athletics": 3, "acrobatics": 6}
     assert template.progression_features.sneak_attack_d6 == 2
+    assert "Rogue 4" in template.source
 
 
 def test_2024_rogue_level4_profile_records_the_legal_split_asi() -> None:
