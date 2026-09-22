@@ -149,31 +149,36 @@
   }
 
   function events(initiative, setup, startSequence = 1) {
-    const members = [...setup.heroes, ...setup.monsters];
-    const names = new Map(members.map((member) => [member.combatant_id, member.state.template.name]));
-    let sequence = startSequence;
-    const result = initiative.groups.map((group) => {
-      const name = names.get(group.combatant_ids[0]);
-      let description = `${name}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.`;
-      if (group.natural_roll === 20) description += " Natural 20: top initiative priority.";
-      else if (group.natural_roll === 1) description += " Natural 1: bottom initiative priority.";
-      if (group.tie_break_rolls.length) description += ` Tie reroll${group.tie_break_rolls.length > 1 ? "s" : ""}: ${group.tie_break_rolls.join(" → ")}.`;
-      return {
-        sequence: sequence++, round_number: 0, event_type: "initiative",
-        actor_id: group.combatant_ids[0], actor_name: name,
-        attack_roll: group.initiative_roll, animation: "initiative", description,
-      };
-    });
-    for (const extra of initiative.first_round_extra_turns || []) {
-      const name = names.get(extra.combatant_id);
-      result.push({
-        sequence: sequence++, round_number: 0, event_type: "feature",
-        actor_id: extra.combatant_id, actor_name: name,
-        feature_id: extra.source_id, animation: "initiative",
-        description: `${name} gains an extra first-round turn at Initiative ${extra.initiative_count} from ${extra.source_name}.`,
+    try {
+      const members = [...setup.heroes, ...setup.monsters];
+      const names = new Map(members.map((member) => [member.combatant_id, member.state.template.name]));
+      let sequence = startSequence;
+      const result = initiative.groups.map((group) => {
+        const name = names.get(group.combatant_ids[0]);
+        let description = `${name}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.`;
+        if (group.natural_roll === 20) description += " Natural 20: top initiative priority.";
+        else if (group.natural_roll === 1) description += " Natural 1: bottom initiative priority.";
+        if (group.tie_break_rolls.length) description += ` Tie reroll${group.tie_break_rolls.length > 1 ? "s" : ""}: ${group.tie_break_rolls.join(" → ")}.`;
+        return {
+          sequence: sequence++, round_number: 0, event_type: "initiative",
+          actor_id: group.combatant_ids[0], actor_name: name,
+          attack_roll: group.initiative_roll, animation: "initiative", description,
+        };
       });
+      for (const extra of initiative.first_round_extra_turns || []) {
+        const name = names.get(extra.combatant_id);
+        result.push({
+          sequence: sequence++, round_number: 0, event_type: "feature",
+          actor_id: extra.combatant_id, actor_name: name,
+          feature_id: extra.source_id, animation: "initiative",
+          description: `${name} gains an extra first-round turn at Initiative ${extra.initiative_count} from ${extra.source_name}.`,
+        });
+      }
+      return result;
+    } catch (error) {
+      console.error("Failed to build browser initiative and extra-turn events", { error });
+      throw error;
     }
-    return result;
   }
 
   window.IRON_PIT_BROWSER_INITIATIVE = { events, firstRoundSchedule, priority, resolve, turnOrderForRound };
