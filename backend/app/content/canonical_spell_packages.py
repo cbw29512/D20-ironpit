@@ -127,6 +127,10 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             "arena-out-of-scope",
         ),
         _later_spell(
+            "fire-storm", "Fire Storm", 7, "damage", 13,
+            "arena-out-of-scope",
+        ),
+        _later_spell(
             "greater-restoration", "Greater Restoration", 5, "healing", 9,
             "arena-out-of-scope", always_prepared_from_level=9,
         ),
