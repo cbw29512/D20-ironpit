@@ -50,6 +50,15 @@ class FirstRoundExtraTurnGrant(BaseModel):
     initiative_offset: int = Field(ge=-30, le=30)
 
 
+class OpeningTargetingWard(BaseModel):
+    """Passive targeting-save gate installed when combat state is created."""
+
+    source_id: str
+    save_ability: AbilityName = "wisdom"
+    save_dc: int = Field(ge=1, le=40)
+    ends_on_owner_attack: bool = True
+
+
 class SavingThrowProficiencyGrant(BaseModel):
     """Source-tagged saving throw proficiencies granted by progression data."""
 
@@ -75,6 +84,7 @@ class ProgressionCombatFeatures(BaseModel):
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
+    opening_targeting_ward: OpeningTargetingWard | None = None
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)

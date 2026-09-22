@@ -79,6 +79,25 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ])
         if level >= 10:
             audits.append(_audit("purity-of-body", "Purity of Body", "class"))
+        if level >= 11:
+            audits.append(_audit(
+                "tranquility", "Tranquility", "subclass",
+                notes=(
+                    "Reuses the universal opening targeting-save gate with the Sanctuary timing: "
+                    "Wisdom save to target Kael, ending when Kael attacks."
+                ),
+            ))
+        if level >= 12:
+            audits.append(_audit(
+                "ability-score-improvement-l12", "Ability Score Improvement (+2 Wisdom)", "class",
+                notes="Canonical progression raises Wisdom 15 to 17 and updates AC and Monk save DCs.",
+            ))
+        if level >= 13:
+            audits.append(_audit(
+                "tongue-of-the-sun-and-moon", "Tongue of the Sun and Moon", "class",
+                combat=False, automated=False,
+                notes="Language communication is arena-neutral and does not change combat resolution.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
