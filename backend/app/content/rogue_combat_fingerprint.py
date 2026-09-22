@@ -6,8 +6,10 @@ from app.domain.character_builds import AbilityScores
 
 def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
     try:
+        strength = 14 if level >= 19 else 13
         dexterity = 20 if level >= 8 else (18 if level >= 4 else 17)
         constitution = 20 if level >= 12 else (18 if level >= 10 else (16 if level >= 4 else 15))
+        strength_mod = (strength - 10) // 2
         dexterity_mod = (dexterity - 10) // 2
         constitution_mod = (constitution - 10) // 2
         proficiency_bonus = 2 + (level - 1) // 4
@@ -16,7 +18,7 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
             archetype="Rogue",
             level=level,
             abilities=AbilityScores(
-                strength=(14 if level >= 19 else 13), dexterity=dexterity, constitution=constitution,
+                strength=strength, dexterity=dexterity, constitution=constitution,
                 intelligence=10, wisdom=(12 if level >= 16 else 10), charisma=10,
             ),
             save_proficiencies=(("dexterity", "intelligence", "wisdom", "charisma") if level >= 15 else ("dexterity", "intelligence")),
@@ -24,7 +26,7 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
             max_hp=8 + constitution_mod + (level - 1) * (5 + constitution_mod),
             speed_ft=30,
             skill_bonuses=(
-                ("athletics", proficiency_bonus + 1),
+                ("athletics", proficiency_bonus + strength_mod),
                 ("acrobatics", proficiency_bonus + dexterity_mod),
             ),
             attacks=(
