@@ -12,8 +12,11 @@
     return outcome;
   };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) }, B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
-  const MH = () => window.IRON_PIT_BROWSER_MISS_TO_HIT || { resolve: (_state, hit) => ({ hit: Boolean(hit), used: false }) };
-  const D20O = () => window.IRON_PIT_BROWSER_D20_OVERRIDE || { apply: (_state, roll) => ({ roll, used: false }) };
+  const PO = () => {
+    const resolver = window.IRON_PIT_BROWSER_ATTACK_POST_ROLL;
+    if (!resolver) throw new Error("Browser attack resolution requires browser-attack-post-roll.js.");
+    return resolver;
+  };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0, consumeNextAttackAgainstAdvantage: () => 0,
     effectiveArmorClass: (state) => state.template.armor_class, effectiveSpeed: (state) => state.template.speed_ft, attackRollFlat: () => 0, applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { attackDisadvantage: () => 0 };
@@ -88,26 +91,18 @@
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
     const baseTargetAc = M().effectiveArmorClass(actualTarget.state);
-    let resolvedAttackRoll = attackRoll;
-    let natural = resolvedAttackRoll.selected_roll;
-    let naturalOne = natural === 1;
-    const initialHit = !naturalOne && (natural === 20 || resolvedAttackRoll.total >= baseTargetAc);
-    const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, resolvedAttackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
-    let hit = parry.hit;
-    const targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
     const turnKey = extra.turnKey || `${round}:${attacker.combatant_id}`;
-    const missToHit = MH().resolve(attacker.state, hit, turnKey);
-    hit = missToHit.hit;
-    let d20Override = { roll: resolvedAttackRoll, used: false };
-    if (!hit) {
-      d20Override = D20O().apply(attacker.state, resolvedAttackRoll, targetAc);
-      resolvedAttackRoll = d20Override.roll;
-      natural = resolvedAttackRoll.selected_roll;
-      naturalOne = natural === 1;
-      hit = !naturalOne && (natural === 20 || resolvedAttackRoll.total >= targetAc);
-    }
-    const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !hit;
-    if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
+    const postRoll = PO().resolve(
+      attacker, actualTarget, attack, attackRoll, baseTargetAc, turnKey, extra.offTurn === true,
+    );
+    const resolvedAttackRoll = postRoll.roll;
+    const natural = postRoll.natural;
+    let hit = postRoll.hit;
+    const targetAc = postRoll.targetAc;
+    const parry = postRoll.parry;
+    const missToHit = postRoll.missToHit;
+    const d20Override = postRoll.d20Override;
+    const naturalOneEndsTurn = postRoll.naturalOneEndsTurn;
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
