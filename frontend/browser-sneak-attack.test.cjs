@@ -14,6 +14,7 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
   assert.ok(html.indexOf("browser-sneak-attack.js") < html.indexOf("browser-rolls.js"), "Sneak Attack must load before damage rolls");
 }
 
+load("browser-timed-conditions.js");
 load("browser-sneak-attack.js");
 load("browser-rolls.js");
 
