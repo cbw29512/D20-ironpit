@@ -76,7 +76,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
         events.extend(initiative_events)
 
         for round_number in range(1, MAX_ENCOUNTER_ROUNDS + 1):
-            for combatant_id in initiative.turn_order:
+            round_turn_order = (
+                initiative.first_round_turn_order if round_number == 1 else initiative.turn_order
+            )
+            for combatant_id in round_turn_order:
                 outcome = resolve_encounter_outcome(setup)
                 if outcome != "active":
                     events.append(build_finish_event(sequence, round_number, outcome))
