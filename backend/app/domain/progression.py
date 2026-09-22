@@ -42,6 +42,14 @@ class EffectBoundSurvivalSave(BaseModel):
     replacement_hp: int = Field(ge=1)
 
 
+class FirstRoundExtraTurnGrant(BaseModel):
+    """Source-tagged extra first-round turn at an initiative offset."""
+
+    source_id: str
+    source_name: str
+    initiative_offset: int = Field(ge=-30, le=30)
+
+
 class SavingThrowProficiencyGrant(BaseModel):
     """Source-tagged saving throw proficiencies granted by progression data."""
 
@@ -57,6 +65,7 @@ class ProgressionCombatFeatures(BaseModel):
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
+    first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
