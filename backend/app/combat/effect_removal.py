@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.ability_checks import apply_ability_check_minimum
+from app.combat.ability_checks import resolve_ability_check_outcome
 from app.combat.dice import DiceProvider
 from app.combat.effect_removal_targets import TrackedSpellEffect, tracked_spell_effects
 from app.combat.modifier_stack import remove_source_modifiers
@@ -67,8 +67,9 @@ def resolve_effect_removal(
                 raise ValueError("Effect-removal ability check requires certified ability scores.")
             dc = 10 + effect.spell_level
             check = roll_d20(dice, scores.modifier(action.casting_ability), RollMode.NORMAL)
-            check = apply_ability_check_minimum(remover.state, action.casting_ability, check)
-            succeeded = check.total >= dc
+            check, succeeded = resolve_ability_check_outcome(
+                remover.state, action.casting_ability, check, dc,
+            )
         if succeeded:
             remove_source_modifiers(
                 [effect.target.state], effect.source.combatant_id, effect.effect_id,
