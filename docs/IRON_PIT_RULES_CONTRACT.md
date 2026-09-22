@@ -43,6 +43,10 @@ Ability names are **presentation and audit metadata**. The original RAW/source a
 
 A capability discovered while implementing a hero must be reusable by monsters, spells, items, and other heroes when their semantics match. A capability discovered while implementing a monster must likewise be reusable by pregens and other content.
 
+**State/effect identity is universal.** Prone is Prone, Grappled is Grappled, Restrained is Restrained, Blinded is Blinded, Frightened is Frightened, Poisoned is Poisoned, and so on, regardless of which class feature, spell, weapon property, item, or monster ability caused it. Source definitions supply parameters such as DC, save ability, duration, repeat-save timing, range, damage, resource cost, and source ability name. The shared condition/effect engine supplies the mechanical behavior.
+
+The player-facing combat log must preserve the exact source ability name. Internal audit/certification data should additionally record the generic capability/primitive IDs used underneath so engine reuse remains provable without exposing implementation jargon to the player.
+
 Before adding new mechanic code, the implementation audit must classify the feature as one of:
 
 - `ENGINE_EXISTS_BINDING_MISSING`
