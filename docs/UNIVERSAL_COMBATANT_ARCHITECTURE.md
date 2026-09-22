@@ -76,6 +76,29 @@ The content card owns **parameters**, not mechanics. For example, a monster acti
 
 Before new mechanic code is allowed, record why existing primitives cannot represent the behavior. If that cannot be shown, reuse wins.
 
+## Mandatory preflight before touching any ability
+
+**STOP AND READ THIS SECTION BEFORE IMPLEMENTING OR MODIFYING ANY CLASS, SUBCLASS, FEAT, SPELL, ITEM, MONSTER, LEGENDARY ACTION, LAIR ACTION, OR OTHER COMBAT ABILITY.**
+
+This checklist is mandatory on every implementation pass:
+
+1. Read `docs/IRON_PIT_RULES_CONTRACT.md`, `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`, and this universal architecture section relevant to the mechanic.
+2. Ignore the source ability's name when deciding engine behavior. First determine what the ability actually does.
+3. Decompose it into semantic pieces: trigger/timing, action cost, target/range, attack/check/save, DC/formula, damage/healing, condition/state change, duration/expiry, resource/recharge, and reaction/override behavior.
+4. Search the complete existing hero **and monster** capability inventory for each semantic piece.
+5. Reuse an existing universal primitive whenever the mechanical effect is equivalent.
+6. Minor differences belong in source/card parameters: DC, save ability, dice, damage type, range, duration, target count, resource count, recharge, timing, ruleset, and similar data.
+7. If the named ability combines several known effects, compose those existing primitives. Do not create a monolithic resolver for the source name.
+8. **Prone is Prone. Grappled is Grappled. Advantage is Advantage. Resistance is Resistance. A saving throw is a saving throw.** The mechanic does not change because it came from a monster, hero, spell, item, subclass, or another edition.
+9. The source/card owns the exact source ability name and parameters. The universal engine owns resolution.
+10. Player-facing logs/cards use the accurate source ability name. Internal audit/certification may also store the generic capability IDs used underneath.
+11. Only after proving no current primitive or composition can represent the behavior may `ENGINE_TRULY_MISSING` justify new universal engine code.
+12. After adding a genuinely new primitive, immediately re-audit heroes and monsters for other abilities that can now reuse it.
+
+**2014-first pregen rule:** for overlapping class progressions, finish/reconcile the 2014 mechanic first, bind it to universal capabilities, then carry all mechanically compatible behavior into 2024 and implement only the true 2024 differences.
+
+If there is uncertainty about whether two abilities are semantically the same, stop and ask Chris before creating new engine behavior.
+
 ## Primitive versus trigger contract
 
 Before adding any new resolver, combat subsystem, or special handler, classify the source behavior first:
