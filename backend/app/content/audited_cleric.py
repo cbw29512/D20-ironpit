@@ -61,6 +61,8 @@ def _source(level: int) -> str:
         + ("Ability Score Improvement, Mending, Inflict Wounds, " if level >= 4 else "")
         + ("Sear Undead, Mass Healing Word, Revivify, Dispel Magic, " if level >= 5 else "")
         + ("Blessed Healer, " if level >= 6 else "")
+        + ("Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, " if level >= 7 else "")
+        + ("Guardian of Faith, Ability Score Improvement, " if level >= 8 else "")
         + "Equipment"
     )
 
@@ -91,7 +93,9 @@ def _build_seraphine(level: int) -> CombatantTemplate:
     defenses = [BLESS.model_copy(deep=True), SHIELD_OF_FAITH.model_copy(deep=True)]
     if level >= 3:
         defenses.insert(0, AID.model_copy(deep=True))
-    save_spells = [build_sacred_flame(save_dc, level)]
+    save_spells = [build_sacred_flame(
+        save_dc, level, wisdom_modifier if "blessed-strikes" in features else 0,
+    )]
     if level >= 4:
         save_spells.append(build_inflict_wounds(save_dc))
     traits = [CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE]
@@ -163,3 +167,11 @@ def build_seraphine_dawnshield_level_five() -> CombatantTemplate:
 
 def build_seraphine_dawnshield_level_six() -> CombatantTemplate:
     return build_seraphine_dawnshield_level(6)
+
+
+def build_seraphine_dawnshield_level_seven() -> CombatantTemplate:
+    return build_seraphine_dawnshield_level(7)
+
+
+def build_seraphine_dawnshield_level_eight() -> CombatantTemplate:
+    return build_seraphine_dawnshield_level(8)
