@@ -8,7 +8,7 @@ from app.domain.progression import (
     ProgressionCombatFeatures,
     SlotHealingSelfRider,
 )
-from app.domain.progression_riders import DamagingActionTemporaryHpRider
+from app.domain.progression_riders import DamagingActionTemporaryHpRider, HealingDiceMaximizer
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +51,12 @@ def build_seraphine_progression_features(level: int) -> ProgressionCombatFeature
                 if level >= 14 else None
             ),
             feature_dice_counts={"divine-spark": row.divine_spark_dice} if level >= 2 else {},
-            maximized_healing_source_ids=(
-                list(_MAXIMIZED_LIFE_HEALING_SOURCES) if level >= 17 else []
+            healing_dice_maximizer=(
+                HealingDiceMaximizer(
+                    source_id="supreme-healing",
+                    healing_source_ids=list(_MAXIMIZED_LIFE_HEALING_SOURCES),
+                )
+                if level >= 17 else None
             ),
         )
     except Exception:

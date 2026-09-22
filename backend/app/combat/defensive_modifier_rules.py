@@ -58,10 +58,14 @@ def healing_is_maximized(
     target_modifier = any(
         item.kind is ModifierKind.HEALING_MAXIMIZE for item in state.active_modifiers
     )
+    rule = (
+        source_state.template.progression_features.healing_dice_maximizer
+        if source_state is not None else None
+    )
     source_feature = bool(
-        source_state is not None
+        rule is not None
         and source_id is not None
-        and source_id in source_state.template.progression_features.maximized_healing_source_ids
+        and source_id in rule.healing_source_ids
     )
     return target_modifier or source_feature
 

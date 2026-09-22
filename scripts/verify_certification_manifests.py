@@ -66,6 +66,10 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.slot_healing_other_self_rider.source_id)
     if features.damaging_action_temporary_hp_rider:
         mechanics.add(features.damaging_action_temporary_hp_rider.source_id)
+    if features.feature_dice_counts:
+        mechanics.update(features.feature_dice_counts)
+    if features.healing_dice_maximizer:
+        mechanics.add(features.healing_dice_maximizer.source_id)
     if features.ability_check_minimums:
         mechanics.update(rule.source_id for rule in features.ability_check_minimums)
     if features.brutal_strike_damage_dice:

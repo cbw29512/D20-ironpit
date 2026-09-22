@@ -8,10 +8,13 @@
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const swarm = (state) => state.template.traits?.includes("swarm");
   const slotHeal = (action) => Boolean(action.resourceId?.startsWith("spell-slot-"));
-  const healingMaximized = (healer, target, sourceId) => Boolean(
-    window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state)
-    || (healer.state.template.maximized_healing_source_ids || []).includes(sourceId)
-  );
+  const healingMaximized = (healer, target, sourceId) => {
+    const rule = healer.state.template.healing_dice_maximizer;
+    return Boolean(
+      window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state)
+      || (rule?.healing_source_ids || []).includes(sourceId)
+    );
+  };
 
   function resourceAvailable(member, action, turnKey = null) {
     if (!action.resourceId) return true;
