@@ -4294,12 +4294,12 @@
       "demand_count": 1,
       "id": "thief-fast-hands",
       "kinds": [
-        "arena-ignored"
+        "subclass-feature"
       ],
       "owners": [
         "rogue/thief"
       ],
-      "status": "arena_out_of_scope"
+      "status": "planned"
     },
     {
       "demand_count": 1,
@@ -4951,8 +4951,8 @@
   },
   "schema_version": 1,
   "summary": {
-    "arena_out_of_scope": 30,
-    "planned": 358,
+    "arena_out_of_scope": 29,
+    "planned": 359,
     "supported": 56
   }
 }
