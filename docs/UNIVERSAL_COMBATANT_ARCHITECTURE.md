@@ -50,6 +50,30 @@ Saving throws are always shared math:
 
 Attack rolls, ability checks, AC, damage defenses, conditions, concentration, and movement follow the same rule: one resolver, different creature data.
 
+## Mandatory semantic reuse workflow
+
+This workflow is required for every content implementation, regardless of whether the source is a class, subclass, species, feat, spell, item, monster, legendary action, or other combat rule.
+
+`source wording -> semantic decomposition -> existing primitive search -> bind/parameterize/compose -> new primitive only if unavoidable -> source-name log label`
+
+The semantic decomposition is based on what the ability **does**, not what it is called. Compare:
+
+- trigger and timing;
+- action/reaction/resource cost;
+- target/range/geometry;
+- attack/check/save/recharge mechanics;
+- damage/healing/state effects;
+- conditions and modifiers;
+- duration and lifecycle;
+- use limits and reset rules;
+- interrupts/overrides.
+
+Two differently named abilities with the same semantics use the same engine capability. A hero ability and monster ability with the same semantics use the same engine capability. A 2014 and 2024 ability with the same semantics use the same engine capability. Minor differences become parameters or ruleset data.
+
+A named ability that consists of multiple known effects must be assembled from the corresponding universal primitives. Do not create a monolithic ability-specific resolver simply to preserve the source name. Preserve the exact source name in event metadata and logs so the player sees the correct ability name while the engine executes reusable mechanics underneath.
+
+Before new mechanic code is allowed, record why existing primitives cannot represent the behavior. If that cannot be shown, reuse wins.
+
 ## Primitive versus trigger contract
 
 Before adding any new resolver, combat subsystem, or special handler, classify the source behavior first:
