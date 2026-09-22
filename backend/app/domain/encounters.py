@@ -50,9 +50,17 @@ class InitiativeGroup(BaseModel):
     tie_break_rolls: list[int] = Field(default_factory=list)
 
 
+class FirstRoundExtraTurn(BaseModel):
+    combatant_id: str
+    initiative_count: int
+    source_id: str
+
+
 class EncounterInitiative(BaseModel):
     groups: list[InitiativeGroup] = Field(min_length=2, max_length=12)
     turn_order: list[str] = Field(min_length=2, max_length=12)
+    first_round_turn_order: list[str] = Field(min_length=2, max_length=24)
+    first_round_extra_turns: list[FirstRoundExtraTurn] = Field(default_factory=list, max_length=12)
 
 
 class EncounterBattleResult(BaseModel):
