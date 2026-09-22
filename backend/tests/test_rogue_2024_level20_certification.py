@@ -76,7 +76,6 @@ def test_level20_stroke_of_luck_turns_second_same_turn_miss_into_natural20_criti
     assert event.critical is True
     assert event.attack_roll is not None
     assert event.attack_roll.selected_roll == 20
-    assert 20 in event.attack_roll.rolls
     assert event.turn_terminated is False
     assert "Stroke of Luck turns the failed d20 into a natural 20" in event.description
     assert _resource(attacker, "stroke-of-luck").current_uses == 0
@@ -91,8 +90,10 @@ def test_level20_stroke_of_luck_is_a_generic_failed_save_override() -> None:
     assert succeeded is True
     assert roll is not None
     assert roll.selected_roll == 20
-    assert 20 in roll.rolls
     assert roll.revisions[-1].source_effect_id == "stroke-of-luck"
+    assert roll.revisions[-1].kind == "selected_result_override"
+    assert roll.revisions[-1].original_rolls == [1]
+    assert roll.revisions[-1].replacement_rolls == [1]
     assert _resource(state, "stroke-of-luck").current_uses == 0
 
 
