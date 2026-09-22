@@ -59,3 +59,30 @@ def build_mara_quickstep_level14_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 14 profile could not be created.") from exc
+
+
+def build_mara_quickstep_level15_profile() -> CharacterBuildProfile:
+    """Level 15 inherits level 14 and adds Slippery Mind."""
+    try:
+        previous = build_mara_quickstep_level14_profile()
+        data = advance_profile_data(previous, 15)
+        data.update(
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "slippery-mind", "Slippery Mind", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Reuses the universal saving-throw proficiency grant. "
+                        "The 2024 source grants Wisdom and Charisma proficiency; 2014 uses the same primitive with Wisdom only."
+                    ),
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 15 — Slippery Mind",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 15 profile could not be created.") from exc

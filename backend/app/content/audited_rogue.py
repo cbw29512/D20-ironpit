@@ -6,11 +6,13 @@ from app.content.character_math import fixed_hit_points
 from app.content.class_subclass_composer import base_class_combat_features, compose_class_subclass_features
 from app.content.hero_combat_feature_registry import compile_progression_feature_fields, unsupported_hero_engine_features
 from app.content.hero_progressions import HERO_BY_CLASS
+from app.content.progression_saves import saving_throw_proficiencies
 from app.content.rogue_attacks import build_mara_shortbow_attack, build_mara_shortsword_attack
 from app.content.rogue_combat_levels import ROGUE_COMBAT_LEVELS
 from app.content.rogue_equipment import build_rogue_visual_loadout
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition
+from app.domain.progression import ProgressionCombatFeatures
 from app.domain.traits import CombatTrait
 
 
@@ -59,6 +61,13 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
     strength_mod = scores.modifier("strength")
     intelligence_mod = scores.modifier("intelligence")
     attack_bonus = row.proficiency_bonus + dexterity_mod
+    progression_fields = compile_progression_feature_fields(mara_rogue_features(level), level)
+    progression = ProgressionCombatFeatures.model_validate(progression_fields)
+    save_proficiencies = saving_throw_proficiencies(("dexterity", "intelligence"), progression)
+
+    def save_bonus(ability: str, modifier: int) -> int:
+        return modifier + (row.proficiency_bonus if ability in save_proficiencies else 0)
+
     data.update(
         ability_scores=scores.model_dump(),
         armor_class=11 + dexterity_mod,
@@ -71,18 +80,18 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
             attack_bonus=attack_bonus, damage_bonus=dexterity_mod,
         ).model_dump()],
         saving_throw_bonuses={
-            "strength": strength_mod,
-            "dexterity": row.proficiency_bonus + dexterity_mod,
-            "constitution": constitution_mod,
-            "intelligence": row.proficiency_bonus + intelligence_mod,
-            "wisdom": scores.modifier("wisdom"),
-            "charisma": scores.modifier("charisma"),
+            "strength": save_bonus("strength", strength_mod),
+            "dexterity": save_bonus("dexterity", dexterity_mod),
+            "constitution": save_bonus("constitution", constitution_mod),
+            "intelligence": save_bonus("intelligence", intelligence_mod),
+            "wisdom": save_bonus("wisdom", scores.modifier("wisdom")),
+            "charisma": save_bonus("charisma", scores.modifier("charisma")),
         },
         skill_bonuses={
             "athletics": row.proficiency_bonus + strength_mod,
             "acrobatics": row.proficiency_bonus + dexterity_mod,
         },
-        progression_features=compile_progression_feature_fields(mara_rogue_features(level), level),
+        progression_features=progression_fields,
         resources=[
             ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus).model_dump(),
             ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1).model_dump(),
