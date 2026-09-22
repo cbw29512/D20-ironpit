@@ -11,6 +11,7 @@ from app.content.cleric_runtime_loadout import (
     build_seraphine_save_spells,
     seraphine_source,
 )
+from app.content.cleric_runtime_progression import build_seraphine_progression_features
 from app.content.cleric_runtime_stats import (
     build_seraphine_mace_attack,
     seraphine_saving_throw_bonuses,
@@ -22,7 +23,6 @@ from app.content.offensive_spell_effects import build_guiding_bolt
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, VisualLoadout
-from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
 from app.domain.traits import CombatTrait
 
 def _modifier(score: int) -> int:
@@ -80,21 +80,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         healing_actions=build_seraphine_healing(level, wisdom_modifier, features),
         condition_removal_actions=[LESSER_RESTORATION.model_copy(deep=True)] if level >= 3 else [],
         effect_removal_actions=[DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],
-        progression_features=ProgressionCombatFeatures(
-            turning_failure_damage=(
-                AbilityScaledDamageRider(
-                    source_id="sear-undead", ability="wisdom",
-                    dice_size=8, damage_type="radiant",
-                )
-                if level >= 5 else None
-            ),
-            slot_healing_other_self_rider=(
-                SlotHealingSelfRider(
-                    source_id="blessed-healer", flat_bonus=2, per_slot_level=1,
-                )
-                if level >= 6 else None
-            ),
-        ),
+        progression_features=build_seraphine_progression_features(level),
         saving_throw_bonuses=seraphine_saving_throw_bonuses(
             row.proficiency_bonus, wisdom_modifier, charisma_modifier,
         ),
