@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from app.content.canonical_combat_build_policy import canonical_background_increases, canonical_base_ability_scores
 from app.content.canonical_hero_policy import canonical_template_id
+from app.content.canonical_progression import advance_profile_data
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
+from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
 
 
 def _feature(
@@ -161,3 +162,43 @@ def build_mara_quickstep_level3_profile() -> CharacterBuildProfile:
         })
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 3 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level4_profile() -> CharacterBuildProfile:
+    """Level 4 takes the canonical ASI as +1 Dexterity / +1 Constitution."""
+    try:
+        previous = build_mara_quickstep_level3_profile()
+        data = advance_profile_data(previous, 4)
+        data.update(
+            advancement_increases=[
+                AbilityIncrease(ability="dexterity", amount=1).model_dump(),
+                AbilityIncrease(ability="constitution", amount=1).model_dump(),
+            ],
+            final_ability_scores=AbilityScores(
+                strength=13, dexterity=18, constitution=16,
+                intelligence=10, wisdom=10, charisma=10,
+            ).model_dump(),
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "ability-score-improvement-l4",
+                    "Ability Score Improvement",
+                    "feat",
+                    combat_relevant=True,
+                    automated=True,
+                    notes=(
+                        "Canonical combat choice splits +1 Dexterity / +1 Constitution: "
+                        "DEX 17→18 and CON 15→16."
+                    ),
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 4 — Ability Score Improvement",
+                "Basic Rules 2024: Feats — Ability Score Improvement (+1 Dexterity, +1 Constitution)",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 4 profile could not be created.") from exc
