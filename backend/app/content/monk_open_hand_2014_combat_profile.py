@@ -16,6 +16,8 @@ def _martial_arts_die(level: int) -> int:
 
 
 def _speed(level: int) -> int:
+    if level >= 14:
+        return 55
     if level >= 10:
         return 50
     if level >= 6:
