@@ -72,6 +72,7 @@ class ProgressionCombatFeatures(BaseModel):
     sneak_attack_d6: int = Field(default=0, ge=0, le=10)
     cunning_action: bool = False
     stationary_bonus_action_next_attack_advantage: bool = False
+    cunning_strike_trip_die_cost: int = Field(default=0, ge=0, le=6)
     uncanny_dodge: bool = False
     evasion: bool = False
     martial_arts_bonus_attack: bool = False
