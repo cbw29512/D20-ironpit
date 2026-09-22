@@ -32,9 +32,15 @@ def test_shared_feature_registry_compiles_reusable_fighter_and_barbarian_flags()
     }
 
 
+def test_shared_feature_registry_reuses_existing_uncanny_dodge_capability() -> None:
+    assert unsupported_hero_engine_features(("uncanny-dodge",)) == ()
+    assert compile_progression_feature_fields(("uncanny-dodge",), 5) == {"uncanny_dodge": True}
+
+
 def test_shared_feature_registry_fails_closed_for_unimplemented_combat_mechanics() -> None:
     assert unsupported_hero_engine_features(("rage", "frenzy")) == ()
     assert unsupported_hero_engine_features(("heroic-warrior", "studied-attacks")) == ()
     assert unsupported_hero_engine_features(("rage", "instinctive-pounce", "brutal-strike")) == ()
     assert unsupported_hero_engine_features(("studied-attacks", "superior-critical")) == ()
     assert unsupported_hero_engine_features(("survivor-defy-death", "survivor-heroic-rally")) == ()
+    assert unsupported_hero_engine_features(("cunning-strike",)) == ("cunning-strike",)
