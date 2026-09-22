@@ -6,6 +6,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
+  const D20O = () => window.IRON_PIT_BROWSER_D20_OVERRIDE || { apply: (_state, roll) => ({ roll, used: false }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -76,6 +77,10 @@
     if (!success && T()) {
       tactical = T().apply(state, roll, source.escape_dc);
       roll = tactical.roll; success = tactical.succeeded;
+    }
+    if (!success) {
+      roll = D20O().apply(state, roll, source.escape_dc).roll;
+      success = roll.total >= source.escape_dc;
     }
     E().spend(state, "action");
     if (success) {
