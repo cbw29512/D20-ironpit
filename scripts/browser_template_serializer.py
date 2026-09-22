@@ -279,6 +279,12 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["critical_hit_minimum"] = features.critical_hit_minimum
     if features.initiative_advantage:
         row["initiative_advantage"] = True
+    if features.first_round_extra_turn_initiative_offset is not None:
+        row["first_round_extra_turn_initiative_offset"] = features.first_round_extra_turn_initiative_offset
+    if features.suppress_attack_advantage_while_not_incapacitated:
+        row["suppress_attack_advantage_while_not_incapacitated"] = True
+    if features.miss_to_hit_override_resource_id:
+        row["miss_to_hit_override_resource_id"] = features.miss_to_hit_override_resource_id
     if features.athletics_advantage:
         row["athletics_advantage"] = True
     if features.bloodied_start_turn_heal_amount:
@@ -311,6 +317,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
             "traits": sorted(traits), "resources": {item.id: item.max_uses for item in template.resources},
+            "resource_names": {item.id: item.name for item in template.resources},
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
