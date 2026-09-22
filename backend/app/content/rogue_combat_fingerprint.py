@@ -69,3 +69,7 @@ def build_mara_quickstep_level5_combat_profile() -> PregenCombatProfile:
 
 def build_mara_quickstep_level6_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(6)
+
+
+def build_mara_quickstep_level7_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(7)
