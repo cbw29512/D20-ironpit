@@ -91,6 +91,16 @@ assert.deepEqual(
   "the extra turn uses initiative -10 in the normal bucket rather than inheriting natural-20 priority",
 );
 
+const tiedExtraGroups = [
+  { members: [scheduledMembers[0]], combatant_ids: ["mara17"], natural_roll: 14, initiative_count: 19, tie_break_rolls: [] },
+  { members: [scheduledMembers[1]], combatant_ids: ["target17"], natural_roll: 9, initiative_count: 9, tie_break_rolls: [] },
+];
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_INITIATIVE.firstRoundSchedule(tiedExtraGroups).order,
+  ["mara17", "target17", "mara17"],
+  "a normal turn at the same initiative count resolves before the extra turn",
+);
+
 function state(template) {
   return {
     template, active_effect_ids: [], is_dead: false, is_unconscious: false,
