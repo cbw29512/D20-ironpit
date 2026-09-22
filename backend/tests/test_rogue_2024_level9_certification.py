@@ -25,6 +25,7 @@ def test_2024_rogue_level9_is_level8_plus_pb_sneak_and_supreme_sneak_audit() -> 
     assert template.progression_features.uncanny_dodge is True
     assert template.progression_features.evasion is True
     assert {item.id: item.max_uses for item in template.resources}["adrenaline-rush"] == 4
+    assert "Rogue 9" in template.source
 
 
 def test_2024_rogue_level9_pb_updates_cunning_strike_dc() -> None:
