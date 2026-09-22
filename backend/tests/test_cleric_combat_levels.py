@@ -71,6 +71,9 @@ def test_complete_cleric_table_advances_through_level_sixteen_then_fails_closed_
         assert unsupported_hero_engine_features(cleric_combat_features(level)) == ()
         assert build_seraphine_dawnshield_level(level).level == level
 
+    # Level 17 data is present; admission fails specifically because 9th-level combat support is not certified yet.
+    assert CLERIC_COMBAT_LEVELS[16].spell_slots[-1] == 0
+    assert CLERIC_COMBAT_LEVELS[17].spell_slots[-1] == 1
     assert unsupported_hero_engine_features(cleric_combat_features(17)) == ("cleric-combat-spells-9",)
     with pytest.raises(ValueError, match="cleric-combat-spells-9"):
         build_seraphine_dawnshield_level(17)
