@@ -47,6 +47,31 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 - If a new clarification conflicts with an existing authoritative rule, stop and reconcile the conflict explicitly in the repository before changing runtime behavior.
 - This gate overrides speed, convenience, and perceived momentum. Asking one targeted question is preferred to implementing the wrong abstraction.
 
+## Mandatory every-task semantic reuse check
+
+Before **every** class, subclass, feat, spell, item, monster, legendary action, lair action, or other combat-mechanic implementation, re-read:
+
+- `docs/IRON_PIT_RULES_CONTRACT.md`
+- `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`
+- `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`
+- `docs/CANONICAL_COMBAT_BUILD_POLICY.md`
+
+Then perform this check **before writing code**:
+
+1. Ignore the source ability name temporarily and describe what it mechanically does.
+2. Decompose it into trigger/timing, action/resource cost, attack/check/save, damage/healing, condition/state change, duration, range/geometry, recharge/use limit, and lifecycle.
+3. Search existing **hero and monster** capabilities/resolvers for each semantic piece.
+4. Reuse an existing primitive when the behavior matches.
+5. Parameterize differences such as DC, save ability, range, damage, duration, resource count, recharge threshold, ruleset, or timing.
+6. Compose named abilities from multiple existing primitives when appropriate.
+7. Add a new universal primitive only for behavior that still cannot be represented correctly after the search.
+8. Preserve the exact source ability name for cards/player logs; keep generic primitive IDs internally for audit/certification.
+9. After adding or widening a primitive, re-audit both pregens and monsters for other content that can now bind to it.
+
+**Universal state identity is absolute:** Prone is Prone; Grappled is Grappled; Restrained is Restrained; Blinded is Blinded; Frightened is Frightened; Poisoned is Poisoned; Advantage is Advantage; Disadvantage is Disadvantage; a Saving Throw is a Saving Throw. The source card supplies the parameters. The engine supplies the mechanic.
+
+This check is mandatory even when the source comes from a different class, monster, edition, spell, item, or feature name. A different printed name is never sufficient reason for a new resolver.
+
 ## Arena/environment invariants
 
 - The Iron Pit magically makes the environment survivable/hospitable for every creature. Breathing, atmosphere, aquatic biology, flight requirements, and similar survival constraints never exclude a combatant.
