@@ -15,8 +15,6 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0, consumeNextAttackAgainstAdvantage: () => 0,
     effectiveArmorClass: (state) => state.template.armor_class, effectiveSpeed: (state) => state.template.speed_ft, attackRollFlat: () => 0, applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { attackDisadvantage: () => 0 };
-  const MO = () => window.IRON_PIT_BROWSER_MISS_TO_HIT_OVERRIDE || { apply: (_state, hit) => ({ hit, featureId: null, sourceName: null }) };
-  const DO = () => window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }) };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
     has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
@@ -85,21 +83,12 @@
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
-    const originalNatural = attackRoll.selected_roll, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
-    const initialHit = originalNatural !== 1 && (originalNatural === 20 || attackRoll.total >= baseTargetAc);
-    const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
-    const d20Grants = attacker.state.template.failed_d20_test_override_grants || [];
-    if (d20Grants.some((grant) => (grant.test_kinds || []).includes("attack"))
-      && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
-      throw new Error("Failed-D20 override runtime is not loaded for a declared attack capability.");
-    }
-    const d20Override = DO().apply(attacker.state, attackRoll, !parry.hit, "attack");
-    const resolvedAttackRoll = d20Override.roll;
-    const natural = resolvedAttackRoll.selected_roll, naturalTwenty = natural === 20, naturalOne = natural === 1;
-    const targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
-    const revisedHit = d20Override.featureId ? (naturalTwenty || resolvedAttackRoll.total >= targetAc) : parry.hit;
-    const override = MO().apply(attacker.state, revisedHit);
-    const hit = override.hit;
+    const resolved = O().resolveD20(
+      attacker.state, actualTarget.state, attack, attackRoll, M().effectiveArmorClass(actualTarget.state),
+    );
+    const resolvedAttackRoll = resolved.roll, natural = resolved.natural, targetAc = resolved.targetAc;
+    const parry = resolved.parry, d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit;
+    const naturalOne = natural === 1;
     const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !d20Override.featureId && !override.featureId;
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
