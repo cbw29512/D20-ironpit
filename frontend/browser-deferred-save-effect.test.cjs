@@ -163,4 +163,24 @@ function pair({ resistance = false } = {}) {
   assert.deepEqual(actor.state.deferred_effects, []);
 }
 
+{
+  const { actor, target, setup } = pair();
+  actor.state.deferred_effects.push({
+    source_id: "quivering-palm",
+    target_id: target.combatant_id,
+    armed_round: 1,
+  });
+  const before = JSON.stringify(actor.state.deferred_effects);
+  assert.equal(D.candidate(actor, setup), target);
+  assert.equal(JSON.stringify(actor.state.deferred_effects), before, "candidate discovery must be side-effect free");
+
+  target.state.current_hp = 0;
+  target.state.is_unconscious = true;
+  assert.equal(D.candidate(actor, setup), null);
+  assert.equal(JSON.stringify(actor.state.deferred_effects), before, "dead-target discovery must still be read-only");
+
+  D.cleanup(setup);
+  assert.deepEqual(actor.state.deferred_effects, []);
+}
+
 console.log("Browser universal deferred save-effect regressions passed.");
