@@ -119,14 +119,19 @@ def test_level_six_blessed_healer_reuses_post_heal_self_rider() -> None:
         hero_total_levels=10, monster_total_cr="1/4", ruleset="2024",
     )
     targets = choose_group_healing_targets(cleric, setup, action, "1:cleric")
+    assert [item.combatant_id for item in targets] == ["ally", "cleric"]
+
     before = cleric.state.current_hp
     events, sequence = resolve_group_healing(
         1, 1, cleric, targets, action, FixedDiceProvider([2, 2, 2, 2]), "1:cleric",
     )
     assert events
+    self_heal = next(event.hp_after - event.hp_before for event in events if event.target_id == "cleric")
+    assert self_heal == 13
+
     rider = apply_slot_healing_self_rider(3, 1, cleric, True, action)
     assert rider is not None
-    assert cleric.state.current_hp == before + 5
+    assert cleric.state.current_hp == before + self_heal + 5
     assert rider.feature_id == "blessed-healer"
 
     profile = build_seraphine_dawnshield_level6_profile()
