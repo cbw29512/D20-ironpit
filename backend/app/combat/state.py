@@ -7,6 +7,7 @@ from app.combat.conditions import DODGE_EFFECT_ID, stand_from_prone
 from app.combat.grapple import speed_is_zero
 from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
 from app.combat.modifier_stack import effective_speed
+from app.combat.resource_refresh import refresh_start_of_turn_resources
 from app.combat.survivor import apply_survivor_start_turn_heal
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 
@@ -36,6 +37,7 @@ def refresh_reaction(state: CombatantState) -> None:
 
 def refresh_start_of_turn(state: CombatantState) -> None:
     refresh_reaction(state)
+    refresh_start_of_turn_resources(state)
     apply_survivor_start_turn_heal(state)
     grant_heroic_warrior_inspiration(state)
 
