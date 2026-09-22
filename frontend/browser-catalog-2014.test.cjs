@@ -35,7 +35,7 @@ load("browser-catalog.js");
   assert.deepEqual(fighters.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(barbarians.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(rogues.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
-  assert.deepEqual(monks.map((card) => card.level), Array.from({ length: 10 }, (_, i) => i + 1));
+  assert.deepEqual(monks.map((card) => card.level), Array.from({ length: 13 }, (_, i) => i + 1));
   assert.deepEqual(paladins.map((card) => card.level), Array.from({ length: 11 }, (_, i) => i + 1));
   assert.ok(fighters.every((card) => card.name === "Karnok Stoneward"));
   assert.ok(barbarians.every((card) => card.name === "Rokhan Stonefury"));
@@ -48,7 +48,7 @@ load("browser-catalog.js");
   assert.equal(monks.find((card) => card.level === 3).subclass_id, "way-open-hand");
   assert.equal(paladins.find((card) => card.level === 3).subclass_id, "oath-devotion");
   assert.ok(catalog.heroes.every((card) => card.build_id === "canonical-2014"));
-  console.log("2014 catalog exposes Fighter 1-20, Berserker 1-20, Thief 1-20, Open Hand Monk 1-10, and Devotion Paladin 1-11.");
+  console.log("2014 catalog exposes Fighter 1-20, Berserker 1-20, Thief 1-20, Open Hand Monk 1-13, and Devotion Paladin 1-11.");
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;
