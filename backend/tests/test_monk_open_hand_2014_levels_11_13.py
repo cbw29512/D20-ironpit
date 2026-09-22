@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.combat.targeting_wards import check_targeting_ward
-from app.content.certified_heroes import build_certified_hero_registry
+from app.content.certified_heroes import build_certified_hero_entries_for_ruleset
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.monk_open_hand_2014_combat_profile import build_kael_2014_combat_profile
 from app.content.monk_open_hand_2014_profile import build_kael_stillwater_2014_profile
@@ -76,9 +76,12 @@ def test_levels12_and13_are_incremental_2014_monk_progression() -> None:
 
 
 def test_2014_monk_registry_now_reaches_level13() -> None:
-    registry = build_certified_hero_registry()
+    registry = {
+        key: (template.name, template.id)
+        for key, template in build_certified_hero_entries_for_ruleset("2014")
+    }
     for level in range(1, 14):
-        assert registry[("monk", level, "2014")] == (
+        assert registry[("monk", level, "canonical-2014")] == (
             "Kael Stillwater",
             f"kael-stillwater-2014-l{level}",
         )
