@@ -10,7 +10,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
-from app.combat.deferred_save_effect import resolve_deferred_save_effect
+from app.combat.deferred_save_effect import cleanup_deferred_effects, resolve_deferred_save_effect
 from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
@@ -40,6 +40,7 @@ def resolve_combat_turn(
     """Resolve one Iron Pit turn through shared legality, movement, and fallback policy."""
     try:
         events: list[BattleEvent] = []
+        cleanup_deferred_effects(setup)
         cleanup_grapples(setup)
         sync_paladin_auras_2014(setup)
         start_events, sequence = begin_turn_with_events(
