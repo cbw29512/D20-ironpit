@@ -79,7 +79,9 @@
         if (!A()) throw new Error("Ability-check minimum runtime is not loaded.");
         check = A().applyMinimum(remover.state, action.castingAbility, check);
       }
-      succeeded = check.total >= dc;
+      const resolved = A()?.resolve ? A().resolve(remover.state, action.castingAbility, check, dc) : { roll: check, succeeded: check.total >= dc };
+      check = resolved.roll;
+      succeeded = resolved.succeeded;
     }
     if (succeeded) {
       M().removeSource([effect.target.state], effect.source.combatant_id, effect.effectId);
