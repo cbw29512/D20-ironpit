@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.content.audited_rogue import build_mara_quickstep_level, unsupported_mara_rogue_features
-from app.content.audited_rogue_profile import build_mara_quickstep_level4_profile
+from app.content.rogue_progression_profile import build_mara_quickstep_level4_profile
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.rogue_combat_fingerprint import build_mara_quickstep_level4_combat_profile
 
