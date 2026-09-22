@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-ability-checks.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
   "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-d20-test-override.js", "browser-miss-to-hit-override.js", "browser-attack.js", "browser-saves.js",
 ]) load(file);
@@ -166,6 +166,23 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(save.succeeded, true);
   assert.equal(saving.state.resources["stroke-of-luck"], 0);
   assert.equal(window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE.sourceNameForRoll(saving.state, save.roll), "Stroke of Luck");
+}
+
+
+{
+  const checking = member("stroke-2024-check");
+  checking.state.template.failed_d20_test_override_grants = [{
+    source_id: "stroke-of-luck", source_name: "Stroke of Luck",
+    resource_id: "stroke-of-luck", replacement_roll: 20,
+    test_kinds: ["attack", "saving_throw", "ability_check"],
+  }];
+  checking.state.resources["stroke-of-luck"] = 1;
+  const original = { notation: "1d20+2", rolls: [3], selected_roll: 3, modifier: 2, total: 5, mode: "normal", revisions: [] };
+  const resolved = window.IRON_PIT_BROWSER_ABILITY_CHECKS.resolve(checking.state, "strength", original, 20);
+  assert.equal(resolved.roll.selected_roll, 20);
+  assert.equal(resolved.roll.total, 22);
+  assert.equal(resolved.succeeded, true);
+  assert.equal(checking.state.resources["stroke-of-luck"], 0);
 }
 
 console.log("Browser condition/action-economy integration regressions passed.");
