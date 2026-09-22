@@ -235,8 +235,12 @@ def test_level_twenty_stroke_of_luck_uses_generic_miss_override_and_exact_source
 
     assert stroke.combat_relevant is True
     assert stroke.automated is True
-    assert hero20.progression_features.miss_to_hit_override_resource_id == "stroke-of-luck"
-    assert hero20.progression_features.miss_to_hit_override_source_name == "Stroke of Luck"
+    grants = hero20.progression_features.miss_to_hit_override_grants
+    assert len(grants) == 1
+    assert grants[0].source_id == "stroke-of-luck"
+    assert grants[0].source_name == "Stroke of Luck"
+    assert grants[0].usage_policy == "resource"
+    assert grants[0].resource_id == "stroke-of-luck"
     assert {item.id: item.max_uses for item in hero20.resources} == {"stroke-of-luck": 1}
     assert hero20.progression_features.sneak_attack_d6 == 10
 
