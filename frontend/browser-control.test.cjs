@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-grapple.js", "browser-state.js",
+  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-ability-checks.js", "browser-grapple.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saves.js", "browser-charge.js",
   "browser-formation.js", "browser-multiattack.js", "browser-ability-hooks.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
@@ -142,6 +142,23 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const failed = V.resolveAction(1, 1, snake, hero, action, 5);
   assert.equal(hero.state.current_hp, 0); assert.equal(hero.state.is_unconscious, true);
   assert.deepEqual(failed.applied_condition_ids, ["grappled"]);
+}
+
+{
+  const mara = member("hero-1:mara", "heroes", heroes["mara-quickstep-l6"]);
+  mara.state.template.skill_check_d20_minimums = [{
+    source_id: "reliable-talent", skill_ids: ["athletics", "acrobatics"], minimum_roll: 10,
+  }];
+  mara.state.action_available = true;
+  mara.state.movement_remaining_ft = 0;
+  G.apply(mara.state, "grappler", 15, 5, true);
+  window.IRON_PIT_DICE = queuedDice([1]);
+  const escaped = G.escape(1, 1, mara);
+  assert.equal(escaped.check_ability, "dexterity (acrobatics)");
+  assert.equal(escaped.ability_check_roll.selected_roll, 10);
+  assert.equal(escaped.ability_check_roll.total, 17);
+  assert.equal(escaped.ability_check_roll.revisions.at(-1).source_effect_id, "reliable-talent");
+  assert.equal(escaped.check_succeeded, true);
 }
 
 console.log("Browser saving throw and control-condition regressions passed.");
