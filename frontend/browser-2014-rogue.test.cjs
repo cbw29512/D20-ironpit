@@ -47,8 +47,10 @@ assert.deepEqual(rogue17.first_round_extra_turn_grants, [
 assert.deepEqual(rogue2024_17.first_round_extra_turn_grants, rogue17.first_round_extra_turn_grants);
 assert.equal(rogue18.suppress_attack_advantage_while_not_incapacitated, true);
 assert.equal(rogue19.ability_scores.constitution, 20);
-assert.equal(rogue20.miss_to_hit_override_resource_id, "stroke-of-luck");
-assert.equal(rogue20.miss_to_hit_override_source_name, "Stroke of Luck");
+assert.deepEqual(rogue20.miss_to_hit_override_grants, [{
+  source_id: "stroke-of-luck", source_name: "Stroke of Luck",
+  usage_policy: "resource", resource_id: "stroke-of-luck",
+}]);
 assert.equal(rogue20.resources["stroke-of-luck"], 1);
 
 const scheduledMembers = [
