@@ -31,3 +31,36 @@ def build_mara_quickstep_level6_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 6 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level7_profile() -> CharacterBuildProfile:
+    """Level 7 inherits level 6, then adds Evasion and Reliable Talent."""
+    try:
+        previous = build_mara_quickstep_level6_profile()
+        data = advance_profile_data(previous, 7)
+        data.update(
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "evasion", "Evasion", "class",
+                    combat_relevant=True, automated=True,
+                    notes="Reuses the shared Dexterity-save half-damage Evasion resolver.",
+                ).model_dump(),
+                _feature(
+                    "reliable-talent", "Reliable Talent", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Uses the shared proficient-skill d20 floor. In the current arena it applies "
+                        "to Mara's Athletics/Acrobatics grapple-escape checks."
+                    ),
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 7 — Evasion and Reliable Talent",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 7 profile could not be created.") from exc
