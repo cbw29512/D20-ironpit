@@ -61,7 +61,7 @@ def build_mara_quickstep_level18_profile() -> CharacterBuildProfile:
 
 
 def build_mara_quickstep_level19_profile() -> CharacterBuildProfile:
-    """Level 19 inherits level 18 and takes the recommended Boon of the Night Spirit."""
+    """Level 19 inherits level 18 and takes Boon of Combat Prowess."""
     try:
         previous = build_mara_quickstep_level18_profile()
         data = advance_profile_data(previous, 19)
@@ -81,26 +81,22 @@ def build_mara_quickstep_level19_profile() -> CharacterBuildProfile:
             feature_audits=[
                 *data["feature_audits"],
                 _feature(
-                    "rogue-epic-boon", "Boon of the Night Spirit", "feat",
-                    combat_relevant=False, automated=False,
+                    "boon-combat-prowess", "Boon of Combat Prowess", "feat",
+                    combat_relevant=True, automated=True,
                     notes=(
-                        "Canonical level-19 choice uses the Basic Rules recommended Epic Boon. "
-                        "Its +1 Strength increase is applied normally. Merge with Shadows and Shadowy Form "
-                        "require Dim Light or Darkness; the certified Iron Pit arena has clear visibility by default "
-                        "and currently has no implemented Dim Light/Darkness state or Darkness-producing combat effect, "
-                        "so those riders are explicitly arena-inert rather than approximated."
+                        "Peerless Aim reuses the universal source-tagged miss-to-hit override. "
+                        "Its usage window refreshes at Mara's own turn start, including after off-turn attacks."
                     ),
                 ).model_dump(),
             ],
             source_references=[
                 *data["source_references"],
-                "Basic Rules 2024: Rogue 19 — Epic Boon; Feats — Boon of the Night Spirit",
+                "Basic Rules 2024: Rogue 19 — Epic Boon; Feats — Boon of Combat Prowess",
             ],
         )
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 19 profile could not be created.") from exc
-
 
 def build_mara_quickstep_level20_profile() -> CharacterBuildProfile:
     """Level 20 inherits level 19 and gains the 2024 Stroke of Luck D20 replacement."""
