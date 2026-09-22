@@ -28,6 +28,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
         ("adrenaline-rush", "Adrenaline Rush", row.proficiency_bonus),
         ("relentless-endurance", "Relentless Endurance", 1),
     ]
+    if "boon-combat-prowess" in _features(level):
+        rows.append(("boon-combat-prowess", "Boon of Combat Prowess", 1))
     return [ResourceDefinition(id=resource_id, name=name, max_uses=uses)
             for resource_id, name, uses in rows if uses > 0]
 
