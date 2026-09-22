@@ -4343,7 +4343,7 @@
       "owners": [
         "rogue/thief"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4952,7 +4952,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 29,
-    "planned": 353,
-    "supported": 62
+    "planned": 352,
+    "supported": 63
   }
 }

@@ -23,6 +23,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -195,6 +196,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -338,6 +340,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -496,6 +499,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -642,6 +646,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -841,6 +846,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -983,6 +989,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -1098,6 +1105,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -1239,6 +1247,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -1356,6 +1365,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -1469,6 +1479,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -1599,6 +1610,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -1712,6 +1724,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -1827,6 +1840,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -1949,6 +1963,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -2071,6 +2086,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -2203,6 +2219,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -2365,6 +2382,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -2482,6 +2500,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -2595,6 +2614,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -2710,6 +2730,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -2823,6 +2844,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -2938,6 +2960,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -3051,6 +3074,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -3169,6 +3193,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -3284,6 +3309,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -3402,6 +3428,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -3549,6 +3576,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -3683,6 +3711,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -3805,6 +3834,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -3947,6 +3977,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -4058,6 +4089,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -4241,6 +4273,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -4494,6 +4527,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -4628,6 +4662,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -4741,6 +4776,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -4852,6 +4888,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -4961,6 +4998,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5072,6 +5110,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5183,6 +5222,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5295,6 +5335,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5404,6 +5445,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5515,6 +5557,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5626,6 +5669,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5737,6 +5781,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5848,6 +5893,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -5957,6 +6003,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -6070,6 +6117,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -6185,6 +6233,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -6300,6 +6349,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -6434,6 +6484,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -6547,6 +6598,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -6662,6 +6714,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -6775,6 +6828,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -6895,6 +6949,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7012,6 +7067,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7125,6 +7181,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7240,6 +7297,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7359,6 +7417,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7476,6 +7535,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7589,6 +7649,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7707,6 +7768,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7822,6 +7884,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -7937,6 +8000,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -8052,6 +8116,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -8217,6 +8282,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -8349,6 +8415,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -8485,6 +8552,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -8646,6 +8714,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -8790,6 +8859,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -8915,6 +8985,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -9040,6 +9111,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -9182,6 +9254,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -9368,6 +9441,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -9536,6 +9610,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -9679,6 +9754,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -9803,6 +9879,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -9932,6 +10009,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -10111,6 +10189,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -10241,6 +10320,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -10372,6 +10452,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -10505,6 +10586,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -10639,6 +10721,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -10776,6 +10859,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -10924,6 +11008,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -11055,6 +11140,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -11228,6 +11314,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -11390,6 +11477,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -11561,6 +11649,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -11704,6 +11793,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -11828,6 +11918,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -12007,6 +12098,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -12125,6 +12217,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -12251,6 +12344,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -12375,6 +12469,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -12515,6 +12610,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -12641,6 +12737,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -12829,6 +12926,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -12963,6 +13061,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -13137,6 +13236,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -13252,6 +13352,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -13376,6 +13477,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -13544,6 +13646,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -13666,6 +13769,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -13792,6 +13896,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -13914,6 +14019,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -14061,6 +14167,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -14186,6 +14293,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -14354,6 +14462,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -14498,6 +14607,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -14624,6 +14734,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -14761,6 +14872,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -14941,6 +15053,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -15063,6 +15176,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -15201,6 +15315,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -15320,6 +15435,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -15435,6 +15551,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -15553,6 +15670,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -15698,6 +15816,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -15846,6 +15965,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -16036,6 +16156,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -16225,6 +16346,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -16412,6 +16534,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -16602,6 +16725,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -16788,6 +16912,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -16976,6 +17101,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -17171,6 +17297,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -17364,6 +17491,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -17560,6 +17688,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -17752,6 +17881,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -17946,6 +18076,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -18069,6 +18200,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -18212,6 +18344,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -18355,6 +18488,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -18508,6 +18642,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -18675,6 +18810,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -18870,6 +19006,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,
@@ -18988,6 +19125,7 @@
     "progression_features": {
       "ability_check_minimums": [],
       "saving_throw_proficiency_grants": [],
+      "first_round_extra_turn_grants": [],
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "suppress_attack_advantage_while_not_incapacitated": false,

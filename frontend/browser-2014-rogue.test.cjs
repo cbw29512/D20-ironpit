@@ -27,7 +27,8 @@ const rogue17 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l17");
 const rogue18 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l18");
 const rogue19 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l19");
 const rogue20 = heroes.find((hero) => hero.id === "mara-quickstep-2014-l20");
-assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11 && rogue12 && rogue15 && rogue16 && rogue17 && rogue18 && rogue19 && rogue20);
+const rogue2024_17 = heroes.find((hero) => hero.id === "mara-quickstep-l17");
+assert.ok(rogue2 && rogue5 && rogue7 && rogue10 && rogue11 && rogue12 && rogue15 && rogue16 && rogue17 && rogue18 && rogue19 && rogue20 && rogue2024_17);
 assert.equal(rogue2.ruleset, "2014");
 assert.equal(rogue2.cunning_action, true);
 assert.equal(rogue5.uncanny_dodge, true);
@@ -40,7 +41,10 @@ assert.ok(rogue11.attacks.every((attack) => attack.masteryProperty == null));
 assert.equal(rogue12.ability_scores.constitution, 16);
 assert.equal(rogue15.saving_throw_bonuses.wisdom, 7);
 assert.equal(rogue16.ability_scores.constitution, 18);
-assert.equal(rogue17.first_round_extra_turn_initiative_offset, -10);
+assert.deepEqual(rogue17.first_round_extra_turn_grants, [
+  { source_id: "thiefs-reflexes", source_name: "Thief's Reflexes", initiative_offset: -10 },
+]);
+assert.deepEqual(rogue2024_17.first_round_extra_turn_grants, rogue17.first_round_extra_turn_grants);
 assert.equal(rogue18.suppress_attack_advantage_while_not_incapacitated, true);
 assert.equal(rogue19.ability_scores.constitution, 20);
 assert.equal(rogue20.miss_to_hit_override_resource_id, "stroke-of-luck");
@@ -51,12 +55,22 @@ const scheduledMembers = [
   { combatant_id: "mara17", state: { template: rogue17 } },
   { combatant_id: "target17", state: { template: {} } },
 ];
+const scheduledGroups = [
+  { members: [scheduledMembers[0]], combatant_ids: ["mara17"], natural_roll: 15, initiative_count: 20, tie_break_rolls: [] },
+  { members: [scheduledMembers[1]], combatant_ids: ["target17"], natural_roll: 12, initiative_count: 17, tie_break_rolls: [] },
+];
+const firstRound = window.IRON_PIT_BROWSER_INITIATIVE.firstRoundSchedule(scheduledGroups);
+assert.deepEqual(firstRound.order, ["mara17", "target17", "mara17"]);
+assert.deepEqual(firstRound.extras, [{
+  combatant_id: "mara17",
+  initiative_count: 10,
+  source_id: "thiefs-reflexes",
+  source_name: "Thief's Reflexes",
+}]);
 const scheduledInitiative = {
   turn_order: ["mara17", "target17"],
-  groups: [
-    { combatant_ids: ["mara17"], natural_roll: 15, initiative_count: 20 },
-    { combatant_ids: ["target17"], natural_roll: 12, initiative_count: 17 },
-  ],
+  first_round_turn_order: firstRound.order,
+  first_round_extra_turns: firstRound.extras,
 };
 assert.deepEqual(
   window.IRON_PIT_BROWSER_INITIATIVE.turnOrderForRound(1, scheduledInitiative, scheduledMembers),
@@ -65,6 +79,26 @@ assert.deepEqual(
 assert.deepEqual(
   window.IRON_PIT_BROWSER_INITIATIVE.turnOrderForRound(2, scheduledInitiative, scheduledMembers),
   ["mara17", "target17"],
+);
+
+const naturalTwentyGroups = [
+  { members: [scheduledMembers[0]], combatant_ids: ["mara17"], natural_roll: 20, initiative_count: 25, tie_break_rolls: [] },
+  { members: [scheduledMembers[1]], combatant_ids: ["target17"], natural_roll: 19, initiative_count: 19, tie_break_rolls: [] },
+];
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_INITIATIVE.firstRoundSchedule(naturalTwentyGroups).order,
+  ["mara17", "target17", "mara17"],
+  "the extra turn uses initiative -10 in the normal bucket rather than inheriting natural-20 priority",
+);
+
+const tiedExtraGroups = [
+  { members: [scheduledMembers[0]], combatant_ids: ["mara17"], natural_roll: 14, initiative_count: 19, tie_break_rolls: [] },
+  { members: [scheduledMembers[1]], combatant_ids: ["target17"], natural_roll: 9, initiative_count: 9, tie_break_rolls: [] },
+];
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_INITIATIVE.firstRoundSchedule(tiedExtraGroups).order,
+  ["mara17", "target17", "mara17"],
+  "a normal turn at the same initiative count resolves before the extra turn",
 );
 
 function state(template) {

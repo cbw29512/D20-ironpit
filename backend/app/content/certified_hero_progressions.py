@@ -26,6 +26,7 @@ from app.content.rogue_progression_profile import (
     build_mara_quickstep_level4_profile, build_mara_quickstep_level5_profile,
 )
 from app.content.rogue_endgame_progression_profile import build_mara_quickstep_level13_profile, build_mara_quickstep_level14_profile, build_mara_quickstep_level15_profile, build_mara_quickstep_level16_profile
+from app.content.rogue_final_progression_profile import build_mara_quickstep_level17_profile
 from app.content.rogue_high_progression_profile import (
     build_mara_quickstep_level9_profile, build_mara_quickstep_level10_profile,
     build_mara_quickstep_level11_profile, build_mara_quickstep_level12_profile,
@@ -148,6 +149,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_mara_quickstep_level9_profile, build_mara_quickstep_level10_profile,
             build_mara_quickstep_level11_profile, build_mara_quickstep_level12_profile,
             build_mara_quickstep_level13_profile, build_mara_quickstep_level14_profile, build_mara_quickstep_level15_profile, build_mara_quickstep_level16_profile,
+            build_mara_quickstep_level17_profile,
         ),
     ),
     CertifiedHeroProgression(
