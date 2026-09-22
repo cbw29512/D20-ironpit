@@ -76,6 +76,36 @@ def _resolve_ties(groups: list[InitiativeGroup], dice: DiceProvider) -> None:
                 group.tie_break_roll = value
 
 
+def turn_order_for_round(
+    round_number: int,
+    initiative: EncounterInitiative,
+    combatants: dict[str, EncounterCombatant],
+) -> list[str]:
+    """Return the turn schedule, including declarative extra first-round turns."""
+    try:
+        if round_number != 1:
+            return list(initiative.turn_order)
+
+        base_index = {combatant_id: index for index, combatant_id in enumerate(initiative.turn_order)}
+        group_by_id = {
+            combatant_id: group
+            for group in initiative.groups
+            for combatant_id in group.combatant_ids
+        }
+        slots: list[tuple[int, int, int, int, str]] = []
+        for combatant_id in initiative.turn_order:
+            group = group_by_id[combatant_id]
+            slots.append((_priority(group), group.initiative_count, 1, -base_index[combatant_id], combatant_id))
+            offset = combatants[combatant_id].state.template.progression_features.first_round_extra_turn_initiative_offset
+            if offset is not None:
+                slots.append((1, group.initiative_count + offset, 0, -base_index[combatant_id], combatant_id))
+        slots.sort(reverse=True)
+        return [slot[-1] for slot in slots]
+    except Exception as exc:
+        logger.exception("Encounter turn scheduling failed for round %s.", round_number)
+        raise RuntimeError("Encounter turn schedule could not be resolved.") from exc
+
+
 def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> EncounterInitiative:
     """Resolve initiative with Iron Pit natural-20/natural-1 buckets and pure d20 tie rerolls."""
     try:
