@@ -32,6 +32,21 @@ def build_initiative_events(
             description=description,
         ))
         sequence += 1
+    for extra in initiative.first_round_extra_turns:
+        events.append(BattleEvent(
+            sequence=sequence,
+            round_number=0,
+            event_type="feature",
+            actor_id=extra.combatant_id,
+            actor_name=extra.combatant_id,
+            feature_id=extra.source_id,
+            animation="initiative",
+            description=(
+                f"{extra.combatant_id} gains an extra first-round turn "
+                f"at Initiative {extra.initiative_count} from {extra.source_id}."
+            ),
+        ))
+        sequence += 1
     return events, sequence
 
 
