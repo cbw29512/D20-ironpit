@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.combat.cunning_strike import select_trip_die_cost
+from app.combat.cunning_strike import select_canonical_die_cost
 from app.domain.models import CombatantState, DamageType, RollMode, WeaponAttack
 
 SNEAK_ATTACK_FEATURE_ID = "sneak-attack"
@@ -27,6 +27,6 @@ def sneak_attack_bonus_damage(
         raise ValueError("Sneak Attack requires the actual active-turn key for once-per-turn tracking.")
     if attacker.feature_last_turn_keys.get(SNEAK_ATTACK_FEATURE_ID) == turn_key:
         return None
-    die_cost = select_trip_die_cost(attacker, target, turn_key)
+    die_cost = select_canonical_die_cost(attacker, target, turn_key)
     attacker.feature_last_turn_keys[SNEAK_ATTACK_FEATURE_ID] = turn_key
     return ("Sneak Attack", dice_count - die_cost, 6, attack.weapon.damage_type)
