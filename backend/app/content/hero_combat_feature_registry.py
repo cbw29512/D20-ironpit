@@ -14,6 +14,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10",
     "sneak-attack", "weapon-mastery", "cunning-action", "steady-aim", "cunning-strike", "uncanny-dodge",
+    "evasion", "reliable-talent",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
     "blessed-strikes", "cleric-combat-spells-5", "divine-intervention", "cleric-combat-spells-6",
@@ -44,6 +45,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "steady-aim": {"stationary_bonus_action_next_attack_advantage": True},
     "cunning-strike": {"cunning_strike_trip_die_cost": 1},
     "uncanny-dodge": {"uncanny_dodge": True},
+    "evasion": {"evasion": True},
 }
 
 
