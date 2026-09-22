@@ -1,6 +1,7 @@
 from app.combat.attacks import resolve_attack
 from app.combat.cunning_action import needs_dash, use_dash
 from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_events import build_initiative_events
 from app.combat.encounter_initiative import roll_encounter_initiative, turn_order_for_round
 from app.combat.rogue_defenses import apply_uncanny_dodge, evasion_damage
 from app.combat.state import build_combatant_state
@@ -157,7 +158,11 @@ def test_level_seventeen_thiefs_reflexes_is_declarative_and_scales_sneak_attack(
 
     assert reflexes.combat_relevant is True
     assert reflexes.automated is True
-    assert hero17.progression_features.first_round_extra_turn_initiative_offset == -10
+    grants = hero17.progression_features.first_round_extra_turn_grants
+    assert len(grants) == 1
+    assert grants[0].source_id == "thiefs-reflexes"
+    assert grants[0].source_name == "Thief's Reflexes"
+    assert grants[0].initiative_offset == -10
     assert hero17.progression_features.sneak_attack_d6 == 9
     assert "surprised exception" in (reflexes.notes or "")
 
@@ -172,8 +177,12 @@ def test_thiefs_reflexes_uses_shared_first_round_turn_scheduler() -> None:
     by_id = {member.combatant_id: member for member in [rogue, target]}
 
     assert initiative.turn_order == ["mara", "target"]
+    assert initiative.first_round_turn_order == ["mara", "target", "mara"]
     assert turn_order_for_round(1, initiative, by_id) == ["mara", "target", "mara"]
     assert turn_order_for_round(2, initiative, by_id) == ["mara", "target"]
+    events, _ = build_initiative_events(initiative, 1)
+    feature = next(event for event in events if event.feature_id == "thiefs-reflexes")
+    assert "Thief's Reflexes" in feature.description
 
 
 def test_level_eighteen_elusive_uses_shared_advantage_suppression() -> None:
