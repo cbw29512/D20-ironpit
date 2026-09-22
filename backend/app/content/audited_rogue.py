@@ -31,6 +31,23 @@ def unsupported_mara_rogue_features(level: int) -> tuple[str, ...]:
     return unsupported_hero_engine_features(active)
 
 
+_MARA_PROFICIENT_SKILL_IDS = (
+    "athletics", "intimidation", "acrobatics", "perception", "sleight-of-hand", "stealth",
+)
+
+
+def _progression_fields(level: int) -> dict[str, object]:
+    features = mara_rogue_features(level)
+    fields = compile_progression_feature_fields(features, level)
+    if "reliable-talent" in features:
+        fields["skill_check_d20_minimums"] = [{
+            "source_id": "reliable-talent",
+            "skill_ids": list(_MARA_PROFICIENT_SKILL_IDS),
+            "minimum_roll": 10,
+        }]
+    return fields
+
+
 def _level_one_scores() -> AbilityScores:
     return AbilityScores(
         strength=13, dexterity=17, constitution=15,
