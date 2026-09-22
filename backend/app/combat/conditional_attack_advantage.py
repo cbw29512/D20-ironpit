@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import is_incapacitated
 from app.combat.hit_points import effective_max_hp
 from app.domain.models import CombatantState, WeaponAttack
 
@@ -20,4 +21,19 @@ def conditional_attack_advantage_sources(attack: WeaponAttack, target: Combatant
         return total
     except Exception:
         logger.exception("Failed to evaluate conditional attack Advantage for %s.", attack.id)
+        raise
+
+
+
+def suppress_attack_advantage_sources(total: int, target: CombatantState) -> int:
+    """Apply generic defender-side suppression without touching Disadvantage sources."""
+    try:
+        if (
+            target.template.progression_features.attack_advantage_suppressed_unless_incapacitated
+            and not is_incapacitated(target)
+        ):
+            return 0
+        return total
+    except Exception:
+        logger.exception("Failed to evaluate defender Advantage suppression for %s.", target.template.id)
         raise
