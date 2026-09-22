@@ -57,3 +57,56 @@ def apply_ability_check_minimum(
             ability,
         )
         raise RuntimeError("Ability-check minimum could not be applied.") from exc
+
+
+
+def apply_skill_check_d20_minimum(
+    state: CombatantState,
+    skill_id: str,
+    roll: DiceRoll,
+) -> DiceRoll:
+    """Apply the strongest declared d20 floor for a proficient skill check."""
+    try:
+        rules = [
+            rule for rule in state.template.progression_features.skill_check_d20_minimums
+            if skill_id in rule.skill_ids
+        ]
+        if not rules:
+            return roll
+        if roll.selected_roll is None:
+            raise ValueError("Skill-check d20 minimum requires a selected d20 roll.")
+        rule = sorted(rules, key=lambda item: (-item.minimum_roll, item.source_id))[0]
+        if roll.selected_roll >= rule.minimum_roll:
+            return roll
+        replacement_rolls = [max(value, rule.minimum_roll) for value in roll.rolls]
+        replacement_selected = rule.minimum_roll
+        replacement_total = replacement_selected + roll.modifier
+        revision = RollRevision(
+            source_effect_id=rule.source_id,
+            kind="die_replacement",
+            original_rolls=list(roll.rolls),
+            replacement_rolls=replacement_rolls,
+            original_modifier=roll.modifier,
+            replacement_modifier=roll.modifier,
+            original_selected=roll.selected_roll,
+            replacement_selected=replacement_selected,
+            original_total=roll.total,
+            replacement_total=replacement_total,
+            accepted="replacement",
+        )
+        return roll.model_copy(update={
+            "rolls": replacement_rolls,
+            "selected_roll": replacement_selected,
+            "total": replacement_total,
+            "notation": f"{roll.notation} [{rule.source_id}]",
+            "revisions": [*roll.revisions, revision],
+        })
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception(
+            "Failed to apply skill-check d20 minimum for %s (%s).",
+            state.template.name,
+            skill_id,
+        )
+        raise RuntimeError("Skill-check d20 minimum could not be applied.") from exc
