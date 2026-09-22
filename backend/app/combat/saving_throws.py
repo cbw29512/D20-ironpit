@@ -7,6 +7,7 @@ from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
+from app.combat.failed_d20_test_override import source_name_for_roll
 from app.combat.rogue_defenses import evasion_damage
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
