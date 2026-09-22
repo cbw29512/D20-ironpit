@@ -16,6 +16,7 @@
       sapApplied: "",
       vexApplied: false,
       studiedApplied: false,
+      deferredEffectArmed: null,
       appliedConditions: [],
     };
   }
