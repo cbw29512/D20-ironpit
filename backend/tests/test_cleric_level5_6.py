@@ -110,12 +110,13 @@ def test_mass_healing_word_heals_multiple_targets_with_one_slot_and_bonus_action
 def test_level_six_blessed_healer_reuses_post_heal_self_rider() -> None:
     cleric = _member(build_seraphine_dawnshield_level(6), "cleric", "heroes", 0)
     ally = _member(build_seraphine_dawnshield_level(4), "ally", "heroes", 5)
+    enemy = _member(build_combatant_from_capabilities("srd-skeleton"), "enemy", "monsters", 20)
     cleric.state.current_hp = 10
     ally.state.current_hp = 1
     action = next(item for item in cleric.state.template.healing_actions if item.id == "mass-healing-word")
     setup = EncounterSetup(
-        heroes=[cleric, ally], monsters=[],
-        hero_total_levels=10, monster_total_cr="0", ruleset="2024",
+        heroes=[cleric, ally], monsters=[enemy],
+        hero_total_levels=10, monster_total_cr="1/4", ruleset="2024",
     )
     targets = choose_group_healing_targets(cleric, setup, action, "1:cleric")
     before = cleric.state.current_hp
