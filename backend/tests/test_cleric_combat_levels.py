@@ -49,7 +49,7 @@ def test_cleric_features_only_track_combat_content_and_mending_is_ignored() -> N
 
 
 def test_existing_cleric_runtime_levels_compile_from_table() -> None:
-    for level in range(1, 11):
+    for level in range(1, 13):
         row = CLERIC_COMBAT_LEVELS[level]
         template = build_seraphine_dawnshield_level(level)
         wisdom_mod = _modifier(row.wisdom)
@@ -66,11 +66,11 @@ def test_existing_cleric_runtime_levels_compile_from_table() -> None:
             assert resources.get(f"spell-slot-{spell_level}", 0) == uses
 
 
-def test_complete_cleric_table_advances_through_level_ten_then_fails_closed_at_level_eleven() -> None:
-    for level in range(1, 11):
+def test_complete_cleric_table_advances_through_level_eight_then_fails_closed_at_level_nine() -> None:
+    for level in range(1, 9):
         assert unsupported_hero_engine_features(cleric_combat_features(level)) == ()
         assert build_seraphine_dawnshield_level(level).level == level
 
-    assert unsupported_hero_engine_features(cleric_combat_features(11)) == ("cleric-combat-spells-6",)
-    with pytest.raises(ValueError, match="cleric-combat-spells-6"):
-        build_seraphine_dawnshield_level(11)
+    assert unsupported_hero_engine_features(cleric_combat_features(9)) == ("cleric-combat-spells-5",)
+    with pytest.raises(ValueError, match="cleric-combat-spells-5"):
+        build_seraphine_dawnshield_level(9)
