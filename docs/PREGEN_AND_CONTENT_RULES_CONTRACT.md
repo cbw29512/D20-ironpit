@@ -59,7 +59,7 @@ The canonical twelve pregen concepts are:
 11. Fiend Warlock
 12. Evoker Wizard
 
-Target progression is levels 1 through 10 in both 2014 and 2024. A level is certified independently; one legal level does not imply the rest of the progression is legal.
+Target progression is levels 1 through 20 in both 2014 and 2024. A level is certified independently; one legal level does not imply the rest of the progression is legal.
 
 ## 5. One universal combat engine
 
@@ -89,7 +89,7 @@ Every monster and pregen must pass this sequence before public READY status:
 
 1. **Source** — authoritative edition-specific source data exists.
 2. **Parse/define** — convert source wording into declarative edition-specific content data.
-3. **Classify** — map every combat-relevant rule to an existing universal primitive, an explicit arena-neutral rule, or a genuinely missing primitive.
+3. **Classify** — decompose every combat-relevant rule into semantic pieces and map each piece to an existing universal primitive, a parameter delta, a composition of existing primitives, an explicit arena-neutral rule, or a genuinely missing primitive. Source ability names are log/UI labels, never the reason to create a new resolver.
 4. **Compile** — build the immutable combat card/capability definition without cross-edition leakage.
 5. **Reference behavior** — prove the Python reference/certification path behaves correctly.
 6. **Browser behavior** — prove the production browser engine matches the reference behavior.
@@ -97,6 +97,21 @@ Every monster and pregen must pass this sequence before public READY status:
 8. **Generated artifact parity** — browser registries/manifests match the canonical source definitions.
 9. **Permanent regression** — exact behavior is covered by tests.
 10. **READY** — only after all required checks pass may the content appear in the public selectable roster.
+
+### Mandatory reuse search before code
+
+Before any new engine code is written for a monster or pregen ability:
+
+1. search the current capability/primitive inventory;
+2. search both hero and monster implementations for equivalent behavior;
+3. compare trigger, timing, target, roll/save, effect, duration, and resource semantics;
+4. bind to the existing mechanic when equivalent;
+5. parameterize minor edition/source differences;
+6. compose multi-part named abilities from existing primitives;
+7. preserve the source ability's exact name only in source metadata, cards, and combat logs;
+8. create a new universal primitive only for the remaining behavior that cannot be represented correctly.
+
+This rule is symmetric: hero mechanics may power monsters, and monster mechanics may power heroes. No separate namespace or duplicate resolver is justified solely by content type.
 
 ## 7. Blocker classification
 
