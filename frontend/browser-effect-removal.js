@@ -7,6 +7,7 @@
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const D20O = () => window.IRON_PIT_BROWSER_D20_OVERRIDE || { apply: (_state, roll) => ({ roll, used: false }) };
 
   function spellLevel(source, effectId) {
     const template = source.state.template;
@@ -79,6 +80,7 @@
         if (!A()) throw new Error("Ability-check minimum runtime is not loaded.");
         check = A().applyMinimum(remover.state, action.castingAbility, check);
       }
+      check = D20O().apply(remover.state, check, dc).roll;
       succeeded = check.total >= dc;
     }
     if (succeeded) {
