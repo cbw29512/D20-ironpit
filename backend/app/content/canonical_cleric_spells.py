@@ -59,6 +59,7 @@ CLERIC_SPELLS = (
     _spell("contagion", "Contagion", 5, "damage", 10, "arena-out-of-scope"),
     _spell("heal", "Heal", 6, "healing", 11, "arena-out-of-scope"),
     _spell("fire-storm", "Fire Storm", 7, "damage", 13, "arena-out-of-scope"),
+    _spell("sunburst", "Sunburst", 8, "damage", 15, "arena-out-of-scope"),
     _spell(
         "greater-restoration", "Greater Restoration", 5, "healing", 9,
         "arena-out-of-scope", always_prepared_from_level=9,
