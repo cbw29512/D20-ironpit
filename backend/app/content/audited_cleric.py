@@ -3,23 +3,27 @@ from __future__ import annotations
 from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
-from app.content.cleric_divine_intervention import build_divine_intervention_damage, build_divine_intervention_healing
-from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION, disciple_of_life_bonus
-from app.content.healing_spell_effects import (
-    build_cure_wounds, build_healing_word, build_mass_cure_wounds, build_mass_healing_word,
+from app.content.cleric_divine_intervention import build_divine_intervention_damage
+from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
+from app.content.cleric_runtime_loadout import (
+    build_seraphine_healing,
+    build_seraphine_resources,
+    build_seraphine_save_spells,
+    seraphine_source,
+)
+from app.content.cleric_runtime_stats import (
+    build_seraphine_mace_attack,
+    seraphine_saving_throw_bonuses,
+    seraphine_skill_bonuses,
 )
 from app.content.hero_combat_feature_registry import unsupported_hero_engine_features
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.content.offensive_spell_effects import build_guiding_bolt, build_inflict_wounds, build_sacred_flame
+from app.content.offensive_spell_effects import build_guiding_bolt
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.character_builds import AbilityScores
+from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
-from app.domain.models import (
-    CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout,
-    Weapon, WeaponAttack, WeaponAttackKind,
-)
 from app.domain.traits import CombatTrait
-
 
 def _modifier(score: int) -> int:
     return (score - 10) // 2
@@ -29,133 +33,81 @@ def _features(level: int) -> tuple[str, ...]:
     return canonical_combat_features("cleric", level, "life-domain")
 
 
-def _mace_attack(attack_bonus: int) -> WeaponAttack:
-    return WeaponAttack(
-        id="seraphine-mace",
-        weapon=Weapon(
-            id="mace", name="Mace", attack_kind=WeaponAttackKind.MELEE,
-            dice_count=1, dice_size=6, damage_type=DamageType.BLUDGEONING,
-            animation="blunt-strike", reach_ft=5,
-        ),
-        attack_bonus=attack_bonus, damage_bonus=0,
-    )
-
-
-def _resources(level: int) -> list[ResourceDefinition]:
-    row = CLERIC_COMBAT_LEVELS[level]
-    slots = [
-        ResourceDefinition(id=f"spell-slot-{spell_level}", name=f"Level {spell_level} Spell Slot", max_uses=uses)
-        for spell_level, uses in enumerate(row.spell_slots, start=1) if uses
-    ]
-    channel = [ResourceDefinition(id="channel-divinity", name="Channel Divinity", max_uses=row.channel_divinity_uses)] if row.channel_divinity_uses else []
-    intervention = [ResourceDefinition(id="divine-intervention", name="Divine Intervention", max_uses=1)] if level >= 10 else []
-    return [
-        *slots, *channel, *intervention,
-        ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
-        ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
-    ]
-
-
-def _source(level: int) -> str:
-    return (
-        f"D&D Beyond Basic Rules 2024: Cleric level {level}, Orc, Sage, Protector, "
-        "Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, "
-        + ("Healing Word, Channel Divinity, " if level >= 2 else "")
-        + ("Life Domain, Aid, Lesser Restoration, Disciple of Life, " if level >= 3 else "")
-        + ("Ability Score Improvement, Mending, Inflict Wounds, " if level >= 4 else "")
-        + ("Sear Undead, Mass Healing Word, Revivify, Dispel Magic, " if level >= 5 else "")
-        + ("Blessed Healer, " if level >= 6 else "")
-        + ("Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, " if level >= 7 else "")
-        + ("Guardian of Faith, Ability Score Improvement, " if level >= 8 else "")
-        + ("Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, " if level >= 9 else "")
-        + ("Divine Intervention, Contagion, Spare the Dying, " if level >= 10 else "")
-        + "Equipment"
-    )
-
-
 def _build_seraphine(level: int) -> CombatantTemplate:
     if level not in CLERIC_COMBAT_LEVELS:
         raise ValueError(f"Seraphine Cleric level {level} must be between 1 and 20.")
     features = _features(level)
     unsupported = unsupported_hero_engine_features(features)
     if unsupported:
-        raise ValueError(f"Seraphine Cleric level {level} awaits combat support for: {', '.join(unsupported)}")
+        raise ValueError(
+            f"Seraphine Cleric level {level} awaits combat support for: {', '.join(unsupported)}"
+        )
+
     row = CLERIC_COMBAT_LEVELS[level]
     hero = HERO_BY_CLASS["cleric"]
     wisdom_modifier = _modifier(row.wisdom)
-    intelligence_modifier = 2
     charisma_modifier = _modifier(row.charisma)
     save_dc = 8 + row.proficiency_bonus + wisdom_modifier
     spell_attack_bonus = row.proficiency_bonus + wisdom_modifier
-    life_bonus = disciple_of_life_bonus(1) if "disciple-of-life" in features else 0
-    healing = [build_cure_wounds(wisdom_modifier, life_bonus)]
-    if level >= 2:
-        healing.append(build_healing_word(wisdom_modifier, life_bonus))
-    if level >= 5:
-        healing.append(build_mass_healing_word(
-            wisdom_modifier,
-            disciple_of_life_bonus(3) if "disciple-of-life" in features else 0,
-        ))
-    if level >= 9:
-        healing.append(build_mass_cure_wounds(
-            wisdom_modifier,
-            disciple_of_life_bonus(5) if "disciple-of-life" in features else 0,
-        ))
-    if level >= 10:
-        healing.append(build_divine_intervention_healing(
-            wisdom_modifier,
-            disciple_of_life_bonus(5) if "disciple-of-life" in features else 0,
-        ))
+
     defenses = [BLESS.model_copy(deep=True), SHIELD_OF_FAITH.model_copy(deep=True)]
     if level >= 3:
         defenses.insert(0, AID.model_copy(deep=True))
-    save_spells = [build_sacred_flame(
-        save_dc, level, wisdom_modifier if "blessed-strikes" in features else 0,
-    )]
-    if level >= 4:
-        save_spells.append(build_inflict_wounds(save_dc))
-    if level >= 9:
-        save_spells.append(build_inflict_wounds(save_dc, 5))
+
     traits = [CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE]
     if "disciple-of-life" in features:
         traits.append(CombatTrait.LIFE_DOMAIN)
+
     return CombatantTemplate(
-        id=canonical_template_id("cleric", level), name=hero.hero_name, archetype=hero.class_name,
-        level=level, kind="character",
+        id=canonical_template_id("cleric", level),
+        name=hero.hero_name,
+        archetype=hero.class_name,
+        level=level,
+        kind="character",
         ability_scores=AbilityScores(
             strength=10, dexterity=10, constitution=10, intelligence=14,
             wisdom=row.wisdom, charisma=row.charisma,
         ),
-        armor_class=row.armor_class, max_hp=row.max_hp,
-        speed_ft=30, initiative_bonus=0, weapon_attack=_mace_attack(row.proficiency_bonus),
+        armor_class=row.armor_class,
+        max_hp=row.max_hp,
+        speed_ft=30,
+        initiative_bonus=0,
+        weapon_attack=build_seraphine_mace_attack(row.proficiency_bonus),
         saving_throw_actions=[build_divine_intervention_damage(save_dc)] if level >= 10 else [],
-        spell_save_actions=save_spells, spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
-        defensive_spell_actions=defenses, healing_actions=healing,
+        spell_save_actions=build_seraphine_save_spells(level, save_dc, wisdom_modifier, features),
+        spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
+        defensive_spell_actions=defenses,
+        healing_actions=build_seraphine_healing(level, wisdom_modifier, features),
         condition_removal_actions=[LESSER_RESTORATION.model_copy(deep=True)] if level >= 3 else [],
         effect_removal_actions=[DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],
         progression_features=ProgressionCombatFeatures(
-            turning_failure_damage=(AbilityScaledDamageRider(
-                source_id="sear-undead", ability="wisdom", dice_size=8, damage_type="radiant",
-            ) if level >= 5 else None),
-            slot_healing_other_self_rider=(SlotHealingSelfRider(
-                source_id="blessed-healer", flat_bonus=2, per_slot_level=1,
-            ) if level >= 6 else None),
+            turning_failure_damage=(
+                AbilityScaledDamageRider(
+                    source_id="sear-undead", ability="wisdom",
+                    dice_size=8, damage_type="radiant",
+                )
+                if level >= 5 else None
+            ),
+            slot_healing_other_self_rider=(
+                SlotHealingSelfRider(
+                    source_id="blessed-healer", flat_bonus=2, per_slot_level=1,
+                )
+                if level >= 6 else None
+            ),
         ),
-        saving_throw_bonuses={
-            "strength": 0, "dexterity": 0, "constitution": 0, "intelligence": intelligence_modifier,
-            "wisdom": row.proficiency_bonus + wisdom_modifier,
-            "charisma": row.proficiency_bonus + charisma_modifier,
-        },
-        skill_bonuses={
-            "athletics": 0, "acrobatics": 0,
-            "arcana": row.proficiency_bonus + intelligence_modifier,
-            "history": row.proficiency_bonus + intelligence_modifier,
-            "medicine": row.proficiency_bonus + wisdom_modifier,
-            "persuasion": row.proficiency_bonus + charisma_modifier,
-        },
+        saving_throw_bonuses=seraphine_saving_throw_bonuses(
+            row.proficiency_bonus, wisdom_modifier, charisma_modifier,
+        ),
+        skill_bonuses=seraphine_skill_bonuses(
+            row.proficiency_bonus, wisdom_modifier, charisma_modifier,
+        ),
         combat_traits=traits,
-        visual=VisualLoadout(armor="chain-shirt", main_hand="mace", off_hand="shield", body_style="humanoid"),
-        resources=_resources(level), source=_source(level),
+        visual=VisualLoadout(
+            armor="chain-shirt", main_hand="mace",
+            off_hand="shield", body_style="humanoid",
+        ),
+        resources=build_seraphine_resources(level),
+        source=seraphine_source(level),
     )
 
 

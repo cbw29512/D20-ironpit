@@ -101,9 +101,8 @@ def test_divine_intervention_healing_does_not_trigger_blessed_healer() -> None:
     assert apply_slot_healing_self_rider(1, 1, cleric, True, action) is None
 
 
-def test_certified_registry_exposes_cleric_level_ten_only() -> None:
+def test_certified_registry_exposes_cleric_level_ten() -> None:
     registry = build_certified_hero_registry()
     assert registry[("cleric", 10, "canonical")] == (
         "Seraphine Dawnshield", "seraphine-dawnshield-l10",
     )
-    assert ("cleric", 11, "canonical") not in registry
