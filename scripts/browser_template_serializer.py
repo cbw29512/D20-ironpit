@@ -299,6 +299,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["feature_dice_counts"] = dict(features.feature_dice_counts)
     if features.healing_dice_maximizer:
         row["healing_dice_maximizer"] = features.healing_dice_maximizer.model_dump()
+    if features.d20_outcome_adjustment:
+        row["d20_outcome_adjustment"] = features.d20_outcome_adjustment.model_dump()
     return row
 
 

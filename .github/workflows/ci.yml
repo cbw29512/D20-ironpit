@@ -168,6 +168,7 @@ jobs:
           node frontend/browser-cleric2.test.cjs
           node frontend/browser-cleric4.test.cjs
           node frontend/browser-cleric17-18.test.cjs
+          node frontend/browser-d20-outcome-adjustments.test.cjs
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-paladin-oath-spells-2014.test.cjs

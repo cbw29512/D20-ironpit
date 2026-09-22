@@ -70,6 +70,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.update(features.feature_dice_counts)
     if features.healing_dice_maximizer:
         mechanics.add(features.healing_dice_maximizer.source_id)
+    if features.d20_outcome_adjustment:
+        mechanics.add(features.d20_outcome_adjustment.source_id)
     if features.ability_check_minimums:
         mechanics.update(rule.source_id for rule in features.ability_check_minimums)
     if features.brutal_strike_damage_dice:

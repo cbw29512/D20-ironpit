@@ -232,6 +232,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["feature_dice_counts"] = dict(progression.feature_dice_counts)
     if progression.healing_dice_maximizer:
         row["healing_dice_maximizer"] = progression.healing_dice_maximizer.model_dump()
+    if progression.d20_outcome_adjustment:
+        row["d20_outcome_adjustment"] = progression.d20_outcome_adjustment.model_dump()
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
