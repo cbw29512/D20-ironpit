@@ -102,6 +102,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("improved-cunning-strike")
     if features.attack_advantage_suppressed_unless_incapacitated:
         mechanics.add("elusive")
+    if features.miss_to_hit_once_per_turn:
+        mechanics.add("boon-combat-prowess")
     if features.uncanny_dodge:
         mechanics.add("uncanny-dodge")
     if features.evasion:
