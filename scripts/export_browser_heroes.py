@@ -211,6 +211,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "saving_throw_proficiency_grants": [
             item.model_dump() for item in progression.saving_throw_proficiency_grants
         ],
+        "first_round_extra_turn_grants": [
+            item.model_dump() for item in progression.first_round_extra_turn_grants
+        ],
         "uncanny_dodge": progression.uncanny_dodge, "evasion": progression.evasion, "martial_arts_bonus_attack": progression.martial_arts_bonus_attack,
         "martial_arts_die_size": progression.martial_arts_die_size, "flurry_of_blows": progression.flurry_of_blows,
         "deflect_missiles": progression.deflect_missiles, "open_hand_technique": progression.open_hand_technique,
