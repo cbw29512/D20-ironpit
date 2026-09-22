@@ -91,3 +91,29 @@ def build_mara_quickstep_profile() -> CharacterBuildProfile:
             "Basic Rules 2024: Equipment — Leather Armor, Shortsword, Shortbow, Vex",
         ],
     )
+
+
+
+def build_mara_quickstep_level2_profile() -> CharacterBuildProfile:
+    """Level 2 preserves Mara's build and adds the combat-relevant Cunning Action feature."""
+    try:
+        base = build_mara_quickstep_profile()
+        return base.model_copy(update={
+            "id": "build-mara-quickstep-l2",
+            "template_id": canonical_template_id("rogue", 2),
+            "level": 2,
+            "feature_audits": [
+                *base.feature_audits,
+                _feature(
+                    "cunning-action", "Cunning Action", "class",
+                    combat_relevant=True, automated=True,
+                    notes="Uses the shared bonus-action Dash/Disengage/Hide engine.",
+                ),
+            ],
+            "source_references": [
+                *base.source_references,
+                "Basic Rules 2024: Rogue 2 — Cunning Action",
+            ],
+        })
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 2 profile could not be created.") from exc
