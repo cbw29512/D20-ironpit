@@ -53,6 +53,8 @@ def _scores_after_level_delta(previous: AbilityScores, level: int) -> AbilitySco
         return previous.model_copy(update={"constitution": 20})
     if level == 16:
         return previous.model_copy(update={"wisdom": 12})
+    if level == 19:
+        return previous.model_copy(update={"strength": 14})
     return previous.model_copy()
 
 
@@ -69,6 +71,15 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
 
     def save_bonus(ability: str, modifier: int) -> int:
         return modifier + (row.proficiency_bonus if ability in save_proficiencies else 0)
+
+    resources = [
+        ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus).model_dump(),
+        ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1).model_dump(),
+    ]
+    if "boon-combat-prowess" in mara_rogue_features(level):
+        resources.append(ResourceDefinition(
+            id="boon-combat-prowess", name="Boon of Combat Prowess", max_uses=1,
+        ).model_dump())
 
     data.update(
         ability_scores=scores.model_dump(),
@@ -94,10 +105,7 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
             "acrobatics": row.proficiency_bonus + dexterity_mod,
         },
         progression_features=progression_fields,
-        resources=[
-            ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus).model_dump(),
-            ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1).model_dump(),
-        ],
+        resources=resources,
         source=f"D&D Beyond Basic Rules 2024: Rogue {level}, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex",
     )
 
