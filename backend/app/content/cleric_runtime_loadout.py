@@ -78,6 +78,10 @@ def build_seraphine_healing(
         actions.append(build_mass_cure_wounds(
             wisdom_modifier, disciple_of_life_bonus(8) if life else 0, 8,
         ))
+    if level >= 17:
+        actions.append(build_mass_cure_wounds(
+            wisdom_modifier, disciple_of_life_bonus(9) if life else 0, 9,
+        ))
     return actions
 
 
@@ -102,6 +106,8 @@ def build_seraphine_save_spells(
         spells.append(build_inflict_wounds(save_dc, 7))
     if level >= 15:
         spells.append(build_inflict_wounds(save_dc, 8))
+    if level >= 17:
+        spells.append(build_inflict_wounds(save_dc, 9))
     return spells
 
 
@@ -121,6 +127,8 @@ def seraphine_source(level: int) -> str:
         (14, "Improved Blessed Strikes, "),
         (15, "Sunburst, eighth-level Inflict Wounds and Mass Cure Wounds upcasts, "),
         (16, "Ability Score Improvement, "),
+        (17, "Supreme Healing, Astral Projection, ninth-level Inflict Wounds and Mass Cure Wounds upcasts, "),
+        (18, "Channel Divinity 4 uses, Divine Spark 4d8, Word of Recall, "),
     )
     details = "".join(text for minimum, text in milestones if level >= minimum)
     return (

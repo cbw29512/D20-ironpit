@@ -50,8 +50,20 @@ def death_save_advantage_sources(state: CombatantState) -> int:
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.DEATH_SAVE_ADVANTAGE)
 
 
-def healing_is_maximized(state: CombatantState) -> bool:
-    return any(item.kind is ModifierKind.HEALING_MAXIMIZE for item in state.active_modifiers)
+def healing_is_maximized(
+    state: CombatantState,
+    source_state: CombatantState | None = None,
+    source_id: str | None = None,
+) -> bool:
+    target_modifier = any(
+        item.kind is ModifierKind.HEALING_MAXIMIZE for item in state.active_modifiers
+    )
+    source_feature = bool(
+        source_state is not None
+        and source_id is not None
+        and source_id in source_state.template.progression_features.maximized_healing_source_ids
+    )
+    return target_modifier or source_feature
 
 
 def condition_immunity_modifier_applies(

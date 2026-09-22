@@ -228,6 +228,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
     if progression.damaging_action_temporary_hp_rider:
         row["damaging_action_temporary_hp_rider"] = progression.damaging_action_temporary_hp_rider.model_dump()
+    if progression.feature_dice_counts:
+        row["feature_dice_counts"] = dict(progression.feature_dice_counts)
+    if progression.maximized_healing_source_ids:
+        row["maximized_healing_source_ids"] = list(progression.maximized_healing_source_ids)
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True

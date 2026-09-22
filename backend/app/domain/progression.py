@@ -50,6 +50,8 @@ class ProgressionCombatFeatures(BaseModel):
     turning_failure_damage: AbilityScaledDamageRider | None = None
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     damaging_action_temporary_hp_rider: DamagingActionTemporaryHpRider | None = None
+    feature_dice_counts: dict[str, int] = Field(default_factory=dict)
+    maximized_healing_source_ids: list[str] = Field(default_factory=list)
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False

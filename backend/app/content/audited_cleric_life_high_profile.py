@@ -18,6 +18,10 @@ from app.content.audited_cleric_life_levels15_16 import (
     build_seraphine_dawnshield_level15_profile,
     build_seraphine_dawnshield_level16_profile,
 )
+from app.content.audited_cleric_life_levels17_18 import (
+    build_seraphine_dawnshield_level17_profile,
+    build_seraphine_dawnshield_level18_profile,
+)
 
 __all__ = [
     "build_seraphine_dawnshield_level7_profile",
@@ -30,4 +34,6 @@ __all__ = [
     "build_seraphine_dawnshield_level14_profile",
     "build_seraphine_dawnshield_level15_profile",
     "build_seraphine_dawnshield_level16_profile",
+    "build_seraphine_dawnshield_level17_profile",
+    "build_seraphine_dawnshield_level18_profile",
 ]

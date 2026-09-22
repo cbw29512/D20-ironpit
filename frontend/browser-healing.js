@@ -8,6 +8,10 @@
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const swarm = (state) => state.template.traits?.includes("swarm");
   const slotHeal = (action) => Boolean(action.resourceId?.startsWith("spell-slot-"));
+  const healingMaximized = (healer, target, sourceId) => Boolean(
+    window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state)
+    || (healer.state.template.maximized_healing_source_ids || []).includes(sourceId)
+  );
 
   function resourceAvailable(member, action, turnKey = null) {
     if (!action.resourceId) return true;
@@ -117,7 +121,7 @@
     healer.state.resources[action.resourceId] -= action.resourceCost || 1;
     const remaining = healer.state.resources[action.resourceId], events = [];
     for (const target of targets) {
-      const maximized = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state) || false;
+      const maximized = healingMaximized(healer, target, action.id);
       const rolls = Array.from({ length: action.diceCount || 0 }, () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6));
       const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
       const before = target.state.current_hp, healed = restore(target.state, total);
@@ -145,7 +149,7 @@
       C().markSlotSpellCast(healer.state, turnKey);
     }
     E().spend(healer.state, action.actionCost);
-    const maximized = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state) || false;
+    const maximized = healingMaximized(healer, target, action.id);
     const rolls = Array.from({ length: action.diceCount || 0 }, () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6));
     const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
     const hpBefore = target.state.current_hp, healed = restore(target.state, total);
@@ -165,5 +169,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_HEALING = { bloodied, chooseAction, chooseTarget, groupTargets, resolve, resolveGroup, restore, selfRider };
+  window.IRON_PIT_BROWSER_HEALING = { bloodied, chooseAction, chooseTarget, groupTargets, healingMaximized, resolve, resolveGroup, restore, selfRider };
 })();

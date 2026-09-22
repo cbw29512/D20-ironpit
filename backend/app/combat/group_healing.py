@@ -61,7 +61,7 @@ def resolve_group_healing(
     events: list[BattleEvent] = []
     notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}"
     for target in targets:
-        rolls = [action.dice_size for _ in range(action.dice_count)] if healing_is_maximized(target.state) else [
+        rolls = [action.dice_size for _ in range(action.dice_count)] if healing_is_maximized(target.state, healer.state, action.id) else [
             dice.roll(action.dice_size) for _ in range(action.dice_count)
         ]
         total = sum(rolls) + action.healing_bonus

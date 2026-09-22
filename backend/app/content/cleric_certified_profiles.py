@@ -13,6 +13,8 @@ from app.content.audited_cleric_life_high_profile import (
     build_seraphine_dawnshield_level14_profile,
     build_seraphine_dawnshield_level15_profile,
     build_seraphine_dawnshield_level16_profile,
+    build_seraphine_dawnshield_level17_profile,
+    build_seraphine_dawnshield_level18_profile,
 )
 from app.content.audited_cleric_life_profile import (
     build_seraphine_dawnshield_level3_profile,
@@ -45,6 +47,8 @@ _BUILDERS: tuple[ProfileBuilder, ...] = (
     build_seraphine_dawnshield_level14_profile,
     build_seraphine_dawnshield_level15_profile,
     build_seraphine_dawnshield_level16_profile,
+    build_seraphine_dawnshield_level17_profile,
+    build_seraphine_dawnshield_level18_profile,
 )
 
 

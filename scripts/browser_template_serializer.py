@@ -295,6 +295,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["sneak_attack_d6"] = features.sneak_attack_d6
     if features.damaging_action_temporary_hp_rider:
         row["damaging_action_temporary_hp_rider"] = features.damaging_action_temporary_hp_rider.model_dump()
+    if features.feature_dice_counts:
+        row["feature_dice_counts"] = dict(features.feature_dice_counts)
+    if features.maximized_healing_source_ids:
+        row["maximized_healing_source_ids"] = list(features.maximized_healing_source_ids)
     return row
 
 
