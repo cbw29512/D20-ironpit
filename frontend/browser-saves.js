@@ -13,6 +13,7 @@
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || { evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const D = () => window.IRON_PIT_DICE;
+  const D20O = () => window.IRON_PIT_BROWSER_D20_OVERRIDE || { apply: (_state, roll) => ({ roll, used: false }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -67,6 +68,7 @@
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
     }
+    roll = D20O().apply(state, roll, dc).roll;
     return { roll, succeeded: roll.total >= dc };
   }
 
