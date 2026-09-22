@@ -62,7 +62,7 @@ def _advancement_audits(spec: FighterChampionVariantSpec, level: int):
     if level >= 19:
         audits.append(advancement_audit(
             19,
-            f"Boon of Combat Prowess: +1 {spec.boon_ability.title()}; Peerless Aim remains runtime-blocked.",
+            f"Boon of Combat Prowess: +1 {spec.boon_ability.title()}; Peerless Aim reuses the shared miss-to-hit and start-turn refresh primitives.",
         ))
     return audits
 
