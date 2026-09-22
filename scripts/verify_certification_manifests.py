@@ -102,6 +102,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("steady-aim")
     if features.cunning_strike_trip_die_cost:
         mechanics.add("cunning-strike")
+    if features.cunning_strike_obscure_die_cost:
+        mechanics.add("devious-strikes")
     if features.cunning_strike_max_effects > 1:
         mechanics.add("improved-cunning-strike")
     if features.uncanny_dodge:
