@@ -100,6 +100,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("devious-strikes")
     if features.cunning_strike_max_effects > 1:
         mechanics.add("improved-cunning-strike")
+    if features.attack_advantage_suppressed_unless_incapacitated:
+        mechanics.add("elusive")
     if features.uncanny_dodge:
         mechanics.add("uncanny-dodge")
     if features.evasion:
