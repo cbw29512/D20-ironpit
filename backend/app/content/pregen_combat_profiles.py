@@ -150,11 +150,19 @@ def build_seraphine_dawnshield_level6_combat_profile() -> PregenCombatProfile:
     return _seraphine_profile(6)
 
 
+def build_seraphine_dawnshield_level7_combat_profile() -> PregenCombatProfile:
+    return _seraphine_profile(7)
+
+
+def build_seraphine_dawnshield_level8_combat_profile() -> PregenCombatProfile:
+    return _seraphine_profile(8)
+
+
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profile
     profiles = [
         *(_karnok_profile(level) for level in range(1, 19)),
-        *(_rokhan_profile(level) for level in range(1, 8)), *(_seraphine_profile(level) for level in range(1, 7)),
+        *(_rokhan_profile(level) for level in range(1, 8)), *(_seraphine_profile(level) for level in range(1, 9)),
         build_mara_quickstep_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
