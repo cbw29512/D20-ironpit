@@ -29,7 +29,10 @@ def apply_miss_to_hit_override(
 
         resource.current_uses -= 1
         definition = next((item for item in attacker.template.resources if item.id == resource_id), None)
-        source_name = definition.name if definition is not None else resource_id
+        source_name = (
+            attacker.template.progression_features.miss_to_hit_override_source_name
+            or (definition.name if definition is not None else resource_id)
+        )
         return True, resource_id, source_name
     except Exception as exc:
         logger.exception("Failed to resolve miss-to-hit override for %s.", attacker.template.name)
