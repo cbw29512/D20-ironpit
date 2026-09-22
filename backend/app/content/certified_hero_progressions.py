@@ -147,7 +147,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_mara_quickstep_level7_profile, build_mara_quickstep_level8_profile,
             build_mara_quickstep_level9_profile, build_mara_quickstep_level10_profile,
             build_mara_quickstep_level11_profile, build_mara_quickstep_level12_profile,
-            build_mara_quickstep_level13_profile, build_mara_quickstep_level14_profile, build_mara_quickstep_level15_profile,
+            build_mara_quickstep_level13_profile, build_mara_quickstep_level14_profile, build_mara_quickstep_level15_profile, build_mara_quickstep_level16_profile,
         ),
     ),
     CertifiedHeroProgression(
