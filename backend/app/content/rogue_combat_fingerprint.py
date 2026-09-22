@@ -13,7 +13,6 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
         wisdom = 12 if level >= 16 else 10
         proficiency_bonus = 2 + (level - 1) // 4
         strength = 14 if level >= 19 else 13
-        strength_mod = (strength - 10) // 2
         return PregenCombatProfile(
             template_id=f"mara-quickstep-l{level}",
             archetype="Rogue",
@@ -30,7 +29,7 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
             max_hp=8 + constitution_mod + (level - 1) * (5 + constitution_mod),
             speed_ft=30,
             skill_bonuses=(
-                ("athletics", proficiency_bonus + strength_mod),
+                ("athletics", proficiency_bonus + 1),
                 ("acrobatics", proficiency_bonus + dexterity_mod),
             ),
             attacks=(
@@ -45,7 +44,10 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
                 ),
             ),
             weapon_masteries=("shortsword", "shortbow"),
-            resources=(("adrenaline-rush", proficiency_bonus), ("relentless-endurance", 1)),
+            resources=(
+                ("adrenaline-rush", proficiency_bonus), ("relentless-endurance", 1),
+                *((("stroke-of-luck", 1),) if level >= 20 else ()),
+            ),
             sneak_attack_d6=(level + 1) // 2,
         )
     except Exception as exc:
@@ -145,3 +147,8 @@ def build_mara_quickstep_level18_combat_profile() -> PregenCombatProfile:
 
 def build_mara_quickstep_level19_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(19)
+
+
+
+def build_mara_quickstep_level20_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(20)
