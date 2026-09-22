@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.domain.character_builds import AbilityName
 from app.domain.models import CombatantState, DiceRoll, RollRevision
 
@@ -57,3 +58,29 @@ def apply_ability_check_minimum(
             ability,
         )
         raise RuntimeError("Ability-check minimum could not be applied.") from exc
+
+
+def resolve_ability_check_outcome(
+    state: CombatantState,
+    ability: AbilityName,
+    roll: DiceRoll,
+    dc: int,
+) -> tuple[DiceRoll, bool]:
+    """Apply universal post-roll ability-check revisions, then test against the DC."""
+    try:
+        revised = apply_ability_check_minimum(state, ability, roll)
+        revised, _, _ = apply_failed_d20_test_override(
+            state, revised, failed=revised.total < dc, test_kind="ability_check",
+        )
+        if revised is None:
+            raise ValueError("Ability-check override unexpectedly removed the d20 roll.")
+        return revised, revised.total >= dc
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception(
+            "Failed to resolve ability-check outcome for %s (%s).",
+            state.template.name,
+            ability,
+        )
+        raise RuntimeError("Ability-check outcome could not be resolved.") from exc
