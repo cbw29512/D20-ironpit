@@ -87,11 +87,14 @@
 
   function resolveSpark(sequence, round, cleric, setup, choice) {
     const target = choice.targets[0]; if (!target || target.combatant_id === cleric.combatant_id || S().distance(cleric, target) > 30) throw new Error("Divine Spark requires another creature within 30 feet.");
-    const remaining = spend(cleric), die = D().roll(8), mod = wisdomModifier(cleric), total = die + mod, notation = `1d8+${mod}`;
+    const remaining = spend(cleric), diceCount = cleric.state.template.divine_spark_dice;
+    if (!(diceCount > 0)) throw new Error("Divine Spark requires certified progression dice.");
+    const rolls = D().rollMany(diceCount, 8), mod = wisdomModifier(cleric);
+    const total = rolls.reduce((sum, roll) => sum + roll, 0) + mod, notation = `${diceCount}d8+${mod}`;
     if (choice.kind === "divine-spark-heal") {
       const before = target.state.current_hp, healed = H().restore(target.state, total);
       return { events: [{ sequence, round_number: round, event_type: "healing", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
-        target_id: target.combatant_id, target_name: target.state.template.name, healing_roll: { notation, rolls: [die], modifier: mod, total },
+        target_id: target.combatant_id, target_name: target.state.template.name, healing_roll: { notation, rolls, modifier: mod, total },
         hp_before: before, hp_after: target.state.current_hp, feature_id: SPARK, resource_remaining: remaining, animation: SPARK,
         description: `${cleric.state.template.name} restores ${healed} HP with Divine Spark.` }], sequence: sequence + 1 };
     }
@@ -101,8 +104,8 @@
     if (applied) A().applyDamage(target.state, applied, false, [type], [...setup.heroes, ...setup.monsters].map((m) => m.state));
     const event = { sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: "constitution", save_dc: dc,
-      save_succeeded: save.succeeded, damage_roll: { notation, rolls: [die], modifier: mod, total: applied },
-      damage_components: [{ source: "Divine Spark", notation, rolls: [die], modifier: mod, damage_type: type, total: raw, applied_total: applied }],
+      save_succeeded: save.succeeded, damage_roll: { notation, rolls, modifier: mod, total: applied },
+      damage_components: [{ source: "Divine Spark", notation, rolls, modifier: mod, damage_type: type, total: raw, applied_total: applied }],
       hp_before: before, hp_after: target.state.current_hp, feature_id: SPARK, resource_remaining: remaining, animation: SPARK,
       description: `${target.state.template.name} takes ${applied} ${type} damage from Divine Spark.` + (window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "") };
     const next = sequence + 1;
