@@ -65,3 +65,5 @@ def test_2024_rogue_level5_profile_fingerprint_and_registry_match() -> None:
 
     registry = build_certified_hero_registry()
     assert registry[("rogue", 5, "canonical")] == ("Mara Quickstep", "mara-quickstep-l5")
+
+# Exact-head certification trigger.
