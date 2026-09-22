@@ -40,3 +40,20 @@ def test_2024_rogue_level4_fingerprint_and_registry_match_runtime() -> None:
     assert fingerprint.sneak_attack_d6 == 2
     registry = build_certified_hero_registry()
     assert registry[("rogue", 4, "canonical")] == ("Mara Quickstep", "mara-quickstep-l4")
+
+
+
+def test_2024_rogue_levels_1_through_4_preserve_one_persistent_foundation() -> None:
+    levels = [build_mara_quickstep_level(level) for level in range(1, 5)]
+    level1 = levels[0]
+    for template in levels[1:]:
+        assert template.name == level1.name
+        assert template.archetype == level1.archetype
+        assert template.combat_traits == level1.combat_traits
+        assert template.weapon_masteries == level1.weapon_masteries
+        assert template.visual == level1.visual
+    assert [item.progression_features.sneak_attack_d6 for item in levels] == [1, 1, 2, 2]
+    assert [item.progression_features.cunning_action for item in levels] == [False, True, True, True]
+    assert [item.progression_features.stationary_bonus_action_next_attack_advantage for item in levels] == [
+        False, False, True, True,
+    ]
