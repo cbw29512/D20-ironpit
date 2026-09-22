@@ -193,6 +193,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "initiative_advantage": progression.initiative_advantage, "athletics_advantage": progression.athletics_advantage,
         "first_round_extra_turn_initiative_offset": progression.first_round_extra_turn_initiative_offset,
         "suppress_attack_advantage_while_not_incapacitated": progression.suppress_attack_advantage_while_not_incapacitated,
+        "miss_to_hit_override_grants": [item.model_dump() for item in progression.miss_to_hit_override_grants],
         "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
         "failed_d20_test_override_grants": [item.model_dump() for item in progression.failed_d20_test_override_grants],
