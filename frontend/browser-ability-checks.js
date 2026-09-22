@@ -29,6 +29,11 @@
   function resolve(state, ability, roll, dc) {
     try {
       let revised = applyMinimum(state, ability, roll);
+      const grants = state.template.failed_d20_test_override_grants || [];
+      const eligible = grants.some((grant) => (grant.test_kinds || []).includes("ability_check"));
+      if (eligible && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
+        throw new Error("Failed-D20 override runtime is not loaded for a declared ability-check capability.");
+      }
       revised = window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE?.apply(
         state, revised, revised.total < dc, "ability_check",
       ).roll || revised;
