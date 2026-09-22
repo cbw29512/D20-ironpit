@@ -55,6 +55,7 @@ def test_devious_strike_obscure_trades_three_dice_and_applies_timed_blinded() ->
     assert "blinded" in defender.active_effect_ids
     effect = next(item for item in defender.timed_effects if item.source_effect_id == OBSCURE_FEATURE_ID)
     assert effect.effect_id == "blinded"
+    assert effect.source_id == attacker.template.id
     assert effect.expiry_timing == "target_turn_end"
 
 
