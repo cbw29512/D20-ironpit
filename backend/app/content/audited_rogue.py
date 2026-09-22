@@ -20,7 +20,7 @@ def mara_rogue_features(level: int) -> tuple[str, ...]:
     return compose_class_subclass_features("rogue", "thief", level, ROGUE_COMBAT_LEVELS)
 
 
-_MARA_LOADOUT_INERT_FEATURES = frozenset({"thief-fast-hands"})
+_MARA_LOADOUT_INERT_FEATURES = frozenset({"thief-fast-hands", "thief-supreme-sneak"})
 
 
 def unsupported_mara_rogue_features(level: int) -> tuple[str, ...]:
