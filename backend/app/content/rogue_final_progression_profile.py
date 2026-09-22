@@ -31,3 +31,32 @@ def build_mara_quickstep_level17_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 17 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level18_profile() -> CharacterBuildProfile:
+    """Level 18 inherits level 17 and gains Elusive."""
+    try:
+        previous = build_mara_quickstep_level17_profile()
+        data = advance_profile_data(previous, 18)
+        data.update(
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "elusive", "Elusive", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Uses the generic defender Advantage-suppression capability. "
+                        "Attack-roll Advantage sources are suppressed unless Mara is Incapacitated; "
+                        "Disadvantage sources remain unchanged."
+                    ),
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 18 — Elusive",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 18 profile could not be created.") from exc
