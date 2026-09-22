@@ -22,6 +22,7 @@ def test_2024_rogue_level7_is_level6_plus_evasion_and_sneak_attack() -> None:
     assert template.progression_features.uncanny_dodge is True
     assert template.progression_features.evasion is True
     assert {item.id: item.max_uses for item in template.resources}["adrenaline-rush"] == 3
+    assert "Rogue 7" in template.source
 
 
 def test_2024_rogue_level7_profile_reuses_evasion_and_audits_reliable_talent() -> None:
