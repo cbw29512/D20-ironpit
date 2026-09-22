@@ -37,8 +37,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -207,8 +207,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -348,8 +348,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -504,8 +504,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -648,8 +648,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -845,8 +845,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -985,8 +985,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -1098,8 +1098,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -1237,8 +1237,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -1352,8 +1352,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -1463,8 +1463,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -1591,8 +1591,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -1702,8 +1702,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -1815,8 +1815,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -1935,8 +1935,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -2055,8 +2055,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -2185,8 +2185,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -2345,8 +2345,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -2460,8 +2460,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -2571,8 +2571,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -2684,8 +2684,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -2795,8 +2795,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -2908,8 +2908,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -3019,8 +3019,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -3135,8 +3135,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -3248,8 +3248,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -3364,8 +3364,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -3509,8 +3509,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -3641,8 +3641,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -3761,8 +3761,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -3901,8 +3901,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -4010,8 +4010,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -4191,8 +4191,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -4442,8 +4442,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -4574,8 +4574,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -4685,8 +4685,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -4794,8 +4794,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -4901,8 +4901,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5010,8 +5010,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5119,8 +5119,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5229,8 +5229,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5336,8 +5336,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5445,8 +5445,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5554,8 +5554,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5663,8 +5663,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5772,8 +5772,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5879,8 +5879,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -5990,8 +5990,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -6103,8 +6103,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -6216,8 +6216,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -6348,8 +6348,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -6459,8 +6459,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -6572,8 +6572,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -6683,8 +6683,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -6801,8 +6801,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -6916,8 +6916,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7027,8 +7027,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7140,8 +7140,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7257,8 +7257,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7372,8 +7372,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7483,8 +7483,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7599,8 +7599,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7712,8 +7712,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7825,8 +7825,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -7938,8 +7938,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -8101,8 +8101,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -8231,8 +8231,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -8365,8 +8365,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -8524,8 +8524,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -8666,8 +8666,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -8789,8 +8789,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -8912,8 +8912,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -9052,8 +9052,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -9236,8 +9236,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -9402,8 +9402,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -9543,8 +9543,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -9665,8 +9665,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -9792,8 +9792,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -9969,8 +9969,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -10097,8 +10097,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -10226,8 +10226,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -10357,8 +10357,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -10489,8 +10489,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -10624,8 +10624,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -10770,8 +10770,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -10899,8 +10899,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -11070,8 +11070,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -11230,8 +11230,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -11399,8 +11399,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -11540,8 +11540,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -11662,8 +11662,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -11839,8 +11839,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -11955,8 +11955,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -12079,8 +12079,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -12201,8 +12201,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -12339,8 +12339,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -12463,8 +12463,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -12649,8 +12649,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -12781,8 +12781,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -12953,8 +12953,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -13066,8 +13066,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -13188,8 +13188,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -13354,8 +13354,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -13474,8 +13474,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -13598,8 +13598,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -13718,8 +13718,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -13863,8 +13863,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -13986,8 +13986,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -14152,8 +14152,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -14294,8 +14294,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -14418,8 +14418,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -14553,8 +14553,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -14731,8 +14731,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -14851,8 +14851,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -14987,8 +14987,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -15104,8 +15104,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -15217,8 +15217,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -15333,8 +15333,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -15476,8 +15476,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -15622,8 +15622,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -15810,8 +15810,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -15997,8 +15997,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -16182,8 +16182,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -16370,8 +16370,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -16554,8 +16554,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -16740,8 +16740,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -16933,8 +16933,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -17124,8 +17124,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -17318,8 +17318,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -17508,8 +17508,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -17700,8 +17700,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -17821,8 +17821,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -17962,8 +17962,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -18103,8 +18103,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -18254,8 +18254,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -18419,8 +18419,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -18612,8 +18612,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
@@ -18728,8 +18728,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0,
-      "tactical_shift_fraction": 0
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
     },
     "attacks": [
       {
