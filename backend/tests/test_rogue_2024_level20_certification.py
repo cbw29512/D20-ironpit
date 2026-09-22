@@ -59,3 +59,30 @@ def test_2024_rogue_level20_profile_fingerprint_and_registry_match() -> None:
 
     registry = build_certified_hero_registry()
     assert registry[("rogue", 20, "canonical")] == ("Mara Quickstep", "mara-quickstep-l20")
+
+
+def test_level20_uses_stroke_before_combat_prowess_then_keeps_boon_available() -> None:
+    attacker = build_combatant_state(build_mara_quickstep_level(20))
+    defender = build_combatant_state(build_karnok_stoneward_level(18))
+
+    stroke = resolve_attack(
+        10, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([1, *([4] * 40)]), spend_action=False, turn_key="1:mara",
+    )
+
+    assert stroke.hit is True
+    assert stroke.critical is True
+    assert stroke.feature_id == "stroke-of-luck"
+    assert "boon-combat-prowess" not in attacker.turn_start_feature_cooldowns
+    assert next(item for item in attacker.resources if item.id == "stroke-of-luck").current_uses == 0
+
+    prowess = resolve_attack(
+        11, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([1, *([4] * 20)]), spend_action=False, turn_key="1:mara",
+    )
+
+    assert prowess.hit is True
+    assert prowess.critical is False
+    assert prowess.feature_id == "boon-combat-prowess"
+    assert "Boon of Combat Prowess turns the miss into a hit." in prowess.description
+    assert attacker.turn_start_feature_cooldowns == ["boon-combat-prowess"]
