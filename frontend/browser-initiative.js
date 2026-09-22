@@ -41,6 +41,27 @@
     return 0;
   }
 
+  function firstRoundSchedule(groups) {
+    const slots = [], extras = [];
+    groups.forEach((group, groupIndex) => {
+      group.members.forEach((member, memberIndex) => {
+        slots.push({ group, groupIndex, memberIndex, count: group.initiative_count, normal: 1, id: member.combatant_id });
+        for (const grant of member.state.template.first_round_extra_turn_grants || []) {
+          const count = group.initiative_count + grant.initiative_offset;
+          slots.push({ group, groupIndex, memberIndex, count, normal: 0, id: member.combatant_id });
+          extras.push({ combatant_id: member.combatant_id, initiative_count: count, source_id: grant.source_id });
+        }
+      });
+    });
+    slots.sort((a, b) => priority(b.group) - priority(a.group)
+      || b.count - a.count
+      || compareTieHistory(a.group.tie_break_rolls, b.group.tie_break_rolls)
+      || a.groupIndex - b.groupIndex
+      || a.memberIndex - b.memberIndex
+      || b.normal - a.normal);
+    return { order: slots.map((slot) => slot.id), extras };
+  }
+
   function resolve(setup) {
     const groups = setup.heroes.map((member, index) => ({
       side: "heroes", template_id: member.state.template.id, members: [member], index,
@@ -77,6 +98,7 @@
       || b.initiative_count - a.initiative_count
       || compareTieHistory(a.tie_break_rolls, b.tie_break_rolls)
       || a.index - b.index);
+    const firstRound = firstRoundSchedule(groups);
     return {
       groups: groups.map((group) => ({
         side: group.side, template_id: group.template_id,
@@ -86,6 +108,8 @@
         tie_break_roll: group.tie_break_roll, tie_break_rolls: [...group.tie_break_rolls],
       })),
       turn_order: groups.flatMap((group) => group.members.map((member) => member.combatant_id)),
+      first_round_turn_order: firstRound.order,
+      first_round_extra_turns: firstRound.extras,
     };
   }
 
@@ -93,7 +117,7 @@
     const members = [...setup.heroes, ...setup.monsters];
     const names = new Map(members.map((member) => [member.combatant_id, member.state.template.name]));
     let sequence = startSequence;
-    return initiative.groups.map((group) => {
+    const result = initiative.groups.map((group) => {
       const name = names.get(group.combatant_ids[0]);
       let description = `${name}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.`;
       if (group.natural_roll === 20) description += " Natural 20: top initiative priority.";
@@ -105,7 +129,17 @@
         attack_roll: group.initiative_roll, animation: "initiative", description,
       };
     });
+    for (const extra of initiative.first_round_extra_turns || []) {
+      const name = names.get(extra.combatant_id);
+      result.push({
+        sequence: sequence++, round_number: 0, event_type: "feature",
+        actor_id: extra.combatant_id, actor_name: name,
+        feature_id: extra.source_id, animation: "initiative",
+        description: `${name} gains an extra first-round turn at Initiative ${extra.initiative_count} from ${extra.source_id}.`,
+      });
+    }
+    return result;
   }
 
-  window.IRON_PIT_BROWSER_INITIATIVE = { events, priority, resolve };
+  window.IRON_PIT_BROWSER_INITIATIVE = { events, firstRoundSchedule, priority, resolve };
 })();
