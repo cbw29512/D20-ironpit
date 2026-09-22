@@ -52,6 +52,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("defender-attack-advantage-suppression")
     if features.miss_to_hit_override_resource_id:
         mechanics.add("miss-to-hit-override")
+    if features.miss_to_hit_override_source_name and not features.miss_to_hit_override_resource_id:
+        raise ValueError("Miss-to-hit source name requires a configured miss-to-hit resource.")
     if features.athletics_advantage:
         mechanics.add("athletics-advantage")
     if features.danger_sense:
