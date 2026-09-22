@@ -16,6 +16,17 @@ window.IRON_PIT_BROWSER_STATE = {
 };
 window.IRON_PIT_BROWSER_FORMATION = {
   targetOrder: (_member, setup) => setup.monsters || [],
+  chooseStandardAttack: (member, setup) => {
+    const target = (setup.monsters || [])[0];
+    const attack = (member.state.template.attacks || [])[0];
+    return target && attack ? { target, attack, distance: 5 } : null;
+  },
+};
+window.IRON_PIT_BROWSER_MODIFIERS = {
+  effectiveSpeed: (state) => state.template.speed_ft || 30,
+  nextAttackAgainstAdvantage: (state, targetId) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length,
+  add: (state, item) => { state.active_modifiers.push({ ...item }); },
 };
 window.IRON_PIT_BROWSER_ATTACK = {
   resolveAttack(sequence, round, actor, target, attack, _distance, extra = {}) {
@@ -42,6 +53,7 @@ load("browser-action-economy.js");
 load("browser-ability-hooks.js");
 load("browser-rage.js");
 load("browser-support.js");
+load("browser-steady-aim.js");
 load("browser-frenzy-2014.js");
 load("browser-2014-monk.js");
 load("browser-ability-hook-installation.js");
@@ -52,6 +64,7 @@ const registrations = H.abilitiesFor(phase).map((item) => [item.id, item.priorit
 assert.deepEqual(registrations, [
   ["rage-enter", 10, ["2014", "2024"]],
   ["second-wind", 20, ["2014", "2024"]],
+  ["steady-aim", 25, ["2024"]],
   ["adrenaline-rush", 30, ["2024"]],
   ["monk-bonus-attack-2014", 100, ["2014"]],
   ["frenzy-bonus-attack-2014", 110, ["2014"]],
@@ -66,7 +79,9 @@ function baseState(template, resources = {}) {
     temporary_hp: 0,
     resources: { ...resources },
     active_effect_ids: [],
+    active_modifiers: [],
     timed_effects: [],
+    movement_remaining_ft: template.speed_ft || 30,
     temporary_damage_resistances: [],
     action_available: true,
     bonus_action_available: true,
@@ -130,6 +145,28 @@ const finalizePhase = (actor, round = 1, monsters = [], turnEvents = []) => H.ru
   assert.equal(fighter.state.resources["second-wind"], 3);
   assert.equal(fighter.state.resources["adrenaline-rush"], 1);
   assert.equal(fighter.state.temporary_hp, 2);
+}
+
+{
+  const rogue = member("rogue", {
+    name: "Rogue", ruleset: "2024", max_hp: 24, level: 3, speed_ft: 30,
+    traits: ["adrenaline-rush"], wearing_heavy_armor: false, rage_damage_bonus: 0,
+    stationary_bonus_action_next_attack_advantage: true,
+    attacks: [{ id: "shortbow", weaponId: "shortbow", kind: "ranged", normal: 80, long: 320 }],
+  }, { "adrenaline-rush": 2 });
+  const target = member("aim-target", {
+    name: "Aim Target", ruleset: "2024", max_hp: 20, level: 1, speed_ft: 30,
+    traits: [], wearing_heavy_armor: false, rage_damage_bonus: 0, attacks: [],
+  }, {});
+  const result = run(rogue, "afterEscape", 1, [target]);
+  assert.equal(result.claimed, true);
+  assert.deepEqual(result.events.map((event) => event.feature_id), ["steady-aim"]);
+  assert.equal(rogue.state.bonus_action_available, false);
+  assert.equal(rogue.state.movement_remaining_ft, 0);
+  assert.equal(rogue.state.resources["adrenaline-rush"], 2, "Steady Aim wins the offensive Bonus Action before Adrenaline Rush");
+  assert.equal(rogue.state.active_modifiers.length, 1);
+  assert.equal(rogue.state.active_modifiers[0].kind, "next-attack-against-advantage");
+  assert.equal(rogue.state.active_modifiers[0].target_id, target.combatant_id);
 }
 
 {
@@ -223,7 +260,8 @@ assert.ok(grappleEscapeIndex < afterEscapeIndex, "Adrenaline checkpoint must rem
 for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname, "..", "index.html")]) {
   const html = fs.readFileSync(htmlPath, "utf8");
   assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-rage.js"));
-  assert.ok(html.indexOf("browser-support.js") < html.indexOf("browser-ability-hook-installation.js"));
+  assert.ok(html.indexOf("browser-support.js") < html.indexOf("browser-steady-aim.js"));
+  assert.ok(html.indexOf("browser-steady-aim.js") < html.indexOf("browser-ability-hook-installation.js"));
   assert.ok(html.indexOf("browser-ability-hook-installation.js") < html.indexOf("browser-turn.js"));
 }
 
