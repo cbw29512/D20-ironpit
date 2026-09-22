@@ -31,6 +31,15 @@ class SlotHealingSelfRider(BaseModel):
     per_slot_level: int = Field(default=0, ge=0)
 
 
+class DamagingActionTemporaryHpRider(BaseModel):
+    """Grant ability-scaled Temporary HP after one of the declared actions deals damage."""
+
+    source_id: str
+    action_ids: list[str] = Field(min_length=1)
+    ability: AbilityName
+    multiplier: int = Field(default=1, ge=1, le=10)
+
+
 class EffectBoundSurvivalSave(BaseModel):
     """Immutable zero-HP replacement parameters; no class identity enters resolution."""
 
@@ -48,6 +57,7 @@ class ProgressionCombatFeatures(BaseModel):
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
     turning_failure_damage: AbilityScaledDamageRider | None = None
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
+    damaging_action_temporary_hp_rider: DamagingActionTemporaryHpRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
