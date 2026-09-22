@@ -72,6 +72,7 @@ class ProgressionCombatFeatures(BaseModel):
     suppress_attack_advantage_while_not_incapacitated: bool = False
     miss_to_hit_override_resource_id: str | None = None
     miss_to_hit_override_source_name: str | None = None
+    start_of_turn_resource_refresh_ids: list[str] = Field(default_factory=list)
     athletics_advantage: bool = False
     danger_sense: bool = False
     reckless_attack: bool = False
