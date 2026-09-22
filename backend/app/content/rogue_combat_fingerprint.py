@@ -44,7 +44,10 @@ def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
                 ),
             ),
             weapon_masteries=("shortsword", "shortbow"),
-            resources=(("adrenaline-rush", proficiency_bonus), ("relentless-endurance", 1)),
+            resources=(
+                ("adrenaline-rush", proficiency_bonus), ("relentless-endurance", 1),
+                *((("stroke-of-luck", 1),) if level >= 20 else ()),
+            ),
             sneak_attack_d6=(level + 1) // 2,
         )
     except Exception as exc:
@@ -144,3 +147,8 @@ def build_mara_quickstep_level18_combat_profile() -> PregenCombatProfile:
 
 def build_mara_quickstep_level19_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(19)
+
+
+
+def build_mara_quickstep_level20_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(20)
