@@ -25,7 +25,6 @@ from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
 from app.domain.traits import CombatTrait
 
-
 def _modifier(score: int) -> int:
     return (score - 10) // 2
 
