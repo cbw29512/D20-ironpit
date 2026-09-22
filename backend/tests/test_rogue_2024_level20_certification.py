@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
-from app.content.audited_fighter import build_karnok_stoneward_level
+from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.audited_rogue import build_mara_quickstep_level, unsupported_mara_rogue_features
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.rogue_combat_fingerprint import build_mara_quickstep_level20_combat_profile
