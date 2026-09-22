@@ -79,3 +79,26 @@ def test_failed_ability_check_uses_same_universal_d20_override() -> None:
     assert succeeded is True
     assert revised.revisions[-1].source_effect_id == "stroke-of-luck"
     assert next(item for item in state.resources if item.id == "stroke-of-luck").current_uses == 0
+
+
+def test_d20_override_replaces_selected_advantage_d20_not_appended_bonus_die() -> None:
+    state = build_combatant_state(build_mara_quickstep_level(20))
+    roll = DiceRoll(
+        notation="2d20 + 1d4",
+        rolls=[1, 2, 4],
+        selected_roll=2,
+        modifier=0,
+        total=6,
+        mode=RollMode.ADVANTAGE,
+    )
+
+    revised, feature_id, _ = apply_failed_d20_test_override(
+        state, roll, failed=True, test_kind="attack",
+    )
+
+    assert revised is not None
+    assert revised.rolls == [1, 20, 4]
+    assert revised.selected_roll == 20
+    assert revised.total == 24
+    assert revised.revisions[-1].replaced_die_index == 1
+    assert feature_id == "stroke-of-luck"
