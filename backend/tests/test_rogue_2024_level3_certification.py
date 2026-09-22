@@ -7,7 +7,7 @@ from app.combat.modifier_stack import (
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.stationary_attack_advantage import use_stationary_attack_advantage
 from app.content.audited_rogue import build_mara_quickstep_level, unsupported_mara_rogue_features
-from app.content.audited_rogue_profile import build_mara_quickstep_level3_profile
+from app.content.rogue_progression_profile import build_mara_quickstep_level3_profile
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.rogue_combat_fingerprint import build_mara_quickstep_level3_combat_profile
