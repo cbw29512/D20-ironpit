@@ -88,8 +88,8 @@ def _first_round_schedule(
         for group_index, group in enumerate(groups):
             for member_index, combatant_id in enumerate(group.combatant_ids):
                 normal_key = (
-                    _priority(group), group.initiative_count, tuple(group.tie_break_rolls),
-                    -group_index, -member_index, 1,
+                    _priority(group), group.initiative_count, 1,
+                    -group_index, -member_index,
                 )
                 slots.append((normal_key, combatant_id))
                 member = members[combatant_id]
@@ -115,8 +115,8 @@ def _first_round_schedule(
                     # The extra turn has an initiative count, not a second initiative roll.
                     # It therefore belongs to the normal Iron Pit priority bucket.
                     extra_key = (
-                        1, count, tuple(group.tie_break_rolls),
-                        -group_index, -member_index, 0,
+                        1, count, 0,
+                        -group_index, -member_index,
                     )
                     slots.append((extra_key, combatant_id))
                     extras.append(FirstRoundExtraTurn(
