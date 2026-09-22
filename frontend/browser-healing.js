@@ -42,18 +42,25 @@
     return self && selfWorthwhile(healer, action) ? self : null;
   }
 
-  function priority(healer, action, target) {
+  function worthwhileTargets(healer, setup, action) {
+    const allies = healer.side === "heroes" ? setup.heroes : setup.monsters;
+    return allies.filter((target) => targetAllowed(healer, target, action)
+      && (target.state.current_hp === 0 || bloodied(target.state)));
+  }
+
+  function priority(healer, setup, action, target) {
     const ally = target.combatant_id !== healer.combatant_id;
     const urgency = ally && target.state.current_hp === 0 ? 0 : ally ? 1 : 2;
     const cost = action.actionCost === "bonus_action" ? 0 : 1;
-    return [urgency, cost, target.state.current_hp / S().effectiveMaxHp(target.state)];
+    const useful = Math.min(action.maxTargets || 1, worthwhileTargets(healer, setup, action).length);
+    return [urgency, cost, useful >= 2 ? -useful : 0, target.state.current_hp / S().effectiveMaxHp(target.state)];
   }
 
   function chooseAction(healer, setup, turnKey = null) {
     const choices = (healer.state.template.healingActions || []).map((action) => ({ action, target: chooseTarget(healer, setup, action, turnKey) })).filter((item) => item.target);
     choices.sort((a, b) => {
-      const pa = priority(healer, a.action, a.target), pb = priority(healer, b.action, b.target);
-      return pa[0] - pb[0] || pa[1] - pb[1] || pa[2] - pb[2];
+      const pa = priority(healer, setup, a.action, a.target), pb = priority(healer, setup, b.action, b.target);
+      return pa[0] - pb[0] || pa[1] - pb[1] || pa[2] - pb[2] || pa[3] - pb[3];
     });
     return choices[0] || null;
   }
@@ -68,6 +75,67 @@
       state.death_save_successes = 0; state.death_save_failures = 0;
     }
     return healed;
+  }
+
+  function groupTargets(healer, setup, action, turnKey = null) {
+    if ((action.maxTargets || 1) <= 1 || !resourceAvailable(healer, action, turnKey)) return [];
+    return worthwhileTargets(healer, setup, action)
+      .sort((a, b) => (a.state.current_hp > 0) - (b.state.current_hp > 0)
+        || a.state.current_hp / S().effectiveMaxHp(a.state) - b.state.current_hp / S().effectiveMaxHp(b.state)
+        || a.combatant_id.localeCompare(b.combatant_id))
+      .slice(0, action.maxTargets || 1);
+  }
+
+  function selfRider(sequence, round, healer, action, healedOther) {
+    const rule = healer.state.template.slot_healing_other_self_rider;
+    if (!rule || !healedOther || !slotHeal(action)) return null;
+    const slotLevel = Number(action.resourceId.split("-").at(-1));
+    const amount = (rule.flat_bonus || 0) + (rule.per_slot_level || 0) * slotLevel;
+    const before = healer.state.current_hp, healed = restore(healer.state, amount);
+    if (!healed) return null;
+    return {
+      sequence, round_number: round, event_type: "healing",
+      actor_id: healer.combatant_id, actor_name: healer.state.template.name,
+      target_id: healer.combatant_id, target_name: healer.state.template.name,
+      hp_before: before, hp_after: healer.state.current_hp,
+      death_save_successes: healer.state.death_save_successes,
+      death_save_failures: healer.state.death_save_failures,
+      is_stable: healer.state.is_stable, is_dead: healer.state.is_dead,
+      feature_id: rule.source_id, animation: "healing",
+      description: `${healer.state.template.name} restores ${healed} HP from ${rule.source_id.replaceAll("-", " ")}.`,
+    };
+  }
+
+  function resolveGroup(sequence, round, healer, targets, action, turnKey = null) {
+    if ((action.maxTargets || 1) <= 1 || !targets.length || targets.length > action.maxTargets) throw new Error("Illegal group healing target set.");
+    if (targets.some((target) => !targetAllowed(healer, target, action)) || !resourceAvailable(healer, action, turnKey)) throw new Error("Illegal group healing target or turn.");
+    if (slotHeal(action)) {
+      if (!turnKey) throw new Error("Spell-slot group healing requires an active turn key.");
+      C().markSlotSpellCast(healer.state, turnKey);
+    }
+    E().spend(healer.state, action.actionCost);
+    healer.state.resources[action.resourceId] -= action.resourceCost || 1;
+    const remaining = healer.state.resources[action.resourceId], events = [];
+    for (const target of targets) {
+      const maximized = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state) || false;
+      const rolls = Array.from({ length: action.diceCount || 0 }, () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6));
+      const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
+      const before = target.state.current_hp, healed = restore(target.state, total);
+      events.push({
+        sequence: sequence++, round_number: round, event_type: "healing",
+        actor_id: healer.combatant_id, actor_name: healer.state.template.name,
+        target_id: target.combatant_id, target_name: target.state.template.name,
+        healing_roll: { notation: `${rolls.length}d${action.diceSize || 6}+${action.healingBonus || 0}`, rolls, modifier: action.healingBonus || 0, total },
+        hp_before: before, hp_after: target.state.current_hp,
+        death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
+        is_stable: target.state.is_stable, is_dead: target.state.is_dead,
+        feature_id: action.id, resource_remaining: remaining, animation: action.animation || "healing",
+        description: `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.`,
+      });
+    }
+    const rider = selfRider(sequence, round, healer, action, targets.some((target) => target.combatant_id !== healer.combatant_id));
+    if (rider) events.push(rider);
+    return { events, sequence: sequence + (rider ? 1 : 0) };
   }
 
   function resolve(sequence, round, healer, target, action, turnKey = null) {
@@ -97,5 +165,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_HEALING = { bloodied, chooseAction, chooseTarget, resolve, restore };
+  window.IRON_PIT_BROWSER_HEALING = { bloodied, chooseAction, chooseTarget, groupTargets, resolve, resolveGroup, restore, selfRider };
 })();
