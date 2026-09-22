@@ -54,6 +54,18 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("miss-to-hit-override")
     if features.miss_to_hit_override_source_name and not features.miss_to_hit_override_resource_id:
         raise ValueError("Miss-to-hit source name requires a configured miss-to-hit resource.")
+    if features.start_of_turn_resource_refresh_ids:
+        resource_ids = {item.id for item in template.resources}
+        missing_refresh_resources = sorted(
+            resource_id
+            for resource_id in features.start_of_turn_resource_refresh_ids
+            if resource_id not in resource_ids
+        )
+        if missing_refresh_resources:
+            raise ValueError(
+                f"Start-of-turn refresh references missing resources: {missing_refresh_resources}."
+            )
+        mechanics.add("start-of-turn-resource-refresh")
     if features.athletics_advantage:
         mechanics.add("athletics-advantage")
     if features.danger_sense:
