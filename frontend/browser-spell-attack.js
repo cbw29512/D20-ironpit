@@ -11,6 +11,7 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
+  const FATE = () => window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS;
 
   function slotResource(caster, spell, turnKey) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
@@ -33,13 +34,20 @@
     const mode = R().modeFromSources(advantage, conditions.disadvantage + SAP().disadvantage(caster.state) + (closeThreat ? 1 : 0));
     const targetAc = M().effectiveArmorClass(target.state);
     const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus, mode), targetAc);
-    const attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll);
+    let attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll);
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
     const natural = attackRoll.selected_roll;
-    const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
+    let hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
+    if (FATE()) {
+      const adjusted = FATE().adjust(
+        attackRoll, hit, targetAc, caster, setup,
+        { outcomeLocked: natural === 1 || natural === 20 },
+      );
+      attackRoll = adjusted.roll; hit = adjusted.succeeded;
+    }
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;

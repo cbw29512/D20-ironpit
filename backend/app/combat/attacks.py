@@ -10,6 +10,7 @@ from app.combat.brutal_strike import brutal_strike_attack_sources
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.conditional_attack_advantage import conditional_attack_advantage_sources
+from app.combat.d20_outcome_adjustments import adjust_d20_outcome
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
@@ -29,6 +30,7 @@ from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.modifiers import ModifierKind
 logger = logging.getLogger(__name__)
@@ -43,6 +45,8 @@ def resolve_attack(
     close_enemy_active: bool = True, redirect_target: CombatantState | None = None,
     redirect_target_event_id: str | None = None, affected_states: list[CombatantState] | None = None,
     sneak_attack_ally_available: bool = False, off_turn: bool = False,
+    outcome_roller: EncounterCombatant | None = None,
+    outcome_setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(attacker, "action"):
@@ -84,7 +88,13 @@ def resolve_attack(
         target_ac = effective_armor_class(actual_defender)
         hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
-        if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
+        if parry_used:
+            target_ac += actual_defender.template.parry_reaction.ac_bonus
+        if outcome_roller is not None:
+            attack_roll, hit, _ = adjust_d20_outcome(
+                attack_roll, hit, target_ac, outcome_roller, outcome_setup, dice,
+                outcome_locked=natural in {1, 20},
+            )
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures

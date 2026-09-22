@@ -15,6 +15,7 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0, consumeNextAttackAgainstAdvantage: () => 0,
     effectiveArmorClass: (state) => state.template.armor_class, effectiveSpeed: (state) => state.template.speed_ft, attackRollFlat: () => 0, applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { attackDisadvantage: () => 0 };
+  const FATE = () => window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
     has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
@@ -77,7 +78,7 @@
       + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id), mode), M().effectiveArmorClass(target.state));
-    const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
+    let attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
     M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
@@ -87,7 +88,15 @@
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const initialHit = !naturalOne && (naturalTwenty || attackRoll.total >= baseTargetAc);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
-    const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
+    let hit = parry.hit;
+    const targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
+    if (FATE() && extra.setup) {
+      const adjusted = FATE().adjust(
+        attackRoll, hit, targetAc, attacker, extra.setup,
+        { outcomeLocked: naturalOne || naturalTwenty },
+      );
+      attackRoll = adjusted.roll; hit = adjusted.succeeded;
+    }
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;

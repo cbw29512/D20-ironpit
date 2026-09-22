@@ -13,6 +13,7 @@
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || { evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const D = () => window.IRON_PIT_DICE;
+  const FATE = () => window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -101,7 +102,11 @@
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
+    let save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
+    if (save.roll && FATE() && options.setup) {
+      const adjusted = FATE().adjust(save.roll, save.succeeded, action.dc, target, options.setup);
+      save = { roll: adjusted.roll, succeeded: adjusted.succeeded };
+    }
     let resourceRemaining = options.resourceRemaining ?? null;
     if (action.resourceId && options.spendResource !== false) {
       actor.state.resources[action.resourceId] -= action.resourceCost || 1; resourceRemaining = actor.state.resources[action.resourceId];

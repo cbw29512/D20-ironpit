@@ -61,7 +61,7 @@ def resolve_encounter_attack(
         redirect_target=redirect.state if redirect is not None else None,
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
         affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
-        off_turn=off_turn,
+        off_turn=off_turn, outcome_roller=attacker, outcome_setup=setup,
     )
     if ward is not None:
         if event.saving_throw_roll is None:

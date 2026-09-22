@@ -7,6 +7,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
+from app.combat.d20_outcome_adjustments import adjust_d20_outcome
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
@@ -90,6 +91,10 @@ def resolve_spell_attack(
         spend(caster.state, spell.action_cost)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
+        attack_roll, hit, _ = adjust_d20_outcome(
+            attack_roll, hit, target_ac, caster, setup, dice,
+            outcome_locked=natural in {1, 20},
+        )
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures

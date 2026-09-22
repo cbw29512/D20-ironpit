@@ -4,6 +4,7 @@ from app.combat.undead_fortitude import consume_survival_save_log
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
+from app.combat.d20_outcome_adjustments import adjust_d20_outcome
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
@@ -11,6 +12,7 @@ from app.combat.rogue_defenses import evasion_damage
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
+from app.domain.encounters import EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
@@ -43,6 +45,7 @@ def resolve_save_action(
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
     check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
+    setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
@@ -50,6 +53,10 @@ def resolve_save_action(
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
+    if save_roll is not None:
+        save_roll, succeeded, _ = adjust_d20_outcome(
+            save_roll, succeeded, action.dc, target, setup, dice,
+        )
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
