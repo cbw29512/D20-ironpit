@@ -122,6 +122,8 @@ def _seraphine_profile(level: int, *_legacy: int) -> PregenCombatProfile:
                  for spell_level, uses in enumerate(row.spell_slots, start=1) if uses]
     if row.channel_divinity_uses:
         resources.append(("channel-divinity", row.channel_divinity_uses))
+    if level >= 10:
+        resources.append(("divine-intervention", 1))
     resources.extend((("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)))
     return PregenCombatProfile(
         f"seraphine-dawnshield-l{level}", "Cleric", level, abilities, ("wisdom", "charisma"),
