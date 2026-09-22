@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 50
+    "public_ready": 51
   },
   "heroes": [
     {
@@ -5816,24 +5816,50 @@
             "id": "thief",
             "name": "Thief"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "mara-quickstep-l14",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Rogue 14, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "cunning-action",
+            "cunning-strike",
+            "devious-strikes",
+            "evasion",
+            "improved-cunning-strike",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "steady-aim",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker",
+            "uncanny-dodge"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "cunning-action",
+            "cunning-strike",
+            "devious-strikes",
+            "evasion",
+            "improved-cunning-strike",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "steady-aim",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker",
+            "uncanny-dodge"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 15,
