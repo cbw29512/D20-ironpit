@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.class_spell_progression import CASTING_ABILITIES, max_spell_level, prepared_spell_count
+from app.content.canonical_cleric_spell_choices import CLERIC_CANTRIPS, CLERIC_SPELLS
 from app.domain.class_loadouts import CanonicalSpellChoice, CasterClassId, ClassSpellPackage
 
 
@@ -25,30 +26,8 @@ def _later_spell(
     )
 
 
-def _cantrip(spell_id: str, name: str, role: str, *capabilities: str) -> CanonicalSpellChoice:
-    return CanonicalSpellChoice(
-        id=spell_id, name=name, spell_level=0, min_character_level=1,
-        role=role, required_capabilities=list(capabilities),
-    )
-
-
-def _later_cantrip(
-    spell_id: str, name: str, role: str, min_character_level: int, *capabilities: str,
-) -> CanonicalSpellChoice:
-    return CanonicalSpellChoice(
-        id=spell_id, name=name, spell_level=0, min_character_level=min_character_level,
-        role=role, required_capabilities=list(capabilities),
-    )
-
-
 CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
-    "cleric": (
-        _cantrip("sacred-flame", "Sacred Flame", "damage", "save-damage", "cantrip-scaling"),
-        _cantrip("light", "Light", "utility", "arena-out-of-scope"),
-        _cantrip("thaumaturgy", "Thaumaturgy", "utility", "arena-out-of-scope"),
-        _later_cantrip("mending", "Mending", "utility", 4, "arena-out-of-scope"),
-        _later_cantrip("spare-the-dying", "Spare the Dying", "healing", 10, "arena-out-of-scope"),
-    ),
+    "cleric": CLERIC_CANTRIPS,
 }
 
 
@@ -59,82 +38,7 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _spell("dissonant-whispers", "Dissonant Whispers", "damage", "save-damage"),
         _spell("healing-word", "Healing Word", "healing", "healing"),
     ),
-    "cleric": (
-        _spell("bless", "Bless", "buff", "modifier-stack", "concentration", always_prepared_from_level=3),
-        _spell("cure-wounds", "Cure Wounds", "healing", "healing", always_prepared_from_level=3),
-        _spell("guiding-bolt", "Guiding Bolt", "mixed", "spell-attack", "next-attack-advantage"),
-        _spell("shield-of-faith", "Shield of Faith", "buff", "modifier-stack", "concentration"),
-        _later_spell("healing-word", "Healing Word", 1, "healing", 2, "healing", "bonus-action"),
-        _later_spell("detect-magic", "Detect Magic", 1, "utility", 3, "arena-out-of-scope"),
-        _later_spell("create-or-destroy-water", "Create or Destroy Water", 1, "utility", 3, "arena-out-of-scope"),
-        _later_spell("augury", "Augury", 2, "utility", 3, "arena-out-of-scope"),
-        _later_spell("inflict-wounds", "Inflict Wounds", 1, "damage", 4, "save-damage"),
-        _later_spell("aid", "Aid", 2, "buff", 3, "max-hp-increase", always_prepared_from_level=3),
-        _later_spell(
-            "lesser-restoration", "Lesser Restoration", 2, "healing", 3,
-            "condition-removal", "bonus-action", always_prepared_from_level=3,
-        ),
-        _later_spell(
-            "dispel-magic", "Dispel Magic", 3, "utility", 5,
-            "effect-removal",
-        ),
-        _later_spell(
-            "create-food-and-water", "Create Food and Water", 3, "utility", 5,
-            "arena-out-of-scope",
-        ),
-        _later_spell(
-            "daylight", "Daylight", 3, "utility", 6,
-            "arena-out-of-scope",
-        ),
-        _later_spell(
-            "mass-healing-word", "Mass Healing Word", 3, "healing", 5,
-            "healing", "bonus-action", "multi-target-healing", always_prepared_from_level=5,
-        ),
-        _later_spell(
-            "revivify", "Revivify", 3, "healing", 5,
-            "arena-out-of-scope", always_prepared_from_level=5,
-        ),
-        _later_spell(
-            "aura-of-life", "Aura of Life", 4, "healing", 7,
-            "arena-out-of-scope", always_prepared_from_level=7,
-        ),
-        _later_spell(
-            "death-ward", "Death Ward", 4, "healing", 7,
-            "arena-out-of-scope", always_prepared_from_level=7,
-        ),
-        _later_spell(
-            "prayer-of-healing", "Prayer of Healing", 2, "healing", 7,
-            "arena-out-of-scope",
-        ),
-        _later_spell(
-            "guardian-of-faith", "Guardian of Faith", 4, "damage", 8,
-            "arena-out-of-scope",
-        ),
-        _later_spell(
-            "flame-strike", "Flame Strike", 5, "damage", 9,
-            "arena-out-of-scope",
-        ),
-        _later_spell(
-            "insect-plague", "Insect Plague", 5, "damage", 9,
-            "arena-out-of-scope",
-        ),
-        _later_spell(
-            "contagion", "Contagion", 5, "damage", 10,
-            "arena-out-of-scope",
-        ),
-        _later_spell(
-            "heal", "Heal", 6, "healing", 11,
-            "arena-out-of-scope",
-        ),
-        _later_spell(
-            "greater-restoration", "Greater Restoration", 5, "healing", 9,
-            "arena-out-of-scope", always_prepared_from_level=9,
-        ),
-        _later_spell(
-            "mass-cure-wounds", "Mass Cure Wounds", 5, "healing", 9,
-            "healing", "multi-target-healing", always_prepared_from_level=9,
-        ),
-    ),
+    "cleric": CLERIC_SPELLS,
     "druid": (
         _spell("animal-friendship", "Animal Friendship", "control", "charmed"),
         _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
