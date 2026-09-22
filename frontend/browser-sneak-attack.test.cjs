@@ -14,6 +14,7 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
   assert.ok(html.indexOf("browser-sneak-attack.js") < html.indexOf("browser-rolls.js"), "Sneak Attack must load before damage rolls");
 }
 
+load("browser-timed-conditions.js");
 load("browser-sneak-attack.js");
 load("browser-rolls.js");
 
@@ -99,6 +100,33 @@ const ineligible = { ...attack, id: "test-club", name: "Club", sneakAttackEligib
   assert.equal(trip.saveSucceeded, false);
   assert.equal(trip.applied, true);
   assert.ok(target.active_effect_ids.includes("prone"));
+}
+
+{
+  const state = rogue(7);
+  state.template.cunning_strike_trip_die_cost = 1;
+  state.template.cunning_strike_obscure_die_cost = 3;
+  state.template.cunning_strike_max_effects = 2;
+  state.template.ability_scores = { dexterity: 20 };
+  state.template.level = 14;
+  const target = {
+    template: { size: "medium" },
+    active_effect_ids: [],
+    timed_effects: [],
+    is_dead: false,
+  };
+  const spec = window.IRON_PIT_BROWSER_SNEAK_ATTACK.bonusDamage(
+    state, attack, "advantage", "14:rogue", false, target,
+  );
+  assert.equal(spec.diceCount, 4, "Devious Strike Obscure must trade 3d6 before Sneak Attack rolls");
+  assert.equal(state.feature_last_turn_keys["cunning-strike-obscure"], "14:rogue");
+  assert.equal(state.feature_last_turn_keys["cunning-strike-trip"], undefined);
+  const obscure = window.IRON_PIT_BROWSER_SNEAK_ATTACK.resolveObscure(state, target, "14:rogue");
+  assert.equal(obscure.saveDc, 18);
+  assert.equal(obscure.saveSucceeded, false);
+  assert.equal(obscure.applied, true);
+  assert.ok(target.active_effect_ids.includes("blinded"));
+  assert.equal(target.timed_effects[0].expiry_timing, "target_turn_end");
 }
 
 assert.throws(
