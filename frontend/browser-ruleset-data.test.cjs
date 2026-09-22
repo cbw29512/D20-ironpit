@@ -24,6 +24,17 @@ const rogues2014 = heroes2014.filter((hero) => hero.class_id === "rogue");
 const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
+const rogue14_2024 = heroes2024.find((hero) => hero.id === "mara-quickstep-l14");
+const rogue15_2024 = heroes2024.find((hero) => hero.id === "mara-quickstep-l15");
+assert.ok(rogue14_2024 && rogue15_2024, "2024 Rogue levels 14-15 must be in the generated browser roster");
+assert.equal(rogue14_2024.cunning_strike_obscure_die_cost, 3);
+assert.equal(rogue14_2024.sneak_attack_d6, 7);
+assert.deepEqual(rogue15_2024.saving_throw_proficiency_grants, [
+  { source_id: "slippery-mind", abilities: ["wisdom", "charisma"] },
+]);
+assert.equal(rogue15_2024.saving_throw_bonuses.wisdom, 5);
+assert.equal(rogue15_2024.saving_throw_bonuses.charisma, 5);
+assert.equal(rogue15_2024.sneak_attack_d6, 8);
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
 assert.equal(heroes2014.length, 81, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-10, and Paladin 1-11");
 levels(fighters2014, 20); levels(barbarians2014, 20); levels(rogues2014, 20); levels(monks2014, 10); levels(paladins2014, 11);
