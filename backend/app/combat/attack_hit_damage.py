@@ -4,7 +4,10 @@ from dataclasses import dataclass
 
 from app.combat.damage import BonusDamageSpec, aggregate_damage_components, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
-from app.combat.cunning_strike import CunningStrikeTripResolution, resolve_trip
+from app.combat.cunning_strike import (
+    CunningStrikeObscureResolution, CunningStrikeTripResolution,
+    resolve_obscure, resolve_trip,
+)
 from app.combat.deflect_missiles import apply_deflect_missiles
 from app.combat.dice import DiceProvider
 from app.combat.on_hit_save_damage import OnHitSaveDamageResolution, resolve_on_hit_save_damage
@@ -22,6 +25,7 @@ class AttackHitDamageResolution:
     applied_total: int
     save_damage: OnHitSaveDamageResolution
     cunning_strike_trip: CunningStrikeTripResolution
+    cunning_strike_obscure: CunningStrikeObscureResolution
     uncanny_dodge_used: bool = False
     deflect_missiles_used: bool = False
     deflect_missiles_reduction: int = 0
@@ -73,6 +77,7 @@ def resolve_attack_hit_damage(
         apply_zero_hp_save_damage_rider(defender, effect, turn_key, affected_states)
         outcome = "unconscious"
     cunning_strike_trip = resolve_trip(attacker, defender, dice, turn_key)
+    cunning_strike_obscure = resolve_obscure(attacker, defender, dice, turn_key)
     return AttackHitDamageResolution(
         damage_roll=damage_roll,
         damage_components=components,
@@ -80,6 +85,7 @@ def resolve_attack_hit_damage(
         applied_total=applied_total,
         save_damage=save_damage,
         cunning_strike_trip=cunning_strike_trip,
+        cunning_strike_obscure=cunning_strike_obscure,
         uncanny_dodge_used=uncanny_used,
         deflect_missiles_used=deflect_used,
         deflect_missiles_reduction=deflect_reduction,
