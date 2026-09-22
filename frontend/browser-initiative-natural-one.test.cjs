@@ -136,4 +136,32 @@ function neutralizeInitiative(setup) {
   assert.equal(window.IRON_PIT_BROWSER_ACTION_SURGE.available(fighter.state, "1:hero-1:karnok-stoneward-l2"), false);
 }
 
+{
+  const setup = basicSetup(); neutralizeInitiative(setup);
+  setup.hero.state.template.first_round_extra_turn_grants = [
+    { source_id: "test-extra-turn", initiative_offset: -10 },
+  ];
+  window.IRON_PIT_DICE = queuedDice([15, 12]);
+  const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
+  assert.deepEqual(
+    initiative.turn_order,
+    [setup.hero.combatant_id, setup.monster.combatant_id],
+    "normal turn order must not duplicate the extra-turn combatant",
+  );
+  assert.deepEqual(
+    initiative.first_round_turn_order,
+    [setup.hero.combatant_id, setup.monster.combatant_id, setup.hero.combatant_id],
+    "round one inserts the extra turn at initiative minus 10",
+  );
+  assert.deepEqual(initiative.first_round_extra_turns, [{
+    combatant_id: setup.hero.combatant_id,
+    initiative_count: 5,
+    source_id: "test-extra-turn",
+  }]);
+  const feature = window.IRON_PIT_BROWSER_INITIATIVE.events(initiative, setup)
+    .find((event) => event.feature_id === "test-extra-turn");
+  assert.ok(feature);
+  assert.match(feature.description, /Initiative 5/);
+}
+
 console.log("Iron Pit initiative/natural-1 browser regressions passed.");
