@@ -5,6 +5,7 @@ from app.combat.ability_checks import apply_ability_check_minimum
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
+from app.combat.d20_outcome_override import replace_failed_d20_with_natural_20
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.modifier_stack import effective_speed
@@ -115,6 +116,9 @@ def resolve_escape_grapple(
     tactical_used = False
     if not success:
         check, tactical_used, success = apply_tactical_mind(state, check, source.escape_dc, dice)
+    if not success:
+        check, _ = replace_failed_d20_with_natural_20(state, check, source.escape_dc)
+        success = check.total >= source.escape_dc
     spend(state, "action")
     if success:
         release_grapple(state, source.source_id)
