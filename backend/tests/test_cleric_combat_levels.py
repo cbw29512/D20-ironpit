@@ -49,7 +49,7 @@ def test_cleric_features_only_track_combat_content_and_mending_is_ignored() -> N
 
 
 def test_existing_cleric_runtime_levels_compile_from_table() -> None:
-    for level in range(1, 11):
+    for level in range(1, 13):
         row = CLERIC_COMBAT_LEVELS[level]
         template = build_seraphine_dawnshield_level(level)
         wisdom_mod = _modifier(row.wisdom)
