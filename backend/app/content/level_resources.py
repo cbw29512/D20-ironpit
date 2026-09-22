@@ -73,6 +73,12 @@ def cleric_channel_divinity_uses(level: int) -> int:
     return 4
 
 
+def cleric_divine_intervention_uses(level: int) -> int:
+    """2024 Cleric Divine Intervention uses; feature begins at level 10."""
+    level = _checked_level(level)
+    return 1 if level >= 10 else 0
+
+
 def fighter_second_wind_uses(level: int) -> int:
     """2024 Fighter Second Wind uses available when a fresh fight begins."""
     level = _checked_level(level)

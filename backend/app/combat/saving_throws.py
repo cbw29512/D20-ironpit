@@ -46,6 +46,9 @@ def resolve_save_action(
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
+    if check_resource and not action_resource_available(actor.state, action):
+        raise ValueError(f"{action.name} resource is unavailable.")
+    remaining = spend_action_resource(actor.state, action) if spend_resource else None
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
@@ -81,6 +84,7 @@ def resolve_save_action(
         death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
+        resource_remaining=remaining,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
         animation=action.animation, description=description + consume_survival_save_log(target.state),
     )

@@ -3,8 +3,11 @@ from __future__ import annotations
 from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
+from app.content.cleric_divine_intervention import build_divine_intervention_damage, build_divine_intervention_healing
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION, disciple_of_life_bonus
-from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_healing_word
+from app.content.healing_spell_effects import (
+    build_cure_wounds, build_healing_word, build_mass_cure_wounds, build_mass_healing_word,
+)
 from app.content.hero_combat_feature_registry import unsupported_hero_engine_features
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.offensive_spell_effects import build_guiding_bolt, build_inflict_wounds, build_sacred_flame
@@ -45,8 +48,9 @@ def _resources(level: int) -> list[ResourceDefinition]:
         for spell_level, uses in enumerate(row.spell_slots, start=1) if uses
     ]
     channel = [ResourceDefinition(id="channel-divinity", name="Channel Divinity", max_uses=row.channel_divinity_uses)] if row.channel_divinity_uses else []
+    intervention = [ResourceDefinition(id="divine-intervention", name="Divine Intervention", max_uses=1)] if level >= 10 else []
     return [
-        *slots, *channel,
+        *slots, *channel, *intervention,
         ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
         ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
     ]
@@ -63,6 +67,8 @@ def _source(level: int) -> str:
         + ("Blessed Healer, " if level >= 6 else "")
         + ("Blessed Strikes (Potent Spellcasting), Aura of Life, Death Ward, Prayer of Healing, " if level >= 7 else "")
         + ("Guardian of Faith, Ability Score Improvement, " if level >= 8 else "")
+        + ("Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, " if level >= 9 else "")
+        + ("Divine Intervention, Contagion, Spare the Dying, " if level >= 10 else "")
         + "Equipment"
     )
 
@@ -90,6 +96,16 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             wisdom_modifier,
             disciple_of_life_bonus(3) if "disciple-of-life" in features else 0,
         ))
+    if level >= 9:
+        healing.append(build_mass_cure_wounds(
+            wisdom_modifier,
+            disciple_of_life_bonus(5) if "disciple-of-life" in features else 0,
+        ))
+    if level >= 10:
+        healing.append(build_divine_intervention_healing(
+            wisdom_modifier,
+            disciple_of_life_bonus(5) if "disciple-of-life" in features else 0,
+        ))
     defenses = [BLESS.model_copy(deep=True), SHIELD_OF_FAITH.model_copy(deep=True)]
     if level >= 3:
         defenses.insert(0, AID.model_copy(deep=True))
@@ -98,6 +114,8 @@ def _build_seraphine(level: int) -> CombatantTemplate:
     )]
     if level >= 4:
         save_spells.append(build_inflict_wounds(save_dc))
+    if level >= 9:
+        save_spells.append(build_inflict_wounds(save_dc, 5))
     traits = [CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE]
     if "disciple-of-life" in features:
         traits.append(CombatTrait.LIFE_DOMAIN)
@@ -110,6 +128,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         ),
         armor_class=row.armor_class, max_hp=row.max_hp,
         speed_ft=30, initiative_bonus=0, weapon_attack=_mace_attack(row.proficiency_bonus),
+        saving_throw_actions=[build_divine_intervention_damage(save_dc)] if level >= 10 else [],
         spell_save_actions=save_spells, spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
         defensive_spell_actions=defenses, healing_actions=healing,
         condition_removal_actions=[LESSER_RESTORATION.model_copy(deep=True)] if level >= 3 else [],
