@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.attack_roll_resolution import resolve_attack_roll
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
+from app.combat.attack_event_support import build_attack_description, primary_attack_save_fields
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
@@ -108,55 +109,39 @@ def resolve_attack(
         tactical_sap_applied = effects.tactical_sap_applied
         vex_applied = effects.vex_applied
         studied_applied = effects.studied_applied
-        outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
-        description = f"{attacker.template.name}: {outcome} with {weapon.name}."
-        if d20_override_feature_id is not None:
-            description += f" {d20_override_name or d20_override_feature_id} turns the failed attack roll into a 20."
-        elif miss_override_feature_id is not None:
-            description += f" {miss_override_name or miss_override_feature_id} turns the miss into a hit."
-        elif natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
-        elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
-        if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
-        if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
-        if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
-        if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
-        if parry_used: description += f" {actual_defender.template.name} uses Parry."
-        if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
-        if tactical_sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
-        if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
-        if save_damage and save_damage.save_dc is not None: description += f" {save_damage.save_ability.title()} save DC {save_damage.save_dc}: {actual_defender.template.name} {'succeeds' if save_damage.save_succeeded else 'fails'}."
-        if on_hit_save and on_hit_save.save_dc is not None: description += f" {on_hit_save.save_ability.title()} save DC {on_hit_save.save_dc}: {actual_defender.template.name} {'succeeds' if on_hit_save.save_succeeded else 'fails'}."
-        if cunning_strike_obscure and cunning_strike_obscure.save_dc is not None: description += f" Devious Strike Obscure save DC {cunning_strike_obscure.save_dc}: {actual_defender.template.name} {'succeeds' if cunning_strike_obscure.save_succeeded else 'fails'}."
-        elif cunning_strike and cunning_strike.save_dc is not None: description += f" Cunning Strike Trip save DC {cunning_strike.save_dc}: {actual_defender.template.name} {'succeeds' if cunning_strike.save_succeeded else 'fails'}."
-        if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
-        if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
-        if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-        if "prone" in applied_conditions: description += f" {actual_defender.template.name} is knocked Prone."
-        if "grappled" in applied_conditions: description += f" {actual_defender.template.name} is Grappled."
-        if "restrained" in applied_conditions: description += f" {actual_defender.template.name} is Restrained while Grappled."
-        if "poisoned" in applied_conditions: description += f" {actual_defender.template.name} is Poisoned."
-        if "blinded" in applied_conditions: description += f" {actual_defender.template.name} is Blinded."
-        primary_save = save_damage if save_damage and save_damage.save_dc is not None else on_hit_save
-        if primary_save and primary_save.save_dc is not None:
-            save_roll = primary_save.save_roll
-            save_ability = primary_save.save_ability
-            save_dc = primary_save.save_dc
-            save_succeeded = primary_save.save_succeeded
-        elif cunning_strike_obscure and cunning_strike_obscure.save_dc is not None:
-            save_roll = cunning_strike_obscure.save_roll
-            save_ability = "dexterity"
-            save_dc = cunning_strike_obscure.save_dc
-            save_succeeded = cunning_strike_obscure.save_succeeded
-        elif cunning_strike and cunning_strike.save_dc is not None:
-            save_roll = cunning_strike.save_roll
-            save_ability = "dexterity"
-            save_dc = cunning_strike.save_dc
-            save_succeeded = cunning_strike.save_succeeded
-        else:
-            save_roll = topple.save_roll if topple else None
-            save_ability = "constitution" if topple and topple.save_dc is not None else None
-            save_dc = topple.save_dc if topple else None
-            save_succeeded = topple.save_succeeded if topple else None
+        description = build_attack_description(
+            attacker_name=attacker.template.name,
+            defender_name=defender.template.name,
+            actual_defender_name=actual_defender.template.name,
+            weapon_name=weapon.name,
+            damage_type=weapon.damage_type.value,
+            hit=hit,
+            critical=critical,
+            natural_1=natural_1,
+            natural_1_ends_turn=natural_1_ends_turn,
+            heroic_reroll=heroic_reroll,
+            redirect_used=redirect_used,
+            parry_used=parry_used,
+            d20_override_feature_id=d20_override_feature_id,
+            d20_override_name=d20_override_name,
+            miss_override_feature_id=miss_override_feature_id,
+            miss_override_name=miss_override_name,
+            damage_roll=damage_roll,
+            studied_applied=studied_applied,
+            weapon_sap_applied=weapon_sap_applied,
+            tactical_sap_applied=tactical_sap_applied,
+            vex_applied=vex_applied,
+            save_damage=save_damage,
+            on_hit_save=on_hit_save,
+            cunning_strike_obscure=cunning_strike_obscure,
+            cunning_strike=cunning_strike,
+            topple=topple,
+            damage_outcome=damage_outcome,
+            applied_conditions=applied_conditions,
+        )
+        save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
+            save_damage, on_hit_save, cunning_strike_obscure, cunning_strike, topple,
+        )
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
