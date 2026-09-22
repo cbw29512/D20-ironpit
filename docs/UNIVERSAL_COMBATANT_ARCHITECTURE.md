@@ -48,6 +48,8 @@ Saving throws are always shared math:
 
 `d20 + creature save modifier + shared modifiers vs DC`
 
+Post-roll D20 replacement is also a shared primitive. Source data declares the resource, replacement natural roll, eligible D20 Test kinds, and exact source name; the attack/save/check resolver remains generic. A rule that replaces a failed D20 roll with 20 is **not** mechanically equivalent to a rule that merely converts a missed attack into a normal hit. Preserve that distinction rather than forcing both through one named-feature shortcut.
+
 Attack rolls, ability checks, AC, damage defenses, conditions, concentration, and movement follow the same rule: one resolver, different creature data.
 
 ## Mandatory semantic reuse workflow

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
-from app.combat.ability_checks import apply_ability_check_minimum
+from app.combat.ability_checks import resolve_ability_check_outcome
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
@@ -110,8 +110,9 @@ def resolve_escape_grapple(
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
     check_ability, check_name, bonus, mode = _escape_choice(state)
     check = roll_d20(dice, bonus + d20_modifier(state), mode)
-    check = apply_ability_check_minimum(state, check_ability, check)
-    success = check.total >= source.escape_dc
+    check, success = resolve_ability_check_outcome(
+        state, check_ability, check, source.escape_dc,
+    )
     tactical_used = False
     if not success:
         check, tactical_used, success = apply_tactical_mind(state, check, source.escape_dc, dice)

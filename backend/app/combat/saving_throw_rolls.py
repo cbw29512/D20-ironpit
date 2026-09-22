@@ -13,6 +13,7 @@ from app.combat.defensive_modifier_rules import (
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
+from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
 from app.combat.rolls import roll_d20
@@ -99,6 +100,9 @@ def resolve_saving_throw(
             if reroll is not None:
                 revision = _indomitable_revision(roll, reroll)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
+        roll, _, _ = apply_failed_d20_test_override(
+            state, roll, failed=roll.total < dc, test_kind="saving_throw",
+        )
         return roll, roll.total >= dc
     except ValueError:
         raise

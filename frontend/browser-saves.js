@@ -13,6 +13,7 @@
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || { evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const D = () => window.IRON_PIT_DICE;
+  const DO = () => window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }), sourceNameForRoll: () => null };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -67,6 +68,12 @@
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
     }
+    const d20Grants = state.template.failed_d20_test_override_grants || [];
+    if (d20Grants.some((grant) => (grant.test_kinds || []).includes("saving_throw"))
+      && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
+      throw new Error("Failed-D20 override runtime is not loaded for a declared saving-throw capability.");
+    }
+    roll = DO().apply(state, roll, roll.total < dc, "saving_throw").roll;
     return { roll, succeeded: roll.total >= dc };
   }
 
@@ -133,6 +140,8 @@
     }
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    const d20OverrideName = DO().sourceNameForRoll(target.state, save.roll);
+    if (d20OverrideName) description += ` ${d20OverrideName} turns the failed saving throw roll into a 20.`;
     if (target.state.template.evasion && action.saveAbility === "dexterity" && action.successDamage === "half") description += " Evasion reduces the damage.";
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;

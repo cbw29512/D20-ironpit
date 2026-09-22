@@ -8,9 +8,9 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-ability-checks.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-miss-to-hit-override.js", "browser-attack.js", "browser-saves.js",
+  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-d20-test-override.js", "browser-miss-to-hit-override.js", "browser-attack.js", "browser-saves.js",
 ]) load(file);
 
 const Q = window.IRON_PIT_BROWSER_CONDITION_RULES;
@@ -125,6 +125,86 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(event.feature_id, "stroke-of-luck");
   assert.equal(attacker.state.resources["stroke-of-luck"], 0);
   assert.match(event.description, /Stroke of Luck turns the miss into a hit/);
+}
+
+
+{
+  const attacker = member("stroke-2024-attacker");
+  attacker.state.template.failed_d20_test_override_grants = [{
+    source_id: "stroke-of-luck", source_name: "Stroke of Luck",
+    resource_id: "stroke-of-luck", replacement_roll: 20,
+    test_kinds: ["attack", "saving_throw", "ability_check"],
+  }];
+  attacker.state.resources["stroke-of-luck"] = 1;
+  const target = member("stroke-2024-target");
+  target.state.template.armor_class = 99;
+  const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
+  const values = [1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
+  window.IRON_PIT_DICE = {
+    roll: () => values.shift() ?? 4,
+    rollMany: (count) => Array.from({ length: count }, () => values.shift() ?? 4),
+  };
+  const event = A.resolveAttack(31, 1, attacker, target, attack, 5, { spendAction: false });
+  assert.equal(event.attack_roll.selected_roll, 20);
+  assert.equal(event.hit, true, "replacement natural 20 automatically hits");
+  assert.equal(event.critical, true, "replacement natural 20 is a critical hit");
+  assert.equal(event.feature_id, "stroke-of-luck");
+  assert.equal(attacker.state.resources["stroke-of-luck"], 0);
+  assert.match(event.description, /Stroke of Luck turns the failed attack roll into a 20/);
+}
+{
+  const saving = member("stroke-2024-save");
+  saving.state.template.failed_d20_test_override_grants = [{
+    source_id: "stroke-of-luck", source_name: "Stroke of Luck",
+    resource_id: "stroke-of-luck", replacement_roll: 20,
+    test_kinds: ["attack", "saving_throw", "ability_check"],
+  }];
+  saving.state.resources["stroke-of-luck"] = 1;
+  window.IRON_PIT_DICE = { roll: () => 1, rollMany: (count) => Array.from({ length: count }, () => 1) };
+  const save = V.resolveSavingThrow(saving.state, "strength", 20);
+  assert.equal(save.roll.selected_roll, 20);
+  assert.equal(save.succeeded, true);
+  assert.equal(saving.state.resources["stroke-of-luck"], 0);
+  assert.equal(window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE.sourceNameForRoll(saving.state, save.roll), "Stroke of Luck");
+}
+
+
+{
+  const checking = member("stroke-2024-check");
+  checking.state.template.failed_d20_test_override_grants = [{
+    source_id: "stroke-of-luck", source_name: "Stroke of Luck",
+    resource_id: "stroke-of-luck", replacement_roll: 20,
+    test_kinds: ["attack", "saving_throw", "ability_check"],
+  }];
+  checking.state.resources["stroke-of-luck"] = 1;
+  const original = { notation: "1d20+2", rolls: [3], selected_roll: 3, modifier: 2, total: 5, mode: "normal", revisions: [] };
+  const resolved = window.IRON_PIT_BROWSER_ABILITY_CHECKS.resolve(checking.state, "strength", original, 20);
+  assert.equal(resolved.roll.selected_roll, 20);
+  assert.equal(resolved.roll.total, 22);
+  assert.equal(resolved.succeeded, true);
+  assert.equal(checking.state.resources["stroke-of-luck"], 0);
+}
+
+
+{
+  const checking = member("stroke-bonus-die-safety");
+  checking.state.template.failed_d20_test_override_grants = [{
+    source_id: "stroke-of-luck", source_name: "Stroke of Luck",
+    resource_id: "stroke-of-luck", replacement_roll: 20,
+    test_kinds: ["attack", "saving_throw", "ability_check"],
+  }];
+  checking.state.resources["stroke-of-luck"] = 1;
+  const roll = {
+    notation: "2d20 + 1d4", rolls: [1, 2, 4], selected_roll: 2,
+    modifier: 0, total: 6, mode: "advantage", revisions: [],
+  };
+  const result = window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE.apply(
+    checking.state, roll, true, "attack",
+  );
+  assert.deepEqual(result.roll.rolls, [1, 20, 4], "replacement must target the selected d20, not the appended bonus die");
+  assert.equal(result.roll.selected_roll, 20);
+  assert.equal(result.roll.total, 24);
+  assert.equal(result.roll.revisions.at(-1).replaced_die_index, 1);
 }
 
 console.log("Browser condition/action-economy integration regressions passed.");
