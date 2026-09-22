@@ -126,6 +126,21 @@ def _first_round_schedule(
     return [combatant_id for _, combatant_id in slots], extras
 
 
+
+def turn_order_for_round(
+    round_number: int,
+    initiative: EncounterInitiative,
+    combatants: dict[str, EncounterCombatant],
+) -> list[str]:
+    """Return the canonical precomputed schedule for one round."""
+    try:
+        if round_number == 1:
+            return list(initiative.first_round_turn_order)
+        return list(initiative.turn_order)
+    except Exception as exc:
+        logger.exception("Encounter turn scheduling failed for round %s.", round_number)
+        raise RuntimeError("Encounter turn schedule could not be resolved.") from exc
+
 def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> EncounterInitiative:
     """Resolve initiative with Iron Pit natural-20/natural-1 buckets and pure d20 tie rerolls."""
     try:
