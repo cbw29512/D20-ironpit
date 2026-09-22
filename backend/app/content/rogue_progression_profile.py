@@ -51,7 +51,7 @@ def build_mara_quickstep_level3_profile() -> CharacterBuildProfile:
                 _feature(
                     "thief-fast-hands", "Fast Hands", "subclass",
                     combat_relevant=False, automated=False,
-                    notes="Loadout-inert: Mara has no modeled qualifying combat item action.",
+                    notes="Loadout-inert: Mara has no qualifying combat item action modeled.",
                 ),
                 _feature(
                     "thief-second-story-work", "Second-Story Work", "subclass",
