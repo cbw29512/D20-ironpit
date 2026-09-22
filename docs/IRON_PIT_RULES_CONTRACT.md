@@ -139,6 +139,15 @@ Audit annotation is evidence-only and must never change combat resolution.
 - Mandatory triggers, reactions, interrupts, expirations, repeat saves, and legendary timing occur at their exact legal windows.
 - Do not add generic repeat saves to effects that do not grant them.
 
+
+### 6.1 Delayed-effect arena policy
+
+- Preserve explicit RAW in-combat timing when a feature names a specific start/end-of-turn, round, reaction, or other legal trigger.
+- When a combat effect is armed now but has **no required minimum delay** and is resolved by a later voluntary action or activation, Arena AI uses it at the **next legal activation opportunity** when doing so is tactically meaningful. In ordinary turn flow this will usually be the creature's next turn/round.
+- A long printed duration is an **expiry window**, not an instruction for Arena AI to wait that long. An effect that can remain armed for minutes, hours, or days may still be activated on the next legal turn when RAW allows it.
+- If a printed delay or required trigger is genuinely longer than a plausible Iron Pit fight, classify and re-evaluate the mechanic before certification. Do not silently wait out combat, silently fire it early, or ignore an outcome-changing delayed effect.
+- Delayed mechanics must use fresh per-fight runtime state and reset completely between matches.
+
 ## 7. Initiative — Iron Pit house rule
 
 Normal initiative bonuses and ruleset-specific initiative mechanics apply, with these Iron Pit ordering rules:
