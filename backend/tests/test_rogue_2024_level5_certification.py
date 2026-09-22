@@ -13,6 +13,7 @@ from app.domain.models import RollMode
 
 
 def test_2024_rogue_level5_inherits_level4_and_applies_only_level5_delta() -> None:
+    """Level 5 must be the level-4 Mara plus only the researched Rogue-5 delta."""
     template = build_mara_quickstep_level(5)
     assert unsupported_mara_rogue_features(5) == ()
     assert template.id == "mara-quickstep-l5"
