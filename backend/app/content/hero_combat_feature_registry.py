@@ -16,7 +16,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "sneak-attack", "weapon-mastery",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
-    "blessed-strikes", "cleric-combat-spells-5", "divine-intervention",
+    "blessed-strikes", "cleric-combat-spells-5", "divine-intervention", "cleric-combat-spells-6",
 }
 
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
