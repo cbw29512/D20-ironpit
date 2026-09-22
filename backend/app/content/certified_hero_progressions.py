@@ -5,7 +5,8 @@ from dataclasses import dataclass
 
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_cleric import build_seraphine_dawnshield_level
-from app.content.cleric_certified_profiles import build_seraphine_dawnshield_certified_profile\nfrom app.content.audited_fighter_profile import build_karnok_stoneward_profile
+from app.content.cleric_certified_profiles import build_seraphine_dawnshield_certified_profile
+from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.audited_rogue import build_mara_quickstep_level
 from app.content.audited_rogue_profile import build_mara_quickstep_profile
 from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_2014_profile
