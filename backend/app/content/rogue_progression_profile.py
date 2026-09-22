@@ -99,3 +99,36 @@ def build_mara_quickstep_level4_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Mara Rogue level 4 profile could not be created.") from exc
+
+
+
+def build_mara_quickstep_level5_profile() -> CharacterBuildProfile:
+    """Level 5 inherits level 4, then adds Cunning Strike and Uncanny Dodge."""
+    try:
+        previous = build_mara_quickstep_level4_profile()
+        data = advance_profile_data(previous, 5)
+        data.update(
+            feature_audits=[
+                *data["feature_audits"],
+                _feature(
+                    "cunning-strike", "Cunning Strike", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Canonical automation uses Trip when a Large-or-smaller target can be affected, "
+                        "trading 1d6 Sneak Attack before rolling. Poison is unavailable without a Poisoner's Kit."
+                    ),
+                ).model_dump(),
+                _feature(
+                    "uncanny-dodge", "Uncanny Dodge", "class",
+                    combat_relevant=True, automated=True,
+                    notes="Reuses the shared visible-attacker Reaction that halves attack damage.",
+                ).model_dump(),
+            ],
+            source_references=[
+                *data["source_references"],
+                "Basic Rules 2024: Rogue 5 — Cunning Strike and Uncanny Dodge",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Mara Rogue level 5 profile could not be created.") from exc
