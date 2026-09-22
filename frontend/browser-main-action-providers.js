@@ -7,6 +7,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE;
   const IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
+  const DE = () => window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -63,6 +64,26 @@
         if (!target) throw new Error("Intimidating Presence candidate target is unavailable.");
         const event = runtime.resolve(sequence, round, member, target);
         if (!event) throw new Error("Intimidating Presence candidate became illegal before resolution.");
+        return { events: [event], sequence: sequence + 1 };
+      },
+    });
+
+    register({
+      id: "deferred-effect", category: C().DEFERRED_EFFECT, rulesets: BOTH,
+      discover: ({ member, setup }) => {
+        const runtime = DE();
+        if (!runtime) {
+          if (member.state.template.deferred_save_effect) throw new Error("Deferred-effect runtime is not loaded.");
+          return null;
+        }
+        const target = runtime.candidate(member, setup);
+        return target ? { payload: { targetId: target.combatant_id } } : null;
+      },
+      resolve: ({ sequence, round, member, setup }, candidate) => {
+        const runtime = DE();
+        if (!runtime) throw new Error("Deferred-effect runtime is not loaded.");
+        const event = runtime.resolve(sequence, round, member, setup, candidate.payload.targetId);
+        if (!event) throw new Error("Deferred-effect candidate became illegal before resolution.");
         return { events: [event], sequence: sequence + 1 };
       },
     });
