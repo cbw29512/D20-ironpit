@@ -81,6 +81,16 @@ assert.deepEqual(
   ["mara17", "target17"],
 );
 
+const naturalTwentyGroups = [
+  { members: [scheduledMembers[0]], combatant_ids: ["mara17"], natural_roll: 20, initiative_count: 25, tie_break_rolls: [] },
+  { members: [scheduledMembers[1]], combatant_ids: ["target17"], natural_roll: 19, initiative_count: 19, tie_break_rolls: [] },
+];
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_INITIATIVE.firstRoundSchedule(naturalTwentyGroups).order,
+  ["mara17", "target17", "mara17"],
+  "the extra turn uses initiative -10 in the normal bucket rather than inheriting natural-20 priority",
+);
+
 function state(template) {
   return {
     template, active_effect_ids: [], is_dead: false, is_unconscious: false,
