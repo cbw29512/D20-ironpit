@@ -57,6 +57,19 @@ class SavingThrowProficiencyGrant(BaseModel):
     abilities: list[AbilityName] = Field(min_length=1)
 
 
+D20TestKind = Literal["attack", "saving_throw", "ability_check"]
+
+
+class FailedD20TestReplacement(BaseModel):
+    """Source-tagged replacement applied only after a supported D20 Test has failed."""
+
+    source_id: str
+    source_name: str
+    resource_id: str
+    replacement_roll: int = Field(default=20, ge=1, le=20)
+    test_kinds: list[D20TestKind] = Field(min_length=1)
+
+
 class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
@@ -66,6 +79,7 @@ class ProgressionCombatFeatures(BaseModel):
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
+    failed_d20_test_replacements: list[FailedD20TestReplacement] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
