@@ -6,7 +6,7 @@ from app.domain.character_builds import AbilityScores
 
 def _build_mara_quickstep_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        dexterity = 18 if level >= 4 else 17
+        dexterity = 20 if level >= 8 else (18 if level >= 4 else 17)
         constitution = 16 if level >= 4 else 15
         dexterity_mod = (dexterity - 10) // 2
         constitution_mod = (constitution - 10) // 2
@@ -73,3 +73,7 @@ def build_mara_quickstep_level6_combat_profile() -> PregenCombatProfile:
 
 def build_mara_quickstep_level7_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(7)
+
+
+def build_mara_quickstep_level8_combat_profile() -> PregenCombatProfile:
+    return _build_mara_quickstep_combat_profile(8)

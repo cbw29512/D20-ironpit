@@ -41,6 +41,8 @@ def _level_one_scores() -> AbilityScores:
 def _scores_after_level_delta(previous: AbilityScores, level: int) -> AbilityScores:
     if level == 4:
         return previous.model_copy(update={"dexterity": 18, "constitution": 16})
+    if level == 8:
+        return previous.model_copy(update={"dexterity": 20})
     return previous.model_copy()
 
 
