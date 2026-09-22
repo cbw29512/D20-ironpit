@@ -69,6 +69,7 @@ class ProgressionCombatFeatures(BaseModel):
     tactical_master_sap_weapon_ids: list[str] = Field(default_factory=list)
     heroic_warrior: bool = False
     studied_attacks: bool = False
+    miss_to_hit_once_per_turn: bool = False
     sneak_attack_d6: int = Field(default=0, ge=0, le=10)
     cunning_action: bool = False
     uncanny_dodge: bool = False
