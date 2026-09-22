@@ -285,6 +285,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["first_round_extra_turn_initiative_offset"] = features.first_round_extra_turn_initiative_offset
     if features.suppress_attack_advantage_while_not_incapacitated:
         row["suppress_attack_advantage_while_not_incapacitated"] = True
+    if features.miss_to_hit_override_grants:
+        row["miss_to_hit_override_grants"] = [item.model_dump() for item in features.miss_to_hit_override_grants]
     if features.miss_to_hit_override_resource_id:
         row["miss_to_hit_override_resource_id"] = features.miss_to_hit_override_resource_id
     if features.miss_to_hit_override_source_name:
