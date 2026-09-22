@@ -181,6 +181,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         build_mara_quickstep_combat_profile, build_mara_quickstep_level2_combat_profile,
         build_mara_quickstep_level3_combat_profile, build_mara_quickstep_level4_combat_profile,
         build_mara_quickstep_level5_combat_profile, build_mara_quickstep_level6_combat_profile,
+        build_mara_quickstep_level7_combat_profile,
     )
     profiles = [
         *(_karnok_profile(level) for level in range(1, 19)),
@@ -188,5 +189,6 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         build_mara_quickstep_combat_profile(), build_mara_quickstep_level2_combat_profile(),
         build_mara_quickstep_level3_combat_profile(), build_mara_quickstep_level4_combat_profile(),
         build_mara_quickstep_level5_combat_profile(), build_mara_quickstep_level6_combat_profile(),
+        build_mara_quickstep_level7_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
