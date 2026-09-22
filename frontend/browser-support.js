@@ -14,14 +14,40 @@
     const events = [];
     let healing = H()?.chooseAction(member, setup, turnKey);
     if (healing?.target.state.current_hp === 0) {
-      events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
+      if ((healing.action.maxTargets || 1) > 1) {
+        const targets = H().groupTargets(member, setup, healing.action, turnKey);
+        if (targets.some((target) => target.state.current_hp === 0)) {
+          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey);
+          events.push(...result.events); sequence = result.sequence;
+        }
+      } else {
+        const before = healing.target.state.current_hp;
+        events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
+        const rider = H().selfRider(sequence, round, member, healing.action,
+          healing.target.combatant_id !== member.combatant_id && healing.target.state.current_hp > before);
+        if (rider) events.push(rider), sequence += 1;
+      }
     }
     const removal = C()?.chooseAction(member, setup, turnKey);
     if (removal) {
       events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
     }
     healing = H()?.chooseAction(member, setup, turnKey);
-    if (healing) events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
+    if (healing) {
+      if ((healing.action.maxTargets || 1) > 1) {
+        const targets = H().groupTargets(member, setup, healing.action, turnKey);
+        if (targets.length) {
+          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey);
+          events.push(...result.events); sequence = result.sequence;
+        }
+      } else {
+        const before = healing.target.state.current_hp;
+        events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
+        const rider = H().selfRider(sequence, round, member, healing.action,
+          healing.target.combatant_id !== member.combatant_id && healing.target.state.current_hp > before);
+        if (rider) events.push(rider), sequence += 1;
+      }
+    }
     const effectRemoval = X()?.choose(member, setup, turnKey);
     if (effectRemoval) events.push(X().resolve(sequence++, round, member, setup, effectRemoval.action, effectRemoval.effect, turnKey));
     const cleric = member.state.template.class_id === "cleric" || member.state.template.archetype === "Cleric";
