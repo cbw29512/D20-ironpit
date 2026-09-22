@@ -43,13 +43,13 @@ def test_cleric_features_only_track_combat_content_and_mending_is_ignored() -> N
     assert {"disciple-of-life", "preserve-life"}.isdisjoint(level_four)
     assert {"disciple-of-life", "preserve-life"} <= set(canonical_combat_features("cleric", 4))
     assert "mending" not in level_four
-    assert cleric_arena_ignored(20) == ("mending",)
+    assert cleric_arena_ignored(20) == ("mending", "cleric-combat-spells-4")
     assert {"boon-of-fate", "greater-divine-intervention"} <= set(cleric_combat_features(20))
     assert "supreme-healing" in canonical_combat_features("cleric", 20)
 
 
 def test_existing_cleric_runtime_levels_compile_from_table() -> None:
-    for level in range(1, 5):
+    for level in range(1, 9):
         row = CLERIC_COMBAT_LEVELS[level]
         template = build_seraphine_dawnshield_level(level)
         wisdom_mod = _modifier(row.wisdom)
@@ -66,14 +66,11 @@ def test_existing_cleric_runtime_levels_compile_from_table() -> None:
             assert resources.get(f"spell-slot-{spell_level}", 0) == uses
 
 
-def test_complete_cleric_table_advances_through_level_six_then_fails_closed_at_level_seven() -> None:
-    assert unsupported_hero_engine_features(cleric_combat_features(5)) == ()
-    assert unsupported_hero_engine_features(cleric_combat_features(6)) == ()
-    assert build_seraphine_dawnshield_level(5).level == 5
-    assert build_seraphine_dawnshield_level(6).level == 6
+def test_complete_cleric_table_advances_through_level_eight_then_fails_closed_at_level_nine() -> None:
+    for level in range(1, 9):
+        assert unsupported_hero_engine_features(cleric_combat_features(level)) == ()
+        assert build_seraphine_dawnshield_level(level).level == level
 
-    assert unsupported_hero_engine_features(cleric_combat_features(7)) == (
-        "blessed-strikes", "cleric-combat-spells-4",
-    )
-    with pytest.raises(ValueError, match="blessed-strikes, cleric-combat-spells-4"):
-        build_seraphine_dawnshield_level(7)
+    assert unsupported_hero_engine_features(cleric_combat_features(9)) == ("cleric-combat-spells-5",)
+    with pytest.raises(ValueError, match="cleric-combat-spells-5"):
+        build_seraphine_dawnshield_level(9)
