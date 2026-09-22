@@ -129,9 +129,18 @@ If RAW requires a noncombat choice that cannot affect the arena, choose a legal 
 
 Hero and monster combat behavior must reuse the same shared engine capability whenever RAW behavior is equivalent.
 
-A hero/monster record should primarily describe stats, attacks, resources, spells, defenses, and capability IDs. New custom resolver code is justified only when the source introduces a genuinely new outcome-changing RAW mechanic.
+This is a mandatory pre-code rule, not a preference. Every new feature must first be compared against the complete existing hero **and** monster mechanic inventory by semantic behavior: trigger, timing, target, roll/save, effect, duration, resource, and lifecycle.
 
-If the capability already exists, adding a new hero level, combat-build overlay, or monster should be data work plus generated certification, not a bespoke engine implementation.
+A hero/monster record should primarily describe stats, attacks, resources, spells, defenses, capability IDs, parameters, and the exact source ability name used for cards/logs. The display/source name does not define engine behavior.
+
+- Exact semantic match -> bind the existing capability.
+- Minor numeric/ruleset/source difference -> reuse the capability with parameters.
+- Multi-effect named ability -> compose existing capabilities.
+- Truly unmatched outcome-changing behavior -> add the smallest new universal primitive, then re-audit every hero and monster for additional users of it.
+
+New custom resolver code is justified only when the source introduces a genuinely new outcome-changing RAW mechanic that cannot be represented by existing primitives or their composition.
+
+If the capability already exists, adding a new hero level, combat-build overlay, monster, spell, feat, or item should be data work plus generated certification, not a bespoke engine implementation.
 
 ## Fail-closed RAW rule
 
