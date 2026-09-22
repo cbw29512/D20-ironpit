@@ -98,6 +98,14 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 combat=False, automated=False,
                 notes="Language communication is arena-neutral and does not change combat resolution.",
             ))
+        if level >= 14:
+            audits.append(_audit(
+                "diamond-soul", "Diamond Soul", "class",
+                notes=(
+                    "Reuses universal saving-throw proficiency grants plus a source-tagged "
+                    "resource-backed failed-save reroll. The reroll preserves existing bonus dice."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
