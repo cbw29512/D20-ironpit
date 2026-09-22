@@ -289,6 +289,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["miss_to_hit_override_source_name"] = features.miss_to_hit_override_source_name
     if features.athletics_advantage:
         row["athletics_advantage"] = True
+    if features.saving_throw_proficiency_grants:
+        row["saving_throw_proficiency_grants"] = [
+            item.model_dump() for item in features.saving_throw_proficiency_grants
+        ]
     if features.bloodied_start_turn_heal_amount:
         row["bloodied_start_turn_heal_amount"] = features.bloodied_start_turn_heal_amount
     if features.death_save_advantage:
