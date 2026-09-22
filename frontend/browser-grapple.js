@@ -72,7 +72,9 @@
       if (!A()) throw new Error("Ability-check minimum runtime is not loaded.");
       roll = A().applyMinimum(state, ability, roll);
     }
-    let success = roll.total >= source.escape_dc, tactical = null;
+    const resolved = A()?.resolve ? A().resolve(state, ability, roll, source.escape_dc) : { roll, succeeded: roll.total >= source.escape_dc };
+    roll = resolved.roll;
+    let success = resolved.succeeded, tactical = null;
     if (!success && T()) {
       tactical = T().apply(state, roll, source.escape_dc);
       roll = tactical.roll; success = tactical.succeeded;
