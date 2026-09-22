@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ability_checks import apply_ability_check_minimum
+from app.combat.d20_outcome_override import replace_failed_d20_with_natural_20
 from app.combat.dice import DiceProvider
 from app.combat.effect_removal_targets import TrackedSpellEffect, tracked_spell_effects
 from app.combat.modifier_stack import remove_source_modifiers
@@ -68,6 +69,7 @@ def resolve_effect_removal(
             dc = 10 + effect.spell_level
             check = roll_d20(dice, scores.modifier(action.casting_ability), RollMode.NORMAL)
             check = apply_ability_check_minimum(remover.state, action.casting_ability, check)
+            check, _ = replace_failed_d20_with_natural_20(remover.state, check, dc)
             succeeded = check.total >= dc
         if succeeded:
             remove_source_modifiers(
