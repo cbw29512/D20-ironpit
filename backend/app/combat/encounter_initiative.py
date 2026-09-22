@@ -104,9 +104,14 @@ def _first_round_schedule(
                         "initiative_offset": legacy_offset,
                     }]
             for grant in grants:
-                source_id = getattr(grant, "source_id", grant["source_id"])
-                source_name = getattr(grant, "source_name", grant["source_name"])
-                initiative_offset = getattr(grant, "initiative_offset", grant["initiative_offset"])
+                if isinstance(grant, dict):
+                    source_id = grant["source_id"]
+                    source_name = grant["source_name"]
+                    initiative_offset = grant["initiative_offset"]
+                else:
+                    source_id = grant.source_id
+                    source_name = grant.source_name
+                    initiative_offset = grant.initiative_offset
                 count = group.initiative_count + initiative_offset
                 extra_key = (
                     _priority(group), count, tuple(group.tie_break_rolls),
