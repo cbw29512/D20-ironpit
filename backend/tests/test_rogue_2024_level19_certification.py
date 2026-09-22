@@ -29,7 +29,7 @@ def test_2024_rogue_level19_night_spirit_shadow_riders_are_explicitly_arena_iner
     assert profile.level == 19
     assert profile.final_ability_scores.strength == 14
     assert profile.ability_score_maximums["strength"] == 30
-    assert boon.name == "Boon of the Night Spirit"
+    assert boon.feature_name == "Boon of the Night Spirit"
     assert boon.combat_relevant is False
     assert boon.automated is False
     assert "Dim Light or Darkness" in (boon.notes or "")
