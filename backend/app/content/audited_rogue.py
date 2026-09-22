@@ -28,9 +28,6 @@ def build_mara_quickstep_level(level: int) -> CombatantTemplate:
     unsupported = unsupported_mara_rogue_features(level)
     if unsupported:
         raise ValueError(f"Mara Rogue level {level} awaits combat support for: {', '.join(unsupported)}")
-    if level != 1:
-        raise ValueError("Mara Rogue build progression beyond level 1 is not yet compiled from the build overlay.")
-
     row = ROGUE_COMBAT_LEVELS[level]
     hero = HERO_BY_CLASS["rogue"]
     return CombatantTemplate(
