@@ -5,6 +5,7 @@ import logging
 from app.combat.activation_movement import resolve_activation_movement
 from app.combat.barbarian import enter_rage
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
+from app.combat.stationary_attack_advantage import use_stationary_attack_advantage
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -23,6 +24,13 @@ def resolve_feature_activation_phase(
     """Resolve supported pre-action feature activations through shared declarative mechanics."""
     try:
         events: list[BattleEvent] = []
+        focus_event = use_stationary_attack_advantage(
+            sequence, round_number, attacker, setup, feature_id="steady-aim",
+        )
+        if focus_event is not None:
+            events.append(focus_event)
+            sequence += 1
+
         rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
         if rage_event is None:
             return events, sequence
