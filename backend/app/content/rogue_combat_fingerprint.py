@@ -114,3 +114,11 @@ def build_mara_quickstep_level14_combat_profile() -> PregenCombatProfile:
 
 def build_mara_quickstep_level15_combat_profile() -> PregenCombatProfile:
     return _build_mara_quickstep_combat_profile(15)
+
+
+
+def build_mara_quickstep_combat_profiles(max_level: int) -> list[PregenCombatProfile]:
+    """Return the cumulative independent fingerprints through max_level."""
+    if max_level < 1 or max_level > 20:
+        raise ValueError("Rogue combat profile max_level must be between 1 and 20.")
+    return [_build_mara_quickstep_combat_profile(level) for level in range(1, max_level + 1)]
