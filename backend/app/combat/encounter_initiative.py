@@ -81,51 +81,55 @@ def _first_round_schedule(
     groups: list[InitiativeGroup],
     setup: EncounterSetup,
 ) -> tuple[list[str], list[FirstRoundExtraTurn]]:
-    members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
-    slots: list[tuple[tuple[object, ...], str]] = []
-    extras: list[FirstRoundExtraTurn] = []
-    for group_index, group in enumerate(groups):
-        for member_index, combatant_id in enumerate(group.combatant_ids):
-            normal_key = (
-                _priority(group), group.initiative_count, tuple(group.tie_break_rolls),
-                -group_index, -member_index, 1,
-            )
-            slots.append((normal_key, combatant_id))
-            member = members[combatant_id]
-            grants = list(member.state.template.progression_features.first_round_extra_turn_grants)
-            if not grants:
-                legacy_offset = member.state.template.progression_features.first_round_extra_turn_initiative_offset
-                if legacy_offset is not None:
-                    grants = [{
-                        "source_id": "first-round-extra-turn",
-                        "source_name": "Extra First-Round Turn",
-                        "initiative_offset": legacy_offset,
-                    }]
-            for grant in grants:
-                if isinstance(grant, dict):
-                    source_id = grant["source_id"]
-                    source_name = grant["source_name"]
-                    initiative_offset = grant["initiative_offset"]
-                else:
-                    source_id = grant.source_id
-                    source_name = grant.source_name
-                    initiative_offset = grant.initiative_offset
-                count = group.initiative_count + initiative_offset
-                extra_key = (
-                    _priority(group), count, tuple(group.tie_break_rolls),
-                    -group_index, -member_index, 0,
+    try:
+        members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
+        slots: list[tuple[tuple[object, ...], str]] = []
+        extras: list[FirstRoundExtraTurn] = []
+        for group_index, group in enumerate(groups):
+            for member_index, combatant_id in enumerate(group.combatant_ids):
+                normal_key = (
+                    _priority(group), group.initiative_count, tuple(group.tie_break_rolls),
+                    -group_index, -member_index, 1,
                 )
-                slots.append((extra_key, combatant_id))
-                extras.append(FirstRoundExtraTurn(
-                    combatant_id=combatant_id,
-                    initiative_count=count,
-                    source_id=source_id,
-                    source_name=source_name,
-                ))
-    slots.sort(key=lambda item: item[0], reverse=True)
-    return [combatant_id for _, combatant_id in slots], extras
-
-
+                slots.append((normal_key, combatant_id))
+                member = members[combatant_id]
+                grants = list(member.state.template.progression_features.first_round_extra_turn_grants)
+                if not grants:
+                    legacy_offset = member.state.template.progression_features.first_round_extra_turn_initiative_offset
+                    if legacy_offset is not None:
+                        grants = [{
+                            "source_id": "first-round-extra-turn",
+                            "source_name": "Extra First-Round Turn",
+                            "initiative_offset": legacy_offset,
+                        }]
+                for grant in grants:
+                    if isinstance(grant, dict):
+                        source_id = grant["source_id"]
+                        source_name = grant["source_name"]
+                        initiative_offset = grant["initiative_offset"]
+                    else:
+                        source_id = grant.source_id
+                        source_name = grant.source_name
+                        initiative_offset = grant.initiative_offset
+                    count = group.initiative_count + initiative_offset
+                    # The extra turn has an initiative count, not a second initiative roll.
+                    # It therefore belongs to the normal Iron Pit priority bucket.
+                    extra_key = (
+                        1, count, tuple(group.tie_break_rolls),
+                        -group_index, -member_index, 0,
+                    )
+                    slots.append((extra_key, combatant_id))
+                    extras.append(FirstRoundExtraTurn(
+                        combatant_id=combatant_id,
+                        initiative_count=count,
+                        source_id=source_id,
+                        source_name=source_name,
+                    ))
+        slots.sort(key=lambda item: item[0], reverse=True)
+        return [combatant_id for _, combatant_id in slots], extras
+    except Exception as exc:
+        logger.exception("Failed to build the first-round extra-turn schedule.")
+        raise RuntimeError("First-round extra-turn schedule could not be resolved.") from exc
 
 def turn_order_for_round(
     round_number: int,
