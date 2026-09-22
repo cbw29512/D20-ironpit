@@ -19,6 +19,42 @@ const H = window.IRON_PIT_BROWSER_HEROES;
 const S = window.IRON_PIT_BROWSER_STATE;
 const P = window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
 const O = window.IRON_PIT_BROWSER_SPELL_OFFENSE;
+
+const level7 = H["seraphine-dawnshield-l7"];
+const level8 = H["seraphine-dawnshield-l8"];
+assert.ok(level7, "Seraphine Cleric 7 must exist in generated browser heroes.");
+assert.ok(level8, "Seraphine Cleric 8 must exist in generated browser heroes.");
+
+const sacred7 = level7.spell_save_actions.find((spell) => spell.id === "sacred-flame");
+const sacred8 = level8.spell_save_actions.find((spell) => spell.id === "sacred-flame");
+assert.equal(level7.level, 7);
+assert.equal(level7.max_hp, 38);
+assert.equal(level7.ability_scores.wisdom, 19);
+assert.equal(level7.resources["spell-slot-4"], 1);
+assert.equal(sacred7.damageDiceCount, 2);
+assert.equal(sacred7.damageDiceSize, 8);
+assert.equal(sacred7.damageBonus, 4);
+assert.equal(sacred7.dc, 15);
+assert.equal(level7.spell_attack_actions[0].attackBonus, 7);
+assert.equal(level7.canonical_prepared_spells.at(-1).id, "prayer-of-healing");
+assert.deepEqual(level7.canonical_always_prepared_spells.slice(-2).map((spell) => spell.id), [
+  "aura-of-life", "death-ward",
+]);
+
+assert.equal(level8.level, 8);
+assert.equal(level8.max_hp, 43);
+assert.equal(level8.ability_scores.wisdom, 20);
+assert.equal(level8.ability_scores.charisma, 15);
+assert.equal(level8.resources["spell-slot-4"], 2);
+assert.equal(sacred8.damageDiceCount, 2);
+assert.equal(sacred8.damageDiceSize, 8);
+assert.equal(sacred8.damageBonus, 5);
+assert.equal(sacred8.dc, 16);
+assert.equal(level8.spell_attack_actions[0].attackBonus, 8);
+assert.deepEqual(level8.canonical_prepared_spells.slice(-2).map((spell) => spell.id), [
+  "prayer-of-healing", "guardian-of-faith",
+]);
+
 const cleric = H["seraphine-dawnshield-l4"];
 assert.ok(cleric, "Seraphine Cleric 4 must exist in generated browser heroes.");
 
