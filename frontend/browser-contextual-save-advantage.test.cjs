@@ -71,6 +71,43 @@ const nonmagical = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
 assert.equal(nonmagical.roll.mode, "normal");
 assert.deepEqual(nonmagical.roll.rolls, [10]);
 
+const racialTemplate = {
+  id: "racial-defender",
+  name: "Racial Defender",
+  saving_throw_bonuses: { constitution: 0 },
+  saving_throw_advantage_grants: [{
+    source_id: "racial-resilience",
+    source_name: "Racial Resilience",
+    abilities: ["constitution"],
+    against_effect_tags: ["poison", "poisoned"],
+  }],
+};
+const racialState = {
+  template: racialTemplate,
+  active_effect_ids: [],
+  active_modifiers: window.IRON_PIT_BROWSER_OPENING_MODIFIERS.build(racialTemplate),
+};
+
+window.IRON_PIT_DICE = queuedDice([3, 18]);
+const poison = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+  racialState, "constitution", 99, { effectTags: ["poison"] },
+);
+assert.equal(poison.roll.mode, "advantage");
+assert.deepEqual(poison.roll.rolls, [3, 18]);
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS.saveAdvantageSourceNames(
+    racialState, "constitution", { effectTags: ["poison"] },
+  ),
+  ["Racial Resilience"],
+);
+
+window.IRON_PIT_DICE = queuedDice([12]);
+const fire = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+  racialState, "constitution", 99, { effectTags: ["fire"] },
+);
+assert.equal(fire.roll.mode, "normal");
+assert.deepEqual(fire.roll.rolls, [12]);
+
 const converted = window.IRON_PIT_BROWSER_SPELL_RESOLUTION.saveAction({
   slotLevel: 0,
   action: {
