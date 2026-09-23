@@ -6,6 +6,19 @@ If implementation and this contract disagree, either fix the implementation or m
 
 ## 1. Core architecture
 
+### 1.0 Rules authority and exception hierarchy
+
+For every combatant, feature, spell, item, condition, action, monster ability, and character-build rule, the default authority is the selected edition's RAW.
+
+The only permitted departures are:
+
+1. an explicit Iron Pit house rule or arena simplification written in this contract; or
+2. intentional homebrew content that is clearly identified as homebrew and is implemented later through the same universal engine.
+
+Automation convenience, implementation difficulty, AI limitations, balance preference, a same-named feature in another edition, or an existing engine behavior are never authority to change RAW.
+
+When 2014 and 2024 differ, preserve each edition's own wording, timing, parameters, progression, and legal options. Build and certify the complete 2014 canonical pregen program first. During the later 2024 migration, compare each 2024 mechanic against the certified 2014 universal mechanic inventory. Reuse the same universal primitive only when the underlying combat behavior is genuinely equivalent; otherwise implement the smallest correct 2024 delta. Never copy 2024 semantics backward into 2014 or assume same-name abilities are mechanically identical.
+
 - Iron Pit is a rules-first automated D&D combat simulator.
 - Implement combat mechanics as universal capabilities, not hero-, class-, monster-, or stat-block-name special cases.
 - Monster and pregen definitions are declarative data wherever practical.
