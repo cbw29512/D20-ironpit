@@ -5,6 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
+  const V = () => window.IRON_PIT_BROWSER_VISIBILITY;
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
 
   function opportunityAttacksSuppressed(state) {
@@ -27,9 +28,11 @@
   }
 
   function opportunityAttackWeapon(reactor, mover, before, after, source, options = {}) {
-    if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
+    const visibility = options.canSee ?? V()?.canSee(reactor, mover, before);
+    if (visibility == null) throw new Error("Browser visibility API is not loaded.");
+    if (reactor.side === mover.side || visibility === false || options.disengaged === true) return null;
     if (opportunityAttacksSuppressed(reactor.state)) return null;
-    if (Q()?.has(reactor.state, "blinded") || !PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
+    if (!PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
     const weapon = (reactor.state.template.attacks || []).find((attack) =>
       attack.kind === "melee" && before <= (attack.reach || 5) && after > (attack.reach || 5));
     if (weapon) return weapon;
