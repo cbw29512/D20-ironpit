@@ -125,6 +125,7 @@ class ProgressionCombatFeatures(BaseModel):
 
     effect_bound_survival_save: EffectBoundSurvivalSave | None = None
     turning_failure_damage: AbilityScaledDamageRider | None = None
+    turning_failure_destroy_max_cr: str | None = None
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
