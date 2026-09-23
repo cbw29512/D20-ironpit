@@ -98,6 +98,7 @@ window.IRON_PIT_BROWSER_MONSTERS_2014 = {
   },
 };
 
+load("browser-condition-rules.js");
 load("browser-ability-hooks.js");
 load("browser-intimidating-presence-2014.js");
 load("browser-engine.js");
