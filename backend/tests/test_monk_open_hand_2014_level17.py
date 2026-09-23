@@ -18,6 +18,7 @@ def _pair() -> tuple[EncounterCombatant, EncounterCombatant, EncounterSetup]:
         "id": "quivering-palm-target",
         "name": "Quivering Palm Target",
         "max_hp": 100,
+        "kind": "monster",
         "ruleset": "2014",
     })
     target_state = build_combatant_state(target_template)
