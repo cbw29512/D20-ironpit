@@ -7,6 +7,7 @@ from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.level_resources import cleric_2014_channel_divinity_uses
 from app.content.spell_slot_progression import spell_slot_resources
+from app.content.shared_spells_2014 import sanctuary_2014
 from app.content.cleric_2014_level1_spells import (
     bless_2014,
     cure_wounds_2014,
@@ -103,7 +104,11 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
             alternate_weapon_attacks=[_attack(_light_crossbow(), scores, level)],
             spell_save_actions=[sacred_flame_2014(save_dc)],
             spell_attack_actions=[guiding_bolt_2014(spell_attack), inflict_wounds_2014(spell_attack)],
-            defensive_spell_actions=[bless_2014(), shield_of_faith_2014()],
+            defensive_spell_actions=[
+                bless_2014(),
+                shield_of_faith_2014(),
+                *([sanctuary_2014(save_dc)] if level >= 2 else []),
+            ],
             healing_actions=[
                 healing_word_2014(wisdom_modifier, life_bonus),
                 cure_wounds_2014(wisdom_modifier, life_bonus),
