@@ -1,4 +1,5 @@
 from app.combat.cleric_channel_divinity import resolve_turn_undead
+from app.combat.cleric_channel_policy import choose_channel_divinity
 from app.combat.condition_lifecycle import resolve_target_condition_timing
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import begin_turn, build_combatant_state
@@ -69,3 +70,17 @@ def test_2014_turn_undead_applies_trembling_and_repeats_save() -> None:
     assert lifecycle[0].save_succeeded is True
     assert lifecycle[0].removed_condition_ids == ["trembling"]
     assert "trembling" not in skeleton.state.active_effect_ids
+
+
+def test_2014_channel_divinity_never_falls_through_to_divine_spark() -> None:
+    cleric = _member(build_seraphine_dawnshield_2014(2), "cleric", "heroes", 0)
+    goblin = _member(build_combatant_from_capabilities("2014-goblin"), "goblin", "monsters", 10)
+    for resource in cleric.state.resources:
+        if resource.id.startswith("spell-slot-"):
+            resource.current_uses = 0
+    setup = EncounterSetup(
+        heroes=[cleric], monsters=[goblin],
+        hero_total_levels=2, monster_total_cr="1/4", ruleset="2014",
+    )
+
+    assert choose_channel_divinity(cleric, setup) is None
