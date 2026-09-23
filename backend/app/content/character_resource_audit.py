@@ -5,6 +5,7 @@ from collections.abc import Callable
 from app.content.level_resources import (
     barbarian_2014_rage_uses,
     barbarian_rage_uses,
+    cleric_2014_channel_divinity_uses,
     cleric_channel_divinity_uses,
     cleric_divine_intervention_uses,
     fighter_2014_action_surge_uses,
@@ -71,7 +72,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
 }
 _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", _barbarian_2014_finite_rage_uses),),
-    "cleric": (),
+    "cleric": (("channel-divinity", "Channel Divinity", cleric_2014_channel_divinity_uses),),
     "fighter": (
         ("second-wind", "Second Wind", fighter_2014_second_wind_uses),
         ("action-surge", "Action Surge", fighter_2014_action_surge_uses),
