@@ -212,6 +212,20 @@ A flavor-only d6 may narrate the fumble; it has no additional mechanical effect.
 - A flavor-only d6 may narrate the critical; it has no additional mechanical effect.
 - Saving throw natural 1/20 values have no extra Iron Pit rule unless RAW for the specific rule says otherwise.
 
+### 2014 Turn Undead — Iron Pit house rule
+
+For 2014 Turn Undead, Iron Pit replaces RAW forced-retreat behavior with the universal `trembling` debuff.
+
+- The initial Turn Undead Wisdom saving throw and Cleric spell save DC remain unchanged.
+- On a failed save, the undead gains `trembling`.
+- While `trembling`, the creature has no voluntary movement and cannot use an Action, Bonus Action, or Reaction.
+- `trembling` does not make the creature Frightened or Incapacitated and does not prevent required saving throws or other non-voluntary engine resolution.
+- At the end of each of its turns, the creature repeats the Wisdom saving throw against the original Turn Undead DC. A success removes `trembling`.
+- Taking any damage immediately removes `trembling`; no additional save is required when damage breaks the effect.
+- After `trembling` ends, the creature immediately returns to its normal combat rules on subsequent legal opportunities.
+- This is an explicit Iron Pit house rule and intentionally replaces 2014 RAW retreat/Dash/Dodge movement behavior in the arena.
+- `trembling` is a universal debuff. Turn Undead is only one source that may apply it; engine behavior must never branch on the Turn Undead name.
+
 ## 9. Advantage and Disadvantage
 
 - Track every source independently for audit and expiry.
