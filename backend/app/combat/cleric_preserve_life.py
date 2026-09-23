@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.hit_points import effective_max_hp
-from app.combat.zero_hp import restore_hit_points
+from app.combat.pooled_healing import pooled_healing_capacity, resolve_pooled_healing
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -11,7 +11,10 @@ PRESERVE_LIFE = "preserve-life"
 
 
 def healing_capacity(target: EncounterCombatant) -> int:
-    return max(0, effective_max_hp(target.state) // 2 - target.state.current_hp)
+    try:
+        return pooled_healing_capacity(target, 1, 2)
+    except Exception:
+        raise
 
 
 def _legal_preserve_life_target(cleric: EncounterCombatant, target: EncounterCombatant) -> bool:
@@ -55,17 +58,16 @@ def resolve_preserve_life(
     pool = 5 * (cleric.state.template.level or 0)
     if pool <= 0 or not targets:
         raise ValueError("Preserve Life requires a Cleric level and at least one worthwhile Bloodied target.")
-    allocations: list[str] = []
-    for target in targets:
-        if pool <= 0:
-            break
-        amount = min(pool, healing_capacity(target))
-        if amount <= 0:
-            continue
-        restored = restore_hit_points(target.state, amount)
-        if restored:
-            allocations.append(f"{target.state.template.name} +{restored} HP")
-            pool -= restored
+    resolved, _ = resolve_pooled_healing(
+        targets,
+        pool,
+        cap_numerator=1,
+        cap_denominator=2,
+    )
+    allocations = [
+        f"{target.state.template.name} +{restored} HP"
+        for target, restored in resolved
+    ]
     if not allocations:
         raise ValueError("Preserve Life had no legal healing allocation.")
     return BattleEvent(
