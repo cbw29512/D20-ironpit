@@ -56,6 +56,7 @@ class SpellAttackAction(BaseModel):
     action_cost: ActionCost = "action"
     attack_kind: SpellAttackKind = "ranged"
     range_ft: int = Field(ge=0)
+    requires_visible_target: bool = False
     attack_bonus: int
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
@@ -80,6 +81,7 @@ class SpellSaveAction(BaseModel):
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
     range_ft: int = Field(ge=0)
+    requires_visible_target: bool = False
     area_radius_ft: int | None = Field(default=None, ge=5)
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
@@ -94,6 +96,8 @@ class SpellSaveAction(BaseModel):
 
     @model_validator(mode="after")
     def validate_spell(self) -> "SpellSaveAction":
+        if self.requires_visible_target and self.area_radius_ft is not None:
+            raise ValueError("Visible-target legality is for creature-targeted spells, not area origins.")
         if self.area_radius_ft is not None and self.area_radius_ft % 5:
             raise ValueError("Iron Pit area spell radii must use 5-foot increments.")
         if self.damage_dice_count and self.damage_type is None:
