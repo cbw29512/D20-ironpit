@@ -27,7 +27,8 @@
   }
 
   function opportunityAttackWeapon(reactor, mover, before, after, source, options = {}) {
-    if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
+    const canSee = options.canSee ?? Q().canSee(reactor.state, mover.state);
+    if (reactor.side === mover.side || canSee === false || options.disengaged === true) return null;
     if (opportunityAttacksSuppressed(reactor.state)) return null;
     if (Q()?.has(reactor.state, "blinded") || !PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
     const weapon = (reactor.state.template.attacks || []).find((attack) =>
