@@ -39,13 +39,27 @@ A build does not require a unique subclass. Where a build genuinely depends on a
 
 Planned overlays do not become runnable or certified merely because their IDs exist. Their subclass rules, spell packages, form packages, equipment/mastery choices, tactical policies, and every outcome-changing mechanic must pass the normal RAW/capability gates first.
 
-## Legal deterministic base ability array
+## Edition-specific RAW ability score policy
 
-Use the 27-point-buy array below before Background increases or later feat/ASI increases:
+Iron Pit canonical pregens must use a legal ability-generation method for the selected ruleset. Never apply one edition's origin/species ability-score rules to the other edition.
+
+### 2014 canonical pregens
+
+For deterministic 2014 canonical pregens, use the RAW 2014 standard array:
+
+`15 / 14 / 13 / 12 / 10 / 8`
+
+Assign those six scores to abilities according to the established combat role, then apply the character's printed 2014 racial ability-score increases exactly as written. Do not apply 2024 Background ability increases to a 2014 character.
+
+A 2014 character keeps those assigned scores and racial increases as it advances. Later changes come only from legal 2014 ASIs, feats, or other explicit RAW effects. Random rolled ability scores are RAW-legal but are not used for canonical mass-produced pregens because the canonical roster must be deterministic and reproducible.
+
+### 2024 canonical pregens
+
+Use the legal 27-point-buy array below before 2024 Background increases or later feat/ASI increases:
 
 `15 / 14 / 13 / 10 / 10 / 10`
 
-This is the only default canonical base array for mass-produced Iron Pit heroes.
+This is the default canonical base array for 2024 mass-produced Iron Pit heroes.
 
 ### Melee and weapon-first hybrids
 
@@ -79,7 +93,9 @@ This deliberate combat-simulation convention keeps three baseline non-priority s
 
 ## Background and origin increases
 
-Use only legal 2024 Background ability increases. Species does not receive invented ability-score bonuses.
+This section applies to 2024 pregens. Use only legal 2024 Background ability increases. Species does not receive invented ability-score bonuses.
+
+2014 pregens instead use their printed 2014 racial ability-score increases from the selected race/subrace and do not receive 2024 Background increases.
 
 - Prefer +2 to the canonical primary ability and +1 to the highest-ranked other allowed canonical ability.
 - Keep a base 10 dump ability at 10 when a legal higher-priority allowed ability can receive the increase instead.
