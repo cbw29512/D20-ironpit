@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import logging
+
 from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, CombatantTemplate
 from app.domain.modifiers import CombatModifier, ModifierKind
+from app.domain.saving_throw_context import SavingThrowContext
+
+logger = logging.getLogger(__name__)
 
 
 def _source_type_matches(modifier: CombatModifier, source: CombatantTemplate | None) -> bool:
@@ -23,11 +28,53 @@ def attacks_against_disadvantage_sources(
     )
 
 
-def saving_throw_advantage_sources(state: CombatantState, ability: str) -> int:
-    return sum(
-        1 for item in state.active_modifiers
-        if item.kind is ModifierKind.SAVING_THROW_ADVANTAGE and item.save_ability == ability
-    )
+def _saving_throw_advantage_modifiers(
+    state: CombatantState,
+    ability: str,
+    context: SavingThrowContext | None = None,
+) -> list[CombatModifier]:
+    try:
+        resolved_context = context or SavingThrowContext()
+        return [
+            item for item in state.active_modifiers
+            if item.kind is ModifierKind.SAVING_THROW_ADVANTAGE
+            and item.save_ability == ability
+            and (not item.requires_magical_effect or resolved_context.magical_effect)
+        ]
+    except Exception:
+        logger.exception(
+            "Failed to resolve saving-throw Advantage sources for %s / %s.",
+            state.template.name,
+            ability,
+        )
+        raise
+
+
+def saving_throw_advantage_sources(
+    state: CombatantState,
+    ability: str,
+    context: SavingThrowContext | None = None,
+) -> int:
+    return len(_saving_throw_advantage_modifiers(state, ability, context))
+
+
+def saving_throw_advantage_source_names(
+    state: CombatantState,
+    ability: str,
+    context: SavingThrowContext | None = None,
+) -> list[str]:
+    try:
+        return sorted({
+            item.source_name or item.source_effect_id
+            for item in _saving_throw_advantage_modifiers(state, ability, context)
+        })
+    except Exception:
+        logger.exception(
+            "Failed to identify saving-throw Advantage source names for %s / %s.",
+            state.template.name,
+            ability,
+        )
+        raise
 
 
 def saving_throw_disadvantage_sources(state: CombatantState) -> int:
