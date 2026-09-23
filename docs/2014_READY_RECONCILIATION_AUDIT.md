@@ -225,7 +225,41 @@ Existing endgame bindings remain valid:
 
 
 ### Devotion Paladin 1-11
-Status: PENDING FULL RE-AUDIT
+Status: AUDITED — THREE REPAIRS REQUIRED
+
+Verified represented behavior:
+- legal 2014 Human/Paladin progression through level 11;
+- sword/shield + Defense style AC;
+- spell slots and prepared/oath-spell package;
+- Divine Smite slot scaling, Fiend/Undead rider, critical doubling, and melee-only trigger;
+- Extra Attack;
+- Aura of Protection strongest-bonus stacking and live range;
+- Aura of Devotion and Aura of Courage live range/immunity;
+- Improved Divine Smite declarative radiant rider;
+- condition removal, defensive spells, concentration, and Dispel Magic entrypoints.
+
+Arena-neutral features:
+- Divine Sense: creature identity is already authoritative to the engine;
+- Divine Health disease immunity: the standard arena currently has no disease-effect producer.
+
+Finding PAL-2014-001 — Turn the Unholy lifecycle/turn behavior:
+- Classification: `ENGINE_TRULY_MISSING` plus correction of an invalid composition.
+- Current shared turning code applies literal `frightened` + `incapacitated`, ends if the source becomes incapacitated/dead, and the current forced-retreat turn logs fleeing without actually moving the creature.
+- 2014 turning is not the Incapacitated condition. It restricts the turned creature's turn/reactions and compels movement away; it ends on damage or duration, not merely because the source later becomes incapacitated/dead.
+- Required repair: model a universal Turned/forced-retreat behavior with real authoritative-grid movement, reaction suppression, allowed-action restriction, source-distance constraint, and correct end conditions. Reuse universal forced movement/pathing where semantically applicable; do not encode Paladin identity into the resolver.
+
+Finding PAL-2014-002 — Lay on Hands healing pool:
+- Classification: `ENGINE_TRULY_MISSING`.
+- Current declarative healing action heals `5 * level` and spends `5 * level` pool points every use.
+- 2014 Lay on Hands is a point pool: the Paladin chooses how many remaining points to spend, healing the same amount; spending exactly 5 points may instead cure one disease or neutralize one poison.
+- Poison removal is already represented at a 5-point cost; disease is arena-neutral today.
+- Required repair: add a reusable variable resource-pool healing amount semantic so Arena AI spends only the useful legal amount instead of draining the whole pool on every heal.
+
+Finding PAL-2014-003 — Sacred Weapon magical source qualifier:
+- Classification: `ENGINE_EXISTS_COMPOSITION` once MONK-2014-003's universal magical/nonmagical source qualifier lands.
+- Sacred Weapon's attack-roll bonus is implemented, but the weapon also becomes magical for the duration if it was not already magical.
+- Bind that source-owned timed qualifier to the same universal damage-defense qualifier required by Ki-Empowered Strikes; no Paladin-specific damage-defense code.
+
 
 ## Certified monster audit queue
 
