@@ -42,7 +42,7 @@ for (const id of [
   "2014-giant-shark", "2014-hunter-shark", "2014-quipper", "2014-swarm-of-quippers",
   "2014-giant-wolf-spider", "2014-spider", "2014-lion", "2014-young-white-dragon",
   "2014-bat", "2014-giant-bat", "2014-killer-whale", "2014-swarm-of-bats",
-  "2014-berserker", "2014-minotaur", "2014-winter-wolf",
+  "2014-berserker", "2014-minotaur", "2014-winter-wolf", "2014-satyr",
 ]) assert.ok(window.IRON_PIT_BROWSER_MONSTERS_2014[id], `${id} must be in the certified 2014 browser lane`);
 
 for (const id of ["2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens"]) {
