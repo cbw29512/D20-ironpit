@@ -1,11 +1,7 @@
 (() => {
   "use strict"; const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
-  const H = () => {
-    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
-    if (!hooks) throw new Error("Browser attack resolution requires browser-ability-hooks.js.");
-    return hooks;
-  };
+  const H = () => { const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS; if (!hooks) throw new Error("Browser attack resolution requires browser-ability-hooks.js."); return hooks; };
   const O = () => {
     const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
     if (!outcome) throw new Error("Browser attack resolution requires browser-attack-outcome.js.");
