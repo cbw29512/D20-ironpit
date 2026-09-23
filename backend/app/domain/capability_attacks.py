@@ -97,6 +97,7 @@ class SaveCapabilityDefinition(BaseModel):
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
+    requires_visible_target: bool = False
     target_max_size: CreatureSize | None = None
     area: AreaTargeting | None = None
     damage: DiceSpec | None = None
@@ -111,6 +112,8 @@ class SaveCapabilityDefinition(BaseModel):
 
     @model_validator(mode="after")
     def validate_damage(self) -> "SaveCapabilityDefinition":
+        if self.requires_visible_target and self.area is not None:
+            raise ValueError("Visible-target legality is for creature-targeted save capabilities, not area origins.")
         if (self.damage is None) != (self.damage_type is None):
             raise ValueError("Save damage dice and damage type must be declared together.")
         if self.grapple and self.grapple.max_target_size and self.target_max_size:
