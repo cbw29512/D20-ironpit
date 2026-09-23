@@ -48,6 +48,8 @@ Saving throws are always shared math:
 
 `d20 + creature save modifier + shared modifiers vs DC`
 
+Divisible healing pools are also a shared primitive. Existing single-target and group-healing actions resolve a fixed healing amount per target; they cannot correctly represent one source-wide pool that is allocated across several targets and capped independently for each target. The universal pooled-healing resolver therefore owns pool depletion and per-target HP ceilings. Source data or the source ability supplies the pool formula, ceiling fraction, legal-target rules, range, resource cost, and display name.
+
 Post-roll D20 replacement is also a shared primitive. Source data declares the resource, replacement natural roll, eligible D20 Test kinds, and exact source name; the attack/save/check resolver remains generic. A rule that replaces a failed D20 roll with 20 is **not** mechanically equivalent to a rule that merely converts a missed attack into a normal hit. Preserve that distinction rather than forcing both through one named-feature shortcut.
 
 Attack rolls, ability checks, AC, damage defenses, conditions, concentration, and movement follow the same rule: one resolver, different creature data.
