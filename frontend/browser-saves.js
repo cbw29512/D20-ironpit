@@ -7,7 +7,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
-  const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 }, DF = () => window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS || { saveAdvantage: () => 0 };
+  const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 }, DF = () => window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS || { saveAdvantage: () => 0, saveAdvantageSourceNames: () => [] };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll, savingThrowFlat: () => 0 };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { saveDisadvantage: () => 0 };
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || { evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total };
@@ -36,7 +36,7 @@
   function saveMode(state, ability, context = {}) {
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
-      + DG().dexSaveAdvantageSources(state, ability) + DF().saveAdvantage(state, ability)
+      + DG().dexSaveAdvantageSources(state, ability) + DF().saveAdvantage(state, ability, context)
       + sureFootedAdvantage(state, ability, context);
     const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state) || 0)
       + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
@@ -116,7 +116,11 @@
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
+    const saveContext = { magicalEffect: Boolean(action.magicalEffect) };
+    const advantageSources = DF().saveAdvantageSourceNames?.(
+      target.state, action.saveAbility, saveContext,
+    ) || [];
+    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, saveContext);
     let resourceRemaining = options.resourceRemaining ?? null;
     if (action.resourceId && options.spendResource !== false) {
       actor.state.resources[action.resourceId] -= action.resourceCost || 1; resourceRemaining = actor.state.resources[action.resourceId];
@@ -148,6 +152,7 @@
     }
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    if (advantageSources.length) description += ` ${advantageSources.join(" and ")} grants Advantage on the save.`;
     const d20OverrideName = DO().sourceNameForRoll(target.state, save.roll);
     if (d20OverrideName) description += ` ${d20OverrideName} turns the failed saving throw roll into a 20.`;
     if (target.state.template.evasion && action.saveAbility === "dexterity" && action.successDamage === "half") description += " Evasion reduces the damage.";

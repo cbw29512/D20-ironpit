@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Literal
 
 from app.domain.character_builds import AbilityName
@@ -66,6 +66,21 @@ class SavingThrowProficiencyGrant(BaseModel):
     abilities: list[AbilityName] = Field(min_length=1)
 
 
+class SavingThrowAdvantageGrant(BaseModel):
+    """Passive source-tagged Advantage on matching saving throws."""
+
+    source_id: str
+    source_name: str = Field(min_length=1)
+    abilities: list[AbilityName] = Field(min_length=1)
+    requires_magical_effect: bool = False
+
+    @model_validator(mode="after")
+    def validate_abilities(self) -> "SavingThrowAdvantageGrant":
+        if len(set(self.abilities)) != len(self.abilities):
+            raise ValueError("Saving-throw Advantage abilities must be unique.")
+        return self
+
+
 class FailedSaveRerollGrant(BaseModel):
     """Source-tagged, resource-backed reroll of a failed saving throw."""
 
@@ -110,6 +125,7 @@ class ProgressionCombatFeatures(BaseModel):
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
+    saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     opening_targeting_ward: OpeningTargetingWard | None = None
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)

@@ -8,12 +8,14 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.failed_d20_test_override import source_name_for_roll
+from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
 from app.combat.rogue_defenses import evasion_damage
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
+from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
 
 
@@ -50,7 +52,13 @@ def resolve_save_action(
     if check_resource and not action_resource_available(actor.state, action):
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
-    save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
+    save_context = SavingThrowContext(magical_effect=action.magical_effect)
+    advantage_sources = saving_throw_advantage_source_names(
+        target.state, action.save_ability, save_context,
+    )
+    save_roll, succeeded = resolve_saving_throw(
+        target.state, action.save_ability, action.dc, dice, save_context,
+    )
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
@@ -71,6 +79,9 @@ def resolve_save_action(
         applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
+    if advantage_sources:
+        source_text = " and ".join(advantage_sources)
+        description += f" {source_text} grants Advantage on the save."
     if target.state.template.progression_features.evasion and action.save_ability == "dexterity" and action.success_damage == "half":
         description += " Evasion reduces the damage."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."

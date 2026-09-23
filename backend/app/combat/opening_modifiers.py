@@ -11,18 +11,31 @@ logger = logging.getLogger(__name__)
 def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
     """Compile passive opening combat modifiers from declarative template data."""
     try:
-        ward = template.progression_features.opening_targeting_ward
-        if ward is None:
-            return []
-        return [CombatModifier(
-            id=f"{template.id}:{ward.source_id}:opening",
-            source_id=template.id,
-            source_effect_id=ward.source_id,
-            kind=ModifierKind.TARGETING_SAVE_GATE,
-            save_ability=ward.save_ability,
-            save_dc=ward.save_dc,
-            ends_on_owner_attack=ward.ends_on_owner_attack,
-        )]
+        features = template.progression_features
+        modifiers: list[CombatModifier] = []
+        ward = features.opening_targeting_ward
+        if ward is not None:
+            modifiers.append(CombatModifier(
+                id=f"{template.id}:{ward.source_id}:opening",
+                source_id=template.id,
+                source_effect_id=ward.source_id,
+                kind=ModifierKind.TARGETING_SAVE_GATE,
+                save_ability=ward.save_ability,
+                save_dc=ward.save_dc,
+                ends_on_owner_attack=ward.ends_on_owner_attack,
+            ))
+        for grant in features.saving_throw_advantage_grants:
+            for ability in grant.abilities:
+                modifiers.append(CombatModifier(
+                    id=f"{template.id}:{grant.source_id}:save-advantage:{ability}",
+                    source_id=template.id,
+                    source_effect_id=grant.source_id,
+                    source_name=grant.source_name,
+                    kind=ModifierKind.SAVING_THROW_ADVANTAGE,
+                    save_ability=ability,
+                    requires_magical_effect=grant.requires_magical_effect,
+                ))
+        return modifiers
     except Exception as exc:
         logger.exception("Failed to compile opening modifiers for %s.", template.id)
         raise RuntimeError("Opening combat modifiers could not be compiled.") from exc

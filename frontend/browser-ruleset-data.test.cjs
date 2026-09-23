@@ -100,7 +100,7 @@ assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy b
 
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
-assert.equal(monsters2014.length, 128, "2014 browser roster must contain exactly 128 certified monsters");
+assert.equal(monsters2014.length, 129, "2014 browser roster must contain exactly 129 certified monsters");
 const spy2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-spy"];
 assert.ok(spy2014, "2014 Spy must be in the certified browser roster");
 assert.equal(spy2014.cunning_action, true);

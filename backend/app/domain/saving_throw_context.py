@@ -8,3 +8,4 @@ class SavingThrowContext:
     """Immutable outcome context for a saving throw."""
 
     condition_id: str | None = None
+    magical_effect: bool = False
