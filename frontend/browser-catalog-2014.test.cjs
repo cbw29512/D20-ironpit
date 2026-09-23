@@ -38,7 +38,11 @@ load("browser-catalog.js");
   assert.deepEqual(rogues.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(monks.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(paladins.map((card) => card.level), Array.from({ length: 11 }, (_, i) => i + 1));
-  assert.deepEqual(clerics.map((card) => card.level), Array.from({ length: 5 }, (_, i) => i + 1));
+  assert.deepEqual(
+    clerics.map((card) => card.level),
+    Array.from({ length: clerics.length }, (_, i) => i + 1),
+    "2014 Life Cleric catalog must remain one continuous persistent progression",
+  );
   assert.ok(fighters.every((card) => card.name === "Karnok Stoneward"));
   assert.ok(barbarians.every((card) => card.name === "Rokhan Stonefury"));
   assert.ok(rogues.every((card) => card.name === "Mara Quickstep"));
@@ -52,7 +56,7 @@ load("browser-catalog.js");
   assert.equal(paladins.find((card) => card.level === 3).subclass_id, "oath-devotion");
   assert.equal(clerics.find((card) => card.level === 3).subclass_id, "life-domain");
   assert.ok(catalog.heroes.every((card) => card.build_id === "canonical-2014"));
-  console.log("2014 catalog exposes the certified persistent progressions, including Life Cleric 1-5.");
+  console.log("2014 catalog exposes the certified persistent progressions, including the current Life Cleric progression.");
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;
