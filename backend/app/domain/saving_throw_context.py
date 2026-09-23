@@ -9,3 +9,4 @@ class SavingThrowContext:
 
     condition_id: str | None = None
     magical_effect: bool = False
+    effect_tags: frozenset[str] = frozenset()
