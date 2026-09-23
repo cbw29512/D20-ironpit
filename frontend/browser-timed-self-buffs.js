@@ -37,7 +37,8 @@
       E().spend(member.state, action.actionCost);
       member.state.resources[action.resourceId] -= action.resourceCost || 1;
       const applied = [];
-      (action.conditionIds || []).forEach((conditionId, index) => {
+      let resistanceAttached = false;
+      (action.conditionIds || []).forEach((conditionId) => {
         const condition = T().apply(member.state, conditionId, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
@@ -45,10 +46,10 @@
           expiresRound: round + action.durationRounds,
           expiryTiming: action.expiryTiming || "source_turn_start",
           expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
-          ownedDamageResistances: index === 0 ? [...(action.damageResistances || [])] : [],
+          ownedDamageResistances: resistanceAttached ? [] : [...(action.damageResistances || [])],
           useDefaultPoisonRecovery: false,
         });
-        if (condition) applied.push(condition);
+        if (condition) { applied.push(condition); resistanceAttached = true; }
       });
       if (!applied.length) throw new Error(`${action.name} applied no timed condition.`);
 
