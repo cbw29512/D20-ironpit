@@ -102,6 +102,19 @@ class DeferredSaveEffect(BaseModel):
     max_active_targets: int = Field(default=1, ge=1, le=20)
 
 
+class TimedSelfEffectGrant(BaseModel):
+    """Data-driven self buff composed from universal condition and defense primitives."""
+
+    source_id: str
+    source_name: str
+    action_cost: Literal["action", "bonus_action"] = "action"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1)
+    duration_rounds: int = Field(ge=1, le=600)
+    condition_ids: list[str] = Field(default_factory=list)
+    damage_resistances: list[str] = Field(default_factory=list)
+
+
 class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
@@ -115,6 +128,7 @@ class ProgressionCombatFeatures(BaseModel):
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
     deferred_save_effect: DeferredSaveEffect | None = None
+    timed_self_effect_grants: list[TimedSelfEffectGrant] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
