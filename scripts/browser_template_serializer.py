@@ -343,6 +343,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "ruleset": template.ruleset, "size": template.size.value,
             "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
+            "opportunity_attack_exempt_movement_modes": list(template.opportunity_attack_exempt_movement_modes),
             "initiative_bonus": template.initiative_bonus,
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
