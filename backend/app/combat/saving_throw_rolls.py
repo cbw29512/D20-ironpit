@@ -37,7 +37,7 @@ def saving_throw_mode(
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
             + sure_footed_advantage(state, ability, context)
-            + saving_throw_advantage_sources(state, ability)
+            + saving_throw_advantage_sources(state, ability, context)
         )
         disadvantage = (
             saving_throw_disadvantage_sources(state)
