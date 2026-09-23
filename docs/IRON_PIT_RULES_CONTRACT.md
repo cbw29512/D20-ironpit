@@ -67,6 +67,8 @@ The target architecture supports hard ruleset profiles:
 
 - 2014 fights use only 2014 monsters, pregens, spells, features, items, and mechanics.
 - 2024 fights use only 2024 monsters, pregens, spells, features, items, and mechanics.
+- Canonical 2014 pregens use a legal 2014 RAW ability-generation method; the deterministic canonical default is the 2014 standard array `15/14/13/12/10/8`, followed by printed 2014 racial ability-score increases.
+- Canonical 2024 pregens use their separate legal 2024 ability-generation and Background-origin increase policy. 2024 Background increases never replace or modify 2014 racial increases.
 - Never cross editions in one fight.
 - Shared mechanics live in one universal core; edition differences live in explicit ruleset profiles/data rather than duplicated whole engines.
 - Certification is ruleset-specific.
