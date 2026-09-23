@@ -18,7 +18,14 @@ def test_2014_seraphine_is_one_persistent_character_across_levels() -> None:
         assert profile.species_increases == levels[0].species_increases
         assert_canonical_profile_policy(profile)
 
+    # RAW 2014 canonical construction: standard array first, then Hill Dwarf racial increases.
+    assert sorted(levels[0].base_ability_scores.model_dump().values()) == [8, 10, 12, 13, 14, 15]
+    assert [(item.ability, item.amount) for item in levels[0].species_increases] == [
+        ("constitution", 2),
+        ("wisdom", 1),
+    ]
     assert levels[0].final_ability_scores.wisdom == 16
+    assert levels[0].final_ability_scores.constitution == 16
     assert levels[3].final_ability_scores.wisdom == 18
     assert levels[7].final_ability_scores.wisdom == 20
     assert levels[11].final_ability_scores.constitution == 18
