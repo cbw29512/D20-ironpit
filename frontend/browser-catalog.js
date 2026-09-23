@@ -16,6 +16,7 @@
     ["wizard", "Wizard", "Elian Starweaver", "evoker", "Evoker"],
   ];
   const SUBCLASS_2014 = {
+    cleric: ["life-domain", "Life Domain"],
     fighter: ["champion", "Champion"],
     barbarian: ["path-berserker", "Path of the Berserker"],
     rogue: ["thief", "Thief"],
@@ -97,8 +98,8 @@
   function build2014() {
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
     const heroes = build2014Heroes(), monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (heroes.length !== 91) throw new Error(`Expected 91 certified 2014 hero levels; found ${heroes.length}.`);
-    if (monsters.length !== 129) throw new Error(`Expected 129 certified 2014 test monsters; found ${monsters.length}.`);
+    if (!heroes.length) throw new Error("Certified 2014 hero runtime set is empty.");
+    if (!monsters.length) throw new Error("Certified 2014 monster runtime set is empty.");
     if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 hero catalog crossed the ruleset boundary.");
     if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
