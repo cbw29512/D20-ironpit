@@ -101,13 +101,18 @@
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
   function damageSourceQualifiers(state, attack) {
-    const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
-    for (const item of state.active_modifiers || []) {
-      if (item.kind === "damage-source-qualifier"
-          && item.weapon_id === (attack.weaponId || attack.id)
-          && item.source_qualifier) qualifiers.add(item.source_qualifier);
+    try {
+      const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
+      for (const item of state.active_modifiers || []) {
+        if (item.kind === "damage-source-qualifier"
+            && item.weapon_id === (attack.weaponId || attack.id)
+            && item.source_qualifier) qualifiers.add(item.source_qualifier);
+      }
+      return qualifiers;
+    } catch (error) {
+      console.error("Failed browser attack damage-source qualifier resolution.", { combatant: state?.template?.name, attack: attack?.id, error });
+      throw error;
     }
-    return qualifiers;
   }
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
   const effectiveSpeed = (state) => X()?.effectiveSpeed(state, Math.max(0, state.template.speed_ft + flat(state, "speed")))
