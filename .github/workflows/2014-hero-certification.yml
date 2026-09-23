@@ -31,6 +31,7 @@ jobs:
       - name: Certify 2014 Paladin Python behavior
         run: |
           pytest -q \
+            backend/tests/test_fighter_champion_2014_runtime.py \
             backend/tests/test_monk_open_hand_2014.py \
             backend/tests/test_monk_open_hand_2014_level18.py \
             backend/tests/test_paladin_2014_spell_package.py \
@@ -45,6 +46,7 @@ jobs:
           node frontend/browser-ruleset-isolation.test.cjs
           node frontend/browser-survivor.test.cjs
           node frontend/browser-roll-revisions.test.cjs
+          node frontend/browser-2014-fighter-second-wind.test.cjs
           node frontend/browser-2014-berserker.test.cjs
           node frontend/browser-2014-rogue.test.cjs
           node frontend/browser-2014-monk.test.cjs

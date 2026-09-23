@@ -1,7 +1,9 @@
 from app.combat.dice import FixedDiceProvider
+from app.combat.healing import resolve_healing
 from app.combat.indomitable import use_indomitable
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
+from app.domain.encounters import EncounterCombatant
 
 
 def _resource_uses(hero, resource_id: str) -> int:
@@ -17,6 +19,43 @@ def test_2014_champion_levels_one_through_twenty_stay_in_2014_rules() -> None:
         assert hero.weapon_attack.weapon.mastery_property is None
         assert all(attack.weapon.mastery_property is None for attack in hero.alternate_weapon_attacks)
         assert hero.source.startswith("D&D Basic Rules 2014")
+
+
+def test_2014_second_wind_is_declarative_universal_healing_data() -> None:
+    hero = build_karnok_stoneward_2014(11)
+
+    assert len(hero.healing_actions) == 1
+    action = hero.healing_actions[0]
+    assert action.id == "second-wind"
+    assert action.name == "Second Wind"
+    assert action.action_cost == "bonus_action"
+    assert action.target_mode == "self"
+    assert action.dice_count == 1
+    assert action.dice_size == 10
+    assert action.healing_bonus == 11
+    assert action.resource_id == "second-wind"
+    assert action.resource_cost == 1
+
+
+def test_2014_second_wind_resolves_through_universal_healing() -> None:
+    state = build_combatant_state(build_karnok_stoneward_2014(11))
+    state.current_hp = state.template.max_hp // 2
+    member = EncounterCombatant(
+        combatant_id="fighter-2014",
+        side="heroes",
+        position_ft=0,
+        state=state,
+    )
+
+    event = resolve_healing(
+        1, 1, member, member, state.template.healing_actions[0], FixedDiceProvider([5]),
+    )
+
+    assert event.feature_id == "second-wind"
+    assert event.healing_roll is not None
+    assert event.healing_roll.total == 16
+    assert state.bonus_action_available is False
+    assert next(item for item in state.resources if item.id == "second-wind").current_uses == 0
 
 
 def test_2014_champion_progression_uses_real_fighter_breakpoints() -> None:

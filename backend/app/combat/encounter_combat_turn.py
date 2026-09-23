@@ -60,7 +60,7 @@ def resolve_combat_turn(
             sequence, round_number, attacker, setup, dice, turn_key,
         )
         events.extend(activation_events)
-        if should_use_second_wind(attacker.state):
+        if attacker.state.template.ruleset == "2024" and should_use_second_wind(attacker.state):
             events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id))
             sequence += 1
             shift_event = resolve_tactical_shift(sequence, round_number, attacker, setup)

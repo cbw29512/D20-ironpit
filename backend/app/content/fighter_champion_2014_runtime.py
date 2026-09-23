@@ -6,7 +6,7 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.weapon_catalog import build_weapon
-from app.domain.actions import AttackActionDefinition, AttackActionSlot
+from app.domain.actions import AttackActionDefinition, AttackActionSlot, HealingAction
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures
@@ -41,6 +41,22 @@ def _resources(level: int) -> list[ResourceDefinition]:
         uses = 3 if level >= 17 else 2 if level >= 13 else 1
         resources.append(ResourceDefinition(id="indomitable", name="Indomitable", max_uses=uses))
     return resources
+
+
+def _healing_actions(level: int) -> list[HealingAction]:
+    return [HealingAction(
+        id="second-wind",
+        name="Second Wind",
+        action_cost="bonus_action",
+        range_ft=0,
+        target_mode="self",
+        dice_count=1,
+        dice_size=10,
+        healing_bonus=level,
+        resource_id="second-wind",
+        resource_cost=1,
+        animation="second-wind",
+    )]
 
 
 def _remarkable_athlete_bonus(level: int) -> int:
@@ -84,6 +100,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             max_hp=fixed_hit_points(level, 10, scores.modifier("constitution")), speed_ft=30,
             initiative_bonus=scores.modifier("dexterity") + remarkable, weapon_attack=greatsword,
             alternate_weapon_attacks=[longbow], attack_action=action,
+            healing_actions=_healing_actions(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "constitution")),
             skill_bonuses={"athletics": scores.modifier("strength") + proficiency_bonus(level),
                            "acrobatics": scores.modifier("dexterity") + remarkable},
