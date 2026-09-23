@@ -19,6 +19,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -42,8 +43,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -194,6 +195,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -217,8 +219,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -340,6 +342,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -363,8 +366,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -501,6 +504,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -524,8 +528,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -650,6 +654,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -673,8 +678,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -852,6 +857,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -875,8 +881,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -997,6 +1003,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -1020,8 +1027,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1115,6 +1122,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -1138,8 +1146,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1259,6 +1267,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -1282,8 +1291,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1379,6 +1388,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -1402,8 +1412,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1495,6 +1505,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -1518,8 +1529,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1628,6 +1639,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -1651,8 +1663,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1744,6 +1756,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -1767,8 +1780,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1862,6 +1875,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -1885,8 +1899,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1987,6 +2001,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -2010,8 +2025,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2112,6 +2127,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -2135,8 +2151,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2247,6 +2263,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -2270,8 +2287,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2412,6 +2429,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -2435,8 +2453,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2532,6 +2550,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -2555,8 +2574,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2648,6 +2667,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -2671,8 +2691,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2766,6 +2786,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -2789,8 +2810,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2882,6 +2903,7 @@
       "burrow_ft": 10,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -2905,8 +2927,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3000,6 +3022,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -3023,8 +3046,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3116,6 +3139,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -3139,8 +3163,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3237,6 +3261,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -3260,8 +3285,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3355,6 +3380,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -3378,8 +3404,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3476,6 +3502,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -3499,8 +3526,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3626,6 +3653,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -3649,8 +3677,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3763,6 +3791,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -3786,8 +3815,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3888,6 +3917,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -3911,8 +3941,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4033,6 +4063,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -4056,8 +4087,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4147,6 +4178,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -4170,8 +4202,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4333,6 +4365,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -4356,8 +4389,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4589,6 +4622,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -4612,8 +4646,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4726,6 +4760,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -4749,8 +4784,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4842,6 +4877,7 @@
       "burrow_ft": 5,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -4865,8 +4901,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4956,6 +4992,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -4979,8 +5016,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5068,6 +5105,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -5091,8 +5129,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5182,6 +5220,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -5205,8 +5244,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5296,6 +5335,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -5319,8 +5359,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5411,6 +5451,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -5434,8 +5475,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5523,6 +5564,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -5546,8 +5588,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5637,6 +5679,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -5660,8 +5703,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5751,6 +5794,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -5774,8 +5818,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5865,6 +5909,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -5888,8 +5933,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5979,6 +6024,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6002,8 +6048,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6091,6 +6137,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6114,8 +6161,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6207,6 +6254,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6230,8 +6278,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6325,6 +6373,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6348,8 +6397,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6443,6 +6492,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6466,8 +6516,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6580,6 +6630,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6603,8 +6654,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6696,6 +6747,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6719,8 +6771,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6814,6 +6866,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6837,8 +6890,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6930,6 +6983,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -6953,8 +7007,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7053,6 +7107,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -7076,8 +7131,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7173,6 +7228,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -7196,8 +7252,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7289,6 +7345,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -7312,8 +7369,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7407,6 +7464,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -7430,8 +7488,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7529,6 +7587,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -7552,8 +7611,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7649,6 +7708,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -7672,8 +7732,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7765,6 +7825,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -7788,8 +7849,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7886,6 +7947,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -7909,8 +7971,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8004,6 +8066,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -8027,8 +8090,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8122,6 +8185,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -8145,8 +8209,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8240,6 +8304,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -8263,8 +8328,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8408,6 +8473,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -8431,8 +8497,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8543,6 +8609,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -8566,8 +8633,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8682,6 +8749,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -8705,8 +8773,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8846,6 +8914,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -8869,8 +8938,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8993,6 +9062,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -9016,8 +9086,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9121,6 +9191,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -9144,8 +9215,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9249,6 +9320,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -9272,8 +9344,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9394,6 +9466,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -9417,8 +9490,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9583,6 +9656,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -9606,8 +9680,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9754,6 +9828,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -9777,8 +9852,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9900,6 +9975,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -9923,8 +9999,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10027,6 +10103,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -10050,8 +10127,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10159,6 +10236,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -10182,8 +10260,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10341,6 +10419,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
@@ -10364,8 +10443,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10474,6 +10553,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -10497,8 +10577,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10608,6 +10688,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -10631,8 +10712,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10744,6 +10825,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -10767,8 +10849,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10881,6 +10963,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -10904,8 +10987,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11021,6 +11104,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -11044,8 +11128,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11172,6 +11256,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 6,
     "progression_features": {
       "ability_check_minimums": [],
@@ -11195,8 +11280,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11306,6 +11391,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -11329,8 +11415,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11482,6 +11568,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -11505,8 +11592,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11647,6 +11734,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -11670,8 +11758,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11821,6 +11909,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -11844,8 +11933,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11967,6 +12056,7 @@
       "burrow_ft": 0,
       "hover": true
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
@@ -11990,8 +12080,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12094,6 +12184,7 @@
       "burrow_ft": 30,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -12117,8 +12208,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12276,6 +12367,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -12299,8 +12391,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12397,6 +12489,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -12420,8 +12513,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12526,6 +12619,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -12549,8 +12643,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12653,6 +12747,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -12676,8 +12771,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12796,6 +12891,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -12819,8 +12915,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12925,6 +13021,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
@@ -12948,8 +13045,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13116,6 +13213,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -13139,8 +13237,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13253,6 +13351,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -13276,8 +13375,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13430,6 +13529,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -13453,8 +13553,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13548,6 +13648,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -13571,8 +13672,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13675,6 +13776,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -13698,8 +13800,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13846,6 +13948,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -13869,8 +13972,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13971,6 +14074,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -13994,8 +14098,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14100,6 +14204,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -14123,8 +14228,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14225,6 +14330,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -14248,8 +14354,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14375,6 +14481,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -14398,8 +14505,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14503,6 +14610,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
@@ -14526,8 +14634,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14674,6 +14782,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -14697,8 +14806,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14821,6 +14930,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -14844,8 +14954,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14950,6 +15060,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -5,
     "progression_features": {
       "ability_check_minimums": [],
@@ -14973,8 +15084,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15090,6 +15201,7 @@
       "burrow_ft": 20,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -15113,8 +15225,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15273,6 +15385,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": -2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -15296,8 +15409,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15398,6 +15511,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -15421,8 +15535,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15539,6 +15653,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -15562,8 +15677,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15661,6 +15776,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -15684,8 +15800,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15779,6 +15895,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -15802,8 +15919,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15900,6 +16017,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -15923,8 +16041,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16048,6 +16166,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -16071,8 +16190,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16199,6 +16318,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -16222,8 +16342,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16392,6 +16512,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
@@ -16415,8 +16536,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16584,6 +16705,7 @@
       "burrow_ft": 15,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -16607,8 +16729,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16774,6 +16896,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -16797,8 +16920,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16967,6 +17090,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -16990,8 +17114,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17156,6 +17280,7 @@
       "burrow_ft": 15,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -17179,8 +17304,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17347,6 +17472,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 5,
     "progression_features": {
       "ability_check_minimums": [],
@@ -17370,8 +17496,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17545,6 +17671,7 @@
       "burrow_ft": 20,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
@@ -17568,8 +17695,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17741,6 +17868,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
@@ -17764,8 +17892,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17940,6 +18068,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 4,
     "progression_features": {
       "ability_check_minimums": [],
@@ -17963,8 +18092,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18135,6 +18264,7 @@
       "burrow_ft": 20,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -18158,8 +18288,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18332,6 +18462,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -18355,8 +18486,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18458,6 +18589,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -18481,8 +18613,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18604,6 +18736,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -18627,8 +18760,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18750,6 +18883,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 2,
     "progression_features": {
       "ability_check_minimums": [],
@@ -18773,8 +18907,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18906,6 +19040,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -18929,8 +19064,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -19076,6 +19211,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 0,
     "progression_features": {
       "ability_check_minimums": [],
@@ -19099,8 +19235,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -19274,6 +19410,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 1,
     "progression_features": {
       "ability_check_minimums": [],
@@ -19297,8 +19434,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -19395,6 +19532,7 @@
       "burrow_ft": 0,
       "hover": false
     },
+    "opportunity_attack_exempt_movement_modes": [],
     "initiative_bonus": 3,
     "progression_features": {
       "ability_check_minimums": [],
@@ -19418,8 +19556,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
