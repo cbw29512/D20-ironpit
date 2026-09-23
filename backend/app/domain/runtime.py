@@ -8,6 +8,7 @@ from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
+from app.domain.persistent_spell_attacks import PersistentSpellAttackState
 
 TimedTurnBehavior = Literal["normal", "forced_retreat"]
 
@@ -103,6 +104,7 @@ class CombatantState(BaseModel):
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
+    persistent_spell_attacks: list[PersistentSpellAttackState] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
     survival_save_uses: dict[str, int] = Field(default_factory=dict)
