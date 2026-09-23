@@ -62,7 +62,7 @@ def resolve_attack_hit_damage(
     )
     rolled_components, uncanny_used = apply_uncanny_dodge(attacker, defender, rolled_components)
     damage_roll = aggregate_damage_components(rolled_components)
-    applied_total, components = apply_damage_defenses(defender, rolled_components)
+    applied_total, components = apply_damage_defenses(defender, rolled_components, attack=attack)
     damage_roll.total = applied_total
     applied_types = {part.damage_type for part in components if part.applied_total > 0}
     outcome = apply_damage(
