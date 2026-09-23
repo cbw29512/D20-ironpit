@@ -4,13 +4,23 @@ from app.combat.condition_lifecycle import resolve_target_condition_timing
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.build_audit import assert_character_build_raw_ready
-from app.content.capability_registry import build_combatant_from_capabilities
+from app.content.roster import build_arena_roster
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.cleric_life_2014_combat_profile import build_seraphine_2014_combat_profile
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
 from app.content.cleric_life_2014_runtime import build_seraphine_dawnshield_2014
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+
+
+def _monster_template(template_id: str):
+    try:
+        return next(
+            item for item in build_arena_roster("2014").monsters
+            if item.id == template_id
+        )
+    except StopIteration as exc:
+        raise ValueError(f"Missing certified 2014 monster template: {template_id}") from exc
 
 
 def _member(template, combatant_id: str, side: str, position: int) -> EncounterCombatant:
@@ -47,7 +57,7 @@ def test_2014_life_cleric_level_two_resources_and_fingerprint() -> None:
 
 def test_2014_turn_undead_applies_trembling_and_repeats_save() -> None:
     cleric = _member(build_seraphine_dawnshield_2014(2), "cleric", "heroes", 0)
-    skeleton = _member(build_combatant_from_capabilities("2014-skeleton"), "skeleton", "monsters", 10)
+    skeleton = _member(_monster_template("2014-skeleton"), "skeleton", "monsters", 10)
     setup = EncounterSetup(
         heroes=[cleric], monsters=[skeleton],
         hero_total_levels=2, monster_total_cr="1/4", ruleset="2014",
@@ -81,7 +91,7 @@ def test_2014_turn_undead_applies_trembling_and_repeats_save() -> None:
 
 def test_2014_channel_divinity_never_falls_through_to_divine_spark() -> None:
     cleric = _member(build_seraphine_dawnshield_2014(2), "cleric", "heroes", 0)
-    goblin = _member(build_combatant_from_capabilities("2014-goblin"), "goblin", "monsters", 10)
+    goblin = _member(_monster_template("2014-goblin"), "goblin", "monsters", 10)
     for resource in cleric.state.resources:
         if resource.id.startswith("spell-slot-"):
             resource.current_uses = 0
