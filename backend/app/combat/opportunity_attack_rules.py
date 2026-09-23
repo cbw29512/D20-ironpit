@@ -21,12 +21,21 @@ def opportunity_attacks_suppressed(reactor: EncounterCombatant) -> bool:
     )
 
 
+def mover_oa_exempt(mover: EncounterCombatant) -> bool:
+    """Return whether the mover's current movement mode suppresses Opportunity Attacks."""
+    try:
+        return mover.state.movement_mode in mover.state.template.opportunity_attack_exempt_movement_modes
+    except Exception:
+        raise
+
+
 def _can_react(
     reactor: EncounterCombatant, mover: EncounterCombatant, movement_source: MovementSource,
     *, disengaged: bool, can_see: bool,
 ) -> bool:
     return (
         reactor.side != mover.side and not disengaged and can_see
+        and not mover_oa_exempt(mover)
         and not has_condition(reactor.state, BLINDED)
         and not opportunity_attacks_suppressed(reactor)
         and movement_source in _PROVOKING_SOURCES
