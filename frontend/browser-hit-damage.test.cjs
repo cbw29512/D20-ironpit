@@ -154,7 +154,7 @@ assert.equal(event.hp_before - event.hp_after, event.damage_roll.total, "attack 
 
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
-assert.equal(Object.keys(roster).length, 128);
+assert.equal(Object.keys(roster).length, 129);
 for (const id of [
   "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp", "poisonous-snake", "scorpion", "wyvern",
 ]) {
@@ -170,4 +170,4 @@ for (const id of ["giant-centipede", "giant-wasp"]) {
   assert.equal(rider.durationRounds, 600);
 }
 
-console.log("Browser save-dependent hit damage remains certified across the 128-monster 2014 roster.");
+console.log("Browser save-dependent hit damage remains certified across the 129-monster 2014 roster.");
