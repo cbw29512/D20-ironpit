@@ -71,7 +71,7 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type, "successDamage": action.success_damage,
         "grappleEscapeDc": action.grapple_escape_dc, "restrainsWhileGrappled": action.restrains_while_grappled,
-        "animation": action.animation,
+        "magicalEffect": action.magical_effect, "animation": action.animation,
     }
 
 
@@ -226,6 +226,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "cunning_strike_max_effects": progression.cunning_strike_max_effects,
         "saving_throw_proficiency_grants": [
             item.model_dump() for item in progression.saving_throw_proficiency_grants
+        ],
+        "saving_throw_advantage_grants": [
+            item.model_dump() for item in progression.saving_throw_advantage_grants
         ],
         "first_round_extra_turn_grants": [
             item.model_dump() for item in progression.first_round_extra_turn_grants
