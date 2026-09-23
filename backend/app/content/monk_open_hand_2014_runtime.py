@@ -9,10 +9,11 @@ from app.content.monk_open_hand_2014_attacks import (
     build_unarmed_attack,
     martial_arts_die,
 )
+from app.content.monk_open_hand_2014_buffs import build_monk_2014_timed_self_buffs
 from app.content.progression_saves import saving_throw_proficiencies
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
-from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, TimedSelfBuffAction, VisualLoadout
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
 from app.domain.progression import (
     DeferredSaveEffect,
     FailedSaveRerollGrant,
@@ -75,24 +76,6 @@ def _healing_actions(level: int) -> list[HealingAction]:
         resource_id="wholeness-of-body",
         resource_cost=1,
         animation="healing",
-    )]
-
-
-def _timed_self_buff_actions(level: int) -> list[TimedSelfBuffAction]:
-    if level < 18:
-        return []
-    return [TimedSelfBuffAction(
-        id="empty-body",
-        name="Empty Body",
-        action_cost="action",
-        resource_id="ki",
-        resource_cost=4,
-        duration_rounds=10,
-        condition_ids=["invisible"],
-        damage_resistances=[item for item in DamageType if item != DamageType.FORCE],
-        expiry_timing="source_turn_start",
-        priority=100,
-        animation="empty-body",
     )]
 
 
@@ -191,7 +174,7 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
             attack_action=build_extra_attack(level),
             healing_actions=_healing_actions(level),
             condition_removal_actions=_condition_removal_actions(level),
-            timed_self_buff_actions=_timed_self_buff_actions(level),
+            timed_self_buff_actions=build_monk_2014_timed_self_buffs(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, save_proficiencies),
             skill_bonuses=_skill_bonuses(level, scores), weapon_masteries=[],
             condition_immunities=["poisoned"] if level >= 10 else [],
