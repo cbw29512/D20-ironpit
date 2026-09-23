@@ -161,6 +161,7 @@
     else if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
     else if (naturalOne) description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn.";
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
+    if (outcome.deferredEffectArmed) description += ` ${outcome.deferredEffectArmed} is armed.`;
     if (!hit && damageRoll !== null) description += ` Graze deals ${damageRoll.total} ${attack.damageType} damage.`;
     if (studiedApplied) description += ` Studied Attacks primes the next attack against ${target.state.template.name}.`;
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`;
