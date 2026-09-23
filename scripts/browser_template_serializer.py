@@ -363,6 +363,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_limited_use_names"] = list(template.source_limited_use_names)
             row["source_legendary_action_names"] = list(template.source_legendary_action_names)
             row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
+        if template.initiative_resource_refill_grants:
+            row["initiative_resource_refill_grants"] = [
+                item.model_dump() for item in template.initiative_resource_refill_grants
+            ]
         recharge = recharge_rows(template)
         if recharge:
             row["recharge_rules"] = recharge
