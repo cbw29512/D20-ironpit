@@ -117,6 +117,14 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "ability-score-improvement-l16", "Ability Score Improvement (+2 Wisdom)", "class",
                 notes="Canonical progression raises Wisdom 17 to 19, updating AC, Wisdom saves, and Monk save DCs.",
             ))
+        if level >= 17:
+            audits.append(_audit(
+                "quivering-palm", "Quivering Palm", "subclass",
+                notes=(
+                    "Universal deferred-save effect: an unarmed hit can spend 3 Ki to mark one target; "
+                    "a later Action triggers the Constitution save, zero HP on failure, or 10d10 necrotic on success."
+                ),
+            ))
 
         return audits
     except Exception:
