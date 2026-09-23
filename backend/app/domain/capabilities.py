@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import ConditionName, ConditionRemovalAction, HealingAction
+from app.domain.actions import ConditionName, ConditionRemovalAction, HealingAction, StabilizationAction
 from app.domain.capability_attacks import (
     AttackCapabilityDefinition,
     CapabilityActionSlot,
@@ -51,6 +51,7 @@ class CombatantDefinition(BaseModel):
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
+    stabilization_actions: list[StabilizationAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
