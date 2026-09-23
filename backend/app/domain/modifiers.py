@@ -44,6 +44,7 @@ class CombatModifier(BaseModel):
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
     requires_magical_effect: bool = False
+    against_effect_tags: list[str] = Field(default_factory=list)
     concentration_required: bool = False
     consume_on_attack_against: bool = False
     consume_on_saving_throw: bool = False
@@ -98,6 +99,10 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a save ability.")
         if self.requires_magical_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
             raise ValueError("Only saving-throw Advantage can require a magical-effect context.")
+        if self.against_effect_tags and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
+            raise ValueError("Only saving-throw Advantage can match incoming effect tags.")
+        if len(set(self.against_effect_tags)) != len(self.against_effect_tags):
+            raise ValueError("Saving-throw Advantage effect tags must be unique.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
             raise ValueError("Only attack-advantage defender modifiers can be consumed by the next attack.")
         if self.consume_on_saving_throw and self.kind is not ModifierKind.SAVING_THROW_DISADVANTAGE:
