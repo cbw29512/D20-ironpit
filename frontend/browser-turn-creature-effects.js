@@ -5,7 +5,27 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const D = () => window.IRON_PIT_DICE;
+
+  function fraction(value) {
+    const text = String(value);
+    if (!text.includes("/")) {
+      const parsed = Number(text);
+      if (!Number.isFinite(parsed)) throw new Error(`Invalid Challenge Rating: ${text}`);
+      return parsed;
+    }
+    const [numerator, denominator] = text.split("/").map(Number);
+    if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator === 0) {
+      throw new Error(`Invalid Challenge Rating: ${text}`);
+    }
+    return numerator / denominator;
+  }
+
+  function challengeRatingAtOrBelow(target, maximum) {
+    if (maximum == null || target.state.template.challenge_rating == null) return false;
+    return fraction(target.state.template.challenge_rating) <= fraction(maximum);
+  }
 
   function apply(source, target, round, sourceEffectId, turnedEffectId, options = {}) {
     const expiresRounds = Object.prototype.hasOwnProperty.call(options, "expiresRounds") ? options.expiresRounds : 10;
@@ -45,6 +65,7 @@
   function resolve(sequence, round, source, targets, saveDc, sourceEffectId, turnedEffectId, resourceRemaining, featureName, options = {}) {
     const events = [];
     const rider = source.state.template.turning_failure_damage || null;
+    const destroyMaxCr = source.state.template.turning_failure_destroy_max_cr || null;
     let sharedRolls = [];
     if (rider) {
       const score = source.state.template.ability_scores?.[rider.ability];
@@ -52,8 +73,9 @@
       const diceCount = Math.max(1, Math.floor((score - 10) / 2));
       sharedRolls = Array.from({ length: diceCount }, () => D().roll(rider.dice_size));
     }
-    const affectedStates = targets.map((target) => target.state);
+    const affectedStates = options.affectedStates || targets.map((target) => target.state);
     for (const target of targets) {
+      const hpBefore = target.state.current_hp;
       const save = V().resolveSavingThrow(target.state, "wisdom", saveDc);
       let damageRoll = null, damageComponents = [];
       if (!save.succeeded && rider) {
@@ -66,7 +88,13 @@
           damage_type: rider.damage_type, total: raw, applied_total: appliedDamage,
         }];
       }
-      const applied = save.succeeded || target.state.is_dead ? [] : apply(
+      let destroyed = false;
+      if (!save.succeeded && !target.state.is_dead && challengeRatingAtOrBelow(target, destroyMaxCr)) {
+        if (!Z()?.reduceToZero) throw new Error("Turning destruction requires browser-zero-hp.js.");
+        Z().reduceToZero(target.state, affectedStates);
+        destroyed = true;
+      }
+      const applied = save.succeeded || target.state.is_dead || destroyed ? [] : apply(
         source, target, round, sourceEffectId, turnedEffectId, { ...options, saveDc },
       );
       events.push({
@@ -76,9 +104,11 @@
         saving_throw_roll: save.roll, save_ability: "wisdom", save_dc: saveDc, save_succeeded: save.succeeded,
         damage_roll: damageRoll, damage_components: damageComponents,
         applied_condition_ids: applied, feature_id: sourceEffectId, resource_remaining: resourceRemaining,
+        hp_before: hpBefore, hp_after: target.state.current_hp, is_dead: target.state.is_dead,
         animation: "turn-undead",
         description: target.state.template.name + " " + (save.succeeded ? "resists" : "fails")
-          + " " + source.state.template.name + "'s " + featureName + ".",
+          + " " + source.state.template.name + "'s " + featureName
+          + (destroyed ? " and is destroyed." : "."),
       });
     }
     return { events, sequence };
