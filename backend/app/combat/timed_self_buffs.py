@@ -64,7 +64,8 @@ def resolve_timed_self_buff(
         spend(member.state, action.action_cost)
         resource.current_uses -= action.resource_cost
         applied: list[str] = []
-        for index, condition_id in enumerate(action.condition_ids):
+        resistance_attached = False
+        for condition_id in action.condition_ids:
             condition = apply_timed_condition(
                 member.state,
                 condition_id,
@@ -75,11 +76,12 @@ def resolve_timed_self_buff(
                 expires_round=round_number + action.duration_rounds,
                 expiry_timing=action.expiry_timing,
                 expires_at_start_of_source_turn=action.expiry_timing == "source_turn_start",
-                owned_damage_resistances=action.damage_resistances if index == 0 else [],
+                owned_damage_resistances=action.damage_resistances if not resistance_attached else [],
                 use_default_poison_recovery=False,
             )
             if condition is not None:
                 applied.append(condition)
+                resistance_attached = True
         if not applied:
             raise RuntimeError(f"{action.name} applied no timed condition.")
 
