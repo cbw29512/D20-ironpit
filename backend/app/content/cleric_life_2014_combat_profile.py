@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import fixed_hit_points, proficiency_bonus
+from app.content.level_resources import cleric_2014_channel_divinity_uses
+from app.content.spell_slot_progression import spell_slot_resources
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
 from app.content.pregen_combat_profiles import AttackExpectation, PregenCombatProfile
 
@@ -11,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 def build_seraphine_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level != 1:
-            raise ValueError("2014 Seraphine combat fingerprint is currently certified only at level 1.")
+        if level not in range(1, 3):
+            raise ValueError("2014 Seraphine combat fingerprint is currently certified through level 2.")
         source = build_seraphine_dawnshield_2014_profile(level)
         scores = source.final_ability_scores
         pb = proficiency_bonus(level)
@@ -40,7 +42,11 @@ def build_seraphine_2014_combat_profile(level: int) -> PregenCombatProfile:
                 ),
             ),
             weapon_masteries=(),
-            resources=(("spell-slot-1", 2),),
+            resources=tuple([
+                *spell_slot_resources("cleric", level).items(),
+                *((("channel-divinity", cleric_2014_channel_divinity_uses(level)),)
+                  if cleric_2014_channel_divinity_uses(level) else ()),
+            ]),
             damage_resistances=("poison",),
         )
     except Exception:
@@ -50,7 +56,7 @@ def build_seraphine_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_seraphine_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_seraphine_2014_combat_profile(1)]
+        return [build_seraphine_2014_combat_profile(level) for level in range(1, 3)]
     except Exception:
         logger.exception("Failed to compile Seraphine's 2014 combat fingerprints.")
         raise
