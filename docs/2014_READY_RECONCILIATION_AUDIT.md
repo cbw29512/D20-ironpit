@@ -95,7 +95,25 @@ This is the model for the rest of the audit: re-evaluate old assumptions against
 ## Certified hero audit queue
 
 ### Fighter 1-20
-Status: PENDING FULL RE-AUDIT
+Status: AUDITED — ONE REPAIR REQUIRED
+
+Verified represented behavior:
+- legal 2014 Human/Champion progression and ASIs;
+- Defense Fighting Style and level-10 Archery style;
+- Action Surge resource scaling;
+- Improved/Superior Critical thresholds;
+- Extra Attack progression through four attacks;
+- Remarkable Athlete on currently live initiative/Acrobatics paths;
+- Indomitable uses/reset count and 2014 no-level-bonus reroll behavior;
+- Survivor start-turn healing threshold and amount;
+- no 2024 Weapon Mastery or other 2024-only Fighter features.
+
+Finding FTR-2014-001:
+- Classification: `ENGINE_EXISTS_BINDING_MISSING`.
+- Second Wind is still reached through legacy identity-driven orchestration (`should_use_second_wind`, `use_second_wind`, and browser ability hook id `second-wind`).
+- The existing universal `HealingAction` schema already exactly represents the 2014 behavior: self, Bonus Action, 1d10 + Fighter level, one source resource use, Bloodied policy.
+- Required repair: bind 2014 Second Wind declaratively to the universal healing path and prove Python/browser live-turn parity without double activation. Do not create a new mechanic.
+
 
 ### Berserker Barbarian 1-20
 Status: PENDING FULL RE-AUDIT
