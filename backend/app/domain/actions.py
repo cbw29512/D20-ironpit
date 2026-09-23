@@ -108,6 +108,7 @@ class SavingThrowAction(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
+    requires_visible_target: bool = False
     target_max_size: CreatureSize | None = None
     area: AreaTargeting | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
@@ -122,6 +123,12 @@ class SavingThrowAction(BaseModel):
     requires_no_active_grapple: bool = False
     magical_effect: bool = False
     animation: str = "save-effect"
+
+    @model_validator(mode="after")
+    def validate_visibility_targeting(self) -> "SavingThrowAction":
+        if self.requires_visible_target and self.area is not None:
+            raise ValueError("Visible-target legality is for creature-targeted save actions, not area origins.")
+        return self
 
 
 class AttackActionSlot(BaseModel):
