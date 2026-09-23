@@ -31,6 +31,8 @@ jobs:
       - name: Certify 2014 Paladin Python behavior
         run: |
           pytest -q \
+            backend/tests/test_monk_open_hand_2014.py \
+            backend/tests/test_monk_open_hand_2014_level18.py \
             backend/tests/test_paladin_2014_spell_package.py \
             backend/tests/test_paladin_auras_2014.py \
             backend/tests/test_paladin_channel_divinity_2014.py \
@@ -46,6 +48,7 @@ jobs:
           node frontend/browser-2014-berserker.test.cjs
           node frontend/browser-2014-rogue.test.cjs
           node frontend/browser-2014-monk.test.cjs
+          node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-2014-monk-entrypoints.test.cjs
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
