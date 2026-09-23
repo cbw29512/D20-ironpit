@@ -4,9 +4,19 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.turn_creature_effects import apply_turned_creature_effects
 from app.combat.zero_hp import apply_damage
-from app.content.capability_registry import build_combatant_from_capabilities
+from app.content.roster import build_arena_roster
 from app.content.cleric_life_2014_runtime import build_seraphine_dawnshield_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+
+
+def _monster_template(template_id: str):
+    try:
+        return next(
+            item for item in build_arena_roster("2014").monsters
+            if item.id == template_id
+        )
+    except StopIteration as exc:
+        raise ValueError(f"Missing certified 2014 monster template: {template_id}") from exc
 
 
 def _member(template, combatant_id: str, side: str) -> EncounterCombatant:
@@ -43,7 +53,7 @@ def _apply_trembling(cleric, skeleton, setup) -> None:
 
 def test_2014_turn_undead_trembling_suppresses_voluntary_turn() -> None:
     cleric = _member(build_seraphine_dawnshield_2014(1), "cleric", "heroes")
-    skeleton = _member(build_combatant_from_capabilities("2014-skeleton"), "skeleton", "monsters")
+    skeleton = _member(_monster_template("2014-skeleton"), "skeleton", "monsters")
     setup = EncounterSetup(
         heroes=[cleric], monsters=[skeleton],
         hero_total_levels=1, monster_total_cr="1/4", ruleset="2014",
@@ -69,7 +79,7 @@ def test_2014_turn_undead_trembling_suppresses_voluntary_turn() -> None:
 
 def test_2014_trembling_ends_on_save_or_damage() -> None:
     cleric = _member(build_seraphine_dawnshield_2014(1), "cleric", "heroes")
-    skeleton = _member(build_combatant_from_capabilities("2014-skeleton"), "skeleton", "monsters")
+    skeleton = _member(_monster_template("2014-skeleton"), "skeleton", "monsters")
     setup = EncounterSetup(
         heroes=[cleric], monsters=[skeleton],
         hero_total_levels=1, monster_total_cr="1/4", ruleset="2014",
