@@ -33,6 +33,13 @@ def test_2014_life_cleric_level_two_resources_and_fingerprint() -> None:
     }
     assert hero.max_hp == 19
     assert hero.progression_features.saving_throw_advantage_grants
+    assert {spell.id for spell in hero.defensive_spell_actions} == {
+        "bless", "shield-of-faith", "sanctuary",
+    }
+    sanctuary = next(spell for spell in hero.defensive_spell_actions if spell.id == "sanctuary")
+    assert sanctuary.action_cost == "bonus_action"
+    assert sanctuary.modifier_effects[0].kind == "targeting-save-gate"
+    assert sanctuary.modifier_effects[0].save_dc == 13
     assert_character_build_raw_ready(profile, hero)
     assert_pregen_combat_stats(hero, combat)
     assert_character_resources_raw_ready(hero, profile, combat)
