@@ -82,7 +82,14 @@
   function resolveTurnUndead(sequence, round, cleric, setup, targets) {
     if (!targets.length || targets.some((t) => S().distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
     const dc = saveDc(cleric), remaining = spend(cleric);
-    return TC().resolve(sequence, round, cleric, targets, dc, TURN, TURNED, remaining, "Turn Undead");
+    const is2014 = cleric.state.template.ruleset === "2014";
+    return TC().resolve(sequence, round, cleric, targets, dc, TURN, TURNED, remaining, "Turn Undead", {
+      includeFrightened: !is2014,
+      includeIncapacitated: !is2014,
+      suppressReactions: is2014,
+      endsIfSourceIncapacitated: !is2014,
+      endsIfSourceDead: !is2014,
+    });
   }
 
   function resolveSpark(sequence, round, cleric, setup, choice) {
