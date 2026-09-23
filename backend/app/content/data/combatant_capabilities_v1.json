@@ -138,6 +138,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -1,
@@ -286,6 +287,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -1,
@@ -446,6 +448,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -595,6 +598,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -2,
@@ -794,6 +798,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -949,6 +954,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -1066,6 +1072,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -1213,6 +1220,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -1330,6 +1338,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -2,
@@ -1451,6 +1460,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -1581,6 +1591,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -2,
@@ -1702,6 +1713,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -1819,6 +1831,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -1943,6 +1956,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -2069,6 +2083,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -2209,6 +2224,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -2375,6 +2391,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -2492,6 +2509,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -1,
@@ -2613,6 +2631,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -2730,6 +2749,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -2849,6 +2869,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -2966,6 +2987,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -3085,6 +3107,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -1,
@@ -3202,6 +3225,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -3324,6 +3348,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -3443,6 +3468,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -3590,6 +3616,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -3735,6 +3762,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 6,
@@ -3854,6 +3882,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -4005,6 +4034,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -4122,6 +4152,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -4309,6 +4340,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -4558,6 +4590,7 @@
       }
     ],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -4706,6 +4739,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -4821,6 +4855,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -4938,6 +4973,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -5053,6 +5089,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -5166,6 +5203,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -5281,6 +5319,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -2,
@@ -5396,6 +5435,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -5,
@@ -5512,6 +5552,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -3,
@@ -5625,6 +5666,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -5740,6 +5782,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -5855,6 +5898,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -5970,6 +6014,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -6085,6 +6130,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -6202,6 +6248,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -2,
@@ -6319,6 +6366,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -6438,6 +6486,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -6576,6 +6625,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -6695,6 +6745,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -6812,6 +6863,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -6931,6 +6983,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -7053,6 +7106,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -7172,6 +7226,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -2,
@@ -7289,6 +7344,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -1,
@@ -7410,6 +7466,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -7529,6 +7586,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -7652,6 +7710,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -7773,6 +7832,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -7895,6 +7955,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -8012,6 +8073,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -8131,6 +8193,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -8250,6 +8313,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -8421,6 +8485,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -8557,6 +8622,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -8693,6 +8759,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 6,
@@ -8862,6 +8929,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -9006,6 +9074,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -9134,6 +9203,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -9263,6 +9333,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -9412,6 +9483,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -9602,6 +9674,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -9773,6 +9846,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -9920,6 +9994,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -10049,6 +10124,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -3,
@@ -10177,6 +10253,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -10366,6 +10443,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -10498,6 +10576,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -10632,6 +10711,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -10767,6 +10847,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -10910,6 +10991,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -11053,6 +11135,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 6,
@@ -11202,6 +11285,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -11335,6 +11419,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 6,
@@ -11513,6 +11598,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -11680,6 +11766,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -11857,6 +11944,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 10,
@@ -11995,6 +12083,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -12123,6 +12212,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -12304,6 +12394,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -12434,6 +12525,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -12569,6 +12661,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -12695,6 +12788,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -3,
@@ -12833,6 +12927,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -12971,6 +13066,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -13163,6 +13259,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -13299,6 +13396,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 7,
@@ -13479,6 +13577,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -13596,6 +13695,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -13715,6 +13815,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -13898,6 +13999,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -14015,6 +14117,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -14154,6 +14257,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -14280,6 +14384,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -14424,6 +14529,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -14557,6 +14663,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -14730,6 +14837,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -14876,6 +14984,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -15010,6 +15119,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -15146,6 +15256,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -15324,6 +15435,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -15452,6 +15564,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -15601,6 +15714,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 6,
@@ -15724,6 +15838,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -15843,6 +15958,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -4,
@@ -15962,6 +16078,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -16107,6 +16224,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -16250,6 +16368,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 1,
@@ -16443,6 +16562,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -16639,6 +16759,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -16833,6 +16954,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -17024,6 +17146,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -17219,6 +17342,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -17410,6 +17534,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -17610,6 +17735,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -17810,6 +17936,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 5,
@@ -18007,6 +18134,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -18208,6 +18336,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 6,
@@ -18405,6 +18534,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -18548,6 +18678,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -18680,6 +18811,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -3,
@@ -18827,6 +18959,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": -1,
@@ -18978,6 +19111,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 2,
@@ -19167,6 +19301,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 4,
@@ -19364,6 +19499,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
@@ -19488,6 +19624,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 0,
@@ -19659,6 +19796,7 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
+    "stabilization_actions": [],
     "condition_removal_actions": [],
     "saving_throw_bonuses": {
       "strength": 3,
