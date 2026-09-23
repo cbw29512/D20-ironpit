@@ -488,6 +488,10 @@ Weapon properties, masteries, fighting styles, feats, and two-weapon rules are u
 
 - Maintain one persistent named canonical hero per core class.
 - Each class progresses level 1–20 through one legal canonical build; a level derives from the previous certified level plus that level's audited combat delta.
+- **Pregen edition sequencing is global, not per-class:** complete and certify all 12 canonical 2014 classes through levels 1–20 before beginning the 2024 pregen migration pass.
+- The 2014 target is therefore **240/240 certified level-slots (12 classes × 20 levels)**, followed by a full 2014 pregen and universal-engine re-audit before 2024 pregen expansion resumes.
+- After 2014 is complete, derive the 2024 pregens from the certified 2014 mechanic inventory: reuse every mechanically equivalent universal capability and implement only genuine 2024 semantic deltas, ruleset data changes, scaling changes, availability changes, naming changes, or resource differences.
+- Do not alternate 2014 and 2024 class construction while the 2014 canonical set is incomplete. Existing 2024 certified work is preserved but is not the active expansion lane until the 2014 240/240 gate is satisfied.
 - Only certified levels are publicly runnable.
 - Combat-relevant class/subclass/species/feat/equipment/spell/resource mechanics must be implemented or remain explicit blockers.
 - Noncombat-only choices do not require engine logic.
