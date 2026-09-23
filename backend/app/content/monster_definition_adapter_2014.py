@@ -12,6 +12,7 @@ from app.content.monster_trait_bindings_2014 import (
     progression_features_2014,
     sneak_attack_eligible_2014,
 )
+from app.content.monster_senses_2014 import parse_combat_senses_2014
 from app.content.monster_save_capabilities_2014 import (
     recharge_rules_2014, save_capabilities_2014, save_resources_2014,
 )
@@ -133,6 +134,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         progression_features=progression_features_2014(monster),
         saving_throw_bonuses=_save_bonuses(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
+        senses=parse_combat_senses_2014(monster),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
