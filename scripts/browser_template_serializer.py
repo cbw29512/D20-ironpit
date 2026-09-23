@@ -66,6 +66,10 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["attackAbility"] = attack.attack_ability
         if weapon.normal_range_ft is not None:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
+        if weapon.magical:
+            row["magical"] = True
+        if weapon.material is not None:
+            row["material"] = weapon.material
         if attack.fixed_damage is not None:
             row["fixedDamage"] = attack.fixed_damage
         if attack.rage_eligible:
@@ -351,6 +355,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
+            "qualified_damage_defenses": [item.model_dump(mode="json") for item in template.qualified_damage_defenses],
             "condition_immunities": list(template.condition_immunities),
             "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
