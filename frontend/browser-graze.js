@@ -28,7 +28,7 @@
     const raw = rawDamage(ctx.member.state, ctx.attack);
     if (raw === null) return null;
     const target = ctx.target.state;
-    const appliedTotal = A().adjustedDamage(target, raw, ctx.attack.damageType, false);
+    const appliedTotal = A().adjustedDamage(target, raw, ctx.attack.damageType, false, ctx.attack);
     outcome.damageComponents = [{
       source: `${ctx.attack.name} (Graze)`, notation: String(raw), rolls: [], modifier: 0,
       damage_type: ctx.attack.damageType, total: raw, applied_total: appliedTotal,
