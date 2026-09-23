@@ -81,7 +81,10 @@ def build_cleric_life_2014_feature_audits(level: int) -> list[FeatureAudit]:
         if level >= 5:
             audits.append(_audit(
                 "destroy-undead-half", "Destroy Undead (CR 1/2)", "class", source=CLERIC,
-                automated=False, notes="Depends on the universal Turn Undead resolution path.",
+                notes=(
+                    "Binds the level-based CR threshold to the shared turning-save resolver; "
+                    "eligible failed saves use the universal zero-HP no-damage outcome."
+                ),
             ))
         if level >= 6:
             audits.extend([
