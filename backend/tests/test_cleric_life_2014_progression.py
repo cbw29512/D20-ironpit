@@ -52,10 +52,10 @@ def test_each_2014_cleric_level_preserves_previous_level_history() -> None:
 def test_2014_seraphine_level_one_spell_package() -> None:
     package = build_cleric_2014_spell_package(1, 3)
     assert [spell.id for spell in package.cantrips] == [
-        "guidance", "sacred-flame", "spare-the-dying",
+        "guidance", "sacred-flame", "thaumaturgy",
     ]
     assert [spell.id for spell in package.spells] == [
-        "healing-word", "guiding-bolt", "shield-of-faith", "sanctuary",
+        "healing-word", "guiding-bolt", "shield-of-faith", "inflict-wounds",
     ]
     assert [spell.id for spell in package.always_prepared_spells] == [
         "bless", "cure-wounds",
