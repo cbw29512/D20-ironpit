@@ -116,7 +116,32 @@ Finding FTR-2014-001:
 
 
 ### Berserker Barbarian 1-20
-Status: PENDING FULL RE-AUDIT
+Status: AUDITED — CERTIFICATION REPAIR REQUIRED
+
+Verified represented behavior:
+- Rage damage/resistance/resource lifecycle;
+- 2014 Frenzy + exhaustion;
+- Reckless Attack and Danger Sense;
+- Extra Attack and Fast Movement;
+- Mindless Rage immunity to Charmed/Frightened while raging;
+- Feral Instinct initiative Advantage;
+- Brutal Critical scaling;
+- Intimidating Presence save/condition lifecycle;
+- Relentless Rage via universal effect-bound survival save;
+- Retaliation via universal damage-reaction attack schema;
+- Persistent Rage lifecycle;
+- Indomitable Might via universal ability-check minimum;
+- Primal Champion ability caps and unlimited Rage representation.
+
+Arena-neutral clarification:
+- Feral Instinct's surprised-first-turn clause has no live trigger in the standard certified arena because there is currently no surprise-producing path. Initiative Advantage remains live and implemented.
+
+Finding BARB-2014-001:
+- Classification: `ENGINE_EXISTS_CERTIFICATION_MISSING`.
+- High-level Python/browser regressions for Persistent Rage, Indomitable Might, and unlimited Rage still clone/mutate a certified level-13 card into synthetic level-15/18/20 fixtures.
+- Generic primitives are tested, and the actual runtime now exports levels 14-20, but the permanent evidence does not consistently exercise the real certified high-level templates.
+- Required repair: replace staged-era mutated fixtures with actual level-14 through level-20 runtime/browser cards and add live encounter-path regressions for Retaliation, Persistent Rage, Indomitable Might, and unlimited Rage. No new engine primitive is indicated.
+
 
 ### Thief Rogue 1-20
 Status: IN PROGRESS
