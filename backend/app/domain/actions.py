@@ -53,6 +53,19 @@ class HitControlEffect(BaseModel):
         return self
 
 
+class StabilizationAction(BaseModel):
+    """A combat action that makes a living 0-HP character stable without restoring HP."""
+
+    id: str
+    name: str
+    action_cost: ActionCost
+    range_ft: int = Field(default=5, ge=0)
+    target_mode: HealingTargetMode = "self_or_ally"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=200)
+    animation: str = "stabilize"
+
+
 class HealingAction(BaseModel):
     """A printed healing option with its actual action cost and target restrictions."""
 
