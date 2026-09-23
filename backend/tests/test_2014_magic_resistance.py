@@ -134,3 +134,119 @@ def test_spell_save_conversion_marks_the_effect_magical() -> None:
     except Exception:
         logger.exception("Spell saving-throw magical-context regression failed.")
         raise
+
+
+def test_effect_tag_save_advantage_is_contextual_and_composes_with_magic_resistance() -> None:
+    try:
+        state = _satyr_state()
+        state.template.progression_features.saving_throw_advantage_grants.append(
+            __import__("app.domain.progression", fromlist=["SavingThrowAdvantageGrant"]).SavingThrowAdvantageGrant(
+                source_id="poison-resilience",
+                source_name="Poison Resilience",
+                abilities=["constitution"],
+                required_effect_tags=["poison"],
+            )
+        )
+        from app.combat.opening_modifiers import opening_modifiers
+        state.active_modifiers = opening_modifiers(state.template)
+
+        poison_roll, _ = resolve_saving_throw(
+            state,
+            "constitution",
+            99,
+            FixedDiceProvider([3, 18]),
+            SavingThrowContext(effect_tags=frozenset({"poison"})),
+        )
+        assert poison_roll is not None
+        assert poison_roll.mode == "advantage"
+        assert poison_roll.rolls == [3, 18]
+
+        ordinary = _satyr_state()
+        ordinary.template.progression_features.saving_throw_advantage_grants.append(
+            __import__("app.domain.progression", fromlist=["SavingThrowAdvantageGrant"]).SavingThrowAdvantageGrant(
+                source_id="poison-resilience",
+                source_name="Poison Resilience",
+                abilities=["constitution"],
+                required_effect_tags=["poison"],
+            )
+        )
+        ordinary.active_modifiers = opening_modifiers(ordinary.template)
+        ordinary_roll, _ = resolve_saving_throw(
+            ordinary,
+            "constitution",
+            99,
+            FixedDiceProvider([11]),
+            SavingThrowContext(),
+        )
+        assert ordinary_roll is not None
+        assert ordinary_roll.mode == "normal"
+        assert ordinary_roll.rolls == [11]
+
+        magical_poison = _satyr_state()
+        magical_poison.template.progression_features.saving_throw_advantage_grants.append(
+            __import__("app.domain.progression", fromlist=["SavingThrowAdvantageGrant"]).SavingThrowAdvantageGrant(
+                source_id="poison-resilience",
+                source_name="Poison Resilience",
+                abilities=["wisdom"],
+                required_effect_tags=["poison"],
+            )
+        )
+        magical_poison.active_modifiers = opening_modifiers(magical_poison.template)
+        names = __import__(
+            "app.combat.defensive_modifier_rules",
+            fromlist=["saving_throw_advantage_source_names"],
+        ).saving_throw_advantage_source_names(
+            magical_poison,
+            "wisdom",
+            SavingThrowContext(magical_effect=True, effect_tags=frozenset({"poison"})),
+        )
+        assert names == ["Magic Resistance", "Poison Resilience"]
+    except Exception:
+        logger.exception("Semantic save-effect tag regression failed.")
+        raise
+
+
+def test_poison_damage_save_action_supplies_poison_effect_tag() -> None:
+    try:
+        actor = EncounterCombatant(
+            combatant_id="actor-poison",
+            side="heroes",
+            position_ft=0,
+            state=_satyr_state(),
+        )
+        target = EncounterCombatant(
+            combatant_id="target-poison",
+            side="monsters",
+            position_ft=5,
+            state=_satyr_state(),
+        )
+        from app.domain.progression import SavingThrowAdvantageGrant
+        from app.combat.opening_modifiers import opening_modifiers
+        target.state.template.progression_features.saving_throw_advantage_grants.append(
+            SavingThrowAdvantageGrant(
+                source_id="poison-resilience",
+                source_name="Poison Resilience",
+                abilities=["constitution"],
+                required_effect_tags=["poison"],
+            )
+        )
+        target.state.active_modifiers = opening_modifiers(target.state.template)
+        action = SavingThrowAction(
+            id="poison-test",
+            name="Poison Test",
+            save_ability="constitution",
+            dc=40,
+            range_ft=60,
+            damage_dice_count=1,
+            damage_dice_size=6,
+            damage_type="poison",
+        )
+        event = resolve_save_action(
+            1, 1, actor, target, action, 5, FixedDiceProvider([2, 17, 4]),
+        )
+        assert event.saving_throw_roll is not None
+        assert event.saving_throw_roll.mode == "advantage"
+        assert "Poison Resilience grants Advantage on the save." in event.description
+    except Exception:
+        logger.exception("Poison save-action semantic tag regression failed.")
+        raise
