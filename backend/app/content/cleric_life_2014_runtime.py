@@ -7,7 +7,7 @@ from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.level_resources import cleric_2014_channel_divinity_uses
 from app.content.spell_slot_progression import spell_slot_resources
-from app.content.shared_spells_2014 import aid_2014, lesser_restoration_2014, sanctuary_2014, spiritual_weapon_2014
+from app.content.shared_spells_2014 import aid_2014, beacon_of_hope_2014, lesser_restoration_2014, sanctuary_2014, spiritual_weapon_2014
 from app.content.cleric_2014_level1_spells import (
     bless_2014,
     cure_wounds_2014,
@@ -72,8 +72,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
     """Compile the currently certified RAW 2014 Life Cleric runtime."""
     try:
-        if level not in range(1, 5):
-            raise ValueError("2014 Life Cleric runtime is currently certified through level 4.")
+        if level not in range(1, 6):
+            raise ValueError("2014 Life Cleric runtime is currently certified through level 5.")
         profile = build_seraphine_dawnshield_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -86,6 +86,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
             wielding_shield=True, shield_trained=True,
         )
         progression = ProgressionCombatFeatures(
+            turning_failure_destroy_max_cr="1/2" if level >= 5 else None,
             saving_throw_advantage_grants=[SavingThrowAdvantageGrant(
                 source_id="dwarven-resilience",
                 source_name="Dwarven Resilience",
@@ -102,7 +103,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
             speed_ft=25, initiative_bonus=scores.modifier("dexterity"),
             weapon_attack=_attack(_warhammer(), scores, level),
             alternate_weapon_attacks=[_attack(_light_crossbow(), scores, level)],
-            spell_save_actions=[sacred_flame_2014(save_dc)],
+            spell_save_actions=[sacred_flame_2014(save_dc, level)],
             spell_attack_actions=[guiding_bolt_2014(spell_attack), inflict_wounds_2014(spell_attack)],
             persistent_spell_attack_actions=(
                 [spiritual_weapon_2014(spell_attack, wisdom_modifier)]
@@ -113,6 +114,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 shield_of_faith_2014(),
                 *([sanctuary_2014(save_dc)] if level >= 2 else []),
                 *([aid_2014()] if level >= 3 else []),
+                *([beacon_of_hope_2014()] if level >= 5 else []),
             ],
             healing_actions=[
                 healing_word_2014(wisdom_modifier, life_bonus),
@@ -135,7 +137,8 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
             visual=VisualLoadout(armor="scale-mail", main_hand="warhammer", off_hand="shield", body_style="humanoid"),
             source=("D&D Basic Rules 2014: Hill Dwarf, Acolyte, Cleric, Life Domain, "
                     "Bless, Cure Wounds, Guiding Bolt, Healing Word, Inflict Wounds, "
-                    "Sacred Flame, Shield of Faith, Aid, Lesser Restoration, Spiritual Weapon, Equipment"),
+                    "Sacred Flame, Shield of Faith, Aid, Lesser Restoration, Spiritual Weapon, "
+                    "Beacon of Hope, Equipment"),
         )
     except Exception:
         logger.exception("Failed to compile 2014 Seraphine Dawnshield at level %s.", level)
