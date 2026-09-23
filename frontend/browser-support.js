@@ -92,7 +92,7 @@
     const existing = () => new Set(hooks.abilitiesFor(phase).map((item) => item.id));
 
     if (!existing().has("second-wind")) hooks.registerAbility(phase, {
-      id: "second-wind", priority: 20, rulesets: ["2014", "2024"],
+      id: "second-wind", priority: 20, rulesets: ["2024"],
       appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape",
       resolve: ({ sequence, round, member, setup }) => {
         const wind = secondWind(sequence, round, member);
