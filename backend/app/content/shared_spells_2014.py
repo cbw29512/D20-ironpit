@@ -115,3 +115,30 @@ def spiritual_weapon_2014(
     except Exception:
         logger.exception("Failed to build 2014 Spiritual Weapon.")
         raise
+
+
+def beacon_of_hope_2014() -> DefensiveSpellAction:
+    """Build shared 2014 Beacon of Hope from universal modifier primitives."""
+    try:
+        return DefensiveSpellAction(
+            id="beacon-of-hope",
+            name="Beacon of Hope",
+            level=3,
+            action_cost="action",
+            range_ft=30,
+            duration_minutes=1,
+            target_policy="friendly",
+            target_count=20,
+            concentration=True,
+            priority=60,
+            modifier_effects=[
+                SpellModifierEffect(kind="saving-throw-advantage", save_ability="wisdom"),
+                SpellModifierEffect(kind="death-save-advantage"),
+                SpellModifierEffect(kind="healing-maximize"),
+            ],
+            animation="beacon-of-hope",
+            source=f"{_SOURCE}: Beacon of Hope",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Beacon of Hope.")
+        raise
