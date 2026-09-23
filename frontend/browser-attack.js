@@ -41,11 +41,28 @@
     return enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0 && !Q().incapacitated(enemy.state) && S().distance(attacker, enemy) <= 5);
   }
   const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && state.current_hp * 2 <= state.template.max_hp ? 1 : 0;
-  function adjustedDamage(target, amount, type, allowVulnerability = true) {
-    if (target.template.damage_immunities?.includes(type)) return 0;
+  function conditionalDefenseKinds(target, type, sourceQualifiers = []) {
+    const qualifiers = new Set(sourceQualifiers || []);
+    const kinds = new Set();
+    for (const rule of target.template.conditional_damage_defenses || []) {
+      if (!(rule.damageTypes || []).includes(type)) continue;
+      const required = rule.requiredSourceQualifiers || [], forbidden = rule.forbiddenSourceQualifiers || [];
+      if (!required.every((item) => qualifiers.has(item))) continue;
+      if (forbidden.some((item) => qualifiers.has(item))) continue;
+      kinds.add(rule.kind);
+    }
+    return kinds;
+  }
+  function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = []) {
+    const conditional = conditionalDefenseKinds(target, type, sourceQualifiers);
+    if (target.template.damage_immunities?.includes(type) || conditional.has("immunity")) return 0;
     let value = amount;
-    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || T()?.ownsDamageResistance?.(target, type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
-    if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
+    if (target.template.damage_resistances?.includes(type)
+        || target.temporary_damage_resistances?.includes(type)
+        || T()?.ownsDamageResistance?.(target, type)
+        || conditional.has("resistance")
+        || Q().has(target, "petrified")) value = Math.floor(value / 2);
+    if (allowVulnerability && (target.template.damage_vulnerabilities?.includes(type) || conditional.has("vulnerability"))) value *= 2;
     return value;
   }
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
@@ -54,7 +71,7 @@
   }
   function legacyHitDamage(attacker, defender, attack, critical, mode, turnKey, options = {}) {
     if (attack.onHitSaveDamage) throw new Error("Save-dependent hit damage requires the browser hit-damage runtime.");
-    const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type) }));
+    const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || []) }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0), damageRoll = { ...base.roll, total: appliedTotal }, appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))];
     return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || []), appliedTotal, saveDamage: null };
   }
@@ -194,5 +211,5 @@
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
-  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack };
+  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, conditionalDefenseKinds, rangedCloseThreat, resolveAttack };
 })();
