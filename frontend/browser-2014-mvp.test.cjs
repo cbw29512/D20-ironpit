@@ -20,6 +20,7 @@ const rogues2014 = heroes2014.filter((hero) => hero.class_id === "rogue");
 const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
 const clerics2014 = heroes2014.filter((hero) => hero.class_id === "cleric");
+// Cleric certification is progressive; assert continuity instead of pinning a stale global count.
 const certifiedClassCounts = {
   fighter: fighters2014.length,
   barbarian: barbarians2014.length,
