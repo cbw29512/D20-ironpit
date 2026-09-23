@@ -4,6 +4,7 @@ import logging
 
 from app.combat.condition_rules import has_condition
 from app.domain.models import CombatantState, DamageRollComponent, DamageType
+from app.domain.damage_sources import DamageDefenseKind, DamageSourceQualifier
 
 logger = logging.getLogger(__name__)
 
@@ -21,19 +22,39 @@ def _active_timed_resistances(target: CombatantState) -> set[DamageType]:
         raise RuntimeError("Timed resistances could not be resolved.") from exc
 
 
+def _matching_conditional_defenses(
+    target: CombatantState,
+    damage_type: DamageType,
+    source_qualifiers: set[DamageSourceQualifier],
+) -> set[DamageDefenseKind]:
+    matched: set[DamageDefenseKind] = set()
+    for rule in target.template.conditional_damage_defenses:
+        if damage_type not in rule.damage_types:
+            continue
+        required = set(rule.required_source_qualifiers)
+        forbidden = set(rule.forbidden_source_qualifiers)
+        if not required.issubset(source_qualifiers) or forbidden.intersection(source_qualifiers):
+            continue
+        matched.add(rule.kind)
+    return matched
+
+
 def adjusted_damage_amount(
     amount: int,
     damage_type: DamageType,
     target: CombatantState,
     *,
     allow_vulnerability: bool = True,
+    source_qualifiers: set[DamageSourceQualifier] | None = None,
 ) -> int:
     """Apply immunity/resistance and, when allowed, vulnerability to one damage type."""
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
         template = target.template
-        if damage_type in template.damage_immunities:
+        qualifiers = source_qualifiers or set()
+        conditional = _matching_conditional_defenses(target, damage_type, qualifiers)
+        if damage_type in template.damage_immunities or DamageDefenseKind.IMMUNITY in conditional:
             return 0
 
         adjusted = amount
@@ -42,9 +63,16 @@ def adjusted_damage_amount(
             *target.temporary_damage_resistances,
             *_active_timed_resistances(target),
         }
-        if damage_type in resistances or has_condition(target, "petrified"):
+        if (
+            damage_type in resistances
+            or DamageDefenseKind.RESISTANCE in conditional
+            or has_condition(target, "petrified")
+        ):
             adjusted //= 2
-        if allow_vulnerability and damage_type in template.damage_vulnerabilities:
+        if allow_vulnerability and (
+            damage_type in template.damage_vulnerabilities
+            or DamageDefenseKind.VULNERABILITY in conditional
+        ):
             adjusted *= 2
         return adjusted
     except ValueError:
@@ -67,6 +95,7 @@ def apply_damage_defenses(
                 component.total,
                 component.damage_type,
                 target,
+                source_qualifiers=set(component.source_qualifiers),
             )
             adjusted_components.append(component.model_copy(update={"applied_total": applied}))
             applied_total += applied
