@@ -15,6 +15,7 @@ from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_sup
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.timed_self_buffs import choose_timed_self_buff_action, resolve_timed_self_buff
 from app.combat.saving_throws import legal_save_action
+from app.combat.stabilization import choose_stabilization_action, resolve_stabilization
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -60,6 +61,11 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             sequence, round_number, member, setup, dice, turn_key, downed_only=True,
         )
         events.extend(healing_events)
+        stabilization = choose_stabilization_action(member, setup)
+        if stabilization is not None:
+            action, target = stabilization
+            events.append(resolve_stabilization(sequence, round_number, member, target, action))
+            sequence += 1
         removal_choice = choose_condition_removal_action(member, setup, turn_key)
         if removal_choice is not None:
             action, target, conditions = removal_choice
