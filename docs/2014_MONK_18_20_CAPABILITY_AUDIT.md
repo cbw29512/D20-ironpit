@@ -63,9 +63,9 @@ This primitive should also be reusable for mechanically equivalent class/monster
 
 ### Level 19
 
-- Apply the canonical ASI only after verifying the existing Kael ability-score plan and cap constraints.
-- Test all changed derived values.
-- No engine work unless the derived-stat audit proves a missing universal calculation.
+- Canonical ASI decision: +1 Wisdom (19→20) and +1 Strength (13→14).
+- Test all changed derived values: AC, Strength/Wisdom saves, Monk save DCs, skills, HP, attacks, and Ki.
+- No engine work: level 19 is progression data plus derived-stat recompilation.
 
 ### Level 20
 
@@ -80,4 +80,4 @@ Do not reuse 2024 Monk level-18/20 feature data. 2024 Superior Defense is a diff
 
 ## Expected count movement
 
-Current certified 2014 catalog on this base is 88/240 (Monk 1–17). If levels 18–20 each independently earn certification, the catalog becomes 91/240. This document does not change READY state or counts.
+After certified Monk 18, the 2014 catalog is 89/240. Level 19 raises it to 90/240; level 20 raises it to 91/240. This document does not change READY state or counts.

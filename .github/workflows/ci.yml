@@ -104,6 +104,7 @@ jobs:
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
           node frontend/browser-deferred-save-effect.test.cjs
+          node frontend/browser-2014-monk-level19.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs

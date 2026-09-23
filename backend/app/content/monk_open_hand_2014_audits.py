@@ -136,6 +136,11 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     "except Force for 10 rounds."
                 ),
             ))
+        if level >= 19:
+            audits.append(_audit(
+                "ability-score-improvement-l19", "Ability Score Improvement (+1 Wisdom, +1 Strength)", "class",
+                notes="Canonical progression raises Wisdom 19 to 20 and Strength 13 to 14.",
+            ))
 
         return audits
     except Exception:

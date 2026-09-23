@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 def martial_arts_die(level: int) -> int:
     try:
-        if level not in range(1, 19):
-            raise ValueError("2014 Monk attack helpers cover levels 1 through 18.")
+        if level not in range(1, 20):
+            raise ValueError("2014 Monk attack helpers cover levels 1 through 19.")
         if level >= 17:
             return 10
         if level >= 11:
