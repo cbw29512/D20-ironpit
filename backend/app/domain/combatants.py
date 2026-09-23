@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
+from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction, StabilizationAction
 from app.domain.character_builds import AbilityScores
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
@@ -68,6 +68,7 @@ class CombatantTemplate(BaseModel):
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
+    stabilization_actions: list[StabilizationAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     initiative_resource_refill_grants: list[InitiativeResourceRefillGrant] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
