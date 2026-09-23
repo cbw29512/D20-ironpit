@@ -36,6 +36,7 @@ _PREPARED = (
     _spell("purify-food-and-drink", "Purify Food and Drink", "utility", "arena-out-of-scope"),
     _spell("detect-poison-and-disease", "Detect Poison and Disease", "utility", "arena-out-of-scope"),
     _spell("aid", "Aid", "buff", "max-hp-increase", level=2, min_level=5),
+    _spell("locate-object", "Locate Object", "utility", "arena-out-of-scope", level=2, min_level=5),
 )
 
 _OATH = (
