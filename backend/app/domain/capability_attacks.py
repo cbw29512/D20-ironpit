@@ -55,6 +55,8 @@ class AttackCapabilityDefinition(BaseModel):
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
     projectile: str | None = None
+    magical: bool = False
+    material: str | None = None
     mastery_property: str | None = None
     light: bool = False
     finesse: bool = False
