@@ -49,6 +49,8 @@ jobs:
           node frontend/browser-2014-rogue.test.cjs
           node frontend/browser-2014-monk.test.cjs
           node frontend/browser-2014-monk-level19.test.cjs
+          node frontend/browser-2014-monk-level20.test.cjs
+          node frontend/browser-initiative-resource-refill.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-2014-monk-entrypoints.test.cjs
           node frontend/browser-2014-paladin.test.cjs
