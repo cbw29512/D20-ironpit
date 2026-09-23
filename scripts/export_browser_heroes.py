@@ -250,6 +250,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     }
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
+    if template.initiative_resource_refill_grants:
+        row["initiative_resource_refill_grants"] = [
+            item.model_dump() for item in template.initiative_resource_refill_grants
+        ]
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.turning_failure_damage:
