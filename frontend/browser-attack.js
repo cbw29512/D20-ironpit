@@ -18,7 +18,6 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
     has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
-  const DDF = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES || { conditionalKinds: () => new Set() };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker.template) || 0);
@@ -44,14 +43,11 @@
   const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && state.current_hp * 2 <= state.template.max_hp ? 1 : 0;
   function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = []) {
     try {
-      const conditional = DDF().conditionalKinds(target, type, sourceQualifiers);
-      if (target.template.damage_immunities?.includes(type) || conditional.has("immunity")) return 0;
-      let value = amount;
-      const resisted = target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type)
-        || T()?.ownsDamageResistance?.(target, type) || conditional.has("resistance") || Q().has(target, "petrified");
-      if (resisted) value = Math.floor(value / 2);
-      if (allowVulnerability && (target.template.damage_vulnerabilities?.includes(type) || conditional.has("vulnerability"))) value *= 2;
-      return value;
+      const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+      if (rules) return rules.adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers);
+      if (target.template.damage_immunities?.includes(type)) return 0; let value = amount;
+      if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || T()?.ownsDamageResistance?.(target, type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
+      if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2; return value;
     } catch (error) { console.error("Failed browser damage-defense adjustment.", { target: target?.template?.name, type, error }); throw error; }
   }
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
