@@ -8,45 +8,79 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(`frontend/${name}`, "utf8"), { filename: name });
 
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+window.IRON_PIT_BROWSER_GRAPPLE = { speedIsZero: () => false };
+window.IRON_PIT_BROWSER_MODIFIERS = { effectiveSpeed: (state) => state.template.speed_ft, expireTargetTurn: () => {} };
+window.IRON_PIT_BROWSER_CONDITION_RULES = { incapacitated: () => false };
+window.IRON_PIT_BROWSER_OPENING_MODIFIERS = { build: () => [] };
+window.IRON_PIT_BROWSER_EXHAUSTION = {};
+window.IRON_PIT_BROWSER_HEROIC_INSPIRATION = { grant: () => {} };
+
 load("browser-timed-conditions.js");
 load("browser-action-economy.js");
+load("browser-state.js");
 load("browser-turn-creature-effects.js");
+load("browser-source-bound-effects.js");
+load("browser-condition-lifecycle.js");
 
 const source = { combatant_id: "cleric", state: { template: { name: "Cleric" } } };
 const target = {
   combatant_id: "skeleton",
-  state: {
-    template: { name: "Skeleton" },
-    active_effect_ids: [],
-    timed_effects: [],
-    action_available: true,
-    bonus_action_available: true,
-    reaction_available: true,
-    is_dead: false,
-    is_unconscious: false,
-    turn_terminated: false,
-  },
+  state: window.IRON_PIT_BROWSER_STATE.buildState({
+    id: "skeleton", name: "Skeleton", max_hp: 13, speed_ft: 30, size: "medium", resources: {},
+  }),
 };
 
-const applied = window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS.apply(
-  source, target, 1, "turn-undead", "turned-undead", {
-    includeFrightened: false,
-    includeIncapacitated: false,
-    suppressReactions: true,
-    endsIfSourceIncapacitated: false,
-    endsIfSourceDead: false,
-  },
-);
+function applyTrembling() {
+  const applied = window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS.apply(
+    source, target, 1, "turn-undead", "trembling", {
+      includeFrightened: false,
+      includeIncapacitated: false,
+      suppressAction: true,
+      suppressBonusAction: true,
+      suppressReactions: true,
+      suppressMovement: true,
+      turnBehavior: "normal",
+      repeatSaveTiming: "target_turn_end",
+      saveDc: 13,
+      expiresRounds: null,
+      expiryTiming: null,
+      endsIfSourceIncapacitated: false,
+      endsIfSourceDead: false,
+    },
+  );
+  assert.deepEqual(applied, ["trembling"]);
+}
 
-assert.deepEqual(applied, ["turned-undead"]);
+applyTrembling();
 assert.equal(target.state.active_effect_ids.includes("frightened"), false);
 assert.equal(target.state.active_effect_ids.includes("incapacitated"), false);
+window.IRON_PIT_BROWSER_STATE.beginTurn(target.state);
+assert.equal(window.IRON_PIT_ACTION_ECONOMY.available(target.state, "action"), false);
+assert.equal(window.IRON_PIT_ACTION_ECONOMY.available(target.state, "bonus_action"), false);
 assert.equal(window.IRON_PIT_ACTION_ECONOMY.available(target.state, "reaction"), false);
-assert.equal(window.IRON_PIT_ACTION_ECONOMY.available(target.state, "action"), true);
-const effect = target.state.timed_effects.find((item) => item.effect_id === "turned-undead");
-assert.equal(effect.turn_behavior, "forced_retreat");
-assert.equal(effect.ends_on_damage, true);
-assert.equal(effect.ends_if_source_incapacitated, false);
-assert.equal(effect.ends_if_source_dead, false);
+assert.equal(target.state.movement_remaining_ft, 0);
 
-console.log("2014 Turn Undead lifecycle regressions passed.");
+let effect = target.state.timed_effects.find((item) => item.effect_id === "trembling");
+assert.equal(effect.turn_behavior, "normal");
+assert.equal(effect.repeat_save_ability, "wisdom");
+assert.equal(effect.repeat_save_dc, 13);
+assert.equal(effect.repeat_save_timing, "target_turn_end");
+assert.equal(effect.expires_round, null);
+assert.equal(effect.ends_on_damage, true);
+
+window.IRON_PIT_BROWSER_SAVES = {
+  resolveSavingThrow: () => ({ roll: { notation: "1d20", rolls: [20], modifier: 0, total: 20 }, succeeded: true }),
+};
+let result = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE.resolveTargetTiming(
+  1, 1, target, "target_turn_end",
+);
+assert.equal(result.events[0].save_succeeded, true);
+assert.deepEqual(result.events[0].removed_condition_ids, ["trembling"]);
+assert.equal(target.state.active_effect_ids.includes("trembling"), false);
+
+applyTrembling();
+const removed = window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS.endDamageSensitive(target.state);
+assert.deepEqual(removed, ["trembling"]);
+assert.equal(target.state.active_effect_ids.includes("trembling"), false);
+
+console.log("2014 Turn Undead trembling regressions passed.");
