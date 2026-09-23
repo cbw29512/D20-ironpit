@@ -107,6 +107,7 @@ class SaveCapabilityDefinition(BaseModel):
     resource_cost: int = Field(default=1, ge=1, le=20)
     requires_no_active_grapple: bool = False
     magical_effect: bool = False
+    effect_tags: list[str] = Field(default_factory=list)
     animation: str = "save-effect"
 
     @model_validator(mode="after")
