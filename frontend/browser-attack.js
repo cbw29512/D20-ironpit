@@ -44,13 +44,10 @@
   function adjustedDamage(target, amount, type, allowVulnerability = true, attack = null) {
     const defenses = window.IRON_PIT_BROWSER_DAMAGE_DEFENSES;
     if (defenses) return defenses.adjustedDamage(target, amount, type, allowVulnerability, attack);
-    if ((target.template.qualified_damage_defenses || []).length) {
-      throw new Error("Qualified damage defenses require browser-damage-defenses.js.");
-    }
+    if ((target.template.qualified_damage_defenses || []).length) throw new Error("Qualified damage defenses require browser-damage-defenses.js.");
     if (target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
-    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type)
-      || T()?.ownsDamageResistance?.(target, type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
+    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || T()?.ownsDamageResistance?.(target, type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
