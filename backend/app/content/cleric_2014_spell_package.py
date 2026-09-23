@@ -30,7 +30,7 @@ def _spell(
 _CANTRIPS = (
     _spell("guidance", "Guidance", "buff", "arena-out-of-scope", level=0),
     _spell("sacred-flame", "Sacred Flame", "damage", "save-damage", "cantrip-scaling", level=0),
-    _spell("spare-the-dying", "Spare the Dying", "healing", "stabilization", level=0),
+    _spell("thaumaturgy", "Thaumaturgy", "utility", "arena-out-of-scope", level=0),
 )
 
 # Clerics prepare from the class list after each long rest. This deterministic
@@ -64,8 +64,8 @@ _PREPARED = (
     _spell("healing-word", "Healing Word", "healing", "healing", "bonus-action"),
     _spell("guiding-bolt", "Guiding Bolt", "mixed", "spell-attack", "next-attack-advantage"),
     _spell("shield-of-faith", "Shield of Faith", "buff", "modifier-stack", "concentration"),
-    _spell("sanctuary", "Sanctuary", "buff", "attack-gate-save", "bonus-action"),
     _spell("inflict-wounds", "Inflict Wounds", "damage", "spell-attack"),
+    _spell("sanctuary", "Sanctuary", "buff", "attack-gate-save", "bonus-action"),
     _spell("command", "Command", "control", "condition"),
 )
 
