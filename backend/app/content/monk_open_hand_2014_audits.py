@@ -2,40 +2,10 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.character_builds import FeatureAudit
+from app.content.monk_open_hand_2014_audit_support import monk_feature_audit as _audit
+from app.content.monk_open_hand_2014_endgame_audits import build_monk_2014_endgame_audits
 
 logger = logging.getLogger(__name__)
-
-
-def _audit(
-    feature_id: str,
-    name: str,
-    category: str,
-    *,
-    combat: bool = True,
-    automated: bool = True,
-    weapon_id: str | None = None,
-    notes: str | None = None,
-) -> FeatureAudit:
-    try:
-        source = (
-            "D&D SRD 5.1 (2014): Way of the Open Hand"
-            if category == "subclass"
-            else "D&D SRD 5.1 (2014): Monk"
-        )
-        return FeatureAudit(
-            feature_id=feature_id,
-            feature_name=name,
-            source_reference=source,
-            category=category,
-            combat_relevant=combat,
-            automated=automated,
-            runtime_attack_weapon_id=weapon_id,
-            notes=notes,
-        )
-    except Exception:
-        logger.exception("Failed to build 2014 Monk feature audit for %s", feature_id)
-        raise
 
 
 def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
@@ -118,29 +88,7 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 notes="Canonical progression raises Wisdom 17 to 19, updating AC, Wisdom saves, and Monk save DCs.",
             ))
 
-        if level >= 17:
-            audits.append(_audit(
-                "quivering-palm", "Quivering Palm", "subclass",
-                notes=(
-                    "Uses the universal hit-armed deferred save-effect capability: 3 Ki on an "
-                    "Unarmed Strike hit, then the next legal Action while the target remains marked. "
-                    "Constitution save; failure reduces true HP to 0, success deals 10d10 necrotic damage."
-                ),
-            ))
-        if level >= 18:
-            audits.append(_audit(
-                "empty-body", "Empty Body", "class",
-                notes=(
-                    "Uses the universal timed self-buff action: Action + 4 Ki, applies the universal "
-                    "Invisible condition and source-owned resistance to every supported damage type "
-                    "except Force for 10 rounds."
-                ),
-            ))
-        if level >= 19:
-            audits.append(_audit(
-                "ability-score-improvement-l19", "Ability Score Improvement (+1 Wisdom, +1 Strength)", "class",
-                notes="Canonical progression raises Wisdom 19 to 20 and Strength 13 to 14.",
-            ))
+        audits.extend(build_monk_2014_endgame_audits(level))
 
         return audits
     except Exception:
