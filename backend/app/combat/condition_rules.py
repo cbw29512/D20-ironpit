@@ -4,6 +4,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.domain.models import CombatantState
 
 BLINDED = "blinded"
+INVISIBLE = "invisible"
 INCAPACITATED = "incapacitated"
 PARALYZED = "paralyzed"
 PETRIFIED = "petrified"
@@ -15,7 +16,7 @@ def has_condition(state: CombatantState, condition_id: str) -> bool:
     return condition_id in state.active_effect_ids and not condition_is_immune(state, condition_id)
 
 
-def is_incapacitated(state: CombatantState) -> bool:
+def can_see(observer: CombatantState, target: CombatantState) -> bool:\n    """Return whether the observer can visually perceive the target under supported visibility rules."""\n    return not has_condition(observer, BLINDED) and not has_condition(target, INVISIBLE)\n\n\ndef is_incapacitated(state: CombatantState) -> bool:
     if condition_is_immune(state, INCAPACITATED):
         return False
     return (
