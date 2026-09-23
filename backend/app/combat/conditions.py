@@ -21,6 +21,7 @@ BLINDED_EFFECT_ID = "blinded"
 FRIGHTENED_EFFECT_ID = "frightened"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
+INVISIBLE_EFFECT_ID = "invisible"
 
 
 def attack_roll_condition_sources(
@@ -35,6 +36,8 @@ def attack_roll_condition_sources(
     disadvantage += attacks_against_disadvantage_sources(defender, attacker.template)
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
+    if has_condition(attacker, INVISIBLE_EFFECT_ID):
+        advantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
         disadvantage += 1
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
@@ -49,6 +52,8 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1
+    if has_condition(defender, INVISIBLE_EFFECT_ID):
+        disadvantage += 1
     if RESTRAINED_EFFECT_ID in defender.active_effect_ids:
         advantage += 1
     if PRONE_EFFECT_ID in defender.active_effect_ids:
