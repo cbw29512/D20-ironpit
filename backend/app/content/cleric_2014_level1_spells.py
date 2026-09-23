@@ -67,12 +67,15 @@ def inflict_wounds_2014(attack_bonus: int) -> SpellAttackAction:
         raise
 
 
-def sacred_flame_2014(save_dc: int) -> SpellSaveAction:
+def sacred_flame_2014(save_dc: int, character_level: int = 1) -> SpellSaveAction:
     try:
+        if not 1 <= character_level <= 20:
+            raise ValueError("Sacred Flame character level must be between 1 and 20.")
+        dice_count = 1 + int(character_level >= 5) + int(character_level >= 11) + int(character_level >= 17)
         return SpellSaveAction(
             id="sacred-flame", name="Sacred Flame", level=0, action_cost="action",
             range_ft=60, save_ability="dexterity", dc=save_dc,
-            damage_dice_count=1, damage_dice_size=8, damage_type="radiant",
+            damage_dice_count=dice_count, damage_dice_size=8, damage_type="radiant",
             success_damage="none", animation="sacred-flame",
         )
     except Exception:
