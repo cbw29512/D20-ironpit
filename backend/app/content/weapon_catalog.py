@@ -68,6 +68,10 @@ _WEAPONS = {
         "longsword", "Longsword", 1, 8, DamageType.SLASHING, "Sap",
         versatile=True,
     ),
+    "warhammer": _melee(
+        "warhammer", "Warhammer", 1, 8, DamageType.BLUDGEONING, "Push",
+        versatile=True,
+    ),
     "mace": _melee(
         "mace", "Mace", 1, 6, DamageType.BLUDGEONING, "Sap",
     ),
