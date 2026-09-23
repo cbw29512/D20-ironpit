@@ -353,7 +353,13 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
-            "conditional_damage_defenses": [
+            "condition_immunities": list(template.condition_immunities),
+            "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
+                       "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
+            "source": template.source, **_progression_features(template),
+        }
+        if template.conditional_damage_defenses:
+            row["conditional_damage_defenses"] = [
                 {
                     "id": item.id,
                     "kind": _value(item.kind),
@@ -362,12 +368,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
                 }
                 for item in template.conditional_damage_defenses
-            ],
-            "condition_immunities": list(template.condition_immunities),
-            "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
-                       "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
-            "source": template.source, **_progression_features(template),
-        }
+            ]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
