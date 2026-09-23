@@ -13,7 +13,9 @@
       return (state.active_modifiers || []).filter((item) =>
         item.kind === "saving-throw-advantage"
         && item.save_ability === ability
-        && (!item.requires_magical_effect || Boolean(context.magicalEffect)));
+        && (!item.requires_magical_effect || Boolean(context.magicalEffect))
+        && (!(item.against_effect_tags || []).length
+          || item.against_effect_tags.some((tag) => (context.effectTags || []).includes(tag))));
     } catch (error) {
       console.error("Failed to resolve browser saving-throw Advantage sources", {
         error, combatant: state?.template?.name, ability,
