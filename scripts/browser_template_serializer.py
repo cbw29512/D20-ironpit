@@ -182,6 +182,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiresNoActiveGrapple"] = True
     if action.magical_effect:
         row["magicalEffect"] = True
+    if action.effect_tags:
+        row["effectTags"] = list(action.effect_tags)
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
@@ -196,6 +198,7 @@ def _spell(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
+        "effectTags": list(action.effect_tags),
         "concentration": action.concentration, "animation": action.animation,
     }
     if action.area_radius_ft is not None:
