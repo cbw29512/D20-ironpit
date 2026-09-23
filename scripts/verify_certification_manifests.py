@@ -9,10 +9,12 @@ import re
 import subprocess
 from typing import Any
 
-from app.content.certified_heroes import build_certified_hero_entries
+from app.content.certified_heroes import build_certified_hero_entries, build_certified_hero_entries_for_ruleset
 from app.content.hero_catalog import build_hero_catalog
 from app.content.hero_progressions import CANONICAL_HEROES
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
+from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
 from export_browser_heroes import render as render_browser_heroes
@@ -327,6 +329,43 @@ def _validate_invariants(hero_manifest: dict[str, Any], monster_manifest: dict[s
         raise RuntimeError("Blocked monsters must expose machine-readable blocker families.")
 
 
+
+def _validate_2014_certification_state() -> tuple[int, int]:
+    """Prove the 2014 certified runtime exactly matches its fail-closed source eligibility."""
+    heroes = build_certified_hero_entries_for_ruleset("2014")
+    hero_keys = [key for key, _ in heroes]
+    hero_templates = [template for _, template in heroes]
+    if len(hero_keys) != len(set(hero_keys)):
+        raise RuntimeError("2014 certified hero registry contains duplicate build keys.")
+    if len(hero_templates) != len({template.id for template in hero_templates}):
+        raise RuntimeError("2014 certified hero registry contains duplicate runtime template IDs.")
+    if any(template.ruleset != "2014" for template in hero_templates):
+        raise RuntimeError("2014 certified hero registry crossed the edition boundary.")
+
+    source = load_monster_source_2014()
+    if len(source) != 327 or len({monster.id for monster in source}) != 327:
+        raise RuntimeError("2014 source corpus must contain exactly 327 unique monsters.")
+    eligible_ids = {
+        monster.id for monster in source
+        if not basic_blockers_2014(monster)
+    }
+
+    runtime = build_arena_roster("2014").monsters
+    runtime_ids = {monster.id for monster in runtime}
+    if len(runtime) != len(runtime_ids):
+        raise RuntimeError("2014 certified monster roster contains duplicate runtime IDs.")
+    if any(monster.ruleset != "2014" for monster in runtime):
+        raise RuntimeError("2014 certified monster roster crossed the edition boundary.")
+    if runtime_ids != eligible_ids:
+        missing = sorted(eligible_ids - runtime_ids)
+        unexpected = sorted(runtime_ids - eligible_ids)
+        raise RuntimeError(
+            "2014 certified monster roster disagrees with fail-closed source eligibility: "
+            f"missing={missing[:10]} unexpected={unexpected[:10]}."
+        )
+    return len(heroes), len(runtime)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate or verify Iron Pit certification manifests.")
     parser.add_argument("--write", action="store_true", help="Rewrite manifests from authoritative repository state.")
@@ -334,6 +373,8 @@ def main() -> None:
     heroes = build_hero_manifest()
     monsters = build_monster_manifest()
     _validate_invariants(heroes, monsters)
+    heroes_2014, monsters_2014 = _validate_2014_certification_state()
+    print(f"2014 certification state verified: {heroes_2014} heroes, {monsters_2014} monsters.")
     _assert_exact_ci_head()
     if args.write:
         _write(HERO_MANIFEST, heroes)
