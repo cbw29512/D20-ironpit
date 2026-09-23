@@ -14,6 +14,7 @@ from app.domain.reactions import DamageReactionAttack, ParryReaction, RedirectAt
 from app.domain.recharge import RechargeRule
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
+from app.domain.senses import CombatSenses
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
@@ -74,6 +75,7 @@ class CombatantTemplate(BaseModel):
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
+    senses: CombatSenses = Field(default_factory=CombatSenses)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
