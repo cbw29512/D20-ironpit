@@ -132,6 +132,12 @@ If RAW requires a noncombat choice that cannot affect the arena, choose a legal 
 
 ## Feat, ASI, spell, equipment, and subclass policy
 
+### 2014 completion-pass feat policy
+
+The first canonical 2014 level-1-through-20 completion pass does **not** use the optional Feats rule. At 2014 Ability Score Improvement levels, the base canonical progression uses legal RAW ability-score increases only.
+
+This is a sequencing decision, not a ban on feats. After all twelve 2014 canonical pregens are complete, certified, and re-audited, legal 2014 feat-based build variants may be added as a second-pass overlay. Those variants must reuse the same universal capability system, remain edition-correct, and must not alter the already-certified no-feat baseline.
+
 - Select legal combat-facing options deterministically for the canonical build.
 - Optimize for the character's established combat role without changing that role between levels unless a separate named combat-build overlay intentionally defines a different role.
 - Prefer reusable policies over hero- or level-specific branches.
