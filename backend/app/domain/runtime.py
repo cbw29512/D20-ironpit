@@ -43,6 +43,10 @@ class TimedEffect(BaseModel):
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
+    # Universal source ownership for temporary typed resistances.  This lets a
+    # timed effect clean up only the resistance contribution it owns while an
+    # overlapping effect that grants the same type remains active.
+    owned_damage_resistances: list[DamageType] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":

@@ -8,6 +8,19 @@ from app.domain.models import CombatantState, DamageRollComponent, DamageType
 logger = logging.getLogger(__name__)
 
 
+def _active_timed_resistances(target: CombatantState) -> set[DamageType]:
+    """Return typed resistances owned by currently active timed effects."""
+    try:
+        return {
+            damage_type
+            for effect in target.timed_effects
+            for damage_type in effect.owned_damage_resistances
+        }
+    except Exception as exc:
+        logger.exception("Timed resistance lookup failed for %s.", target.template.name)
+        raise RuntimeError("Timed resistances could not be resolved.") from exc
+
+
 def adjusted_damage_amount(
     amount: int,
     damage_type: DamageType,
@@ -27,6 +40,7 @@ def adjusted_damage_amount(
         resistances = {
             *template.damage_resistances,
             *target.temporary_damage_resistances,
+            *_active_timed_resistances(target),
         }
         if damage_type in resistances or has_condition(target, "petrified"):
             adjusted //= 2
