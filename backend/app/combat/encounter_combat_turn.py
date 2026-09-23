@@ -25,7 +25,7 @@ from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
-from app.combat.timed_conditions import suppresses_voluntary_turn
+from app.combat.timed_effect_control import suppresses_voluntary_turn
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
