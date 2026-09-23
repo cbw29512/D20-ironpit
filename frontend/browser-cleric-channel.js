@@ -9,7 +9,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
   const TC = () => window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS;
-  const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", SPARK = "divine-spark", PRESERVE = "preserve-life";
+  const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", TREMBLING = "trembling", SPARK = "divine-spark", PRESERVE = "preserve-life";
   const living = (m) => m.state.is_alive && !m.state.is_dead;
   const side = (m, setup, allies) => allies === (m.side === "heroes") ? setup.heroes : setup.monsters;
   const baseType = (m) => String(m.state.template.creature_type || "").split(" (")[0].toLowerCase();
@@ -84,10 +84,17 @@
     if (!targets.length || targets.some((t) => S().distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
     const dc = saveDc(cleric), remaining = spend(cleric);
     const is2014 = cleric.state.template.ruleset === "2014";
-    return TC().resolve(sequence, round, cleric, targets, dc, TURN, TURNED, remaining, "Turn Undead", {
+    return TC().resolve(sequence, round, cleric, targets, dc, TURN, is2014 ? TREMBLING : TURNED, remaining, "Turn Undead", {
       includeFrightened: !is2014,
       includeIncapacitated: !is2014,
+      suppressAction: is2014,
+      suppressBonusAction: is2014,
       suppressReactions: is2014,
+      suppressMovement: is2014,
+      turnBehavior: is2014 ? "normal" : "forced_retreat",
+      repeatSaveTiming: is2014 ? "target_turn_end" : null,
+      expiresRounds: is2014 ? null : 10,
+      expiryTiming: is2014 ? null : "source_turn_start",
       endsIfSourceIncapacitated: !is2014,
       endsIfSourceDead: !is2014,
     });
