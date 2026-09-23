@@ -18,7 +18,7 @@ def legal_area_save_placements(
     for placement in legal_area_placements(actor, setup, action.area, action.range_ft):
         targets = tuple(
             target_id for target_id in placement.target_ids
-            if (target := by_id.get(target_id)) is not None and legal_save_action(action, target, 0)
+            if (target := by_id.get(target_id)) is not None and legal_save_action(actor, action, target, 0)
         )
         if targets and targets not in filtered:
             filtered[targets] = AreaPlacement(
