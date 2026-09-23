@@ -149,6 +149,7 @@ jobs:
           node frontend/browser-creature-types.test.cjs
           node frontend/browser-monster-saves.test.cjs
           node frontend/browser-condition-immunity.test.cjs
+          node frontend/browser-qualified-damage-defenses.test.cjs
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-condition-lifecycle.test.cjs
@@ -234,6 +235,7 @@ jobs:
           grep -q 'browser-monsters-generated.js' index.html
           grep -q 'browser-monsters-expansion.js' index.html
           grep -q 'browser-condition-rules.js' index.html
+          grep -q 'browser-damage-defenses.js' index.html
           grep -q 'browser-action-economy.js' index.html
           grep -q 'browser-ability-hooks.js' index.html
           grep -q 'browser-recharge.js' index.html
@@ -318,6 +320,7 @@ jobs:
           grep -q 'battlefield-replay.js' frontend/index.html
           grep -q 'browser-condition-immunity.js' frontend/index.html
           grep -q 'browser-condition-rules.js' frontend/index.html
+          grep -q 'browser-damage-defenses.js' frontend/index.html
           grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-ability-hooks.js' frontend/index.html
           grep -q 'browser-recharge.js' frontend/index.html
