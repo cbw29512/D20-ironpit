@@ -12,7 +12,11 @@ logger = logging.getLogger(__name__)
 
 
 def _resource(member: EncounterCombatant, action: TimedSelfBuffAction):
-    return next((item for item in member.state.resources if item.id == action.resource_id), None)
+    try:
+        return next((item for item in member.state.resources if item.id == action.resource_id), None)
+    except Exception as exc:
+        logger.exception("Timed self-buff resource lookup failed for %s.", member.combatant_id)
+        raise RuntimeError("Timed self-buff resource could not be resolved.") from exc
 
 
 def timed_self_buff_active(member: EncounterCombatant, action: TimedSelfBuffAction) -> bool:
