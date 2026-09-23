@@ -57,3 +57,4 @@ jobs:
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-paladin-oath-spells-2014.test.cjs
           node frontend/browser-2014-paladin-entrypoints.test.cjs
+          node frontend/browser-turn-undead-2014.test.cjs
