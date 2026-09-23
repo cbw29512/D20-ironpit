@@ -76,4 +76,26 @@ assert.throws(() => window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.resolve(1, 1, lowKi
 assert.equal(lowKi.state.action_available, true);
 assert.equal(lowKi.state.resources.ki, 3);
 
+
+window.IRON_PIT_BROWSER_HEALING = { chooseAction: () => null };
+window.IRON_PIT_BROWSER_CONDITION_REMOVAL = { chooseAction: () => null };
+window.IRON_PIT_BROWSER_EFFECT_REMOVAL = { choose: () => null };
+window.IRON_PIT_BROWSER_CLERIC_CHANNEL = { resolve: () => null };
+window.IRON_PIT_BROWSER_PALADIN_2014 = { resolveChannel: () => null };
+window.IRON_PIT_BROWSER_STATE = { effectiveMaxHp: (s) => s.template.max_hp || 50 };
+load("browser-support.js");
+
+const supportMonk = { combatant_id: "support-kael", side: "heroes", state: state("Support Kael") };
+supportMonk.state.template.timed_self_buff_actions = [action];
+const supportTarget = { combatant_id: "support-target", side: "monsters", state: state("Support Target") };
+supportTarget.state.template.timed_self_buff_actions = [];
+const supportResult = window.IRON_PIT_BROWSER_SUPPORT.resolve(
+  1, 1, supportMonk, { heroes: [supportMonk], monsters: [supportTarget] }, "1:support-kael",
+);
+assert.deepEqual(supportResult.events.map((item) => item.feature_id), ["empty-body"]);
+assert.equal(supportResult.sequence, 2);
+assert.equal(supportMonk.state.action_available, false);
+assert.equal(supportMonk.state.resources.ki, 14);
+assert.ok(supportMonk.state.active_effect_ids.includes("invisible"));
+
 console.log("Browser timed self-buff, invisibility, and owned resistance parity are certified.");
