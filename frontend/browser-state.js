@@ -11,6 +11,16 @@
   const effectiveMaxHp = (state) => X()?.effectiveMaxHp(state, state.template.max_hp + (state.max_hp_bonus || 0))
     ?? state.template.max_hp + (state.max_hp_bonus || 0);
 
+  function horizontalMovementMode(template) {
+    try {
+      const modes = template.movement_modes || { walk_ft: template.speed_ft || 0, fly_ft: 0 };
+      return (modes.fly_ft || 0) > 0 && (modes.fly_ft || 0) >= (modes.walk_ft || 0) ? "fly" : "walk";
+    } catch (error) {
+      console.error("Failed to choose browser horizontal movement mode.", { name: template?.name, error });
+      throw error;
+    }
+  }
+
   function buildState(template) {
     return {
       template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, position: null,
@@ -19,7 +29,8 @@
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
       turn_terminated: false, turn_termination_reason: null,
-      movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
+      movement_mode: horizontalMovementMode(template), movement_remaining_ft: 0,
+      resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
       grapple_sources: [], timed_effects: [], deferred_effects: [], active_modifiers: OM().build(template), concentration: null,
       survival_save_uses: {}, pending_survival_save_logs: [],
@@ -55,6 +66,7 @@
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
     refreshStartOfTurn(state);
+    state.movement_mode = horizontalMovementMode(state.template);
     const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
     state.movement_remaining_ft = speedZero ? 0 : speed;
@@ -143,6 +155,6 @@
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
     hasAdjacentActiveAlly, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost,
-    targetPriority, terminateTurn,
+    horizontalMovementMode, targetPriority, terminateTurn,
   };
 })();
