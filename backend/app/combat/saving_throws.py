@@ -52,7 +52,13 @@ def resolve_save_action(
     if check_resource and not action_resource_available(actor.state, action):
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
-    save_context = SavingThrowContext(magical_effect=action.magical_effect)
+    effect_tags = set(action.effect_tags)
+    if action.damage_type == "poison":
+        effect_tags.add("poison")
+    save_context = SavingThrowContext(
+        magical_effect=action.magical_effect,
+        effect_tags=frozenset(effect_tags),
+    )
     advantage_sources = saving_throw_advantage_source_names(
         target.state, action.save_ability, save_context,
     )
