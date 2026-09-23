@@ -43,7 +43,7 @@ def build_cleric_life_2014_feature_audits(level: int) -> list[FeatureAudit]:
             _audit("hill-dwarf-constitution", "Dwarf Ability Score Increase", "species", source=DWARF),
             _audit("hill-dwarf-wisdom", "Hill Dwarf Ability Score Increase", "species", source=DWARF),
             _audit(
-                "dwarven-resilience", "Dwarven Resilience", "species", source=DWARF, automated=False,
+                "dwarven-resilience", "Dwarven Resilience", "species", source=DWARF,
                 notes=(
                     "Dwarf-owned passive buff. Universal resolution checks incoming poison effects/debuffs "
                     "against defender buffs; poison damage resistance stays in the shared damage pipeline."
