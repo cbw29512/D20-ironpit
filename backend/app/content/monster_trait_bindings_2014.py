@@ -4,7 +4,7 @@ import logging
 import re
 
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
-from app.domain.progression import ProgressionCombatFeatures
+from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 from app.domain.weapons import ConditionalAttackAdvantage
 
 logger = logging.getLogger(__name__)
@@ -12,6 +12,10 @@ _BLOOD_FRENZY = "Blood Frenzy"
 _RECKLESS = "Reckless"
 _CUNNING_ACTION = "Cunning Action"
 _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
+_MAGIC_RESISTANCE = "Magic Resistance"
+_ALL_SAVE_ABILITIES = (
+    "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
+)
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
@@ -72,6 +76,15 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
     return ProgressionCombatFeatures(
         cunning_action=supports_cunning_action_2014(monster),
         sneak_attack_d6=sneak_attack_d6_2014(monster),
+        saving_throw_advantage_grants=(
+            [SavingThrowAdvantageGrant(
+                source_id="magic-resistance",
+                source_name=_MAGIC_RESISTANCE,
+                abilities=list(_ALL_SAVE_ABILITIES),
+                requires_magical_effect=True,
+            )]
+            if _MAGIC_RESISTANCE in monster.trait_names else []
+        ),
     )
 
 
@@ -87,6 +100,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_CUNNING_ACTION)
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
+        if _MAGIC_RESISTANCE in monster.trait_names:
+            bound.add(_MAGIC_RESISTANCE)
         return frozenset(bound)
     except Exception:
         logger.exception("Failed to classify bound 2014 traits for %s.", monster.name)
