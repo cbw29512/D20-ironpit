@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import logging
+
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
 from app.domain.models import BattleEvent, CombatantState, CombatantTemplate, EncounterCombatant, EncounterSetup, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
+
+logger = logging.getLogger(__name__)
 
 POISONED_EFFECT_ID = "poisoned"
 ARENA_POISON_RECOVERY_DC = 10
@@ -37,7 +41,7 @@ def apply_timed_condition(
     """Apply one source-owned timed condition and its optional passive defenses.
 
     Passive defenses live on the same TimedEffect as the condition so normal
-    lifecycle cleanup removes only state owned by this source.  Callers supply
+    lifecycle cleanup removes only state owned by this source. Callers supply
     source-specific parameters; damage math and expiry remain universal.
     """
     try:
@@ -82,8 +86,12 @@ def apply_timed_condition(
         end_concentration_if_incapacitated(state, affected_states)
         return effect_id
     except Exception:
-        # Preserve the existing fail-fast behavior while ensuring malformed
-        # source data is visible to the caller/logging boundary.
+        logger.exception(
+            "Failed to apply timed condition %s from source %s (%s)",
+            effect_id,
+            source_id,
+            source_effect_id,
+        )
         raise
 
 
