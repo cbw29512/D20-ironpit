@@ -9,10 +9,12 @@ global.window = globalThis;
 window.IRON_PIT_BROWSER_TIMED = { ownsDamageResistance: () => false };
 window.IRON_PIT_BROWSER_CONDITION_RULES = { has: () => false };
 
-vm.runInThisContext(
-  fs.readFileSync(path.join(__dirname, "browser-attack.js"), "utf8"),
-  { filename: "browser-attack.js" },
-);
+for (const file of ["browser-damage-defenses.js", "browser-attack.js"]) {
+  vm.runInThisContext(
+    fs.readFileSync(path.join(__dirname, file), "utf8"),
+    { filename: file },
+  );
+}
 
 const target = {
   active_effect_ids: [],
