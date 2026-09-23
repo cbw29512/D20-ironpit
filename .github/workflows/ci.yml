@@ -171,6 +171,7 @@ jobs:
           node frontend/browser-bless.test.cjs
           node frontend/browser-cleric1.test.cjs
           node frontend/browser-cleric2.test.cjs
+          node frontend/browser-turn-undead-2014.test.cjs
           node frontend/browser-cleric4.test.cjs
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
