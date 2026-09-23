@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
-from app.combat.condition_rules import has_condition
+from app.combat.condition_rules import can_see
 from app.domain.models import CombatantState, DamageRollComponent
 
 
@@ -9,8 +9,7 @@ def can_uncanny_dodge(attacker: CombatantState, defender: CombatantState) -> boo
     """Return whether the defender can see this attacker and spend its Reaction."""
     return bool(
         defender.template.progression_features.uncanny_dodge
-        and not has_condition(defender, "blinded")
-        and not has_condition(attacker, "invisible")
+        and can_see(defender, attacker)
         and is_available(defender, "reaction")
     )
 
