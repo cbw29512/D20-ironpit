@@ -30,6 +30,7 @@
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
+      owned_damage_resistances: [...(options.ownedDamageResistances || [])],
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
@@ -50,6 +51,17 @@
     const removed = [];
     for (const item of grouped) if (removeEffect(state, item)) removed.push(item.effect_id);
     return removed;
+  }
+
+  function ownsDamageResistance(state, damageType) {
+    try {
+      return (state.timed_effects || []).some((effect) =>
+        (effect.owned_damage_resistances || []).includes(damageType),
+      );
+    } catch (error) {
+      console.error("Timed resistance lookup failed.", error);
+      throw error;
+    }
   }
 
   function expireSourceStart(sequence, round, source, setup) {
@@ -75,5 +87,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, removeEffect, removeGroup };
+  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, ownsDamageResistance, removeEffect, removeGroup };
 })();
