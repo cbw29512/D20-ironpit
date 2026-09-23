@@ -248,6 +248,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()}, "source": template.source,
     }
+    if template.opportunity_attack_exempt_movement_modes:
+        row["opportunity_attack_exempt_movement_modes"] = list(template.opportunity_attack_exempt_movement_modes)
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
