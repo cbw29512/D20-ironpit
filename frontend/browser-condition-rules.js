@@ -4,7 +4,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const has = (state, id) => state.active_effect_ids.includes(id) && !I().immune(state, id);
 
-  function incapacitated(state) {
+  const canSee = (observer, target) => !has(observer, "blinded") && !has(target, "invisible");\n\n  function incapacitated(state) {
     if (I().immune(state, "incapacitated")) return false;
     return state.is_unconscious || has(state, "incapacitated") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
   }
@@ -15,5 +15,5 @@
   const suppressAttackAdvantage = (state) => Boolean(state.template?.suppress_attack_advantage_while_not_incapacitated) && !incapacitated(state);
   const speedZero = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "restrained");
 
-  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, has, incapacitated, speedZero, suppressAttackAdvantage };
+  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, canSee, has, incapacitated, speedZero, suppressAttackAdvantage };
 })();
