@@ -27,16 +27,20 @@ def _matching_conditional_defenses(
     damage_type: DamageType,
     source_qualifiers: set[DamageSourceQualifier],
 ) -> set[DamageDefenseKind]:
-    matched: set[DamageDefenseKind] = set()
-    for rule in target.template.conditional_damage_defenses:
-        if damage_type not in rule.damage_types:
-            continue
-        required = set(rule.required_source_qualifiers)
-        forbidden = set(rule.forbidden_source_qualifiers)
-        if not required.issubset(source_qualifiers) or forbidden.intersection(source_qualifiers):
-            continue
-        matched.add(rule.kind)
-    return matched
+    try:
+        matched: set[DamageDefenseKind] = set()
+        for rule in target.template.conditional_damage_defenses:
+            if damage_type not in rule.damage_types:
+                continue
+            required = set(rule.required_source_qualifiers)
+            forbidden = set(rule.forbidden_source_qualifiers)
+            if not required.issubset(source_qualifiers) or forbidden.intersection(source_qualifiers):
+                continue
+            matched.add(rule.kind)
+        return matched
+    except Exception as exc:
+        logger.exception("Conditional damage-defense matching failed for %s.", target.template.name)
+        raise RuntimeError("Conditional damage defenses could not be matched.") from exc
 
 
 def adjusted_damage_amount(
