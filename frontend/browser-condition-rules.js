@@ -4,7 +4,9 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const has = (state, id) => state.active_effect_ids.includes(id) && !I().immune(state, id);
 
-  const canSee = (observer, target) => !has(observer, "blinded") && !has(target, "invisible");\n\n  function incapacitated(state) {
+  const canSee = (observer, target) => !has(observer, "blinded") && !has(target, "invisible");
+
+  function incapacitated(state) {
     if (I().immune(state, "incapacitated")) return false;
     return state.is_unconscious || has(state, "incapacitated") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
   }
