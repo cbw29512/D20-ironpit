@@ -4,6 +4,7 @@ import logging
 import re
 
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.domain.movement import MovementMode
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.weapons import ConditionalAttackAdvantage
 
@@ -12,6 +13,7 @@ _BLOOD_FRENZY = "Blood Frenzy"
 _RECKLESS = "Reckless"
 _CUNNING_ACTION = "Cunning Action"
 _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
+_FLYBY = "Flyby"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
@@ -67,6 +69,15 @@ def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2
     return sneak_attack_d6_2014(monster) > 0 and _base_sneak_attack_eligible(attack)
 
 
+def opportunity_attack_exempt_modes_2014(monster: SourceMonster2014) -> list[MovementMode]:
+    """Bind mover-side OA exemptions by movement semantics, never monster identity."""
+    try:
+        return ["fly"] if _FLYBY in monster.trait_names else []
+    except Exception:
+        logger.exception("Failed to bind OA-exempt movement modes for %s.", monster.name)
+        raise
+
+
 def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFeatures:
     """Translate printed 2014 traits into reusable progression feature fields."""
     return ProgressionCombatFeatures(
@@ -87,6 +98,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_CUNNING_ACTION)
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
+        if _FLYBY in monster.trait_names:
+            bound.add(_FLYBY)
         return frozenset(bound)
     except Exception:
         logger.exception("Failed to classify bound 2014 traits for %s.", monster.name)
