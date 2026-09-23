@@ -159,7 +159,7 @@ def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> No
     next(item for item in cleric.state.resources if item.id == "spell-slot-2").current_uses = 0
     begin_turn(cleric.state)
     expired = resolve_persistent_spell_attack(
-        3, 11, cleric, setup, "11:cleric", FixedDiceProvider([]),
+        3, 11, cleric, setup, "11:cleric", FixedDiceProvider([1]),
     )
     assert expired is None
     assert cleric.state.persistent_spell_attacks == []
