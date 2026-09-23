@@ -8,15 +8,28 @@
   const D = () => window.IRON_PIT_DICE;
 
   function apply(source, target, round, sourceEffectId, turnedEffectId, options = {}) {
+    const expiresRounds = Object.prototype.hasOwnProperty.call(options, "expiresRounds") ? options.expiresRounds : 10;
+    const expiryTiming = Object.prototype.hasOwnProperty.call(options, "expiryTiming") ? options.expiryTiming : "source_turn_start";
     const common = {
-      sourceEffectId, appliedRound: round, expiresRound: round + 10,
-      expiryTiming: "source_turn_start", endsOnDamage: true,
+      sourceEffectId, appliedRound: round,
+      expiresRound: expiresRounds == null ? null : round + expiresRounds,
+      expiryTiming, endsOnDamage: true,
       endsIfSourceIncapacitated: options.endsIfSourceIncapacitated !== false,
       endsIfSourceDead: options.endsIfSourceDead !== false,
     };
     const applied = [T().apply(
       target.state, turnedEffectId, source.combatant_id,
-      { ...common, turnBehavior: "forced_retreat", suppressReactions: Boolean(options.suppressReactions) },
+      {
+        ...common,
+        turnBehavior: options.turnBehavior || "forced_retreat",
+        suppressAction: Boolean(options.suppressAction),
+        suppressBonusAction: Boolean(options.suppressBonusAction),
+        suppressReactions: Boolean(options.suppressReactions),
+        suppressMovement: Boolean(options.suppressMovement),
+        repeatSaveAbility: options.repeatSaveTiming ? "wisdom" : null,
+        repeatSaveDc: options.repeatSaveTiming ? options.saveDc : null,
+        repeatSaveTiming: options.repeatSaveTiming || null,
+      },
     )];
     const conditions = [];
     if (options.includeFrightened !== false) conditions.push("frightened");
@@ -53,7 +66,9 @@
           damage_type: rider.damage_type, total: raw, applied_total: appliedDamage,
         }];
       }
-      const applied = save.succeeded || target.state.is_dead ? [] : apply(source, target, round, sourceEffectId, turnedEffectId, options);
+      const applied = save.succeeded || target.state.is_dead ? [] : apply(
+        source, target, round, sourceEffectId, turnedEffectId, { ...options, saveDc },
+      );
       events.push({
         sequence: sequence++, round_number: round, event_type: "saving_throw",
         actor_id: source.combatant_id, actor_name: source.state.template.name,
