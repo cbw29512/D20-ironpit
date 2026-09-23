@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-modifiers.js", "browser-grapple.js", "browser-grid-geometry.js", "browser-state.js", "browser-rolls.js",
   "browser-timed-conditions.js", "browser-source-bound-effects.js", "browser-undead-fortitude.js", "browser-zero-hp.js",
-  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saves.js", "browser-healing.js", "browser-turn-creature-effects.js", "browser-cleric-channel.js",
+  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saves.js", "browser-healing.js", "browser-pooled-healing.js", "browser-turn-creature-effects.js", "browser-cleric-channel.js",
 ]) load(file);
 
 const H = window.IRON_PIT_BROWSER_HEROES;
@@ -21,6 +21,7 @@ const C = window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
 const T = window.IRON_PIT_BROWSER_TIMED;
 const B = window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
 const A = window.IRON_PIT_BROWSER_ATTACK;
+const PH = window.IRON_PIT_BROWSER_POOLED_HEALING;
 
 const clericTemplate = H["seraphine-dawnshield-l2"];
 assert.ok(clericTemplate, "Seraphine Cleric 2 must exist in the generated browser roster.");
@@ -152,4 +153,19 @@ const fixedDice = (values) => {
   assert.equal(ally.state.is_unconscious, false);
 }
 
-console.log("Browser Cleric 2 Channel Divinity, Turn Undead lifecycle, and Divine Spark regressions passed.");
+{
+  const first = member(structuredClone(H["karnok-stoneward-l1"]), "pool-a", "heroes", 0);
+  const second = member(structuredClone(H["karnok-stoneward-l1"]), "pool-b", "heroes", 0);
+  first.state.current_hp = 1;
+  second.state.current_hp = 2;
+  const firstCap = PH.capacity(first, 1, 2);
+  const secondCap = PH.capacity(second, 1, 2);
+  const result = PH.resolve([first, second], 100, 1, 2);
+  assert.equal(result.allocations[0].healed, firstCap);
+  assert.equal(result.allocations[1].healed, secondCap);
+  assert.equal(first.state.current_hp, Math.floor(first.state.template.max_hp / 2));
+  assert.equal(second.state.current_hp, Math.floor(second.state.template.max_hp / 2));
+  assert.equal(result.remaining, 100 - firstCap - secondCap);
+}
+
+console.log("Browser Cleric 2 Channel Divinity, Turn Undead lifecycle, Divine Spark, and pooled-healing regressions passed.");
