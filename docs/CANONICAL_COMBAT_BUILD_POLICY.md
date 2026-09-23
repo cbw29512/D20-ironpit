@@ -138,6 +138,12 @@ The first canonical 2014 level-1-through-20 completion pass does **not** use the
 
 This is a sequencing decision, not a ban on feats. After all twelve 2014 canonical pregens are complete, certified, and re-audited, legal 2014 feat-based build variants may be added as a second-pass overlay. Those variants must reuse the same universal capability system, remain edition-correct, and must not alter the already-certified no-feat baseline.
 
+### Multiclass policy
+
+Canonical Iron Pit pregens are single-class characters. Multiclassing is not part of the 2014 or 2024 canonical pregen pipeline and must not be introduced into canonical progression, certification, or migration work.
+
+If multiclassing is implemented in the future, it belongs to the explicitly separate homebrew/custom-build system. It must use the same universal mechanics, edition isolation, legality validation, and certification principles, but it must never alter the canonical single-class baselines.
+
 - Select legal combat-facing options deterministically for the canonical build.
 - Optimize for the character's established combat role without changing that role between levels unless a separate named combat-build overlay intentionally defines a different role.
 - Prefer reusable policies over hero- or level-specific branches.
