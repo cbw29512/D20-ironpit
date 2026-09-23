@@ -94,7 +94,7 @@
     const uncanny = RD().applyUncannyDodge(attacker, defender, deflect.components);
     const damageComponents = uncanny.components.map((part) => ({
       ...part,
-      applied_total: A().adjustedDamage(defender, part.total, part.damage_type),
+      applied_total: A().adjustedDamage(defender, part.total, part.damage_type, true, attack),
     }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
     const damageRoll = { ...aggregate(uncanny.components), total: appliedTotal };
