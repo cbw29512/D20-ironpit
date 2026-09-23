@@ -22,6 +22,9 @@
     if (item.kind === "condition-immunity" && !item.condition_id) throw new Error("Condition-immunity modifiers require a condition id.");
     if (item.kind !== "condition-immunity" && item.condition_id) throw new Error(`${item.kind} does not accept a condition id.`);
     if (item.kind === "condition-immunity" && (item.flat_bonus || 0)) throw new Error("Condition immunity does not accept a flat bonus.");
+    if (item.requires_magical_effect && item.kind !== "saving-throw-advantage") {
+      throw new Error("Only saving-throw Advantage can require magical-effect context.");
+    }
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
