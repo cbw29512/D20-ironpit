@@ -4,6 +4,8 @@ import pytest
 
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_turn_support import resolve_support_actions
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.combat.timed_self_buffs import choose_timed_self_buff_action, resolve_timed_self_buff
@@ -91,6 +93,21 @@ def test_empty_body_spends_action_and_ki_and_uses_universal_condition_and_resist
     assert "invisible" not in monk.state.active_effect_ids
     assert adjusted_damage_amount(9, DamageType.FIRE, monk.state) == 9
 
+
+
+def test_live_support_phase_activates_empty_body_before_offense() -> None:
+    monk, _, setup = _setup()
+    begin_turn(monk.state)
+
+    events, sequence = resolve_support_actions(
+        1, 1, monk, setup, FixedDiceProvider([]), "1:kael",
+    )
+
+    assert sequence == 2
+    assert [event.feature_id for event in events] == ["empty-body"]
+    assert monk.state.action_available is False
+    assert "invisible" in monk.state.active_effect_ids
+    assert next(item for item in monk.state.resources if item.id == "ki").current_uses == 14
 
 def test_empty_body_is_illegal_without_four_ki() -> None:
     monk, _, _ = _setup()
