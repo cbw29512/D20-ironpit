@@ -54,21 +54,31 @@ jobs:
           retention-days: 1
       - name: Certify 2014 hero data and browser behavior
         run: |
-          node frontend/browser-catalog-2014.test.cjs
-          node frontend/browser-ruleset-isolation.test.cjs
-          node frontend/browser-survivor.test.cjs
-          node frontend/browser-roll-revisions.test.cjs
-          node frontend/browser-2014-berserker.test.cjs
-          node frontend/browser-2014-rogue.test.cjs
-          node frontend/browser-2014-monk.test.cjs
-          node frontend/browser-2014-monk-level19.test.cjs
-          node frontend/browser-2014-monk-level20.test.cjs
-          node frontend/browser-initiative-resource-refill.test.cjs
-          node frontend/browser-timed-self-buffs.test.cjs
-          node frontend/browser-2014-monk-entrypoints.test.cjs
-          node frontend/browser-2014-paladin.test.cjs
-          node frontend/browser-2014-paladin-auras.test.cjs
-          node frontend/browser-paladin-oath-spells-2014.test.cjs
-          node frontend/browser-2014-paladin-entrypoints.test.cjs
-          node frontend/browser-turn-undead-2014.test.cjs
-          node frontend/browser-persistent-spell-attacks.test.cjs
+          set -o pipefail
+          {
+            node frontend/browser-catalog-2014.test.cjs
+            node frontend/browser-ruleset-isolation.test.cjs
+            node frontend/browser-survivor.test.cjs
+            node frontend/browser-roll-revisions.test.cjs
+            node frontend/browser-2014-berserker.test.cjs
+            node frontend/browser-2014-rogue.test.cjs
+            node frontend/browser-2014-monk.test.cjs
+            node frontend/browser-2014-monk-level19.test.cjs
+            node frontend/browser-2014-monk-level20.test.cjs
+            node frontend/browser-initiative-resource-refill.test.cjs
+            node frontend/browser-timed-self-buffs.test.cjs
+            node frontend/browser-2014-monk-entrypoints.test.cjs
+            node frontend/browser-2014-paladin.test.cjs
+            node frontend/browser-2014-paladin-auras.test.cjs
+            node frontend/browser-paladin-oath-spells-2014.test.cjs
+            node frontend/browser-2014-paladin-entrypoints.test.cjs
+            node frontend/browser-turn-undead-2014.test.cjs
+            node frontend/browser-persistent-spell-attacks.test.cjs
+          } 2>&1 | tee 2014-hero-browser.log
+      - name: Upload 2014 hero browser log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2014-hero-browser-${{ github.sha }}
+          path: 2014-hero-browser.log
+          retention-days: 1
