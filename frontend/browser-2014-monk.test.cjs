@@ -53,6 +53,7 @@ assert.equal(monk(11).attacks.find((attack) => attack.weaponId === "unarmed-stri
 assert.equal(monk(12).ability_scores.wisdom, 17);
 assert.equal(monk(14).speed_ft, 55);
 assert.equal(monk(18).speed_ft, 60);
+assert.equal(monk(20).speed_ft, 60);
 assert.equal(monk(15).ability_scores.wisdom, 17);
 assert.equal(monk(16).ability_scores.wisdom, 19);
 assert.equal(monk(16).armor_class, 19);
