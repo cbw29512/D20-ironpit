@@ -96,6 +96,7 @@ def resolve_attack(
         cunning_strike, cunning_strike_obscure, topple = effects.cunning_strike, effects.cunning_strike_obscure, effects.topple
         weapon_sap_applied, tactical_sap_applied = effects.weapon_sap_applied, effects.tactical_sap_applied
         vex_applied, studied_applied = effects.vex_applied, effects.studied_applied
+        deferred_effect_armed = effects.deferred_effect_armed
         description = build_attack_description(
             attacker_name=attacker.template.name,
             defender_name=defender.template.name,
@@ -125,6 +126,7 @@ def resolve_attack(
             topple=topple,
             damage_outcome=damage_outcome,
             applied_conditions=applied_conditions,
+            deferred_effect_armed=deferred_effect_armed,
         )
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
             save_damage, on_hit_save, cunning_strike_obscure, cunning_strike, topple,
@@ -142,6 +144,7 @@ def resolve_attack(
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
             feature_id=d20_override_feature_id or miss_override_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
+            resource_remaining=(deferred_effect_armed.resource_remaining if deferred_effect_armed is not None else None),
             animation=weapon.animation, description=description + consume_survival_save_log(actual_defender),
         )
     except Exception as exc:

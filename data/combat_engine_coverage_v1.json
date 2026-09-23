@@ -4,66 +4,752 @@
   "ruleset": "D&D 5e 2024 / SRD 5.2.1",
   "policy": "A capability is supported only when Python, browser, and permanent regression evidence exist. Declared build requirements must be explicitly supported or blocked; active builds may require only supported capabilities. Arena exceptions must be explicitly arena_out_of_scope. Partial or unsupported mechanics fail closed for public certification.",
   "capabilities": [
-    {"id":"action-economy","status":"supported","python":["backend/app/combat/action_economy.py"],"browser":["frontend/browser-action-economy.js"],"tests":["backend/tests/test_action_condition_economy.py","frontend/browser-action-condition.test.cjs"]},
-    {"id":"attack-roll-advantage-disadvantage","status":"supported","python":["backend/app/combat/rolls.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-rolls.js","frontend/browser-attack.js"],"tests":["backend/tests/test_rolls.py","frontend/browser-engine.test.cjs"]},
-    {"id":"natural-1-natural-20-critical","status":"supported","python":["backend/app/combat/rolls.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-rolls.js","frontend/browser-attack.js"],"tests":["backend/tests/test_rolls.py","frontend/browser-engine.test.cjs"]},
-    {"id":"melee-ranged-range-bands","status":"supported","python":["backend/app/combat/range.py"],"browser":["frontend/browser-attack.js"],"tests":["backend/tests/test_range.py","backend/tests/test_ranged_close_threat.py","frontend/browser-engine.test.cjs"]},
-    {"id":"saving-throws","status":"supported","python":["backend/app/combat/saving_throws.py","backend/app/combat/saving_throw_rolls.py"],"browser":["frontend/browser-saves.js"],"tests":["backend/tests/test_saving_throw_actions.py","frontend/browser-control.test.cjs"]},
-    {"id":"simultaneous-save-shared-damage-roll","status":"supported","python":["backend/app/combat/spell_resolution.py","backend/app/combat/saving_throws.py"],"browser":["frontend/browser-spell-resolution.js","frontend/browser-saves.js"],"tests":["backend/tests/test_spell_shared_damage.py","frontend/browser-spell-resolution.test.cjs"]},
-    {"id":"typed-damage-resistance-immunity-vulnerability","status":"supported","python":["backend/app/combat/damage_defenses.py"],"browser":["frontend/browser-attack.js"],"tests":["backend/tests/test_damage_defenses.py","frontend/browser-mixed-damage.test.cjs"]},
-    {"id":"temporary-hit-points","status":"supported","python":["backend/app/combat/temporary_hp.py","backend/app/combat/zero_hp.py"],"browser":["frontend/browser-zero-hp.js"],"tests":["backend/tests/test_zero_hp.py","frontend/browser-zero-hp-lifecycle.test.cjs"]},
-    {"id":"zero-hp-death-lifecycle","status":"supported","python":["backend/app/combat/zero_hp.py","backend/app/combat/death_saves.py"],"browser":["frontend/browser-zero-hp.js"],"tests":["backend/tests/test_zero_hp.py","frontend/browser-zero-hp-lifecycle.test.cjs"]},
-    {"id":"healing","status":"supported","python":["backend/app/combat/healing.py"],"browser":["frontend/browser-healing.js"],"tests":["backend/tests/test_action_healing.py","frontend/browser-action-healing.test.cjs"]},
-    {"id":"condition-immunity","status":"supported","python":["backend/app/combat/condition_immunity.py"],"browser":["frontend/browser-condition-immunity.js"],"tests":["backend/tests/test_condition_immunities.py","frontend/browser-condition-immunity.test.cjs"]},
-    {"id":"prone","status":"supported","python":["backend/app/combat/conditions.py","backend/app/combat/condition_rules.py"],"browser":["frontend/browser-condition-rules.js","frontend/browser-attack.js"],"tests":["backend/tests/test_prone_wolves.py","frontend/browser-control.test.cjs"]},
-    {"id":"blinded","status":"supported","python":["backend/app/combat/condition_rules.py"],"browser":["frontend/browser-condition-rules.js"],"tests":["backend/tests/test_blinded_condition.py","frontend/browser-condition-immunity.test.cjs"]},
-    {"id":"poisoned","status":"supported","python":["backend/app/combat/condition_rules.py","backend/app/combat/timed_conditions.py"],"browser":["frontend/browser-condition-rules.js","frontend/browser-timed-conditions.js"],"tests":["backend/tests/test_poisoned_conditions.py","frontend/browser-poison.test.cjs"]},
-    {"id":"grappled-restrained-escape","status":"supported","python":["backend/app/combat/grapple.py"],"browser":["frontend/browser-grapple.js"],"tests":["backend/tests/test_grapple_conditions.py","frontend/browser-control.test.cjs"]},
-    {"id":"timed-condition-lifecycle-repeat-save","status":"supported","python":["backend/app/combat/condition_lifecycle.py","backend/app/combat/timed_conditions.py"],"browser":["frontend/browser-condition-lifecycle.js","frontend/browser-timed-conditions.js"],"tests":["backend/tests/test_poisoned_conditions.py","frontend/browser-condition-lifecycle.test.cjs"]},
-    {"id":"condition-removal","status":"supported","python":["backend/app/combat/condition_removal.py"],"browser":["frontend/browser-condition-removal.js"],"tests":["backend/tests/test_condition_removal.py","frontend/browser-condition-removal.test.cjs"]},
-    {"id":"opportunity-attacks","status":"supported","python":["backend/app/combat/opportunity_attacks.py","backend/app/combat/opportunity_attack_rules.py"],"browser":["frontend/browser-reactions.js","frontend/browser-reaction-movement.js"],"tests":["backend/tests/test_opportunity_attacks.py","frontend/browser-reactions.test.cjs"]},
-    {"id":"parry-redirect-reactions","status":"supported","python":["backend/app/combat/parry.py","backend/app/combat/redirect_attack.py"],"browser":["frontend/browser-reactions.js"],"tests":["backend/tests/test_parry.py","backend/tests/test_redirect_attack.py","frontend/browser-reactions.test.cjs"]},
-    {"id":"multiattack-extra-attack","status":"supported","python":["backend/app/combat/attack_actions.py"],"browser":["frontend/browser-multiattack.js"],"tests":["backend/tests/test_attack_actions.py","frontend/browser-mixed-multiattack.test.cjs"]},
-    {"id":"movement-modes-closing","status":"supported","python":["backend/app/combat/movement.py","backend/app/combat/arena_closing.py"],"browser":["frontend/browser-state.js","frontend/browser-turn.js"],"tests":["backend/tests/test_movement.py","backend/tests/test_arena_closing.py","frontend/browser-formation.test.cjs"]},
-    {"id":"one-slot-spell-per-turn","status":"supported","python":["backend/app/combat/spellcasting.py"],"browser":["frontend/browser-spellcasting.js"],"tests":["backend/tests/test_spell_policy.py","frontend/browser-spell-policy.test.cjs"]},
-    {"id":"non-concentration-precombat-defense","status":"supported","python":["backend/app/combat/precombat_spells.py"],"browser":["frontend/browser-precombat-spells.js"],"tests":["backend/tests/test_precombat_spells.py","frontend/browser-precombat-spells.test.cjs"]},
-    {"id":"area-target-placement","status":"supported","python":["backend/app/combat/spell_area.py"],"browser":["frontend/browser-spell-area.js"],"tests":["backend/tests/test_spell_area.py","frontend/browser-spell-area.test.cjs"]},
-    {"id":"undead-fortitude","status":"supported","python":["backend/app/combat/undead_fortitude.py"],"browser":["frontend/browser-undead-fortitude.js"],"tests":["backend/tests/test_undead_fortitude.py","frontend/browser-undead-fortitude.test.cjs"]},
-
-    {"id":"great-weapon-fighting","status":"supported","python":["backend/app/content/fighter_progression.py","backend/app/combat/damage.py","backend/app/combat/savage_attacker.py"],"browser":["frontend/browser-rolls.js"],"tests":["backend/tests/test_damage.py","backend/tests/test_fighter_progression.py","frontend/browser-fighter-progression.test.cjs"]},
-    {"id":"indomitable","status":"supported","python":["backend/app/combat/indomitable.py","backend/app/combat/saving_throw_rolls.py"],"browser":["frontend/browser-indomitable.js","frontend/browser-saves.js"],"tests":["backend/tests/test_fighter_level9.py","frontend/browser-fighter9.test.cjs"]},
-    {"id":"tactical-master","status":"supported","python":["backend/app/combat/tactical_master_policy.py","backend/app/combat/tactical_master.py","backend/app/combat/weapon_mastery.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-tactical-master.js","frontend/browser-weapon-mastery.js","frontend/browser-attack.js"],"tests":["backend/tests/test_fighter_level9.py","frontend/browser-fighter9.test.cjs"]},
-    {"id":"sap-mastery","status":"supported","python":["backend/app/combat/sap.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-tactical-master.js","frontend/browser-attack.js"],"tests":["backend/tests/test_fighter_level9.py","frontend/browser-fighter9.test.cjs"]},
-    {"id":"vex-mastery","status":"supported","python":["backend/app/combat/vex.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-vex.js","frontend/browser-attack.js"],"tests":["backend/tests/test_vex.py","frontend/browser-vex.test.cjs"]},
-    {"id":"graze-mastery","status":"supported","python":["backend/app/combat/graze.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-graze.js","frontend/browser-attack.js"],"tests":["backend/tests/test_graze.py","frontend/browser-graze.test.cjs"]},
-    {"id":"defense-style","status":"supported","python":["backend/app/content/armor_class_rules.py","backend/app/content/audited_fighter.py","backend/app/content/fighter_combat_levels.py","backend/app/combat/modifier_stack.py"],"browser":["frontend/browser-heroes.js","frontend/browser-modifiers.js"],"tests":["backend/tests/test_armor_class_rules.py","frontend/browser-defense-style.test.cjs"]},
-    {"id":"shield-ac","status":"supported","python":["backend/app/content/armor_class_rules.py","backend/app/combat/modifier_stack.py"],"browser":["frontend/browser-modifiers.js"],"tests":["backend/tests/test_armor_class_rules.py","frontend/browser-defense-style.test.cjs"]},
-    {"id":"archery-style","status":"supported","python":["backend/app/content/attack_bonus_rules.py","backend/app/content/pregen_attacks.py"],"browser":["frontend/browser-rolls.js"],"tests":["backend/tests/test_attack_bonus_rules.py","frontend/browser-fighter-progression.test.cjs"]},
-    {"id":"nick-mastery","status":"supported","python":["backend/app/combat/weapon_mastery.py","backend/app/combat/light_weapons.py","backend/app/combat/light_attack_resolution.py","backend/app/combat/standard_attack_action.py","backend/app/combat/attack_actions.py"],"browser":["frontend/browser-weapon-mastery.js","frontend/browser-light-weapons.js","frontend/browser-light-attack.js","frontend/browser-standard-attack-action.js","frontend/browser-multiattack.js"],"tests":["backend/tests/test_light_weapons.py","frontend/browser-light-weapons.test.cjs"]},
-    {"id":"two-weapon-fighting","status":"supported","python":["backend/app/content/fighting_style_rules.py","backend/app/combat/light_weapons.py"],"browser":["frontend/browser-light-weapons.js"],"tests":["backend/tests/test_light_weapons.py","frontend/browser-light-weapons.test.cjs"]},
-    {"id":"slow-mastery","status":"arena_out_of_scope","blocker":"The current card-v-card arena does not use tactical retreat or kiting outputs where Slow can change the declared combat result."},
-    {"id":"cleave-mastery","status":"supported","python":["backend/app/combat/cleave.py","backend/app/combat/standard_attack_action.py","backend/app/combat/attack_actions.py"],"browser":["frontend/browser-weapon-mastery.js","frontend/browser-standard-attack-action.js","frontend/browser-multiattack.js"],"tests":["backend/tests/test_cleave.py","frontend/browser-light-weapons.test.cjs"]},
-    {"id":"topple-mastery","status":"supported","python":["backend/app/combat/topple.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-topple.js","frontend/browser-attack.js"],"tests":["backend/tests/test_topple.py","frontend/browser-topple.test.cjs"]},
-
-    {"id":"generic-buff-debuff-modifier-stack","status":"partial","blocker":"Shared typed modifiers now cover AC, speed, attack/save bonus dice, bonus damage, defender-wide and target-scoped attack Advantage, source cleanup, and expiry. A universal ability-check modifier path and every stacking interaction are not yet certified.","python":["backend/app/combat/modifier_stack.py"],"browser":["frontend/browser-modifiers.js"],"tests":["backend/tests/test_concentration_modifiers.py","frontend/browser-modifiers-concentration.test.cjs"]},
-    {"id":"concentration","status":"supported","python":["backend/app/combat/concentration.py","backend/app/combat/zero_hp.py"],"browser":["frontend/browser-concentration.js","frontend/browser-attack.js","frontend/browser-saves.js"],"tests":["backend/tests/test_concentration_modifiers.py","frontend/browser-modifiers-concentration.test.cjs"]},
-    {"id":"multiple-persistent-riders-on-one-attack","status":"unsupported","blocker":"Declarative attack schema intentionally fails closed when more than one persistent grapple/condition rider is present."},
-    {"id":"complete-condition-semantics","status":"partial","blocker":"Several conditions are modeled, but Charmed, Frightened, Invisible, Exhaustion, and every cross-condition interaction are not yet universally certified."},
-    {"id":"forced-movement-push-pull-teleport","status":"partial","blocker":"Feature-specific movement exists; a universal forced-movement effect with collision, trigger, and OA semantics is not certified."},
-    {"id":"recharge","status":"unsupported","blocker":"No universal recharge state/roll primitive is certified."},
-    {"id":"generic-limited-use-resources","status":"partial","blocker":"Resources exist, but arbitrary SRD limited-use actions are not universally compiled and refreshed."},
-    {"id":"spell-attack-rolls","status":"supported","python":["backend/app/combat/spell_attack_resolution.py","backend/app/domain/spells.py"],"browser":["frontend/browser-spell-attack.js"],"tests":["backend/tests/test_guiding_bolt.py","backend/tests/test_spell_attack_context.py","frontend/browser-guiding-bolt.test.cjs"]},
-    {"id":"generic-reaction-trigger-grammar","status":"partial","blocker":"Opportunity Attack, Parry, Redirect Attack, and selected reactions exist, but arbitrary trigger/response composition is not universal."},
-    {"id":"legendary-actions","status":"unsupported","blocker":"Legendary action pools and after-turn timing are not certified."},
-    {"id":"legendary-resistance","status":"unsupported","blocker":"Save replacement with limited-use legendary resistance is not certified."},
-    {"id":"ongoing-periodic-damage","status":"unsupported","blocker":"No universal start/end-turn periodic damage effect with source lifecycle is certified."},
-    {"id":"auras","status":"unsupported","blocker":"No universal proximity aura application/removal engine is certified."},
-    {"id":"regeneration","status":"unsupported","blocker":"No universal conditional start-turn regeneration primitive is certified."},
-    {"id":"generic-death-triggers","status":"partial","blocker":"Undead Fortitude is certified, but arbitrary on-zero/on-death effects are not universal."},
-    {"id":"summons-transformations-splitting","status":"unsupported","blocker":"Dynamic combatant creation, transformation, and split/merge lifecycle are not certified."},
-    {"id":"cover-line-of-sight-obscurement","status":"partial","blocker":"The card arena has range/formation abstractions but not a general geometry/cover/obscurement engine."},
-    {"id":"standard-tactical-actions-dash-dodge-disengage-ready-help","status":"partial","blocker":"Iron Pit intentionally uses simplified card-v-card AI; these general actions are not universally selected/resolved."},
-    {"id":"unarmed-grapple-shove-options","status":"partial","blocker":"Unarmed Opportunity Attack damage exists and monster grapples exist; universal player Grapple/Shove options are not certified."},
-    {"id":"simultaneous-effect-ordering","status":"partial","blocker":"Specific simultaneous cases are modeled, but a universal ordered effect-batch transaction system is not certified."}
+    {
+      "id": "action-economy",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/action_economy.py"
+      ],
+      "browser": [
+        "frontend/browser-action-economy.js"
+      ],
+      "tests": [
+        "backend/tests/test_action_condition_economy.py",
+        "frontend/browser-action-condition.test.cjs"
+      ]
+    },
+    {
+      "id": "attack-roll-advantage-disadvantage",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/rolls.py",
+        "backend/app/combat/attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-rolls.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_rolls.py",
+        "frontend/browser-engine.test.cjs"
+      ]
+    },
+    {
+      "id": "natural-1-natural-20-critical",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/rolls.py",
+        "backend/app/combat/attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-rolls.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_rolls.py",
+        "frontend/browser-engine.test.cjs"
+      ]
+    },
+    {
+      "id": "melee-ranged-range-bands",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/range.py"
+      ],
+      "browser": [
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_range.py",
+        "backend/tests/test_ranged_close_threat.py",
+        "frontend/browser-engine.test.cjs"
+      ]
+    },
+    {
+      "id": "saving-throws",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/saving_throws.py",
+        "backend/app/combat/saving_throw_rolls.py"
+      ],
+      "browser": [
+        "frontend/browser-saves.js"
+      ],
+      "tests": [
+        "backend/tests/test_saving_throw_actions.py",
+        "frontend/browser-control.test.cjs"
+      ]
+    },
+    {
+      "id": "simultaneous-save-shared-damage-roll",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/spell_resolution.py",
+        "backend/app/combat/saving_throws.py"
+      ],
+      "browser": [
+        "frontend/browser-spell-resolution.js",
+        "frontend/browser-saves.js"
+      ],
+      "tests": [
+        "backend/tests/test_spell_shared_damage.py",
+        "frontend/browser-spell-resolution.test.cjs"
+      ]
+    },
+    {
+      "id": "typed-damage-resistance-immunity-vulnerability",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/damage_defenses.py"
+      ],
+      "browser": [
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_damage_defenses.py",
+        "frontend/browser-mixed-damage.test.cjs"
+      ]
+    },
+    {
+      "id": "temporary-hit-points",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/temporary_hp.py",
+        "backend/app/combat/zero_hp.py"
+      ],
+      "browser": [
+        "frontend/browser-zero-hp.js"
+      ],
+      "tests": [
+        "backend/tests/test_zero_hp.py",
+        "frontend/browser-zero-hp-lifecycle.test.cjs"
+      ]
+    },
+    {
+      "id": "zero-hp-death-lifecycle",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/zero_hp.py",
+        "backend/app/combat/death_saves.py"
+      ],
+      "browser": [
+        "frontend/browser-zero-hp.js"
+      ],
+      "tests": [
+        "backend/tests/test_zero_hp.py",
+        "frontend/browser-zero-hp-lifecycle.test.cjs"
+      ]
+    },
+    {
+      "id": "healing",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/healing.py"
+      ],
+      "browser": [
+        "frontend/browser-healing.js"
+      ],
+      "tests": [
+        "backend/tests/test_action_healing.py",
+        "frontend/browser-action-healing.test.cjs"
+      ]
+    },
+    {
+      "id": "condition-immunity",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/condition_immunity.py"
+      ],
+      "browser": [
+        "frontend/browser-condition-immunity.js"
+      ],
+      "tests": [
+        "backend/tests/test_condition_immunities.py",
+        "frontend/browser-condition-immunity.test.cjs"
+      ]
+    },
+    {
+      "id": "prone",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/conditions.py",
+        "backend/app/combat/condition_rules.py"
+      ],
+      "browser": [
+        "frontend/browser-condition-rules.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_prone_wolves.py",
+        "frontend/browser-control.test.cjs"
+      ]
+    },
+    {
+      "id": "blinded",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/condition_rules.py"
+      ],
+      "browser": [
+        "frontend/browser-condition-rules.js"
+      ],
+      "tests": [
+        "backend/tests/test_blinded_condition.py",
+        "frontend/browser-condition-immunity.test.cjs"
+      ]
+    },
+    {
+      "id": "poisoned",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/condition_rules.py",
+        "backend/app/combat/timed_conditions.py"
+      ],
+      "browser": [
+        "frontend/browser-condition-rules.js",
+        "frontend/browser-timed-conditions.js"
+      ],
+      "tests": [
+        "backend/tests/test_poisoned_conditions.py",
+        "frontend/browser-poison.test.cjs"
+      ]
+    },
+    {
+      "id": "grappled-restrained-escape",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/grapple.py"
+      ],
+      "browser": [
+        "frontend/browser-grapple.js"
+      ],
+      "tests": [
+        "backend/tests/test_grapple_conditions.py",
+        "frontend/browser-control.test.cjs"
+      ]
+    },
+    {
+      "id": "timed-condition-lifecycle-repeat-save",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/condition_lifecycle.py",
+        "backend/app/combat/timed_conditions.py"
+      ],
+      "browser": [
+        "frontend/browser-condition-lifecycle.js",
+        "frontend/browser-timed-conditions.js"
+      ],
+      "tests": [
+        "backend/tests/test_poisoned_conditions.py",
+        "frontend/browser-condition-lifecycle.test.cjs"
+      ]
+    },
+    {
+      "id": "condition-removal",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/condition_removal.py"
+      ],
+      "browser": [
+        "frontend/browser-condition-removal.js"
+      ],
+      "tests": [
+        "backend/tests/test_condition_removal.py",
+        "frontend/browser-condition-removal.test.cjs"
+      ]
+    },
+    {
+      "id": "opportunity-attacks",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/opportunity_attacks.py",
+        "backend/app/combat/opportunity_attack_rules.py"
+      ],
+      "browser": [
+        "frontend/browser-reactions.js",
+        "frontend/browser-reaction-movement.js"
+      ],
+      "tests": [
+        "backend/tests/test_opportunity_attacks.py",
+        "frontend/browser-reactions.test.cjs"
+      ]
+    },
+    {
+      "id": "parry-redirect-reactions",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/parry.py",
+        "backend/app/combat/redirect_attack.py"
+      ],
+      "browser": [
+        "frontend/browser-reactions.js"
+      ],
+      "tests": [
+        "backend/tests/test_parry.py",
+        "backend/tests/test_redirect_attack.py",
+        "frontend/browser-reactions.test.cjs"
+      ]
+    },
+    {
+      "id": "multiattack-extra-attack",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/attack_actions.py"
+      ],
+      "browser": [
+        "frontend/browser-multiattack.js"
+      ],
+      "tests": [
+        "backend/tests/test_attack_actions.py",
+        "frontend/browser-mixed-multiattack.test.cjs"
+      ]
+    },
+    {
+      "id": "movement-modes-closing",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/movement.py",
+        "backend/app/combat/arena_closing.py"
+      ],
+      "browser": [
+        "frontend/browser-state.js",
+        "frontend/browser-turn.js"
+      ],
+      "tests": [
+        "backend/tests/test_movement.py",
+        "backend/tests/test_arena_closing.py",
+        "frontend/browser-formation.test.cjs"
+      ]
+    },
+    {
+      "id": "one-slot-spell-per-turn",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/spellcasting.py"
+      ],
+      "browser": [
+        "frontend/browser-spellcasting.js"
+      ],
+      "tests": [
+        "backend/tests/test_spell_policy.py",
+        "frontend/browser-spell-policy.test.cjs"
+      ]
+    },
+    {
+      "id": "non-concentration-precombat-defense",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/precombat_spells.py"
+      ],
+      "browser": [
+        "frontend/browser-precombat-spells.js"
+      ],
+      "tests": [
+        "backend/tests/test_precombat_spells.py",
+        "frontend/browser-precombat-spells.test.cjs"
+      ]
+    },
+    {
+      "id": "area-target-placement",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/spell_area.py"
+      ],
+      "browser": [
+        "frontend/browser-spell-area.js"
+      ],
+      "tests": [
+        "backend/tests/test_spell_area.py",
+        "frontend/browser-spell-area.test.cjs"
+      ]
+    },
+    {
+      "id": "undead-fortitude",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/undead_fortitude.py"
+      ],
+      "browser": [
+        "frontend/browser-undead-fortitude.js"
+      ],
+      "tests": [
+        "backend/tests/test_undead_fortitude.py",
+        "frontend/browser-undead-fortitude.test.cjs"
+      ]
+    },
+    {
+      "id": "great-weapon-fighting",
+      "status": "supported",
+      "python": [
+        "backend/app/content/fighter_progression.py",
+        "backend/app/combat/damage.py",
+        "backend/app/combat/savage_attacker.py"
+      ],
+      "browser": [
+        "frontend/browser-rolls.js"
+      ],
+      "tests": [
+        "backend/tests/test_damage.py",
+        "backend/tests/test_fighter_progression.py",
+        "frontend/browser-fighter-progression.test.cjs"
+      ]
+    },
+    {
+      "id": "indomitable",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/indomitable.py",
+        "backend/app/combat/saving_throw_rolls.py"
+      ],
+      "browser": [
+        "frontend/browser-indomitable.js",
+        "frontend/browser-saves.js"
+      ],
+      "tests": [
+        "backend/tests/test_fighter_level9.py",
+        "frontend/browser-fighter9.test.cjs"
+      ]
+    },
+    {
+      "id": "tactical-master",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/tactical_master_policy.py",
+        "backend/app/combat/tactical_master.py",
+        "backend/app/combat/weapon_mastery.py",
+        "backend/app/combat/attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-tactical-master.js",
+        "frontend/browser-weapon-mastery.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_fighter_level9.py",
+        "frontend/browser-fighter9.test.cjs"
+      ]
+    },
+    {
+      "id": "sap-mastery",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/sap.py",
+        "backend/app/combat/attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-tactical-master.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_fighter_level9.py",
+        "frontend/browser-fighter9.test.cjs"
+      ]
+    },
+    {
+      "id": "vex-mastery",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/vex.py",
+        "backend/app/combat/attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-vex.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_vex.py",
+        "frontend/browser-vex.test.cjs"
+      ]
+    },
+    {
+      "id": "graze-mastery",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/graze.py",
+        "backend/app/combat/attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-graze.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_graze.py",
+        "frontend/browser-graze.test.cjs"
+      ]
+    },
+    {
+      "id": "defense-style",
+      "status": "supported",
+      "python": [
+        "backend/app/content/armor_class_rules.py",
+        "backend/app/content/audited_fighter.py",
+        "backend/app/content/fighter_combat_levels.py",
+        "backend/app/combat/modifier_stack.py"
+      ],
+      "browser": [
+        "frontend/browser-heroes.js",
+        "frontend/browser-modifiers.js"
+      ],
+      "tests": [
+        "backend/tests/test_armor_class_rules.py",
+        "frontend/browser-defense-style.test.cjs"
+      ]
+    },
+    {
+      "id": "shield-ac",
+      "status": "supported",
+      "python": [
+        "backend/app/content/armor_class_rules.py",
+        "backend/app/combat/modifier_stack.py"
+      ],
+      "browser": [
+        "frontend/browser-modifiers.js"
+      ],
+      "tests": [
+        "backend/tests/test_armor_class_rules.py",
+        "frontend/browser-defense-style.test.cjs"
+      ]
+    },
+    {
+      "id": "archery-style",
+      "status": "supported",
+      "python": [
+        "backend/app/content/attack_bonus_rules.py",
+        "backend/app/content/pregen_attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-rolls.js"
+      ],
+      "tests": [
+        "backend/tests/test_attack_bonus_rules.py",
+        "frontend/browser-fighter-progression.test.cjs"
+      ]
+    },
+    {
+      "id": "nick-mastery",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/weapon_mastery.py",
+        "backend/app/combat/light_weapons.py",
+        "backend/app/combat/light_attack_resolution.py",
+        "backend/app/combat/standard_attack_action.py",
+        "backend/app/combat/attack_actions.py"
+      ],
+      "browser": [
+        "frontend/browser-weapon-mastery.js",
+        "frontend/browser-light-weapons.js",
+        "frontend/browser-light-attack.js",
+        "frontend/browser-standard-attack-action.js",
+        "frontend/browser-multiattack.js"
+      ],
+      "tests": [
+        "backend/tests/test_light_weapons.py",
+        "frontend/browser-light-weapons.test.cjs"
+      ]
+    },
+    {
+      "id": "two-weapon-fighting",
+      "status": "supported",
+      "python": [
+        "backend/app/content/fighting_style_rules.py",
+        "backend/app/combat/light_weapons.py"
+      ],
+      "browser": [
+        "frontend/browser-light-weapons.js"
+      ],
+      "tests": [
+        "backend/tests/test_light_weapons.py",
+        "frontend/browser-light-weapons.test.cjs"
+      ]
+    },
+    {
+      "id": "slow-mastery",
+      "status": "arena_out_of_scope",
+      "blocker": "The current card-v-card arena does not use tactical retreat or kiting outputs where Slow can change the declared combat result."
+    },
+    {
+      "id": "cleave-mastery",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/cleave.py",
+        "backend/app/combat/standard_attack_action.py",
+        "backend/app/combat/attack_actions.py"
+      ],
+      "browser": [
+        "frontend/browser-weapon-mastery.js",
+        "frontend/browser-standard-attack-action.js",
+        "frontend/browser-multiattack.js"
+      ],
+      "tests": [
+        "backend/tests/test_cleave.py",
+        "frontend/browser-light-weapons.test.cjs"
+      ]
+    },
+    {
+      "id": "topple-mastery",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/topple.py",
+        "backend/app/combat/attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-topple.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_topple.py",
+        "frontend/browser-topple.test.cjs"
+      ]
+    },
+    {
+      "id": "generic-buff-debuff-modifier-stack",
+      "status": "partial",
+      "blocker": "Shared typed modifiers now cover AC, speed, attack/save bonus dice, bonus damage, defender-wide and target-scoped attack Advantage, source cleanup, and expiry. A universal ability-check modifier path and every stacking interaction are not yet certified.",
+      "python": [
+        "backend/app/combat/modifier_stack.py"
+      ],
+      "browser": [
+        "frontend/browser-modifiers.js"
+      ],
+      "tests": [
+        "backend/tests/test_concentration_modifiers.py",
+        "frontend/browser-modifiers-concentration.test.cjs"
+      ]
+    },
+    {
+      "id": "concentration",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/concentration.py",
+        "backend/app/combat/zero_hp.py"
+      ],
+      "browser": [
+        "frontend/browser-concentration.js",
+        "frontend/browser-attack.js",
+        "frontend/browser-saves.js"
+      ],
+      "tests": [
+        "backend/tests/test_concentration_modifiers.py",
+        "frontend/browser-modifiers-concentration.test.cjs"
+      ]
+    },
+    {
+      "id": "multiple-persistent-riders-on-one-attack",
+      "status": "unsupported",
+      "blocker": "Declarative attack schema intentionally fails closed when more than one persistent grapple/condition rider is present."
+    },
+    {
+      "id": "complete-condition-semantics",
+      "status": "partial",
+      "blocker": "Several conditions are modeled, but Charmed, Frightened, Invisible, Exhaustion, and every cross-condition interaction are not yet universally certified."
+    },
+    {
+      "id": "forced-movement-push-pull-teleport",
+      "status": "partial",
+      "blocker": "Feature-specific movement exists; a universal forced-movement effect with collision, trigger, and OA semantics is not certified."
+    },
+    {
+      "id": "recharge",
+      "status": "unsupported",
+      "blocker": "No universal recharge state/roll primitive is certified."
+    },
+    {
+      "id": "generic-limited-use-resources",
+      "status": "partial",
+      "blocker": "Resources exist, but arbitrary SRD limited-use actions are not universally compiled and refreshed."
+    },
+    {
+      "id": "spell-attack-rolls",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/spell_attack_resolution.py",
+        "backend/app/domain/spells.py"
+      ],
+      "browser": [
+        "frontend/browser-spell-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_guiding_bolt.py",
+        "backend/tests/test_spell_attack_context.py",
+        "frontend/browser-guiding-bolt.test.cjs"
+      ]
+    },
+    {
+      "id": "generic-reaction-trigger-grammar",
+      "status": "partial",
+      "blocker": "Opportunity Attack, Parry, Redirect Attack, and selected reactions exist, but arbitrary trigger/response composition is not universal."
+    },
+    {
+      "id": "legendary-actions",
+      "status": "unsupported",
+      "blocker": "Legendary action pools and after-turn timing are not certified."
+    },
+    {
+      "id": "legendary-resistance",
+      "status": "unsupported",
+      "blocker": "Save replacement with limited-use legendary resistance is not certified."
+    },
+    {
+      "id": "ongoing-periodic-damage",
+      "status": "unsupported",
+      "blocker": "No universal start/end-turn periodic damage effect with source lifecycle is certified."
+    },
+    {
+      "id": "auras",
+      "status": "unsupported",
+      "blocker": "No universal proximity aura application/removal engine is certified."
+    },
+    {
+      "id": "regeneration",
+      "status": "unsupported",
+      "blocker": "No universal conditional start-turn regeneration primitive is certified."
+    },
+    {
+      "id": "generic-death-triggers",
+      "status": "partial",
+      "blocker": "Undead Fortitude is certified, but arbitrary on-zero/on-death effects are not universal."
+    },
+    {
+      "id": "summons-transformations-splitting",
+      "status": "unsupported",
+      "blocker": "Dynamic combatant creation, transformation, and split/merge lifecycle are not certified."
+    },
+    {
+      "id": "cover-line-of-sight-obscurement",
+      "status": "partial",
+      "blocker": "The card arena has range/formation abstractions but not a general geometry/cover/obscurement engine."
+    },
+    {
+      "id": "standard-tactical-actions-dash-dodge-disengage-ready-help",
+      "status": "partial",
+      "blocker": "Iron Pit intentionally uses simplified card-v-card AI; these general actions are not universally selected/resolved."
+    },
+    {
+      "id": "unarmed-grapple-shove-options",
+      "status": "partial",
+      "blocker": "Unarmed Opportunity Attack damage exists and monster grapples exist; universal player Grapple/Shove options are not certified."
+    },
+    {
+      "id": "simultaneous-effect-ordering",
+      "status": "partial",
+      "blocker": "Specific simultaneous cases are modeled, but a universal ordered effect-batch transaction system is not certified."
+    },
+    {
+      "id": "deferred-save-effect",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/deferred_save_effect.py",
+        "backend/app/combat/zero_hp.py"
+      ],
+      "browser": [
+        "frontend/browser-deferred-save-effect.js",
+        "frontend/browser-zero-hp.js",
+        "frontend/browser-main-action-providers.js"
+      ],
+      "tests": [
+        "backend/tests/test_monk_open_hand_2014_level17.py",
+        "frontend/browser-deferred-save-effect.test.cjs"
+      ]
+    }
   ]
 }

@@ -19,6 +19,7 @@ def test_python_normal_post_move_main_action_policy_order_is_stable() -> None:
     _positions_in_order(post_move, [
         "spell_events, sequence = resolve_best_spell_offense(",
         "presence = resolve_intimidating_presence(",
+        "deferred = resolve_deferred_save_effect(",
         "action_events, sequence = resolve_attack_action(",
         "area_result = resolve_area_save_turn(",
         "chosen_save = save_choice(",
@@ -35,6 +36,7 @@ def test_browser_normal_post_move_profile_matches_python_policy_order() -> None:
     _positions_in_order(profile, [
         "CATEGORIES.SPELL_OFFENSE",
         "CATEGORIES.INTIMIDATING_PRESENCE_2014",
+        "CATEGORIES.DEFERRED_EFFECT",
         "CATEGORIES.ATTACK_ACTION",
         "CATEGORIES.AREA_SAVE",
         "CATEGORIES.SAVE_ACTION",
@@ -62,6 +64,7 @@ def test_browser_action_surge_profile_matches_python_attack_only_policy() -> Non
     for forbidden in [
         "CATEGORIES.SPELL_OFFENSE",
         "CATEGORIES.INTIMIDATING_PRESENCE_2014",
+        "CATEGORIES.DEFERRED_EFFECT",
         "CATEGORIES.AREA_SAVE",
         "CATEGORIES.SAVE_ACTION",
         "CATEGORIES.DODGE",

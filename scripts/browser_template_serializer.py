@@ -295,6 +295,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["failed_d20_test_override_grants"] = [
             item.model_dump() for item in features.failed_d20_test_override_grants
         ]
+    if features.deferred_save_effect:
+        row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.athletics_advantage:

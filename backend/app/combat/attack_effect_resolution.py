@@ -8,6 +8,7 @@ from app.combat.attack_hit_damage import resolve_attack_hit_damage
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.conditions import apply_hit_conditions
 from app.combat.damage import BonusDamageSpec
+from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
@@ -36,6 +37,7 @@ class AttackEffectResolution:
     tactical_sap_applied: bool = False
     vex_applied: bool = False
     studied_applied: bool = False
+    deferred_effect_armed: Any = None
 
 
 def resolve_attack_effects(
@@ -115,6 +117,9 @@ def resolve_attack_effects(
         )
         result.vex_applied = apply_vex_mastery(
             attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total,
+        )
+        result.deferred_effect_armed = arm_deferred_save_effect(
+            attacker, defender, actual_event_id, attack, round_number,
         )
         end_rage_if_incapacitated(defender)
         return result

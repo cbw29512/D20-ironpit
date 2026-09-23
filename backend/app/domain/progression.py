@@ -85,6 +85,23 @@ class FailedD20TestOverrideGrant(BaseModel):
     test_kinds: list[Literal["attack", "saving_throw", "ability_check"]] = Field(min_length=1)
 
 
+class DeferredSaveEffect(BaseModel):
+    """Hit-armed effect later resolved by a generic Action and saving throw."""
+
+    source_id: str
+    source_name: str
+    trigger_weapon_ids: list[str] = Field(min_length=1)
+    resource_id: str
+    resource_cost: int = Field(default=1, ge=1)
+    save_ability: AbilityName
+    save_dc: int = Field(ge=1, le=40)
+    failure_sets_zero_hp: bool = False
+    success_damage_dice_count: int = Field(default=0, ge=0, le=40)
+    success_damage_dice_size: int = Field(default=10, ge=2, le=100)
+    success_damage_type: str | None = None
+    max_active_targets: int = Field(default=1, ge=1, le=20)
+
+
 class ProgressionCombatFeatures(BaseModel):
     """Level/subclass combat flags that should stay out of core stat-block shape."""
 
@@ -97,6 +114,7 @@ class ProgressionCombatFeatures(BaseModel):
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
+    deferred_save_effect: DeferredSaveEffect | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)

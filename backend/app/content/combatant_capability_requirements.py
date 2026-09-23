@@ -38,6 +38,8 @@ def combatant_capability_requirements(
     replacements = set(progression.tactical_master_sap_weapon_ids)
     if progression.indomitable_reroll or progression.indomitable_bonus:
         requirements.add("indomitable")
+    if progression.deferred_save_effect is not None:
+        requirements.add("deferred-save-effect")
     if replacements:
         requirements.add("tactical-master")
     attacks = [template.weapon_attack, *template.alternate_weapon_attacks]

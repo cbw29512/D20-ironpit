@@ -118,6 +118,16 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 notes="Canonical progression raises Wisdom 17 to 19, updating AC, Wisdom saves, and Monk save DCs.",
             ))
 
+        if level >= 17:
+            audits.append(_audit(
+                "quivering-palm", "Quivering Palm", "subclass",
+                notes=(
+                    "Uses the universal hit-armed deferred save-effect capability: 3 Ki on an "
+                    "Unarmed Strike hit, then the next legal Action while the target remains marked. "
+                    "Constitution save; failure reduces true HP to 0, success deals 10d10 necrotic damage."
+                ),
+            ))
+
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Monk feature audits at level %s", level)
