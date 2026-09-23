@@ -89,6 +89,7 @@ class SpellSaveAction(BaseModel):
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
     upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
+    effect_tags: list[str] = Field(default_factory=list)
     concentration: bool = False
     animation: str = "spell-save"
 
