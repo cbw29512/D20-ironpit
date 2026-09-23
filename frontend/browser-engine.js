@@ -9,6 +9,7 @@
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
   const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
   const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
+  const IR = () => window.IRON_PIT_BROWSER_INITIATIVE_RESOURCE_REFILL;
   function cloneTemplate(template) { return structuredClone(template); }
   function selectedRuleset(selection) {
     try {
@@ -130,8 +131,15 @@
     const init = I().resolve(setup);
     const members = [...setup.heroes, ...setup.monsters], states = members.map((member) => member.state);
     const byId = new Map(members.map((member) => [member.combatant_id, member]));
-    const events = [...prep.events, ...I().events(init, setup, prep.sequence)];
-    let sequence = events.length + 1, resolvedRound = 0;
+    const initiativeEvents = I().events(init, setup, prep.sequence);
+    const events = [...prep.events, ...initiativeEvents];
+    let sequence = prep.sequence + initiativeEvents.length;
+    const refill = IR()?.resolve(sequence, setup);
+    if (!IR() && members.some((member) => member.state.template.initiative_resource_refill_grants?.length)) {
+      throw new Error("Declared initiative resource refill requires browser-initiative-resource-refill.js.");
+    }
+    if (refill) { events.push(...refill.events); sequence = refill.sequence; }
+    let resolvedRound = 0;
     for (let round = 1; round <= 100; round += 1) {
       resolvedRound = round;
       const roundTurnOrder = (

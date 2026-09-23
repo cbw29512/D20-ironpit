@@ -69,10 +69,10 @@ This primitive should also be reusable for mechanically equivalent class/monster
 
 ### Level 20
 
-- Extend ki cap to 20 and add Perfect Self data.
-- Implement/use generic initiative resource refill.
-- Python/browser tests: 0 ki -> 4 at initiative; 1+ ki -> unchanged; never above cap; correct feature log; 2014-only scope.
-- Add permanent capability coverage and certification regression.
+- Extend ki cap to 20 and bind Perfect Self to the universal initiative resource-refill grant schema.
+- The shared resolver runs after initiative events and before the first combat turn; no Monk identity enters resolution.
+- Python/browser tests cover 0 Ki -> +4, 1+ Ki -> unchanged, resource-cap enforcement, missing-resource failure, source-name logging, and live encounter ordering.
+- Add permanent capability coverage and certification regression before READY advances.
 
 ## Edition separation
 
@@ -80,4 +80,4 @@ Do not reuse 2024 Monk level-18/20 feature data. 2024 Superior Defense is a diff
 
 ## Expected count movement
 
-After certified Monk 18, the 2014 catalog is 89/240. Level 19 raises it to 90/240; level 20 raises it to 91/240. This document does not change READY state or counts.
+After certified Monk 18, the 2014 catalog is 89/240. Level 19 raises it to 90/240; level 20 raises it to 91/240. READY advances only after the exact-head certification gates pass.

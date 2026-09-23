@@ -21,7 +21,7 @@ for (const file of [
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
-  "browser-frenzy-2014.js", "browser-2014-monk.js", "browser-steady-aim.js", "browser-ability-hook-installation.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
+  "browser-frenzy-2014.js", "browser-2014-monk.js", "browser-steady-aim.js", "browser-ability-hook-installation.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-initiative.js", "browser-initiative-resource-refill.js", "browser-engine.js",
 ]) load(file);
 
 function deterministicDice(seed = 12345) {
@@ -144,6 +144,37 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   assert.equal(battle.setup.heroes.length, 6);
   assert.equal(battle.setup.monsters.length, 6);
   assert.throws(() => fight(Array(7).fill("karnok-stoneward-l1"), ["srd-wolf"]), /1-6 cards per side/);
+}
+
+{
+  const id = "initiative-refill-engine-fixture";
+  const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+  template.id = id;
+  template.name = "Initiative Refill Fixture";
+  template.resources = { ...(template.resources || {}), focus: 5 };
+  template.initiative_resource_refill_grants = [{
+    source_id: "second-breath", source_name: "Second Breath",
+    resource_id: "focus", when_at_or_below: 0, restore_amount: 4,
+  }];
+  window.IRON_PIT_BROWSER_HEROES[id] = template;
+
+  const originalBuildState = window.IRON_PIT_BROWSER_STATE.buildState;
+  window.IRON_PIT_BROWSER_STATE.buildState = (candidate) => {
+    const state = originalBuildState(candidate);
+    if (candidate.id === id) state.resources.focus = 0;
+    return state;
+  };
+  try {
+    const battle = fight([id], ["srd-commoner"], deterministicDice(2020));
+    const refillIndex = battle.events.findIndex((event) => event.feature_id === "second-breath");
+    const firstTurnIndex = battle.events.findIndex((event) => event.round_number >= 1 && event.actor_id !== "arena");
+    assert.ok(refillIndex >= 0, "live browser engine must execute initiative resource refill");
+    assert.ok(firstTurnIndex > refillIndex, "initiative resource refill must resolve before combat turns");
+    assert.equal(battle.events[refillIndex].resource_remaining, 4);
+  } finally {
+    window.IRON_PIT_BROWSER_STATE.buildState = originalBuildState;
+    delete window.IRON_PIT_BROWSER_HEROES[id];
+  }
 }
 
 console.log("Browser combat regressions passed.");

@@ -735,6 +735,25 @@
       "blocker": "Specific simultaneous cases are modeled, but a universal ordered effect-batch transaction system is not certified."
     },
     {
+      "id": "initiative-resource-refill",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/initiative_resource_refill.py",
+        "backend/app/domain/initiative_resources.py"
+      ],
+      "browser": [
+        "frontend/browser-initiative-resource-refill.js",
+        "frontend/browser-engine.js"
+      ],
+      "tests": [
+        "backend/tests/test_initiative_resource_refill.py",
+        "backend/tests/test_monk_open_hand_2014_level20.py",
+        "frontend/browser-initiative-resource-refill.test.cjs",
+        "frontend/browser-2014-monk-level20.test.cjs",
+        "frontend/browser-engine.test.cjs"
+      ]
+    },
+    {
       "id": "deferred-save-effect",
       "status": "supported",
       "python": [
