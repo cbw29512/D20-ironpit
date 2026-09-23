@@ -32,7 +32,10 @@ def apply_timed_condition(
     allowed_removal_action_ids: list[str] | None = None,
     affected_states: list[CombatantState] | None = None,
     turn_behavior: TimedTurnBehavior = "normal",
+    suppress_action: bool = False,
+    suppress_bonus_action: bool = False,
     suppress_reactions: bool = False,
+    suppress_movement: bool = False,
     ends_on_damage: bool = False,
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
@@ -77,7 +80,10 @@ def apply_timed_condition(
             repeat_save_timing=repeat_save_timing,
             allowed_removal_action_ids=allowed_removal_action_ids or [],
             turn_behavior=turn_behavior,
+            suppress_action=suppress_action,
+            suppress_bonus_action=suppress_bonus_action,
             suppress_reactions=suppress_reactions,
+            suppress_movement=suppress_movement,
             ends_on_damage=ends_on_damage,
             ends_if_source_incapacitated=ends_if_source_incapacitated,
             ends_if_source_dead=ends_if_source_dead,
@@ -95,6 +101,26 @@ def apply_timed_condition(
             source_effect_id,
         )
         raise
+
+
+def suppresses_action(state: CombatantState) -> bool:
+    return any(effect.suppress_action for effect in state.timed_effects)
+
+
+def suppresses_bonus_action(state: CombatantState) -> bool:
+    return any(effect.suppress_bonus_action for effect in state.timed_effects)
+
+
+def suppresses_reactions(state: CombatantState) -> bool:
+    return any(effect.suppress_reactions for effect in state.timed_effects)
+
+
+def suppresses_movement(state: CombatantState) -> bool:
+    return any(effect.suppress_movement for effect in state.timed_effects)
+
+
+def suppresses_voluntary_turn(state: CombatantState) -> bool:
+    return suppresses_action(state) and suppresses_bonus_action(state) and suppresses_movement(state)
 
 
 def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
