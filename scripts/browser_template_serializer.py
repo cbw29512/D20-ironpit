@@ -259,6 +259,17 @@ def defense_row(action: Any) -> dict[str, Any]:
     return row
 
 
+def _timed_self_buff(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
+        "damageResistances": [_value(item) for item in action.damage_resistances],
+        "expiryTiming": action.expiry_timing, "priority": action.priority,
+        "animation": action.animation,
+    }
+
+
 def _removal(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
@@ -372,6 +383,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["healingActions"] = [_healing(item) for item in template.healing_actions]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+        if template.timed_self_buff_actions:
+            row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}

@@ -53,8 +53,8 @@ def _final(
 
 def build_kael_stillwater_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Kael profile covers levels 1 through 17.")
+        if level not in range(1, 19):
+            raise ValueError("2014 Kael profile covers levels 1 through 18.")
         base = _base()
         species = _species()
         advances = _advancements(level)

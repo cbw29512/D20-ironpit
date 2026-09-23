@@ -9,6 +9,7 @@ from app.content.monk_open_hand_2014_attacks import (
     build_unarmed_attack,
     martial_arts_die,
 )
+from app.content.monk_open_hand_2014_buffs import build_monk_2014_timed_self_buffs
 from app.content.progression_saves import saving_throw_proficiencies
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
@@ -104,10 +105,10 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
-    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 17."""
+    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 18."""
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 17.")
+        if level not in range(1, 19):
+            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 18.")
         scores = _scores(level)
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
@@ -173,6 +174,7 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
             attack_action=build_extra_attack(level),
             healing_actions=_healing_actions(level),
             condition_removal_actions=_condition_removal_actions(level),
+            timed_self_buff_actions=build_monk_2014_timed_self_buffs(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, save_proficiencies),
             skill_bonuses=_skill_bonuses(level, scores), weapon_masteries=[],
             condition_immunities=["poisoned"] if level >= 10 else [],

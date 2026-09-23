@@ -42,6 +42,7 @@ from app.domain.events import (
 )
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
+from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
 from app.domain.turbo import (
     EncounterReplayRequest,
@@ -92,6 +93,7 @@ __all__ = [
     "RollRevision",
     "SavingThrowAction",
     "TimedEffect",
+    "TimedSelfBuffAction",
     "TurboBatchRequest",
     "TurboBatchResult",
     "TurboFightError",
