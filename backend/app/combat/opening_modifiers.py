@@ -34,6 +34,7 @@ def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
                     kind=ModifierKind.SAVING_THROW_ADVANTAGE,
                     save_ability=ability,
                     requires_magical_effect=grant.requires_magical_effect,
+                    required_effect_tags=list(grant.required_effect_tags),
                 ))
         return modifiers
     except Exception as exc:
