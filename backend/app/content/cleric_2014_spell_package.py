@@ -52,7 +52,6 @@ _PREPARED = (
     _spell("prayer-of-healing", "Prayer of Healing", "healing", "arena-out-of-scope", level=2, min_level=3),
     _spell("warding-bond", "Warding Bond", "buff", "damage-resistance", level=2, min_level=3),
     _spell("hold-person", "Hold Person", "control", "condition", "repeat-save", level=2, min_level=3),
-    _spell("prayer-of-healing", "Prayer of Healing", "healing", "arena-out-of-scope", level=2, min_level=3),
     _spell("silence", "Silence", "control", "area-effect", "concentration", level=2, min_level=3),
     _spell("mass-healing-word", "Mass Healing Word", "healing", "multi-target-healing", "bonus-action", level=3, min_level=5),
     _spell("spirit-guardians", "Spirit Guardians", "damage", "persistent-damage", "concentration", level=3, min_level=5),

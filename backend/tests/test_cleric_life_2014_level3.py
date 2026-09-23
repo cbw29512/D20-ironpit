@@ -113,7 +113,7 @@ def test_level_three_runtime_and_fingerprint_match_persistent_progression() -> N
 
 def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> None:
     cleric = _member(build_seraphine_dawnshield_2014(3), "cleric", "heroes", 0, 6)
-    goblin = _member(_monster_template("2014-goblin"), "goblin", "monsters", 8, 6)
+    goblin = _member(_monster_template("2014-skeleton"), "goblin", "monsters", 8, 6)
     setup = EncounterSetup(
         heroes=[cleric],
         monsters=[goblin],
