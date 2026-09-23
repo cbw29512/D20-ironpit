@@ -14,6 +14,7 @@ from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
 from app.domain.progression import (
+    DeferredSaveEffect,
     FailedSaveRerollGrant,
     OpeningTargetingWard,
     ProgressionCombatFeatures,
@@ -103,10 +104,10 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
-    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 16."""
+    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 17."""
     try:
-        if level not in range(1, 17):
-            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 16.")
+        if level not in range(1, 18):
+            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 17.")
         scores = _scores(level)
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
@@ -118,6 +119,22 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
             deflect_missiles=level >= 3,
             open_hand_technique=level >= 3,
             stunning_strike=level >= 5,
+            deferred_save_effect=(
+                DeferredSaveEffect(
+                    source_id="quivering-palm",
+                    source_name="Quivering Palm",
+                    trigger_attack_ids=["unarmed-strike"],
+                    resource_id="ki",
+                    resource_cost=3,
+                    save_ability="constitution",
+                    save_dc=8 + proficiency_bonus(level) + wisdom,
+                    failure_sets_zero_hp=True,
+                    success_damage_dice_count=10,
+                    success_damage_dice_size=10,
+                    success_damage_type="necrotic",
+                )
+                if level >= 17 else None
+            ),
             opening_targeting_ward=(
                 OpeningTargetingWard(
                     source_id="tranquility",
