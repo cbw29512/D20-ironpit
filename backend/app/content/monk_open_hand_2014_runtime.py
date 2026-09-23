@@ -12,7 +12,7 @@ from app.content.monk_open_hand_2014_attacks import (
 from app.content.progression_saves import saving_throw_proficiencies
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
+from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, TimedSelfBuffAction, VisualLoadout
 from app.domain.progression import (
     DeferredSaveEffect,
     FailedSaveRerollGrant,
@@ -78,6 +78,24 @@ def _healing_actions(level: int) -> list[HealingAction]:
     )]
 
 
+def _timed_self_buff_actions(level: int) -> list[TimedSelfBuffAction]:
+    if level < 18:
+        return []
+    return [TimedSelfBuffAction(
+        id="empty-body",
+        name="Empty Body",
+        action_cost="action",
+        resource_id="ki",
+        resource_cost=4,
+        duration_rounds=10,
+        condition_ids=["invisible"],
+        damage_resistances=[item for item in DamageType if item != DamageType.FORCE],
+        expiry_timing="source_turn_start",
+        priority=100,
+        animation="empty-body",
+    )]
+
+
 def _condition_removal_actions(level: int) -> list[ConditionRemovalAction]:
     if level < 7:
         return []
@@ -104,10 +122,10 @@ def _skill_bonuses(level: int, scores: AbilityScores) -> dict[str, int]:
 
 
 def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
-    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 17."""
+    """Compile Kael Stillwater, a 2014 Human Open Hand Monk, through level 18."""
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 17.")
+        if level not in range(1, 19):
+            raise ValueError("2014 Open Hand Monk certification covers levels 1 through 18.")
         scores = _scores(level)
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
@@ -173,6 +191,7 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
             attack_action=build_extra_attack(level),
             healing_actions=_healing_actions(level),
             condition_removal_actions=_condition_removal_actions(level),
+            timed_self_buff_actions=_timed_self_buff_actions(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, save_proficiencies),
             skill_bonuses=_skill_bonuses(level, scores), weapon_masteries=[],
             condition_immunities=["poisoned"] if level >= 10 else [],
