@@ -280,6 +280,7 @@ jobs:
           grep -q 'browser-spell-resolution.js' index.html
           grep -q 'browser-spell-attack-policy.js' index.html
           grep -q 'browser-spell-attack.js' index.html
+          grep -q 'browser-persistent-spell-attack-support.js' index.html
           grep -q 'browser-persistent-spell-attacks.js' index.html
           grep -q 'browser-precombat-spells.js' index.html
           grep -q 'battlefield-picker.js' index.html
@@ -369,6 +370,7 @@ jobs:
           grep -q 'browser-spell-resolution.js' frontend/index.html
           grep -q 'browser-spell-attack-policy.js' frontend/index.html
           grep -q 'browser-spell-attack.js' frontend/index.html
+          grep -q 'browser-persistent-spell-attack-support.js' frontend/index.html
           grep -q 'browser-persistent-spell-attacks.js' frontend/index.html
           grep -q 'browser-precombat-spells.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
