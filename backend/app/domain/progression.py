@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Literal
 
 from app.domain.character_builds import AbilityName
@@ -73,6 +73,12 @@ class SavingThrowAdvantageGrant(BaseModel):
     source_name: str = Field(min_length=1)
     abilities: list[AbilityName] = Field(min_length=1)
     requires_magical_effect: bool = False
+
+    @model_validator(mode="after")
+    def validate_abilities(self) -> "SavingThrowAdvantageGrant":
+        if len(set(self.abilities)) != len(self.abilities):
+            raise ValueError("Saving-throw Advantage abilities must be unique.")
+        return self
 
 
 class FailedSaveRerollGrant(BaseModel):
