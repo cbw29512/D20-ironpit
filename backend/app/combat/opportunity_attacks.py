@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import spend
 from app.combat.ally_context import pack_tactics_active
+from app.combat.condition_rules import can_see as can_see_target
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.opportunity_attack_rules import MovementSource, opportunity_attack_weapon, unarmed_opportunity_available
@@ -28,9 +29,11 @@ def resolve_opportunity_attack(
     sequence: int, round_number: int, reactor: EncounterCombatant, mover: EncounterCombatant,
     setup: EncounterSetup, distance_before_ft: int, distance_after_ft: int,
     movement_source: MovementSource, dice: DiceProvider, *,
-    disengaged: bool = False, can_see: bool = True, turn_key: str | None = None,
+    disengaged: bool = False, can_see: bool | None = None, turn_key: str | None = None,
 ) -> BattleEvent | None:
-    """Resolve a 2024 OA on the mover's active turn with a legal melee option."""
+    """Resolve an OA only when the reactor can currently see the departing mover."""
+    if can_see is None:
+        can_see = can_see_target(reactor.state, mover.state)
     attack = opportunity_attack_weapon(
         reactor, mover, distance_before_ft, distance_after_ft, movement_source,
         disengaged=disengaged, can_see=can_see,
