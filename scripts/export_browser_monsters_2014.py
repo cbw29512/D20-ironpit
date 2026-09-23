@@ -36,6 +36,7 @@ def render() -> str:
         rows = []
         for template in templates:
             row = template_row(template)
+            row["senses"] = template.senses.model_dump()
             _add_charge_follow_up_metadata(template, row)
             rows.append(row)
         ids = {row["id"] for row in rows}
