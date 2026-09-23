@@ -37,6 +37,11 @@
       kind: "attack-roll-flat", flat_bonus: bonus, weapon_id: weaponId,
       expires_source_turn_end_round: round + 10,
     });
+    M().add(member.state, {
+      id: `${member.combatant_id}:${SACRED}:magical`, source_id: member.combatant_id, source_effect_id: SACRED,
+      kind: "damage-source-qualifier", weapon_id: weaponId, source_qualifier: "magical",
+      expires_source_turn_end_round: round + 10,
+    });
     return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id,
       actor_name: member.state.template.name, feature_id: SACRED, resource_remaining: member.state.resources[CHANNEL],
       animation: "bless", description: `${member.state.template.name} uses Sacred Weapon, gaining +${bonus} to ${attack.name} attack rolls.` };
