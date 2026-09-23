@@ -9,6 +9,7 @@ from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.attack_event_support import build_attack_description, primary_attack_save_fields
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.damage import BonusDamageSpec
+from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
 from app.combat.state import terminate_turn
@@ -96,6 +97,9 @@ def resolve_attack(
         cunning_strike, cunning_strike_obscure, topple = effects.cunning_strike, effects.cunning_strike_obscure, effects.topple
         weapon_sap_applied, tactical_sap_applied = effects.weapon_sap_applied, effects.tactical_sap_applied
         vex_applied, studied_applied = effects.vex_applied, effects.studied_applied
+        deferred_arm = None
+        if hit and actual_defender.current_hp > 0 and actual_defender.is_alive and not actual_defender.is_dead:
+            deferred_arm = arm_deferred_save_effect(attacker, actual_event_id, attack.id)
         description = build_attack_description(
             attacker_name=attacker.template.name,
             defender_name=defender.template.name,
@@ -126,6 +130,8 @@ def resolve_attack(
             damage_outcome=damage_outcome,
             applied_conditions=applied_conditions,
         )
+        if deferred_arm is not None:
+            description += f" {deferred_arm[1]} is armed."
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
             save_damage, on_hit_save, cunning_strike_obscure, cunning_strike, topple,
         )
