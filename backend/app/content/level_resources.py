@@ -61,6 +61,18 @@ def barbarian_rage_damage_bonus(level: int) -> int:
     return 4
 
 
+def cleric_2014_channel_divinity_uses(level: int) -> int:
+    """2014 Cleric Channel Divinity uses between short or long rests."""
+    level = _checked_level(level)
+    if level < 2:
+        return 0
+    if level < 6:
+        return 1
+    if level < 18:
+        return 2
+    return 3
+
+
 def cleric_channel_divinity_uses(level: int) -> int:
     """2024 Cleric Channel Divinity uses; feature begins at level 2."""
     level = _checked_level(level)
