@@ -395,3 +395,18 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 - Python/browser parity stays mandatory.
 - Production source-size limits stay enforced.
 - Active means executable and certified.
+
+## Universal visibility and special senses
+
+Visibility is a relationship query between an observer and a target, not a source-specific condition resolver.
+
+- `Invisible` remains one universal condition regardless of whether it came from a spell, class feature, monster action, or other source.
+- Visibility-dependent rules call one shared `can_see` mechanic. Opportunity Attacks, reactions such as Uncanny Dodge, and actions or spells whose source text requires a visible target must not duplicate `Blinded`/`Invisible` checks.
+- Combatant sense data is declarative. Blindsight, Truesight, Tremorsense, Darkvision, finite sight limits, and source restrictions such as Echolocation belong to the combatant data model rather than creature-specific resolver code.
+- Blindsight can satisfy sight-dependent legality inside its source radius because it perceives without relying on normal sight. Source restrictions still apply; for example, Echolocation-backed Blindsight is unavailable while Deafened.
+- Truesight can defeat Invisible inside its source radius but remains sight and therefore does not override the Blinded condition.
+- Tremorsense is detection, not sight, and must never satisfy a rule that explicitly requires the creature to see its target.
+- A creature explicitly described as blind beyond a sense radius cannot fall back to ordinary vision outside that radius.
+- The standard arena still assumes otherwise sufficient light and clear geometric line of sight. Future darkness, obscurement, cover, and wall geometry must feed the same visibility query rather than creating parallel legality rules.
+- Python is the oracle and the browser must implement the same inputs, outputs, sense restrictions, and visibility-dependent legality.
+
