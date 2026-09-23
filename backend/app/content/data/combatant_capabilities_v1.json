@@ -83,8 +83,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "goblin-shortbow",
@@ -126,8 +125,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "goblin-scimitar",
@@ -162,7 +160,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -247,8 +244,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "goblin-minion-dagger-ranged",
@@ -276,8 +272,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "goblin-minion-dagger-melee",
@@ -312,7 +307,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -396,8 +390,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "hobgoblin-longbow",
@@ -438,8 +431,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "hobgoblin-longsword",
@@ -476,7 +468,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -560,8 +551,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "kobold-warrior-dagger-ranged",
@@ -589,8 +579,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "kobold-warrior-dagger-melee",
@@ -628,7 +617,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -726,8 +714,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "goblin-boss-shortbow",
@@ -769,8 +756,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "goblin-boss-scimitar",
@@ -832,7 +818,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -918,8 +903,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "bandit-light-crossbow",
@@ -947,8 +931,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "bandit-scimitar",
@@ -981,7 +964,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -1065,8 +1047,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "commoner-club",
@@ -1101,7 +1082,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -1185,8 +1165,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "guard-spear-thrown",
@@ -1214,8 +1193,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "guard-spear-melee",
@@ -1248,7 +1226,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -1332,8 +1309,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-rat-bite",
@@ -1370,7 +1346,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -1454,8 +1429,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-weasel-bite",
@@ -1488,7 +1462,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -1585,8 +1558,7 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-blood-hawk-beak",
@@ -1623,7 +1595,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -1707,8 +1678,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "axe-beak-beak",
@@ -1741,7 +1711,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -1825,8 +1794,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-lizard-bite",
@@ -1861,7 +1829,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -1950,8 +1917,7 @@
             "max_target_size": "medium"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "wolf-bite",
@@ -1988,7 +1954,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -2077,8 +2042,7 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "dire-wolf-bite",
@@ -2115,7 +2079,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -2199,8 +2162,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "black-bear-rend",
@@ -2252,7 +2214,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -2336,8 +2297,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "brown-bear-claw",
@@ -2367,8 +2327,7 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "brown-bear-bite",
@@ -2420,7 +2379,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -2504,8 +2462,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "baboon-bite",
@@ -2542,7 +2499,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -2626,8 +2582,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "camel-bite",
@@ -2660,7 +2615,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -2744,8 +2698,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "deer-ram",
@@ -2780,7 +2733,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -2864,8 +2816,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "draft-horse-hooves",
@@ -2898,7 +2849,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -2982,8 +2932,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-badger-bite",
@@ -3018,7 +2967,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -3102,8 +3050,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "jackal-bite",
@@ -3136,7 +3083,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -3220,8 +3166,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "boar-gore",
@@ -3259,7 +3204,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -3343,8 +3287,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "elk-ram",
@@ -3379,7 +3322,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -3463,8 +3405,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-boar-gore",
@@ -3502,7 +3443,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -3586,8 +3526,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "minotaur-skeleton-slam",
@@ -3612,8 +3551,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "minotaur-skeleton-gore",
@@ -3652,7 +3590,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "exhaustion",
       "poisoned"
@@ -3739,8 +3676,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "triceratops-gore",
@@ -3794,7 +3730,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -3878,8 +3813,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "warhorse-skeleton-hooves",
@@ -3918,7 +3852,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "exhaustion",
       "poisoned"
@@ -4005,8 +3938,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "allosaurus-claws",
@@ -4031,8 +3963,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "allosaurus-bite",
@@ -4069,7 +4000,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -4149,8 +4079,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "goat-ram",
@@ -4185,7 +4114,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -4292,8 +4220,7 @@
             "expires_at_end_of_target_turn": true
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "merfolk-skirmisher-ocean-spear-melee",
@@ -4338,8 +4265,7 @@
             "expires_at_end_of_target_turn": true
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "merfolk-skirmisher-ocean-spear-ranged",
@@ -4374,7 +4300,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -4471,8 +4396,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-druid-verdant-wisp",
@@ -4499,8 +4423,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-druid-vine-staff",
@@ -4622,7 +4545,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -4717,8 +4639,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "hippogriff-rend",
@@ -4772,7 +4693,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -4852,8 +4772,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "awakened-shrub-rake",
@@ -4890,7 +4809,6 @@
       "fire"
     ],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -4970,8 +4888,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "badger-bite",
@@ -5006,7 +4923,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -5086,8 +5002,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "bat-bite",
@@ -5120,7 +5035,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -5200,8 +5114,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "cat-scratch",
@@ -5236,7 +5149,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -5316,8 +5228,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "crab-claw",
@@ -5352,7 +5263,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -5432,8 +5342,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "frog-bite",
@@ -5469,7 +5378,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -5549,8 +5457,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "hawk-talons",
@@ -5583,7 +5490,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -5663,8 +5569,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "lizard-bite",
@@ -5699,7 +5604,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -5779,8 +5683,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "owl-talons",
@@ -5815,7 +5718,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -5895,8 +5797,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "rat-bite",
@@ -5931,7 +5832,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6011,8 +5911,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "raven-beak",
@@ -6047,7 +5946,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6127,8 +6025,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "weasel-bite",
@@ -6161,7 +6058,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6245,8 +6141,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "eagle-talons",
@@ -6279,7 +6174,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6363,8 +6257,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "panther-rend",
@@ -6399,7 +6292,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6483,8 +6375,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "plesiosaurus-bite",
@@ -6519,7 +6410,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6603,8 +6493,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "polar-bear-rend",
@@ -6658,7 +6547,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6742,8 +6630,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "pony-hooves",
@@ -6776,7 +6663,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6860,8 +6746,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "pteranodon-bite",
@@ -6896,7 +6781,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -6980,8 +6864,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "riding-horse-hooves",
@@ -7014,7 +6897,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -7103,8 +6985,7 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "tiger-rend",
@@ -7139,7 +7020,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -7223,8 +7103,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "vulture-beak",
@@ -7261,7 +7140,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -7341,8 +7219,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-fire-beetle-bite",
@@ -7379,7 +7256,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -7463,8 +7339,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-goat-ram",
@@ -7499,7 +7374,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -7583,8 +7457,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-owl-talons",
@@ -7623,7 +7496,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -7707,8 +7579,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "hyena-bite",
@@ -7745,7 +7616,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -7829,8 +7699,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-bat-bite",
@@ -7863,7 +7732,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -7952,8 +7820,7 @@
             "max_target_size": "medium"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "mastiff-bite",
@@ -7986,7 +7853,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -8070,8 +7936,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "mule-hooves",
@@ -8106,7 +7971,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -8190,8 +8054,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "rhinoceros-gore",
@@ -8226,7 +8089,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -8310,8 +8172,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "warhorse-hooves",
@@ -8346,7 +8207,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -8430,8 +8290,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "ogre-javelin-melee",
@@ -8456,8 +8315,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "ogre-javelin",
@@ -8484,8 +8342,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "ogre-greatclub",
@@ -8518,7 +8375,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -8602,8 +8458,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "owlbear-rend",
@@ -8655,7 +8510,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -8739,8 +8593,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "saber-toothed-tiger-rend",
@@ -8796,7 +8649,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -8882,8 +8734,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "scout-shortsword",
@@ -8908,8 +8759,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "scout-longbow",
@@ -8963,7 +8813,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -9047,8 +8896,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "warrior-infantry-spear-ranged",
@@ -9075,8 +8923,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "warrior-infantry-spear-melee",
@@ -9113,7 +8960,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -9204,8 +9050,7 @@
             "restrains": true
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "crocodile-bite",
@@ -9243,7 +9088,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -9334,8 +9178,7 @@
             "restrains": false
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-crab-claw",
@@ -9373,7 +9216,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -9457,8 +9299,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "constrictor-snake-bite",
@@ -9520,7 +9361,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -9611,8 +9451,7 @@
             "restrains": false
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-giant-scorpion-sting",
@@ -9650,8 +9489,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-giant-scorpion-claw",
@@ -9712,7 +9550,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -9796,8 +9633,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-grick-tentacles",
@@ -9829,8 +9665,7 @@
             "restrains": false
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-grick-beak",
@@ -9886,7 +9721,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -9977,8 +9811,7 @@
             "restrains": false
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-griffon-rend",
@@ -10034,7 +9867,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -10126,8 +9958,7 @@
             "allowed_removal_action_ids": []
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-centipede-bite",
@@ -10163,7 +9994,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -10255,8 +10085,7 @@
             "allowed_removal_action_ids": []
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-vulture-gouge",
@@ -10297,7 +10126,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -10381,8 +10209,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "wyvern-sting",
@@ -10427,8 +10254,7 @@
             "allowed_removal_action_ids": []
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "wyvern-bite",
@@ -10482,7 +10308,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -10579,8 +10404,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-venomous-snake-bite",
@@ -10617,7 +10441,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -10714,8 +10537,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-wasp-sting",
@@ -10753,7 +10575,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -10850,8 +10671,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-wolf-spider-bite",
@@ -10891,7 +10711,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -10975,8 +10794,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "archelon-bite",
@@ -11030,7 +10848,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -11119,8 +10936,7 @@
             "max_target_size": "huge"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "ankylosaurus-tail",
@@ -11172,7 +10988,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -11269,8 +11084,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-eagle-rend",
@@ -11325,7 +11139,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -11422,8 +11235,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-elk-ram",
@@ -11461,7 +11273,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -11552,8 +11363,7 @@
             "restrains": true
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "giant-crocodile-tail",
@@ -11583,8 +11393,7 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": true,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": true
       }
     ],
     "primary_attack_id": "giant-crocodile-bite",
@@ -11640,7 +11449,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -11724,8 +11532,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "giant-constrictor-snake-bite",
@@ -11807,7 +11614,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -11898,8 +11704,7 @@
             "restrains": true
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "tyrannosaurus-rex-tail",
@@ -11929,8 +11734,7 @@
             "max_target_size": "huge"
           }
         ],
-        "forbid_target_grappled_by_self": true,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": true
       }
     ],
     "primary_attack_id": "tyrannosaurus-rex-bite",
@@ -11984,7 +11788,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -12068,8 +11871,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-animated-armor-slam",
@@ -12124,7 +11926,6 @@
       "poison",
       "psychic"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "charmed",
       "deafened",
@@ -12216,8 +12017,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-animated-flying-sword-slash",
@@ -12253,7 +12053,6 @@
       "poison",
       "psychic"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "charmed",
       "deafened",
@@ -12345,8 +12144,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-earth-elemental-rock-launch",
@@ -12378,8 +12176,7 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-earth-elemental-slam",
@@ -12440,7 +12237,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "exhaustion",
       "paralyzed",
@@ -12530,8 +12326,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-awakened-tree-slam",
@@ -12569,7 +12364,6 @@
       "fire"
     ],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -12666,8 +12460,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-cultist-ritual-sickle",
@@ -12700,7 +12493,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -12793,8 +12585,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-flying-snake-bite",
@@ -12829,7 +12620,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -12913,8 +12703,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-gargoyle-claw",
@@ -12970,7 +12759,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "exhaustion",
       "petrified",
@@ -13071,8 +12859,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-grimlock-bone-cudgel",
@@ -13105,7 +12892,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -13189,8 +12975,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-guard-captain-javelin-ranged",
@@ -13217,8 +13002,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-guard-captain-longsword",
@@ -13243,8 +13027,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-guard-captain-javelin-melee",
@@ -13300,7 +13083,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -13384,8 +13166,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-hippopotamus-bite",
@@ -13439,7 +13220,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -13528,8 +13308,7 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-hill-giant-trash-lob",
@@ -13564,8 +13343,7 @@
             "allowed_removal_action_ids": []
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-hill-giant-tree-club",
@@ -13619,7 +13397,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -13703,8 +13480,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-killer-whale-bite",
@@ -13739,7 +13515,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -13823,8 +13598,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-lemure-vile-slime",
@@ -13864,7 +13638,6 @@
       "fire",
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "charmed",
       "frightened",
@@ -13952,8 +13725,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-manticore-tail-spike",
@@ -13980,8 +13752,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-manticore-rend",
@@ -14042,7 +13813,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -14126,8 +13896,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-ogre-zombie-slam",
@@ -14166,7 +13935,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "exhaustion",
       "poisoned"
@@ -14266,8 +14034,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-pegasus-hooves",
@@ -14300,7 +14067,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -14393,8 +14159,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-scorpion-sting",
@@ -14427,7 +14192,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -14511,8 +14275,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-skeleton-shortbow",
@@ -14539,8 +14302,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-skeleton-shortsword",
@@ -14577,7 +14339,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "exhaustion",
       "poisoned"
@@ -14673,8 +14434,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-spider-bite",
@@ -14710,7 +14470,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -14807,8 +14566,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-spy-hand-crossbow",
@@ -14848,8 +14606,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-spy-shortsword",
@@ -14884,7 +14641,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -14968,8 +14724,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-tough-heavy-crossbow",
@@ -14996,8 +14751,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-tough-mace",
@@ -15034,7 +14788,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -15131,8 +14884,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-venomous-snake-bite",
@@ -15165,7 +14917,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -15249,8 +15000,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-violet-fungus-rotting-touch",
@@ -15302,7 +15052,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "blinded",
       "charmed",
@@ -15391,8 +15140,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-xorn-claw",
@@ -15417,8 +15165,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-xorn-bite",
@@ -15489,7 +15236,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "paralyzed",
       "petrified",
@@ -15577,8 +15323,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-zombie-slam",
@@ -15617,7 +15362,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "exhaustion",
       "poisoned"
@@ -15708,8 +15452,7 @@
           }
         ],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-giant-shark-bite",
@@ -15763,7 +15506,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -15851,8 +15593,7 @@
           }
         ],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-hunter-shark-bite",
@@ -15887,7 +15628,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -15971,8 +15711,7 @@
           }
         ],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-piranha-bite",
@@ -16007,7 +15746,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -16091,8 +15829,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-reef-shark-bite",
@@ -16130,7 +15867,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -16218,8 +15954,7 @@
           }
         ],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-sahuagin-warrior-claw",
@@ -16280,7 +16015,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -16381,8 +16115,7 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-swarm-of-piranhas-bites",
@@ -16424,7 +16157,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "charmed",
       "frightened",
@@ -16530,8 +16262,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-hell-hound-bite",
@@ -16616,7 +16347,6 @@
     "damage_immunities": [
       "fire"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -16725,8 +16455,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-black-dragon-wyrmling-rend",
@@ -16810,7 +16539,6 @@
     "damage_immunities": [
       "acid"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -16919,8 +16647,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-blue-dragon-wyrmling-rend",
@@ -17002,7 +16729,6 @@
     "damage_immunities": [
       "lightning"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -17111,8 +16837,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-green-dragon-wyrmling-rend",
@@ -17195,7 +16920,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "poisoned"
     ],
@@ -17306,8 +17030,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-red-dragon-wyrmling-rend",
@@ -17388,7 +17111,6 @@
     "damage_immunities": [
       "fire"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -17497,8 +17219,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-white-dragon-wyrmling-rend",
@@ -17581,7 +17302,6 @@
     "damage_immunities": [
       "cold"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -17690,8 +17410,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-young-black-dragon-rend",
@@ -17781,7 +17500,6 @@
     "damage_immunities": [
       "acid"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -17890,8 +17608,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-young-blue-dragon-rend",
@@ -17979,7 +17696,6 @@
     "damage_immunities": [
       "lightning"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -18088,8 +17804,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-young-green-dragon-rend",
@@ -18178,7 +17893,6 @@
     "damage_immunities": [
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "poisoned"
     ],
@@ -18289,8 +18003,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-young-red-dragon-rend",
@@ -18377,7 +18090,6 @@
     "damage_immunities": [
       "fire"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -18486,8 +18198,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-young-white-dragon-rend",
@@ -18576,7 +18287,6 @@
     "damage_immunities": [
       "cold"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -18680,8 +18390,7 @@
             "expires_at_end_of_target_turn": false
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-worg-bite",
@@ -18716,7 +18425,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -18813,8 +18521,7 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-swarm-of-bats-bites",
@@ -18855,7 +18562,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "charmed",
       "frightened",
@@ -18961,8 +18667,7 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-swarm-of-rats-bites",
@@ -19003,7 +18708,6 @@
     ],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "charmed",
       "frightened",
@@ -19113,8 +18817,7 @@
             "max_target_size": "medium"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-swarm-of-crawling-claws-swarm-of-grasping-hands",
@@ -19158,7 +18861,6 @@
       "necrotic",
       "poison"
     ],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "charmed",
       "exhaustion",
@@ -19254,8 +18956,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-bandit-captain-pistol",
@@ -19283,8 +18984,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-bandit-captain-scimitar",
@@ -19343,7 +19043,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -19440,8 +19139,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-knight-heavy-crossbow",
@@ -19482,8 +19180,7 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-knight-greatsword",
@@ -19542,7 +19239,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [
       "frightened"
     ],
@@ -19628,8 +19324,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-noble-rapier",
@@ -19667,7 +19362,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
@@ -19751,8 +19445,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       },
       {
         "id": "srd-warrior-veteran-heavy-crossbow",
@@ -19780,8 +19473,7 @@
         "sneak_attack_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false,
-        "damage_source_qualifiers": []
+        "forbid_target_grappled_by_self": false
       }
     ],
     "primary_attack_id": "srd-warrior-veteran-greatsword",
@@ -19840,7 +19532,6 @@
     "damage_resistances": [],
     "damage_vulnerabilities": [],
     "damage_immunities": [],
-    "conditional_damage_defenses": [],
     "condition_immunities": [],
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
