@@ -9403,6 +9403,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "constrict"
       }
     ],
@@ -11670,6 +11671,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "constrict"
       }
     ],
@@ -16432,6 +16434,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -16627,6 +16630,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -16820,6 +16824,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -17010,6 +17015,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -17204,6 +17210,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -17394,6 +17401,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -17593,6 +17601,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -17792,6 +17801,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -17988,6 +17998,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -18188,6 +18199,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
@@ -18384,6 +18396,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "effect_tags": [],
         "animation": "save-effect"
       }
     ],
