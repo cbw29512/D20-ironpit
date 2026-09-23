@@ -10,7 +10,6 @@ from app.domain.weapons_base import DamageType
 class DamageSourceQualifier(StrEnum):
     ATTACK = "attack"
     WEAPON = "weapon"
-    SPELL = "spell"
     MELEE = "melee"
     RANGED = "ranged"
     MAGICAL = "magical"
