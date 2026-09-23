@@ -7,6 +7,7 @@ from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import DamageType, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.damage_sources import DamageSourceQualifier
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +46,9 @@ def build_unarmed_attack(level: int, scores: AbilityScores) -> WeaponAttack:
             damage_bonus=dexterity,
             attack_ability="dexterity",
             attack_ability_modifier=dexterity,
+            damage_source_qualifiers=(
+                [DamageSourceQualifier.MAGICAL] if level >= 6 else []
+            ),
         )
     except Exception:
         logger.exception("Failed to build 2014 Monk unarmed attack at level %s", level)
