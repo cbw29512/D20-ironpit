@@ -14,7 +14,7 @@ from app.domain.capability_attacks import (
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.effect_removal import EffectRemovalAction
-from app.domain.movement import MovementModes
+from app.domain.movement import MovementMode, MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
@@ -41,6 +41,7 @@ class CombatantDefinition(BaseModel):
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     movement_modes: MovementModes | None = None
+    opportunity_attack_exempt_movement_modes: list[MovementMode] = Field(default_factory=list)
     initiative_bonus: int
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
