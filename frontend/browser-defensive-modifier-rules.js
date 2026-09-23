@@ -8,8 +8,32 @@
   };
   const attacksAgainstDisadvantage = (state, attackerTemplate) => (state.active_modifiers || [])
     .filter((item) => item.kind === "attacks-against-disadvantage" && sourceMatches(item, attackerTemplate)).length;
-  const saveAdvantage = (state, ability) => (state.active_modifiers || [])
-    .filter((item) => item.kind === "saving-throw-advantage" && item.save_ability === ability).length;
+  function saveAdvantageModifiers(state, ability, context = {}) {
+    try {
+      return (state.active_modifiers || []).filter((item) =>
+        item.kind === "saving-throw-advantage"
+        && item.save_ability === ability
+        && (!item.requires_magical_effect || Boolean(context.magicalEffect)));
+    } catch (error) {
+      console.error("Failed to resolve browser saving-throw Advantage sources", {
+        error, combatant: state?.template?.name, ability,
+      });
+      throw error;
+    }
+  }
+  const saveAdvantage = (state, ability, context = {}) =>
+    saveAdvantageModifiers(state, ability, context).length;
+  function saveAdvantageSourceNames(state, ability, context = {}) {
+    try {
+      return [...new Set(saveAdvantageModifiers(state, ability, context)
+        .map((item) => item.source_name || item.source_effect_id))].sort();
+    } catch (error) {
+      console.error("Failed to identify browser saving-throw Advantage sources", {
+        error, combatant: state?.template?.name, ability,
+      });
+      throw error;
+    }
+  }
   const saveDisadvantage = (state) => (state.active_modifiers || [])
     .filter((item) => item.kind === "saving-throw-disadvantage").length;
 
@@ -41,6 +65,6 @@
 
   window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = {
     attacksAgainstDisadvantage, conditionImmune, consumeSavingThrowModifiers, deathSaveAdvantage, healingMaximized,
-    removeOwnerAttackEnding, saveAdvantage, saveDisadvantage, targetingGate,
+    removeOwnerAttackEnding, saveAdvantage, saveAdvantageSourceNames, saveDisadvantage, targetingGate,
   };
 })();
