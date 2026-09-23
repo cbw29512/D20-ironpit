@@ -52,7 +52,7 @@ Canonical profiles for the first migration are:
 | Profile | Allowed category order |
 |---|---|
 | `normalPreMove` | `spell-offense` |
-| `normalPostMove` | `spell-offense`, `intimidating-presence-2014`, `attack-action`, `area-save`, `save-action`, `standard-attack`, `dodge` |
+| `normalPostMove` | `spell-offense`, `intimidating-presence-2014`, `deferred-save-effect`, `attack-action`, `area-save`, `save-action`, `standard-attack`, `dodge` |
 | `actionSurgeAttack` | `attack-action`, `standard-attack` |
 
 The Action Surge profile deliberately preserves the currently certified Iron Pit attack-only extra-Action path. Architecture migration must not broaden it into Magic or other Action families.
@@ -81,17 +81,18 @@ Python and browser currently use the same normal-turn preference:
 2. charge/closing and offensive movement;
 3. post-move best spell offense;
 4. 2014 Intimidating Presence;
-5. Attack/Multiattack action;
-6. area save action;
-7. single-target save action;
-8. standard attack;
-9. Dodge fallback.
+5. an armed deferred save effect;
+6. Attack/Multiattack action;
+7. area save action;
+8. single-target save action;
+9. standard attack;
+10. Dodge fallback.
 
 The migration changes orchestration, not those choices.
 
 ## Registered provider families
 
-The browser registers providers for all seven normal-turn Action families: spell offense, 2014 Intimidating Presence, Attack/Multiattack, area save, save action, standard attack, and Dodge. Provider discovery reuses the existing pure choice/legality paths; both normal-turn opportunities now resolve through the selector.
+The browser registers providers for all eight normal-turn Action families: spell offense, 2014 Intimidating Presence, deferred save effects, Attack/Multiattack, area save, save action, standard attack, and Dodge. Provider discovery reuses the existing pure choice/legality paths; both normal-turn opportunities now resolve through the selector.
 
 `browser-spell-offense.js` exposes a pure `choose()` plus `resolveChoice()` split so discovery can select the same attack-vs-save spell without casting it. `browser-multiattack.js` exposes pure `available()` using the same slot legality checks as live Attack Action resolution.
 
