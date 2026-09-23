@@ -198,16 +198,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
-        "conditional_damage_defenses": [
-            {
-                "id": item.id,
-                "kind": _value(item.kind),
-                "damageTypes": [_value(kind) for kind in item.damage_types],
-                "requiredSourceQualifiers": [_value(kind) for kind in item.required_source_qualifiers],
-                "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
-            }
-            for item in template.conditional_damage_defenses
-        ],
         "condition_immunities": list(template.condition_immunities),
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
@@ -260,6 +250,17 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()}, "source": template.source,
     }
+    if template.conditional_damage_defenses:
+        row["conditional_damage_defenses"] = [
+            {
+                "id": item.id,
+                "kind": _value(item.kind),
+                "damageTypes": [_value(kind) for kind in item.damage_types],
+                "requiredSourceQualifiers": [_value(kind) for kind in item.required_source_qualifiers],
+                "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
+            }
+            for item in template.conditional_damage_defenses
+        ]
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
