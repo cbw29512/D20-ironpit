@@ -45,8 +45,8 @@ def build_cleric_life_2014_feature_audits(level: int) -> list[FeatureAudit]:
             _audit(
                 "dwarven-resilience", "Dwarven Resilience", "species", source=DWARF, automated=False,
                 notes=(
-                    "Poison resistance exists in the universal damage engine; contextual Advantage "
-                    "on saving throws against poison must bind through the universal contextual-save primitive."
+                    "Dwarf-owned passive buff. Universal resolution checks incoming poison effects/debuffs "
+                    "against defender buffs; poison damage resistance stays in the shared damage pipeline."
                 ),
             ),
             _audit("dwarven-toughness", "Dwarven Toughness", "species", source=DWARF),
