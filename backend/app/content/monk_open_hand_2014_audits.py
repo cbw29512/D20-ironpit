@@ -127,6 +127,15 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     "Constitution save; failure reduces true HP to 0, success deals 10d10 necrotic damage."
                 ),
             ))
+        if level >= 18:
+            audits.append(_audit(
+                "empty-body", "Empty Body", "class",
+                notes=(
+                    "Uses the universal timed self-buff action: Action + 4 Ki, applies the universal "
+                    "Invisible condition and source-owned resistance to every supported damage type "
+                    "except Force for 10 rounds."
+                ),
+            ))
 
         return audits
     except Exception:
