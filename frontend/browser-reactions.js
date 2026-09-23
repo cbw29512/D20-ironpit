@@ -26,8 +26,17 @@
     };
   }
 
+  function moverOaExempt(mover) {
+    try {
+      return (mover.state.template.opportunity_attack_exempt_movement_modes || []).includes(mover.state.movement_mode);
+    } catch (error) {
+      console.error("Failed browser mover-side OA exemption check.", { mover: mover?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function opportunityAttackWeapon(reactor, mover, before, after, source, options = {}) {
-    if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
+    if (reactor.side === mover.side || options.canSee === false || options.disengaged === true || moverOaExempt(mover)) return null;
     if (opportunityAttacksSuppressed(reactor.state)) return null;
     if (Q()?.has(reactor.state, "blinded") || !PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
     const weapon = (reactor.state.template.attacks || []).find((attack) =>
@@ -80,6 +89,6 @@
   }
 
   window.IRON_PIT_BROWSER_REACTIONS = {
-    opportunityAttackWeapon, opportunityAttacksSuppressed, parryHit, redirectAttack, resolveOpportunityAttack,
+    moverOaExempt, opportunityAttackWeapon, opportunityAttacksSuppressed, parryHit, redirectAttack, resolveOpportunityAttack,
   };
 })();

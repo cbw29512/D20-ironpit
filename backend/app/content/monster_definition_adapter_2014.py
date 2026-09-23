@@ -9,6 +9,7 @@ from app.content.monster_charge_source_corrections_2014 import corrected_charge_
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_trait_bindings_2014 import (
     conditional_attack_advantage_2014,
+    opportunity_attack_exempt_modes_2014,
     progression_features_2014,
     sneak_attack_eligible_2014,
 )
@@ -24,7 +25,7 @@ from app.domain.capability_attacks import (
 from app.domain.capability_effects import DiceSpec
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import VisualLoadout
-from app.domain.movement import MovementModes
+from app.domain.movement import MovementModes, preferred_horizontal_speed
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
 
@@ -124,8 +125,9 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
-        armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=movement.walk_ft,
-        movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
+        armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=preferred_horizontal_speed(movement),
+        movement_modes=movement, opportunity_attack_exempt_movement_modes=opportunity_attack_exempt_modes_2014(monster),
+        initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
         save_actions=save_capabilities_2014(monster),
         resources=save_resources_2014(monster), recharge_rules=recharge_rules_2014(monster),

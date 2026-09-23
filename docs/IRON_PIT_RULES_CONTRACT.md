@@ -231,6 +231,7 @@ Permanent arena rules:
 - Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.
 - No default pits, lava, traps, difficult terrain, water, or random arena hazards. A supported RAW effect may create an area/hazard.
 - Flyers cannot use altitude to become permanently unreachable. A melee flyer must enter its legal reach to attack.
+- **Iron Pit flight projection rule:** a creature with a printed Fly speed may use that full Fly speed as horizontal movement across the arena grid. The standard Iron Pit does not model vertical altitude for ordinary flight movement; flying does not make a creature vertically unreachable. The movement still counts as `fly` movement for RAW mechanics that care about movement mode, including Flyby and similar Opportunity Attack rules.
 - Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.
 - If the pathfinder proves a legal eventual route toward a supported offensive position, the combatant may spend this turn making useful progress even when it cannot reach attack range yet; after moving, if no supported offense is legal and its Action remains, it Dodges. If no such eventual legal route exists, or no useful legal progress can be made, it stays put and uses the same Dodge fallback after the other supported offensive families are exhausted.
 

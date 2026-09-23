@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Literal
 
 from app.combat.action_economy import is_available
@@ -11,6 +12,7 @@ from app.domain.modifiers import ModifierKind
 
 MovementSource = Literal["speed", "action", "bonus_action", "reaction", "forced", "teleport"]
 _PROVOKING_SOURCES = frozenset({"speed", "action", "bonus_action", "reaction"})
+logger = logging.getLogger(__name__)
 
 
 def opportunity_attacks_suppressed(reactor: EncounterCombatant) -> bool:
@@ -21,12 +23,22 @@ def opportunity_attacks_suppressed(reactor: EncounterCombatant) -> bool:
     )
 
 
+def mover_oa_exempt(mover: EncounterCombatant) -> bool:
+    """Return whether the mover's current movement mode suppresses Opportunity Attacks."""
+    try:
+        return mover.state.movement_mode in mover.state.template.opportunity_attack_exempt_movement_modes
+    except Exception:
+        logger.exception("Failed to evaluate mover-side Opportunity Attack exemption for %s.", mover.combatant_id)
+        raise
+
+
 def _can_react(
     reactor: EncounterCombatant, mover: EncounterCombatant, movement_source: MovementSource,
     *, disengaged: bool, can_see: bool,
 ) -> bool:
     return (
         reactor.side != mover.side and not disengaged and can_see
+        and not mover_oa_exempt(mover)
         and not has_condition(reactor.state, BLINDED)
         and not opportunity_attacks_suppressed(reactor)
         and movement_source in _PROVOKING_SOURCES

@@ -10,6 +10,7 @@ from app.combat.modifier_stack import effective_speed
 from app.combat.opening_modifiers import opening_modifiers
 from app.combat.survivor import apply_survivor_start_turn_heal
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
+from app.domain.movement import preferred_horizontal_mode
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
         return CombatantState(
             template=template,
             current_hp=template.max_hp,
+            movement_mode=preferred_horizontal_mode(template.movement_modes),
             movement_remaining_ft=0,
             resources=[
                 ResourceState(id=r.id, name=r.name, current_uses=r.max_uses, max_uses=r.max_uses)
@@ -59,6 +61,7 @@ def begin_turn(state: CombatantState) -> None:
         state.action_available = not incapacitated
         state.bonus_action_available = not incapacitated
         refresh_start_of_turn(state)
+        state.movement_mode = preferred_horizontal_mode(state.template.movement_modes)
         speed = effective_speed(state)
         state.movement_remaining_ft = 0 if speed_is_zero(state) else speed
         if DODGE_EFFECT_ID in state.active_effect_ids:
