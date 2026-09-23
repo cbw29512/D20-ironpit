@@ -348,7 +348,7 @@ def _validate_2014_certification_state() -> tuple[int, int]:
     if len(source) != 327 or len({monster.id for monster in source}) != 327:
         raise RuntimeError("2014 source corpus must contain exactly 327 unique monsters.")
     eligible_ids = {
-        monster.id for monster in source
+        f"2014-{monster.id}" for monster in source
         if not basic_blockers_2014(monster)
     }
 
