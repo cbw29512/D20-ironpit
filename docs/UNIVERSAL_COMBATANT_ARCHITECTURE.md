@@ -52,6 +52,20 @@ Post-roll D20 replacement is also a shared primitive. Source data declares the r
 
 Attack rolls, ability checks, AC, damage defenses, conditions, concentration, and movement follow the same rule: one resolver, different creature data.
 
+## Universal buff-versus-debuff ownership
+
+Keep source ownership simple and declarative:
+
+- The combatant that possesses a racial/species, class, feat, item, spell, monster-trait, or other persistent defensive benefit owns that **buff/passive modifier** in its own combat data/state.
+- The incoming attack, spell, condition, hazard, or other source owns only the **debuff/effect** it attempts to apply plus its RAW parameters.
+- At the normal shared resolution point, the universal engine compares the incoming debuff/effect semantics against the defender's active/passive buffs and applies every matching RAW modifier before resolving the outcome.
+- Resolution must never branch on a race/species, class, hero, monster, spell, or feature name when the interaction can be expressed as buff/debuff semantics.
+- A race/species-specific feature therefore stays on that race/species record. Other content can gain the same semantic buff later without creating another engine path.
+- Damage defenses, condition immunities, Advantage/Disadvantage, save modifiers, effect prevention, duration changes, and similar interactions follow this same ownership pattern when RAW supports them.
+- Exact source names remain available for cards/logs/audit evidence; engine matching uses generic semantic capability data.
+
+Example: Dwarven Resilience is a Dwarf-owned passive buff. A poison source remains a generic poison effect/debuff. When that poison effect reaches the Dwarf, the universal engine sees the matching defensive buff, grants the RAW saving-throw Advantage, and separately applies poison-damage resistance through the universal damage pipeline.
+
 ## Mandatory semantic reuse workflow
 
 This workflow is required for every content implementation, regardless of whether the source is a class, subclass, species, feat, spell, item, monster, legendary action, or other combat rule.
