@@ -19,6 +19,7 @@ from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
+from app.combat.persistent_spell_attacks import resolve_persistent_spell_attack
 from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
 from app.combat.spell_offense import resolve_best_spell_offense
@@ -79,6 +80,13 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
+
+        persistent_spell_event = resolve_persistent_spell_attack(
+            sequence, round_number, attacker, setup, turn_key, dice,
+        )
+        if persistent_spell_event is not None:
+            events.append(persistent_spell_event)
+            sequence += 1
 
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
