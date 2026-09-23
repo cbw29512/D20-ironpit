@@ -14,6 +14,7 @@ from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.intimidating_presence_2014 import end_invalid_presence
+from app.combat.initiative_resource_refill import resolve_initiative_resource_refills
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
@@ -74,6 +75,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
         affected_states = [member.state for member in combatants]
         initiative_events, sequence = build_initiative_events(initiative, sequence)
         events.extend(initiative_events)
+        refill_events, sequence = resolve_initiative_resource_refills(sequence, setup)
+        events.extend(refill_events)
 
         for round_number in range(1, MAX_ENCOUNTER_ROUNDS + 1):
             round_turn_order = initiative.first_round_turn_order if round_number == 1 else initiative.turn_order
