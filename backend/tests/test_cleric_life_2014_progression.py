@@ -69,9 +69,8 @@ def test_2014_seraphine_level_two_extends_level_one_spell_capacity() -> None:
     two_package = build_cleric_2014_spell_package(2, level_two.final_ability_scores.modifier("wisdom"))
 
     assert [spell.id for spell in one_package.spells] == [
-        "healing-word", "guiding-bolt", "shield-of-faith", "sanctuary",
+        "healing-word", "guiding-bolt", "shield-of-faith", "inflict-wounds",
     ]
-    assert [spell.id for spell in two_package.spells][: len(one_package.spells)] == [
-        spell.id for spell in one_package.spells
+    assert [spell.id for spell in two_package.spells] == [
+        "healing-word", "guiding-bolt", "shield-of-faith", "inflict-wounds", "sanctuary",
     ]
-    assert len(two_package.spells) == len(one_package.spells) + 1
