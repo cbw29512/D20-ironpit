@@ -18,6 +18,11 @@ def apply_turned_creature_effects(
     *,
     source_effect_id: str,
     turned_effect_id: str,
+    include_frightened: bool = True,
+    include_incapacitated: bool = True,
+    suppress_reactions: bool = False,
+    ends_if_source_incapacitated: bool = True,
+    ends_if_source_dead: bool = True,
 ) -> list[str]:
     """Apply the shared 1-minute forced-retreat turn package used by holy turning features."""
     states = [member.state for member in [*setup.heroes, *setup.monsters]]
@@ -28,8 +33,8 @@ def apply_turned_creature_effects(
         expiry_timing="source_turn_start",
         affected_states=states,
         ends_on_damage=True,
-        ends_if_source_incapacitated=True,
-        ends_if_source_dead=True,
+        ends_if_source_incapacitated=ends_if_source_incapacitated,
+        ends_if_source_dead=ends_if_source_dead,
     )
     applied = [
         apply_timed_condition(
@@ -37,10 +42,16 @@ def apply_turned_creature_effects(
             turned_effect_id,
             source.combatant_id,
             turn_behavior="forced_retreat",
+            suppress_reactions=suppress_reactions,
             **common,
         )
     ]
-    for condition in ("frightened", "incapacitated"):
+    conditions = []
+    if include_frightened:
+        conditions.append("frightened")
+    if include_incapacitated:
+        conditions.append("incapacitated")
+    for condition in conditions:
         if not condition_is_immune(target.state, condition):
             applied.append(apply_timed_condition(
                 target.state,
@@ -64,6 +75,11 @@ def resolve_turning_saves(
     turned_effect_id: str,
     resource_remaining: int,
     feature_name: str,
+    include_frightened: bool = True,
+    include_incapacitated: bool = True,
+    suppress_reactions: bool = False,
+    ends_if_source_incapacitated: bool = True,
+    ends_if_source_dead: bool = True,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve the shared Wisdom-save/event loop for creature-turning features."""
     events: list[BattleEvent] = []
@@ -107,7 +123,13 @@ def resolve_turning_saves(
             )
         applied = [] if succeeded or target.state.is_dead else apply_turned_creature_effects(
             source, target, setup, round_number,
-            source_effect_id=source_effect_id, turned_effect_id=turned_effect_id,
+            source_effect_id=source_effect_id,
+            turned_effect_id=turned_effect_id,
+            include_frightened=include_frightened,
+            include_incapacitated=include_incapacitated,
+            suppress_reactions=suppress_reactions,
+            ends_if_source_incapacitated=ends_if_source_incapacitated,
+            ends_if_source_dead=ends_if_source_dead,
         )
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="saving_throw",
