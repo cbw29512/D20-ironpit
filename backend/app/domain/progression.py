@@ -73,11 +73,17 @@ class SavingThrowAdvantageGrant(BaseModel):
     source_name: str = Field(min_length=1)
     abilities: list[AbilityName] = Field(min_length=1)
     requires_magical_effect: bool = False
+    required_effect_tags: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_abilities(self) -> "SavingThrowAdvantageGrant":
         if len(set(self.abilities)) != len(self.abilities):
             raise ValueError("Saving-throw Advantage abilities must be unique.")
+        if len(set(self.required_effect_tags)) != len(self.required_effect_tags):
+            raise ValueError("Saving-throw Advantage effect tags must be unique.")
+        if any(not item.strip() for item in self.required_effect_tags):
+            raise ValueError("Saving-throw Advantage effect tags cannot be blank.")
+        self.required_effect_tags = [item.strip().casefold() for item in self.required_effect_tags]
         return self
 
 
