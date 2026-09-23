@@ -4501,6 +4501,7 @@
         "damage_type": "necrotic",
         "success_damage": "half",
         "upcast_dice_per_level": 1,
+        "effect_tags": [],
         "concentration": false,
         "animation": "inflict-wounds"
       },
@@ -4518,6 +4519,7 @@
         "damage_type": "necrotic",
         "success_damage": "half",
         "upcast_dice_per_level": 1,
+        "effect_tags": [],
         "concentration": false,
         "animation": "inflict-wounds"
       }
