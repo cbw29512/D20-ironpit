@@ -150,4 +150,6 @@ assert.ok(result.events.every((event) => event.feature_id === "flurry-of-blows")
 assert.equal(flurryActor.state.resources.ki, 1);
 assert.equal(flurryActor.state.bonus_action_available, false);
 
+require("./browser-deferred-save-effect.test.cjs");
+
 console.log("2014 Open Hand Monk browser mechanics preserve progression, Ki, Flurry, Deflect Missiles, Stunning Strike, Open Hand Technique, and static defenses.");
