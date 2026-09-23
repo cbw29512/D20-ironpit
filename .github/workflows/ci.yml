@@ -105,6 +105,8 @@ jobs:
           node frontend/browser-attack-outcome-hooks.test.cjs
           node frontend/browser-deferred-save-effect.test.cjs
           node frontend/browser-2014-monk-level19.test.cjs
+          node frontend/browser-2014-monk-level20.test.cjs
+          node frontend/browser-initiative-resource-refill.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs
@@ -252,6 +254,7 @@ jobs:
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
           grep -q 'browser-timed-self-buffs.js' index.html
+          grep -q 'browser-initiative-resource-refill.js' index.html
           grep -q 'browser-barbarian2.js' index.html
           grep -q 'browser-barbarian3.js' index.html
           grep -q 'browser-sneak-attack.js' index.html
@@ -336,6 +339,7 @@ jobs:
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
+          grep -q 'browser-initiative-resource-refill.js' frontend/index.html
           grep -q 'browser-barbarian2.js' frontend/index.html
           grep -q 'browser-barbarian3.js' frontend/index.html
           grep -q 'browser-sneak-attack.js' frontend/index.html
