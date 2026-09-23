@@ -14,6 +14,15 @@ window.IRON_PIT_BROWSER_CONDITION_RULES = { incapacitated: () => false };
 window.IRON_PIT_BROWSER_OPENING_MODIFIERS = { build: () => [] };
 window.IRON_PIT_BROWSER_EXHAUSTION = {};
 window.IRON_PIT_BROWSER_HEROIC_INSPIRATION = { grant: () => {} };
+window.IRON_PIT_BROWSER_ZERO_HP = {
+  reduceToZero: (state) => {
+    state.current_hp = 0;
+    state.is_alive = false;
+    state.is_dead = true;
+    state.is_unconscious = false;
+    return "dead";
+  },
+};
 
 load("browser-timed-conditions.js");
 load("browser-action-economy.js");
@@ -118,4 +127,48 @@ assert.equal(
   null,
 );
 
-console.log("2014 Turn Undead trembling regressions passed.");
+{
+  window.IRON_PIT_BROWSER_SAVES = {
+    resolveSavingThrow: () => ({ roll: { notation: "1d20", rolls: [1], modifier: 0, total: 1 }, succeeded: false }),
+  };
+  const destroySource = {
+    combatant_id: "cleric-5",
+    state: {
+      template: {
+        name: "Seraphine", turning_failure_destroy_max_cr: "1/2",
+        ability_scores: { wisdom: 18 },
+      },
+    },
+  };
+  const low = {
+    combatant_id: "skeleton-low",
+    state: window.IRON_PIT_BROWSER_STATE.buildState({
+      id: "skeleton-low", name: "Skeleton", kind: "monster", challenge_rating: "1/4",
+      max_hp: 13, speed_ft: 30, size: "medium", resources: {},
+    }),
+  };
+  const high = {
+    combatant_id: "skeleton-high",
+    state: window.IRON_PIT_BROWSER_STATE.buildState({
+      id: "skeleton-high", name: "Greater Skeleton", kind: "monster", challenge_rating: "2",
+      max_hp: 40, speed_ft: 30, size: "medium", resources: {},
+    }),
+  };
+  const destroyed = window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS.resolve(
+    1, 1, destroySource, [low], 15, "turn-undead", "trembling", 0, "Turn Undead",
+    { includeFrightened: false, includeIncapacitated: false },
+  );
+  assert.equal(low.state.is_dead, true);
+  assert.equal(low.state.current_hp, 0);
+  assert.deepEqual(destroyed.events[0].applied_condition_ids, []);
+
+  const survived = window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS.resolve(
+    2, 1, destroySource, [high], 15, "turn-undead", "trembling", 0, "Turn Undead",
+    { includeFrightened: false, includeIncapacitated: false, suppressAction: true },
+  );
+  assert.equal(high.state.is_dead, false);
+  assert.ok(high.state.active_effect_ids.includes("trembling"));
+  assert.deepEqual(survived.events[0].applied_condition_ids, ["trembling"]);
+}
+
+console.log("2014 Turn Undead trembling and Destroy Undead regressions passed.");
