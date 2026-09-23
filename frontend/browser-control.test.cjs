@@ -145,3 +145,4 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
 }
 
 console.log("Browser saving throw and control-condition regressions passed.");
+require("./browser-contextual-save-advantage.test.cjs");
