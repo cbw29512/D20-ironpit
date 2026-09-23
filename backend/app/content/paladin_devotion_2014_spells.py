@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
-from app.content.shared_spells_2014 import sanctuary_2014
+from app.content.shared_spells_2014 import lesser_restoration_2014, sanctuary_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
@@ -35,15 +35,6 @@ def protection_from_evil_and_good_2014() -> DefensiveSpellAction:
     )
 
 
-
-def lesser_restoration_2014() -> ConditionRemovalAction:
-    return ConditionRemovalAction(
-        id="lesser-restoration", name="Lesser Restoration", action_cost="action",
-        range_ft=5, target_mode="self_or_ally",
-        removable_conditions=["blinded", "deafened", "paralyzed", "poisoned"],
-        max_conditions_per_use=1, resource_costs={"spell-slot-2": 1},
-        expends_spell_slot=True, animation="lesser-restoration",
-    )
 
 
 def beacon_of_hope_2014() -> DefensiveSpellAction:
