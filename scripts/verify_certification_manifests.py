@@ -36,6 +36,7 @@ def _mechanics(template: Any) -> list[str]:
         *(f"saving-throw-action:{item.id}" for item in template.saving_throw_actions),
         *(f"spell-save-action:{item.id}" for item in template.spell_save_actions),
         *(f"spell-attack-action:{item.id}" for item in template.spell_attack_actions),
+        *(f"persistent-spell-attack:{item.id}" for item in template.persistent_spell_attack_actions),
         *(f"defensive-spell-action:{item.id}" for item in template.defensive_spell_actions),
         *(f"healing-action:{item.id}" for item in template.healing_actions),
         *(f"condition-removal-action:{item.id}" for item in template.condition_removal_actions),
