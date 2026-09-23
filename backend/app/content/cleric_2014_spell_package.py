@@ -33,17 +33,40 @@ _CANTRIPS = (
     _spell("spare-the-dying", "Spare the Dying", "healing", "stabilization", level=0),
 )
 
-# Prepared choices belong to the one persistent character. New levels extend this
-# ordered package; they do not replace Seraphine's prior spell choices.
+# Clerics prepare from the class list after each long rest. This deterministic
+# combat package may replace lower-priority prepared choices when higher spell
+# levels unlock; that is a legal preparation change by the same character.
 _PREPARED = (
+    _spell("mass-heal", "Mass Heal", "healing", "multi-target-healing", level=9, min_level=17),
+    _spell("gate", "Gate", "utility", "arena-out-of-scope", level=9, min_level=17),
+    _spell("earthquake", "Earthquake", "damage", "area-effect", "concentration", level=8, min_level=15),
+    _spell("holy-aura", "Holy Aura", "buff", "modifier-stack", "concentration", level=8, min_level=15),
+    _spell("fire-storm", "Fire Storm", "damage", "save-damage", "area-effect", level=7, min_level=13),
+    _spell("regenerate", "Regenerate", "healing", "healing", level=7, min_level=13),
+    _spell("harm", "Harm", "damage", "save-damage", level=6, min_level=11),
+    _spell("heal", "Heal", "healing", "healing", level=6, min_level=11),
+    _spell("blade-barrier", "Blade Barrier", "damage", "area-effect", "concentration", level=6, min_level=11),
+    _spell("flame-strike", "Flame Strike", "damage", "save-damage", "area-effect", level=5, min_level=9),
+    _spell("greater-restoration", "Greater Restoration", "healing", "condition-removal", level=5, min_level=9),
+    _spell("commune", "Commune", "utility", "arena-out-of-scope", level=5, min_level=9),
+    _spell("freedom-of-movement", "Freedom of Movement", "buff", "condition-prevention", level=4, min_level=7),
+    _spell("locate-creature", "Locate Creature", "utility", "arena-out-of-scope", level=4, min_level=7),
+    _spell("mass-healing-word", "Mass Healing Word", "healing", "multi-target-healing", "bonus-action", level=3, min_level=5),
+    _spell("spirit-guardians", "Spirit Guardians", "damage", "persistent-damage", "concentration", level=3, min_level=5),
+    _spell("dispel-magic", "Dispel Magic", "control", "effect-removal", level=3, min_level=5),
+    _spell("protection-from-energy", "Protection from Energy", "buff", "damage-resistance", "concentration", level=3, min_level=5),
+    _spell("remove-curse", "Remove Curse", "healing", "effect-removal", level=3, min_level=5),
+    _spell("hold-person", "Hold Person", "control", "condition", "repeat-save", level=2, min_level=3),
+    _spell("prayer-of-healing", "Prayer of Healing", "healing", "arena-out-of-scope", level=2, min_level=3),
+    _spell("silence", "Silence", "control", "area-effect", "concentration", level=2, min_level=3),
+    _spell("aid", "Aid", "healing", "max-hp-increase", level=2, min_level=3),
+    _spell("warding-bond", "Warding Bond", "buff", "damage-resistance", level=2, min_level=3),
     _spell("healing-word", "Healing Word", "healing", "healing", "bonus-action"),
     _spell("guiding-bolt", "Guiding Bolt", "mixed", "spell-attack", "next-attack-advantage"),
     _spell("shield-of-faith", "Shield of Faith", "buff", "modifier-stack", "concentration"),
     _spell("sanctuary", "Sanctuary", "buff", "attack-gate-save", "bonus-action"),
     _spell("inflict-wounds", "Inflict Wounds", "damage", "spell-attack"),
-    _spell("hold-person", "Hold Person", "control", "condition", "repeat-save", level=2, min_level=3),
-    _spell("prayer-of-healing", "Prayer of Healing", "healing", "arena-out-of-scope", level=2, min_level=3),
-    _spell("silence", "Silence", "control", "area-effect", "concentration", level=2, min_level=3),
+    _spell("command", "Command", "control", "condition"),
 )
 
 _DOMAIN = (
@@ -70,8 +93,6 @@ def build_cleric_2014_spell_package(level: int, wisdom_modifier: int) -> ClassSp
     try:
         count = prepared_count_2014(level, wisdom_modifier)
         available = [spell for spell in _PREPARED if spell.min_character_level <= level]
-        # This initial tranche intentionally defines enough selected spells for levels 1-3.
-        # Later levels extend the same ordered package instead of replacing it.
         if count > len(available):
             raise ValueError(
                 f"2014 Cleric level {level} needs {count} prepared spells; "
