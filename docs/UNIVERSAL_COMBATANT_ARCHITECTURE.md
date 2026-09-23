@@ -105,7 +105,7 @@ If there is uncertainty about whether two abilities are semantically the same, s
 
 Damage defenses may depend on both damage type and the semantic source of that damage. This is one universal damage pipeline, not separate Monk, Paladin, monster, or edition-specific defense logic.
 
-- Damage components may carry reusable source qualifiers such as `attack`, `weapon`, `spell`, `melee`, `ranged`, and `magical`.
+- Damage components may carry reusable source qualifiers such as `attack`, `weapon`, `melee`, `ranged`, and `magical`.
 - Static attack data may declare qualifiers that always apply to that attack.
 - Temporary effects may add a source-owned qualifier to a specific weapon through the shared modifier lifecycle; expiry removes only that source's contribution.
 - Conditional resistance, immunity, or vulnerability is declarative data that matches damage type plus required/forbidden source qualifiers.
