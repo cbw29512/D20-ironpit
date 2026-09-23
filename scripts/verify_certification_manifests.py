@@ -40,6 +40,8 @@ def _mechanics(template: Any) -> list[str]:
         *(f"healing-action:{item.id}" for item in template.healing_actions),
         *(f"condition-removal-action:{item.id}" for item in template.condition_removal_actions),
         *(f"effect-removal-action:{item.id}" for item in template.effect_removal_actions),
+        *(f"timed-self-buff:{item.id}" for item in template.timed_self_buff_actions),
+        *(f"initiative-resource-refill:{item.source_id}" for item in template.initiative_resource_refill_grants),
     }
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
