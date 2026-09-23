@@ -19,6 +19,22 @@ def test_2014_champion_levels_one_through_twenty_stay_in_2014_rules() -> None:
         assert hero.source.startswith("D&D Basic Rules 2014")
 
 
+def test_2014_second_wind_is_declarative_universal_healing_data() -> None:
+    hero = build_karnok_stoneward_2014(11)
+
+    assert len(hero.healing_actions) == 1
+    action = hero.healing_actions[0]
+    assert action.id == "second-wind"
+    assert action.name == "Second Wind"
+    assert action.action_cost == "bonus_action"
+    assert action.target_mode == "self"
+    assert action.dice_count == 1
+    assert action.dice_size == 10
+    assert action.healing_bonus == 11
+    assert action.resource_id == "second-wind"
+    assert action.resource_cost == 1
+
+
 def test_2014_champion_progression_uses_real_fighter_breakpoints() -> None:
     l1 = build_karnok_stoneward_2014(1); l5 = build_karnok_stoneward_2014(5)
     l10 = build_karnok_stoneward_2014(10); l11 = build_karnok_stoneward_2014(11)
