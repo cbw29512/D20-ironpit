@@ -66,6 +66,8 @@ Keep source ownership simple and declarative:
 
 Example: Dwarven Resilience is a Dwarf-owned passive buff. A poison source remains a generic poison effect/debuff. When that poison effect reaches the Dwarf, the universal engine sees the matching defensive buff, grants the RAW saving-throw Advantage, and separately applies poison-damage resistance through the universal damage pipeline.
 
+Timed debuffs that suppress voluntary turn economy use generic declarative flags rather than named-feature branches. A timed effect may suppress Action, Bonus Action, Reaction, and/or movement independently, while normal saving throws and mandatory lifecycle processing continue. Repeat-save timing and damage-sensitive removal remain properties of the same universal timed-effect record. The `trembling` debuff used by the 2014 Iron Pit Turn Undead house rule is one composition of those generic flags, not a Turn Undead-specific turn engine.
+
 ## Mandatory semantic reuse workflow
 
 This workflow is required for every content implementation, regardless of whether the source is a class, subclass, species, feat, spell, item, monster, legendary action, or other combat rule.
