@@ -21,6 +21,7 @@ load("browser-state.js");
 load("browser-turn-creature-effects.js");
 load("browser-source-bound-effects.js");
 load("browser-condition-lifecycle.js");
+load("browser-cleric-channel.js");
 
 const source = { combatant_id: "cleric", state: { template: { name: "Cleric" } } };
 const target = {
@@ -82,5 +83,39 @@ applyTrembling();
 const removed = window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS.endDamageSensitive(target.state);
 assert.deepEqual(removed, ["trembling"]);
 assert.equal(target.state.active_effect_ids.includes("trembling"), false);
+
+const cleric2014 = {
+  combatant_id: "cleric-2014",
+  side: "heroes",
+  position_ft: 0,
+  state: {
+    template: { name: "Seraphine", archetype: "Cleric", ruleset: "2014", level: 2, traits: ["life-domain"] },
+    current_hp: 19,
+    is_alive: true,
+    is_dead: false,
+    action_available: true,
+    resources: { "channel-divinity": 1, "spell-slot-1": 0 },
+  },
+};
+const goblin2014 = {
+  combatant_id: "goblin-2014",
+  side: "monsters",
+  position_ft: 10,
+  state: {
+    template: { name: "Goblin", creature_type: "humanoid", max_hp: 7, traits: [] },
+    current_hp: 7, is_alive: true, is_dead: false,
+  },
+};
+window.IRON_PIT_ACTION_ECONOMY = { available: () => true };
+window.IRON_PIT_BROWSER_STATE = {
+  distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
+  effectiveMaxHp: (state) => state.template.max_hp || state.current_hp,
+};
+assert.equal(
+  window.IRON_PIT_BROWSER_CLERIC_CHANNEL.choose(
+    cleric2014, { heroes: [cleric2014], monsters: [goblin2014] },
+  ),
+  null,
+);
 
 console.log("2014 Turn Undead trembling regressions passed.");
