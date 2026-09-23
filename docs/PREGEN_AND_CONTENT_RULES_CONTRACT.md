@@ -158,6 +158,8 @@ The 100-monster threshold is a testing milestone, not completion of either roste
 
 Future 2014 and 2024 homebrew pages must use the same edition-specific intake and capability system.
 
+Multiclassing is reserved for this future homebrew/custom-build layer. Canonical pregens remain single-class in both editions.
+
 - 2014 homebrew may select only legal/supported 2014 primitives and parameters.
 - 2024 homebrew may select only legal/supported 2024 primitives and parameters.
 - Homebrew may combine supported primitives in novel ways, but it must not bypass engine validation, action economy, damage rules, conditions, resource limits, or edition isolation.
