@@ -70,6 +70,8 @@ Then perform this check **before writing code**:
 
 **Universal state identity is absolute:** Prone is Prone; Grappled is Grappled; Restrained is Restrained; Blinded is Blinded; Frightened is Frightened; Poisoned is Poisoned; Advantage is Advantage; Disadvantage is Disadvantage; a Saving Throw is a Saving Throw. The source card supplies the parameters. The engine supplies the mechanic.
 
+**Buff/debuff ownership is also universal:** the combatant owns its racial/species/class/item/spell/trait buffs and passive defenses; the incoming source owns its debuff/effect. The shared engine compares those semantics at the normal resolution point. Never move a defender-owned racial/species buff into an attacker/effect resolver, and never branch on race/species names when generic buff/debuff matching can express the RAW interaction.
+
 This check is mandatory even when the source comes from a different class, monster, edition, spell, item, or feature name. A different printed name is never sufficient reason for a new resolver.
 
 ## Arena/environment invariants
