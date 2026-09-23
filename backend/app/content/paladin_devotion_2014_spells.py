@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
+from app.content.shared_spells_2014 import sanctuary_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
@@ -33,20 +34,6 @@ def protection_from_evil_and_good_2014() -> DefensiveSpellAction:
         animation="protection", source=_SOURCE,
     )
 
-
-def sanctuary_2014(save_dc: int) -> DefensiveSpellAction:
-    return DefensiveSpellAction(
-        id="sanctuary", name="Sanctuary", level=1, action_cost="bonus_action",
-        range_ft=30, duration_minutes=1, target_policy="friendly", target_count=1,
-        priority=32,
-        modifier_effects=[
-            SpellModifierEffect(
-                kind="targeting-save-gate", save_ability="wisdom", save_dc=save_dc,
-                ends_on_owner_attack=True,
-            ),
-        ],
-        animation="sanctuary", source=_SOURCE,
-    )
 
 
 def lesser_restoration_2014() -> ConditionRemovalAction:
