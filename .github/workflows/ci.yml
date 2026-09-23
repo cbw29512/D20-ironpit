@@ -150,6 +150,7 @@ jobs:
           node frontend/browser-monster-saves.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-action-healing.test.cjs
+          node frontend/browser-pooled-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-condition-lifecycle.test.cjs
           node frontend/browser-condition-removal.test.cjs
