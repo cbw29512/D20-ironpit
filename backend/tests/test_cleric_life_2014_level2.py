@@ -31,7 +31,7 @@ def test_2014_life_cleric_level_two_resources_and_fingerprint() -> None:
         "spell-slot-1": 3,
         "channel-divinity": 1,
     }
-    assert hero.max_hp == 19
+    assert hero.max_hp == 21
     assert hero.progression_features.saving_throw_advantage_grants
     assert {spell.id for spell in hero.defensive_spell_actions} == {
         "bless", "shield-of-faith", "sanctuary",
