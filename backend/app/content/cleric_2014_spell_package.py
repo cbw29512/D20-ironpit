@@ -49,6 +49,7 @@ _PREPARED = (
     _spell("aid", "Aid", "healing", "max-hp-increase", level=2, min_level=3),
     _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
     _spell("augury", "Augury", "utility", "arena-out-of-scope", level=2, min_level=3),
+    _spell("prayer-of-healing", "Prayer of Healing", "healing", "arena-out-of-scope", level=2, min_level=3),
     _spell("warding-bond", "Warding Bond", "buff", "damage-resistance", level=2, min_level=3),
     _spell("hold-person", "Hold Person", "control", "condition", "repeat-save", level=2, min_level=3),
     _spell("prayer-of-healing", "Prayer of Healing", "healing", "arena-out-of-scope", level=2, min_level=3),
