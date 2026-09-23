@@ -97,7 +97,7 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
                 distance = save_distance(attacker, target, action.range_ft)
-                if legal_save_action(action, target, distance):
+                if legal_save_action(attacker, action, target, distance):
                     return target, action, distance
         return None
     except Exception:
