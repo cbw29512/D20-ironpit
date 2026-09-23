@@ -1,11 +1,21 @@
 from app.combat.pooled_healing import pooled_healing_capacity, resolve_pooled_healing
 from app.combat.state import build_combatant_state
-from app.content.capability_registry import build_combatant_from_capabilities
+from app.content.roster import build_arena_roster
 from app.domain.encounters import EncounterCombatant
 
 
+def _monster_template(template_id: str):
+    try:
+        return next(
+            item for item in build_arena_roster("2014").monsters
+            if item.id == template_id
+        )
+    except StopIteration as exc:
+        raise ValueError(f"Missing certified 2014 monster template: {template_id}") from exc
+
+
 def _member(combatant_id: str, current_hp: int) -> EncounterCombatant:
-    template = build_combatant_from_capabilities("2014-goblin")
+    template = _monster_template("2014-goblin")
     member = EncounterCombatant(
         combatant_id=combatant_id,
         side="heroes",
