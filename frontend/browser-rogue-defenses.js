@@ -2,13 +2,12 @@
   "use strict";
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const has = (state, id) => Boolean(state?.active_effect_ids?.includes(id));
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
 
   function canUncannyDodge(attacker, defender) {
     return Boolean(
       defender?.template?.uncanny_dodge
-      && !has(defender, "blinded")
-      && !has(attacker, "invisible")
+      && Q().canSee(defender, attacker)
       && E().available(defender, "reaction")
     );
   }
