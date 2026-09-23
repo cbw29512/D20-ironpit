@@ -150,6 +150,7 @@ jobs:
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-condition-lifecycle.test.cjs
           node frontend/browser-condition-removal.test.cjs
+          node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs
           node frontend/browser-reaction-movement.test.cjs
@@ -249,6 +250,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' index.html
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
+          grep -q 'browser-timed-self-buffs.js' index.html
           grep -q 'browser-barbarian2.js' index.html
           grep -q 'browser-barbarian3.js' index.html
           grep -q 'browser-sneak-attack.js' index.html
@@ -332,6 +334,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' frontend/index.html
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
+          grep -q 'browser-timed-self-buffs.js' frontend/index.html
           grep -q 'browser-barbarian2.js' frontend/index.html
           grep -q 'browser-barbarian3.js' frontend/index.html
           grep -q 'browser-sneak-attack.js' frontend/index.html
