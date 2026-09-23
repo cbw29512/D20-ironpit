@@ -53,6 +53,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         normal_range_ft=definition.normal_range_ft,
         long_range_ft=definition.long_range_ft,
         projectile=definition.projectile,
+        magical=definition.magical,
+        material=definition.material,
         mastery_property=definition.mastery_property,
         light=definition.light,
         finesse=definition.finesse,
