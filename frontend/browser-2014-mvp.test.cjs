@@ -12,7 +12,7 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 128);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 129);
 const heroes2014 = Object.values(window.IRON_PIT_BROWSER_HEROES).filter((hero) => hero.ruleset === "2014");
 const fighters2014 = heroes2014.filter((hero) => hero.class_id === "fighter");
 const barbarians2014 = heroes2014.filter((hero) => hero.class_id === "barbarian");
