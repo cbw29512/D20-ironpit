@@ -61,15 +61,18 @@ def build_cleric_life_2014_feature_audits(level: int) -> list[FeatureAudit]:
             audits.extend([
                 _audit("channel-divinity", "Channel Divinity", "class", source=CLERIC),
                 _audit(
-                    "turn-undead", "Turn Undead", "class", source=CLERIC, automated=False,
-                    notes="Awaiting the universal Turned/forced-retreat condition primitive.",
+                    "turn-undead", "Turn Undead", "class", source=CLERIC,
+                    notes=(
+                        "2014 Iron Pit house rule: failed saves apply the universal Trembling debuff; "
+                        "Action, Bonus Action, Reaction, and movement are suppressed until damage or "
+                        "an end-of-turn Wisdom save removes the effect."
+                    ),
                 ),
                 _audit(
                     "preserve-life", "Channel Divinity: Preserve Life", "subclass", source=LIFE,
-                    automated=False,
                     notes=(
-                        "Awaiting universal divisible healing-pool allocation with a half-maximum-HP cap "
-                        "and undead/construct exclusions."
+                        "Uses the universal divisible healing pool with the half-maximum-HP cap and "
+                        "2014 Undead/Construct exclusions."
                     ),
                 ),
             ])
