@@ -36,6 +36,11 @@ _PREPARED = (
     _spell("purify-food-and-drink", "Purify Food and Drink", "utility", "arena-out-of-scope"),
     _spell("detect-poison-and-disease", "Detect Poison and Disease", "utility", "arena-out-of-scope"),
     _spell("aid", "Aid", "buff", "max-hp-increase", level=2, min_level=5),
+    # RAW 2014 Paladins can prepare Magic Weapon once 2nd-level slots are available.
+    # It reuses the universal modifier-stack + concentration capabilities rather than
+    # introducing spell-specific engine behavior, and supplies the ninth prepared
+    # spell required by Aurelia's level-12 CHA modifier + half-level preparation count.
+    _spell("magic-weapon", "Magic Weapon", "buff", "modifier-stack", "concentration", level=2, min_level=5),
 )
 
 _OATH = (
