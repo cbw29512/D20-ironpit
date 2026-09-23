@@ -35,6 +35,7 @@ def test_browser_normal_post_move_profile_matches_python_policy_order() -> None:
     _positions_in_order(profile, [
         "CATEGORIES.SPELL_OFFENSE",
         "CATEGORIES.INTIMIDATING_PRESENCE_2014",
+        "CATEGORIES.DEFERRED_SAVE_EFFECT",
         "CATEGORIES.ATTACK_ACTION",
         "CATEGORIES.AREA_SAVE",
         "CATEGORIES.SAVE_ACTION",
