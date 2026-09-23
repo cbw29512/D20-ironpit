@@ -67,17 +67,20 @@ class SavingThrowProficiencyGrant(BaseModel):
 
 
 class SavingThrowAdvantageGrant(BaseModel):
-    """Passive source-tagged Advantage on matching saving throws."""
+    """Defender-owned passive Advantage on matching saving throws."""
 
     source_id: str
     source_name: str = Field(min_length=1)
     abilities: list[AbilityName] = Field(min_length=1)
     requires_magical_effect: bool = False
+    against_effect_tags: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_abilities(self) -> "SavingThrowAdvantageGrant":
         if len(set(self.abilities)) != len(self.abilities):
             raise ValueError("Saving-throw Advantage abilities must be unique.")
+        if len(set(self.against_effect_tags)) != len(self.against_effect_tags):
+            raise ValueError("Saving-throw Advantage effect tags must be unique.")
         return self
 
 
