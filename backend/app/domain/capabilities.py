@@ -20,6 +20,7 @@ from app.domain.recharge import RechargeRule
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.rulesets import RulesetId
 from app.domain.size import CreatureSize
+from app.domain.senses import CombatSenses
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
@@ -55,6 +56,7 @@ class CombatantDefinition(BaseModel):
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
+    senses: CombatSenses = Field(default_factory=CombatSenses)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
