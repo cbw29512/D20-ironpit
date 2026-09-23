@@ -20,6 +20,7 @@ def build_sacred_flame(save_dc: int, character_level: int, damage_bonus: int = 0
         level=0,
         action_cost="action",
         range_ft=60,
+        requires_visible_target=True,
         save_ability="dexterity",
         dc=save_dc,
         damage_dice_count=cantrip_damage_dice(character_level),
