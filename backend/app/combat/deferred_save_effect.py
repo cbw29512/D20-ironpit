@@ -4,11 +4,10 @@ from dataclasses import dataclass
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
+from app.combat.deferred_save_effect_outcomes import resolve_deferred_effect_outcome
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import BattleEvent, CombatantState, DamageRollComponent, DamageType, DiceRoll, WeaponAttack
+from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.runtime import DeferredEffectState
 
 logger = logging.getLogger(__name__)
@@ -135,46 +134,13 @@ def resolve_deferred_save_effect(
         death_failure_before = target.state.death_save_failures
         roll, succeeded = resolve_saving_throw(target.state, rule.save_ability, rule.save_dc, dice)
         affected = [member.state for member in [*setup.heroes, *setup.monsters]]
-        damage_roll = None
-        components: list[DamageRollComponent] = []
-
-        if succeeded and rule.success_damage_dice_count:
-            if rule.success_damage_type is None:
-                raise ValueError(f"Deferred effect {rule.source_id} has damage dice without a damage type.")
-            rolls = [
-                dice.roll(rule.success_damage_dice_size)
-                for _ in range(rule.success_damage_dice_count)
-            ]
-            raw_total = sum(rolls)
-            damage_type = DamageType(rule.success_damage_type)
-            raw = DamageRollComponent(
-                source=rule.source_name,
-                notation=f"{rule.success_damage_dice_count}d{rule.success_damage_dice_size}",
-                rolls=rolls,
-                modifier=0,
-                damage_type=damage_type,
-                total=raw_total,
-            )
-            applied, components = apply_damage_defenses(target.state, [raw])
-            apply_damage(
-                target.state,
-                applied,
-                damage_types={damage_type},
-                dice=dice,
-                affected_states=affected,
-            )
-            damage_roll = DiceRoll(
-                notation=raw.notation,
-                rolls=rolls,
-                modifier=0,
-                total=applied,
-            )
-        elif not succeeded and rule.failure_sets_zero_hp:
-            reduce_to_zero_hit_points(
-                target.state,
-                dice=dice,
-                affected_states=affected,
-            )
+        damage_roll, components = resolve_deferred_effect_outcome(
+            target.state,
+            rule,
+            succeeded,
+            dice,
+            affected,
+        )
 
         spend(actor.state, "action")
         actor.state.deferred_effects = [
