@@ -7,6 +7,7 @@ from typing import Any
 
 from app.content.canonical_hero_policy import canonical_spell_package
 from app.content.certified_heroes import build_all_certified_hero_entries
+from app.content.class_spell_progression import CASTING_ABILITIES
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -178,8 +179,9 @@ def _spell_package(class_id: str, level: int, template: CombatantTemplate):
     ):
         return None
     casting_modifier = None
-    if class_id == "paladin" and template.ability_scores is not None:
-        casting_modifier = template.ability_scores.modifier("charisma")
+    casting_ability = CASTING_ABILITIES.get(class_id)
+    if casting_ability is not None and template.ability_scores is not None:
+        casting_modifier = template.ability_scores.modifier(casting_ability)
     return canonical_spell_package(class_id, level, template.ruleset, casting_modifier)
 
 
