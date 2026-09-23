@@ -1,7 +1,10 @@
 # 2014 READY Reconciliation Audit
 
 Status: active  
-Base commit: `e3b2bffb822d8bd5e89794aeb76388f8f6d8761e`
+PR branch base commit: `e3b2bffb822d8bd5e89794aeb76388f8f6d8761e`  
+Latest audit validation anchor: `7c87cfbaef3349f2eaad86728e09f4ab71935720` (`main`, after PR #344)
+
+The PR branch is intentionally still based on the earlier audit anchor while the audit is active. PR #344 added Paladin audit documentation only; no runtime behavior changed between these anchors. Re-anchor to current `main` before any reconciliation repair is merged.
 
 ## Objective
 
@@ -285,9 +288,10 @@ READY status must fail closed if any printed outcome-changing mechanic is discov
 ### MON-2014-001 — Flyby falsely classified arena-neutral
 - Classification: `ENGINE_TRULY_MISSING`.
 - The current 2014 classifier admits Flyby as arena-neutral.
-- Confirmed READY cards admitted on that basis: **Giant Owl, Owl, Pteranodon**.
-- Flyby changes Opportunity Attack legality when the creature moves out of an enemy's reach and is therefore outcome-changing under the authoritative grid/OA contract.
-- Required repair: remove Flyby from the neutral allowlist and add/reuse a universal movement/OA exemption semantic for voluntary movement by a creature with that trait. Until then, affected cards must fail closed rather than remain READY.
+- Full generated-READY-roster sweep confirms **four** affected cards: **Flying Snake, Giant Owl, Owl, Pteranodon**. The earlier three-card list missed Flying Snake.
+- Flyby changes Opportunity Attack legality when the creature flies out of an enemy's reach and is therefore outcome-changing under the authoritative grid/OA contract.
+- Current universal OA legality checks reactor state, sight, reaction availability, movement source, and Disengage, but carries no immutable mover-side OA exemption.
+- Required repair: remove Flyby from the neutral allowlist and add one universal mover-side Opportunity Attack exemption semantic, parameterized so Flyby applies only to qualifying flight movement. Until then, affected cards must fail closed rather than remain READY.
 
 ### MON-2014-002 — Echolocation/special senses missing from 2014 source/runtime schema
 - Classification: `ENGINE_TRULY_MISSING`.
@@ -299,8 +303,41 @@ READY status must fail closed if any printed outcome-changing mechanic is discov
 ### MON-2014-003 — Sunlight Sensitivity depends on an undefined arena environment fact
 - Classification: `ARENA_NEUTRAL` only if the rules contract explicitly fixes the standard arena as having no direct sunlight; otherwise `ENGINE_TRULY_MISSING`.
 - Confirmed READY card admitted on the current neutral assumption: **Kobold**.
-- No current Iron Pit contract entry was found defining sunlight/lighting state.
-- Required repair: either lock the standard arena lighting environment explicitly (making Sunlight Sensitivity deterministically inactive) or model environmental sunlight and its attack/Perception disadvantage. Do not silently assume a lighting state.
+- The standard-arena contract already fixes clear line of sight, no environmental cover, and no default pits/lava/traps/difficult terrain/water/random hazards, so terrain-dependent neutral traits can be evaluated deterministically.
+- The contract still does **not** define direct sunlight/lighting state.
+- Required repair: either lock the standard arena lighting environment explicitly (making Sunlight Sensitivity deterministically active or inactive as specified) or model environmental sunlight and its attack/Perception disadvantage. Do not silently assume a lighting state.
+
+## Cross-edition findings exposed by the 2014 reconciliation
+
+These findings are recorded now because the same universal mechanic/certification policy is shared across editions. They do **not** authorize skipping the 2014-first repair order.
+
+### XED-MON-001 — 2024 Flyby and Agile are also falsely arena-neutral
+- Classification: `ENGINE_TRULY_MISSING`.
+- The 2024 trait source audit currently lists both `Flyby` and `Agile` as arena-neutral.
+- Current 2024 READY Flyby cards: **Hippogriff, Owl, Pteranodon, Giant Owl, Giant Wasp, Flying Snake, Gargoyle**.
+- Current 2024 READY Agile cards: **Deer, Rat**.
+- Both mechanics change Opportunity Attack legality. Flyby is movement-mode-qualified; Agile is not.
+- The same universal mover-side OA-exemption primitive required by MON-2014-001 must support these source-specific parameters rather than adding Flyby- or Agile-named resolvers.
+- Re-audit both editions after that primitive lands and fail closed any affected READY card until its binding/parity evidence is present.
+
+### XED-MON-002 — 2024 Sunlight Sensitivity shares the same undefined environment dependency
+- Classification: `ARENA_NEUTRAL` only after an explicit no-direct-sunlight arena contract; otherwise `ENGINE_TRULY_MISSING`.
+- Current 2024 READY affected card: **Kobold Warrior**.
+- The source trait changes attack rolls/ability checks while in sunlight, so the same environment decision as MON-2014-003 must be edition-neutral.
+
+### XED-ARCH-001 — 2024 READY monster authoring remains overwhelmingly legacy-derived
+- Classification: `ENGINE_EXISTS_BINDING_MISSING` as architecture/content migration debt; this fact alone is **not** a RAW-readiness blocker when source audits and runtime behavior are complete.
+- Current 2024 READY runtime count: **140**.
+- `combatant_capabilities_v1.json` contains **138** monster definitions generated from `build_legacy_monster_templates(include_capability_migrated=False)`.
+- `combatant_capabilities_native_v1.json` contains only **2** native monster definitions: Swarm of Insects and Swarm of Venomous Snakes.
+- Required follow-up after the READY correctness gate: migrate repeated families from imperative legacy builders into authoritative declarative capability data one semantic family at a time, preserving source-audit parity and exact behavior. Do not bulk-rewrite working mechanics.
+
+## Monster defense gate verification
+
+- The 2014 basic-candidate gate already fails closed on `unsupported_defense_text`.
+- The 128 generated READY 2014 monsters currently expose only unconditional typed resistances/immunities/vulnerabilities supported by the existing damage-type path; conditional nonmagical-attack defense text is not silently admitted through this basic roster.
+- This means MONK-2014-003 remains a real universal capability gap, but it has **not** already corrupted the current 128-monster READY set through a known conditional-defense admission.
+- The blocked/catch-up monsters that use conditional magical/nonmagical defenses must be re-evaluated when the universal source qualifier lands.
 
 ## Paired-edition catch-up queue after READY reconciliation
 
