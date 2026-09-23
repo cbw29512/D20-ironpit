@@ -27,7 +27,10 @@
       repeat_save_timing: defaultPoison ? "target_turn_start" : (options.repeatSaveTiming || null),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
+      suppress_action: Boolean(options.suppressAction),
+      suppress_bonus_action: Boolean(options.suppressBonusAction),
       suppress_reactions: Boolean(options.suppressReactions),
+      suppress_movement: Boolean(options.suppressMovement),
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
@@ -36,6 +39,12 @@
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
   }
+
+  const suppressesAction = (state) => (state.timed_effects || []).some((effect) => effect.suppress_action);
+  const suppressesBonusAction = (state) => (state.timed_effects || []).some((effect) => effect.suppress_bonus_action);
+  const suppressesReactions = (state) => (state.timed_effects || []).some((effect) => effect.suppress_reactions);
+  const suppressesMovement = (state) => (state.timed_effects || []).some((effect) => effect.suppress_movement);
+  const suppressesVoluntaryTurn = (state) => suppressesAction(state) && suppressesBonusAction(state) && suppressesMovement(state);
 
   function removeEffect(state, effect) {
     state.timed_effects = state.timed_effects.filter((item) => item !== effect);
@@ -88,5 +97,8 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, ownsDamageResistance, removeEffect, removeGroup };
+  window.IRON_PIT_BROWSER_TIMED = {
+    apply, expireSourceStart, ownsDamageResistance, removeEffect, removeGroup,
+    suppressesAction, suppressesBonusAction, suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
+  };
 })();
