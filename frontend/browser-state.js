@@ -27,7 +27,7 @@
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
-      grapple_sources: [], timed_effects: [], deferred_effects: [], active_modifiers: OM().build(template), concentration: null,
+      grapple_sources: [], timed_effects: [], deferred_effects: [], persistent_spell_attacks: [], active_modifiers: OM().build(template), concentration: null,
       survival_save_uses: {}, pending_survival_save_logs: [],
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
