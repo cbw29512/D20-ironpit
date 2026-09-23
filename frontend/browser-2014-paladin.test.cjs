@@ -59,6 +59,7 @@ function queued(values) {
   assert.equal(paladin.state.resources["channel-divinity"], 0);
   assert.equal(paladin.state.action_available, false);
   assert.equal(M.attackRollFlat(paladin.state, "longsword"), 2);
+  assert.ok(M.damageSourceQualifiers(paladin.state, paladin.state.template.attacks[0]).has("magical"));
 }
 
 {

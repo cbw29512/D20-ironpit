@@ -132,15 +132,18 @@
     );
     if (brutalStrike) components.push(bonusComponent(brutalStrike, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
-    const total = components.reduce((sum, item) => sum + item.total, 0);
+    const qualifiers = window.IRON_PIT_BROWSER_MODIFIERS?.damageSourceQualifiers(attacker, attack)
+      || new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
+    const qualifiedComponents = components.map((item) => ({ ...item, source_qualifiers: [...qualifiers] }));
+    const total = qualifiedComponents.reduce((sum, item) => sum + item.total, 0);
     return {
       roll: {
-        notation: components.map((item) => item.notation).join(" + "),
-        rolls: components.flatMap((item) => item.rolls),
-        modifier: components.reduce((sum, item) => sum + item.modifier, 0),
+        notation: qualifiedComponents.map((item) => item.notation).join(" + "),
+        rolls: qualifiedComponents.flatMap((item) => item.rolls),
+        modifier: qualifiedComponents.reduce((sum, item) => sum + item.modifier, 0),
         total,
       },
-      components,
+      components: qualifiedComponents,
     };
   }
 

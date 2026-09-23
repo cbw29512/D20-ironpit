@@ -11,6 +11,7 @@ from app.content.monk_open_hand_2014_combat_profile import build_kael_2014_comba
 from app.content.monk_open_hand_2014_profile import build_kael_stillwater_2014_profile
 from app.content.monk_open_hand_2014_runtime import build_kael_stillwater_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.events import BattleEvent
 from app.domain.models import DamageRollComponent, DamageType
 
@@ -64,6 +65,15 @@ def test_2014_open_hand_levels_one_through_ten_compile_with_expected_breakpoints
         assert hero.progression_features.evasion is (level >= 7)
     assert build_kael_stillwater_2014(4).ability_scores.dexterity == 18
     assert build_kael_stillwater_2014(8).ability_scores.dexterity == 20
+
+
+def test_ki_empowered_strikes_marks_only_level_six_plus_unarmed_attacks_magical() -> None:
+    level5 = build_kael_stillwater_2014(5)
+    level6 = build_kael_stillwater_2014(6)
+
+    assert DamageSourceQualifier.MAGICAL not in level5.weapon_attack.damage_source_qualifiers
+    assert DamageSourceQualifier.MAGICAL in level6.weapon_attack.damage_source_qualifiers
+    assert DamageSourceQualifier.MAGICAL not in level6.alternate_weapon_attacks[0].damage_source_qualifiers
 
 
 def test_monk_resources_healing_removal_and_purity_are_level_gated() -> None:

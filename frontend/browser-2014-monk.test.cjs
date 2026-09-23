@@ -39,6 +39,9 @@ assert.equal(monk(4).attacks.find((attack) => attack.weaponId === "unarmed-strik
 assert.equal(monk(5).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 6);
 assert.equal(monk(2).resources.ki, 2);
 assert.equal(monk(6).resources["wholeness-of-body"], 1);
+assert.ok(!(monk(5).attacks.find((attack) => attack.weaponId === "unarmed-strike").damageSourceQualifiers || []).includes("magical"));
+assert.ok(monk(6).attacks.find((attack) => attack.weaponId === "unarmed-strike").damageSourceQualifiers.includes("magical"));
+assert.ok(!(monk(6).attacks.find((attack) => attack.weaponId === "shortsword").damageSourceQualifiers || []).includes("magical"));
 assert.equal(monk(3).deflect_missiles, true);
 assert.equal(monk(3).open_hand_technique, true);
 assert.equal(monk(5).stunning_strike, true);

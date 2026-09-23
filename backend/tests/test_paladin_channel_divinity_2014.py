@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.dice import FixedDiceProvider
-from app.combat.modifier_stack import attack_roll_flat_bonus
+from app.combat.modifier_stack import attack_damage_source_qualifiers, attack_roll_flat_bonus
 from app.combat.ongoing_spell_control import forced_retreat_active
 from app.combat.paladin_channel_divinity_2014 import (
     legal_unholy_targets,
@@ -12,6 +12,7 @@ from app.content.capability_registry import build_combatant_from_capabilities
 from app.content.monsters import build_commoner
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.damage_sources import DamageSourceQualifier
 
 
 def _member(template, combatant_id: str, side: str, position: int) -> EncounterCombatant:
@@ -73,6 +74,9 @@ def test_sacred_weapon_is_fallback_when_no_unholy_target_is_legal() -> None:
     assert events[0].feature_id == "sacred-weapon"
     assert _uses(paladin) == 0
     assert attack_roll_flat_bonus(paladin.state, "longsword") == 2
+    assert DamageSourceQualifier.MAGICAL in attack_damage_source_qualifiers(
+        paladin.state, paladin.state.template.weapon_attack,
+    )
 
 
 def test_unholy_target_outside_thirty_feet_does_not_consume_turn_policy() -> None:

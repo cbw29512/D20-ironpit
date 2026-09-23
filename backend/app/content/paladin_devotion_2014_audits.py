@@ -67,7 +67,7 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
                 _audit(
                     "sacred-weapon", "Sacred Weapon", "subclass",
-                    notes="Channel Divinity activates the timed Charisma attack-roll bonus through the shared modifier engine.",
+                    notes="Channel Divinity activates the timed Charisma attack-roll bonus and source-owned magical weapon qualifier through shared modifier mechanics.",
                 ),
                 _audit(
                     "turn-the-unholy", "Turn the Unholy", "subclass",

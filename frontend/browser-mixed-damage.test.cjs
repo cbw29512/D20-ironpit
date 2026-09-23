@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-grapple.js", "browser-timed-conditions.js",
-  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
+  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-damage-defense-rules.js", "browser-attack.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -80,4 +80,34 @@ const ritualSickle = {
   assert.equal(event.damage_roll.total, 4);
 }
 
-console.log("Browser mixed typed hit-damage regressions passed, including fixed typed riders.");
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const commoner = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  hero.state.template.conditional_damage_defenses = [{
+    id: "nonmagical-slashing-resistance", kind: "resistance", damageTypes: ["slashing"],
+    requiredSourceQualifiers: ["attack"], forbiddenSourceQualifiers: ["magical"],
+  }];
+  const mundane = { ...ritualSickle, onHitDamage: [] };
+  window.IRON_PIT_DICE = queuedDice([15, 4]);
+  const mundaneEvent = A.resolveAttack(1, 1, commoner, hero, mundane, 5);
+  assert.equal(mundaneEvent.damage_components[0].total, 5);
+  assert.equal(mundaneEvent.damage_components[0].applied_total, 2);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const commoner = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  hero.state.template.conditional_damage_defenses = [{
+    id: "nonmagical-slashing-resistance", kind: "resistance", damageTypes: ["slashing"],
+    requiredSourceQualifiers: ["attack"], forbiddenSourceQualifiers: ["magical"],
+  }];
+  const magical = { ...ritualSickle, onHitDamage: [], damageSourceQualifiers: ["magical"] };
+  window.IRON_PIT_DICE = queuedDice([15, 4]);
+  const magicalEvent = A.resolveAttack(1, 1, commoner, hero, magical, 5);
+  assert.equal(magicalEvent.damage_components[0].total, 5);
+  assert.equal(magicalEvent.damage_components[0].applied_total, 5);
+  assert.ok(magicalEvent.damage_components[0].source_qualifiers.includes("magical"));
+}
+
+console.log("Browser mixed typed hit-damage regressions passed, including source-qualified defenses.");

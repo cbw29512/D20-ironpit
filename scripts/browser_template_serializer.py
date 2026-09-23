@@ -62,6 +62,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
             "reach": weapon.reach_ft, "animation": weapon.animation,
         }
+        if attack.damage_source_qualifiers:
+            row["damageSourceQualifiers"] = [_value(item) for item in attack.damage_source_qualifiers]
         if attack.attack_ability is not None:
             row["attackAbility"] = attack.attack_ability
         if weapon.normal_range_ft is not None:
@@ -356,6 +358,17 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.conditional_damage_defenses:
+            row["conditional_damage_defenses"] = [
+                {
+                    "id": item.id,
+                    "kind": _value(item.kind),
+                    "damageTypes": [_value(kind) for kind in item.damage_types],
+                    "requiredSourceQualifiers": [_value(kind) for kind in item.required_source_qualifiers],
+                    "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
+                }
+                for item in template.conditional_damage_defenses
+            ]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)

@@ -101,6 +101,22 @@ This checklist is mandatory on every implementation pass:
 
 If there is uncertainty about whether two abilities are semantically the same, stop and ask Chris before creating new engine behavior.
 
+## Damage-source qualifier contract
+
+Damage defenses may depend on both damage type and the semantic source of that damage. This is one universal damage pipeline, not separate Monk, Paladin, monster, or edition-specific defense logic.
+
+- Damage components may carry reusable source qualifiers such as `attack`, `weapon`, `melee`, `ranged`, and `magical`.
+- Static attack data may declare qualifiers that always apply to that attack.
+- Temporary effects may add a source-owned qualifier to a specific weapon through the shared modifier lifecycle; expiry removes only that source's contribution.
+- Conditional resistance, immunity, or vulnerability is declarative data that matches damage type plus required/forbidden source qualifiers.
+- A defense such as resistance to Bludgeoning, Piercing, and Slashing damage from nonmagical attacks is represented as B/P/S + required `attack` + forbidden `magical`; the defense resolver never checks the attacker, class, monster, or feature name.
+- 2014 Ki-Empowered Strikes binds `magical` to the Monk's qualifying unarmed strikes from level 6 onward.
+- 2014 Sacred Weapon composes its existing weapon-scoped attack-roll bonus with a temporary weapon-scoped `magical` qualifier owned by the same source effect.
+- Exact source names remain presentation/audit metadata; qualifier matching is semantic.
+- Python and browser must carry the same qualifier data on resolved damage components and apply the same conditional-defense matching.
+
+This qualifier vocabulary is intentionally reusable by future hero, monster, spell, item, and ruleset content. Add a new qualifier only when a source rule truly requires a semantic distinction that cannot be represented by the existing vocabulary.
+
 ## Primitive versus trigger contract
 
 Before adding any new resolver, combat subsystem, or special handler, classify the source behavior first:

@@ -45,6 +45,8 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
         "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
         "reach": weapon.reach_ft, "animation": weapon.animation,
     }
+    if attack.damage_source_qualifiers:
+        row["damageSourceQualifiers"] = [_value(item) for item in attack.damage_source_qualifiers]
     if weapon.mastery_property is not None: row["masteryProperty"] = weapon.mastery_property
     if weapon.light: row["light"] = True
     if attack.damage_die_minimum is not None: row["damageDieMinimum"] = attack.damage_die_minimum
@@ -248,6 +250,17 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()}, "source": template.source,
     }
+    if template.conditional_damage_defenses:
+        row["conditional_damage_defenses"] = [
+            {
+                "id": item.id,
+                "kind": _value(item.kind),
+                "damageTypes": [_value(kind) for kind in item.damage_types],
+                "requiredSourceQualifiers": [_value(kind) for kind in item.required_source_qualifiers],
+                "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
+            }
+            for item in template.conditional_damage_defenses
+        ]
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:

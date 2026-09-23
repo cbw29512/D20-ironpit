@@ -39,7 +39,10 @@ def build_monk_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ])
         if level >= 6:
             audits.extend([
-                _audit("ki-empowered-strikes", "Ki-Empowered Strikes", "class"),
+                _audit(
+                    "ki-empowered-strikes", "Ki-Empowered Strikes", "class",
+                    notes="Level 6+ unarmed strikes carry the universal magical damage-source qualifier for conditional defenses.",
+                ),
                 _audit("wholeness-of-body", "Wholeness of Body", "subclass"),
             ])
         if level >= 7:

@@ -5,8 +5,10 @@ from collections.abc import Iterable
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import d20_modifier, speed_after_exhaustion
 from app.domain.events import DiceRoll
+from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import CombatantState
+from app.domain.weapons import WeaponAttack
 
 
 def add_modifier(state: CombatantState, modifier: CombatModifier) -> None:
@@ -79,6 +81,30 @@ def saving_throw_flat_bonus(state: CombatantState) -> int:
         item.flat_bonus for item in state.active_modifiers
         if item.kind is ModifierKind.SAVING_THROW_FLAT
     )
+
+
+def attack_damage_source_qualifiers(
+    state: CombatantState, attack: WeaponAttack,
+) -> set[DamageSourceQualifier]:
+    try:
+        qualifiers = {
+            DamageSourceQualifier.ATTACK,
+            DamageSourceQualifier.WEAPON,
+            DamageSourceQualifier(attack.weapon.attack_kind.value),
+            *attack.damage_source_qualifiers,
+        }
+        qualifiers.update(
+            item.source_qualifier
+            for item in state.active_modifiers
+            if item.kind is ModifierKind.DAMAGE_SOURCE_QUALIFIER
+            and item.weapon_id == attack.weapon.id
+            and item.source_qualifier is not None
+        )
+        return qualifiers
+    except Exception as exc:
+        raise RuntimeError(
+            f"Damage-source qualifiers could not be resolved for {state.template.name} / {attack.id}."
+        ) from exc
 
 
 def effective_speed(state: CombatantState) -> int:
