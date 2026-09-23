@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from fractions import Fraction
+
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition
-from app.combat.zero_hp import apply_damage
+from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll
 
@@ -77,6 +79,17 @@ def apply_turned_creature_effects(
     return [effect for effect in applied if effect is not None]
 
 
+def _challenge_rating_at_or_below(target: EncounterCombatant, maximum: str | None) -> bool:
+    try:
+        if maximum is None or target.state.template.challenge_rating is None:
+            return False
+        return Fraction(target.state.template.challenge_rating) <= Fraction(maximum)
+    except Exception as exc:
+        raise ValueError(
+            f"Invalid turning-destruction Challenge Rating comparison for {target.state.template.name}."
+        ) from exc
+
+
 def resolve_turning_saves(
     sequence: int,
     round_number: int,
@@ -105,7 +118,9 @@ def resolve_turning_saves(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve the shared Wisdom-save/event loop for creature-turning features."""
     events: list[BattleEvent] = []
-    rider = source.state.template.progression_features.turning_failure_damage
+    features = source.state.template.progression_features
+    rider = features.turning_failure_damage
+    destroy_max_cr = features.turning_failure_destroy_max_cr
     shared_rolls: list[int] = []
     if rider is not None:
         scores = source.state.template.ability_scores
@@ -115,6 +130,7 @@ def resolve_turning_saves(
         shared_rolls = [dice.roll(rider.dice_size) for _ in range(dice_count)]
     affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
     for target in targets:
+        hp_before = target.state.current_hp
         roll, succeeded = resolve_saving_throw(target.state, "wisdom", save_dc, dice)
         damage_roll = None
         damage_components = []
@@ -143,7 +159,19 @@ def resolve_turning_saves(
                 modifier=0,
                 total=applied_total,
             )
-        applied = [] if succeeded or target.state.is_dead else apply_turned_creature_effects(
+        destroyed = False
+        if (
+            not succeeded
+            and not target.state.is_dead
+            and _challenge_rating_at_or_below(target, destroy_max_cr)
+        ):
+            reduce_to_zero_hit_points(
+                target.state,
+                dice=dice,
+                affected_states=affected_states,
+            )
+            destroyed = True
+        applied = [] if succeeded or target.state.is_dead or destroyed else apply_turned_creature_effects(
             source, target, setup, round_number,
             source_effect_id=source_effect_id,
             turned_effect_id=turned_effect_id,
@@ -170,9 +198,11 @@ def resolve_turning_saves(
             damage_roll=damage_roll, damage_components=damage_components,
             applied_condition_ids=applied, feature_id=source_effect_id,
             resource_remaining=resource_remaining, animation="turn-undead",
+            hp_before=hp_before, hp_after=target.state.current_hp, is_dead=target.state.is_dead,
             description=(
                 f"{target.state.template.name} {'resists' if succeeded else 'fails'} "
-                f"{source.state.template.name}'s {feature_name}."
+                f"{source.state.template.name}'s {feature_name}"
+                f"{' and is destroyed' if destroyed else ''}."
             ),
         ))
         sequence += 1
