@@ -26,6 +26,7 @@
             kind: "saving-throw-advantage",
             save_ability: ability,
             requires_magical_effect: Boolean(grant.requires_magical_effect),
+            against_effect_tags: [...(grant.against_effect_tags || [])],
           });
         }
       }
