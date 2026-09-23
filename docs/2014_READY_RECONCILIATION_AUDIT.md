@@ -280,6 +280,28 @@ All **128 currently READY 2014 monsters** must be rechecked against:
 
 READY status must fail closed if any printed outcome-changing mechanic is discovered without support.
 
+## Certified monster audit findings
+
+### MON-2014-001 — Flyby falsely classified arena-neutral
+- Classification: `ENGINE_TRULY_MISSING`.
+- The current 2014 classifier admits Flyby as arena-neutral.
+- Confirmed READY cards admitted on that basis: **Giant Owl, Owl, Pteranodon**.
+- Flyby changes Opportunity Attack legality when the creature moves out of an enemy's reach and is therefore outcome-changing under the authoritative grid/OA contract.
+- Required repair: remove Flyby from the neutral allowlist and add/reuse a universal movement/OA exemption semantic for voluntary movement by a creature with that trait. Until then, affected cards must fail closed rather than remain READY.
+
+### MON-2014-002 — Echolocation/special senses missing from 2014 source/runtime schema
+- Classification: `ENGINE_TRULY_MISSING`.
+- Confirmed READY cards currently admitted with Echolocation: **Bat, Giant Bat, Killer Whale, Swarm of Bats**.
+- The 2014 source model has no certified senses/blindsight field, and the universal Invisible attack modifier currently has no special-sense override.
+- This became directly outcome-changing once Invisible was certified for 2014 Monk Empty Body.
+- Required repair: carry authoritative senses/ranges into immutable source data, add universal perception-of-target semantics for effects such as blindsight, and make Invisible/unseen attack modifiers consume that semantic. Until then, Echolocation cards cannot be treated as fully READY against all certified opponents.
+
+### MON-2014-003 — Sunlight Sensitivity depends on an undefined arena environment fact
+- Classification: `ARENA_NEUTRAL` only if the rules contract explicitly fixes the standard arena as having no direct sunlight; otherwise `ENGINE_TRULY_MISSING`.
+- Confirmed READY card admitted on the current neutral assumption: **Kobold**.
+- No current Iron Pit contract entry was found defining sunlight/lighting state.
+- Required repair: either lock the standard arena lighting environment explicitly (making Sunlight Sensitivity deterministically inactive) or model environmental sunlight and its attack/Perception disadvantage. Do not silently assume a lighting state.
+
 ## Paired-edition catch-up queue after READY reconciliation
 
 Do not process these until the currently READY 2014 roster is revalidated.
