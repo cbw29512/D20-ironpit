@@ -62,6 +62,7 @@ class SourceMonster2014(BaseModel):
     abilities: dict[str, int]
     saving_throws: dict[str, int] = Field(default_factory=dict)
     skills: dict[str, int] = Field(default_factory=dict)
+    senses: str | None = None
     damage_resistances: list[str] = Field(default_factory=list)
     damage_immunities: list[str] = Field(default_factory=list)
     damage_vulnerabilities: list[str] = Field(default_factory=list)
