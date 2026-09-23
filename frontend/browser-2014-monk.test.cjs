@@ -52,6 +52,7 @@ assert.ok(monk(10).attacks.every((attack) => attack.masteryProperty == null));
 assert.equal(monk(11).attacks.find((attack) => attack.weaponId === "unarmed-strike").diceSize, 8);
 assert.equal(monk(12).ability_scores.wisdom, 17);
 assert.equal(monk(14).speed_ft, 55);
+assert.equal(monk(18).speed_ft, 60);
 assert.equal(monk(15).ability_scores.wisdom, 17);
 assert.equal(monk(16).ability_scores.wisdom, 19);
 assert.equal(monk(16).armor_class, 19);
