@@ -12,13 +12,22 @@ from app.combat.rogue_defenses import evasion_damage
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
+from app.combat.visibility import can_see
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
 
 
-def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
-    if distance_ft > action.range_ft: return False
+def legal_save_action(
+    actor: EncounterCombatant,
+    action: SavingThrowAction,
+    target: EncounterCombatant,
+    distance_ft: int,
+) -> bool:
+    if distance_ft > action.range_ft:
+        return False
+    if action.requires_visible_target and not can_see(actor.state, target.state, distance_ft):
+        return False
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
 
 
@@ -46,7 +55,7 @@ def resolve_save_action(
     shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
-    if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
+    if not legal_save_action(actor, action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     if check_resource and not action_resource_available(actor.state, action):
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
