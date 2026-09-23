@@ -42,6 +42,22 @@ class EffectBoundSurvivalSave(BaseModel):
     replacement_hp: int = Field(ge=1)
 
 
+class DeferredSaveEffect(BaseModel):
+    """A source-tagged mark armed by a qualifying hit and later activated as an Action."""
+
+    source_id: str
+    source_name: str
+    trigger_attack_ids: list[str] = Field(min_length=1)
+    resource_id: str
+    resource_cost: int = Field(default=1, ge=1)
+    save_ability: AbilityName
+    save_dc: int = Field(ge=1, le=40)
+    failure_sets_zero_hp: bool = False
+    success_damage_dice_count: int = Field(default=0, ge=0, le=40)
+    success_damage_dice_size: int = Field(default=10, ge=2, le=100)
+    success_damage_type: str | None = None
+
+
 class FirstRoundExtraTurnGrant(BaseModel):
     """Source-tagged extra first-round turn at an initiative offset."""
 
@@ -93,6 +109,7 @@ class ProgressionCombatFeatures(BaseModel):
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
+    deferred_save_effect: DeferredSaveEffect | None = None
     opening_targeting_ward: OpeningTargetingWard | None = None
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
