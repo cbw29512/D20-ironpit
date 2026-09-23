@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import logging
+
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.actions import AbilityName, ConditionTiming
+from app.domain.combatants import DamageType
 from app.domain.models import BattleEvent, CombatantState, CombatantTemplate, EncounterCombatant, EncounterSetup, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
+
+logger = logging.getLogger(__name__)
 
 POISONED_EFFECT_ID = "poisoned"
 ARENA_POISON_RECOVERY_DC = 10
@@ -30,47 +35,64 @@ def apply_timed_condition(
     ends_on_damage: bool = False,
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
+    owned_damage_resistances: list[DamageType] | None = None,
     use_default_poison_recovery: bool = True,
 ) -> str | None:
-    if condition_is_immune(state, effect_id, source_template):
-        return None
-    if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
-        if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
-            return POISONED_EFFECT_ID
-        expires_at_start_of_source_turn = False
-        expiry_timing = None
-        repeat_save_ability = repeat_save_ability or "constitution"
-        repeat_save_dc = repeat_save_dc or ARENA_POISON_RECOVERY_DC
-        repeat_save_timing = "target_turn_start"
-    state.timed_effects = [
-        effect for effect in state.timed_effects
-        if not (
-            effect.effect_id == effect_id
-            and effect.source_id == source_id
-            and effect.source_effect_id == source_effect_id
+    """Apply one source-owned timed condition and its optional passive defenses.
+
+    Passive defenses live on the same TimedEffect as the condition so normal
+    lifecycle cleanup removes only state owned by this source. Callers supply
+    source-specific parameters; damage math and expiry remain universal.
+    """
+    try:
+        if condition_is_immune(state, effect_id, source_template):
+            return None
+        if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
+            if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
+                return POISONED_EFFECT_ID
+            expires_at_start_of_source_turn = False
+            expiry_timing = None
+            repeat_save_ability = repeat_save_ability or "constitution"
+            repeat_save_dc = repeat_save_dc or ARENA_POISON_RECOVERY_DC
+            repeat_save_timing = "target_turn_start"
+        state.timed_effects = [
+            effect for effect in state.timed_effects
+            if not (
+                effect.effect_id == effect_id
+                and effect.source_id == source_id
+                and effect.source_effect_id == source_effect_id
+            )
+        ]
+        state.timed_effects.append(TimedEffect(
+            effect_id=effect_id,
+            source_id=source_id,
+            source_effect_id=source_effect_id,
+            applied_round=applied_round,
+            expires_round=expires_round,
+            expires_at_start_of_source_turn=expires_at_start_of_source_turn,
+            expiry_timing=expiry_timing,
+            repeat_save_ability=repeat_save_ability,
+            repeat_save_dc=repeat_save_dc,
+            repeat_save_timing=repeat_save_timing,
+            allowed_removal_action_ids=allowed_removal_action_ids or [],
+            turn_behavior=turn_behavior,
+            ends_on_damage=ends_on_damage,
+            ends_if_source_incapacitated=ends_if_source_incapacitated,
+            ends_if_source_dead=ends_if_source_dead,
+            owned_damage_resistances=owned_damage_resistances or [],
+        ))
+        if effect_id not in state.active_effect_ids:
+            state.active_effect_ids.append(effect_id)
+        end_concentration_if_incapacitated(state, affected_states)
+        return effect_id
+    except Exception:
+        logger.exception(
+            "Failed to apply timed condition %s from source %s (%s)",
+            effect_id,
+            source_id,
+            source_effect_id,
         )
-    ]
-    state.timed_effects.append(TimedEffect(
-        effect_id=effect_id,
-        source_id=source_id,
-        source_effect_id=source_effect_id,
-        applied_round=applied_round,
-        expires_round=expires_round,
-        expires_at_start_of_source_turn=expires_at_start_of_source_turn,
-        expiry_timing=expiry_timing,
-        repeat_save_ability=repeat_save_ability,
-        repeat_save_dc=repeat_save_dc,
-        repeat_save_timing=repeat_save_timing,
-        allowed_removal_action_ids=allowed_removal_action_ids or [],
-        turn_behavior=turn_behavior,
-        ends_on_damage=ends_on_damage,
-        ends_if_source_incapacitated=ends_if_source_incapacitated,
-        ends_if_source_dead=ends_if_source_dead,
-    ))
-    if effect_id not in state.active_effect_ids:
-        state.active_effect_ids.append(effect_id)
-    end_concentration_if_incapacitated(state, affected_states)
-    return effect_id
+        raise
 
 
 def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
