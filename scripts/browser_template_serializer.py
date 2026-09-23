@@ -316,6 +316,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["saving_throw_proficiency_grants"] = [
             item.model_dump() for item in features.saving_throw_proficiency_grants
         ]
+    if features.saving_throw_advantage_grants:
+        row["saving_throw_advantage_grants"] = [
+            item.model_dump() for item in features.saving_throw_advantage_grants
+        ]
     if features.bloodied_start_turn_heal_amount:
         row["bloodied_start_turn_heal_amount"] = features.bloodied_start_turn_heal_amount
     if features.death_save_advantage:
