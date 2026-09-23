@@ -47,14 +47,15 @@
     if (preserve.length && (preserve.length >= 2 || preserve.some((m) => m.state.current_hp === 0 || m.combatant_id === cleric.combatant_id))) {
       return { kind: PRESERVE, targets: preserve };
     }
+    const is2014 = cleric.state.template.ruleset === "2014";
     const allies = side(cleric, setup, true).filter(living);
     const downed = allies.filter((m) => m.combatant_id !== cleric.combatant_id && m.state.current_hp === 0 && S().distance(cleric, m) <= 30)
       .sort((a, b) => b.state.death_save_failures - a.state.death_save_failures || a.combatant_id.localeCompare(b.combatant_id));
-    if (downed.length && !slotsRemain(cleric)) return { kind: "divine-spark-heal", targets: [downed[0]] };
+    if (!is2014 && downed.length && !slotsRemain(cleric)) return { kind: "divine-spark-heal", targets: [downed[0]] };
     const enemies = side(cleric, setup, false).filter((m) => living(m) && m.state.current_hp > 0 && S().distance(cleric, m) <= 30);
     const undead = enemies.filter((m) => baseType(m) === "undead").sort((a, b) => S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
     if (undead.length) return { kind: TURN, targets: undead };
-    if (slotsRemain(cleric)) return null;
+    if (is2014 || slotsRemain(cleric)) return null;
     enemies.sort((a, b) => S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
     return enemies.length ? { kind: "divine-spark-damage", targets: [enemies[0]] } : null;
   }
