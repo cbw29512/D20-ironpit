@@ -195,6 +195,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "suppress_attack_advantage_while_not_incapacitated": progression.suppress_attack_advantage_while_not_incapacitated,
         "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
+        "deferred_save_effect": progression.deferred_save_effect.model_dump() if progression.deferred_save_effect else None,
         "failed_save_reroll_grants": [item.model_dump() for item in progression.failed_save_reroll_grants],
         "failed_d20_test_override_grants": [item.model_dump() for item in progression.failed_d20_test_override_grants],
         "opening_targeting_ward": progression.opening_targeting_ward.model_dump() if progression.opening_targeting_ward else None,
