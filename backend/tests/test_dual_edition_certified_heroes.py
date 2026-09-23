@@ -25,11 +25,11 @@ def test_all_edition_registry_contains_exact_certified_2014_progressions() -> No
     monks = [(key, template) for key, template in heroes_2014 if key[0] == "monk"]
     paladins = [(key, template) for key, template in heroes_2014 if key[0] == "paladin"]
 
-    assert len(heroes_2014) == 88
+    assert len(heroes_2014) == 89
     assert [key[1] for key, _ in fighters] == list(range(1, 21))
     assert [key[1] for key, _ in barbarians] == list(range(1, 21))
     assert [key[1] for key, _ in rogues] == list(range(1, 21))
-    assert [key[1] for key, _ in monks] == list(range(1, 18))
+    assert [key[1] for key, _ in monks] == list(range(1, 19))
     assert [key[1] for key, _ in paladins] == list(range(1, 12))
     assert {key[2] for key, _ in heroes_2014} == {"canonical-2014"}
     assert {template.name for _, template in fighters} == {"Karnok Stoneward"}
@@ -46,7 +46,7 @@ def test_arena_fingerprints_stay_2024_while_all_edition_registry_adds_2014() -> 
     fighter_ids = {f"karnok-stoneward-2014-l{level}" for level in range(1, 21)}
     barbarian_ids = {f"rokhan-stonefury-2014-l{level}" for level in range(1, 21)}
     rogue_ids = {f"mara-quickstep-2014-l{level}" for level in range(1, 21)}
-    monk_ids = {f"kael-stillwater-2014-l{level}" for level in range(1, 18)}
+    monk_ids = {f"kael-stillwater-2014-l{level}" for level in range(1, 19)}
     paladin_ids = {f"aurelia-brightshield-2014-l{level}" for level in range(1, 12)}
     ids_2014 = fighter_ids | barbarian_ids | rogue_ids | monk_ids | paladin_ids
 
