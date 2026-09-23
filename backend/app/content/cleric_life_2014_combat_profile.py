@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 def build_seraphine_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level not in range(1, 5):
-            raise ValueError("2014 Seraphine combat fingerprint is currently certified through level 4.")
+        if level not in range(1, 6):
+            raise ValueError("2014 Seraphine combat fingerprint is currently certified through level 5.")
         source = build_seraphine_dawnshield_2014_profile(level)
         scores = source.final_ability_scores
         pb = proficiency_bonus(level)
@@ -56,7 +56,7 @@ def build_seraphine_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_seraphine_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_seraphine_2014_combat_profile(level) for level in range(1, 5)]
+        return [build_seraphine_2014_combat_profile(level) for level in range(1, 6)]
     except Exception:
         logger.exception("Failed to compile Seraphine's 2014 combat fingerprints.")
         raise
