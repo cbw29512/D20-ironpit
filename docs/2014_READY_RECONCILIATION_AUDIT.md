@@ -144,9 +144,37 @@ Finding BARB-2014-001:
 
 
 ### Thief Rogue 1-20
-Status: IN PROGRESS
-- Stroke of Luck stale ability-check assumption repaired in PR #343.
-- Remaining levels/features still require full source-to-live-path pass.
+Status: AUDITED — ONE ENGINE GAP REQUIRED
+
+Verified represented behavior:
+- Sneak Attack scaling and eligible weapons;
+- Expertise-derived skill bonuses;
+- Cunning Action Dash on the live offensive-movement path;
+- Uncanny Dodge and Evasion;
+- Slippery Mind save proficiency;
+- Thief's Reflexes universal first-round extra-turn scheduling;
+- Elusive attack-Advantage suppression;
+- Stroke of Luck attack-miss + failed-ability-check composition after PR #343;
+- legal ASI progression and 2014/2024 isolation.
+
+Arena-neutral features remain explicitly scoped:
+- Fast Hands: no trap/lock/object-use combat loop in the standard arena;
+- Second-Story Work: no climbing/running-jump requirement in the standard arena;
+- Supreme Sneak: no legal Hide-position loop in the standard open arena;
+- Use Magic Device: canonical loadout is mundane;
+- Blindsense: no unresolved hidden-creature location loop; authoritative positions are already known;
+- Thief's Reflexes surprised exception: no surprise-producing path.
+
+Finding ROG-2014-001:
+- Classification: `ENGINE_TRULY_MISSING`.
+- Reliable Talent was certified as arena-inert, but that assumption is stale: grapple escape now invokes Mara's proficient/expert Acrobatics ability check.
+- RAW semantic requirement: on an ability check that includes Mara's proficiency bonus, a d20 roll of 9 or lower is treated as 10 before the final total is evaluated.
+- Existing `AbilityCheckMinimum` / Indomitable Might replaces the final check total with an ability-score floor and is not mechanically equivalent.
+- Required repair: add the smallest reusable proficient-ability-check d20-floor primitive in Python/browser, bind Reliable Talent declaratively from level 11, and prove live grapple-escape behavior plus non-proficient checks remaining unaffected. Re-audit heroes/monsters for other consumers after the primitive lands.
+
+Previously repaired finding:
+- Stroke of Luck stale failed-ability-check assumption was repaired in PR #343 by composing the existing failed-D20 replacement primitive with the existing attack-miss override and shared one-use resource.
+
 
 ### Open Hand Monk 1-20
 Status: PENDING FULL RE-AUDIT
