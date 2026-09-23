@@ -32,7 +32,7 @@ def validate_save_targets(
         if not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0:
             raise ValueError(f"Save-action target {target_id!r} is not active.")
         distance = 0 if skip_range_check else combatant_distance(actor, target)
-        if not legal_save_action(action, target, distance):
+        if not legal_save_action(actor, action, target, distance):
             raise ValueError(f"{action.name} cannot affect {target.state.template.name}.")
         result.append(target)
     return result
