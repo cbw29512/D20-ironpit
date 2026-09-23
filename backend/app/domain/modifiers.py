@@ -31,6 +31,7 @@ class CombatModifier(BaseModel):
     id: str
     source_id: str
     source_effect_id: str
+    source_name: str | None = Field(default=None, min_length=1)
     kind: ModifierKind
     flat_bonus: int = 0
     dice_count: int = Field(default=0, ge=0, le=20)
@@ -42,6 +43,7 @@ class CombatModifier(BaseModel):
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
+    requires_magical_effect: bool = False
     concentration_required: bool = False
     consume_on_attack_against: bool = False
     consume_on_saving_throw: bool = False
@@ -94,6 +96,8 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a save DC.")
         if self.kind not in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and self.save_ability:
             raise ValueError(f"{self.kind.value} does not accept a save ability.")
+        if self.requires_magical_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
+            raise ValueError("Only saving-throw Advantage can require a magical-effect context.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
             raise ValueError("Only attack-advantage defender modifiers can be consumed by the next attack.")
         if self.consume_on_saving_throw and self.kind is not ModifierKind.SAVING_THROW_DISADVANTAGE:
