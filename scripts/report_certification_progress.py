@@ -4,6 +4,9 @@ from collections import Counter
 import json
 from pathlib import Path
 
+from app.content.certified_heroes import build_certified_hero_entries_for_ruleset
+from app.content.roster import build_arena_roster
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -17,7 +20,10 @@ def main() -> None:
     heroes = hero_manifest["heroes"]
     monsters = monster_manifest["monsters"]
 
-    print("Heroes:")
+    heroes_2014 = build_certified_hero_entries_for_ruleset("2014")
+    monsters_2014 = build_arena_roster("2014").monsters
+    print(f"2014 certified: {len(heroes_2014)}/240 hero snapshots, {len(monsters_2014)}/327 monsters")
+    print("2024 Heroes:")
     total_ready = 0
     for hero in heroes:
         ready = sum(level["public_ready_status"] == "ready" for level in hero["levels"])
@@ -34,7 +40,7 @@ def main() -> None:
         for blocker in row["blockers"]
         if blocker != "monster-combat-mechanics-not-certified"
     )
-    print("\nMonsters:")
+    print("\n2024 Monsters:")
     print(f"Certified: {certified}/330")
     print(f"Blocked: {blocked}")
     print("Top blocker families:")
