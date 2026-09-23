@@ -27,6 +27,7 @@
       repeat_save_timing: defaultPoison ? "target_turn_start" : (options.repeatSaveTiming || null),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
+      suppress_reactions: Boolean(options.suppressReactions),
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
