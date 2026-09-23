@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant
+from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.events import BattleEvent
 from app.domain.modifiers import CombatModifier, ModifierKind
 
@@ -46,6 +47,15 @@ def resolve_sacred_weapon(
             kind=ModifierKind.ATTACK_ROLL_FLAT,
             flat_bonus=bonus,
             weapon_id=weapon_id,
+            expires_source_turn_end_round=round_number + 10,
+        ))
+        add_modifier(member.state, CombatModifier(
+            id=f"{member.combatant_id}:{_EFFECT_ID}:magical",
+            source_id=member.combatant_id,
+            source_effect_id=_EFFECT_ID,
+            kind=ModifierKind.DAMAGE_SOURCE_QUALIFIER,
+            weapon_id=weapon_id,
+            source_qualifier=DamageSourceQualifier.MAGICAL,
             expires_source_turn_end_round=round_number + 10,
         ))
         return BattleEvent(
