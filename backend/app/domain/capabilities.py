@@ -12,6 +12,7 @@ from app.domain.capability_attacks import (
     SaveCapabilityDefinition,
 )
 from app.domain.character_builds import AbilityScores
+from app.domain.damage_defenses import QualifiedDamageDefense
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.movement import MovementModes
@@ -70,6 +71,7 @@ class CombatantDefinition(BaseModel):
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
+    qualified_damage_defenses: list[QualifiedDamageDefense] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
     wearing_heavy_armor: bool = False
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
