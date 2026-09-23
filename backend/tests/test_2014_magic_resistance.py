@@ -104,7 +104,7 @@ def test_magic_resistance_source_name_is_preserved_in_save_log() -> None:
             id="magical-test",
             name="Magical Test",
             save_ability="wisdom",
-            dc=99,
+            dc=40,
             range_ft=60,
             magical_effect=True,
         )
