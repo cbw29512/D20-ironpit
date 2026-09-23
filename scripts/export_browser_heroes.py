@@ -279,6 +279,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.turning_failure_damage:
         row["turning_failure_damage"] = progression.turning_failure_damage.model_dump()
+    if progression.turning_failure_destroy_max_cr:
+        row["turning_failure_destroy_max_cr"] = progression.turning_failure_destroy_max_cr
     if progression.slot_healing_other_self_rider:
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
     if progression.ability_check_minimums:
