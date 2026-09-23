@@ -15,6 +15,7 @@ from app.domain.models import BattleEvent
 CHANNEL_DIVINITY = "channel-divinity"
 TURN_UNDEAD = "turn-undead"
 TURNED_EFFECT = "turned-undead"
+TREMBLING_EFFECT = "trembling"
 
 
 def _resource(cleric: EncounterCombatant):
@@ -59,11 +60,19 @@ def resolve_turn_undead(
     is_2014 = cleric.state.template.ruleset == "2014"
     return resolve_turning_saves(
         sequence, round_number, cleric, setup, targets, dice,
-        save_dc=dc, source_effect_id=TURN_UNDEAD, turned_effect_id=TURNED_EFFECT,
+        save_dc=dc, source_effect_id=TURN_UNDEAD,
+        turned_effect_id=TREMBLING_EFFECT if is_2014 else TURNED_EFFECT,
         resource_remaining=remaining, feature_name="Turn Undead",
         include_frightened=not is_2014,
         include_incapacitated=not is_2014,
+        suppress_action=is_2014,
+        suppress_bonus_action=is_2014,
         suppress_reactions=is_2014,
+        suppress_movement=is_2014,
+        turn_behavior="normal" if is_2014 else "forced_retreat",
+        repeat_save_timing="target_turn_end" if is_2014 else None,
+        expires_rounds=None if is_2014 else 10,
+        expiry_timing=None if is_2014 else "source_turn_start",
         ends_if_source_incapacitated=not is_2014,
         ends_if_source_dead=not is_2014,
     )
