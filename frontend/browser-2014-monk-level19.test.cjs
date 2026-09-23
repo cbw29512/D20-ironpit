@@ -24,7 +24,7 @@ assert.deepEqual(hero.ability_scores, {
 });
 assert.equal(hero.armor_class, 20);
 assert.equal(hero.max_hp, 136);
-assert.equal(hero.speed_ft, 55);
+assert.equal(hero.speed_ft, 60);
 assert.equal(hero.initiative_bonus, 5);
 assert.equal(hero.resources.ki, 19);
 assert.equal(hero.resources["wholeness-of-body"], 1);
