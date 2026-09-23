@@ -118,8 +118,9 @@ def _audits(level: int) -> list[FeatureAudit]:
         audits.append(_audit(
             "stroke-of-luck", "Stroke of Luck", "subclass",
             notes=(
-                "Uses the shared resource-backed miss-to-hit override. "
-                "The player-facing log preserves the source name Stroke of Luck."
+                "Composes two shared primitives against the same one-use resource: attack misses use "
+                "the miss-to-normal-hit override, while failed ability checks use the generic failed-D20 "
+                "replacement with an accepted roll of 20. The player-facing source name remains Stroke of Luck."
             ),
         ))
     return audits

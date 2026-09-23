@@ -68,6 +68,16 @@ def build_mara_quickstep_2014(level: int) -> CombatantTemplate:
             suppress_attack_advantage_while_not_incapacitated=level >= 18,
             miss_to_hit_override_resource_id=("stroke-of-luck" if level >= 20 else None),
             miss_to_hit_override_source_name=("Stroke of Luck" if level >= 20 else None),
+            failed_d20_test_override_grants=(
+                [{
+                    "source_id": "stroke-of-luck",
+                    "source_name": "Stroke of Luck",
+                    "resource_id": "stroke-of-luck",
+                    "replacement_roll": 20,
+                    "test_kinds": ["ability_check"],
+                }]
+                if level >= 20 else []
+            ),
         )
         save_proficiencies = saving_throw_proficiencies(("dexterity", "intelligence"), progression)
         rapier = _attack(level, "rapier", scores); shortbow = _attack(level, "shortbow", scores)
