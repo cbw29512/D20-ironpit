@@ -19,6 +19,11 @@ class ResourceState(BaseModel):
     max_uses: int = Field(ge=0)
 
 
+class DeferredEffectState(BaseModel):
+    source_id: str
+    target_id: str
+
+
 class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
@@ -86,6 +91,7 @@ class CombatantState(BaseModel):
     opening_buff_spell_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
+    deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
     survival_save_uses: dict[str, int] = Field(default_factory=dict)
