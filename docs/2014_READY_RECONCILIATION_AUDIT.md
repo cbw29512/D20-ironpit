@@ -177,10 +177,52 @@ Previously repaired finding:
 
 
 ### Open Hand Monk 1-20
-Status: PENDING FULL RE-AUDIT
+Status: AUDITED — THREE COMBAT GAPS REQUIRED
+
+Verified represented behavior:
+- Martial Arts die scaling and Bonus Action attack;
+- Flurry of Blows resource/action economy;
+- Stunning Strike via shared save + timed Stunned condition;
+- Wholeness of Body via universal healing;
+- Stillness of Mind via universal condition removal;
+- Evasion via shared defense primitive;
+- Purity of Body poison immunity;
+- Tranquility via universal opening targeting ward;
+- Diamond Soul save proficiencies + failed-save reroll;
+- Quivering Palm via universal deferred save effect;
+- Empty Body via universal timed self-buff, universal Invisible, and source-owned timed resistances;
+- level-19 canonical ASI (+1 Wisdom / +1 Strength);
+- Perfect Self via universal initiative resource refill.
+
+Arena-neutral features:
+- Slow Fall: standard certified arena has no falling hazard;
+- Tongue of the Sun and Moon: communication does not alter automated arena combat;
+- Timeless Body: aging/food/water do not alter arena combat.
+
+Finding MONK-2014-001 — Deflect Missiles follow-up attack:
+- Classification: `ENGINE_TRULY_MISSING`.
+- Current Python/browser Deflect Missiles only reduces ranged-weapon damage and spends the Reaction.
+- 2014 Deflect Missiles also permits spending 1 Ki, when reduction reaches 0, to make the caught missile ranged attack as part of the same Reaction.
+- No current caught-projectile / conditional post-deflection attack primitive was found.
+- Required repair: add the smallest reusable reaction follow-up attack capability keyed by semantic trigger (eligible projectile damage reduced to 0), resource cost, range, and attack/damage parameters; then bind Deflect Missiles without Monk-name dispatch.
+
+Finding MONK-2014-002 — Open Hand Technique incomplete options:
+- Classification: `ENGINE_EXISTS_COMPOSITION` plus one missing primitive.
+- Current Python/browser implementation hardcodes only the Dexterity-save Prone option.
+- Existing universal forced movement already supports the Strength-save push option's 15-foot movement semantics.
+- No generic timed "cannot take reactions" suppression effect was found for the third option.
+- Required repair: represent Open Hand Technique as declarative on-hit choices/composition; reuse universal Prone and forced movement; add only the smallest generic timed reaction-suppression primitive for the unmatched effect. Arena AI may deterministically choose among legal supported options, but a target that is already/immune to Prone must not erase other legal Open Hand outcomes.
+
+Finding MONK-2014-003 — Ki-Empowered Strikes source qualifier:
+- Classification: `ENGINE_TRULY_MISSING`.
+- Level-6 Ki-Empowered Strikes makes unarmed strikes count as magical for overcoming resistance and immunity to nonmagical attacks/damage.
+- The current damage-defense model carries damage type but no certified magical/nonmagical source qualifier.
+- Required repair: add one universal attack/damage-source qualifier consumed by conditional defenses; bind level-6+ Monk unarmed strikes as magical for this purpose; then re-audit the full 2014 monster roster because any nonmagical B/P/S resistance or immunity may change certification behavior.
+
+Existing endgame bindings remain valid:
 - Level 18 Empty Body uses universal timed self-buff + universal Invisible + source-owned timed resistances.
-- Level 19 canonical ASI: +1 Wisdom / +1 Strength.
 - Level 20 Perfect Self uses universal initiative resource refill.
+
 
 ### Devotion Paladin 1-11
 Status: PENDING FULL RE-AUDIT
