@@ -56,6 +56,8 @@ def _mechanics(template: Any) -> list[str]:
         raise ValueError("Miss-to-hit source name requires a configured miss-to-hit resource.")
     if features.failed_save_reroll_grants:
         mechanics.update(rule.source_id for rule in features.failed_save_reroll_grants)
+    if features.deferred_save_effect:
+        mechanics.add(features.deferred_save_effect.source_id)
     if features.failed_d20_test_override_grants:
         mechanics.update(rule.source_id for rule in features.failed_d20_test_override_grants)
     if features.athletics_advantage:
