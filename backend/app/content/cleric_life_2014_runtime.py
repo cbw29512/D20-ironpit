@@ -5,6 +5,8 @@ import logging
 from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
+from app.content.level_resources import cleric_2014_channel_divinity_uses
+from app.content.spell_slot_progression import spell_slot_resources
 from app.content.cleric_2014_level1_spells import (
     bless_2014,
     cure_wounds_2014,
@@ -18,6 +20,7 @@ from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
+from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
@@ -54,11 +57,22 @@ def _light_crossbow() -> Weapon:
     )
 
 
+def _resources(level: int) -> list[ResourceDefinition]:
+    resources = [
+        ResourceDefinition(id=resource_id, name=f"Level {resource_id.split('-')[-1]} Spell Slot", max_uses=uses)
+        for resource_id, uses in spell_slot_resources("cleric", level).items()
+    ]
+    channel_uses = cleric_2014_channel_divinity_uses(level)
+    if channel_uses:
+        resources.append(ResourceDefinition(id="channel-divinity", name="Channel Divinity", max_uses=channel_uses))
+    return resources
+
+
 def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
     """Compile the currently certified RAW 2014 Life Cleric runtime."""
     try:
-        if level != 1:
-            raise ValueError("2014 Life Cleric runtime is currently certified only at level 1.")
+        if level not in range(1, 3):
+            raise ValueError("2014 Life Cleric runtime is currently certified through level 2.")
         profile = build_seraphine_dawnshield_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -102,7 +116,8 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 "persuasion": scores.modifier("charisma") + pb,
             },
             weapon_masteries=[], damage_resistances=[DamageType.POISON],
-            resources=[ResourceDefinition(id="spell-slot-1", name="Level 1 Spell Slot", max_uses=2)],
+            combat_traits=[CombatTrait.LIFE_DOMAIN],
+            resources=_resources(level),
             progression_features=progression,
             visual=VisualLoadout(armor="scale-mail", main_hand="warhammer", off_hand="shield", body_style="humanoid"),
             source=("D&D Basic Rules 2014: Hill Dwarf, Acolyte, Cleric, Life Domain, "
