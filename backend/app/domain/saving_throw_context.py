@@ -5,7 +5,8 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class SavingThrowContext:
-    """Immutable outcome context for a saving throw."""
+    """Immutable incoming-effect semantics checked against defender-owned buffs."""
 
     condition_id: str | None = None
     magical_effect: bool = False
+    effect_tags: frozenset[str] = frozenset()
