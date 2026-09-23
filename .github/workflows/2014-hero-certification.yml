@@ -33,6 +33,8 @@ jobs:
           pytest -q \
             backend/tests/test_cleric_life_2014_progression.py \
             backend/tests/test_cleric_life_2014_level2.py \
+            backend/tests/test_cleric_life_2014_level3.py \
+            backend/tests/test_pooled_healing.py \
             backend/tests/test_turn_undead_2014.py \
             backend/tests/test_monk_open_hand_2014.py \
             backend/tests/test_monk_open_hand_2014_level18.py \
@@ -61,3 +63,4 @@ jobs:
           node frontend/browser-paladin-oath-spells-2014.test.cjs
           node frontend/browser-2014-paladin-entrypoints.test.cjs
           node frontend/browser-turn-undead-2014.test.cjs
+          node frontend/browser-persistent-spell-attacks.test.cjs
