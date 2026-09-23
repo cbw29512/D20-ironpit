@@ -32,8 +32,9 @@
 
   function preserveTargets(cleric, setup) {
     if (!cleric.state.template.traits?.includes("life-domain")) return [];
+    const is2014 = cleric.state.template.ruleset === "2014";
     return side(cleric, setup, true).filter((m) => living(m) && S().distance(cleric, m) <= 30
-      && !m.state.template.traits?.includes("swarm") && capacity(m) > 0)
+      && (!is2014 || !["undead", "construct"].includes(baseType(m))) && capacity(m) > 0)
       .sort((a, b) => (a.state.current_hp > 0) - (b.state.current_hp > 0)
         || (a.combatant_id === cleric.combatant_id) - (b.combatant_id === cleric.combatant_id)
         || a.state.current_hp / S().effectiveMaxHp(a.state) - b.state.current_hp / S().effectiveMaxHp(b.state)
