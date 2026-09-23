@@ -45,6 +45,8 @@ A capability discovered while implementing a hero must be reusable by monsters, 
 
 **State/effect identity is universal.** Prone is Prone, Grappled is Grappled, Restrained is Restrained, Blinded is Blinded, Frightened is Frightened, Poisoned is Poisoned, and so on, regardless of which class feature, spell, weapon property, item, or monster ability caused it. Source definitions supply parameters such as DC, save ability, duration, repeat-save timing, range, damage, resource cost, and source ability name. The shared condition/effect engine supplies the mechanical behavior.
 
+Invisibility is one universal condition regardless of source. A spell, feature, item, monster ability, or self-buff that grants invisibility applies the same `invisible` condition; source-specific activation cost, resource cost, duration, and companion effects belong to declarative source data rather than a source-specific invisibility resolver.
+
 The player-facing combat log must preserve the exact source ability name. Internal audit/certification data should additionally record the generic capability/primitive IDs used underneath so engine reuse remains provable without exposing implementation jargon to the player.
 
 Before adding new mechanic code, the implementation audit must classify the feature as one of:
