@@ -9,7 +9,7 @@ from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
 from app.combat.modifier_stack import effective_speed
 from app.combat.opening_modifiers import opening_modifiers
 from app.combat.survivor import apply_survivor_start_turn_heal
-from app.combat.timed_conditions import suppresses_action, suppresses_bonus_action, suppresses_movement, suppresses_reactions
+from app.combat.timed_effect_control import suppresses_action, suppresses_bonus_action, suppresses_movement, suppresses_reactions
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 
 logger = logging.getLogger(__name__)
