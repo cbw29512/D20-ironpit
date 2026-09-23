@@ -5,6 +5,7 @@ from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
+from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.reckless_attack import activate_reckless_attack
@@ -76,4 +77,10 @@ def resolve_encounter_attack(
             event.feature_id = "reckless-attack"
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
+    if event.hit and not event.is_dead and (event.hp_after is None or event.hp_after > 0):
+        armed_name = arm_deferred_save_effect(
+            attacker.state, event.target_id, attack.weapon.id,
+        )
+        if armed_name:
+            event.description += f" {armed_name} is armed on {event.target_name}."
     return apply_critical_closing_move(attacker, setup, event)
