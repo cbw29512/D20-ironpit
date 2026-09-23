@@ -11,6 +11,8 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 load("browser-heroes.js");
 load("browser-condition-rules.js");
 load("browser-action-economy.js");
+load("browser-d20-test-override.js");
+load("browser-ability-checks.js");
 load("browser-initiative.js");
 load("browser-rogue-defenses.js");
 
@@ -50,6 +52,30 @@ assert.equal(rogue19.ability_scores.constitution, 20);
 assert.equal(rogue20.miss_to_hit_override_resource_id, "stroke-of-luck");
 assert.equal(rogue20.miss_to_hit_override_source_name, "Stroke of Luck");
 assert.equal(rogue20.resources["stroke-of-luck"], 1);
+assert.deepEqual(rogue20.failed_d20_test_override_grants, [{
+  source_id: "stroke-of-luck",
+  source_name: "Stroke of Luck",
+  resource_id: "stroke-of-luck",
+  replacement_roll: 20,
+  test_kinds: ["ability_check"],
+}]);
+
+const luckyCheckState = {
+  template: rogue20,
+  resources: { ...rogue20.resources },
+};
+const failedCheck = {
+  notation: "1 + 17", rolls: [1], selected_roll: 1,
+  modifier: 17, total: 18, mode: "normal", revisions: [],
+};
+const luckyCheck = window.IRON_PIT_BROWSER_ABILITY_CHECKS.resolve(
+  luckyCheckState, "dexterity", failedCheck, 25,
+);
+assert.equal(luckyCheck.succeeded, true);
+assert.equal(luckyCheck.roll.selected_roll, 20);
+assert.equal(luckyCheck.roll.total, 37);
+assert.equal(luckyCheck.roll.revisions.at(-1).source_effect_id, "stroke-of-luck");
+assert.equal(luckyCheckState.resources["stroke-of-luck"], 0);
 
 const scheduledMembers = [
   { combatant_id: "mara17", state: { template: rogue17 } },
