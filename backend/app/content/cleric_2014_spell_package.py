@@ -31,6 +31,7 @@ _CANTRIPS = (
     _spell("guidance", "Guidance", "buff", "arena-out-of-scope", level=0),
     _spell("sacred-flame", "Sacred Flame", "damage", "save-damage", "cantrip-scaling", level=0),
     _spell("thaumaturgy", "Thaumaturgy", "utility", "arena-out-of-scope", level=0),
+    _spell("mending", "Mending", "utility", "arena-out-of-scope", level=0, min_level=4),
 )
 
 # Clerics prepare from the class list after each long rest. This deterministic
@@ -46,6 +47,8 @@ _PREPARED = (
     _spell("inflict-wounds", "Inflict Wounds", "damage", "spell-attack"),
     _spell("sanctuary", "Sanctuary", "buff", "attack-gate-save", "bonus-action"),
     _spell("aid", "Aid", "healing", "max-hp-increase", level=2, min_level=3),
+    _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
+    _spell("augury", "Augury", "utility", "arena-out-of-scope", level=2, min_level=3),
     _spell("warding-bond", "Warding Bond", "buff", "damage-resistance", level=2, min_level=3),
     _spell("hold-person", "Hold Person", "control", "condition", "repeat-save", level=2, min_level=3),
     _spell("prayer-of-healing", "Prayer of Healing", "healing", "arena-out-of-scope", level=2, min_level=3),
@@ -108,7 +111,10 @@ def build_cleric_2014_spell_package(level: int, wisdom_modifier: int) -> ClassSp
         return ClassSpellPackage(
             class_id="cleric",
             casting_ability="wisdom",
-            cantrips=list(_CANTRIPS),
+            cantrips=[
+                spell for spell in _CANTRIPS
+                if spell.min_character_level <= level
+            ],
             spells=available[:count],
             always_prepared_spells=domain,
         )

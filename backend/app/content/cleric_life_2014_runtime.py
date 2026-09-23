@@ -72,8 +72,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
     """Compile the currently certified RAW 2014 Life Cleric runtime."""
     try:
-        if level not in range(1, 4):
-            raise ValueError("2014 Life Cleric runtime is currently certified through level 3.")
+        if level not in range(1, 5):
+            raise ValueError("2014 Life Cleric runtime is currently certified through level 4.")
         profile = build_seraphine_dawnshield_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
