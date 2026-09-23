@@ -100,7 +100,7 @@ def test_live_support_phase_activates_empty_body_before_offense() -> None:
     begin_turn(monk.state)
 
     events, sequence = resolve_support_actions(
-        1, 1, monk, setup, FixedDiceProvider([]), "1:kael",
+        1, 1, monk, setup, FixedDiceProvider([10]), "1:kael",
     )
 
     assert sequence == 2
