@@ -25,7 +25,8 @@ def test_level20_snapshot_preserves_progression_and_binds_perfect_self() -> None
     assert hero.ability_scores.wisdom == 20
     assert hero.armor_class == 20
     assert hero.max_hp == 143
-    assert hero.speed_ft == 55
+    assert hero.speed_ft == 60
+    assert combat.speed_ft == 60
     assert hero.initiative_bonus == 5
     assert {item.id: item.max_uses for item in hero.resources} == {
         "ki": 20,
