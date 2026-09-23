@@ -86,20 +86,25 @@ def saving_throw_flat_bonus(state: CombatantState) -> int:
 def attack_damage_source_qualifiers(
     state: CombatantState, attack: WeaponAttack,
 ) -> set[DamageSourceQualifier]:
-    qualifiers = {
-        DamageSourceQualifier.ATTACK,
-        DamageSourceQualifier.WEAPON,
-        DamageSourceQualifier(attack.weapon.attack_kind.value),
-        *attack.damage_source_qualifiers,
-    }
-    qualifiers.update(
-        item.source_qualifier
-        for item in state.active_modifiers
-        if item.kind is ModifierKind.DAMAGE_SOURCE_QUALIFIER
-        and item.weapon_id == attack.weapon.id
-        and item.source_qualifier is not None
-    )
-    return qualifiers
+    try:
+        qualifiers = {
+            DamageSourceQualifier.ATTACK,
+            DamageSourceQualifier.WEAPON,
+            DamageSourceQualifier(attack.weapon.attack_kind.value),
+            *attack.damage_source_qualifiers,
+        }
+        qualifiers.update(
+            item.source_qualifier
+            for item in state.active_modifiers
+            if item.kind is ModifierKind.DAMAGE_SOURCE_QUALIFIER
+            and item.weapon_id == attack.weapon.id
+            and item.source_qualifier is not None
+        )
+        return qualifiers
+    except Exception as exc:
+        raise RuntimeError(
+            f"Damage-source qualifiers could not be resolved for {state.template.name} / {attack.id}."
+        ) from exc
 
 
 def effective_speed(state: CombatantState) -> int:
