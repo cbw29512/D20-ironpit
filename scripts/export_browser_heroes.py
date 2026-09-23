@@ -113,6 +113,22 @@ def _spell_attack(action: Any) -> dict[str, Any]:
     return row
 
 
+def _persistent_spell_attack(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id,
+            "name": action.name,
+            "attack": _spell_attack(action.attack),
+            "durationRounds": action.duration_rounds,
+            "moveFt": action.move_ft,
+            "attackReachFt": action.attack_reach_ft,
+            "upcastIntervalLevels": action.upcast_interval_levels,
+        }
+    except Exception:
+        logger.exception("Failed to serialize persistent spell attack %s.", action.id)
+        raise
+
+
 def _defense(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
            "range": action.range_ft, "durationMinutes": action.duration_minutes,
@@ -279,6 +295,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+    if template.persistent_spell_attack_actions: row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
     if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
     if template.effect_removal_actions: row["effect_removal_actions"] = [_effect_removal(item) for item in template.effect_removal_actions]
