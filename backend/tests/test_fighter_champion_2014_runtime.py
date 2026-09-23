@@ -1,7 +1,9 @@
 from app.combat.dice import FixedDiceProvider
+from app.combat.healing import resolve_healing
 from app.combat.indomitable import use_indomitable
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
+from app.domain.encounters import EncounterCombatant
 
 
 def _resource_uses(hero, resource_id: str) -> int:
@@ -33,6 +35,27 @@ def test_2014_second_wind_is_declarative_universal_healing_data() -> None:
     assert action.healing_bonus == 11
     assert action.resource_id == "second-wind"
     assert action.resource_cost == 1
+
+
+def test_2014_second_wind_resolves_through_universal_healing() -> None:
+    state = build_combatant_state(build_karnok_stoneward_2014(11))
+    state.current_hp = state.template.max_hp // 2
+    member = EncounterCombatant(
+        combatant_id="fighter-2014",
+        side="heroes",
+        position_ft=0,
+        state=state,
+    )
+
+    event = resolve_healing(
+        1, 1, member, member, state.template.healing_actions[0], FixedDiceProvider([5]),
+    )
+
+    assert event.feature_id == "second-wind"
+    assert event.healing_roll is not None
+    assert event.healing_roll.total == 16
+    assert state.bonus_action_available is False
+    assert next(item for item in state.resources if item.id == "second-wind").current_uses == 0
 
 
 def test_2014_champion_progression_uses_real_fighter_breakpoints() -> None:
