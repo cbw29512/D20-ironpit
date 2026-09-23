@@ -81,6 +81,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.effect_bound_survival_save.source_id)
     if features.turning_failure_damage:
         mechanics.add(features.turning_failure_damage.source_id)
+    if features.turning_failure_destroy_max_cr:
+        mechanics.add("turning-destruction-threshold")
     if features.slot_healing_other_self_rider:
         mechanics.add(features.slot_healing_other_self_rider.source_id)
     if features.ability_check_minimums:
