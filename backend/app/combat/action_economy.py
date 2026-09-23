@@ -14,6 +14,8 @@ def is_available(state: CombatantState, cost: ActionCost) -> bool:
         return False
     if state.turn_terminated and cost != "reaction":
         return False
+    if cost == "reaction" and any(effect.suppress_reactions for effect in state.timed_effects):
+        return False
     if cost == "action":
         return state.action_available
     if cost == "bonus_action":
