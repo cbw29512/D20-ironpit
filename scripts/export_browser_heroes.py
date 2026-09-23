@@ -136,6 +136,15 @@ def _healing(action: Any) -> dict[str, Any]:
             "resourceCost": action.resource_cost, "animation": action.animation}
 
 
+def _stabilization(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "range": action.range_ft, "targetMode": action.target_mode,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "animation": action.animation,
+    }
+
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     return {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -198,6 +207,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
+        "stabilizationActions": [_stabilization(item) for item in template.stabilization_actions],
         "condition_immunities": list(template.condition_immunities),
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
