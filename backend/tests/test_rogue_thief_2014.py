@@ -3,6 +3,7 @@ from app.combat.cunning_action import needs_dash, use_dash
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_events import build_initiative_events
 from app.combat.encounter_initiative import roll_encounter_initiative, turn_order_for_round
+from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.rogue_defenses import apply_uncanny_dodge, evasion_damage
 from app.combat.state import build_combatant_state
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
@@ -226,6 +227,40 @@ def test_level_nineteen_applies_final_constitution_asi_and_sneak_attack_ten_d6()
     assert hero19.saving_throw_bonuses["constitution"] == 5
     assert hero19.saving_throw_bonuses["wisdom"] == 8
     assert hero19.progression_features.sneak_attack_d6 == 10
+
+
+def test_level_twenty_stroke_of_luck_replaces_failed_ability_check_with_twenty() -> None:
+    hero20 = build_mara_quickstep_2014(20)
+    grants = hero20.progression_features.failed_d20_test_override_grants
+    assert len(grants) == 1
+    assert grants[0].source_id == "stroke-of-luck"
+    assert grants[0].source_name == "Stroke of Luck"
+    assert grants[0].resource_id == "stroke-of-luck"
+    assert grants[0].replacement_roll == 20
+    assert grants[0].test_kinds == ["ability_check"]
+
+    rogue = build_combatant_state(hero20)
+    apply_grapple(rogue, "grappler", 25, 5, restrains=True)
+    event = resolve_escape_grapple(1, 1, "mara", rogue, FixedDiceProvider([1]))
+
+    assert event.check_succeeded is True
+    assert event.ability_check_roll is not None
+    assert event.ability_check_roll.selected_roll == 20
+    assert event.ability_check_roll.total == 37
+    revision = event.ability_check_roll.revisions[-1]
+    assert revision.source_effect_id == "stroke-of-luck"
+    assert revision.kind == "die_replacement"
+    assert revision.original_selected == 1
+    assert revision.replacement_selected == 20
+    assert next(item for item in rogue.resources if item.id == "stroke-of-luck").current_uses == 0
+
+    defender = build_combatant_state(build_karnok_stoneward_2014(20))
+    miss = resolve_attack(
+        2, 1, rogue, defender, rogue.template.weapon_attack, 5,
+        FixedDiceProvider([1]), spend_action=False,
+    )
+    assert miss.hit is False
+    assert miss.turn_terminated is True
 
 
 def test_level_twenty_stroke_of_luck_uses_generic_miss_override_and_exact_source_name() -> None:
