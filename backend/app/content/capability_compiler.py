@@ -30,7 +30,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         restrains_while_grappled=grapple.restrains if grapple else False,
         resource_id=definition.resource_id, resource_cost=definition.resource_cost,
         requires_no_active_grapple=definition.requires_no_active_grapple,
-        magical_effect=definition.magical_effect, animation=definition.animation,
+        magical_effect=definition.magical_effect, effect_tags=list(definition.effect_tags),
+        animation=definition.animation,
     )
 
 
