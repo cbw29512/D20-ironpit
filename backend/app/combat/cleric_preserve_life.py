@@ -3,9 +3,9 @@ from __future__ import annotations
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.hit_points import effective_max_hp
 from app.combat.zero_hp import restore_hit_points
+from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-from app.domain.traits import CombatTrait
 
 PRESERVE_LIFE = "preserve-life"
 
@@ -14,13 +14,25 @@ def healing_capacity(target: EncounterCombatant) -> int:
     return max(0, effective_max_hp(target.state) // 2 - target.state.current_hp)
 
 
+def _legal_preserve_life_target(cleric: EncounterCombatant, target: EncounterCombatant) -> bool:
+    try:
+        if cleric.state.template.ruleset != "2014":
+            return True
+        return not (
+            is_creature_type(target.state.template, "undead")
+            or is_creature_type(target.state.template, "construct")
+        )
+    except Exception:
+        raise
+
+
 def preserve_life_targets(cleric: EncounterCombatant, setup: EncounterSetup) -> tuple[EncounterCombatant, ...]:
     allies = setup.heroes if cleric.side == "heroes" else setup.monsters
     legal = [
         target for target in allies
         if target.state.is_alive and not target.state.is_dead
         and combatant_distance(cleric, target) <= 30
-        and CombatTrait.SWARM not in target.state.template.combat_traits
+        and _legal_preserve_life_target(cleric, target)
         and healing_capacity(target) > 0
     ]
     legal.sort(key=lambda target: (
