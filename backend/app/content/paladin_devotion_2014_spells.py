@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
-from app.content.shared_spells_2014 import lesser_restoration_2014, sanctuary_2014
+from app.content.shared_spells_2014 import beacon_of_hope_2014, lesser_restoration_2014, sanctuary_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
@@ -32,22 +32,6 @@ def protection_from_evil_and_good_2014() -> DefensiveSpellAction:
             ),
         ],
         animation="protection", source=_SOURCE,
-    )
-
-
-
-
-def beacon_of_hope_2014() -> DefensiveSpellAction:
-    return DefensiveSpellAction(
-        id="beacon-of-hope", name="Beacon of Hope", level=3, action_cost="action",
-        range_ft=30, duration_minutes=1, target_policy="friendly", target_count=20,
-        concentration=True, priority=60,
-        modifier_effects=[
-            SpellModifierEffect(kind="saving-throw-advantage", save_ability="wisdom"),
-            SpellModifierEffect(kind="death-save-advantage"),
-            SpellModifierEffect(kind="healing-maximize"),
-        ],
-        animation="beacon-of-hope", source=_SOURCE,
     )
 
 
