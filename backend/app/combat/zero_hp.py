@@ -72,6 +72,22 @@ def _finish_damage(
     return outcome
 
 
+def stabilize_zero_hp(state: CombatantState) -> bool:
+    """Make a living 0-HP character stable without restoring HP or waking it."""
+    if (
+        state.template.kind != "character"
+        or state.is_dead
+        or not state.is_alive
+        or state.current_hp != 0
+        or state.is_stable
+    ):
+        return False
+    state.is_stable = True
+    state.is_unconscious = True
+    reset_death_saves(state)
+    return True
+
+
 def restore_hit_points(state: CombatantState, amount: int) -> int:
     """Restore true HP; ordinary healing cannot restore a dead creature or a Swarm."""
     if amount < 0:
