@@ -4,6 +4,7 @@ import logging
 
 from app.combat.dice import FixedDiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_policy import SpellChoice
 from app.combat.spell_resolution import _save_action
 from app.combat.state import build_combatant_state
@@ -11,6 +12,8 @@ from app.content.capability_compiler import compile_combatant
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
+from app.domain.actions import SavingThrowAction
+from app.domain.encounters import EncounterCombatant
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.spells import SpellSaveAction
 
@@ -80,6 +83,39 @@ def test_magic_resistance_applies_only_to_magical_effect_saves() -> None:
         assert roll.rolls == [10]
     except Exception:
         logger.exception("Contextual Magic Resistance saving-throw regression failed.")
+        raise
+
+
+def test_magic_resistance_source_name_is_preserved_in_save_log() -> None:
+    try:
+        actor = EncounterCombatant(
+            combatant_id="actor",
+            side="heroes",
+            position_ft=0,
+            state=_satyr_state(),
+        )
+        target = EncounterCombatant(
+            combatant_id="target",
+            side="monsters",
+            position_ft=5,
+            state=_satyr_state(),
+        )
+        action = SavingThrowAction(
+            id="magical-test",
+            name="Magical Test",
+            save_ability="wisdom",
+            dc=99,
+            range_ft=60,
+            magical_effect=True,
+        )
+        event = resolve_save_action(
+            1, 1, actor, target, action, 5, FixedDiceProvider([2, 17]),
+        )
+        assert event.saving_throw_roll is not None
+        assert event.saving_throw_roll.mode == "advantage"
+        assert "Magic Resistance grants Advantage on the save." in event.description
+    except Exception:
+        logger.exception("Magic Resistance combat-log source regression failed.")
         raise
 
 
