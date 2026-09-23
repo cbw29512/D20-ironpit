@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.character_builds import AbilityScores
 from app.domain.effect_removal import EffectRemovalAction
+from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import DamageReactionAttack, ParryReaction, RedirectAttackReaction
@@ -68,6 +69,7 @@ class CombatantTemplate(BaseModel):
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
+    initiative_resource_refill_grants: list[InitiativeResourceRefillGrant] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
