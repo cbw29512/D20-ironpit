@@ -59,9 +59,11 @@ load("browser-action-economy.js");
 load("browser-spellcasting.js");
 load("browser-grid-geometry.js");
 load("browser-spell-attack.js");
+load("browser-persistent-spell-attack-support.js");
 load("browser-persistent-spell-attacks.js");
 
 const P = window.IRON_PIT_BROWSER_PERSISTENT_SPELL_ATTACKS;
+const PS = window.IRON_PIT_BROWSER_PERSISTENT_SPELL_ATTACK_SUPPORT;
 const spiritualWeapon = {
   id: "spiritual-weapon",
   name: "Spiritual Weapon",
@@ -169,7 +171,7 @@ const setup = {
 }
 
 assert.deepEqual(
-  P.attackForSlot(spiritualWeapon, 4, false).damageDiceCount,
+  PS.attackForSlot(spiritualWeapon, 4, false).damageDiceCount,
   2,
   "Spiritual Weapon adds one die for every two slot levels above 2nd.",
 );
