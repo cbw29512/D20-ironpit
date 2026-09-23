@@ -2,7 +2,7 @@ from app.combat.persistent_spell_attacks import resolve_persistent_spell_attack
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.arena_map import build_standard_iron_pit_map
 from app.content.build_audit import assert_character_build_raw_ready
-from app.content.capability_registry import build_combatant_from_capabilities
+from app.content.roster import build_arena_roster
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.cleric_2014_spell_package import build_cleric_2014_spell_package
 from app.content.cleric_life_2014_combat_profile import build_seraphine_2014_combat_profile
@@ -12,6 +12,16 @@ from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.combat.dice import FixedDiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
+
+
+def _monster_template(template_id: str):
+    try:
+        return next(
+            item for item in build_arena_roster("2014").monsters
+            if item.id == template_id
+        )
+    except StopIteration as exc:
+        raise ValueError(f"Missing certified 2014 monster template: {template_id}") from exc
 
 
 def _member(template, combatant_id: str, side: str, x: int, y: int) -> EncounterCombatant:
@@ -103,7 +113,7 @@ def test_level_three_runtime_and_fingerprint_match_persistent_progression() -> N
 
 def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> None:
     cleric = _member(build_seraphine_dawnshield_2014(3), "cleric", "heroes", 0, 6)
-    goblin = _member(build_combatant_from_capabilities("2014-goblin"), "goblin", "monsters", 8, 6)
+    goblin = _member(_monster_template("2014-goblin"), "goblin", "monsters", 8, 6)
     setup = EncounterSetup(
         heroes=[cleric],
         monsters=[goblin],
