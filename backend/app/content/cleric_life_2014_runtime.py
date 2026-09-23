@@ -20,7 +20,7 @@ from app.content.cleric_2014_level1_spells import (
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
-from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
+from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant, SlotHealingSelfRider
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
@@ -72,8 +72,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
     """Compile the currently certified RAW 2014 Life Cleric runtime."""
     try:
-        if level not in range(1, 6):
-            raise ValueError("2014 Life Cleric runtime is currently certified through level 5.")
+        if level not in range(1, 7):
+            raise ValueError("2014 Life Cleric runtime is currently certified through level 6.")
         profile = build_seraphine_dawnshield_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -87,6 +87,14 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
         )
         progression = ProgressionCombatFeatures(
             turning_failure_destroy_max_cr="1/2" if level >= 5 else None,
+            slot_healing_other_self_rider=(
+                SlotHealingSelfRider(
+                    source_id="blessed-healer",
+                    flat_bonus=2,
+                    per_slot_level=1,
+                )
+                if level >= 6 else None
+            ),
             saving_throw_advantage_grants=[SavingThrowAdvantageGrant(
                 source_id="dwarven-resilience",
                 source_name="Dwarven Resilience",
