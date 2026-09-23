@@ -8,6 +8,7 @@ from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.content.monster_qualified_defenses_2014 import unsupported_defense_clauses_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
 from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
@@ -119,7 +120,7 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     blockers.extend(_multiattack_blockers(monster))
     blockers.extend(_source_name_blockers(monster))
     families = {
-        "defense": monster.unsupported_defense_text,
+        "defense": unsupported_defense_clauses_2014(monster),
         "save-action": unsupported_save_actions_2014(monster),
         "swallow": monster.swallow_actions,
         "death-trigger": monster.death_trigger_actions,
