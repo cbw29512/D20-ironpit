@@ -79,6 +79,13 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                     size=int(action.get("damage_dice_size", 6)),
                     bonus=int(action.get("damage_bonus", 0) or 0),
                 )
+            effect_tags = {
+                str(item).strip().casefold()
+                for item in action.get("effect_tags", [])
+                if str(item).strip()
+            }
+            if str(action.get("damage_type", "")).casefold() == "poison":
+                effect_tags.add("poison")
             result.append(SaveCapabilityDefinition(
                 id=str(action["id"]), name=str(action["name"]),
                 save_ability=str(action["save_ability"]), dc=int(action["dc"]),
@@ -89,6 +96,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 resource_cost=int(action.get("resource_cost", 1) or 1),
                 requires_no_active_grapple=bool(action.get("requires_no_active_grapple", False)),
                 magical_effect=bool(action.get("magical_effect", False)),
+                effect_tags=sorted(effect_tags),
                 animation=str(action.get("animation", "save-effect")),
             ))
         return result
