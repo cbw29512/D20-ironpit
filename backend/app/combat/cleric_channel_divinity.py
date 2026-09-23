@@ -56,10 +56,16 @@ def resolve_turn_undead(
             raise ValueError("Turn Undead targets must be Undead within 30 feet.")
     dc = _spell_save_dc(cleric)
     remaining = _spend_channel(cleric)
+    is_2014 = cleric.state.template.ruleset == "2014"
     return resolve_turning_saves(
         sequence, round_number, cleric, setup, targets, dice,
         save_dc=dc, source_effect_id=TURN_UNDEAD, turned_effect_id=TURNED_EFFECT,
         resource_remaining=remaining, feature_name="Turn Undead",
+        include_frightened=not is_2014,
+        include_incapacitated=not is_2014,
+        suppress_reactions=is_2014,
+        ends_if_source_incapacitated=not is_2014,
+        ends_if_source_dead=not is_2014,
     )
 
 
