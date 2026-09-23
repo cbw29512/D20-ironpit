@@ -12,6 +12,7 @@ from app.content.monster_trait_bindings_2014 import (
     progression_features_2014,
     sneak_attack_eligible_2014,
 )
+from app.content.monster_qualified_defenses_2014 import qualified_damage_defenses_2014
 from app.content.monster_save_capabilities_2014 import (
     recharge_rules_2014, save_capabilities_2014, save_resources_2014,
 )
@@ -139,6 +140,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         damage_resistances=[item.lower() for item in monster.damage_resistances],
         damage_vulnerabilities=[item.lower() for item in monster.damage_vulnerabilities],
         damage_immunities=[item.lower() for item in monster.damage_immunities],
+        qualified_damage_defenses=qualified_damage_defenses_2014(monster),
         condition_immunities=[item.lower() for item in monster.condition_immunities],
         visual=VisualLoadout(armor=monster.creature_type, main_hand=monster.attacks[0].name, body_style=monster.creature_type),
         source=f"SRD 5.1 (2014) {monster.name}",
