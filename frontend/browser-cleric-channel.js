@@ -6,6 +6,7 @@
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
+  const PH = () => window.IRON_PIT_BROWSER_POOLED_HEALING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
   const TC = () => window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS;
@@ -13,7 +14,7 @@
   const living = (m) => m.state.is_alive && !m.state.is_dead;
   const side = (m, setup, allies) => allies === (m.side === "heroes") ? setup.heroes : setup.monsters;
   const baseType = (m) => String(m.state.template.creature_type || "").split(" (")[0].toLowerCase();
-  const capacity = (m) => Math.max(0, Math.floor(S().effectiveMaxHp(m.state) / 2) - m.state.current_hp);
+  const capacity = (m) => PH().capacity(m, 1, 2);
 
   function saveDc(cleric) {
     const dcs = [...new Set((cleric.state.template.spell_save_actions || []).map((a) => a.dc))];
@@ -67,14 +68,10 @@
   }
 
   function resolvePreserve(sequence, round, cleric, targets) {
-    let pool = 5 * cleric.state.template.level; const remaining = spend(cleric), allocations = [];
-    for (const target of targets) {
-      if (pool <= 0) break;
-      const amount = Math.min(pool, capacity(target)); if (amount <= 0) continue;
-      const restored = H().restore(target.state, amount); if (!restored) continue;
-      allocations.push(`${target.state.template.name} +${restored} HP`); pool -= restored;
-    }
-    if (!allocations.length) throw new Error("Preserve Life had no legal healing allocation.");
+    const remaining = spend(cleric);
+    const result = PH().resolve(targets, 5 * cleric.state.template.level, 1, 2);
+    if (!result.allocations.length) throw new Error("Preserve Life had no legal healing allocation.");
+    const allocations = result.allocations.map((item) => `${item.targetName} +${item.healed} HP`);
     return { events: [{ sequence, round_number: round, event_type: "healing", actor_id: cleric.combatant_id,
       actor_name: cleric.state.template.name, feature_id: PRESERVE, resource_remaining: remaining, animation: PRESERVE,
       description: `${cleric.state.template.name} uses Preserve Life: ${allocations.join("; ")}.` }], sequence: sequence + 1 };
