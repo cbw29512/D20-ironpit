@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from fractions import Fraction
-
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition
-from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
+from app.combat.turning_outcomes import destroy_on_failed_turn_save_if_eligible
+from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll
 
@@ -79,17 +78,6 @@ def apply_turned_creature_effects(
     return [effect for effect in applied if effect is not None]
 
 
-def _challenge_rating_at_or_below(target: EncounterCombatant, maximum: str | None) -> bool:
-    try:
-        if maximum is None or target.state.template.challenge_rating is None:
-            return False
-        return Fraction(target.state.template.challenge_rating) <= Fraction(maximum)
-    except Exception as exc:
-        raise ValueError(
-            f"Invalid turning-destruction Challenge Rating comparison for {target.state.template.name}."
-        ) from exc
-
-
 def resolve_turning_saves(
     sequence: int,
     round_number: int,
@@ -159,18 +147,13 @@ def resolve_turning_saves(
                 modifier=0,
                 total=applied_total,
             )
-        destroyed = False
-        if (
-            not succeeded
-            and not target.state.is_dead
-            and _challenge_rating_at_or_below(target, destroy_max_cr)
-        ):
-            reduce_to_zero_hit_points(
-                target.state,
-                dice=dice,
-                affected_states=affected_states,
-            )
-            destroyed = True
+        destroyed = destroy_on_failed_turn_save_if_eligible(
+            target,
+            succeeded=succeeded,
+            maximum_cr=destroy_max_cr,
+            dice=dice,
+            affected_states=affected_states,
+        )
         applied = [] if succeeded or target.state.is_dead or destroyed else apply_turned_creature_effects(
             source, target, setup, round_number,
             source_effect_id=source_effect_id,
