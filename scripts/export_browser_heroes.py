@@ -134,6 +134,17 @@ def _healing(action: Any) -> dict[str, Any]:
             "resourceCost": action.resource_cost, "animation": action.animation}
 
 
+def _timed_self_buff(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
+        "damageResistances": [_value(item) for item in action.damage_resistances],
+        "expiryTiming": action.expiry_timing, "priority": action.priority,
+        "animation": action.animation,
+    }
+
+
 def _removal(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
            "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
@@ -186,6 +197,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
         "condition_immunities": list(template.condition_immunities),
+        "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
         "fighting_style": template.fighting_style, "fighting_styles": list(template.fighting_styles),
