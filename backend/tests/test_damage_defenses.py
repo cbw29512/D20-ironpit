@@ -4,7 +4,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.demo import build_demo_fighter, build_goblin_warrior
-from app.domain.models import DamageRollComponent, DamageType
+from app.domain.models import DamageRollComponent, DamageType, TimedEffect
 
 
 def _component(amount: int, damage_type: DamageType) -> DamageRollComponent:
@@ -40,6 +40,42 @@ def test_resistance_halves_damage_and_rounds_down() -> None:
     target.template.damage_resistances = [DamageType.FIRE]
 
     assert adjusted_damage_amount(9, DamageType.FIRE, target) == 4
+
+
+def test_timed_effect_owned_resistance_is_applied_without_global_state_mutation() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    target.timed_effects.append(TimedEffect(
+        effect_id="test-buff",
+        source_id="hero",
+        source_effect_id="test-source",
+        applied_round=1,
+        expires_round=11,
+        owned_damage_resistances=[DamageType.FIRE],
+    ))
+
+    assert target.temporary_damage_resistances == []
+    assert adjusted_damage_amount(9, DamageType.FIRE, target) == 4
+    assert adjusted_damage_amount(9, DamageType.FORCE, target) == 9
+
+
+def test_timed_resistance_expires_by_removing_only_its_effect_instance() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    fire_effect = TimedEffect(
+        effect_id="fire-buff",
+        source_id="hero",
+        owned_damage_resistances=[DamageType.FIRE],
+    )
+    cold_effect = TimedEffect(
+        effect_id="cold-buff",
+        source_id="hero",
+        owned_damage_resistances=[DamageType.COLD],
+    )
+    target.timed_effects.extend([fire_effect, cold_effect])
+
+    target.timed_effects.remove(fire_effect)
+
+    assert adjusted_damage_amount(8, DamageType.FIRE, target) == 8
+    assert adjusted_damage_amount(8, DamageType.COLD, target) == 4
 
 
 def test_vulnerability_doubles_damage() -> None:
