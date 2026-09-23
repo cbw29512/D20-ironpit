@@ -38,7 +38,12 @@ assert.equal(barbarians2014.length, 20);
 assert.equal(rogues2014.length, 20);
 assert.equal(monks2014.length, 20);
 assert.equal(paladins2014.length, 11);
-assert.equal(clerics2014.length, 5);
+assert.ok(clerics2014.length >= 5);
+assert.deepEqual(
+  clerics2014.map((hero) => hero.level),
+  Array.from({ length: clerics2014.length }, (_value, index) => index + 1),
+  "2014 Life Cleric browser snapshots must remain one continuous level progression",
+);
 assert.ok(fighters2014.every((hero) => hero.name === "Karnok Stoneward"));
 assert.ok(barbarians2014.every((hero) => hero.name === "Rokhan Stonefury"));
 assert.ok(rogues2014.every((hero) => hero.name === "Mara Quickstep"));
