@@ -30,6 +30,7 @@ jobs:
           python scripts/prepare_static_site.py
       - name: Certify 2014 hero Python behavior
         run: |
+          set -o pipefail
           pytest -q \
             backend/tests/test_cleric_life_2014_progression.py \
             backend/tests/test_cleric_life_2014_level2.py \
@@ -43,7 +44,14 @@ jobs:
             backend/tests/test_paladin_channel_divinity_2014.py \
             backend/tests/test_paladin_devotion_2014_foundation.py \
             backend/tests/test_paladin_oath_spells_2014.py \
-            backend/tests/test_certification_progression_manifest.py
+            backend/tests/test_certification_progression_manifest.py 2>&1 | tee 2014-hero-pytest.log
+      - name: Upload 2014 hero pytest log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2014-hero-pytest-${{ github.sha }}
+          path: 2014-hero-pytest.log
+          retention-days: 1
       - name: Certify 2014 hero data and browser behavior
         run: |
           node frontend/browser-catalog-2014.test.cjs
