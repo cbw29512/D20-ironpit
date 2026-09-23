@@ -28,9 +28,12 @@ jobs:
         run: |
           python scripts/export_browser_heroes.py
           python scripts/prepare_static_site.py
-      - name: Certify 2014 Paladin Python behavior
+      - name: Certify 2014 hero Python behavior
         run: |
           pytest -q \
+            backend/tests/test_cleric_life_2014_progression.py \
+            backend/tests/test_cleric_life_2014_level2.py \
+            backend/tests/test_turn_undead_2014.py \
             backend/tests/test_monk_open_hand_2014.py \
             backend/tests/test_monk_open_hand_2014_level18.py \
             backend/tests/test_paladin_2014_spell_package.py \
