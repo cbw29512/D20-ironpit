@@ -17,9 +17,13 @@ window.IRON_PIT_BROWSER_STATE = {
   effectiveMaxHp: (state) => state.template.max_hp,
 };
 
-vm.runInThisContext(fs.readFileSync("frontend/browser-healing.js", "utf8"), {
-  filename: "browser-healing-policy.js", "browser-healing.js", "browser-group-healing.js",
-});
+const load = (name) => vm.runInThisContext(
+  fs.readFileSync(`frontend/${name}`, "utf8"),
+  { filename: name },
+);
+load("browser-healing-policy.js");
+load("browser-healing.js");
+load("browser-group-healing.js");
 
 const H = window.IRON_PIT_BROWSER_HEALING;
 
