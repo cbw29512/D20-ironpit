@@ -28,8 +28,8 @@ def build_warlock_fiend_2014_feature_audits(level: int) -> list[FeatureAudit]:
             _audit("light-crossbow", "Light Crossbow", "equipment", weapon_id="varek-2014-light-crossbow"),
             _audit("pact-magic", "Pact Magic", "class", automated=False,
                    notes="Pact slot count/level is prepared. Generic spell casting still needs mandatory higher-slot use for lower-level Warlock spells."),
-            _audit("dark-ones-blessing", "Dark One's Blessing", "subclass", automated=False,
-                   notes="Needs a universal hostile-zero-HP trigger that grants source-scaled Temporary HP."),
+            _audit("dark-ones-blessing", "Dark One's Blessing", "subclass",
+                   notes="Uses the universal hostile-zero-HP Temporary HP reward trigger with the source-scaled amount stored in progression data."),
         ]
         if level >= 2:
             audits.append(_audit("eldritch-invocations", "Eldritch Invocations", "class", automated=False,
