@@ -19,17 +19,21 @@ logger = logging.getLogger(__name__)
 _SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
-    11: (4, 3, 3), 12: (4, 3, 3), 13: (4, 3, 3, 1),
+    11: (4, 3, 3), 12: (4, 3, 3), 13: (4, 3, 3, 1), 14: (4, 3, 3, 1),
+    15: (4, 3, 3, 2), 16: (4, 3, 3, 2),
+    17: (4, 3, 3, 3, 1), 18: (4, 3, 3, 3, 1),
+    19: (4, 3, 3, 3, 2), 20: (4, 3, 3, 3, 2),
 }
 
 
 def _scores(level: int) -> AbilityScores:
     strength = 16 + (2 if level >= 4 else 0) + (2 if level >= 12 else 0)
-    charisma = 15 + (2 if level >= 8 else 0)
+    charisma = 15 + (2 if level >= 8 else 0) + (2 if level >= 16 else 0) + (1 if level >= 19 else 0)
+    constitution = 14 + (1 if level >= 19 else 0)
     return AbilityScores(
         strength=strength,
         dexterity=11,
-        constitution=14,
+        constitution=constitution,
         intelligence=9,
         wisdom=13,
         charisma=charisma,
@@ -44,6 +48,12 @@ def _resources(level: int) -> list[ResourceDefinition]:
         ))
     if level >= 3:
         resources.append(ResourceDefinition(id="channel-divinity", name="Channel Divinity", max_uses=1))
+    if level >= 14:
+        resources.append(ResourceDefinition(
+            id="cleansing-touch", name="Cleansing Touch", max_uses=max(1, _scores(level).modifier("charisma")),
+        ))
+    if level >= 20:
+        resources.append(ResourceDefinition(id="holy-nimbus", name="Holy Nimbus", max_uses=1))
     return resources
 
 
@@ -70,8 +80,8 @@ def _improved_divine_smite(level: int) -> list[OnHitDamage]:
 
 def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Devotion Paladin build support covers levels 1 through 13; certification remains separately gated.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Devotion Paladin build support covers levels 1 through 20; certification remains separately gated.")
         scores = _scores(level)
         charisma_modifier = scores.modifier("charisma")
         aura_bonus = charisma_modifier if level >= 6 else 0
