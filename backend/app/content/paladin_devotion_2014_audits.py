@@ -116,12 +116,11 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ))
         if level >= 15:
             audits.append(_audit(
-                "purity-of-spirit", "Purity of Spirit", "subclass", automated=False,
+                "purity-of-spirit", "Purity of Spirit", "subclass",
                 notes=(
-                    "The existing Protection from Evil and Good typed attack Disadvantage and typed charm/fright "
-                    "immunities are installed passively through the universal opening-modifier engine. Possession "
-                    "prevention/termination is not yet represented by the universal control-state engine, so the "
-                    "complete feature remains uncertified."
+                    "Protection from Evil and Good is installed passively through the universal opening-modifier "
+                    "engine: typed attack Disadvantage, typed charm/fright immunity, and typed possession-effect "
+                    "immunity all remain defender-owned and source-qualified."
                 ),
             ))
         if level >= 16:
