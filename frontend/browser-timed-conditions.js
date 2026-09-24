@@ -6,7 +6,7 @@
   const POISON_RECOVERY_DC = 10;
 
   function apply(state, effectId, sourceId, options = {}) {
-    if (I().immune(state, effectId, options.sourceTemplate || null)) return null;
+    if (I().immune(state, effectId, options.sourceTemplate || null, { sourceIsMagical: options.sourceIsMagical === true })) return null;
     const defaultPoison = effectId === POISONED && options.useDefaultPoisonRecovery !== false;
     if (defaultPoison && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
     const sourceEffectId = options.sourceEffectId || null;
@@ -31,6 +31,7 @@
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
+      owned_magical_condition_immunities: [...(options.ownedMagicalConditionImmunities || [])],
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
