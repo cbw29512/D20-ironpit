@@ -33,4 +33,7 @@ jobs:
             backend/tests/test_ranger_hunter_2014_prep.py \
             backend/tests/test_sorcerer_draconic_2014_prep.py \
             backend/tests/test_warlock_fiend_2014_prep.py \
-            backend/tests/test_wizard_evoker_2014_prep.py
+            backend/tests/test_wizard_evoker_2014_prep.py \
+            backend/tests/test_difficult_terrain_bypass.py
+      - name: Run targeted browser movement parity
+        run: node frontend/browser-grid-movement.test.cjs
