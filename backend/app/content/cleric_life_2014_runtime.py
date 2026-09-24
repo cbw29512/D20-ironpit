@@ -18,6 +18,7 @@ from app.content.cleric_2014_level1_spells import (
     shield_of_faith_2014,
 )
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
+from app.content.cleric_2014_level4_spells import death_ward_2014, guardian_of_faith_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant, SlotHealingSelfRider
@@ -72,8 +73,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
     """Compile the currently certified RAW 2014 Life Cleric runtime."""
     try:
-        if level not in range(1, 7):
-            raise ValueError("2014 Life Cleric runtime is currently certified through level 6.")
+        if level not in range(1, 8):
+            raise ValueError("2014 Life Cleric runtime is currently certified through level 7.")
         profile = build_seraphine_dawnshield_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -117,12 +118,16 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 [spiritual_weapon_2014(spell_attack, wisdom_modifier)]
                 if level >= 3 else []
             ),
+            persistent_hazard_actions=(
+                [guardian_of_faith_2014(save_dc)] if level >= 7 else []
+            ),
             defensive_spell_actions=[
                 bless_2014(),
                 shield_of_faith_2014(),
                 *([sanctuary_2014(save_dc)] if level >= 2 else []),
                 *([aid_2014()] if level >= 3 else []),
                 *([beacon_of_hope_2014()] if level >= 5 else []),
+                *([death_ward_2014()] if level >= 7 else []),
             ],
             healing_actions=[
                 healing_word_2014(wisdom_modifier, life_bonus),
@@ -146,7 +151,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
             source=("D&D Basic Rules 2014: Hill Dwarf, Acolyte, Cleric, Life Domain, "
                     "Bless, Cure Wounds, Guiding Bolt, Healing Word, Inflict Wounds, "
                     "Sacred Flame, Shield of Faith, Aid, Lesser Restoration, Spiritual Weapon, "
-                    "Beacon of Hope, Equipment"),
+                    "Beacon of Hope, Death Ward, Guardian of Faith, Equipment"),
         )
     except Exception:
         logger.exception("Failed to compile 2014 Seraphine Dawnshield at level %s.", level)
