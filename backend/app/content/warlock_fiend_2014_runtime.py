@@ -81,8 +81,9 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
         spell_save_dc = 8 + proficiency_bonus(level) + scores.modifier("charisma")
         save_spells = [poison_spray_2014(spell_save_dc, level)]
         if level >= 5:
-            # Fiend expanded spell choice, always compiled at the current Pact Magic slot level.
-            save_spells.append(fireball_2014(spell_save_dc, row.pact_slot_level))
+            # Keep the printed spell level immutable; generic slot selection casts it
+            # with the current Pact Magic slot and applies normal upcast scaling.
+            save_spells.append(fireball_2014(spell_save_dc))
         return CombatantTemplate(
             id=f"varek-ashenmark-2014-l{level}", name="Varek Ashenmark",
             archetype="Warlock", level=level, kind="character", ruleset="2014",
