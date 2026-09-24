@@ -37,8 +37,11 @@
     if (!resourceAvailable(healer, action, turnKey)) return null;
     const allies = healer.side === "heroes" ? setup.heroes : setup.monsters;
     const legal = allies.filter((target) => targetAllowed(healer, target, action));
-    if (action.restoreToEffectiveMax && legal.length) {
-      return legal.slice().sort((a, b) =>
+    if (action.restoreToEffectiveMax) {
+      const worthwhile = legal.filter((target) =>
+        target.state.current_hp === 0 || bloodied(target.state));
+      if (!worthwhile.length) return null;
+      return worthwhile.slice().sort((a, b) =>
         a.state.current_hp / S().effectiveMaxHp(a.state)
           - b.state.current_hp / S().effectiveMaxHp(b.state)
         || a.combatant_id.localeCompare(b.combatant_id))[0];
@@ -63,7 +66,9 @@
 
   function priority(healer, setup, action, target) {
     const ally = target.combatant_id !== healer.combatant_id;
-    const urgency = ally && target.state.current_hp === 0 ? 0 : ally ? 1 : 2;
+    const urgency = action.restoreToEffectiveMax
+      ? -1
+      : ally && target.state.current_hp === 0 ? 0 : ally ? 1 : 2;
     const cost = action.actionCost === "bonus_action" ? 0 : 1;
     const useful = Math.min(action.maxTargets || 1, worthwhileTargets(healer, setup, action).length);
     return [urgency, cost, useful >= 2 ? -useful : 0,
