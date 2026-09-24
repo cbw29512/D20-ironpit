@@ -29,6 +29,7 @@ class GrappleSource(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
+    source_is_magical: bool = False
 
 
 class HitControlEffect(BaseModel):
