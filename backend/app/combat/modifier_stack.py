@@ -82,9 +82,17 @@ def saving_throw_flat_bonus(state: CombatantState) -> int:
 
 
 def effective_speed(state: CombatantState) -> int:
-    base = max(0, state.template.speed_ft + sum(
-        item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED
-    ))
+    prevents_magical_reduction = any(effect.prevents_magical_speed_reduction for effect in state.timed_effects)
+    speed_modifiers = (
+        item for item in state.active_modifiers
+        if item.kind is ModifierKind.SPEED
+        and not (
+            prevents_magical_reduction
+            and item.source_is_magical
+            and item.flat_bonus < 0
+        )
+    )
+    base = max(0, state.template.speed_ft + sum(item.flat_bonus for item in speed_modifiers))
     return speed_after_exhaustion(state, base)
 
 
