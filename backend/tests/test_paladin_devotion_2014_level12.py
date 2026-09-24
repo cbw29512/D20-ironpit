@@ -42,7 +42,9 @@ def test_aurelia_level12_reuses_existing_combat_capabilities() -> None:
 
 
 def test_aurelia_level12_prepared_spell_capacity_is_explicitly_covered() -> None:
-    package = build_paladin_2014_spell_package(12)
+    profile = build_aurelia_brightshield_2014_profile(12)
+    charisma_modifier = profile.final_ability_scores.modifier("charisma")
+    package = build_paladin_2014_spell_package(12, charisma_modifier)
     prepared = [spell for spell in package.spells if spell.prepared]
 
     assert len(prepared) == 9
