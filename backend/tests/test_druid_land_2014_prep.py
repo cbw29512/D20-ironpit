@@ -29,7 +29,7 @@ def test_wild_shape_and_land_features_remain_explicitly_uncertified() -> None:
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["wild-shape"].automated is False
     assert audits["lands-stride"].automated is False
-    assert audits["natures-ward"].automated is False
+    assert audits["natures-ward"].automated is True
     assert audits["natures-sanctuary"].automated is False
     assert audits["beast-spells"].automated is False
     assert audits["archdruid"].automated is False
