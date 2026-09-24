@@ -54,7 +54,8 @@ def fireball_2014(save_dc: int, slot_level: int = 3) -> SpellSaveAction:
             level=slot_level, action_cost="action", range_ft=150, area_radius_ft=20,
             save_ability="dexterity", dc=save_dc,
             damage_dice_count=8 + (slot_level - 3), damage_dice_size=6,
-            damage_type="fire", success_damage="half", animation="fireball",
+            damage_type="fire", success_damage="half", upcast_dice_per_level=1,
+            animation="fireball",
         )
     except Exception:
         logger.exception("Failed to compile 2014 Fireball at slot level %s.", slot_level)
