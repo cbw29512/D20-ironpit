@@ -80,13 +80,32 @@
     }
   }
 
+  function ignoresDifficultTerrain(mover, magical) {
+    try {
+      const progression = mover.state.template.difficult_terrain_bypass_grants || [];
+      const timed = (mover.state.timed_effects || [])
+        .map((effect) => effect.difficult_terrain_bypass_scope)
+        .filter(Boolean);
+      return [...progression.map((grant) => grant.scope), ...timed]
+        .some((scope) => scope === "all" || (scope === "nonmagical" && !magical));
+    } catch (error) {
+      console.error("Failed to resolve browser difficult-terrain bypass", {
+        mover: mover.combatant_id,
+        error,
+      });
+      throw error;
+    }
+  }
+
   function movementStepCostFt(map, mover, destination, members) {
     try {
       if (!geometry().inBounds(map, destination, mover.state.template.size)) return null;
       let cost = map.cell_size_ft || 5;
       for (const occupant of occupantsAt(mover, destination, members)) {
         if (!canPassThrough(mover, occupant)) return null;
-        if (creatureSpaceIsDifficult(mover, occupant)) cost = (map.cell_size_ft || 5) * 2;
+        if (creatureSpaceIsDifficult(mover, occupant) && !ignoresDifficultTerrain(mover, false)) {
+          cost = (map.cell_size_ft || 5) * 2;
+        }
       }
       return cost;
     } catch (error) {
@@ -104,6 +123,7 @@
     canPassThrough,
     creatureSpaceIsDifficult,
     occupantsAt,
+    ignoresDifficultTerrain,
     movementStepCostFt,
   };
 })();
