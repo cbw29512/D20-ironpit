@@ -6,6 +6,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
+  const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -22,11 +23,14 @@
     if (restrained) state.active_effect_ids.push("restrained");
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false) {
-    if (I().immune(state, "grappled")) return [];
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false) {
+    if (I().immune(state, "grappled", null, { sourceIsMagical })) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
-    const effectiveRestrains = restrains && !I().immune(state, "restrained");
-    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains });
+    const effectiveRestrains = restrains && !I().immune(state, "restrained", null, { sourceIsMagical });
+    state.grapple_sources.push({
+      source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt,
+      restrains: effectiveRestrains, source_is_magical: Boolean(sourceIsMagical),
+    });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
   }
@@ -34,6 +38,22 @@
   function release(state, sourceId) {
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     sync(state);
+  }
+
+  function resolveMovementCounters(state) {
+    const resolved = [];
+    for (const source of [...state.grapple_sources]) {
+      const ids = source.restrains ? ["grappled", "restrained"] : ["grappled"];
+      const costs = ids.map((id) => C().movementCost(state, id, { sourceIsMagical: Boolean(source.source_is_magical) }))
+        .filter((cost) => cost != null);
+      if (!costs.length) continue;
+      const cost = Math.min(...costs);
+      if (state.movement_remaining_ft < cost) continue;
+      state.movement_remaining_ft -= cost;
+      release(state, source.source_id);
+      resolved.push({ debuffId: source.restrains ? "restrained" : "grappled", sourceId: source.source_id, movementCost: cost });
+    }
+    return resolved;
   }
 
   const speedIsZero = (state) => state.grapple_sources.length > 0 || Q().speedZero(state);
@@ -99,5 +119,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, shouldEscape, speedIsZero };
+  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, speedIsZero };
 })();
