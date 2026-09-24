@@ -36,6 +36,7 @@
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
       owned_magical_condition_immunities: [...(options.ownedMagicalConditionImmunities || [])],
+      difficult_terrain_bypass_scope: options.difficultTerrainBypassScope || null,
       zero_hp_replacement_hp: options.zeroHpReplacementHp || 0,
       prevents_nondamage_instant_death: Boolean(options.preventsNondamageInstantDeath),
     });
