@@ -101,8 +101,6 @@ def freedom_of_movement_2014() -> DefensiveSpellAction:
             mode="remove-with-movement",
             movement_cost_ft=5,
         ),
-        DebuffCounter(debuff_id="underwater-movement-penalty"),
-        DebuffCounter(debuff_id="underwater-attack-penalty"),
     ]
     return DefensiveSpellAction(
         id="freedom-of-movement",
