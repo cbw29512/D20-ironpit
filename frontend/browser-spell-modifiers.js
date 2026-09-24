@@ -22,6 +22,7 @@
       damage_type: effect.damageType || null,
       target_id: targetId,
       condition_id: effect.conditionId || null,
+      effect_tag: effect.effectTag || null,
       source_creature_types: [...(effect.sourceCreatureTypes || [])],
       save_ability: effect.saveAbility || null,
       save_dc: effect.saveDc ?? null,
