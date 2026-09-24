@@ -11,7 +11,8 @@ class Druid2014Level:
     level: int
     proficiency_bonus: int
     cantrips_known: int
-    wild_shape_uses: int | None
+    wild_shape_uses: int
+    wild_shape_unlimited: bool
     wild_shape_max_cr: str | None
     wild_shape_allows_swim: bool
     wild_shape_allows_fly: bool
@@ -37,9 +38,10 @@ for level in range(1,21):
     pb=2+(level-1)//4
     cantrips=2 if level < 4 else 3 if level < 10 else 4
     if level < 2:
-        uses=None; max_cr=None; swim=False; fly=False
+        uses=0; unlimited=False; max_cr=None; swim=False; fly=False
     else:
-        uses=None if level == 20 else 2
+        uses=2
+        unlimited=level == 20
         max_cr="1/4" if level < 4 else "1/2" if level < 8 else "1"
         swim=level >= 4; fly=level >= 8
     features={
@@ -52,7 +54,7 @@ for level in range(1,21):
         19:("ability-score-improvement",),20:("archdruid",),
     }.get(level, ())
     DRUID_LAND_2014_LEVELS[level]=Druid2014Level(
-        level,pb,cantrips,uses,max_cr,swim,fly,_s(*_SLOTS[level]),features,
+        level,pb,cantrips,uses,unlimited,max_cr,swim,fly,_s(*_SLOTS[level]),features,
     )
 
 
