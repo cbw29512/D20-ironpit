@@ -177,6 +177,7 @@ jobs:
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-paladin-oath-spells-2014.test.cjs
+          node frontend/browser-2014-paladin-level13.test.cjs
           node frontend/browser-2014-paladin-entrypoints.test.cjs
           node frontend/browser-spell-slot-healing.test.cjs
           node frontend/browser-ongoing-spell-control.test.cjs
