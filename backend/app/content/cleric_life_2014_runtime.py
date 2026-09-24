@@ -41,8 +41,8 @@ logger = logging.getLogger(__name__)
 def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
     """Compile the currently certified RAW 2014 Life Cleric runtime."""
     try:
-        if level not in range(1, 17):
-            raise ValueError("2014 Life Cleric runtime is currently certified through level 16.")
+        if level not in range(1, 18):
+            raise ValueError("2014 Life Cleric runtime is currently certified through level 17.")
         profile = build_seraphine_dawnshield_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -82,6 +82,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 *([inflict_wounds_2014(spell_attack, 6)] if level >= 11 else []),
                 *([inflict_wounds_2014(spell_attack, 7)] if level >= 13 else []),
                 *([inflict_wounds_2014(spell_attack, 8)] if level >= 15 else []),
+                *([inflict_wounds_2014(spell_attack, 9)] if level >= 17 else []),
             ],
             persistent_spell_attack_actions=(
                 [spiritual_weapon_2014(spell_attack, wisdom_modifier)] if level >= 3 else []
