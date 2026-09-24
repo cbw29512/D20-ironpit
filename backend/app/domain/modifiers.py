@@ -18,6 +18,7 @@ class ModifierKind(StrEnum):
     DEATH_SAVE_ADVANTAGE = "death-save-advantage"
     HEALING_MAXIMIZE = "healing-maximize"
     CONDITION_IMMUNITY = "condition-immunity"
+    EFFECT_IMMUNITY = "effect-immunity"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
     ATTACKS_AGAINST_DISADVANTAGE = "attacks-against-disadvantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
@@ -41,6 +42,7 @@ class CombatModifier(BaseModel):
     target_id: str | None = None
     weapon_id: str | None = None
     condition_id: str | None = None
+    effect_tag: str | None = Field(default=None, min_length=1)
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -84,10 +86,14 @@ class CombatModifier(BaseModel):
             raise ValueError("Condition-immunity modifiers require a condition id.")
         if self.kind is not ModifierKind.CONDITION_IMMUNITY and self.condition_id is not None:
             raise ValueError(f"{self.kind.value} does not accept a condition id.")
+        if self.kind is ModifierKind.EFFECT_IMMUNITY and self.effect_tag is None:
+            raise ValueError("Effect-immunity modifiers require an effect tag.")
+        if self.kind is not ModifierKind.EFFECT_IMMUNITY and self.effect_tag is not None:
+            raise ValueError(f"{self.kind.value} does not accept an effect tag.")
         if self.kind is ModifierKind.ATTACKS_AGAINST_DISADVANTAGE and not self.source_creature_types:
             raise ValueError("Typed attack Disadvantage requires source creature types.")
         if self.source_creature_types and self.kind not in {
-            ModifierKind.ATTACKS_AGAINST_DISADVANTAGE, ModifierKind.CONDITION_IMMUNITY,
+            ModifierKind.ATTACKS_AGAINST_DISADVANTAGE, ModifierKind.CONDITION_IMMUNITY, ModifierKind.EFFECT_IMMUNITY,
         }:
             raise ValueError(f"{self.kind.value} does not accept source creature types.")
         if self.kind in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and not self.save_ability:
