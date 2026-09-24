@@ -143,7 +143,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     ),
     CertifiedHeroProgression(
         class_id="cleric", template_builder=build_seraphine_dawnshield_2014,
-        profile_level_builder=build_seraphine_dawnshield_2014_profile, max_level=10,
+        profile_level_builder=build_seraphine_dawnshield_2014_profile, max_level=11,
     ),
     CertifiedHeroProgression(
         class_id="rogue", template_builder=build_mara_quickstep_level,
