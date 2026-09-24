@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.spell_modifiers import build_spell_modifier
 from app.domain.models import CombatantTemplate
 from app.domain.modifiers import CombatModifier, ModifierKind
 
@@ -36,6 +37,17 @@ def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
                     requires_magical_effect=grant.requires_magical_effect,
                     against_effect_tags=list(grant.against_effect_tags),
                 ))
+        for grant in features.passive_modifier_grants:
+            for index, effect in enumerate(grant.modifier_effects):
+                modifier = build_spell_modifier(
+                    template.id,
+                    template.id,
+                    grant.source_id,
+                    effect,
+                    index,
+                )
+                modifier.source_name = grant.source_name
+                modifiers.append(modifier)
         return modifiers
     except Exception as exc:
         logger.exception("Failed to compile opening modifiers for %s.", template.id)
