@@ -8,6 +8,7 @@
   const GM = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT;
   const GS = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT_SUPPORT;
   const GR = () => window.IRON_PIT_BROWSER_GRID_REACTION_SUPPORT;
+  const H = () => window.IRON_PIT_BROWSER_PERSISTENT_HAZARDS;
 
   function preview(mover, target, desired) {
     try {
@@ -73,6 +74,15 @@
             : `${mover.state.template.name} moves 5 feet, spending ${stepCost} feet of movement.`,
         };
         events.push(lastMovement); sequence += 1;
+        if (H()) {
+          const triggered = H().resolveEntries(
+            sequence, round, mover, setup, options.turnKey || `${round}:${mover.combatant_id}`,
+          );
+          events.push(...triggered.events); sequence = triggered.sequence;
+          if (mover.state.is_dead || mover.state.is_unconscious) {
+            return { events, sequence, movement: lastMovement };
+          }
+        }
         if (afterDistance <= desired || mover.state.movement_remaining_ft <= 0) break;
       }
       return { events, sequence, movement: lastMovement };

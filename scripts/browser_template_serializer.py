@@ -239,6 +239,20 @@ def _healing(action: Any) -> dict[str, Any]:
     }
 
 
+
+def persistent_hazard_row(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+        "durationRounds": action.duration_rounds, "footprintSize": _value(action.footprint_size),
+        "triggerRadiusFt": action.trigger_radius_ft, "saveAbility": action.save_ability,
+        "dc": action.dc, "failureDamage": action.failure_damage,
+        "successDamage": action.success_damage, "damageType": action.damage_type,
+        "maxTotalDamage": action.max_total_damage, "animation": action.animation,
+        "source": action.source,
+    }
+
+
 def defense_row(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
@@ -396,6 +410,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions:
             row["healingActions"] = [_healing(item) for item in template.healing_actions]
+        if template.persistent_hazard_actions:
+            row["persistent_hazard_actions"] = [
+                persistent_hazard_row(item) for item in template.persistent_hazard_actions
+            ]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.timed_self_buff_actions:
