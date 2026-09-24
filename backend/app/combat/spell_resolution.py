@@ -25,7 +25,9 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
         id=spell.id, name=spell.name, save_ability=spell.save_ability, dc=spell.dc,
         range_ft=target_range, damage_dice_count=spell.damage_dice_count,
         damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
-        damage_type=spell.damage_type, success_damage=spell.success_damage,
+        damage_type=spell.damage_type,
+        damage_components=[component.model_copy(deep=True) for component in spell.damage_components],
+        success_damage=spell.success_damage,
         magical_effect=True, animation=spell.animation,
     )
 
@@ -79,6 +81,7 @@ def resolve_spell(
     affected_states = [member.state for member in members]
     save_action = _save_action(choice)
     shared_damage_rolls: list[int] | None = None
+    shared_damage_component_rolls: list[list[int]] | None = None
     for target_id in choice.target_ids:
         target = by_id[target_id]
         ward = check_targeting_ward(caster, target, dice) if spell.area_radius_ft is None else None
@@ -92,12 +95,19 @@ def resolve_spell(
             sequence, round_number, caster, target, save_action,
             abs(caster.position_ft - target.position_ft), dice, setup,
             turn_key=turn_key, spend_action=False,
-            shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
+            shared_damage_rolls=shared_damage_rolls,
+            shared_damage_component_rolls=shared_damage_component_rolls,
+            affected_states=affected_states,
         )
         event = chain[0]
         if ward is not None:
             event.description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
         events.extend(chain)
-        if shared_damage_rolls is None and event.damage_components:
-            shared_damage_rolls = list(event.damage_components[0].rolls)
+        if event.damage_components:
+            if save_action.damage_components and shared_damage_component_rolls is None:
+                shared_damage_component_rolls = [
+                    list(component.rolls) for component in event.damage_components
+                ]
+            elif not save_action.damage_components and shared_damage_rolls is None:
+                shared_damage_rolls = list(event.damage_components[0].rolls)
     return events, sequence
