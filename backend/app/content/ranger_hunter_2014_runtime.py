@@ -5,6 +5,7 @@ import logging
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.ranger_hunter_2014_data import ability_scores
 from app.content.ranger_hunter_2014_progression import ranger_hunter_2014_level
+from app.content.shared_healing_spells_2014 import cure_wounds_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
@@ -100,6 +101,7 @@ def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
             weapon_attack=_attack(level, "longbow", "rowan-2014-longbow", archery=True),
             alternate_weapon_attacks=[_attack(level, "shortsword", "rowan-2014-shortsword")],
             attack_action=_attack_action(level),
+            healing_actions=[cure_wounds_2014(scores.modifier("wisdom"))] if level >= 2 else [],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "dexterity")),
             skill_bonuses=_skills(level),
             progression_features=ProgressionCombatFeatures(
