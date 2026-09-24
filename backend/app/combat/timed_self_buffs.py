@@ -68,7 +68,7 @@ def resolve_timed_self_buff(
         spend(member.state, action.action_cost)
         resource.current_uses -= action.resource_cost
         applied: list[str] = []
-        resistance_attached = False
+        defenses_attached = False
         for condition_id in action.condition_ids:
             condition = apply_timed_condition(
                 member.state,
@@ -80,14 +80,28 @@ def resolve_timed_self_buff(
                 expires_round=round_number + action.duration_rounds,
                 expiry_timing=action.expiry_timing,
                 expires_at_start_of_source_turn=action.expiry_timing == "source_turn_start",
-                owned_damage_resistances=action.damage_resistances if not resistance_attached else [],
+                owned_damage_resistances=action.damage_resistances if not defenses_attached else [],
+                owned_debuff_counters=action.debuff_counters if not defenses_attached else [],
                 use_default_poison_recovery=False,
             )
             if condition is not None:
                 applied.append(condition)
-                resistance_attached = True
-        if not applied:
-            raise RuntimeError(f"{action.name} applied no timed condition.")
+                defenses_attached = True
+        if not defenses_attached and (action.damage_resistances or action.debuff_counters):
+            apply_timed_condition(
+                member.state,
+                action.id,
+                member.combatant_id,
+                source_effect_id=action.id,
+                source_template=member.state.template,
+                applied_round=round_number,
+                expires_round=round_number + action.duration_rounds,
+                expiry_timing=action.expiry_timing,
+                expires_at_start_of_source_turn=action.expiry_timing == "source_turn_start",
+                owned_damage_resistances=action.damage_resistances,
+                owned_debuff_counters=action.debuff_counters,
+                use_default_poison_recovery=False,
+            )
 
         return BattleEvent(
             sequence=sequence,
