@@ -109,7 +109,9 @@
       target.state.max_hp_bonus += spell.maxHpIncrease || 0;
       target.state.current_hp += spell.currentHpIncrease || 0;
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
-      if (spell.survivalWard) {
+      if (spell.survivalWard || spell.ownedMagicalConditionImmunities?.length
+        || spell.difficultTerrainBypassScope || spell.preventsMagicalSpeedReduction
+        || spell.nonmagicalGrappleEscapeMovementCostFt) {
         if (!T()) throw new Error("Browser timed-effect runtime is not loaded.");
         T().apply(target.state, `survival-ward:${spell.id}`, member.combatant_id, {
           sourceEffectId: spell.id,
@@ -117,8 +119,12 @@
           expiresRound: 1 + spell.durationMinutes * 10,
           expiresAtStartOfSourceTurn: false,
           expiryTiming: "target_turn_start",
-          zeroHpReplacementHp: spell.survivalWard.replacementHp,
-          preventsNondamageInstantDeath: spell.survivalWard.preventsNondamageInstantDeath,
+          ownedMagicalConditionImmunities: [...(spell.ownedMagicalConditionImmunities || [])],
+          difficultTerrainBypassScope: spell.difficultTerrainBypassScope || null,
+          preventsMagicalSpeedReduction: Boolean(spell.preventsMagicalSpeedReduction),
+          nonmagicalGrappleEscapeMovementCostFt: spell.nonmagicalGrappleEscapeMovementCostFt || 0,
+          zeroHpReplacementHp: spell.survivalWard?.replacementHp || 0,
+          preventsNondamageInstantDeath: Boolean(spell.survivalWard?.preventsNondamageInstantDeath),
           useDefaultPoisonRecovery: false,
         });
       }
@@ -133,6 +139,10 @@
     if (spell.currentHpIncrease) details.push(`+${spell.currentHpIncrease} current Hit Points`);
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
     if (spell.survivalWard) details.push(`survival ward to ${spell.survivalWard.replacementHp} HP`);
+    if (spell.ownedMagicalConditionImmunities?.length) details.push("magical condition prevention");
+    if (spell.difficultTerrainBypassScope) details.push("difficult terrain bypass");
+    if (spell.preventsMagicalSpeedReduction) details.push("magical Speed reduction prevention");
+    if (spell.nonmagicalGrappleEscapeMovementCostFt) details.push(`${spell.nonmagicalGrappleEscapeMovementCostFt}-ft nonmagical grapple escape`);
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     if (spell.concentration) details.push("Concentration");
     const single = targets.length === 1 ? targets[0] : null;
