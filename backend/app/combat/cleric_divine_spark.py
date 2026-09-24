@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.undead_fortitude import consume_survival_save_log
+from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
 from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses
 from app.combat.dice import DiceProvider
@@ -73,5 +74,5 @@ def resolve_divine_spark(
         damage_roll=DiceRoll(notation=notation, rolls=[roll], modifier=modifier, total=applied_total),
         damage_components=components, hp_before=before, hp_after=target.state.current_hp,
         feature_id=DIVINE_SPARK, resource_remaining=resource_remaining, animation="divine-spark",
-        description=f"{target.state.template.name} takes {applied_total} {damage_type.value} damage from Divine Spark." + consume_survival_save_log(target.state),
+        description=f"{target.state.template.name} takes {applied_total} {damage_type.value} damage from Divine Spark." + consume_survival_save_log(target.state) + consume_zero_hp_replacement_log(target.state),
     )
