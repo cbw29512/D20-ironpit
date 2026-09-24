@@ -6,6 +6,8 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.weapon_catalog import build_weapon
 from app.content.wizard_evoker_2014_data import ability_scores
 from app.content.wizard_evoker_2014_progression import wizard_evoker_2014_level
+from app.content.shared_spell_attacks_2014 import fire_bolt_2014
+from app.content.shared_spell_saves_2014 import disintegrate_2014, fireball_2014
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
 
@@ -67,6 +69,13 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
         if level not in range(1, 21):
             raise ValueError("2014 Evoker Wizard build support covers levels 1 through 20.")
         scores = ability_scores(level)
+        spell_attack_bonus = proficiency_bonus(level) + scores.modifier("intelligence")
+        spell_save_dc = 8 + proficiency_bonus(level) + scores.modifier("intelligence")
+        save_spells = []
+        if level >= 5:
+            save_spells.append(fireball_2014(spell_save_dc))
+        if level >= 11:
+            save_spells.append(disintegrate_2014(spell_save_dc))
         return CombatantTemplate(
             id=f"elian-starweaver-2014-l{level}",
             name="Elian Starweaver",
@@ -80,6 +89,8 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
             speed_ft=30,
             initiative_bonus=scores.modifier("dexterity"),
             weapon_attack=_attack(level),
+            spell_attack_actions=[fire_bolt_2014(spell_attack_bonus, level)],
+            spell_save_actions=save_spells,
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("intelligence", "wisdom")),
             skill_bonuses=_skills(level),
             progression_features=ProgressionCombatFeatures(),
