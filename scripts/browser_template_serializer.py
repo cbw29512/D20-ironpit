@@ -314,6 +314,20 @@ def defense_row(action: Any) -> dict[str, Any]:
     return row
 
 
+def _timed_aura(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "durationRounds": action.duration_rounds, "radiusFt": action.radius_ft,
+        "startTurnFixedDamage": action.start_turn_fixed_damage,
+        "damageType": _value(action.damage_type) if action.damage_type else None,
+        "savingThrowAdvantageAbilities": list(action.saving_throw_advantage_abilities),
+        "savingThrowAdvantageSourceCreatureTypes": list(action.saving_throw_advantage_source_creature_types),
+        "savingThrowAdvantageRequiresSpell": action.saving_throw_advantage_requires_spell,
+        "priority": action.priority, "animation": action.animation, "source": action.source,
+    }
+
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     return {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -483,6 +497,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.timed_self_buff_actions:
             row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
+        if template.timed_aura_actions:
+            row["timed_aura_actions"] = [_timed_aura(item) for item in template.timed_aura_actions]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
