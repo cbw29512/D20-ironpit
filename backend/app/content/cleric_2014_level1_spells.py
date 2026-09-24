@@ -28,7 +28,8 @@ def cure_wounds_2014(wisdom_modifier: int, life_bonus: int) -> HealingAction:
             id="cure-wounds", name="Cure Wounds", action_cost="action",
             range_ft=5, target_mode="self_or_ally", dice_count=1, dice_size=8,
             healing_bonus=wisdom_modifier + life_bonus,
-            resource_id="spell-slot-1", resource_cost=1, animation="healing",
+            resource_id="spell-slot-1", resource_cost=1,
+            excluded_creature_types=["undead", "construct"], animation="healing",
         )
     except Exception:
         logger.exception("Failed to build 2014 Cure Wounds.")
