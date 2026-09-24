@@ -246,6 +246,14 @@ Permanent arena rules:
 
 Resolve each damage component separately and preserve source qualifiers.
 
+### Runtime damage-roll invariant
+
+- When RAW/source damage is expressed with dice, actual combat resolution rolls those printed dice at runtime through the canonical dice provider. Do not substitute averages, expected values, static approximations, or precomputed damage for the resolved fight.
+- Critical hits add the additional damage dice required by the selected ruleset/source; they do not replace rolled damage with an average.
+- Rolled bonus damage and on-hit riders (for example Sneak Attack, Divine Smite, Frenzy, and equivalent universal riders) use the same runtime dice path when their source damage is expressed as dice.
+- Expected/average damage may be used only by Arena AI to rank otherwise legal tactical choices. AI valuation never becomes the damage applied to combat state or the audit log.
+- Genuinely fixed-damage rules remain fixed and do not fabricate dice. A source that says it deals a fixed amount must resolve that fixed amount, including any source-defined success/failure split.
+
 Universal dimensions include:
 
 - damage type;
