@@ -4,9 +4,10 @@ import logging
 
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.debuff_counters import movement_counter_cost
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
-from app.domain.models import BattleEvent, CombatantState, CombatantTemplate, EncounterCombatant, EncounterSetup, TimedEffect
+from app.domain.models import BattleEvent, CombatantState, CombatantTemplate, DebuffCounter, EncounterCombatant, EncounterSetup, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
 
 logger = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ def apply_timed_condition(
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
     owned_damage_resistances: list[DamageType] | None = None,
-    owned_magical_condition_immunities: list[str] | None = None,
+    owned_debuff_counters: list[DebuffCounter] | None = None,
     use_default_poison_recovery: bool = True,
 ) -> str | None:
     """Apply one source-owned timed condition and its optional passive defenses.
@@ -86,8 +87,9 @@ def apply_timed_condition(
             ends_on_damage=ends_on_damage,
             ends_if_source_incapacitated=ends_if_source_incapacitated,
             ends_if_source_dead=ends_if_source_dead,
+            source_is_magical=source_is_magical,
             owned_damage_resistances=owned_damage_resistances or [],
-            owned_magical_condition_immunities=owned_magical_condition_immunities or [],
+            owned_debuff_counters=owned_debuff_counters or [],
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
@@ -124,6 +126,26 @@ def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]
         if remove_effect_instance(state, item):
             removed.append(item.effect_id)
     return removed
+
+
+def resolve_movement_countered_conditions(state: CombatantState) -> list[tuple[str, str, int]]:
+    """Automatically spend movement to clear active debuffs when a buff grants that option."""
+    resolved: list[tuple[str, str, int]] = []
+    for effect in list(state.timed_effects):
+        cost = movement_counter_cost(
+            state,
+            effect.effect_id,
+            source_is_magical=effect.source_is_magical,
+        )
+        if cost is None or state.movement_remaining_ft < cost:
+            continue
+        removed = remove_effect_group(state, effect)
+        if not removed:
+            continue
+        state.movement_remaining_ft -= cost
+        for condition_id in removed:
+            resolved.append((condition_id, effect.source_id, cost))
+    return resolved
 
 
 def _source_start_expired(effect: TimedEffect, round_number: int) -> bool:
