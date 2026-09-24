@@ -36,6 +36,7 @@ jobs:
             backend/tests/test_cleric_life_2014_level2.py \
             backend/tests/test_cleric_life_2014_level3.py \
             backend/tests/test_cleric_life_2014_level6.py \
+            backend/tests/test_cleric_life_2014_level7.py \
             backend/tests/test_pooled_healing.py \
             backend/tests/test_turn_undead_2014.py \
             backend/tests/test_monk_open_hand_2014.py \
