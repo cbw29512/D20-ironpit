@@ -71,8 +71,12 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ))
         if level >= 10:
             audits.append(_audit(
-                "natures-ward", "Nature's Ward", "subclass", automated=False,
-                notes="Requires source-owned charm/fright immunity against elementals/fey plus poison/disease immunity.",
+                "natures-ward", "Nature's Ward", "subclass",
+                notes=(
+                    "Poison damage and the Poisoned condition use the normal immunity engine. "
+                    "Charm/fright prevention against elementals and fey uses source-creature-type passive modifiers. "
+                    "Disease is arena-neutral because the standard Iron Pit does not apply disease effects."
+                ),
             ))
         if level >= 14:
             audits.append(_audit(
