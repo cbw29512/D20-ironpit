@@ -4,6 +4,7 @@ import logging
 
 from app.combat.grid_geometry import footprints_overlap, position_in_bounds
 from app.combat.grid_passage import can_pass_through, creature_space_is_difficult
+from app.combat.movement_defenses import ignores_difficult_terrain
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, GridPosition
 
@@ -57,7 +58,9 @@ def movement_step_cost_ft(
         for occupant in overlapping_occupants(mover, destination, members):
             if not can_pass_through(mover, occupant):
                 return None
-            if creature_space_is_difficult(mover, occupant):
+            if creature_space_is_difficult(mover, occupant) and not ignores_difficult_terrain(
+                mover.state, magical=False,
+            ):
                 cost = map_definition.cell_size_ft * 2
         return cost
     except Exception:
