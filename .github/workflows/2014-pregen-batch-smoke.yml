@@ -29,6 +29,7 @@ jobs:
             backend/tests/test_paladin_devotion_2014_level13_prep.py \
             backend/tests/test_paladin_devotion_2014_high_level_prep.py \
             backend/tests/test_paladin_auras_2014.py \
+            backend/tests/test_split_save_damage.py \
             backend/tests/test_bard_lore_2014_prep.py \
             backend/tests/test_ranger_hunter_2014_prep.py \
             backend/tests/test_sorcerer_draconic_2014_prep.py \
@@ -39,4 +40,5 @@ jobs:
             backend/tests/test_2014_pregen_batch_spines.py
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-passive-opening-modifiers.test.cjs
+          node frontend/browser-split-save-damage.test.cjs
           node frontend/browser-once-per-turn-hit-damage.test.cjs
