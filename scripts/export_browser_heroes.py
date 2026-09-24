@@ -315,6 +315,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["turning_failure_destroy_max_cr"] = progression.turning_failure_destroy_max_cr
     if progression.slot_healing_other_self_rider:
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
+    if progression.outgoing_healing_dice_maximizer:
+        row["outgoing_healing_dice_maximizer"] = progression.outgoing_healing_dice_maximizer.model_dump()
     if progression.once_per_turn_weapon_hit_damage_rider:
         row["once_per_turn_weapon_hit_damage_rider"] = progression.once_per_turn_weapon_hit_damage_rider.model_dump()
     if progression.ability_check_minimums:
