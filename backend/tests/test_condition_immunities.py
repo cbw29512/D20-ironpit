@@ -5,6 +5,7 @@ from app.combat.state import build_combatant_state
 from app.combat.timed_conditions import apply_timed_condition, remove_effect_instance
 from app.combat.zero_hp import apply_damage
 from app.content.roster import build_arena_roster
+from app.domain.debuffs import DebuffCounter
 
 
 def _template(item_id: str):
@@ -80,7 +81,10 @@ def test_timed_magical_condition_prevention_does_not_block_nonmagical_source() -
         "movement-ward",
         "caster",
         source_effect_id="test-ward",
-        owned_magical_condition_immunities=["paralyzed", "restrained"],
+        owned_debuff_counters=[
+            DebuffCounter(debuff_id="paralyzed", source_scope="magical"),
+            DebuffCounter(debuff_id="restrained", source_scope="magical"),
+        ],
         use_default_poison_recovery=False,
     )
 
