@@ -69,7 +69,6 @@ def test_high_level_preparation_keeps_unfinished_features_explicitly_uncertified
     expected_blocked = {
         13: "devotion-oath-spells-4",
         15: "purity-of-spirit",
-        17: "devotion-oath-spells-5",
         20: "holy-nimbus",
     }
     for level, feature_id in expected_blocked.items():
@@ -133,3 +132,23 @@ def test_purity_of_spirit_typed_defenses_use_opening_modifier_engine() -> None:
     )
     assert audit.automated is False
     assert "Possession" in (audit.notes or "")
+
+
+def test_level_seventeen_flame_strike_uses_one_save_with_two_typed_components() -> None:
+    runtime = build_aurelia_brightshield_2014(17)
+    assert len(runtime.spell_save_actions) == 1
+    flame_strike = runtime.spell_save_actions[0]
+    assert flame_strike.id == "flame-strike"
+    assert flame_strike.level == 5
+    assert flame_strike.save_ability == "dexterity"
+    assert flame_strike.dc == 17
+    assert flame_strike.success_damage == "half"
+    assert [(item.dice_count, item.dice_size, item.damage_type) for item in flame_strike.damage_components] == [
+        (4, 6, "fire"),
+        (4, 6, "radiant"),
+    ]
+    audit = next(
+        item for item in build_aurelia_brightshield_2014_profile(17).feature_audits
+        if item.feature_id == "devotion-oath-spells-5"
+    )
+    assert audit.automated is True
