@@ -37,6 +37,12 @@
     if (!resourceAvailable(healer, action, turnKey)) return null;
     const allies = healer.side === "heroes" ? setup.heroes : setup.monsters;
     const legal = allies.filter((target) => targetAllowed(healer, target, action));
+    if (action.restoreToEffectiveMax && legal.length) {
+      return legal.slice().sort((a, b) =>
+        a.state.current_hp / S().effectiveMaxHp(a.state)
+          - b.state.current_hp / S().effectiveMaxHp(b.state)
+        || a.combatant_id.localeCompare(b.combatant_id))[0];
+    }
     const others = legal.filter((target) => target.combatant_id !== healer.combatant_id);
     const downed = others.filter((target) => target.state.current_hp === 0);
     if (downed.length) return downed.reduce((best, item) =>
