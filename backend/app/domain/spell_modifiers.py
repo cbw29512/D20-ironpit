@@ -8,7 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, DamageTypeName
 
 SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die", "saving-throw-advantage",
-    "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
+    "death-save-advantage", "healing-maximize", "condition-immunity", "effect-immunity", "attacks-against-advantage",
     "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "speed",
 ]
 
@@ -22,6 +22,7 @@ class SpellModifierEffect(BaseModel):
     dice_size: int = Field(default=0, ge=0, le=100)
     damage_type: DamageTypeName | None = None
     condition_id: ConditionName | None = None
+    effect_tag: str | None = Field(default=None, min_length=1)
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: AbilityName | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -44,9 +45,13 @@ class SpellModifierEffect(BaseModel):
             raise ValueError("Condition immunity requires a condition id.")
         if self.kind != "condition-immunity" and self.condition_id is not None:
             raise ValueError(f"{self.kind} does not accept a condition id.")
+        if self.kind == "effect-immunity" and self.effect_tag is None:
+            raise ValueError("Effect immunity requires an effect tag.")
+        if self.kind != "effect-immunity" and self.effect_tag is not None:
+            raise ValueError(f"{self.kind} does not accept an effect tag.")
         if self.kind == "attacks-against-disadvantage" and not self.source_creature_types:
             raise ValueError("Typed attack Disadvantage requires source creature types.")
-        if self.source_creature_types and self.kind not in {"attacks-against-disadvantage", "condition-immunity"}:
+        if self.source_creature_types and self.kind not in {"attacks-against-disadvantage", "condition-immunity", "effect-immunity"}:
             raise ValueError(f"{self.kind} does not accept source creature types.")
         if self.kind in {"saving-throw-advantage", "targeting-save-gate"} and not self.save_ability:
             raise ValueError(f"{self.kind} requires a save ability.")
