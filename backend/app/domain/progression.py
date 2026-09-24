@@ -6,6 +6,7 @@ from typing import Literal
 from app.domain.character_builds import AbilityName
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
+from app.domain.movement import DifficultTerrainBypassGrant
 from app.domain.spell_modifiers import SpellModifierEffect
 from app.domain.spell_damage import SpellDamageBonusGrant
 from app.domain.spell_cast_grants import FreeSpellCastGrant
@@ -166,6 +167,7 @@ class ProgressionCombatFeatures(BaseModel):
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     opening_targeting_ward: OpeningTargetingWard | None = None
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
+    difficult_terrain_bypass_grants: list[DifficultTerrainBypassGrant] = Field(default_factory=list)
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
     failed_d20_bonus_die_grants: list[FailedD20BonusDieGrant] = Field(default_factory=list)
