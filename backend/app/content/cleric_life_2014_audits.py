@@ -105,8 +105,11 @@ def build_cleric_life_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ])
         if level >= 10:
             audits.append(_audit(
-                "divine-intervention", "Divine Intervention", "class", source=CLERIC, automated=False,
-                notes="Requires deterministic Iron Pit policy over the RAW deity-intervention result.",
+                "divine-intervention", "Divine Intervention", "class", source=CLERIC,
+                notes=(
+                    "Uses the universal percentile-gated healing action. On success, Iron Pit's "
+                    "deterministic deity policy restores one legal living party member to effective max HP."
+                ),
             ))
         if level >= 11:
             audits.append(_audit(
