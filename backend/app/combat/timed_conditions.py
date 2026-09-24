@@ -22,6 +22,7 @@ def apply_timed_condition(
     *,
     source_effect_id: str | None = None,
     source_template: CombatantTemplate | None = None,
+    source_is_magical: bool = False,
     applied_round: int | None = None,
     expires_round: int | None = None,
     expires_at_start_of_source_turn: bool = True,
@@ -36,6 +37,7 @@ def apply_timed_condition(
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
     owned_damage_resistances: list[DamageType] | None = None,
+    owned_magical_condition_immunities: list[str] | None = None,
     use_default_poison_recovery: bool = True,
 ) -> str | None:
     """Apply one source-owned timed condition and its optional passive defenses.
@@ -45,7 +47,12 @@ def apply_timed_condition(
     source-specific parameters; damage math and expiry remain universal.
     """
     try:
-        if condition_is_immune(state, effect_id, source_template):
+        if condition_is_immune(
+            state,
+            effect_id,
+            source_template,
+            source_is_magical=source_is_magical,
+        ):
             return None
         if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
             if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
@@ -80,6 +87,7 @@ def apply_timed_condition(
             ends_if_source_incapacitated=ends_if_source_incapacitated,
             ends_if_source_dead=ends_if_source_dead,
             owned_damage_resistances=owned_damage_resistances or [],
+            owned_magical_condition_immunities=owned_magical_condition_immunities or [],
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)

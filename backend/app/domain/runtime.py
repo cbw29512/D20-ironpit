@@ -43,10 +43,14 @@ class TimedEffect(BaseModel):
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
-    # Universal source ownership for temporary typed resistances.  This lets a
+    # Universal source ownership for temporary typed resistances. This lets a
     # timed effect clean up only the resistance contribution it owns while an
     # overlapping effect that grants the same type remains active.
     owned_damage_resistances: list[DamageType] = Field(default_factory=list)
+    # Conditions prevented only when the incoming effect is magical. This is
+    # intentionally distinct from blanket condition immunity: source data must
+    # identify the incoming effect as magical before this defense applies.
+    owned_magical_condition_immunities: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":

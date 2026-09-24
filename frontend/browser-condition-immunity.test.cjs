@@ -20,6 +20,7 @@ const queuedDice = (values, fallback = 10) => {
 const S = window.IRON_PIT_BROWSER_STATE;
 const G = window.IRON_PIT_BROWSER_GRAPPLE;
 const T = window.IRON_PIT_BROWSER_TIMED;
+const I = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
 const A = window.IRON_PIT_BROWSER_ATTACK;
 const heroTemplate = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroes", position_ft: position, state: S.buildState(structuredClone(template)) });
@@ -47,6 +48,21 @@ const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroe
   assert.equal(target.state.grapple_sources[0].restrains, false);
   assert.equal(target.state.active_effect_ids.includes("grappled"), true);
   assert.equal(target.state.active_effect_ids.includes("restrained"), false);
+}
+
+{
+  const target = member("hero-1", heroTemplate);
+  assert.equal(T.apply(target.state, "movement-ward", "caster", {
+    sourceEffectId: "test-ward",
+    ownedMagicalConditionImmunities: ["paralyzed", "restrained"],
+    useDefaultPoisonRecovery: false,
+  }), "movement-ward");
+  assert.equal(I.immune(target.state, "paralyzed", null, { sourceIsMagical: true }), true);
+  assert.equal(I.immune(target.state, "restrained", null, { sourceIsMagical: true }), true);
+  assert.equal(I.immune(target.state, "paralyzed", null, { sourceIsMagical: false }), false);
+  const ward = target.state.timed_effects[0];
+  assert.equal(T.removeEffect(target.state, ward), true);
+  assert.equal(I.immune(target.state, "restrained", null, { sourceIsMagical: true }), false);
 }
 
 {
