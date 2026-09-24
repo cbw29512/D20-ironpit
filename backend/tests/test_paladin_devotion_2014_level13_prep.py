@@ -40,7 +40,7 @@ def test_level_thirteen_is_prepared_without_advancing_certification_boundary() -
     assert dict(fingerprint.resources) == expected_resources
 
     audit = next(item for item in level_thirteen.feature_audits if item.feature_id == "devotion-oath-spells-4")
-    assert audit.automated is False
+    assert audit.automated is True
 
     certified = next(
         item for item in CERTIFIED_HERO_PROGRESSIONS
