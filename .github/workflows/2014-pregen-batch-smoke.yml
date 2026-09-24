@@ -42,3 +42,5 @@ jobs:
           node frontend/browser-spell-upcasting-2014.test.cjs
       - name: Run targeted browser movement parity
         run: node frontend/browser-grid-movement.test.cjs
+      - name: Run targeted 2014 Paladin modifier parity
+        run: node frontend/browser-paladin-oath-spells-2014.test.cjs
