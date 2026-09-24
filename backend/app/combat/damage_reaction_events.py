@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.damage_reaction_dispatch import resolve_damage_reaction_attack
+from app.combat.zero_hp_rewards import resolve_zero_hp_temporary_hp_reward
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -124,8 +125,20 @@ def damage_event_chain(
 ) -> tuple[list[BattleEvent], int]:
     """Return one resolved damage event followed by any immediate reaction chain."""
     try:
-        reactions, final_sequence = resolve_damage_event_reactions(
+        events = [event]
+        reward = resolve_zero_hp_temporary_hp_reward(
             next_sequence,
+            round_number,
+            source,
+            event,
+            setup,
+        )
+        reaction_sequence = next_sequence
+        if reward is not None:
+            events.append(reward)
+            reaction_sequence += 1
+        reactions, final_sequence = resolve_damage_event_reactions(
+            reaction_sequence,
             round_number,
             source,
             event,
@@ -133,7 +146,8 @@ def damage_event_chain(
             dice,
             turn_key=turn_key,
         )
-        return [event, *reactions], final_sequence
+        events.extend(reactions)
+        return events, final_sequence
     except ValueError:
         raise
     except Exception as exc:
