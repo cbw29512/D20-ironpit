@@ -37,6 +37,7 @@ def build_spell_modifier(
         damage_type=DamageType(effect.damage_type) if effect.damage_type else None,
         target_id=target_id,
         condition_id=effect.condition_id,
+        debuff_counter=effect.debuff_counter,
         source_creature_types=list(effect.source_creature_types),
         save_ability=effect.save_ability,
         save_dc=effect.save_dc,
