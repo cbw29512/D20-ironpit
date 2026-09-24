@@ -24,7 +24,7 @@ assert.equal(fighters2014.length, 20);
 assert.equal(barbarians2014.length, 20);
 assert.equal(rogues2014.length, 20);
 assert.equal(monks2014.length, 20);
-assert.equal(paladins2014.length, 11);
+assert.equal(paladins2014.length, 12);
 assert.ok(fighters2014.every((hero) => hero.name === "Karnok Stoneward"));
 assert.ok(barbarians2014.every((hero) => hero.name === "Rokhan Stonefury"));
 assert.ok(rogues2014.every((hero) => hero.name === "Mara Quickstep"));
