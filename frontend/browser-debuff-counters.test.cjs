@@ -88,6 +88,18 @@ function addCounter(target, id, counter) {
 }
 
 {
+  const target = state("Magical Grapple Speed");
+  addCounter(target, 1, {
+    debuff_id: "speed-reduction", source_scope: "magical",
+    mode: "prevent", movement_cost_ft: 0,
+  });
+  G.apply(target, "magic-source", 12, 5, false, true);
+  assert.deepEqual(S.beginTurn(target), []);
+  assert.equal(target.grapple_sources.length, 1);
+  assert.equal(target.movement_remaining_ft, 30);
+}
+
+{
   const target = state("Magic Grapple");
   addCounter(target, 1, {
     debuff_id: "grappled", source_scope: "nonmagical",
