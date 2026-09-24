@@ -14,7 +14,7 @@ class EffectRemovalAction(BaseModel):
 
     id: str
     name: str
-    level: int = Field(ge=1, le=9)
+    level: int = Field(default=0, ge=0, le=9)
     action_cost: ActionCost = "action"
     range_ft: int = Field(ge=0)
     casting_ability: AbilityName
