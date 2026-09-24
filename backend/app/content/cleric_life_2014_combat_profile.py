@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import fixed_hit_points, proficiency_bonus
-from app.content.level_resources import cleric_2014_channel_divinity_uses
+from app.content.level_resources import cleric_2014_channel_divinity_uses, cleric_2014_divine_intervention_uses
 from app.content.spell_slot_progression import spell_slot_resources
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
 from app.content.pregen_combat_profiles import AttackExpectation, PregenCombatProfile
@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 def build_seraphine_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Seraphine combat fingerprint is currently certified through level 9.")
+        if level not in range(1, 11):
+            raise ValueError("2014 Seraphine combat fingerprint is currently certified through level 10.")
         source = build_seraphine_dawnshield_2014_profile(level)
         scores = source.final_ability_scores
         pb = proficiency_bonus(level)
@@ -46,6 +46,8 @@ def build_seraphine_2014_combat_profile(level: int) -> PregenCombatProfile:
                 *spell_slot_resources("cleric", level).items(),
                 *((("channel-divinity", cleric_2014_channel_divinity_uses(level)),)
                   if cleric_2014_channel_divinity_uses(level) else ()),
+                *((("divine-intervention", cleric_2014_divine_intervention_uses(level)),)
+                  if cleric_2014_divine_intervention_uses(level) else ()),
             ]),
             damage_resistances=("poison",),
         )
@@ -56,7 +58,7 @@ def build_seraphine_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_seraphine_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_seraphine_2014_combat_profile(level) for level in range(1, 10)]
+        return [build_seraphine_2014_combat_profile(level) for level in range(1, 11)]
     except Exception:
         logger.exception("Failed to compile Seraphine's 2014 combat fingerprints.")
         raise
