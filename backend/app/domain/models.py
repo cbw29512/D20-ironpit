@@ -19,6 +19,7 @@ from app.domain.combatants import (
     WeaponAttack,
     WeaponAttackKind,
 )
+from app.domain.debuffs import DebuffCounter
 from app.domain.encounters import (
     EncounterBattleResult,
     EncounterCombatant,
@@ -71,6 +72,7 @@ __all__ = [
     "ConditionalDamage",
     "DamageRollComponent",
     "DamageType",
+    "DebuffCounter",
     "DemoRoster",
     "DiceRoll",
     "EncounterBattleResult",
