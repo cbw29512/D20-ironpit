@@ -7,7 +7,10 @@ from app.domain.runtime import CombatantState, TimedEffect
 
 def _state(*, protected: bool) -> CombatantState:
     return CombatantState.model_construct(
-        template=SimpleNamespace(speed_ft=30),
+        # effective_speed always routes through the edition-aware Exhaustion
+        # primitive, so the fixture must carry the same ruleset provenance as a
+        # real combatant instead of relying on an incomplete template stub.
+        template=SimpleNamespace(speed_ft=30, ruleset="2014"),
         exhaustion_level=0,
         active_modifiers=[
             CombatModifier(
