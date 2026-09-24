@@ -180,8 +180,12 @@ def test_cleansing_touch_reuses_effect_removal_without_roll_or_spell_slot() -> N
         1, target, [target], sanctuary, 1, _slot(target, 1),
         [remover.state, target.state],
     )
+    enemy = _member(
+        build_commoner().model_copy(update={"ruleset": "2014"}),
+        "enemy", "monsters", 20,
+    )
     setup = EncounterSetup(
-        heroes=[remover, target], monsters=[], hero_total_levels=17,
+        heroes=[remover, target], monsters=[enemy], hero_total_levels=17,
         monster_total_cr="0", ruleset="2014",
     )
     before_level3 = _slot(remover, 3).current_uses
