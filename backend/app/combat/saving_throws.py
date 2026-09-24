@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.undead_fortitude import consume_survival_save_log
+from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
@@ -105,5 +106,5 @@ def resolve_save_action(
         is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
         resource_remaining=remaining,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
-        animation=action.animation, description=description + consume_survival_save_log(target.state),
+        animation=action.animation, description=description + consume_survival_save_log(target.state) + consume_zero_hp_replacement_log(target.state),
     )
