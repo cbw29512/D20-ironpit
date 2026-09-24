@@ -60,18 +60,65 @@
       C().markSlotSpellCast(healer.state, turnKey);
     }
     E().spend(healer.state, action.actionCost);
-    const maximized = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state) || false;
-    const rolls = Array.from(
-      { length: action.diceCount || 0 },
-      () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6),
-    );
-    const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
-    const hpBefore = target.state.current_hp;
-    const healed = restore(target.state, total);
     let remaining = null;
     if (action.resourceId) {
       healer.state.resources[action.resourceId] -= action.resourceCost || 1;
       remaining = healer.state.resources[action.resourceId];
+    }
+
+    let featureRoll = null;
+    if (action.percentileSuccessMax != null) {
+      const rolled = window.IRON_PIT_DICE.roll(100);
+      featureRoll = {
+        notation: "1d100", rolls: [rolled], modifier: 0,
+        selected_roll: rolled, mode: "normal", total: rolled,
+      };
+      if (rolled > action.percentileSuccessMax) {
+        return {
+          sequence,
+          round_number: round,
+          event_type: "feature",
+          actor_id: healer.combatant_id,
+          actor_name: healer.state.template.name,
+          target_id: target.combatant_id,
+          target_name: target.state.template.name,
+          feature_roll: featureRoll,
+          hp_before: target.state.current_hp,
+          hp_after: target.state.current_hp,
+          death_save_successes: target.state.death_save_successes,
+          death_save_failures: target.state.death_save_failures,
+          is_stable: target.state.is_stable,
+          is_dead: target.state.is_dead,
+          feature_id: action.id,
+          resource_remaining: remaining,
+          animation: action.animation || "healing",
+          description: `${healer.state.template.name} uses ${action.name} and rolls ${rolled} on d100; the intervention fails (needed ${action.percentileSuccessMax} or lower).`,
+        };
+      }
+    }
+
+    const hpBefore = target.state.current_hp;
+    let rolls = [];
+    let total = 0;
+    let healed = 0;
+    let notation = "";
+    let modifier = 0;
+    if (action.restoreToEffectiveMax) {
+      total = S().effectiveMaxHp(target.state) - target.state.current_hp;
+      healed = restore(target.state, total);
+      notation = "restore-to-effective-max";
+    } else {
+      const maximized = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state) || false;
+      rolls = Array.from(
+        { length: action.diceCount || 0 },
+        () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6),
+      );
+      total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
+      healed = restore(target.state, total);
+      notation = rolls.length
+        ? `${rolls.length}d${action.diceSize || 6}+${action.healingBonus || 0}`
+        : String(action.healingBonus || 0);
+      modifier = action.healingBonus || 0;
     }
     return {
       sequence,
@@ -81,13 +128,12 @@
       actor_name: healer.state.template.name,
       target_id: target.combatant_id,
       target_name: target.state.template.name,
+      feature_roll: featureRoll,
       healing_roll: {
-        notation: rolls.length
-          ? `${rolls.length}d${action.diceSize || 6}+${action.healingBonus || 0}`
-          : String(action.healingBonus || 0),
+        notation,
         rolls,
-        modifier: action.healingBonus || 0,
-        total,
+        modifier,
+        total: healed,
       },
       hp_before: hpBefore,
       hp_after: target.state.current_hp,
@@ -98,7 +144,9 @@
       feature_id: action.id,
       resource_remaining: remaining,
       animation: action.animation || "healing",
-      description: `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.`,
+      description: featureRoll
+        ? `${healer.state.template.name} uses ${action.name} and rolls ${featureRoll.total} on d100; the intervention succeeds. ${target.state.template.name} is restored for ${healed} HP.`
+        : `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.`,
     };
   }
 
