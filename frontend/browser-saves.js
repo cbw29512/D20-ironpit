@@ -15,6 +15,7 @@
   const D = () => window.IRON_PIT_DICE;
   const DO = () => window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }), sourceNameForRoll: () => null };
   const FR = () => window.IRON_PIT_BROWSER_FAILED_SAVE_REROLL || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }) };
+  const BD = () => window.IRON_PIT_BROWSER_FAILED_D20_BONUS_DIE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -68,6 +69,15 @@
     if (roll.total < dc) {
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
+    }
+    if (roll.total < dc) {
+      const bonusGrants = state.template.failed_d20_bonus_die_grants || [];
+      const bonusEligible = bonusGrants.some((grant) =>
+        (grant.test_kinds || []).includes("saving_throw"));
+      if (bonusEligible && !BD()) {
+        throw new Error("Failed-D20 bonus-die runtime is not loaded for a declared saving-throw capability.");
+      }
+      roll = BD()?.apply(state, roll, dc, "saving_throw").roll || roll;
     }
     if (roll.total < dc) {
       const rerollGrants = state.template.failed_save_reroll_grants || [];
