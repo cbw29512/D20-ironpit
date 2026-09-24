@@ -5,6 +5,7 @@ from app.combat.ability_checks import resolve_ability_check_outcome
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
+from app.combat.debuff_counters import movement_counter_cost
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.modifier_stack import effective_speed
@@ -34,14 +35,28 @@ def _sync_effect_ids(state: CombatantState) -> None:
 
 
 def apply_grapple(
-    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *, restrains: bool = False,
+    state: CombatantState,
+    source_id: str,
+    escape_dc: int,
+    range_ft: int,
+    *,
+    restrains: bool = False,
+    source_is_magical: bool = False,
 ) -> list[str]:
-    if condition_is_immune(state, GRAPPLED_EFFECT_ID):
+    if condition_is_immune(state, GRAPPLED_EFFECT_ID, source_is_magical=source_is_magical):
         return []
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
-    restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
+    restrains = restrains and not condition_is_immune(
+        state,
+        RESTRAINED_EFFECT_ID,
+        source_is_magical=source_is_magical,
+    )
     state.grapple_sources.append(GrappleSource(
-        source_id=source_id, escape_dc=escape_dc, range_ft=range_ft, restrains=restrains,
+        source_id=source_id,
+        escape_dc=escape_dc,
+        range_ft=range_ft,
+        restrains=restrains,
+        source_is_magical=source_is_magical,
     ))
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
@@ -50,6 +65,29 @@ def apply_grapple(
 def release_grapple(state: CombatantState, source_id: str) -> None:
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     _sync_effect_ids(state)
+
+
+def resolve_movement_countered_grapples(state: CombatantState) -> list[tuple[str, str, int]]:
+    """Spend movement to clear grapple-backed debuffs when an active buff permits it."""
+    resolved: list[tuple[str, str, int]] = []
+    for source in list(state.grapple_sources):
+        costs = [
+            cost for debuff_id in ([GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if source.restrains else [GRAPPLED_EFFECT_ID])
+            if (cost := movement_counter_cost(
+                state,
+                debuff_id,
+                source_is_magical=source.source_is_magical,
+            )) is not None
+        ]
+        if not costs:
+            continue
+        cost = min(costs)
+        if state.movement_remaining_ft < cost:
+            continue
+        state.movement_remaining_ft -= cost
+        release_grapple(state, source.source_id)
+        resolved.append((RESTRAINED_EFFECT_ID if source.restrains else GRAPPLED_EFFECT_ID, source.source_id, cost))
+    return resolved
 
 
 def speed_is_zero(state: CombatantState) -> bool:
