@@ -262,15 +262,17 @@ def defense_row(action: Any) -> dict[str, Any]:
 
 
 def _timed_self_buff(action: Any) -> dict[str, Any]:
-    return {
+    row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
         "damageResistances": [_value(item) for item in action.damage_resistances],
-        "debuffCounters": [item.model_dump(mode="json") for item in action.debuff_counters],
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
     }
+    if action.debuff_counters:
+        row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
+    return row
 
 
 def _removal(action: Any) -> dict[str, Any]:
