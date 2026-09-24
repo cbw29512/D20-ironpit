@@ -20,7 +20,7 @@
   }
 
   function nearbySources(target, setup) {
-    return allies(target, setup).filter((source) => S().active(source) && S().distance(source, target) <= 10);
+    return allies(target, setup).filter((source) => S().active(source) && S().distance(source, target) <= (source.state.template.paladin_aura_radius_2014_ft || 10));
   }
 
   function saveAura(target, sources) {
