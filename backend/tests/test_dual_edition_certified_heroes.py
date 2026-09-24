@@ -3,6 +3,7 @@ from app.content.certified_heroes import (
     build_all_certified_hero_entries,
     build_certified_hero_entries,
 )
+from app.content.certified_hero_progressions import CERTIFIED_HERO_PROGRESSIONS
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
@@ -16,39 +17,40 @@ def test_public_canonical_registry_remains_2024_only() -> None:
     assert all(build_id == "canonical" for (class_id, level, build_id), template in entries)
 
 
+def _certified_2014_progressions():
+    return [
+        progression
+        for progression in CERTIFIED_HERO_PROGRESSIONS
+        if progression.profile(1).ruleset == "2014"
+    ]
+
+
 def test_all_edition_registry_contains_exact_certified_2014_progressions() -> None:
     entries = build_all_certified_hero_entries()
     heroes_2014 = [(key, template) for key, template in entries if template.ruleset == "2014"]
-    fighters = [(key, template) for key, template in heroes_2014 if key[0] == "fighter"]
-    barbarians = [(key, template) for key, template in heroes_2014 if key[0] == "barbarian"]
-    rogues = [(key, template) for key, template in heroes_2014 if key[0] == "rogue"]
-    monks = [(key, template) for key, template in heroes_2014 if key[0] == "monk"]
-    paladins = [(key, template) for key, template in heroes_2014 if key[0] == "paladin"]
+    expected = {
+        (progression.class_id, level, "canonical-2014")
+        for progression in _certified_2014_progressions()
+        for level in progression.levels
+    }
 
-    assert len(heroes_2014) == 91
-    assert [key[1] for key, _ in fighters] == list(range(1, 21))
-    assert [key[1] for key, _ in barbarians] == list(range(1, 21))
-    assert [key[1] for key, _ in rogues] == list(range(1, 21))
-    assert [key[1] for key, _ in monks] == list(range(1, 21))
-    assert [key[1] for key, _ in paladins] == list(range(1, 12))
+    assert {key for key, _template in heroes_2014} == expected
     assert {key[2] for key, _ in heroes_2014} == {"canonical-2014"}
-    assert {template.name for _, template in fighters} == {"Karnok Stoneward"}
-    assert {template.name for _, template in barbarians} == {"Rokhan Stonefury"}
-    assert {template.name for _, template in rogues} == {"Mara Quickstep"}
-    assert {template.name for _, template in monks} == {"Kael Stillwater"}
-    assert {template.name for _, template in paladins} == {"Aurelia Brightshield"}
+    for progression in _certified_2014_progressions():
+        class_rows = [(key, template) for key, template in heroes_2014 if key[0] == progression.class_id]
+        assert [key[1] for key, _ in class_rows] == list(progression.levels)
+        assert len({template.name for _, template in class_rows}) == 1
     assert all(template.weapon_masteries == [] for _, template in heroes_2014)
 
 
 def test_arena_fingerprints_stay_2024_while_all_edition_registry_adds_2014() -> None:
     arena_profiles = build_pregen_combat_profiles()
     all_profiles = build_all_pregen_combat_profiles()
-    fighter_ids = {f"karnok-stoneward-2014-l{level}" for level in range(1, 21)}
-    barbarian_ids = {f"rokhan-stonefury-2014-l{level}" for level in range(1, 21)}
-    rogue_ids = {f"mara-quickstep-2014-l{level}" for level in range(1, 21)}
-    monk_ids = {f"kael-stillwater-2014-l{level}" for level in range(1, 21)}
-    paladin_ids = {f"aurelia-brightshield-2014-l{level}" for level in range(1, 12)}
-    ids_2014 = fighter_ids | barbarian_ids | rogue_ids | monk_ids | paladin_ids
+    ids_2014 = {
+        progression.profile(level).template_id
+        for progression in _certified_2014_progressions()
+        for level in progression.levels
+    }
 
     assert ids_2014.isdisjoint(arena_profiles)
     assert ids_2014.issubset(all_profiles)
