@@ -265,6 +265,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
         "failed_save_reroll_grants": [item.model_dump() for item in progression.failed_save_reroll_grants],
+        "failed_d20_bonus_die_grants": [item.model_dump() for item in progression.failed_d20_bonus_die_grants],
         "failed_d20_test_override_grants": [item.model_dump() for item in progression.failed_d20_test_override_grants],
         "deferred_save_effect": progression.deferred_save_effect.model_dump() if progression.deferred_save_effect else None,
         "zero_hp_temporary_hp_grant": progression.zero_hp_temporary_hp_grant.model_dump() if progression.zero_hp_temporary_hp_grant else None,
