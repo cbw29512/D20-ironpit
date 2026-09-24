@@ -8,7 +8,7 @@ from app.content.warlock_fiend_2014_progression import warlock_fiend_2014_level
 from app.content.shared_spell_saves_2014 import fireball_2014, poison_spray_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.progression import ProgressionCombatFeatures, ZeroHpTemporaryHpGrant
+from app.domain.progression import FailedD20BonusDieGrant, ProgressionCombatFeatures, ZeroHpTemporaryHpGrant
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +43,12 @@ def _resources(level: int) -> list[ResourceDefinition]:
             resources.append(ResourceDefinition(
                 id=f"mystic-arcanum-{spell_level}",
                 name=f"Mystic Arcanum Level {spell_level}",
+                max_uses=1,
+            ))
+        if level >= 6:
+            resources.append(ResourceDefinition(
+                id="dark-ones-own-luck",
+                name="Dark One's Own Luck",
                 max_uses=1,
             ))
         return resources
@@ -94,6 +100,15 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                     source_name="Dark One's Blessing",
                     temporary_hp=max(1, level + scores.modifier("charisma")),
                 ),
+                failed_d20_bonus_die_grants=([
+                    FailedD20BonusDieGrant(
+                        source_id="dark-ones-own-luck",
+                        source_name="Dark One's Own Luck",
+                        resource_id="dark-ones-own-luck",
+                        dice_size=10,
+                        test_kinds=["ability_check", "saving_throw"],
+                    )
+                ] if level >= 6 else []),
             ),
             resources=_resources(level),
             weapon_masteries=[],
