@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -12,3 +14,14 @@ class MovementModes(BaseModel):
     swim_ft: int = Field(default=0, ge=0)
     burrow_ft: int = Field(default=0, ge=0)
     hover: bool = False
+
+
+DifficultTerrainScope = Literal["all", "nonmagical"]
+
+
+class DifficultTerrainBypassGrant(BaseModel):
+    """Source-owned permission to ignore extra movement cost from matching difficult terrain."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    scope: DifficultTerrainScope
