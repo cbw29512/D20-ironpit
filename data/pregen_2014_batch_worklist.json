@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "authority": "planning-only",
+  "readiness_authority": "backend/app/content/certified_hero_progressions.py plus certification gates",
+  "ruleset": "2014",
+  "objective": "Prepare remaining canonical 2014 pregens, implement with targeted checks, then run full batch certification.",
+  "lanes": [
+    {
+      "order": 1,
+      "class_id": "paladin",
+      "hero_name": "Aurelia Brightshield",
+      "subclass_id": "oath-devotion",
+      "subclass_name": "Oath of Devotion",
+      "current_certified_max": 12,
+      "target_max_level": 20,
+      "status": "carryover-prepared"
+    },
+    {
+      "order": 2,
+      "class_id": "bard",
+      "hero_name": "Lyra Silverstring",
+      "subclass_id": "college-lore",
+      "subclass_name": "College of Lore",
+      "current_certified_max": 0,
+      "target_max_level": 20,
+      "status": "prepared-not-certified"
+    },
+    {
+      "order": 3,
+      "class_id": "druid",
+      "hero_name": "Thalen Greenbough",
+      "subclass_id": "circle-land",
+      "subclass_name": "Circle of the Land",
+      "current_certified_max": 0,
+      "target_max_level": 20,
+      "status": "prepared-not-certified"
+    },
+    {
+      "order": 4,
+      "class_id": "ranger",
+      "hero_name": "Rowan Ashtrail",
+      "subclass_id": "hunter",
+      "subclass_name": "Hunter",
+      "current_certified_max": 0,
+      "target_max_level": 20,
+      "status": "prepared-not-certified"
+    },
+    {
+      "order": 5,
+      "class_id": "sorcerer",
+      "hero_name": "Nyra Emberveil",
+      "subclass_id": "draconic-sorcery",
+      "subclass_name": "Draconic Bloodline",
+      "current_certified_max": 0,
+      "target_max_level": 20,
+      "status": "prepared-not-certified"
+    },
+    {
+      "order": 6,
+      "class_id": "warlock",
+      "hero_name": "Varek Ashenmark",
+      "subclass_id": "fiend-patron",
+      "subclass_name": "Fiend Patron",
+      "current_certified_max": 0,
+      "target_max_level": 20,
+      "status": "prepared-not-certified"
+    },
+    {
+      "order": 7,
+      "class_id": "wizard",
+      "hero_name": "Elian Starweaver",
+      "subclass_id": "evoker",
+      "subclass_name": "School of Evocation",
+      "current_certified_max": 0,
+      "target_max_level": 20,
+      "status": "prepared-not-certified"
+    }
+  ],
+  "cadence": {
+    "branch_push": "targeted checks only",
+    "full_hero_certification": "batch PR/main gate",
+    "full_repository_ci": "batch PR/main gate",
+    "ready_rule": "No lane becomes READY until the full mandatory certification pipeline passes."
+  }
+}
