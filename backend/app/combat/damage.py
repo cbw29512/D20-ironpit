@@ -9,6 +9,7 @@ from app.combat.conditional_damage import active_replacement_damage, conditional
 from app.combat.dice import DiceProvider
 from app.combat.divine_smite_2014 import divine_smite_bonus_damage
 from app.combat.frenzy import frenzy_bonus_damage
+from app.combat.modifier_stack import bonus_damage_modifiers
 from app.combat.savage_attacker import roll_weapon_component
 from app.combat.sneak_attack import sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
@@ -64,6 +65,7 @@ def resolve_weapon_damage(
     attacker: CombatantState, attack: WeaponAttack, dice: DiceProvider, critical: bool,
     attack_mode: RollMode, turn_key: str | None = None,
     bonus_damage: BonusDamageSpec | None = None, target: CombatantState | None = None,
+    target_event_id: str | None = None,
     sneak_attack_ally_available: bool = False, brutal_strike_disadvantage: bool = False,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
@@ -120,6 +122,16 @@ def resolve_weapon_damage(
             critical=critical,
         )
         _append_bonus_component(components, dice, divine_smite_bonus_damage(attacker, target, attack), critical=critical)
+        for modifier in bonus_damage_modifiers(attacker, target_event_id):
+            components.append(roll_damage_component(
+                dice,
+                modifier.source_name or modifier.source_effect_id,
+                modifier.dice_count,
+                modifier.dice_size,
+                0,
+                modifier.damage_type,
+                critical,
+            ))
         _append_bonus_component(components, dice, bonus_damage, critical=critical)
         return aggregate_damage_components(components), components
     except Exception as exc:
