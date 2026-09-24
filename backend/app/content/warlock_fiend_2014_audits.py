@@ -38,8 +38,8 @@ def build_warlock_fiend_2014_feature_audits(level: int) -> list[FeatureAudit]:
             audits.append(_audit("pact-of-the-tome", "Pact of the Tome", "class", automated=False,
                                  notes="Additional cantrips are part of the pending spell package."))
         if level >= 6:
-            audits.append(_audit("dark-ones-own-luck", "Dark One's Own Luck", "subclass", automated=False,
-                                 notes="Needs a generic post-roll/pre-result additive d10 to an ability check or saving throw."))
+            audits.append(_audit("dark-ones-own-luck", "Dark One's Own Luck", "subclass",
+                                 notes="Uses the generic resource-backed failed-D20 additive die on ability checks and saving throws."))
         if level >= 10:
             audits.append(_audit("fiendish-resilience", "Fiendish Resilience", "subclass", automated=False,
                                  notes="Needs source-qualified chosen resistance including magical/silver weapon bypass semantics."))
