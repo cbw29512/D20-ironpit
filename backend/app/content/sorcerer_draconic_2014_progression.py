@@ -40,7 +40,7 @@ for level in range(1, 21):
         16:("ability-score-improvement",),17:("metamagic-option",),18:("draconic-presence",),
         19:("ability-score-improvement",),20:("sorcerous-restoration",),
     }.get(level, ())
-    _ROWS[level] = (pb, cantrips, _KNOWN[level - 1], max(0, level - 1), _s(*slots_by_level), features)
+    _ROWS[level] = (pb, cantrips, _KNOWN[level - 1], (0 if level == 1 else level), _s(*slots_by_level), features)
 
 
 SORCERER_DRACONIC_2014_LEVELS = {
