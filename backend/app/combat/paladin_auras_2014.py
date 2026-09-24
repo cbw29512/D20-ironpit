@@ -38,7 +38,7 @@ def _nearby_sources(target: EncounterCombatant, setup: EncounterSetup) -> list[E
     return [
         source for source in side_members
         if _active_source(source)
-        and combatant_distance(source, target) <= 10
+        and combatant_distance(source, target) <= source.state.template.progression_features.paladin_aura_radius_2014_ft
     ]
 
 
@@ -85,7 +85,7 @@ def _apply_condition_aura(
 
 
 def sync_paladin_auras_2014(setup: EncounterSetup) -> None:
-    """Refresh non-stacking 10-foot 2014 Paladin aura effects from current encounter positions."""
+    """Refresh non-stacking 2014 Paladin aura effects using each source-owned radius."""
     try:
         _clear_aura_modifiers(setup)
         for target in _members(setup):
