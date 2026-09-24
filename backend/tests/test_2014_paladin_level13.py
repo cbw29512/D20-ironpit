@@ -1,6 +1,7 @@
 from app.combat.precombat_spells import choose_defensive_spell
 from app.combat.state import build_combatant_state
 from app.content.canonical_hero_policy import canonical_spell_package
+from app.content.certified_heroes import build_certified_hero_registry
 from app.content.paladin_devotion_2014_audits import build_paladin_2014_feature_audits
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
 from app.domain.encounters import EncounterCombatant
@@ -55,3 +56,11 @@ def test_guardian_of_faith_remains_source_visible_but_arena_unavailable() -> Non
     assert guardian.combat_relevant is False
     assert guardian.automated is False
     assert audits["death-ward"].automated is True
+
+
+def test_level_13_is_registered_for_2014_paladin_certification() -> None:
+    registry = build_certified_hero_registry()
+    assert registry[("paladin", 13, "devotion-sword-shield")] == (
+        "Aurelia Brightshield",
+        "aurelia-brightshield-2014-l13",
+    )
