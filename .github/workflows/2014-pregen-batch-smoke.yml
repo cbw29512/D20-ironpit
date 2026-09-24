@@ -37,7 +37,7 @@ jobs:
             backend/tests/test_druid_land_2014_prep.py \
             backend/tests/test_wizard_evoker_2014_prep.py \
             backend/tests/test_once_per_turn_hit_damage.py \
-            backend/tests/test_2014_pregen_batch_spines.py
+            backend/tests/test_2014_pregen_batch_spines.py \
             backend/tests/test_2014_shared_caster_spells.py
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-passive-opening-modifiers.test.cjs
