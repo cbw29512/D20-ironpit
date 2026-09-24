@@ -104,6 +104,17 @@ class FailedSaveRerollGrant(BaseModel):
     resource_cost: int = Field(default=1, ge=1)
 
 
+class FailedD20BonusDieGrant(BaseModel):
+    """Resource-backed additive die applied after a failed eligible D20 Test roll."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    resource_id: str = Field(min_length=1)
+    resource_cost: int = Field(default=1, ge=1)
+    dice_size: int = Field(ge=2, le=100)
+    test_kinds: list[Literal["saving_throw", "ability_check"]] = Field(min_length=1)
+
+
 class FailedD20TestOverrideGrant(BaseModel):
     """Resource-backed replacement of a failed eligible D20 Test roll."""
 
@@ -155,6 +166,7 @@ class ProgressionCombatFeatures(BaseModel):
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
+    failed_d20_bonus_die_grants: list[FailedD20BonusDieGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
     deferred_save_effect: DeferredSaveEffect | None = None
     zero_hp_temporary_hp_grant: ZeroHpTemporaryHpGrant | None = None
