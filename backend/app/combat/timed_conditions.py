@@ -43,6 +43,8 @@ def apply_timed_condition(
     owned_damage_resistances: list[DamageType] | None = None,
     owned_magical_condition_immunities: list[str] | None = None,
     difficult_terrain_bypass_scope: DifficultTerrainScope | None = None,
+    prevents_magical_speed_reduction: bool = False,
+    nonmagical_grapple_escape_movement_cost_ft: int = 0,
     zero_hp_replacement_hp: int = 0,
     prevents_nondamage_instant_death: bool = False,
     use_default_poison_recovery: bool = True,
@@ -95,6 +97,8 @@ def apply_timed_condition(
             owned_damage_resistances=owned_damage_resistances or [],
             owned_magical_condition_immunities=owned_magical_condition_immunities or [],
             difficult_terrain_bypass_scope=difficult_terrain_bypass_scope,
+            prevents_magical_speed_reduction=prevents_magical_speed_reduction,
+            nonmagical_grapple_escape_movement_cost_ft=nonmagical_grapple_escape_movement_cost_ft,
             zero_hp_replacement_hp=zero_hp_replacement_hp,
             prevents_nondamage_instant_death=prevents_nondamage_instant_death,
         ))
