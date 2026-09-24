@@ -36,6 +36,7 @@ class BattleEvent(BaseModel):
     save_dc: int | None = Field(default=None, ge=1)
     save_succeeded: bool | None = None
     ability_check_roll: DiceRoll | None = None
+    feature_roll: DiceRoll | None = None
     check_ability: str | None = None
     check_dc: int | None = Field(default=None, ge=1)
     check_succeeded: bool | None = None
