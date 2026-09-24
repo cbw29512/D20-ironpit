@@ -151,6 +151,7 @@ jobs:
           node frontend/browser-monster-saves.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-debuff-counters.test.cjs
+          node frontend/browser-bonus-damage-modifiers.test.cjs
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-condition-lifecycle.test.cjs
