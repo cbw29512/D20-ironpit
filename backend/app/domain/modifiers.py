@@ -5,6 +5,7 @@ from enum import StrEnum
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.combatants import DamageType
+from app.domain.debuffs import DebuffCounter
 
 
 class ModifierKind(StrEnum):
@@ -24,6 +25,7 @@ class ModifierKind(StrEnum):
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
+    DEBUFF_COUNTER = "debuff-counter"
     OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
 
 
@@ -41,6 +43,7 @@ class CombatModifier(BaseModel):
     target_id: str | None = None
     weapon_id: str | None = None
     condition_id: str | None = None
+    debuff_counter: DebuffCounter | None = None
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -83,6 +86,10 @@ class CombatModifier(BaseModel):
             raise ValueError("Condition-immunity modifiers require a condition id.")
         if self.kind is not ModifierKind.CONDITION_IMMUNITY and self.condition_id is not None:
             raise ValueError(f"{self.kind.value} does not accept a condition id.")
+        if self.kind is ModifierKind.DEBUFF_COUNTER and self.debuff_counter is None:
+            raise ValueError("Debuff-counter modifiers require a counter definition.")
+        if self.kind is not ModifierKind.DEBUFF_COUNTER and self.debuff_counter is not None:
+            raise ValueError(f"{self.kind.value} does not accept a debuff counter.")
         if self.kind is ModifierKind.ATTACKS_AGAINST_DISADVANTAGE and not self.source_creature_types:
             raise ValueError("Typed attack Disadvantage requires source creature types.")
         if self.source_creature_types and self.kind not in {
