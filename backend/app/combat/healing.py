@@ -64,9 +64,12 @@ def choose_healing_target(
         return None
     allies = setup.heroes if healer.side == "heroes" else setup.monsters
     legal = [target for target in allies if _target_allowed(healer, target, action)]
-    if action.restore_to_effective_max and legal:
+    if action.restore_to_effective_max:
+        worthwhile = [target for target in legal if target.state.current_hp == 0 or is_bloodied(target.state)]
+        if not worthwhile:
+            return None
         return min(
-            legal,
+            worthwhile,
             key=lambda target: (
                 target.state.current_hp / effective_max_hp(target.state),
                 target.combatant_id,
@@ -98,7 +101,13 @@ def _choice_priority(
     healer: EncounterCombatant, setup: EncounterSetup, action: HealingAction, target: EncounterCombatant,
 ) -> tuple[int, int, int, float]:
     ally = target.combatant_id != healer.combatant_id
-    urgency = 0 if ally and target.state.current_hp == 0 else 1 if ally else 2
+    urgency = (
+        -1
+        if action.restore_to_effective_max
+        else 0 if ally and target.state.current_hp == 0
+        else 1 if ally
+        else 2
+    )
     cost = 0 if action.action_cost == "bonus_action" else 1
     useful_targets = min(action.max_targets, _worthwhile_target_count(healer, setup, action))
     group_value = -useful_targets if useful_targets >= 2 else 0
