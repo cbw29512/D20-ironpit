@@ -14,7 +14,7 @@
     suppressesMovement: () => false,
     suppressesReactions: () => false,
   };
-  const effectiveMaxHp = (state) => X()?.effectiveMaxHp(state, state.template.max_hp + (state.max_hp_bonus || 0))
+  const effectiveMaxHp = (state) => X()?.effectiveMaxHp?.(state, state.template.max_hp + (state.max_hp_bonus || 0))
     ?? state.template.max_hp + (state.max_hp_bonus || 0);
 
   function buildState(template) {
