@@ -65,16 +65,14 @@ def build_high_level_cleric_life_2014_audits(level: int) -> list[FeatureAudit]:
                     "Destroy Undead (CR 3)",
                     "class",
                     source=CLERIC,
-                    automated=False,
-                    notes="Depends on the universal Turn Undead resolution path.",
+                    notes="Uses the shared turning-save destruction threshold with CR 3 source data.",
                 ),
                 _audit(
                     "divine-strike-2d8",
                     "Divine Strike (2d8)",
                     "subclass",
                     source=LIFE,
-                    automated=False,
-                    notes="Scaling delta of the level-8 once-per-turn weapon-hit damage rider.",
+                    notes="Scales the universal once-per-turn weapon-hit damage rider to 2d8 radiant.",
                 ),
             ])
         if level >= 16:
