@@ -117,11 +117,34 @@ def freedom_of_movement_2014() -> DefensiveSpellAction:
             SpellModifierEffect(
                 kind="debuff-counter",
                 debuff_counter=counter,
-                expires_after_source_turns=600,
             )
             for counter in counters
         ],
         animation="freedom-of-movement",
+        source=_SOURCE,
+    )
+
+
+def death_ward_2014() -> DefensiveSpellAction:
+    return DefensiveSpellAction(
+        id="death-ward",
+        name="Death Ward",
+        level=4,
+        action_cost="action",
+        range_ft=5,
+        duration_minutes=480,
+        target_policy="friendly",
+        target_count=1,
+        concentration=False,
+        priority=95,
+        modifier_effects=[
+            SpellModifierEffect(
+                kind="zero-hp-replacement",
+                replacement_hp=1,
+                prevents_instant_death=True,
+            ),
+        ],
+        animation="death-ward",
         source=_SOURCE,
     )
 
@@ -170,5 +193,5 @@ def build_paladin_defensive_spells_2014(level: int, charisma_modifier: int) -> l
     if level >= 10:
         actions.append(AID.model_copy(update={"source": source}))
     if level >= 13:
-        actions.append(freedom_of_movement_2014())
+        actions.extend([death_ward_2014(), freedom_of_movement_2014()])
     return actions
