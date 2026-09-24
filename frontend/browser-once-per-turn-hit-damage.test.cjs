@@ -63,3 +63,34 @@ assert.deepEqual(result.components.map((part) => part.source), ["Warhammer", "Te
 assert.deepEqual(result.components[1].rolls, [6, 7]);
 
 console.log("Browser once-per-turn weapon-hit damage rider regressions passed.");
+
+const conditionalAttacker = {
+  template: {
+    max_hp: 20,
+    traits: [],
+    once_per_turn_weapon_hit_damage_rider: {
+      source_id: "conditional-rider",
+      source_name: "Conditional Rider",
+      dice_count: 1,
+      dice_size: 8,
+      damage_type: "slashing",
+      requires_target_below_max_hp: true,
+    },
+  },
+  current_hp: 20,
+  feature_last_turn_keys: {},
+};
+const conditionalTarget = { template: { max_hp: 30 }, current_hp: 30, max_hp_bonus: 0 };
+window.IRON_PIT_DICE.rolls = [4];
+result = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(
+  conditionalAttacker, attack, false, "normal", "1:conditional", null, conditionalTarget,
+);
+assert.deepEqual(result.components.map((part) => part.source), ["Warhammer"]);
+assert.equal(conditionalAttacker.feature_last_turn_keys["conditional-rider"], undefined);
+
+conditionalTarget.current_hp = 29;
+window.IRON_PIT_DICE.rolls = [4, 6];
+result = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(
+  conditionalAttacker, attack, false, "normal", "1:conditional", null, conditionalTarget,
+);
+assert.deepEqual(result.components.map((part) => part.source), ["Warhammer", "Conditional Rider"]);
