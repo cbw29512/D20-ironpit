@@ -24,7 +24,7 @@ load("browser-saves.js");
 load("browser-targeting-wards.js");
 load("browser-spellcasting.js");
 load("browser-healing-policy.js");
-load("browser-healing.js");
+load("browser-healing-resolution.js", "browser-healing.js");
 load("browser-group-healing.js");
 load("browser-condition-removal.js");
 load("browser-effect-removal.js");
