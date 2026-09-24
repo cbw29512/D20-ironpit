@@ -163,4 +163,4 @@ def test_2014_certified_catalog_reaches_ninety_four_hero_snapshots() -> None:
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
     assert len(entries) == 94
     assert [entry[0][1] for entry in monks] == list(range(1, 21))
-    assert [entry[0][1] for entry in paladins] == list(range(1, 14))
+    assert [entry[0][1] for entry in paladins] == list(range(1, 15))
