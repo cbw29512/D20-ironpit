@@ -61,9 +61,17 @@
     state.action_available = !incapacitated && !T().suppressesAction(state);
     state.bonus_action_available = !incapacitated && !T().suppressesBonusAction(state);
     refreshStartOfTurn(state);
-    const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
-    state.movement_remaining_ft = speedZero || T().suppressesMovement(state) ? 0 : speed;
+    if (T().suppressesMovement(state)) {
+      state.movement_remaining_ft = 0;
+    } else {
+      const remaining = G()?.spendMovementToEscapeNonmagical
+        ? G().spendMovementToEscapeNonmagical(state, speed)
+        : speed;
+      const speedZero = G()?.speedIsZero(state) || false;
+      state.movement_remaining_ft = speedZero ? 0 : remaining;
+    }
+    const speedZero = G()?.speedIsZero(state) || false;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
     if (state.active_effect_ids.includes("prone") && speed > 0 && !speedZero) {
       state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(speed / 2));
