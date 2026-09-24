@@ -98,6 +98,18 @@ def test_nonmagical_grapple_counter_spends_five_feet_and_clears_grapple() -> Non
     assert state.movement_remaining_ft == state.template.speed_ft - 5
 
 
+def test_magical_speed_counter_neutralizes_magical_grapple_speed_zero_without_removing_grapple() -> None:
+    state = _state()
+    _counter(state, 1, DebuffCounter(debuff_id="speed-reduction", source_scope="magical"))
+    apply_grapple(state, "magic-source", 12, 5, source_is_magical=True)
+
+    resolved = begin_turn(state)
+
+    assert resolved == []
+    assert len(state.grapple_sources) == 1
+    assert state.movement_remaining_ft == state.template.speed_ft
+
+
 def test_nonmagical_grapple_counter_does_not_clear_magical_grapple() -> None:
     state = _state()
     _counter(state, 1, DebuffCounter(
