@@ -49,7 +49,7 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
                                  notes="Needs a source-neutral subsequent-attacks-from-same-attacker AC modifier."))
         if level >= 8:
             audits.append(_audit("lands-stride", "Land's Stride", "class", automated=False,
-                                 notes="Shares difficult-terrain bypass needs with Freedom of Movement."))
+                                 notes="Nonmagical difficult terrain bypass is already bound to the universal movement-defense grant; only the separate magical-plant movement/save clauses remain unbound."))
         if level >= 10:
             audits.append(_audit("hide-in-plain-sight", "Hide in Plain Sight", "class", automated=False,
                                  notes="Precombat camouflage/Stealth setup is not yet automated."))
