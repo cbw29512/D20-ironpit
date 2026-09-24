@@ -4,32 +4,25 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
-from app.domain.events import BattleEvent
-from app.domain.modifiers import CombatModifier
-from app.domain.positions import GridPosition
-from app.domain.resources import ResourceState
+from app.domain.grid import BattleMapDefinition, GridPosition
+from app.domain.modifiers import CombatModifier, ConcentrationState
 
-ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
-TimedTurnBehavior = Literal["normal", "skip_turn"]
+TimedTurnBehavior = Literal["normal", "forced_retreat"]
 
 
-class ConcentrationState(BaseModel):
-    source_effect_id: str
-    source_name: str
-
-
-class GrappleSource(BaseModel):
-    source_id: str
-    source_name: str
-    escape_dc: int = Field(ge=1, le=40)
-    escape_ability_options: list[str] = Field(default_factory=lambda: ["strength", "dexterity"])
+class ResourceState(BaseModel):
+    id: str
+    name: str
+    current_uses: int = Field(ge=0)
+    max_uses: int = Field(ge=0)
 
 
 class DeferredEffectState(BaseModel):
-    effect_id: str
+    """Fresh per-fight state for one armed deferred source/target relationship."""
+
     source_id: str
-    source_effect_id: str
     target_id: str
     armed_round: int = Field(ge=1)
 
@@ -38,13 +31,11 @@ class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
     source_effect_id: str | None = None
-    source_name: str | None = None
-    condition_id: str | None = None
     applied_round: int | None = Field(default=None, ge=1)
     expires_round: int | None = Field(default=None, ge=1)
     expires_at_start_of_source_turn: bool = True
     expiry_timing: ConditionTiming | None = None
-    repeat_save_ability: str | None = None
+    repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
@@ -52,11 +43,16 @@ class TimedEffect(BaseModel):
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
+    # Universal source ownership for temporary typed resistances. This lets a
+    # timed effect clean up only the resistance contribution it owns while an
+    # overlapping effect that grants the same type remains active.
     owned_damage_resistances: list[DamageType] = Field(default_factory=list)
+    # Conditions prevented only when the incoming effect is magical. This is
+    # intentionally distinct from blanket condition immunity: source data must
+    # identify the incoming effect as magical before this defense applies.
     owned_magical_condition_immunities: list[str] = Field(default_factory=list)
-    # Generic source-owned defense: magical effects cannot reduce this target's
-    # speed while the owning timed effect is active. Nonmagical speed penalties
-    # remain valid, preserving source semantics rather than spell-name logic.
+    # Generic source-owned defense used by effects that prevent magical effects
+    # from reducing speed. Nonmagical speed penalties remain fully effective.
     prevents_magical_speed_reduction: bool = False
 
     @model_validator(mode="after")
@@ -122,12 +118,7 @@ class CombatantState(BaseModel):
 
 
 class BattlefieldState(BaseModel):
-    map_definition: object | None = None
+    map_definition: BattleMapDefinition | None = None
+    # Migration-only scalar distance fields. Remove after all canonical paths consume grid positions.
     starting_distance_ft: int = Field(default=5, ge=0)
     distance_ft: int = Field(default=5, ge=0)
-
-
-class BattleState(BaseModel):
-    combatants: list[CombatantState] = Field(default_factory=list)
-    battlefield: BattlefieldState = Field(default_factory=BattlefieldState)
-    events: list[BattleEvent] = Field(default_factory=list)
