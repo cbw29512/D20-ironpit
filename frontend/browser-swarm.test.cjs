@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 load("browser-state.js");
 load("browser-healing-policy.js");
-load("browser-healing.js");
+load("browser-healing-resolution.js", "browser-healing.js");
 load("browser-group-healing.js");
 load("browser-precombat-spells.js");
 
