@@ -387,6 +387,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["saving_throw_advantage_grants"] = [
             item.model_dump() for item in features.saving_throw_advantage_grants
         ]
+    if features.difficult_terrain_bypass_grants:
+        row["difficult_terrain_bypass_grants"] = [
+            item.model_dump() for item in features.difficult_terrain_bypass_grants
+        ]
     if features.passive_modifier_grants:
         row["passive_modifier_grants"] = [
             {
