@@ -60,10 +60,11 @@
     if (gate.event) return gate.event;
 
     const hpBefore = target.state.current_hp;
-    let rolls = [], healed = 0, notation = "", modifier = 0;
+    let rolls = [], healed = 0, rollTotal = 0, notation = "", modifier = 0;
     if (action.restoreToEffectiveMax) {
       const amount = S().effectiveMaxHp(target.state) - target.state.current_hp;
       healed = restore(target.state, amount);
+      rollTotal = healed;
       notation = "restore-to-effective-max";
     } else {
       const maximized = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state) || false;
@@ -72,6 +73,7 @@
         () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6),
       );
       const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
+      rollTotal = total;
       healed = restore(target.state, total);
       notation = rolls.length
         ? `${rolls.length}d${action.diceSize || 6}+${action.healingBonus || 0}`
@@ -88,7 +90,7 @@
       actor_id: healer.combatant_id, actor_name: healer.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name,
       feature_roll: gate.featureRoll,
-      healing_roll: { notation, rolls, modifier, total: healed },
+      healing_roll: { notation, rolls, modifier, total: rollTotal },
       hp_before: hpBefore, hp_after: target.state.current_hp,
       death_save_successes: target.state.death_save_successes,
       death_save_failures: target.state.death_save_failures,
