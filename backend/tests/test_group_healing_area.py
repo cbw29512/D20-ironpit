@@ -23,6 +23,7 @@ def _hero(index: int, position: int) -> EncounterCombatant:
 
 def _setup() -> EncounterSetup:
     heroes = [_hero(0, 0), _hero(1, 80), _hero(2, 95)]
+    heroes[0].state.current_hp = heroes[0].state.template.max_hp
     monster = EncounterCombatant(
         combatant_id="monster-0",
         side="monsters",
