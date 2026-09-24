@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.domain.debuffs import DebuffCounter, DebuffCounterMode
+from app.domain.modifiers import ModifierKind
 from app.domain.runtime import CombatantState
 
 logger = logging.getLogger(__name__)
@@ -25,10 +26,19 @@ def matching_debuff_counters(
 ) -> list[DebuffCounter]:
     """Return active buff-owned counters that match one debuff application/state."""
     try:
-        return [
+        owned = [
             counter
             for effect in state.timed_effects
             for counter in effect.owned_debuff_counters
+        ]
+        owned.extend(
+            item.debuff_counter
+            for item in state.active_modifiers
+            if item.kind is ModifierKind.DEBUFF_COUNTER and item.debuff_counter is not None
+        )
+        return [
+            counter
+            for counter in owned
             if counter.debuff_id == debuff_id
             and _scope_matches(counter, source_is_magical)
             and (mode is None or counter.mode == mode)
