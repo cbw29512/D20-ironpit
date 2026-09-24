@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
+from app.domain.debuffs import DebuffCounter
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
 
@@ -43,14 +44,14 @@ class TimedEffect(BaseModel):
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
+    source_is_magical: bool = False
     # Universal source ownership for temporary typed resistances. This lets a
     # timed effect clean up only the resistance contribution it owns while an
     # overlapping effect that grants the same type remains active.
     owned_damage_resistances: list[DamageType] = Field(default_factory=list)
-    # Conditions prevented only when the incoming effect is magical. This is
-    # intentionally distinct from blanket condition immunity: source data must
-    # identify the incoming effect as magical before this defense applies.
-    owned_magical_condition_immunities: list[str] = Field(default_factory=list)
+    # Buff-owned counters describe which debuffs this effect prevents or can
+    # clear, including source qualifiers and conditional movement costs.
+    owned_debuff_counters: list[DebuffCounter] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
