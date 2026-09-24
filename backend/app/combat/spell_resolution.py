@@ -19,10 +19,16 @@ def _resource(state, level: int):
 
 def _save_action(choice: SpellChoice, caster_state) -> SavingThrowAction:
     spell = choice.action
-    if choice.slot_level != spell.level:
-        raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
+    if choice.slot_level < spell.level:
+        raise ValueError("Spell cast level cannot be below the spell's printed level.")
+    if spell.level == 0 and choice.slot_level != 0:
+        raise ValueError("Cantrips cannot expend spell slots.")
+    upcast_levels = choice.slot_level - spell.level
+    if spell.damage_components and upcast_levels and spell.upcast_dice_per_level:
+        raise ValueError("Split-component spell upcasting requires explicit component scaling data.")
     target_range = spell.range_ft + (spell.area_radius_ft or 0)
     damage_bonus = spell.damage_bonus
+    damage_dice_count = spell.damage_dice_count + (upcast_levels * spell.upcast_dice_per_level)
     components = [component.model_copy(deep=True) for component in spell.damage_components]
     used_sources: set[str] = set()
     if components:
@@ -42,7 +48,7 @@ def _save_action(choice: SpellChoice, caster_state) -> SavingThrowAction:
         damage_bonus += sum(amount for _, _, amount in matches)
     return SavingThrowAction(
         id=spell.id, name=spell.name, save_ability=spell.save_ability, dc=spell.dc,
-        range_ft=target_range, damage_dice_count=spell.damage_dice_count,
+        range_ft=target_range, damage_dice_count=damage_dice_count,
         damage_dice_size=spell.damage_dice_size, damage_bonus=damage_bonus,
         damage_type=spell.damage_type, damage_components=components,
         success_damage=spell.success_damage,
@@ -62,8 +68,10 @@ def resolve_spell(
     spell = choice.action
     if spell.action_cost == "reaction":
         raise ValueError("Reaction spells require their own trigger window.")
-    if choice.slot_level != spell.level:
-        raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
+    if choice.slot_level < spell.level:
+        raise ValueError("Spell cast level cannot be below the spell's printed level.")
+    if spell.level == 0 and choice.slot_level != 0:
+        raise ValueError("Cantrips cannot expend spell slots.")
     if not is_available(caster.state, spell.action_cost):
         raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
 
