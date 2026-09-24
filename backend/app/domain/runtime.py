@@ -58,6 +58,8 @@ class TimedEffect(BaseModel):
     # identify the incoming effect as magical before this defense applies.
     owned_magical_condition_immunities: list[str] = Field(default_factory=list)
     difficult_terrain_bypass_scope: DifficultTerrainScope | None = None
+    prevents_magical_speed_reduction: bool = False
+    nonmagical_grapple_escape_movement_cost_ft: int = Field(default=0, ge=0)
     zero_hp_replacement_hp: int = Field(default=0, ge=0)
     prevents_nondamage_instant_death: bool = False
 
