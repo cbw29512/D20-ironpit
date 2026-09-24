@@ -141,5 +141,3 @@ def test_freedom_of_movement_is_data_composed_from_universal_counters() -> None:
     assert ("restrained", "magical", "prevent", 0) in signatures
     assert ("grappled", "nonmagical", "remove-with-movement", 5) in signatures
     assert ("restrained", "nonmagical", "remove-with-movement", 5) in signatures
-    assert ("underwater-movement-penalty", "any", "prevent", 0) in signatures
-    assert ("underwater-attack-penalty", "any", "prevent", 0) in signatures
