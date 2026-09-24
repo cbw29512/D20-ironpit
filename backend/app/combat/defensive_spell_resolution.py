@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from app.combat.spell_modifiers import apply_spell_modifiers
+from app.combat.spellcasting import consume_free_spell_cast
 from app.combat.temporary_hp import grant_temporary_hit_points
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterCombatant
@@ -29,10 +30,12 @@ def resolve_defensive_spell(
     slot_level: int,
     resource,
     affected_states: Iterable[CombatantState] | None = None,
+    *,
+    free_grant=None,
 ) -> BattleEvent:
     if slot_level != spell.level:
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
-    if resource.current_uses < 1:
+    if free_grant is None and (resource is None or resource.current_uses < 1):
         raise ValueError(f"No level {slot_level} spell slot remains for {spell.name}.")
     if not targets:
         raise ValueError(f"{spell.name} has no legal precombat targets.")
@@ -47,7 +50,13 @@ def resolve_defensive_spell(
     ):
         raise ValueError(f"{spell.name} is already active on a selected target.")
     member.state.opening_buff_spell_id = spell.id
-    resource.current_uses -= 1
+    remaining = (
+        consume_free_spell_cast(member.state, free_grant)
+        if free_grant is not None
+        else resource.current_uses - 1
+    )
+    if free_grant is None:
+        resource.current_uses = remaining
     temp_hp_details: list[str] = []
     for target in targets:
         before = target.state.temporary_hp
@@ -102,11 +111,12 @@ def resolve_defensive_spell(
         actor_id=member.combatant_id, actor_name=member.state.template.name,
         target_id=single.combatant_id if single else None,
         target_name=single.state.template.name if single else None,
-        feature_id=spell.id, resource_remaining=resource.current_uses,
+        feature_id=spell.id, resource_remaining=remaining,
         concentration_started_effect_id=spell.id if spell.concentration else None,
         animation=spell.animation,
         description=(
-            f"Precombat preparation: {member.state.template.name} casts {spell.name} with a level {slot_level} slot "
+            f"Precombat preparation: {member.state.template.name} casts {spell.name} "
+            f"{'via ' + free_grant.source_name + ' without expending a spell slot' if free_grant is not None else 'with a level ' + str(slot_level) + ' slot'} "
             f"on {names} ({'; '.join(details)})."
         ),
     )
