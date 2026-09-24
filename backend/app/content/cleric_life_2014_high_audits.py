@@ -44,8 +44,9 @@ def build_high_level_cleric_life_2014_audits(level: int) -> list[FeatureAudit]:
                 "class",
                 source=CLERIC,
                 notes=(
-                    "Uses the universal percentile-gated healing action. On success, Iron Pit's "
-                    "deterministic deity policy restores one legal living party member to effective max HP."
+                    "Uses the universal healing action. Levels 10-19 use the RAW percentile gate; "
+                    "the level-20 improvement removes that gate. On success, Iron Pit's deterministic "
+                    "deity policy restores one legal living party member to effective max HP."
                 ),
             ))
         if level >= 11:
@@ -104,8 +105,10 @@ def build_high_level_cleric_life_2014_audits(level: int) -> list[FeatureAudit]:
                 "Divine Intervention Improvement",
                 "class",
                 source=CLERIC,
-                automated=False,
-                notes="Requires the same universal Divine Intervention policy as level 10.",
+                notes=(
+                    "Reuses the universal Divine Intervention healing action with no percentile gate; "
+                    "success is automatic and no d100 roll is made."
+                ),
             ))
         return audits
     except Exception:

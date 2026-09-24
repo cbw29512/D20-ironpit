@@ -20,7 +20,7 @@ def divine_intervention_full_heal_2014(level: int) -> HealingAction:
             target_mode="self_or_ally",
             max_targets=1,
             restore_to_effective_max=True,
-            percentile_success_max=100 if level >= 20 else level,
+            percentile_success_max=None if level >= 20 else level,
             resource_id="divine-intervention",
             resource_cost=1,
             animation="divine-intervention",
