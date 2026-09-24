@@ -18,7 +18,7 @@ for (const file of [
   "browser-state.js",
   "browser-action-economy.js",
   "browser-healing-policy.js",
-  "browser-healing.js",
+  "browser-healing-resolution.js", "browser-healing.js",
   "browser-group-healing.js",
 ]) load(file);
 
