@@ -4,6 +4,7 @@ from collections.abc import Iterable
 
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import d20_modifier, speed_after_exhaustion
+from app.combat.movement_defenses import prevents_magical_speed_reduction
 from app.domain.events import DiceRoll
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import CombatantState
@@ -82,10 +83,18 @@ def saving_throw_flat_bonus(state: CombatantState) -> int:
 
 
 def effective_speed(state: CombatantState) -> int:
-    base = max(0, state.template.speed_ft + sum(
-        item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED
-    ))
-    return speed_after_exhaustion(state, base)
+    try:
+        protected = prevents_magical_speed_reduction(state)
+        speed_bonus = sum(
+            item.flat_bonus
+            for item in state.active_modifiers
+            if item.kind is ModifierKind.SPEED
+            and not (protected and item.source_is_magical and item.flat_bonus < 0)
+        )
+        base = max(0, state.template.speed_ft + speed_bonus)
+        return speed_after_exhaustion(state, base)
+    except Exception:
+        raise
 
 
 def attacks_against_advantage_sources(state: CombatantState) -> int:
