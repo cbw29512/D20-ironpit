@@ -41,8 +41,8 @@ logger = logging.getLogger(__name__)
 def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
     """Compile the currently certified RAW 2014 Life Cleric runtime."""
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Life Cleric runtime is currently certified through level 17.")
+        if level not in range(1, 19):
+            raise ValueError("2014 Life Cleric runtime is currently certified through level 18.")
         profile = build_seraphine_dawnshield_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
