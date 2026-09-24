@@ -11,7 +11,7 @@ Current certified runtime stops at Aurelia level 12. The purpose of this documen
 | Level | Combat-relevant progression | Universal-engine disposition |
 | --- | --- | --- |
 | 13 | 4th-level spell slots; Devotion oath spells *freedom of movement*, *guardian of faith* | 4/3/3/1 slots. *Freedom of movement* uses universal buff/debuff counters. *Guardian of Faith* remains in RAW/Oath metadata but is arena-unavailable under the current no-summons/created-entity rule. Aurelia prepares *death ward* as the legal non-summoning 4th-level combat replacement. |
-| 14 | Cleansing Touch | Effect-removal action: action economy + Charisma-modifier uses per long rest + target spell-effect removal. Compare against existing `effect_removal_actions` / Dispel Magic machinery; do not create a Paladin-specific remover. |
+| 14 | Cleansing Touch | `ENGINE_EXISTS_PARAMETER_DELTA`: universal effect-removal action, Action, touch, self/willing ally, no spell-level check, Charisma-modifier uses. No Paladin-specific resolver. |
 | 15 | Purity of Spirit | Persistent self effect equivalent to always being under *protection from evil and good*. Compose the spell's existing universal defenses if present; otherwise identify the missing generic creature-type defense primitive. |
 | 16 | Ability Score Improvement | Existing canonical ability-score/derived-stat progression. No new combat primitive. |
 | 17 | 5th-level spell slots; Devotion oath spells *commune*, *flame strike* | Slot resource is existing. *Commune* is noncombat for Iron Pit. *Flame strike* should reuse save-damage/AoE primitives with its two damage components if the current multi-component save-damage path supports them. |
@@ -43,7 +43,7 @@ Repository inventory after level 12 certification found:
 
 1. **Freedom of Movement / Death Ward:** keep both as generic source-owned buffs; no Paladin-specific resolver.
 2. **Guardian of Faith:** no engine work while summons/created combat entities are disabled. Revisit only if the global summon policy changes.
-3. **Cleansing Touch:** verify whether the existing generic effect-removal action can remove a spell on a touched creature without a spellcasting-ability check. If yes, this is data/resource wiring only.
+3. **Cleansing Touch:** confirmed as universal effect-removal data. Feature actions may use effect removal without being spells themselves; Arena AI only spends ally-cleansing actions on opposing-source spell effects so it does not strip friendly buffs.
 4. **Purity of Spirit:** reuse the existing typed defenses from *protection from evil and good* and separately inventory the possession/prevention semantics that are not yet represented.
 5. **Flame Strike:** verify a save-damage action can carry both fire and radiant components through one Dexterity save and half-on-success semantics.
 6. **Holy Nimbus:** verify generic start-of-turn area damage and source-creature-type-gated save advantage. Only missing generic pieces may become new engine primitives.
@@ -52,7 +52,7 @@ Repository inventory after level 12 certification found:
 
 1. Level 12: certified on main.
 2. Level 13 after the 4/3/3/1 resource vector, Freedom of Movement, and Death Ward pass Python/browser parity; Guardian of Faith remains source-visible but arena-unavailable by contract.
-3. Level 14 after Cleansing Touch is proven to reuse or minimally extend generic effect removal.
+3. Level 14 uses the certified generic effect-removal primitive with a `cleansing-touch` resource equal to Charisma modifier.
 4. Level 15 after *protection from evil and good* composition is certified for the persistent self effect.
 5. Level 16 ASI.
 6. Level 17 after *flame strike* parity; *commune* remains explicitly noncombat.
