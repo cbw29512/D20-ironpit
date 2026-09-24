@@ -100,6 +100,7 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
            "diceSize": effect.dice_size, "damageType": effect.damage_type}
     if effect.condition_id: row["conditionId"] = effect.condition_id
+    if effect.effect_tag: row["effectTag"] = effect.effect_tag
     if effect.source_creature_types: row["sourceCreatureTypes"] = list(effect.source_creature_types)
     if effect.save_ability: row["saveAbility"] = effect.save_ability
     if effect.save_dc is not None: row["saveDc"] = effect.save_dc
