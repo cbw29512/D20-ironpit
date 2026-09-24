@@ -50,7 +50,7 @@ def resolve_healing(
         return failure
 
     hp_before = target.state.current_hp
-    rolls, roll_total, healed, notation, modifier = resolve_healing_amount(target, action, dice)
+    rolls, roll_total, healed, notation, modifier = resolve_healing_amount(healer, target, action, dice)
     description = (
         f"{healer.state.template.name} uses {action.name} on {target.state.template.name} "
         f"and restores {healed} HP."
