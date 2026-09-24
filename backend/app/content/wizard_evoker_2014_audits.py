@@ -65,8 +65,8 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ))
         if level >= 10:
             audits.append(_audit(
-                "empowered-evocation", "Empowered Evocation", "subclass", automated=False,
-                notes="Requires a reusable once-per-spell evocation damage modifier using Intelligence.",
+                "empowered-evocation", "Empowered Evocation", "subclass",
+                notes="Uses the universal once-per-spell damage bonus grant for eligible Evocation spell IDs.",
             ))
         if level >= 14:
             audits.append(_audit(
