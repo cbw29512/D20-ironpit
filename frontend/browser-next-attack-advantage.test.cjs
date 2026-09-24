@@ -89,10 +89,24 @@ const nextAttack = (expires = 2) => ({
   assert.equal(target.state.active_modifiers.length, 0);
 }
 
+{
+  const protectedState = {
+    template: { speed_ft: 30 }, exhaustion_level: 0,
+    active_modifiers: [
+      { id: "magic-slow", source_id: "caster", source_effect_id: "slow", kind: "speed", flat_bonus: -10, source_is_magical: true },
+      { id: "mud-slow", source_id: "hazard", source_effect_id: "mud", kind: "speed", flat_bonus: -5, source_is_magical: false },
+    ],
+    timed_effects: [{ effect_id: "movement-protection", source_id: "ally", prevents_magical_speed_reduction: true }],
+  };
+  assert.equal(M.effectiveSpeed(protectedState), 25);
+  protectedState.timed_effects = [];
+  assert.equal(M.effectiveSpeed(protectedState), 15);
+}
+
 assert.throws(() => M.validate({
   id: "bad", source_id: "caster", source_effect_id: "bad", kind: "speed",
   flat_bonus: 5, dice_count: 0, dice_size: 0, damage_type: null,
   consume_on_attack_against: true,
 }));
 
-console.log("Browser next-attack Advantage consumption and source-turn expiry regressions passed.");
+console.log("Browser next-attack Advantage, source-turn expiry, and magical speed-protection regressions passed.");
