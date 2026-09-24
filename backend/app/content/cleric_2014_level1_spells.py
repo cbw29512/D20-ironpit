@@ -14,7 +14,8 @@ def healing_word_2014(wisdom_modifier: int, life_bonus: int) -> HealingAction:
             id="healing-word", name="Healing Word", action_cost="bonus_action",
             range_ft=60, target_mode="self_or_ally", dice_count=1, dice_size=4,
             healing_bonus=wisdom_modifier + life_bonus,
-            resource_id="spell-slot-1", resource_cost=1, animation="healing",
+            resource_id="spell-slot-1", resource_cost=1,
+            excluded_creature_types=["undead", "construct"], animation="healing",
         )
     except Exception:
         logger.exception("Failed to build 2014 Healing Word.")
