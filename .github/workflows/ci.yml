@@ -86,7 +86,16 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
       - name: Certify Python rules reference
         working-directory: backend
-        run: pytest -q
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=30s 30m pytest -vv 2>&1 | tee ../ci-pytest.log
+      - name: Upload CI pytest log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-pytest-${{ github.sha }}
+          path: ci-pytest.log
+          retention-days: 1
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
@@ -138,6 +147,8 @@ jobs:
           node frontend/browser-batch3.test.cjs
           node frontend/browser-deathmatch.test.cjs
           node frontend/browser-zero-hp-lifecycle.test.cjs
+          node frontend/browser-survival-wards.test.cjs
+          node frontend/browser-persistent-hazards.test.cjs
           node frontend/browser-undead-fortitude.test.cjs
           node frontend/browser-control.test.cjs
           node frontend/browser-poison.test.cjs
@@ -150,6 +161,7 @@ jobs:
           node frontend/browser-monster-saves.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-action-healing.test.cjs
+          node frontend/browser-pooled-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-condition-lifecycle.test.cjs
           node frontend/browser-condition-removal.test.cjs
@@ -167,10 +179,12 @@ jobs:
           node frontend/browser-attack-advantage.test.cjs
           node frontend/browser-guiding-bolt.test.cjs
           node frontend/browser-spell-attack-turn.test.cjs
+          node frontend/browser-persistent-spell-attacks.test.cjs
           node frontend/browser-shield-of-faith.test.cjs
           node frontend/browser-bless.test.cjs
           node frontend/browser-cleric1.test.cjs
           node frontend/browser-cleric2.test.cjs
+          node frontend/browser-turn-undead-2014.test.cjs
           node frontend/browser-cleric4.test.cjs
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
@@ -271,12 +285,15 @@ jobs:
           grep -q 'browser-spell-effects.js' index.html
           grep -q 'browser-spell-modifiers.js' index.html
           grep -q 'browser-healing.js' index.html
+          grep -q 'browser-pooled-healing.js' index.html
           grep -q 'browser-cleric-channel.js' index.html
           grep -q 'browser-spell-area.js' index.html
           grep -q 'browser-spell-policy.js' index.html
           grep -q 'browser-spell-resolution.js' index.html
           grep -q 'browser-spell-attack-policy.js' index.html
           grep -q 'browser-spell-attack.js' index.html
+          grep -q 'browser-persistent-spell-attack-support.js' index.html
+          grep -q 'browser-persistent-spell-attacks.js' index.html
           grep -q 'browser-precombat-spells.js' index.html
           grep -q 'battlefield-picker.js' index.html
           grep -q 'battlefield-replay.js' index.html
@@ -358,12 +375,15 @@ jobs:
           grep -q 'browser-spell-modifiers.js' frontend/index.html
           grep -q 'browser-multiattack.js' frontend/index.html
           grep -q 'browser-healing.js' frontend/index.html
+          grep -q 'browser-pooled-healing.js' frontend/index.html
           grep -q 'browser-cleric-channel.js' frontend/index.html
           grep -q 'browser-spell-area.js' frontend/index.html
           grep -q 'browser-spell-policy.js' frontend/index.html
           grep -q 'browser-spell-resolution.js' frontend/index.html
           grep -q 'browser-spell-attack-policy.js' frontend/index.html
           grep -q 'browser-spell-attack.js' frontend/index.html
+          grep -q 'browser-persistent-spell-attack-support.js' frontend/index.html
+          grep -q 'browser-persistent-spell-attacks.js' frontend/index.html
           grep -q 'browser-precombat-spells.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
           grep -q 'auditDetails' frontend/battlefield-view.js

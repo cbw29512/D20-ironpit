@@ -19,12 +19,14 @@ from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
+from app.combat.persistent_spell_attacks import resolve_persistent_spell_attack
 from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
+from app.combat.timed_effect_control import suppresses_voluntary_turn
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -48,6 +50,8 @@ def resolve_combat_turn(
         )
         events.extend(start_events)
         turn_key = f"{round_number}:{attacker.combatant_id}"
+        if suppresses_voluntary_turn(attacker.state):
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
         if forced_retreat_active(attacker.state):
             events.append(build_forced_retreat_event(sequence, round_number, attacker.combatant_id, attacker.state))
             sequence += 1
@@ -76,6 +80,13 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
+
+        persistent_spell_event = resolve_persistent_spell_attack(
+            sequence, round_number, attacker, setup, turn_key, dice,
+        )
+        if persistent_spell_event is not None:
+            events.append(persistent_spell_event)
+            sequence += 1
 
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)

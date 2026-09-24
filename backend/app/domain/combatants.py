@@ -10,6 +10,8 @@ from app.domain.effect_removal import EffectRemovalAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
+from app.domain.persistent_hazards import PersistentHazardAction
 from app.domain.reactions import DamageReactionAttack, ParryReaction, RedirectAttackReaction
 from app.domain.recharge import RechargeRule
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
@@ -66,6 +68,8 @@ class CombatantTemplate(BaseModel):
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
+    persistent_spell_attack_actions: list[PersistentSpellAttackAction] = Field(default_factory=list)
+    persistent_hazard_actions: list[PersistentHazardAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)

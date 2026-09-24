@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
+from app.content.shared_spells_2014 import beacon_of_hope_2014, lesser_restoration_2014, sanctuary_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
@@ -31,45 +32,6 @@ def protection_from_evil_and_good_2014() -> DefensiveSpellAction:
             ),
         ],
         animation="protection", source=_SOURCE,
-    )
-
-
-def sanctuary_2014(save_dc: int) -> DefensiveSpellAction:
-    return DefensiveSpellAction(
-        id="sanctuary", name="Sanctuary", level=1, action_cost="bonus_action",
-        range_ft=30, duration_minutes=1, target_policy="friendly", target_count=1,
-        priority=32,
-        modifier_effects=[
-            SpellModifierEffect(
-                kind="targeting-save-gate", save_ability="wisdom", save_dc=save_dc,
-                ends_on_owner_attack=True,
-            ),
-        ],
-        animation="sanctuary", source=_SOURCE,
-    )
-
-
-def lesser_restoration_2014() -> ConditionRemovalAction:
-    return ConditionRemovalAction(
-        id="lesser-restoration", name="Lesser Restoration", action_cost="action",
-        range_ft=5, target_mode="self_or_ally",
-        removable_conditions=["blinded", "deafened", "paralyzed", "poisoned"],
-        max_conditions_per_use=1, resource_costs={"spell-slot-2": 1},
-        expends_spell_slot=True, animation="lesser-restoration",
-    )
-
-
-def beacon_of_hope_2014() -> DefensiveSpellAction:
-    return DefensiveSpellAction(
-        id="beacon-of-hope", name="Beacon of Hope", level=3, action_cost="action",
-        range_ft=30, duration_minutes=1, target_policy="friendly", target_count=20,
-        concentration=True, priority=60,
-        modifier_effects=[
-            SpellModifierEffect(kind="saving-throw-advantage", save_ability="wisdom"),
-            SpellModifierEffect(kind="death-save-advantage"),
-            SpellModifierEffect(kind="healing-maximize"),
-        ],
-        animation="beacon-of-hope", source=_SOURCE,
     )
 
 

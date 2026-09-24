@@ -8,7 +8,13 @@
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
   const GEOM = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const OM = () => window.IRON_PIT_BROWSER_OPENING_MODIFIERS || { build: () => [] };
-  const effectiveMaxHp = (state) => X()?.effectiveMaxHp(state, state.template.max_hp + (state.max_hp_bonus || 0))
+  const T = () => window.IRON_PIT_BROWSER_TIMED || {
+    suppressesAction: () => false,
+    suppressesBonusAction: () => false,
+    suppressesMovement: () => false,
+    suppressesReactions: () => false,
+  };
+  const effectiveMaxHp = (state) => X()?.effectiveMaxHp?.(state, state.template.max_hp + (state.max_hp_bonus || 0))
     ?? state.template.max_hp + (state.max_hp_bonus || 0);
 
   function buildState(template) {
@@ -21,7 +27,7 @@
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
-      grapple_sources: [], timed_effects: [], deferred_effects: [], active_modifiers: OM().build(template), concentration: null,
+      grapple_sources: [], timed_effects: [], deferred_effects: [], persistent_spell_attacks: [], active_modifiers: OM().build(template), concentration: null,
       survival_save_uses: {}, pending_survival_save_logs: [],
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
@@ -40,7 +46,7 @@
     state.action_available = false; state.bonus_action_available = false; state.movement_remaining_ft = 0;
   }
 
-  function refreshReaction(state) { state.reaction_available = true; }
+  function refreshReaction(state) { state.reaction_available = !T().suppressesReactions(state); }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
     const survivor = state.template.bloodied_start_turn_heal_amount || state.template.survivor_heal_amount || 0;
@@ -52,12 +58,12 @@
   function beginTurn(state) {
     state.turn_terminated = false; state.turn_termination_reason = null;
     const incapacitated = Q().incapacitated(state);
-    state.action_available = !incapacitated;
-    state.bonus_action_available = !incapacitated;
+    state.action_available = !incapacitated && !T().suppressesAction(state);
+    state.bonus_action_available = !incapacitated && !T().suppressesBonusAction(state);
     refreshStartOfTurn(state);
     const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
-    state.movement_remaining_ft = speedZero ? 0 : speed;
+    state.movement_remaining_ft = speedZero || T().suppressesMovement(state) ? 0 : speed;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
     if (state.active_effect_ids.includes("prone") && speed > 0 && !speedZero) {
       state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(speed / 2));

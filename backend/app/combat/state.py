@@ -9,6 +9,7 @@ from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
 from app.combat.modifier_stack import effective_speed
 from app.combat.opening_modifiers import opening_modifiers
 from app.combat.survivor import apply_survivor_start_turn_heal
+from app.combat.timed_effect_control import suppresses_action, suppresses_bonus_action, suppresses_movement, suppresses_reactions
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 
 logger = logging.getLogger(__name__)
@@ -32,8 +33,8 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
 
 
 def refresh_reaction(state: CombatantState) -> None:
-    """A creature regains its Reaction at the start of its turn, even if Incapacitated."""
-    state.reaction_available = True
+    """Refresh the Reaction opportunity, subject to active timed suppression."""
+    state.reaction_available = not suppresses_reactions(state)
 
 
 def refresh_start_of_turn(state: CombatantState) -> None:
@@ -56,11 +57,11 @@ def begin_turn(state: CombatantState) -> None:
         state.turn_terminated = False
         state.turn_termination_reason = None
         incapacitated = is_incapacitated(state)
-        state.action_available = not incapacitated
-        state.bonus_action_available = not incapacitated
+        state.action_available = not incapacitated and not suppresses_action(state)
+        state.bonus_action_available = not incapacitated and not suppresses_bonus_action(state)
         refresh_start_of_turn(state)
         speed = effective_speed(state)
-        state.movement_remaining_ft = 0 if speed_is_zero(state) else speed
+        state.movement_remaining_ft = 0 if speed_is_zero(state) or suppresses_movement(state) else speed
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)
         stand_from_prone(state)

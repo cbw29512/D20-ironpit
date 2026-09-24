@@ -42,6 +42,7 @@ from app.domain.events import (
 )
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
+from app.domain.persistent_spell_attacks import PersistentSpellAttackAction, PersistentSpellAttackState
 from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
@@ -89,6 +90,8 @@ __all__ = [
     "InitiativeGroup",
     "InitiativeResourceRefillGrant",
     "OnHitDamage",
+    "PersistentSpellAttackAction",
+    "PersistentSpellAttackState",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",

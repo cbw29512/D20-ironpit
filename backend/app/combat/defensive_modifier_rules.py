@@ -40,6 +40,10 @@ def _saving_throw_advantage_modifiers(
             if item.kind is ModifierKind.SAVING_THROW_ADVANTAGE
             and item.save_ability == ability
             and (not item.requires_magical_effect or resolved_context.magical_effect)
+            and (
+                not item.against_effect_tags
+                or bool(set(item.against_effect_tags) & set(resolved_context.effect_tags))
+            )
         ]
     except Exception:
         logger.exception(

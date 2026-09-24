@@ -61,6 +61,8 @@ from app.content.fighter_progression_profile import (
     build_karnok_stoneward_level2_profile, build_karnok_stoneward_level3_profile,
     build_karnok_stoneward_level4_profile, build_karnok_stoneward_level5_profile,
 )
+from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
+from app.content.cleric_life_2014_runtime import build_seraphine_dawnshield_2014
 from app.content.monk_open_hand_2014_profile import build_kael_stillwater_2014_profile
 from app.content.monk_open_hand_2014_runtime import build_kael_stillwater_2014
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
@@ -138,6 +140,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_seraphine_dawnshield_level9_profile, build_seraphine_dawnshield_level10_profile,
             build_seraphine_dawnshield_level11_profile, build_seraphine_dawnshield_level12_profile,
         ),
+    ),
+    CertifiedHeroProgression(
+        class_id="cleric", template_builder=build_seraphine_dawnshield_2014,
+        profile_level_builder=build_seraphine_dawnshield_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(
         class_id="rogue", template_builder=build_mara_quickstep_level,

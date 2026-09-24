@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.domain.events import BattleEvent, DiceRoll
 from app.domain.grid import BattleMapDefinition
+from app.domain.persistent_hazards import PersistentHazardState
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.runtime import CombatantState
 
@@ -36,6 +37,7 @@ class EncounterSetup(BaseModel):
     monster_total_cr: str
     ruleset: RulesetId = DEFAULT_RULESET
     map_definition: BattleMapDefinition | None = None
+    persistent_hazards: list[PersistentHazardState] = Field(default_factory=list)
 
 
 class InitiativeGroup(BaseModel):

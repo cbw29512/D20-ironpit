@@ -35,6 +35,7 @@ class CombatantDefinition(BaseModel):
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
     ruleset: RulesetId
+    creature_type: str | None = None
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)

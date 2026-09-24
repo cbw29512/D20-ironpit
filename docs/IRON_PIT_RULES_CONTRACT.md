@@ -6,6 +6,19 @@ If implementation and this contract disagree, either fix the implementation or m
 
 ## 1. Core architecture
 
+### 1.0 Rules authority and exception hierarchy
+
+For every combatant, feature, spell, item, condition, action, monster ability, and character-build rule, the default authority is the selected edition's RAW.
+
+The only permitted departures are:
+
+1. an explicit Iron Pit house rule or arena simplification written in this contract; or
+2. intentional homebrew content that is clearly identified as homebrew and is implemented later through the same universal engine.
+
+Automation convenience, implementation difficulty, AI limitations, balance preference, a same-named feature in another edition, or an existing engine behavior are never authority to change RAW.
+
+When 2014 and 2024 differ, preserve each edition's own wording, timing, parameters, progression, and legal options. Build and certify the complete 2014 canonical pregen program first. During the later 2024 migration, compare each 2024 mechanic against the certified 2014 universal mechanic inventory. Reuse the same universal primitive only when the underlying combat behavior is genuinely equivalent; otherwise implement the smallest correct 2024 delta. Never copy 2024 semantics backward into 2014 or assume same-name abilities are mechanically identical.
+
 - Iron Pit is a rules-first automated D&D combat simulator.
 - Implement combat mechanics as universal capabilities, not hero-, class-, monster-, or stat-block-name special cases.
 - Monster and pregen definitions are declarative data wherever practical.
@@ -45,6 +58,8 @@ A capability discovered while implementing a hero must be reusable by monsters, 
 
 **State/effect identity is universal.** Prone is Prone, Grappled is Grappled, Restrained is Restrained, Blinded is Blinded, Frightened is Frightened, Poisoned is Poisoned, and so on, regardless of which class feature, spell, weapon property, item, or monster ability caused it. Source definitions supply parameters such as DC, save ability, duration, repeat-save timing, range, damage, resource cost, and source ability name. The shared condition/effect engine supplies the mechanical behavior.
 
+**Buff/debuff ownership is defender-driven and universal.** A race/species, class, item, spell, or other source owns the buffs/passive defenses it grants to that combatant. Incoming attacks, spells, conditions, and other effects declare only their normal effect/debuff semantics. At the shared resolution point, the universal engine compares the incoming effect with the defender's active/passive buffs and applies any matching RAW modifier. Never branch on a race/species name in the attacker or effect resolver. Dwarven Resilience is therefore a Dwarf-owned passive buff; poison remains a universal incoming effect/debuff.
+
 Invisibility is one universal condition regardless of source. A spell, feature, item, monster ability, or self-buff that grants invisibility applies the same `invisible` condition; source-specific activation cost, resource cost, duration, and companion effects belong to declarative source data rather than a source-specific invisibility resolver.
 
 The player-facing combat log must preserve the exact source ability name. Internal audit/certification data should additionally record the generic capability/primitive IDs used underneath so engine reuse remains provable without exposing implementation jargon to the player.
@@ -67,6 +82,8 @@ The target architecture supports hard ruleset profiles:
 
 - 2014 fights use only 2014 monsters, pregens, spells, features, items, and mechanics.
 - 2024 fights use only 2024 monsters, pregens, spells, features, items, and mechanics.
+- Canonical 2014 pregens use a legal 2014 RAW ability-generation method; the deterministic canonical default is the 2014 standard array `15/14/13/12/10/8`, followed by printed 2014 racial ability-score increases.
+- Canonical 2024 pregens use their separate legal 2024 ability-generation and Background-origin increase policy. 2024 Background increases never replace or modify 2014 racial increases.
 - Never cross editions in one fight.
 - Shared mechanics live in one universal core; edition differences live in explicit ruleset profiles/data rather than duplicated whole engines.
 - Certification is ruleset-specific.
@@ -194,6 +211,35 @@ A flavor-only d6 may narrate the fumble; it has no additional mechanical effect.
 - Use the selected edition's RAW automatic-hit/critical behavior.
 - A flavor-only d6 may narrate the critical; it has no additional mechanical effect.
 - Saving throw natural 1/20 values have no extra Iron Pit rule unless RAW for the specific rule says otherwise.
+
+### 2014 Turn Undead — Iron Pit house rule
+
+For 2014 Turn Undead, Iron Pit replaces RAW forced-retreat behavior with the universal `trembling` debuff.
+
+- The initial Turn Undead Wisdom saving throw and Cleric spell save DC remain unchanged.
+- On a failed save, the undead gains `trembling`.
+- While `trembling`, the creature has no voluntary movement and cannot use an Action, Bonus Action, or Reaction.
+- `trembling` does not make the creature Frightened or Incapacitated and does not prevent required saving throws or other non-voluntary engine resolution.
+- At the end of each of its turns, the creature repeats the Wisdom saving throw against the original Turn Undead DC. A success removes `trembling`.
+- Taking any damage immediately removes `trembling`; no additional save is required when damage breaks the effect.
+- After `trembling` ends, the creature immediately returns to its normal combat rules on subsequent legal opportunities.
+- This is an explicit Iron Pit house rule and intentionally replaces 2014 RAW retreat/Dash/Dodge movement behavior in the arena.
+- `trembling` is a universal debuff. Turn Undead is only one source that may apply it; engine behavior must never branch on the Turn Undead name.
+
+### 2014 Divine Intervention — Iron Pit deterministic arena policy
+
+For the 2014 Cleric's Divine Intervention feature, Iron Pit uses one deterministic combat effect when the percentile request succeeds.
+
+- Using Divine Intervention costs the Cleric's Action.
+- The attempt is available once per fresh Iron Pit fight. Fresh fights restore the immutable card's resources as normal.
+- Roll percentile dice. The intervention succeeds when the d100 result is less than or equal to the Cleric's current level, matching the printed 2014 success chance before level 20.
+- A failed attempt still spends the Action and the attempt for that fight.
+- On a successful intervention, the deity fully restores one legal living creature on the Cleric's side to that creature's effective maximum Hit Points. The Cleric may be the target.
+- Arena AI considers the intervention once at least one legal living party member is Bloodied or at 0 HP, then chooses the legal target with the lowest current-HP / effective-max-HP ratio; ties are deterministic.
+- The effect uses the universal healing/life-state pipeline. Divine Intervention is source/presentation metadata, not a healing-engine name switch.
+- The player-facing log must display **Divine Intervention** and whether the percentile request succeeded or failed.
+- This policy is an explicit deterministic Iron Pit interpretation of the 2014 feature's DM-chosen intervention result; it does not redefine generic healing or percentile checks for other sources.
+
 
 ## 9. Advantage and Disadvantage
 
@@ -490,6 +536,7 @@ Weapon properties, masteries, fighting styles, feats, and two-weapon rules are u
 - Each class progresses level 1–20 through one legal canonical build; a level derives from the previous certified level plus that level's audited combat delta.
 - **Pregen edition sequencing is global, not per-class:** complete and certify all 12 canonical 2014 classes through levels 1–20 before beginning the 2024 pregen migration pass.
 - The 2014 target is therefore **240/240 certified level-slots (12 classes × 20 levels)**, followed by a full 2014 pregen and universal-engine re-audit before 2024 pregen expansion resumes.
+- The first 2014 canonical completion pass uses RAW Ability Score Improvements rather than the optional Feats rule. Feat-based 2014 variants are deferred until after the 240/240 baseline and full re-audit are complete.
 - After 2014 is complete, derive the 2024 pregens from the certified 2014 mechanic inventory: reuse every mechanically equivalent universal capability and implement only genuine 2024 semantic deltas, ruleset data changes, scaling changes, availability changes, naming changes, or resource differences.
 - Do not alternate 2014 and 2024 class construction while the 2014 canonical set is incomplete. Existing 2024 certified work is preserved but is not the active expansion lane until the 2014 240/240 gate is satisfied.
 - Only certified levels are publicly runnable.

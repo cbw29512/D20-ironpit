@@ -48,9 +48,29 @@ Saving throws are always shared math:
 
 `d20 + creature save modifier + shared modifiers vs DC`
 
+Divisible healing pools are also a shared primitive. Existing single-target and group-healing actions resolve a fixed healing amount per target; they cannot correctly represent one source-wide pool that is allocated across several targets and capped independently for each target. The universal pooled-healing resolver therefore owns pool depletion and per-target HP ceilings. Source data or the source ability supplies the pool formula, ceiling fraction, legal-target rules, range, resource cost, and display name.
+
+Mobile persistent spell attacks are likewise universal. A source spell declares its casting Action/Bonus Action, initial placement range, effect duration, repeat-attack economy, effect movement allowance, attack reach, attack bonus, damage profile, and slot-scaling cadence. Immutable spell data lives on the combatant; mutable fight state stores only the active effect's slot level, grid position, applied round, and expiry round. The shared resolver uses the normal spell-attack, action-economy, spell-slot, damage, grid-distance, and target-selection primitives. Repeated attacks do not recast the spell or spend another slot unless the source explicitly says they do. Source names such as Spiritual Weapon are display/audit labels, not engine switches.
+
 Post-roll D20 replacement is also a shared primitive. Source data declares the resource, replacement natural roll, eligible D20 Test kinds, and exact source name; the attack/save/check resolver remains generic. A rule that replaces a failed D20 roll with 20 is **not** mechanically equivalent to a rule that merely converts a missed attack into a normal hit. Preserve that distinction rather than forcing both through one named-feature shortcut.
 
 Attack rolls, ability checks, AC, damage defenses, conditions, concentration, and movement follow the same rule: one resolver, different creature data.
+
+## Universal buff-versus-debuff ownership
+
+Keep source ownership simple and declarative:
+
+- The combatant that possesses a racial/species, class, feat, item, spell, monster-trait, or other persistent defensive benefit owns that **buff/passive modifier** in its own combat data/state.
+- The incoming attack, spell, condition, hazard, or other source owns only the **debuff/effect** it attempts to apply plus its RAW parameters.
+- At the normal shared resolution point, the universal engine compares the incoming debuff/effect semantics against the defender's active/passive buffs and applies every matching RAW modifier before resolving the outcome.
+- Resolution must never branch on a race/species, class, hero, monster, spell, or feature name when the interaction can be expressed as buff/debuff semantics.
+- A race/species-specific feature therefore stays on that race/species record. Other content can gain the same semantic buff later without creating another engine path.
+- Damage defenses, condition immunities, Advantage/Disadvantage, save modifiers, effect prevention, duration changes, and similar interactions follow this same ownership pattern when RAW supports them.
+- Exact source names remain available for cards/logs/audit evidence; engine matching uses generic semantic capability data.
+
+Example: Dwarven Resilience is a Dwarf-owned passive buff. A poison source remains a generic poison effect/debuff. When that poison effect reaches the Dwarf, the universal engine sees the matching defensive buff, grants the RAW saving-throw Advantage, and separately applies poison-damage resistance through the universal damage pipeline.
+
+Timed debuffs that suppress voluntary turn economy use generic declarative flags rather than named-feature branches. A timed effect may suppress Action, Bonus Action, Reaction, and/or movement independently, while normal saving throws and mandatory lifecycle processing continue. Repeat-save timing and damage-sensitive removal remain properties of the same universal timed-effect record. The `trembling` debuff used by the 2014 Iron Pit Turn Undead house rule is one composition of those generic flags, not a Turn Undead-specific turn engine.
 
 ## Mandatory semantic reuse workflow
 

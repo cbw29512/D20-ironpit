@@ -130,12 +130,15 @@ If one content entry is blocked, record the blocker and continue with other entr
 
 ## 8. Iron Pit rules versus RAW
 
-RAW governs the selected edition except where `docs/IRON_PIT_RULES_CONTRACT.md` explicitly declares an Iron Pit house rule or arena simplification.
+RAW governs the selected edition except where `docs/IRON_PIT_RULES_CONTRACT.md` explicitly declares an Iron Pit house rule or arena simplification, or where future content is explicitly identified as homebrew.
 
+- RAW is the default. An engine implementation, prior edition implementation, AI shortcut, test fixture, or historical chat decision cannot silently override it.
 - Never silently change RAW to make automation easier.
 - Never silently promote an unsupported rule to READY.
 - Never treat an outcome-changing combat rule as flavor-only.
 - Iron Pit house rules apply equally through the universal engine to all legal combatants for that ruleset unless the contract explicitly scopes them otherwise.
+- Homebrew must remain explicitly labeled and must never alter the canonical RAW implementation used by ordinary 2014 or 2024 content.
+- Canonical pregen work proceeds globally in this order: finish and certify all 2014 classes through level 20; re-audit the complete 2014 pregen and universal-mechanic inventory; then migrate to 2024 by reusing only mechanics whose actual behavior remains equivalent and implementing true 2024 differences separately.
 
 ## 9. Test-ready baseline
 
@@ -154,6 +157,8 @@ The 100-monster threshold is a testing milestone, not completion of either roste
 ## 10. Future homebrew
 
 Future 2014 and 2024 homebrew pages must use the same edition-specific intake and capability system.
+
+Multiclassing is reserved for this future homebrew/custom-build layer. Canonical pregens remain single-class in both editions.
 
 - 2014 homebrew may select only legal/supported 2014 primitives and parameters.
 - 2024 homebrew may select only legal/supported 2024 primitives and parameters.

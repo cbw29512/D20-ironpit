@@ -41,7 +41,10 @@ def resolve_on_hit_condition_save(
             effect.save_ability,
             effect.dc,
             dice,
-            SavingThrowContext(condition_id=effect.condition_id),
+            SavingThrowContext(
+                condition_id=effect.condition_id,
+                effect_tags=frozenset({effect.condition_id}),
+            ),
         )
         applied = None
         if not succeeded and effect.condition_id not in defender.active_effect_ids:

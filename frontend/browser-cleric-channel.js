@@ -6,14 +6,15 @@
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
+  const PH = () => window.IRON_PIT_BROWSER_POOLED_HEALING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
   const TC = () => window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS;
-  const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", SPARK = "divine-spark", PRESERVE = "preserve-life";
+  const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", TREMBLING = "trembling", SPARK = "divine-spark", PRESERVE = "preserve-life";
   const living = (m) => m.state.is_alive && !m.state.is_dead;
   const side = (m, setup, allies) => allies === (m.side === "heroes") ? setup.heroes : setup.monsters;
   const baseType = (m) => String(m.state.template.creature_type || "").split(" (")[0].toLowerCase();
-  const capacity = (m) => Math.max(0, Math.floor(S().effectiveMaxHp(m.state) / 2) - m.state.current_hp);
+  const capacity = (m) => PH().capacity(m, 1, 2);
 
   function saveDc(cleric) {
     const dcs = [...new Set((cleric.state.template.spell_save_actions || []).map((a) => a.dc))];
@@ -32,8 +33,9 @@
 
   function preserveTargets(cleric, setup) {
     if (!cleric.state.template.traits?.includes("life-domain")) return [];
+    const is2014 = cleric.state.template.ruleset === "2014";
     return side(cleric, setup, true).filter((m) => living(m) && S().distance(cleric, m) <= 30
-      && !m.state.template.traits?.includes("swarm") && capacity(m) > 0)
+      && (!is2014 || !["undead", "construct"].includes(baseType(m))) && capacity(m) > 0)
       .sort((a, b) => (a.state.current_hp > 0) - (b.state.current_hp > 0)
         || (a.combatant_id === cleric.combatant_id) - (b.combatant_id === cleric.combatant_id)
         || a.state.current_hp / S().effectiveMaxHp(a.state) - b.state.current_hp / S().effectiveMaxHp(b.state)
@@ -46,14 +48,15 @@
     if (preserve.length && (preserve.length >= 2 || preserve.some((m) => m.state.current_hp === 0 || m.combatant_id === cleric.combatant_id))) {
       return { kind: PRESERVE, targets: preserve };
     }
+    const is2014 = cleric.state.template.ruleset === "2014";
     const allies = side(cleric, setup, true).filter(living);
     const downed = allies.filter((m) => m.combatant_id !== cleric.combatant_id && m.state.current_hp === 0 && S().distance(cleric, m) <= 30)
       .sort((a, b) => b.state.death_save_failures - a.state.death_save_failures || a.combatant_id.localeCompare(b.combatant_id));
-    if (downed.length && !slotsRemain(cleric)) return { kind: "divine-spark-heal", targets: [downed[0]] };
+    if (!is2014 && downed.length && !slotsRemain(cleric)) return { kind: "divine-spark-heal", targets: [downed[0]] };
     const enemies = side(cleric, setup, false).filter((m) => living(m) && m.state.current_hp > 0 && S().distance(cleric, m) <= 30);
     const undead = enemies.filter((m) => baseType(m) === "undead").sort((a, b) => S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
     if (undead.length) return { kind: TURN, targets: undead };
-    if (slotsRemain(cleric)) return null;
+    if (is2014 || slotsRemain(cleric)) return null;
     enemies.sort((a, b) => S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
     return enemies.length ? { kind: "divine-spark-damage", targets: [enemies[0]] } : null;
   }
@@ -65,14 +68,10 @@
   }
 
   function resolvePreserve(sequence, round, cleric, targets) {
-    let pool = 5 * cleric.state.template.level; const remaining = spend(cleric), allocations = [];
-    for (const target of targets) {
-      if (pool <= 0) break;
-      const amount = Math.min(pool, capacity(target)); if (amount <= 0) continue;
-      const restored = H().restore(target.state, amount); if (!restored) continue;
-      allocations.push(`${target.state.template.name} +${restored} HP`); pool -= restored;
-    }
-    if (!allocations.length) throw new Error("Preserve Life had no legal healing allocation.");
+    const remaining = spend(cleric);
+    const result = PH().resolve(targets, 5 * cleric.state.template.level, 1, 2);
+    if (!result.allocations.length) throw new Error("Preserve Life had no legal healing allocation.");
+    const allocations = result.allocations.map((item) => `${item.targetName} +${item.healed} HP`);
     return { events: [{ sequence, round_number: round, event_type: "healing", actor_id: cleric.combatant_id,
       actor_name: cleric.state.template.name, feature_id: PRESERVE, resource_remaining: remaining, animation: PRESERVE,
       description: `${cleric.state.template.name} uses Preserve Life: ${allocations.join("; ")}.` }], sequence: sequence + 1 };
@@ -82,7 +81,22 @@
   function resolveTurnUndead(sequence, round, cleric, setup, targets) {
     if (!targets.length || targets.some((t) => S().distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
     const dc = saveDc(cleric), remaining = spend(cleric);
-    return TC().resolve(sequence, round, cleric, targets, dc, TURN, TURNED, remaining, "Turn Undead");
+    const is2014 = cleric.state.template.ruleset === "2014";
+    return TC().resolve(sequence, round, cleric, targets, dc, TURN, is2014 ? TREMBLING : TURNED, remaining, "Turn Undead", {
+      includeFrightened: !is2014,
+      includeIncapacitated: !is2014,
+      suppressAction: is2014,
+      suppressBonusAction: is2014,
+      suppressReactions: is2014,
+      suppressMovement: is2014,
+      turnBehavior: is2014 ? "normal" : "forced_retreat",
+      repeatSaveTiming: is2014 ? "target_turn_end" : null,
+      expiresRounds: is2014 ? null : 10,
+      expiryTiming: is2014 ? null : "source_turn_start",
+      endsIfSourceIncapacitated: !is2014,
+      endsIfSourceDead: !is2014,
+      affectedStates: [...setup.heroes, ...setup.monsters].map((member) => member.state),
+    });
   }
 
   function resolveSpark(sequence, round, cleric, setup, choice) {

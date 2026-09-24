@@ -6,6 +6,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const W = () => window.IRON_PIT_BROWSER_SURVIVAL_WARDS;
   const DODGE = "dodge";
   const PRONE = "prone";
 
@@ -76,7 +77,9 @@
       if (state.is_dead || state.current_hp === 0) return "unchanged";
       state.current_hp = 0;
       let outcome = null;
-      if (state.template.kind === "monster") {
+      if (W()?.consume(state)) {
+        outcome = "survival_ward";
+      } else if (state.template.kind === "monster") {
         markDead(state); outcome = "dead";
       } else if (state.template.effect_bound_survival_save) {
         if (!U()) throw new Error("Effect-bound survival save runtime is not loaded.");
@@ -111,6 +114,7 @@
     const before = state.current_hp;
     state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates);
+    if (W()?.consume(state)) return finish(state, "survival_ward", incoming, affectedStates);
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates);
     if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     const remaining = Math.max(0, amount - before);
@@ -124,5 +128,13 @@
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, reduceToZero, stabilizeAtZero };
+  function applyInstantDeath(state, affectedStates = []) {
+    if (state.is_dead) return "unchanged";
+    if (W()?.consume(state, true)) return "survival_ward";
+    markDead(state);
+    if (state.concentration && C()) C().endIfIncapacitated(state, affectedStates);
+    return "dead";
+  }
+
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyInstantDeath, reduceToZero, stabilizeAtZero };
 })();
