@@ -43,10 +43,12 @@ def apply_grapple(
     restrains: bool = False,
     source_is_magical: bool = False,
 ) -> list[str]:
-    if condition_is_immune(state, GRAPPLED_EFFECT_ID):
+    if condition_is_immune(state, GRAPPLED_EFFECT_ID, source_is_magical=source_is_magical):
         return []
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
-    restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
+    restrains = restrains and not condition_is_immune(
+        state, RESTRAINED_EFFECT_ID, source_is_magical=source_is_magical,
+    )
     state.grapple_sources.append(GrappleSource(
         source_id=source_id, escape_dc=escape_dc, range_ft=range_ft, restrains=restrains,
         source_is_magical=source_is_magical,
