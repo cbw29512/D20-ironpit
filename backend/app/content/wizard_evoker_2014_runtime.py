@@ -10,6 +10,7 @@ from app.content.shared_spell_attacks_2014 import fire_bolt_2014
 from app.content.shared_spell_saves_2014 import disintegrate_2014, fireball_2014
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.spell_damage import SpellDamageBonusGrant
 
 logger = logging.getLogger(__name__)
 
@@ -93,7 +94,17 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
             spell_save_actions=save_spells,
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("intelligence", "wisdom")),
             skill_bonuses=_skills(level),
-            progression_features=ProgressionCombatFeatures(),
+            progression_features=ProgressionCombatFeatures(
+                spell_damage_bonus_grants=(
+                    [SpellDamageBonusGrant(
+                        source_id="empowered-evocation",
+                        source_name="Empowered Evocation",
+                        ability="intelligence",
+                        eligible_spell_ids=["fire-bolt", "fireball"],
+                    )]
+                    if level >= 10 else []
+                ),
+            ),
             resources=_resources(level),
             weapon_masteries=[],
             wearing_heavy_armor=False,
