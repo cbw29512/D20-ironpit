@@ -98,3 +98,25 @@ def test_lore_bard_preparation_does_not_claim_certification() -> None:
     inspiration = next(item for item in level_three.feature_audits if item.feature_id == "bardic-inspiration")
     assert cutting.automated is False
     assert inspiration.automated is False
+
+
+def test_peerless_skill_reuses_generic_failed_d20_bonus_die_grant() -> None:
+    thirteen = build_lyra_silverstring_2014(13)
+    fourteen = build_lyra_silverstring_2014(14)
+    assert thirteen.progression_features.failed_d20_bonus_die_grants == []
+
+    grants = fourteen.progression_features.failed_d20_bonus_die_grants
+    assert len(grants) == 1
+    grant = grants[0]
+    assert grant.source_id == "peerless-skill"
+    assert grant.source_name == "Peerless Skill"
+    assert grant.resource_id == "bardic-inspiration"
+    assert grant.resource_cost == 1
+    assert grant.dice_size == bardic_inspiration_die(14)
+    assert grant.test_kinds == ["ability_check"]
+
+    audit = next(
+        item for item in build_lyra_silverstring_2014_profile(14).feature_audits
+        if item.feature_id == "peerless-skill"
+    )
+    assert audit.automated is True
