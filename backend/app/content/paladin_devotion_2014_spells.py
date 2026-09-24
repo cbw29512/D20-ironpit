@@ -83,6 +83,15 @@ def dispel_magic_2014() -> EffectRemovalAction:
     )
 
 
+def cleansing_touch_2014() -> EffectRemovalAction:
+    return EffectRemovalAction(
+        id="cleansing-touch", name="Cleansing Touch", level=1, action_cost="action",
+        range_ft=5, casting_ability="charisma", target_mode="self_or_ally",
+        auto_remove_max_level=9, resource_id="cleansing-touch", resource_cost=1,
+        expends_spell_slot=False, animation="cleansing-touch",
+    )
+
+
 def freedom_of_movement_2014() -> DefensiveSpellAction:
     counters = [
         DebuffCounter(debuff_id="difficult-terrain"),
