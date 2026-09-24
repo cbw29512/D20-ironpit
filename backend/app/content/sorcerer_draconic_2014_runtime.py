@@ -10,6 +10,7 @@ from app.content.shared_spell_saves_2014 import disintegrate_2014, fireball_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.spell_damage import SpellDamageBonusGrant
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +92,17 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             spell_save_actions=save_spells,
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("constitution", "charisma")),
             skill_bonuses=_skills(level),
-            progression_features=ProgressionCombatFeatures(),
+            progression_features=ProgressionCombatFeatures(
+                spell_damage_bonus_grants=(
+                    [SpellDamageBonusGrant(
+                        source_id="elemental-affinity",
+                        source_name="Elemental Affinity",
+                        ability="charisma",
+                        eligible_damage_types=["fire"],
+                    )]
+                    if level >= 6 else []
+                ),
+            ),
             resources=_resources(level),
             weapon_masteries=[],
             wearing_heavy_armor=False,
