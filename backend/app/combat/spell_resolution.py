@@ -76,6 +76,7 @@ def _save_action(choice: SpellChoice, caster_state) -> SavingThrowAction:
             damage_components=components,
             success_damage=spell.success_damage,
             magical_effect=True,
+            spell_effect=True,
             animation=spell.animation,
         )
     except ValueError:
