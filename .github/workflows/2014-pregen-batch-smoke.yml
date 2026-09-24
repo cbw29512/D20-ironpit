@@ -34,7 +34,7 @@ jobs:
             backend/tests/test_sorcerer_draconic_2014_prep.py \
             backend/tests/test_warlock_fiend_2014_prep.py \
             backend/tests/test_wizard_evoker_2014_prep.py \
-            backend/tests/test_difficult_terrain_bypass.py \\
+            backend/tests/test_difficult_terrain_bypass.py \
             backend/tests/test_spell_upcasting_2014.py
       - name: Run current browser batch-targeted parity checks
         run: |
