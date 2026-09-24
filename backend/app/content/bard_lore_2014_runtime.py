@@ -4,6 +4,10 @@ import logging
 
 from app.content.bard_lore_2014_data import SPELL_SLOTS, ability_scores, bardic_inspiration_die
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
+from app.content.cleric_2014_level1_spells import guiding_bolt_2014, inflict_wounds_2014
+from app.content.shared_healing_spells_2014 import healing_word_2014
+from app.content.shared_spell_attacks_2014 import fire_bolt_2014
+from app.content.shared_spell_saves_2014 import fireball_2014, shatter_2014
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
@@ -112,6 +116,22 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             abilities=list(_ALL_ABILITIES),
             against_effect_tags=["charmed"],
         )
+        spell_attack_bonus = proficiency_bonus(level) + scores.modifier("charisma")
+        spell_save_dc = 8 + proficiency_bonus(level) + scores.modifier("charisma")
+        spell_attacks = []
+        spell_saves = []
+        if level >= 3:
+            spell_saves.append(shatter_2014(spell_save_dc))
+        if level >= 6:
+            # College of Lore Additional Magical Secrets: Fire Bolt + Fireball.
+            spell_attacks.append(fire_bolt_2014(spell_attack_bonus, level))
+            spell_saves.append(fireball_2014(spell_save_dc))
+        if level >= 10:
+            # Magical Secrets: two additional supported combat spells.
+            spell_attacks.extend([
+                guiding_bolt_2014(spell_attack_bonus),
+                inflict_wounds_2014(spell_attack_bonus),
+            ])
         return CombatantTemplate(
             id=f"lyra-silverstring-2014-l{level}",
             name="Lyra Silverstring",
@@ -126,6 +146,9 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             speed_ft=30,
             initiative_bonus=initiative_bonus,
             weapon_attack=_attack(level, "lyra-2014-rapier", "Rapier", 8),
+            spell_attack_actions=spell_attacks,
+            spell_save_actions=spell_saves,
+            healing_actions=[healing_word_2014(scores.modifier("charisma"))],
             alternate_weapon_attacks=[_attack(level, "lyra-2014-dagger", "Dagger", 4, ranged=True)],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
             skill_bonuses=_skill_bonuses(level),
