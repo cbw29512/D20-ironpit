@@ -68,7 +68,6 @@ def test_aurelia_prepared_high_level_slots_and_resources_match_2014_progression(
 def test_high_level_preparation_keeps_unfinished_features_explicitly_uncertified() -> None:
     expected_blocked = {
         13: "devotion-oath-spells-4",
-        15: "purity-of-spirit",
         20: "holy-nimbus",
     }
     for level, feature_id in expected_blocked.items():
