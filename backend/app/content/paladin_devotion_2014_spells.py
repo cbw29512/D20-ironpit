@@ -6,12 +6,12 @@ from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.content.shared_spells_2014 import beacon_of_hope_2014, lesser_restoration_2014, sanctuary_2014
-from app.domain.actions import ConditionRemovalAction, HealingAction
+from app.domain.actions import ConditionRemovalAction, HealingAction, SaveDamageComponent
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.persistent_hazards import PersistentHazardAction
 from app.domain.progression import PassiveModifierGrant
 from app.domain.size import CreatureSize
-from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
+from app.domain.spells import DefensiveSpellAction, SpellModifierEffect, SpellSaveAction
 
 _PROTECTED_TYPES = ["aberration", "celestial", "elemental", "fey", "fiend", "undead"]
 _SOURCE = "D&D SRD 5.1 (2014): Paladin and Oath of Devotion spells"
@@ -166,4 +166,52 @@ def purity_of_spirit_2014() -> PassiveModifierGrant:
         )
     except Exception:
         logger.exception("Failed to compile 2014 Purity of Spirit passive modifiers")
+        raise
+
+
+def flame_strike_2014(save_dc: int) -> SpellSaveAction:
+    """Bind Flame Strike to the generic split-damage save spell schema."""
+    try:
+        return SpellSaveAction(
+            id="flame-strike",
+            name="Flame Strike",
+            level=5,
+            action_cost="action",
+            range_ft=60,
+            area_radius_ft=10,
+            save_ability="dexterity",
+            dc=save_dc,
+            damage_components=[
+                SaveDamageComponent(
+                    source="Flame Strike (Fire)",
+                    dice_count=4,
+                    dice_size=6,
+                    damage_type="fire",
+                ),
+                SaveDamageComponent(
+                    source="Flame Strike (Radiant)",
+                    dice_count=4,
+                    dice_size=6,
+                    damage_type="radiant",
+                ),
+            ],
+            success_damage="half",
+            animation="flame-strike",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Flame Strike at save DC %s", save_dc)
+        raise
+
+
+def build_paladin_spell_save_actions_2014(
+    level: int,
+    charisma_modifier: int,
+) -> list[SpellSaveAction]:
+    """Compile currently supported Devotion save-based oath spells."""
+    try:
+        if level < 17:
+            return []
+        return [flame_strike_2014(8 + proficiency_bonus(level) + charisma_modifier)]
+    except Exception:
+        logger.exception("Failed to compile 2014 Paladin save spells at level %s", level)
         raise
