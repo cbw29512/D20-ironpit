@@ -10,7 +10,7 @@ Current certified runtime stops at Aurelia level 12. The purpose of this documen
 
 | Level | Combat-relevant progression | Universal-engine disposition |
 | --- | --- | --- |
-| 13 | 4th-level spell slots; Devotion oath spells *freedom of movement*, *guardian of faith* | Spell/resource data first. Reuse existing slot resources. Both spells require explicit disposition before level 13 can certify. |
+| 13 | 4th-level spell slots; Devotion oath spells *freedom of movement*, *guardian of faith* | 4/3/3/1 slots. *Freedom of movement* uses universal buff/debuff counters. *Guardian of Faith* remains in RAW/Oath metadata but is arena-unavailable under the current no-summons/created-entity rule. Aurelia prepares *death ward* as the legal non-summoning 4th-level combat replacement. |
 | 14 | Cleansing Touch | Effect-removal action: action economy + Charisma-modifier uses per long rest + target spell-effect removal. Compare against existing `effect_removal_actions` / Dispel Magic machinery; do not create a Paladin-specific remover. |
 | 15 | Purity of Spirit | Persistent self effect equivalent to always being under *protection from evil and good*. Compose the spell's existing universal defenses if present; otherwise identify the missing generic creature-type defense primitive. |
 | 16 | Ability Score Improvement | Existing canonical ability-score/derived-stat progression. No new combat primitive. |
@@ -34,14 +34,15 @@ Current certified runtime stops at Aurelia level 12. The purpose of this documen
 Repository inventory after level 12 certification found:
 
 1. **4th-level slots:** existing generic spell-slot `ResourceDefinition` is sufficient. Level 13 needs the RAW 4/3/3/1 slot vector in Paladin runtime/profile data; no new resource primitive is needed.
-2. **Guardian of Faith:** the spell already exists in the canonical 2014 Life Cleric data, but that lane explicitly classifies it `arena-out-of-scope` / non-automated. That existing classification must not be mistaken for engine support. Devotion Paladin level 13 therefore cannot claim this spell as automated by merely reusing the Cleric data row.
+2. **Guardian of Faith:** preserved as an always-prepared Oath of Devotion spell in source metadata, but explicitly arena-unavailable while Iron Pit disables summoned/conjured/created combat entities. It is not automated, selected by Arena AI, or treated as a certification blocker.
 3. **Freedom of Movement:** represented through universal buff-vs-debuff counter semantics. Arena-relevant behavior is difficult-terrain countering, prevention of magical Speed reduction and magical paralysis/restraint, plus automatic escape from nonmagical Grappled/Restrained by spending 5 feet of movement. The underwater clause is `ARENA_NEUTRAL` because Iron Pit environmental hospitality already lets combatants move as though in a valid native environment for their printed movement modes.
-4. **Certification consequence:** level 13 remains blocked on a generic/data-driven Freedom of Movement representation and an explicit Iron Pit disposition for Guardian of Faith. Do not extend Aurelia's certified level ranges or READY manifests until those behaviors are resolved and tested.
+4. **Death Ward:** selected as Aurelia's legal prepared 4th-level non-summoning combat spell. It uses the universal source-owned zero-HP replacement primitive: the first qualifying drop to 0 becomes 1 HP and the ward ends. Its non-damage instant-death clause is represented by the same ward capability for future direct-death effects.
+5. **Certification consequence:** level 13 requires the 4/3/3/1 slot vector plus Python/browser parity for Freedom of Movement and Death Ward. Guardian of Faith no longer blocks under the current arena contract.
 
 ## Gaps that require focused inventory before code
 
-1. **Freedom of Movement:** add only generic movement/condition-prevention pieces that are genuinely absent. Do not create a spell-name resolver.
-2. **Guardian of Faith:** inventory stationary area/summoned hazard support before deciding whether it is runnable in the arena. Do not model it as an ordinary creature summon if the engine's summon contract would change RAW behavior.
+1. **Freedom of Movement / Death Ward:** keep both as generic source-owned buffs; no Paladin-specific resolver.
+2. **Guardian of Faith:** no engine work while summons/created combat entities are disabled. Revisit only if the global summon policy changes.
 3. **Cleansing Touch:** verify whether the existing generic effect-removal action can remove a spell on a touched creature without a spellcasting-ability check. If yes, this is data/resource wiring only.
 4. **Purity of Spirit:** reuse the existing typed defenses from *protection from evil and good* and separately inventory the possession/prevention semantics that are not yet represented.
 5. **Flame Strike:** verify a save-damage action can carry both fire and radiant components through one Dexterity save and half-on-success semantics.
@@ -50,7 +51,7 @@ Repository inventory after level 12 certification found:
 ## Certification sequence
 
 1. Level 12: certified on main.
-2. Level 13 only after both 4th-level combat oath spells are dispositioned accurately and the 4/3/3/1 resource vector is covered by Python/browser parity.
+2. Level 13 after the 4/3/3/1 resource vector, Freedom of Movement, and Death Ward pass Python/browser parity; Guardian of Faith remains source-visible but arena-unavailable by contract.
 3. Level 14 after Cleansing Touch is proven to reuse or minimally extend generic effect removal.
 4. Level 15 after *protection from evil and good* composition is certified for the persistent self effect.
 5. Level 16 ASI.
