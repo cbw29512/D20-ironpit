@@ -8,6 +8,7 @@ from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
+from app.domain.movement import DifficultTerrainScope
 from app.domain.persistent_spell_attacks import PersistentSpellAttackState
 
 TimedTurnBehavior = Literal["normal", "forced_retreat"]
@@ -56,6 +57,7 @@ class TimedEffect(BaseModel):
     # intentionally distinct from blanket condition immunity: source data must
     # identify the incoming effect as magical before this defense applies.
     owned_magical_condition_immunities: list[str] = Field(default_factory=list)
+    difficult_terrain_bypass_scope: DifficultTerrainScope | None = None
     zero_hp_replacement_hp: int = Field(default=0, ge=0)
     prevents_nondamage_instant_death: bool = False
 
