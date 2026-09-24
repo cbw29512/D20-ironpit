@@ -54,22 +54,20 @@ def resolve_group_healing(
     action: HealingAction,
     dice,
     turn_key: str | None = None,
+    *,
+    setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int]:
     if action.max_targets <= 1 or not targets or len(targets) > action.max_targets:
         raise ValueError("Group healing requires one or more legal targets within max_targets.")
     if any(not _target_allowed(healer, target, action) for target in targets):
         raise ValueError("Group healing contains an illegal target.")
     if action.area_radius_ft is not None:
+        if setup is None:
+            raise ValueError("Area group healing requires the actual encounter setup.")
         target_ids = {target.combatant_id for target in targets}
         placement = best_friendly_area_placement(
             healer,
-            EncounterSetup(
-                heroes=[] if healer.side != "heroes" else [healer, *[target for target in targets if target is not healer]],
-                monsters=[] if healer.side != "monsters" else [healer, *[target for target in targets if target is not healer]],
-                hero_total_levels=0,
-                monster_total_cr="0",
-                ruleset=healer.state.template.ruleset,
-            ),
+            setup,
             action.area_radius_ft,
             action.range_ft,
             target_ids,
