@@ -10,7 +10,12 @@
 
   function saveAction(choice, casterState) {
     const spell = choice.action;
-    if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
+    if (choice.slotLevel < spell.level) throw new Error("Spell cast level cannot be below the spell's printed level.");
+    if (spell.level === 0 && choice.slotLevel !== 0) throw new Error("Cantrips cannot expend spell slots.");
+    const upcastLevels = choice.slotLevel - spell.level;
+    if ((spell.damageComponents || []).length && upcastLevels && (spell.upcastDicePerLevel || 0)) {
+      throw new Error("Split-component spell upcasting requires explicit component scaling data.");
+    }
     let damageBonus = spell.damageBonus || 0;
     let damageComponents = (spell.damageComponents || []).map((component) => ({ ...component }));
     const usedSources = new Set();
@@ -27,7 +32,7 @@
     return {
       id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
       range: spell.range + (spell.areaRadius || 0),
-      damageDiceCount: spell.damageDiceCount,
+      damageDiceCount: (spell.damageDiceCount || 0) + upcastLevels * (spell.upcastDicePerLevel || 0),
       damageDiceSize: spell.damageDiceSize, damageBonus,
       damageType: spell.damageType, damageComponents,
       successDamage: spell.successDamage || "none",
@@ -38,7 +43,8 @@
   function resolve(sequence, round, caster, setup, choice, turnKey) {
     const spell = choice.action;
     if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
-    if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
+    if (choice.slotLevel < spell.level) throw new Error("Spell cast level cannot be below the spell's printed level.");
+    if (spell.level === 0 && choice.slotLevel !== 0) throw new Error("Cantrips cannot expend spell slots.");
     if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
 
     let remaining = null;
