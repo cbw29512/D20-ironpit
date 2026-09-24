@@ -33,13 +33,13 @@ window.IRON_PIT_BROWSER_SPELL_AREA = {
 const S = window.IRON_PIT_BROWSER_STATE;
 const H = window.IRON_PIT_BROWSER_HEALING;
 
-const template = () => structuredClone(
+const template = (level = 10) => structuredClone(
   Object.values(window.IRON_PIT_BROWSER_HEROES)
-    .find((hero) => hero.ruleset === "2014" && hero.class_id === "cleric" && hero.level === 10),
+    .find((hero) => hero.ruleset === "2014" && hero.class_id === "cleric" && hero.level === level),
 );
 
-const member = (id, hp) => {
-  const state = S.buildState(template());
+const member = (id, hp, level = 10) => {
+  const state = S.buildState(template(level));
   state.current_hp = hp;
   return { combatant_id: id, side: "heroes", position_ft: 0, state };
 };
@@ -95,4 +95,30 @@ const setup = (cleric, ally) => ({ heroes: [cleric, ally], monsters: [] });
   assert.equal(event.resource_remaining, 0);
 }
 
-console.log("Browser 2014 Divine Intervention percentile full-heal regressions passed.");
+{
+  const cleric = member("cleric-20", 100, 20);
+  const ally = member("ally-19", 10, 19);
+  const action = cleric.state.template.healingActions
+    .find((item) => item.id === "divine-intervention");
+
+  assert.ok(action);
+  assert.equal(action.restoreToEffectiveMax, true);
+  assert.equal(action.percentileSuccessMax, null);
+  assert.equal(action.resourceId, "divine-intervention");
+
+  window.IRON_PIT_DICE = {
+    roll: (sides) => {
+      throw new Error(`Level-20 Divine Intervention must not roll d${sides}.`);
+    },
+  };
+  const event = H.resolve(1, 1, cleric, ally, action, "1:cleric-20");
+
+  assert.equal(event.event_type, "healing");
+  assert.equal(event.feature_roll, null);
+  assert.equal(event.healing_roll.notation, "restore-to-effective-max");
+  assert.equal(ally.state.current_hp, S.effectiveMaxHp(ally.state));
+  assert.equal(event.resource_remaining, 0);
+  assert.equal(cleric.state.resources["divine-intervention"], 0);
+}
+
+console.log("Browser 2014 Divine Intervention percentile and level-20 automatic-success regressions passed.");

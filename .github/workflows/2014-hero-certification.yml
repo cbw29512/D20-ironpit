@@ -49,6 +49,7 @@ jobs:
             backend/tests/test_cleric_life_2014_level17.py \
             backend/tests/test_cleric_life_2014_level18.py \
             backend/tests/test_cleric_life_2014_level19.py \
+            backend/tests/test_cleric_life_2014_level20.py \
             backend/tests/test_once_per_turn_hit_damage.py \
             backend/tests/test_healing_creature_type_exclusions.py \
             backend/tests/test_group_healing_area.py \
@@ -94,6 +95,7 @@ jobs:
             node frontend/browser-outgoing-healing-maximize.test.cjs
             node frontend/browser-healing-creature-type-exclusions.test.cjs
             node frontend/browser-group-healing-area.test.cjs
+            node frontend/browser-divine-intervention-2014.test.cjs
             node frontend/browser-cleric9-2014.test.cjs
             node frontend/browser-persistent-spell-attacks.test.cjs
           } 2>&1 | tee 2014-hero-browser.log
