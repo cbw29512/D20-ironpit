@@ -75,7 +75,7 @@
     try {
       enablePitRangePolicy();
       const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); PA()?.sync(setup);
-      const countered = S().beginTurn(member.state);
+      const countered = S().beginTurn(member.state) || [];
       for (const item of countered) {
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
