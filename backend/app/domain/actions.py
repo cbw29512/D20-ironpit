@@ -106,6 +106,16 @@ class ConditionRemovalAction(BaseModel):
         return self
 
 
+class SaveDamageComponent(BaseModel):
+    """One typed damage component governed by the parent saving throw."""
+
+    source: str | None = None
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    damage_bonus: int = 0
+    damage_type: DamageTypeName
+
+
 class SavingThrowAction(BaseModel):
     id: str
     name: str
@@ -118,6 +128,7 @@ class SavingThrowAction(BaseModel):
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
@@ -126,6 +137,14 @@ class SavingThrowAction(BaseModel):
     requires_no_active_grapple: bool = False
     magical_effect: bool = False
     animation: str = "save-effect"
+
+    @model_validator(mode="after")
+    def validate_damage_shape(self) -> "SavingThrowAction":
+        if self.damage_components and (self.damage_dice_count or self.damage_type is not None or self.damage_bonus):
+            raise ValueError("Saving throw actions must use either legacy damage fields or typed damage components, not both.")
+        if self.damage_dice_count and self.damage_type is None:
+            raise ValueError("Damaging saving throw actions require a damage type.")
+        return self
 
 
 class AttackActionSlot(BaseModel):
