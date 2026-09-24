@@ -13,6 +13,16 @@ def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
     try:
         features = template.progression_features
         modifiers: list[CombatModifier] = []
+        for index, grant in enumerate(template.passive_modifier_grants):
+            modifiers.append(CombatModifier(
+                id=f"{template.id}:{grant.source_id}:passive:{index}",
+                source_id=template.id,
+                source_effect_id=grant.source_id,
+                source_name=grant.source_name,
+                kind=ModifierKind(grant.kind),
+                condition_id=grant.condition_id,
+                source_creature_types=list(grant.source_creature_types),
+            ))
         ward = features.opening_targeting_ward
         if ward is not None:
             modifiers.append(CombatModifier(
