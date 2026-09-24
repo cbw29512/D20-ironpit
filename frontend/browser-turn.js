@@ -82,6 +82,7 @@
         sequence, round, member, setup, turnKey, events: [],
       });
       events.push(...start.events); sequence = start.sequence;
+      if (!S().active(member)) return finalize(events, sequence, round, member, setup, turnKey, false);
       if (window.IRON_PIT_BROWSER_TIMED?.suppressesVoluntaryTurn(member.state)) {
         return finalize(events, sequence, round, member, setup, turnKey, false);
       }
