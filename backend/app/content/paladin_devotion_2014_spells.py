@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+import logging
+
 from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.content.shared_spells_2014 import beacon_of_hope_2014, lesser_restoration_2014, sanctuary_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
+from app.domain.persistent_hazards import PersistentHazardAction
+from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 _PROTECTED_TYPES = ["aberration", "celestial", "elemental", "fey", "fiend", "undead"]
 _SOURCE = "D&D SRD 5.1 (2014): Paladin and Oath of Devotion spells"
+logger = logging.getLogger(__name__)
 
 
 def protection_from_evil_and_good_2014() -> DefensiveSpellAction:
@@ -88,3 +93,44 @@ def build_paladin_defensive_spells_2014(level: int, charisma_modifier: int) -> l
     if level >= 10:
         actions.append(AID.model_copy(update={"source": source}))
     return actions
+
+
+def guardian_of_faith_2014(save_dc: int) -> PersistentHazardAction:
+    """Bind Guardian of Faith to the shared stationary persistent-hazard schema."""
+    try:
+        return PersistentHazardAction(
+            id="guardian-of-faith",
+            name="Guardian of Faith",
+            level=4,
+            action_cost="action",
+            cast_range_ft=30,
+            duration_rounds=4800,
+            footprint_size=CreatureSize.LARGE,
+            trigger_radius_ft=10,
+            save_ability="dexterity",
+            dc=save_dc,
+            failure_damage=20,
+            success_damage=10,
+            damage_type="radiant",
+            max_total_damage=60,
+            animation="guardian-of-faith",
+            source=_SOURCE,
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Guardian of Faith at save DC %s", save_dc)
+        raise
+
+
+def build_paladin_persistent_hazard_actions_2014(
+    level: int,
+    charisma_modifier: int,
+) -> list[PersistentHazardAction]:
+    """Compile currently supported persistent-hazard oath spells for Aurelia."""
+    try:
+        if level < 13:
+            return []
+        save_dc = 8 + proficiency_bonus(level) + charisma_modifier
+        return [guardian_of_faith_2014(save_dc)]
+    except Exception:
+        logger.exception("Failed to compile 2014 Paladin persistent hazards at level %s", level)
+        raise
