@@ -138,6 +138,13 @@ def _defense(action: Any) -> dict[str, Any]:
            "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,
            "damageResistances": list(action.damage_resistances),
            "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
+           "survivalWard": (
+               {
+                   "replacementHp": action.survival_ward.replacement_hp,
+                   "preventsNondamageInstantDeath": action.survival_ward.prevents_nondamage_instant_death,
+               }
+               if action.survival_ward else None
+           ),
            "concentration": action.concentration, "priority": action.priority, "animation": action.animation}
     if action.source: row["source"] = action.source
     return row

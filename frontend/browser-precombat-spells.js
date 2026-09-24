@@ -3,6 +3,7 @@
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
 
   function slotChoice(member, spell) {
     const resourceId = `spell-slot-${spell.level}`;
@@ -108,6 +109,19 @@
       target.state.max_hp_bonus += spell.maxHpIncrease || 0;
       target.state.current_hp += spell.currentHpIncrease || 0;
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
+      if (spell.survivalWard) {
+        if (!T()) throw new Error("Browser timed-effect runtime is not loaded.");
+        T().apply(target.state, `survival-ward:${spell.id}`, member.combatant_id, {
+          sourceEffectId: spell.id,
+          appliedRound: 1,
+          expiresRound: 1 + spell.durationMinutes * 10,
+          expiresAtStartOfSourceTurn: false,
+          expiryTiming: "target_turn_start",
+          zeroHpReplacementHp: spell.survivalWard.replacementHp,
+          preventsNondamageInstantDeath: spell.survivalWard.preventsNondamageInstantDeath,
+          useDefaultPoisonRecovery: false,
+        });
+      }
       if (!spell.concentration && !target.state.active_buff_effect_ids.includes(spell.id)) target.state.active_buff_effect_ids.push(spell.id);
     }
     if (spell.concentration || spell.modifierEffects?.length) {
@@ -118,6 +132,7 @@
     if (spell.maxHpIncrease) details.push(`+${spell.maxHpIncrease} Hit Point maximum`);
     if (spell.currentHpIncrease) details.push(`+${spell.currentHpIncrease} current Hit Points`);
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
+    if (spell.survivalWard) details.push(`survival ward to ${spell.survivalWard.replacementHp} HP`);
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     if (spell.concentration) details.push("Concentration");
     const single = targets.length === 1 ? targets[0] : null;

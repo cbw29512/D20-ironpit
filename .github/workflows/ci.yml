@@ -138,6 +138,7 @@ jobs:
           node frontend/browser-batch3.test.cjs
           node frontend/browser-deathmatch.test.cjs
           node frontend/browser-zero-hp-lifecycle.test.cjs
+          node frontend/browser-survival-wards.test.cjs
           node frontend/browser-undead-fortitude.test.cjs
           node frontend/browser-control.test.cjs
           node frontend/browser-poison.test.cjs

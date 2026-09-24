@@ -248,6 +248,13 @@ def defense_row(action: Any) -> dict[str, Any]:
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
         "damageResistances": list(action.damage_resistances),
         "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
+        "survivalWard": (
+            {
+                "replacementHp": action.survival_ward.replacement_hp,
+                "preventsNondamageInstantDeath": action.survival_ward.prevents_nondamage_instant_death,
+            }
+            if action.survival_ward else None
+        ),
         "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
     }
     if action.max_hp_increase:

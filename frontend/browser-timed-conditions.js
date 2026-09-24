@@ -35,6 +35,8 @@
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
+      zero_hp_replacement_hp: options.zeroHpReplacementHp || 0,
+      prevents_nondamage_instant_death: Boolean(options.preventsNondamageInstantDeath),
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
