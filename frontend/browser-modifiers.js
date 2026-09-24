@@ -101,8 +101,16 @@
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
-  const effectiveSpeed = (state) => X()?.effectiveSpeed(state, Math.max(0, state.template.speed_ft + flat(state, "speed")))
-    ?? Math.max(0, state.template.speed_ft + flat(state, "speed"));
+  function effectiveSpeed(state) {
+    const protectedFromMagicalReduction = (state.timed_effects || [])
+      .some((effect) => effect.prevents_magical_speed_reduction);
+    const speedBonus = (state.active_modifiers || [])
+      .filter((item) => item.kind === "speed")
+      .filter((item) => !(protectedFromMagicalReduction && item.source_is_magical && (item.flat_bonus || 0) < 0))
+      .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+    const base = Math.max(0, state.template.speed_ft + speedBonus);
+    return X()?.effectiveSpeed(state, base) ?? base;
+  }
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
