@@ -3,6 +3,7 @@
 
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
+  const T = () => window.IRON_PIT_BROWSER_TIMED || { resolveMovementCounters: () => [] };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
@@ -55,14 +56,20 @@
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
     refreshStartOfTurn(state);
-    const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
-    state.movement_remaining_ft = speedZero ? 0 : speed;
+    state.movement_remaining_ft = speed;
+    const countered = [
+      ...T().resolveMovementCounters(state),
+      ...(G()?.resolveMovementCounters?.(state) || []),
+    ];
+    const speedZero = G()?.speedIsZero(state) || false;
+    if (speedZero) state.movement_remaining_ft = 0;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
     if (state.active_effect_ids.includes("prone") && speed > 0 && !speedZero) {
       state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(speed / 2));
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "prone");
     }
+    return countered;
   }
 
   function distance(a, b) {
