@@ -24,7 +24,7 @@ ResourceRule = tuple[str, str, Callable[[int], int]]
 _PALADIN_2014_SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
-    11: (4, 3, 3), 12: (4, 3, 3), 13: (4, 3, 3, 1),
+    11: (4, 3, 3), 12: (4, 3, 3), 13: (4, 3, 3, 1), 14: (4, 3, 3, 1),
 }
 
 
@@ -114,6 +114,8 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
     if profile.ruleset == "2014" and profile.class_id == "paladin":
         resolved.update(_paladin_2014_spell_slots(profile.level))
+        if profile.level >= 14:
+            resolved["cleansing-touch"] = profile.final_ability_scores.modifier("charisma")
     return {resource_id: uses for resource_id, uses in resolved.items() if uses > 0}
 
 
