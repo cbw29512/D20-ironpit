@@ -9,6 +9,14 @@ CARD_WIDTH_FT = 5
 
 
 @dataclass(frozen=True)
+class FriendlyAreaPlacement:
+    start_slot: int
+    slot_count: int
+    center_ft: int
+    target_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class AreaPlacement:
     start_slot: int
     slot_count: int
@@ -109,6 +117,44 @@ def best_area_placement(
         key=lambda item: (
             len(item.enemy_ids),
             len(item.protected_friendly_ids),
+            -abs(caster.position_ft - item.center_ft),
+            -item.start_slot,
+        ),
+    )
+
+
+def best_friendly_area_placement(
+    caster: EncounterCombatant,
+    setup: EncounterSetup,
+    radius_ft: int,
+    spell_range_ft: int,
+    eligible_ids: set[str],
+    required_ids: set[str] | None = None,
+) -> FriendlyAreaPlacement | None:
+    """Maximize eligible friendly targets inside one legal source-defined area."""
+    slot_count = area_slot_count(radius_ft)
+    _, friends = _side_rows(caster, setup)
+    eligible = [member for member in friends if member.combatant_id in eligible_ids]
+    if not eligible:
+        return None
+    required = required_ids or set()
+    candidates: list[FriendlyAreaPlacement] = []
+    for center_ft in _candidate_centers(caster, eligible, radius_ft, spell_range_ft):
+        for start in range(0, MAX_CARD_SLOTS - slot_count + 1):
+            target_ids = tuple(
+                member.combatant_id for index, member in enumerate(friends)
+                if member.combatant_id in eligible_ids
+                and _inside(member, index, start, slot_count, center_ft, radius_ft)
+            )
+            if not target_ids or not required.issubset(target_ids):
+                continue
+            candidates.append(FriendlyAreaPlacement(start, slot_count, center_ft, target_ids))
+    if not candidates:
+        return None
+    return max(
+        candidates,
+        key=lambda item: (
+            len(item.target_ids),
             -abs(caster.position_ft - item.center_ft),
             -item.start_slot,
         ),
