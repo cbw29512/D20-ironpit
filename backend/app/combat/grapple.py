@@ -8,6 +8,7 @@ from app.combat.condition_rules import condition_speed_is_zero, has_condition
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.modifier_stack import effective_speed
+from app.combat.movement_defenses import nonmagical_grapple_escape_cost_ft, prevents_magical_speed_reduction
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
@@ -34,7 +35,13 @@ def _sync_effect_ids(state: CombatantState) -> None:
 
 
 def apply_grapple(
-    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *, restrains: bool = False,
+    state: CombatantState,
+    source_id: str,
+    escape_dc: int,
+    range_ft: int,
+    *,
+    restrains: bool = False,
+    source_is_magical: bool = False,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
@@ -42,6 +49,7 @@ def apply_grapple(
     restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
     state.grapple_sources.append(GrappleSource(
         source_id=source_id, escape_dc=escape_dc, range_ft=range_ft, restrains=restrains,
+        source_is_magical=source_is_magical,
     ))
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
@@ -53,7 +61,27 @@ def release_grapple(state: CombatantState, source_id: str) -> None:
 
 
 def speed_is_zero(state: CombatantState) -> bool:
-    return bool(state.grapple_sources) or condition_speed_is_zero(state)
+    blocking_grapple = any(
+        not source.source_is_magical or not prevents_magical_speed_reduction(state)
+        for source in state.grapple_sources
+    )
+    return blocking_grapple or condition_speed_is_zero(state)
+
+
+def spend_movement_to_escape_nonmagical_grapples(state: CombatantState, movement_ft: int) -> int:
+    """Use a source-owned movement permission to escape nonmagical grapples without an Action."""
+    try:
+        cost = nonmagical_grapple_escape_cost_ft(state)
+        if cost is None or cost <= 0:
+            return movement_ft
+        for source in list(state.grapple_sources):
+            if source.source_is_magical or movement_ft < cost:
+                continue
+            movement_ft -= cost
+            release_grapple(state, source.source_id)
+        return movement_ft
+    except Exception:
+        raise
 
 
 def grapple_attack_disadvantage(state: CombatantState, target_id: str) -> int:
