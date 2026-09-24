@@ -85,6 +85,7 @@ This check is mandatory even when the source comes from a different class, monst
 - The card artwork is the moving battlefield token. Current HP, Temporary HP, conditions, buffs/debuffs, concentration, recharge/resource state, and similar live symbols are presentation overlays derived from runtime state and never rule inputs.
 - Reach/range still determine legal attack geometry. Forced movement, Opportunity Attacks, speed-changing effects, Grappled/Prone interactions, and any feature that explicitly depends on movement remain real mechanics and must follow the selected ruleset.
 - The arena must not create a hidden combat buff/debuff from a creature's locomotion type.
+- Summoning/conjuring/creating a separate combat entity is currently arena-unavailable. Preserve the RAW option in source/audit data, but Arena AI never selects it and it does not by itself block an otherwise complete hero or monster from certification. Revisit only when the global summon policy is explicitly reopened.
 
 ## Universal mechanic workflow
 
