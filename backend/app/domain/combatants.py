@@ -17,6 +17,7 @@ from app.domain.recharge import RechargeRule
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.timed_auras import TimedAuraAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
@@ -75,6 +76,7 @@ class CombatantTemplate(BaseModel):
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     initiative_resource_refill_grants: list[InitiativeResourceRefillGrant] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
+    timed_aura_actions: list[TimedAuraAction] = Field(default_factory=list)
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
