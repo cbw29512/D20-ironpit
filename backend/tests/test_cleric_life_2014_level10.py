@@ -6,6 +6,7 @@ from app.content.character_resource_audit import assert_character_resources_raw_
 from app.content.cleric_life_2014_combat_profile import build_seraphine_2014_combat_profile
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
 from app.content.cleric_life_2014_runtime import build_seraphine_dawnshield_2014
+from app.content.demo import build_goblin_warrior
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -22,12 +23,18 @@ def _member(level: int, combatant_id: str, hp: int) -> EncounterCombatant:
 
 
 def _setup(cleric: EncounterCombatant, ally: EncounterCombatant) -> EncounterSetup:
+    enemy = EncounterCombatant(
+        combatant_id="goblin",
+        side="monsters",
+        position_ft=5,
+        state=build_combatant_state(build_goblin_warrior()),
+    )
     return EncounterSetup(
         heroes=[cleric, ally],
-        monsters=[],
+        monsters=[enemy],
         hero_total_levels=cleric.state.template.level + ally.state.template.level,
-        monster_total_cr="0",
-        starting_distance_ft=0,
+        monster_total_cr="1/4",
+        starting_distance_ft=5,
         ruleset="2014",
     )
 
