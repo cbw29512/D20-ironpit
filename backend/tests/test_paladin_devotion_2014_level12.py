@@ -1,5 +1,6 @@
 from app.content.build_audit import audit_character_build
 from app.content.character_resource_audit import assert_character_resources_raw_ready
+from app.content.paladin_2014_spell_package import build_paladin_2014_spell_package
 from app.content.paladin_devotion_2014_combat_profile import build_aurelia_brightshield_2014_combat_profile
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
@@ -38,3 +39,12 @@ def test_aurelia_level12_reuses_existing_combat_capabilities() -> None:
     assert runtime.weapon_attack.on_hit_damage[0].source == "Improved Divine Smite"
     assert runtime.weapon_attack.on_hit_damage[0].dice_count == 1
     assert runtime.weapon_attack.on_hit_damage[0].dice_size == 8
+
+
+def test_aurelia_level12_prepared_spell_capacity_is_explicitly_covered() -> None:
+    package = build_paladin_2014_spell_package(12)
+    prepared = [spell for spell in package.spells if spell.prepared]
+
+    assert len(prepared) == 9
+    magic_weapon = next(spell for spell in prepared if spell.id == "magic-weapon")
+    assert set(magic_weapon.capability_ids) == {"modifier-stack", "concentration"}
