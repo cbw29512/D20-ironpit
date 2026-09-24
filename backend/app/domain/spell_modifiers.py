@@ -11,6 +11,7 @@ SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die", "saving-throw-advantage",
     "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
     "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "speed", "debuff-counter",
+    "zero-hp-replacement",
 ]
 
 
@@ -24,6 +25,8 @@ class SpellModifierEffect(BaseModel):
     damage_type: DamageTypeName | None = None
     condition_id: ConditionName | None = None
     debuff_counter: DebuffCounter | None = None
+    replacement_hp: int = Field(default=0, ge=0)
+    prevents_instant_death: bool = False
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: AbilityName | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -50,6 +53,10 @@ class SpellModifierEffect(BaseModel):
             raise ValueError("Debuff counter effects require a counter definition.")
         if self.kind != "debuff-counter" and self.debuff_counter is not None:
             raise ValueError(f"{self.kind} does not accept a debuff counter.")
+        if self.kind == "zero-hp-replacement" and self.replacement_hp < 1:
+            raise ValueError("Zero-HP replacement effects require positive replacement HP.")
+        if self.kind != "zero-hp-replacement" and (self.replacement_hp or self.prevents_instant_death):
+            raise ValueError(f"{self.kind} does not accept zero-HP replacement fields.")
         if self.kind == "attacks-against-disadvantage" and not self.source_creature_types:
             raise ValueError("Typed attack Disadvantage requires source creature types.")
         if self.source_creature_types and self.kind not in {"attacks-against-disadvantage", "condition-immunity"}:
