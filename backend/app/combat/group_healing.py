@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from app.combat.action_economy import spend
-from app.combat.defensive_modifier_rules import healing_is_maximized
 from app.combat.friendly_area import best_friendly_area_placement
-from app.combat.healing_policy import resource_available, slot_heal, target_allowed
+from app.combat.healing_policy import healing_dice_maximized, resource_available, slot_heal, target_allowed
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.zero_hp import restore_hit_points
@@ -90,7 +89,7 @@ def resolve_group_healing(
     events: list[BattleEvent] = []
     notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}"
     for target in targets:
-        rolls = [action.dice_size for _ in range(action.dice_count)] if healing_is_maximized(target.state) else [
+        rolls = [action.dice_size for _ in range(action.dice_count)] if healing_dice_maximized(healer, target) else [
             dice.roll(action.dice_size) for _ in range(action.dice_count)
         ]
         total = sum(rolls) + action.healing_bonus
