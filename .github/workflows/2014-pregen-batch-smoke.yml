@@ -27,4 +27,5 @@ jobs:
         run: |
           pytest -q \
             backend/tests/test_paladin_devotion_2014_level13_prep.py \
-            backend/tests/test_paladin_devotion_2014_high_level_prep.py
+            backend/tests/test_paladin_devotion_2014_high_level_prep.py \
+            backend/tests/test_bard_lore_2014_prep.py
