@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
+from app.combat.spellcasting import available_free_spell_cast
 from app.combat.friendly_buff_targeting import select_friendly_buff_targets
 from app.content.monster_creature_types import base_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -9,11 +10,17 @@ from app.domain.spells import DefensiveSpellAction
 
 
 def _slot_resource(member: EncounterCombatant, spell: DefensiveSpellAction):
-    resource_id = f"spell-slot-{spell.level}"
-    resource = next((item for item in member.state.resources if item.id == resource_id), None)
-    if resource is None or resource.current_uses < 1:
-        return None
-    return spell.level, resource
+    try:
+        free_grant = available_free_spell_cast(member.state, spell.id)
+        if free_grant is not None:
+            return spell.level, None, free_grant
+        resource_id = f"spell-slot-{spell.level}"
+        resource = next((item for item in member.state.resources if item.id == resource_id), None)
+        if resource is None or resource.current_uses < 1:
+            return None
+        return spell.level, resource, None
+    except Exception:
+        raise
 
 
 def defensive_spell_active(member: EncounterCombatant, setup: EncounterSetup, spell: DefensiveSpellAction) -> bool:
@@ -53,7 +60,7 @@ def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | N
             continue
         slot = _slot_resource(member, spell)
         if slot is not None:
-            return spell, slot[0], slot[1]
+            return spell, slot[0], slot[1], slot[2]
     return None
 
 
@@ -81,10 +88,11 @@ def prepare_defenses(
         choice = choose_defensive_spell(member, setup)
         if choice is None:
             continue
-        spell, slot_level, resource = choice
+        spell, slot_level, resource, free_grant = choice
         targets = select_defensive_targets(member, setup, spell, slot_level)
         events.append(resolve_defensive_spell(
             sequence, member, targets, spell, slot_level, resource, affected_states,
+            free_grant=free_grant,
         ))
         sequence += 1
     return events, sequence
