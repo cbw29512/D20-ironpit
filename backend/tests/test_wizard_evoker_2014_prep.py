@@ -29,8 +29,20 @@ def test_evoker_missing_mechanics_remain_explicitly_blocked_and_uncertified() ->
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["wizard-spellcasting"].automated is False
     assert audits["potent-cantrip"].automated is False
-    assert audits["empowered-evocation"].automated is False
+    assert audits["empowered-evocation"].automated is True
     assert audits["overchannel"].automated is False
     assert audits["spell-mastery"].automated is False
     assert audits["signature-spells"].automated is False
     assert all(item.class_id != "wizard" for item in CERTIFIED_HERO_PROGRESSIONS)
+
+
+def test_empowered_evocation_uses_generic_spell_id_damage_bonus_grant() -> None:
+    nine = build_elian_starweaver_2014(9)
+    ten = build_elian_starweaver_2014(10)
+    assert nine.progression_features.spell_damage_bonus_grants == []
+    assert len(ten.progression_features.spell_damage_bonus_grants) == 1
+    grant = ten.progression_features.spell_damage_bonus_grants[0]
+    assert grant.source_name == "Empowered Evocation"
+    assert grant.ability == "intelligence"
+    assert grant.eligible_spell_ids == ["fire-bolt", "fireball"]
+    assert "disintegrate" not in grant.eligible_spell_ids
