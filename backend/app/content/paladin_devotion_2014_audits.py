@@ -132,10 +132,9 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
         if level >= 17:
             audits.append(_audit(
                 "devotion-oath-spells-5", "Oath of Devotion 5th-level Spells", "subclass",
-                automated=False,
                 notes=(
-                    "Commune is noncombat. Flame Strike still needs one-save multi-component fire/radiant "
-                    "save-damage binding before this tranche can certify."
+                    "Commune is noncombat. Flame Strike uses the universal one-save split fire/radiant "
+                    "save-damage path with half damage on a successful Dexterity save."
                 ),
             ))
         if level >= 18:
