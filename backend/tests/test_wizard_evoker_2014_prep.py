@@ -46,3 +46,19 @@ def test_empowered_evocation_uses_generic_spell_id_damage_bonus_grant() -> None:
     assert grant.ability == "intelligence"
     assert grant.eligible_spell_ids == ["fire-bolt", "fireball"]
     assert "disintegrate" not in grant.eligible_spell_ids
+
+
+def test_potent_cantrip_reuses_generic_half_damage_on_success() -> None:
+    five = build_elian_starweaver_2014(5)
+    six = build_elian_starweaver_2014(6)
+
+    five_poison = next(item for item in five.spell_save_actions if item.id == "poison-spray")
+    six_poison = next(item for item in six.spell_save_actions if item.id == "poison-spray")
+
+    assert five_poison.level == 0
+    assert five_poison.success_damage == "none"
+    assert six_poison.level == 0
+    assert six_poison.success_damage == "half"
+
+    audits = {item.feature_id: item for item in build_elian_starweaver_2014_profile(6).feature_audits}
+    assert audits["potent-cantrip"].automated is True
