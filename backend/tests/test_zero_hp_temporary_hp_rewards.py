@@ -84,7 +84,7 @@ def test_damage_event_chain_emits_zero_hp_reward_before_reaction_dispatch() -> N
     source, target, setup = _setup(5)
     event = _zero_event(source, target)
     events, sequence = damage_event_chain(
-        2, 1, source, event, setup, FixedDiceProvider([]), turn_key="1:varek",
+        2, 1, source, event, setup, FixedDiceProvider([1]), turn_key="1:varek",
     )
     assert [item.feature_id for item in events] == [None, "dark-ones-blessing"]
     assert [item.sequence for item in events] == [1, 2]
