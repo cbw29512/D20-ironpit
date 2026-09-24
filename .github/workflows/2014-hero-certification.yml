@@ -37,6 +37,7 @@ jobs:
             backend/tests/test_cleric_life_2014_level3.py \
             backend/tests/test_cleric_life_2014_level6.py \
             backend/tests/test_cleric_life_2014_level7.py \
+            backend/tests/test_once_per_turn_hit_damage.py \
             backend/tests/test_pooled_healing.py \
             backend/tests/test_turn_undead_2014.py \
             backend/tests/test_monk_open_hand_2014.py \
@@ -75,6 +76,7 @@ jobs:
             node frontend/browser-paladin-oath-spells-2014.test.cjs
             node frontend/browser-2014-paladin-entrypoints.test.cjs
             node frontend/browser-turn-undead-2014.test.cjs
+            node frontend/browser-once-per-turn-hit-damage.test.cjs
             node frontend/browser-persistent-spell-attacks.test.cjs
           } 2>&1 | tee 2014-hero-browser.log
       - name: Upload 2014 hero browser log
