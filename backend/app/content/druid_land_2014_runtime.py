@@ -9,8 +9,9 @@ from app.content.shared_healing_spells_2014 import cure_wounds_2014
 from app.content.shared_spell_attacks_2014 import produce_flame_2014
 from app.content.shared_spell_saves_2014 import poison_spray_2014
 from app.content.weapon_catalog import build_weapon
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.progression import ProgressionCombatFeatures
+from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.progression import PassiveModifierGrant, ProgressionCombatFeatures
+from app.domain.spell_modifiers import SpellModifierEffect
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +91,29 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
             healing_actions=[cure_wounds_2014(scores.modifier("wisdom"))],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("intelligence", "wisdom")),
             skill_bonuses=_skills(level),
-            progression_features=ProgressionCombatFeatures(),
+            progression_features=ProgressionCombatFeatures(
+                passive_modifier_grants=(
+                    [PassiveModifierGrant(
+                        source_id="natures-ward",
+                        source_name="Nature's Ward",
+                        modifier_effects=[
+                            SpellModifierEffect(
+                                kind="condition-immunity",
+                                condition_id="charmed",
+                                source_creature_types=["elemental", "fey"],
+                            ),
+                            SpellModifierEffect(
+                                kind="condition-immunity",
+                                condition_id="frightened",
+                                source_creature_types=["elemental", "fey"],
+                            ),
+                        ],
+                    )]
+                    if level >= 10 else []
+                ),
+            ),
+            damage_immunities=[DamageType.POISON] if level >= 10 else [],
+            condition_immunities=["poisoned"] if level >= 10 else [],
             resources=_resources(level),
             weapon_masteries=[],
             wearing_heavy_armor=False,
