@@ -22,11 +22,11 @@
     if (restrained) state.active_effect_ids.push("restrained");
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false) {
     if (I().immune(state, "grappled")) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained");
-    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains });
+    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains, source_is_magical: Boolean(sourceIsMagical) });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
   }
@@ -36,7 +36,27 @@
     sync(state);
   }
 
-  const speedIsZero = (state) => state.grapple_sources.length > 0 || Q().speedZero(state);
+  function preventsMagicalSpeedReduction(state) {
+    return (state.timed_effects || []).some((effect) => effect.prevents_magical_speed_reduction);
+  }
+  function speedIsZero(state) {
+    const blockingGrapple = state.grapple_sources.some((source) =>
+      !source.source_is_magical || !preventsMagicalSpeedReduction(state));
+    return blockingGrapple || Q().speedZero(state);
+  }
+  function spendMovementToEscapeNonmagical(state, movementFt) {
+    const costs = (state.timed_effects || [])
+      .map((effect) => effect.nonmagical_grapple_escape_movement_cost_ft || 0)
+      .filter((value) => value > 0);
+    if (!costs.length) return movementFt;
+    const cost = Math.min(...costs);
+    for (const source of [...state.grapple_sources]) {
+      if (source.source_is_magical || movementFt < cost) continue;
+      movementFt -= cost;
+      release(state, source.source_id);
+    }
+    return movementFt;
+  }
   function attackDisadvantage(state, targetId) {
     if (!state.grapple_sources.length) return 0;
     return state.grapple_sources.some((source) => source.source_id === targetId) ? 0 : 1;
@@ -99,5 +119,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, shouldEscape, speedIsZero };
+  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, shouldEscape, speedIsZero, spendMovementToEscapeNonmagical };
 })();
