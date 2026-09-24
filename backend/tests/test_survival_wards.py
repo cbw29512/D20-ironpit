@@ -1,7 +1,7 @@
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage, apply_instant_death
-from app.content.audited_fighter import build_karnok_stoneward_level
+from app.content.fighter_progression import build_karnok_stoneward_level
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import ResourceState
 from app.domain.spells import DefensiveSpellAction
