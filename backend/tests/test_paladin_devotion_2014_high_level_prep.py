@@ -1,3 +1,7 @@
+from app.combat.condition_immunity import condition_is_immune
+from app.combat.defensive_modifier_rules import attacks_against_disadvantage_sources
+from app.combat.state import build_combatant_state
+from app.content.monsters import build_commoner
 from app.content.certified_hero_progressions import CERTIFIED_HERO_PROGRESSIONS
 from app.content.paladin_devotion_2014_combat_profile import build_aurelia_brightshield_2014_combat_profile
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
@@ -107,3 +111,25 @@ def test_level_eighteen_aura_radius_is_prepared() -> None:
         if item.feature_id == "aura-improvements"
     )
     assert audit.automated is True
+
+
+def test_purity_of_spirit_typed_defenses_use_opening_modifier_engine() -> None:
+    state = build_combatant_state(build_aurelia_brightshield_2014(15))
+    fiend = build_commoner().model_copy(update={"ruleset": "2014", "creature_type": "fiend"})
+    humanoid = build_commoner().model_copy(update={"ruleset": "2014", "creature_type": "humanoid"})
+
+    purity = [item for item in state.active_modifiers if item.source_effect_id == "purity-of-spirit"]
+    assert len(purity) == 3
+    assert {item.source_name for item in purity} == {"Purity of Spirit"}
+    assert attacks_against_disadvantage_sources(state, fiend) == 1
+    assert attacks_against_disadvantage_sources(state, humanoid) == 0
+    assert condition_is_immune(state, "charmed", fiend) is True
+    assert condition_is_immune(state, "frightened", fiend) is True
+    assert condition_is_immune(state, "charmed", humanoid) is False
+
+    audit = next(
+        item for item in build_aurelia_brightshield_2014_profile(15).feature_audits
+        if item.feature_id == "purity-of-spirit"
+    )
+    assert audit.automated is False
+    assert "Possession" in (audit.notes or "")
