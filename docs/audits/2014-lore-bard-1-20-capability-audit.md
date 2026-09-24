@@ -4,7 +4,7 @@
 
 Canonical hero: **Lyra Silverstring**, 2014 Bard, College of Lore.
 
-This is a preparation/capability document, not a READY manifest. The source authority is the D&D Basic Rules 2014 / SRD 5.1 Bard and College of Lore. The canonical deterministic 2014 build uses Human + Entertainer, Charisma first, Dexterity second, and one persistent character from level 1 through 20.
+This is a preparation/capability document, not a READY manifest. The source authority is the D&D Basic Rules 2014 / SRD 5.1 Bard and College of Lore. The canonical deterministic 2014 build uses Half-Elf + Noble, Charisma first, Dexterity second, and one persistent character from level 1 through 20.
 
 ## RAW progression
 
@@ -76,11 +76,11 @@ Use generic initiative resource-refill semantics: when initiative is rolled and 
 
 ## Initial deterministic build decisions
 
-- Species: Human (2014 standard human, +1 all abilities).
-- Background: Entertainer.
+- Species: Half-Elf (2014: +2 Charisma, +1 Dexterity, +1 Constitution).
+- Background: Noble.
 - Starting ability array before species: CHA 15, DEX 14, CON 13, WIS 12, INT 10, STR 8.
 - Starting equipment: Rapier, Entertainer's Pack, lute, leather armor, dagger.
-- ASI plan: level 4 +2 CHA; level 8 +2 DEX; level 12 +2 CON; level 16 +2 DEX; level 19 +2 CON.
+- ASI plan: level 4 +2 CHA; level 8 +1 CHA/+1 DEX; level 12 +2 DEX; level 16 +2 CON; level 19 +2 DEX.
 - This plan is persistent and may only change through an explicit audited build decision.
 
 ## Implementation order
