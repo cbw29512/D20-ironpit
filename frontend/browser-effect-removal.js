@@ -51,6 +51,11 @@
       if (action.expendsSpellSlot && !P().slotSpellAvailable(remover.state, turnKey)) continue;
       if (action.resourceId && (remover.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) continue;
       const candidates = effects(remover, setup, action);
+      if (action.targetMode === "ally" || action.targetMode === "self_or_ally") {
+        const opposing = candidates.filter((item) => item.source.side !== remover.side);
+        if (opposing.length) return { action, effect: opposing[0] };
+        continue;
+      }
       if (candidates.length) return { action, effect: candidates[0] };
     }
     return null;
@@ -71,6 +76,7 @@
     }
     let check = null, succeeded = true, dc = null;
     if (effect.spellLevel > (action.autoRemoveMaxLevel ?? 3)) {
+      if (!action.castingAbility) throw new Error("Effect-removal ability check requires a casting ability.");
       const score = remover.state.template.ability_scores?.[action.castingAbility];
       if (!Number.isInteger(score)) throw new Error("Effect removal requires a certified casting ability.");
       dc = 10 + effect.spellLevel;
