@@ -10,6 +10,11 @@
   const swarm = (state) => state.template.traits?.includes("swarm");
   const slotHeal = (action) => Boolean(action.resourceId?.startsWith("spell-slot-"));
 
+  function healingMaximized(healer, target) {
+    return Boolean(healer.state.template.outgoing_healing_dice_maximizer)
+      || Boolean(window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state));
+  }
+
   function resourceAvailable(member, action, turnKey = null) {
     if (!action.resourceId) return true;
     if (slotHeal(action) && (!turnKey || !C().slotSpellAvailable(member.state, turnKey))) return false;
@@ -117,6 +122,6 @@
 
   window.IRON_PIT_BROWSER_HEALING_POLICY = {
     areaTargetsFit, bloodied, chooseAction, chooseTarget, groupTargets,
-    resourceAvailable, slotHeal, swarm, targetAllowed, worthwhileTargets,
+    healingMaximized, resourceAvailable, slotHeal, swarm, targetAllowed, worthwhileTargets,
   };
 })();
