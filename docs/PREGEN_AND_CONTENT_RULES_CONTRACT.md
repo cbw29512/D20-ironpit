@@ -115,6 +115,18 @@ This rule is symmetric: hero mechanics may power monsters, and monster mechanics
 
 The source content record/card supplies the source-specific facts: exact ability name for logs/UI, DC or DC formula, save/check ability, attack parameters, damage, range/area, duration, timing, resource/recharge limits, and other printed qualifiers. Universal mechanics consume those parameters. A condition such as Prone has one mechanical implementation regardless of source.
 
+## 6A. Pregen batch development cadence
+
+To reduce repeated full-suite cost while preserving certification rigor, canonical pregen work may be prepared and implemented in batches.
+
+- A batch branch may stage multiple classes/progressions before opening a pull request.
+- Intermediate batch commits use targeted smoke/regression checks for the mechanics actually changed; they do not require the full repository certification suite after every level or every class.
+- Preparation may include legal level-by-level progression data, source references, spell/resource tables, combat-feature inventories, blocker classification, and mappings to existing universal primitives before the class is wired into READY certification.
+- A prepared class is not READY and must not be added to the public certified roster merely because its data skeleton exists.
+- Before the batch is merged, each class must still satisfy the full mandatory intake pipeline, Python/browser parity, ruleset isolation, generated-artifact parity, and permanent regression requirements.
+- Full 2014 hero certification is a pull-request/mainline gate for the completed batch, not a required branch-push gate for every incremental implementation commit.
+- If a targeted check exposes a universal-engine defect or ambiguous RAW behavior, stop that mechanic, record/classify the blocker, and continue preparing other independent classes rather than repeatedly running the entire suite.
+
 ## 7. Blocker classification
 
 Before writing new engine code, classify a blocked monster or pregen as exactly one of:
