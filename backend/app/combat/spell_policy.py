@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
 
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
@@ -9,6 +10,8 @@ from app.combat.spell_area import AreaPlacement, best_area_placement
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -38,8 +41,13 @@ def _slot_level(caster: EncounterCombatant, action: SpellSaveAction, turn_key: s
             if slot_level >= action.level:
                 available.append(slot_level)
         return min(available) if available else None
-    except Exception:
-        raise
+    except Exception as exc:
+        logger.exception(
+            "Failed to select a legal slot for %s casting %s.",
+            caster.combatant_id,
+            action.id,
+        )
+        raise RuntimeError("Spell slot selection could not be resolved.") from exc
 
 
 def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, action: SpellSaveAction):
