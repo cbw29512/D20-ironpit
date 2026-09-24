@@ -106,6 +106,54 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     "movement semantics are not yet fully automated; level 13 therefore remains uncertified."
                 ),
             ))
+        if level >= 14:
+            audits.append(_audit(
+                "cleansing-touch", "Cleansing Touch", "class", automated=False,
+                notes=(
+                    "The Charisma-modifier use resource is present in the prepared runtime. "
+                    "The touched-creature no-check spell-ending action still requires generic effect-removal binding."
+                ),
+            ))
+        if level >= 15:
+            audits.append(_audit(
+                "purity-of-spirit", "Purity of Spirit", "subclass", automated=False,
+                notes=(
+                    "Must compose the existing Protection from Evil and Good typed defenses as an always-on "
+                    "self effect; possession prevention/termination remains to be reconciled generically."
+                ),
+            ))
+        if level >= 16:
+            audits.append(_audit(
+                "ability-score-improvement-16", "Ability Score Improvement", "class",
+                notes="Prepared persistent choice: +2 Charisma.",
+            ))
+        if level >= 17:
+            audits.append(_audit(
+                "devotion-oath-spells-5", "Oath of Devotion 5th-level Spells", "subclass",
+                automated=False,
+                notes=(
+                    "Commune is noncombat. Flame Strike still needs one-save multi-component fire/radiant "
+                    "save-damage binding before this tranche can certify."
+                ),
+            ))
+        if level >= 18:
+            audits.append(_audit(
+                "aura-improvements", "Aura Improvements", "class", automated=False,
+                notes="Prepared breakpoint only; shared Paladin aura radius must become data-driven 30 feet.",
+            ))
+        if level >= 19:
+            audits.append(_audit(
+                "ability-score-improvement-19", "Ability Score Improvement", "class",
+                notes="Prepared persistent choice: +1 Charisma and +1 Constitution.",
+            ))
+        if level >= 20:
+            audits.append(_audit(
+                "holy-nimbus", "Holy Nimbus", "subclass", automated=False,
+                notes=(
+                    "The 1/long-rest resource is present. Activation, timed 30-foot start-turn radiant damage, "
+                    "and fiend/undead spell-save Advantage still require universal composition."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)
