@@ -45,6 +45,7 @@ jobs:
             backend/tests/test_cleric_life_2014_level13.py \
             backend/tests/test_cleric_life_2014_level14.py \
             backend/tests/test_cleric_life_2014_level15.py \
+            backend/tests/test_cleric_life_2014_level16.py \
             backend/tests/test_once_per_turn_hit_damage.py \
             backend/tests/test_healing_creature_type_exclusions.py \
             backend/tests/test_group_healing_area.py \
