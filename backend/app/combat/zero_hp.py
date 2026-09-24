@@ -4,49 +4,20 @@ import logging
 from typing import Literal
 
 from app.combat.concentration import resolve_concentration_damage
-from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.survival_wards import consume_survival_ward
 from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
+from app.combat.zero_hp_state import damage_at_zero, mark_dead, mark_unconscious, reset_death_saves
+from app.combat.hit_point_recovery import restore_hit_points
 from app.domain.models import CombatantState, DamageType
-from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
     "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude", "survival_save", "survival_ward",
 ]
-DODGE_EFFECT_ID = "dodge"
-PRONE_EFFECT_ID = "prone"
-
-
-def reset_death_saves(state: CombatantState) -> None:
-    state.death_save_successes = 0
-    state.death_save_failures = 0
-
-
-def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
-    state.current_hp = 0
-    state.is_alive = False
-    state.is_dead = True
-    state.is_unconscious = False
-    state.is_stable = False
-    state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
-    return "dead"
-
-
-def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
-    state.is_alive = True
-    state.is_unconscious = True
-    state.is_stable = False
-    state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
-    if not condition_is_immune(state, PRONE_EFFECT_ID) and PRONE_EFFECT_ID not in state.active_effect_ids:
-        state.active_effect_ids.append(PRONE_EFFECT_ID)
-    return "unconscious"
-
-
 def _after_temporary_hp(state: CombatantState, amount: int) -> int:
     absorbed = min(state.temporary_hp, amount)
     state.temporary_hp -= absorbed
@@ -73,33 +44,6 @@ def _finish_damage(
     return outcome
 
 
-def restore_hit_points(state: CombatantState, amount: int) -> int:
-    """Restore true HP; ordinary healing cannot restore a dead creature or a Swarm."""
-    if amount < 0:
-        raise ValueError("Healing cannot be negative.")
-    if state.is_dead or amount == 0 or CombatTrait.SWARM in state.template.combat_traits:
-        return 0
-    before = state.current_hp
-    state.current_hp = min(effective_max_hp(state), before + amount)
-    healed = state.current_hp - before
-    if healed > 0:
-        state.is_alive = True
-        state.is_unconscious = False
-        state.is_stable = False
-        reset_death_saves(state)
-    return healed
-
-
-def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
-    if state.template.kind == "monster" or incoming >= effective_max_hp(state):
-        return _mark_dead(state)
-    state.is_stable = False
-    state.death_save_failures = min(3, state.death_save_failures + (2 if critical else 1))
-    if state.death_save_failures >= 3:
-        return _mark_dead(state)
-    return _mark_unconscious(state)
-
-
 def reduce_to_zero_hit_points(
     state: CombatantState,
     *,
@@ -114,13 +58,13 @@ def reduce_to_zero_hit_points(
         if consume_survival_ward(state):
             outcome = "survival_ward"
         elif state.template.kind == "monster":
-            outcome = _mark_dead(state)
+            outcome = mark_dead(state)
         elif resolve_effect_bound_survival_save(state, dice):
             outcome = "survival_save"
         elif use_relentless_endurance(state, 0):
             outcome = "relentless_endurance"
         else:
-            outcome = _mark_unconscious(state)
+            outcome = mark_unconscious(state)
         if state.is_dead or state.is_unconscious:
             from app.combat.concentration import end_concentration_if_incapacitated
             end_concentration_if_incapacitated(state, affected_states)
@@ -152,7 +96,7 @@ def apply_damage(
         types = damage_types or set()
         amount = _after_temporary_hp(state, amount)
         if state.current_hp == 0:
-            return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
+            return _finish_damage(state, damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
         if amount == 0:
             return _finish_damage(state, "damaged", incoming, dice, affected_states)
 
@@ -167,16 +111,16 @@ def apply_damage(
         ):
             return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
         if state.template.kind == "monster":
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+            return _finish_damage(state, mark_dead(state), incoming, dice, affected_states)
 
         remaining_damage = max(0, amount - hp_before)
         if remaining_damage >= effective_max_hp(state):
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+            return _finish_damage(state, mark_dead(state), incoming, dice, affected_states)
         if resolve_effect_bound_survival_save(state, dice):
             return _finish_damage(state, "survival_save", incoming, dice, affected_states)
         if use_relentless_endurance(state, remaining_damage):
             return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
-        return _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
+        return _finish_damage(state, mark_unconscious(state), incoming, dice, affected_states)
     except ValueError:
         raise
     except Exception as exc:
@@ -195,7 +139,7 @@ def apply_instant_death(
             return "unchanged"
         if consume_survival_ward(state, nondamage_instant_death=True):
             return "survival_ward"
-        outcome = _mark_dead(state)
+        outcome = mark_dead(state)
         if state.concentration is not None:
             from app.combat.concentration import end_concentration_if_incapacitated
             end_concentration_if_incapacitated(state, affected_states)
