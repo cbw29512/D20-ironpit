@@ -42,8 +42,13 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             audits.append(_audit("elemental-affinity", "Elemental Affinity", "subclass", automated=False,
                                  notes="The one-roll fire spell damage bonus is bound generically; resource-backed fire resistance activation remains pending."))
         if level >= 14:
-            audits.append(_audit("dragon-wings", "Dragon Wings", "subclass", automated=False,
-                                 notes="Needs generic bonus-action movement-mode activation; Pit flight remains horizontal."))
+            audits.append(_audit(
+                "dragon-wings", "Dragon Wings", "subclass",
+                notes=(
+                    "Nyra's canonical restored combat card begins with her indefinitely sustainable wings manifested. "
+                    "The movement fingerprint remains walk 30 / fly 60; standard Iron Pit flight is horizontal."
+                ),
+            ))
         if level >= 18:
             audits.append(_audit("draconic-presence", "Draconic Presence", "subclass", automated=False,
                                  notes="Needs generic timed hostile aura with start-turn save, condition choice, concentration, and immunity-on-success."))
