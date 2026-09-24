@@ -169,3 +169,60 @@ def test_dispel_magic_auto_removes_low_level_effect_and_checks_higher_level_effe
     failed = resolve_effect_removal(1, 1, remover2, setup2, *choice2, FixedDiceProvider([1]), "1:aurelia-2")
     assert failed.check_dc == 14 and failed.check_succeeded is False
     assert high.state.active_modifiers
+
+
+
+def test_cleansing_touch_reuses_effect_removal_without_roll_or_spell_slot() -> None:
+    remover = _member(build_aurelia_brightshield_2014(14), "aurelia", "heroes", 0)
+    target = _member(build_aurelia_brightshield_2014(3), "target", "heroes", 5)
+    sanctuary = _spell(target, "sanctuary")
+    resolve_defensive_spell(
+        1, target, [target], sanctuary, 1, _slot(target, 1),
+        [remover.state, target.state],
+    )
+    enemy = _member(
+        build_commoner().model_copy(update={"ruleset": "2014"}),
+        "enemy", "monsters", 20,
+    )
+    setup = EncounterSetup(
+        heroes=[remover, target], monsters=[enemy], hero_total_levels=17,
+        monster_total_cr="0", ruleset="2014",
+    )
+    before_level3 = _slot(remover, 3).current_uses
+    cleansing = next(item for item in remover.state.resources if item.id == "cleansing-touch")
+    assert cleansing.current_uses == 3
+
+    choice = choose_effect_removal_action(remover, setup, "1:aurelia")
+
+    assert choice is not None
+    action, effect = choice
+    assert action.id == "cleansing-touch"
+    assert action.level == 0
+    assert action.range_ft == 5
+    assert action.auto_remove_max_level == 9
+    event = resolve_effect_removal(
+        2, 1, remover, setup, action, effect, FixedDiceProvider([1]), "1:aurelia",
+    )
+
+    assert event.ability_check_roll is None
+    assert event.check_dc is None
+    assert event.removed_condition_ids == ["sanctuary"]
+    assert cleansing.current_uses == 2
+    assert _slot(remover, 3).current_uses == before_level3
+    assert remover.state.action_available is False
+    assert not target.state.active_modifiers
+
+
+
+def test_level14_divine_favor_is_existing_bonus_damage_composition() -> None:
+    _, paladin, _ = _setup(14)
+    spell = _spell(paladin, "divine-favor")
+
+    assert spell.level == 1
+    assert spell.action_cost == "bonus_action"
+    assert spell.concentration is True
+    assert spell.target_policy == "self"
+    assert len(spell.modifier_effects) == 1
+    effect = spell.modifier_effects[0]
+    assert effect.kind == "bonus-damage"
+    assert (effect.dice_count, effect.dice_size, effect.damage_type) == (1, 4, "radiant")

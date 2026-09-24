@@ -37,7 +37,7 @@ def build_spell_modifier(
         dice_count=effect.dice_count,
         dice_size=effect.dice_size,
         damage_type=DamageType(effect.damage_type) if effect.damage_type else None,
-        target_id=target_id,
+        target_id=None if effect.kind == "bonus-damage" and target_id == source_id else target_id,
         condition_id=effect.condition_id,
         debuff_counter=effect.debuff_counter,
         replacement_hp=effect.replacement_hp,

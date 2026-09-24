@@ -47,6 +47,7 @@ _PREPARED = (
     # introducing spell-specific engine behavior, and supplies the ninth prepared
     # spell required by Aurelia's level-12 CHA modifier + half-level preparation count.
     _spell("magic-weapon", "Magic Weapon", "buff", "modifier-stack", "concentration", level=2, min_level=5),
+    _spell("divine-favor", "Divine Favor", "buff", "modifier-stack", "bonus-damage", "concentration"),
 )
 
 _OATH = (

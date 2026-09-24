@@ -151,6 +151,7 @@ jobs:
           node frontend/browser-monster-saves.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-debuff-counters.test.cjs
+          node frontend/browser-bonus-damage-modifiers.test.cjs
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-condition-lifecycle.test.cjs
@@ -178,6 +179,7 @@ jobs:
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-paladin-oath-spells-2014.test.cjs
           node frontend/browser-2014-paladin-level13.test.cjs
+          node frontend/browser-2014-paladin-level14.test.cjs
           node frontend/browser-2014-paladin-entrypoints.test.cjs
           node frontend/browser-spell-slot-healing.test.cjs
           node frontend/browser-ongoing-spell-control.test.cjs

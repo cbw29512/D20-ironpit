@@ -8,6 +8,7 @@
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { bonusDamage: () => [] };
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014 || {
     applyDeflectMissiles: (_defender, _attack, components) => ({ components, used: false, reduction: 0 }),
   };
@@ -69,6 +70,21 @@
     }
   }
 
+  function modifierDamageComponents(attacker, targetId, critical) {
+    return M().bonusDamage(attacker, targetId).map((modifier) => {
+      const count = modifier.dice_count * (critical ? 2 : 1);
+      const rolls = D().rollMany(count, modifier.dice_size);
+      return {
+        source: modifier.source_name || modifier.source_effect_id,
+        damage_type: modifier.damage_type,
+        notation: `${count}d${modifier.dice_size}+0`,
+        rolls,
+        modifier: 0,
+        total: rolls.reduce((sum, roll) => sum + roll, 0),
+      };
+    });
+  }
+
   function aggregate(components) {
     return {
       notation: components.map((part) => part.notation).join(" + "),
@@ -84,7 +100,10 @@
       attacker, attack, critical, mode, turnKey, options.bonusDamage || null,
       defender, Boolean(options.sneakAttackAllyAvailable),
     );
-    const rolled = [...base.components];
+    const rolled = [
+      ...base.components,
+      ...modifierDamageComponents(attacker, options.targetId || null, critical),
+    ];
     const smite = P()?.divineSmiteComponent(attacker, defender, attack, critical) || null;
     if (smite) rolled.push(smite);
     const saveDamage = resolveSaveDamage(defender, attack);
