@@ -13,6 +13,7 @@ from app.domain.persistent_hazards import PersistentHazardAction
 from app.domain.progression import PassiveModifierGrant
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect, SpellSaveAction
+from app.domain.timed_auras import TimedAuraAction
 
 _PROTECTED_TYPES = ["aberration", "celestial", "elemental", "fey", "fiend", "undead"]
 _SOURCE = "D&D SRD 5.1 (2014): Paladin and Oath of Devotion spells"
@@ -239,4 +240,33 @@ def build_paladin_spell_save_actions_2014(
         return [flame_strike_2014(8 + proficiency_bonus(level) + charisma_modifier)]
     except Exception:
         logger.exception("Failed to compile 2014 Paladin save spells at level %s", level)
+        raise
+
+
+
+def holy_nimbus_2014() -> TimedAuraAction:
+    """Bind Holy Nimbus to the universal timed-aura capability."""
+    try:
+        return TimedAuraAction(
+            id="holy-nimbus",
+            name="Holy Nimbus",
+            action_cost="action",
+            resource_id="holy-nimbus",
+            resource_cost=1,
+            duration_rounds=10,
+            radius_ft=30,
+            start_turn_fixed_damage=10,
+            damage_type="radiant",
+            saving_throw_advantage_abilities=[
+                "strength", "dexterity", "constitution",
+                "intelligence", "wisdom", "charisma",
+            ],
+            saving_throw_advantage_source_creature_types=["fiend", "undead"],
+            saving_throw_advantage_requires_spell=True,
+            priority=90,
+            animation="holy-nimbus",
+            source="D&D SRD 5.1 (2014): Oath of Devotion — Holy Nimbus",
+        )
+    except Exception:
+        logger.exception("Failed to compile 2014 Holy Nimbus")
         raise
