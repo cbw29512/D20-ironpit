@@ -66,9 +66,11 @@ def test_level_nineteen_runtime_recalculates_weapon_math_without_new_engine_beha
     assert_character_resources_raw_ready(hero, profile, combat)
 
 
-def test_level_nineteen_spell_package_expands_prepared_count_legally() -> None:
+def test_level_nineteen_spell_package_expands_prepared_and_cantrip_counts_legally() -> None:
     package = build_cleric_2014_spell_package(19, 5)
 
+    assert len(package.cantrips) == 5
+    assert package.cantrips[-1].id == "light"
     assert len(package.spells) == 24
     assert package.spells[-1].id == "heal"
     assert package.casting_ability == "wisdom"
