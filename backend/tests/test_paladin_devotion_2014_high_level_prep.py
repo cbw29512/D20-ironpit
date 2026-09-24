@@ -65,15 +65,13 @@ def test_aurelia_prepared_high_level_slots_and_resources_match_2014_progression(
             assert "holy-nimbus" not in resources
 
 
-def test_high_level_preparation_keeps_unfinished_features_explicitly_uncertified() -> None:
-    expected_blocked = {
-        20: "holy-nimbus",
-    }
-    for level, feature_id in expected_blocked.items():
-        profile = build_aurelia_brightshield_2014_profile(level)
-        audit = next(item for item in profile.feature_audits if item.feature_id == feature_id)
-        assert audit.combat_relevant is True
-        assert audit.automated is False
+def test_high_level_preparation_keeps_certification_boundary_separate_from_preparation() -> None:
+    holy_nimbus = next(
+        item for item in build_aurelia_brightshield_2014_profile(20).feature_audits
+        if item.feature_id == "holy-nimbus"
+    )
+    assert holy_nimbus.combat_relevant is True
+    assert holy_nimbus.automated is True
 
     certified = next(
         item for item in CERTIFIED_HERO_PROGRESSIONS
@@ -152,3 +150,18 @@ def test_level_seventeen_flame_strike_uses_one_save_with_two_typed_components() 
         if item.feature_id == "devotion-oath-spells-5"
     )
     assert audit.automated is True
+
+
+
+def test_level_twenty_holy_nimbus_uses_universal_timed_aura_schema() -> None:
+    runtime = build_aurelia_brightshield_2014(20)
+    assert len(runtime.timed_aura_actions) == 1
+    aura = runtime.timed_aura_actions[0]
+    assert aura.id == "holy-nimbus"
+    assert aura.resource_id == "holy-nimbus"
+    assert aura.duration_rounds == 10
+    assert aura.radius_ft == 30
+    assert aura.start_turn_fixed_damage == 10
+    assert aura.damage_type == "radiant"
+    assert set(aura.saving_throw_advantage_source_creature_types) == {"fiend", "undead"}
+    assert aura.saving_throw_advantage_requires_spell is True
