@@ -83,6 +83,8 @@ Content compiles into reusable combat primitives such as:
 
 If a needed mechanic is missing, add one reusable primitive whenever possible rather than adding a class-name, hero-name, monster-name, or stat-block-name special case.
 
+Summon/conjure/create-a-separate-combat-entity options are currently arena-unavailable by Iron Pit contract. Preserve them in RAW/source audits, never silently rename or replace mandatory source features, and do not let an otherwise complete pregen or monster remain blocked solely because its summon option is unavailable. Prepared casters may select another legal non-summoning combat spell when RAW allows preparation changes.
+
 ## 6. Mandatory content intake pipeline
 
 Every monster and pregen must pass this sequence before public READY status:
