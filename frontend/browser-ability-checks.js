@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const BD = () => window.IRON_PIT_BROWSER_FAILED_D20_BONUS_DIE;
   function applyMinimum(state, ability, roll) {
     try {
       const rules = (state.template.ability_check_minimums || []).filter((rule) => rule.ability === ability);
@@ -29,6 +30,13 @@
   function resolve(state, ability, roll, dc) {
     try {
       let revised = applyMinimum(state, ability, roll);
+      const bonusGrants = state.template.failed_d20_bonus_die_grants || [];
+      const bonusEligible = bonusGrants.some((grant) =>
+        (grant.test_kinds || []).includes("ability_check"));
+      if (bonusEligible && revised.total < dc && !BD()) {
+        throw new Error("Failed-D20 bonus-die runtime is not loaded for a declared ability-check capability.");
+      }
+      revised = BD()?.apply(state, revised, dc, "ability_check").roll || revised;
       const grants = state.template.failed_d20_test_override_grants || [];
       const eligible = grants.some((grant) => (grant.test_kinds || []).includes("ability_check"));
       if (eligible && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
