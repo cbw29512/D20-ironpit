@@ -9,6 +9,7 @@ from app.content.shared_healing_spells_2014 import cure_wounds_2014
 from app.content.shared_spell_attacks_2014 import produce_flame_2014
 from app.content.shared_spell_saves_2014 import poison_spray_2014
 from app.content.weapon_catalog import build_weapon
+from app.domain.movement import DifficultTerrainBypassGrant
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import PassiveModifierGrant, ProgressionCombatFeatures
 from app.domain.spell_modifiers import SpellModifierEffect
@@ -92,6 +93,14 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("intelligence", "wisdom")),
             skill_bonuses=_skills(level),
             progression_features=ProgressionCombatFeatures(
+                difficult_terrain_bypass_grants=(
+                    [DifficultTerrainBypassGrant(
+                        source_id="lands-stride",
+                        source_name="Land's Stride",
+                        scope="nonmagical",
+                    )]
+                    if level >= 6 else []
+                ),
                 passive_modifier_grants=(
                     [PassiveModifierGrant(
                         source_id="natures-ward",
