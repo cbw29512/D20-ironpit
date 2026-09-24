@@ -9,6 +9,7 @@
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
+  const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { prevented: () => false };
 
   function validate(item) {
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
@@ -101,8 +102,17 @@
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
-  const effectiveSpeed = (state) => X()?.effectiveSpeed(state, Math.max(0, state.template.speed_ft + flat(state, "speed")))
-    ?? Math.max(0, state.template.speed_ft + flat(state, "speed"));
+  const effectiveSpeed = (state) => {
+    const speedDelta = (state.active_modifiers || []).filter((item) => item.kind === "speed")
+      .reduce((sum, item) => sum + (
+        (item.flat_bonus || 0) < 0
+        && C().prevented(state, "speed-reduction", { sourceIsMagical: Boolean(item.source_is_magical) })
+          ? 0
+          : (item.flat_bonus || 0)
+      ), 0);
+    const base = Math.max(0, state.template.speed_ft + speedDelta);
+    return X()?.effectiveSpeed(state, base) ?? base;
+  };
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
