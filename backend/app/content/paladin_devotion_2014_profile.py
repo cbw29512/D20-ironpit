@@ -25,7 +25,14 @@ def _species() -> list[AbilityIncrease]:
 
 
 def _advancements(level: int) -> list[AbilityIncrease]:
-    milestones = (\n        (4, "strength", 2),\n        (8, "charisma", 2),\n        (12, "strength", 2),\n        (16, "charisma", 2),\n        (19, "charisma", 1),\n        (19, "constitution", 1),\n    )
+    milestones = (
+        (4, "strength", 2),
+        (8, "charisma", 2),
+        (12, "strength", 2),
+        (16, "charisma", 2),
+        (19, "charisma", 1),
+        (19, "constitution", 1),
+    )
     return [
         AbilityIncrease(ability=ability, amount=amount)
         for required, ability, amount in milestones
