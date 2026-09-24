@@ -12,6 +12,7 @@ from app.content.paladin_devotion_2014_spells import (
     build_paladin_persistent_hazard_actions_2014,
     cleansing_touch_2014,
     purity_of_spirit_2014,
+    build_paladin_spell_save_actions_2014,
 )
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, ResourceDefinition, VisualLoadout
@@ -104,6 +105,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
             alternate_weapon_attacks=[javelin],
             attack_action=build_extra_attack(level),
             defensive_spell_actions=build_paladin_defensive_spells_2014(level, charisma_modifier),
+            spell_save_actions=build_paladin_spell_save_actions_2014(level, charisma_modifier),
             persistent_hazard_actions=build_paladin_persistent_hazard_actions_2014(level, charisma_modifier),
             healing_actions=build_paladin_healing_actions_2014(level, charisma_modifier),
             condition_removal_actions=build_paladin_condition_removal_actions_2014(level),
