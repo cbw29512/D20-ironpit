@@ -2,6 +2,7 @@
   "use strict";
 
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
   const POISONED = "poisoned";
   const POISON_RECOVERY_DC = 10;
 
@@ -30,8 +31,9 @@
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
+      source_is_magical: Boolean(options.sourceIsMagical),
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
-      owned_magical_condition_immunities: [...(options.ownedMagicalConditionImmunities || [])],
+      owned_debuff_counters: [...(options.ownedDebuffCounters || [])],
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
@@ -52,6 +54,19 @@
     const removed = [];
     for (const item of grouped) if (removeEffect(state, item)) removed.push(item.effect_id);
     return removed;
+  }
+
+  function resolveMovementCounters(state) {
+    const resolved = [];
+    for (const effect of [...(state.timed_effects || [])]) {
+      const cost = C().movementCost(state, effect.effect_id, { sourceIsMagical: Boolean(effect.source_is_magical) });
+      if (cost == null || state.movement_remaining_ft < cost) continue;
+      const removed = removeGroup(state, effect);
+      if (!removed.length) continue;
+      state.movement_remaining_ft -= cost;
+      for (const debuffId of removed) resolved.push({ debuffId, sourceId: effect.source_id, movementCost: cost });
+    }
+    return resolved;
   }
 
   function ownsDamageResistance(state, damageType) {
@@ -88,5 +103,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, ownsDamageResistance, removeEffect, removeGroup };
+  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, ownsDamageResistance, removeEffect, removeGroup, resolveMovementCounters };
 })();
