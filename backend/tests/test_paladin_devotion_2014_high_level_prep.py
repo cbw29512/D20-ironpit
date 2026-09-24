@@ -51,7 +51,10 @@ def test_aurelia_prepared_high_level_slots_and_resources_match_2014_progression(
         assert resources["lay-on-hands"] == 5 * level
         assert resources["channel-divinity"] == 1
         assert tuple(resources[f"spell-slot-{index}"] for index in range(1, len(slots) + 1)) == slots
-        assert resources["cleansing-touch"] == (3 if level < 16 else 4 if level < 19 else 5)
+        if level >= 14:
+            assert resources["cleansing-touch"] == (3 if level < 16 else 4 if level < 19 else 5)
+        else:
+            assert "cleansing-touch" not in resources
         if level == 20:
             assert resources["holy-nimbus"] == 1
         else:
