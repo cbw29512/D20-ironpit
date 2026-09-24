@@ -48,6 +48,8 @@ _PREPARED = (
     # spell required by Aurelia's level-12 CHA modifier + half-level preparation count.
     _spell("magic-weapon", "Magic Weapon", "buff", "modifier-stack", "concentration", level=2, min_level=5),
     _spell("divine-favor", "Divine Favor", "buff", "modifier-stack", "bonus-damage", "concentration"),
+    _spell("find-steed", "Find Steed", "utility", "arena-unavailable-summon", level=2, min_level=5),
+    _spell("create-food-and-water", "Create Food and Water", "utility", "arena-out-of-scope", level=3, min_level=9),
 )
 
 _OATH = (
