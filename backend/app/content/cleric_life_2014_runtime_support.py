@@ -6,6 +6,7 @@ from app.content.character_math import proficiency_bonus
 from app.content.level_resources import cleric_2014_channel_divinity_uses, cleric_2014_divine_intervention_uses
 from app.content.spell_slot_progression import spell_slot_resources
 from app.domain.character_builds import AbilityScores
+from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.models import DamageType, ResourceDefinition, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant, SlotHealingSelfRider
@@ -112,7 +113,7 @@ def build_cleric_resources_2014(level: int) -> list[ResourceDefinition]:
 def build_cleric_progression_2014(level: int) -> ProgressionCombatFeatures:
     try:
         return ProgressionCombatFeatures(
-            turning_failure_destroy_max_cr=("3" if level >= 14 else "2" if level >= 11 else "1" if level >= 8 else "1/2" if level >= 5 else None),
+            turning_failure_destroy_max_cr=("4" if level >= 17 else "3" if level >= 14 else "2" if level >= 11 else "1" if level >= 8 else "1/2" if level >= 5 else None),
             slot_healing_other_self_rider=(
                 SlotHealingSelfRider(
                     source_id="blessed-healer",
@@ -120,6 +121,13 @@ def build_cleric_progression_2014(level: int) -> ProgressionCombatFeatures:
                     per_slot_level=1,
                 )
                 if level >= 6 else None
+            ),
+            outgoing_healing_dice_maximizer=(
+                OutgoingHealingDiceMaximizer(
+                    source_id="supreme-healing",
+                    source_name="Supreme Healing",
+                )
+                if level >= 17 else None
             ),
             once_per_turn_weapon_hit_damage_rider=(
                 OncePerTurnWeaponHitDamageRider(
