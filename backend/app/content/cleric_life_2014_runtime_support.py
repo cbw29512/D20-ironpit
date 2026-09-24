@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import proficiency_bonus
-from app.content.level_resources import cleric_2014_channel_divinity_uses
+from app.content.level_resources import cleric_2014_channel_divinity_uses, cleric_2014_divine_intervention_uses
 from app.content.spell_slot_progression import spell_slot_resources
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
@@ -92,6 +92,15 @@ def build_cleric_resources_2014(level: int) -> list[ResourceDefinition]:
                     id="channel-divinity",
                     name="Channel Divinity",
                     max_uses=channel_uses,
+                )
+            )
+        intervention_uses = cleric_2014_divine_intervention_uses(level)
+        if intervention_uses:
+            resources.append(
+                ResourceDefinition(
+                    id="divine-intervention",
+                    name="Divine Intervention",
+                    max_uses=intervention_uses,
                 )
             )
         return resources
