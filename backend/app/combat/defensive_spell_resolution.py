@@ -71,7 +71,13 @@ def resolve_defensive_spell(
             typed = DamageType(damage_type)
             if typed not in target.state.temporary_damage_resistances:
                 target.state.temporary_damage_resistances.append(typed)
-        if spell.survival_ward is not None:
+        if (
+            spell.survival_ward is not None
+            or spell.owned_magical_condition_immunities
+            or spell.difficult_terrain_bypass_scope is not None
+            or spell.prevents_magical_speed_reduction
+            or spell.nonmagical_grapple_escape_movement_cost_ft
+        ):
             apply_timed_condition(
                 target.state,
                 f"survival-ward:{spell.id}",
@@ -81,8 +87,12 @@ def resolve_defensive_spell(
                 expires_round=1 + spell.duration_minutes * 10,
                 expires_at_start_of_source_turn=False,
                 expiry_timing="target_turn_start",
-                zero_hp_replacement_hp=spell.survival_ward.replacement_hp,
-                prevents_nondamage_instant_death=spell.survival_ward.prevents_nondamage_instant_death,
+                owned_magical_condition_immunities=list(spell.owned_magical_condition_immunities),
+                difficult_terrain_bypass_scope=spell.difficult_terrain_bypass_scope,
+                prevents_magical_speed_reduction=spell.prevents_magical_speed_reduction,
+                nonmagical_grapple_escape_movement_cost_ft=spell.nonmagical_grapple_escape_movement_cost_ft,
+                zero_hp_replacement_hp=spell.survival_ward.replacement_hp if spell.survival_ward is not None else 0,
+                prevents_nondamage_instant_death=spell.survival_ward.prevents_nondamage_instant_death if spell.survival_ward is not None else False,
                 use_default_poison_recovery=False,
             )
         if not spell.concentration and spell.id not in target.state.active_buff_effect_ids:
@@ -101,6 +111,14 @@ def resolve_defensive_spell(
         details.append("resistance to " + ", ".join(spell.damage_resistances))
     if spell.survival_ward is not None:
         details.append(f"survival ward to {spell.survival_ward.replacement_hp} HP")
+    if spell.owned_magical_condition_immunities:
+        details.append("magical condition prevention")
+    if spell.difficult_terrain_bypass_scope is not None:
+        details.append("difficult terrain bypass")
+    if spell.prevents_magical_speed_reduction:
+        details.append("magical Speed reduction prevention")
+    if spell.nonmagical_grapple_escape_movement_cost_ft:
+        details.append(f"{spell.nonmagical_grapple_escape_movement_cost_ft}-ft nonmagical grapple escape")
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
     if spell.concentration:
         details.append("Concentration")
