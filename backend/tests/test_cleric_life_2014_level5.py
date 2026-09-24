@@ -2,7 +2,7 @@ from app.combat.cleric_channel_divinity import resolve_turn_undead
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.build_audit import assert_character_build_raw_ready
-from app.content.capability_registry import build_combatant_from_capabilities
+from app.content.roster import build_arena_roster
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.cleric_2014_spell_package import build_cleric_2014_spell_package
 from app.content.cleric_life_2014_combat_profile import build_seraphine_2014_combat_profile
@@ -10,6 +10,13 @@ from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014
 from app.content.cleric_life_2014_runtime import build_seraphine_dawnshield_2014
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+
+
+def _monster_template(template_id: str):
+    return next(
+        item for item in build_arena_roster("2014").monsters
+        if item.id == template_id
+    )
 
 
 def _member(template, combatant_id: str, side: str, position: int) -> EncounterCombatant:
@@ -101,7 +108,7 @@ def test_level_five_runtime_applies_only_level_five_combat_deltas() -> None:
 
 def test_destroy_undead_uses_cr_threshold_inside_shared_turning_resolution() -> None:
     cleric = _member(build_seraphine_dawnshield_2014(5), "cleric-low", "heroes", 0)
-    skeleton_template = build_combatant_from_capabilities("2014-skeleton")
+    skeleton_template = _monster_template("2014-skeleton")
     skeleton = _member(skeleton_template, "skeleton-low", "monsters", 10)
     setup = EncounterSetup(
         heroes=[cleric], monsters=[skeleton],
