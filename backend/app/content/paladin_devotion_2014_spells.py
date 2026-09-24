@@ -134,3 +134,21 @@ def build_paladin_persistent_hazard_actions_2014(
     except Exception:
         logger.exception("Failed to compile 2014 Paladin persistent hazards at level %s", level)
         raise
+
+
+def cleansing_touch_2014() -> EffectRemovalAction:
+    """Bind Cleansing Touch to generic tracked-spell removal with no ability check."""
+    return EffectRemovalAction(
+        id="cleansing-touch",
+        name="Cleansing Touch",
+        level=9,
+        action_cost="action",
+        range_ft=5,
+        casting_ability="charisma",
+        target_mode="self_or_ally",
+        auto_remove_max_level=9,
+        resource_id="cleansing-touch",
+        resource_cost=1,
+        expends_spell_slot=False,
+        animation="cleansing-touch",
+    )
