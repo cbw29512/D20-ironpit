@@ -4,11 +4,11 @@ import logging
 
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.paladin_devotion_2014_attacks import build_extra_attack, build_javelin_attack, build_longsword_attack
+from app.content.paladin_devotion_2014_features import cleansing_touch_2014
 from app.content.paladin_devotion_2014_spells import (
     build_paladin_condition_removal_actions_2014,
     build_paladin_defensive_spells_2014,
     build_paladin_healing_actions_2014,
-    cleansing_touch_2014,
     dispel_magic_2014,
 )
 from app.domain.character_builds import AbilityScores
