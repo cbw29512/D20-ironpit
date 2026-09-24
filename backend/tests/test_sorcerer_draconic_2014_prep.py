@@ -50,7 +50,6 @@ def test_nyra_unfinished_outcome_changing_features_remain_blocked_and_uncertifie
         1: "sorcerer-spellcasting",
         2: "font-of-magic",
         3: "metamagic",
-        6: "elemental-affinity",
         14: "dragon-wings",
         18: "draconic-presence",
     }
@@ -66,3 +65,20 @@ def test_nyra_unfinished_outcome_changing_features_remain_blocked_and_uncertifie
         )
         for item in CERTIFIED_HERO_PROGRESSIONS
     )
+
+
+def test_elemental_affinity_prepares_generic_fire_spell_damage_bonus() -> None:
+    five = build_nyra_emberveil_2014(5)
+    six = build_nyra_emberveil_2014(6)
+    assert five.progression_features.spell_damage_bonus_grants == []
+    assert len(six.progression_features.spell_damage_bonus_grants) == 1
+    grant = six.progression_features.spell_damage_bonus_grants[0]
+    assert grant.source_name == "Elemental Affinity"
+    assert grant.ability == "charisma"
+    assert grant.eligible_damage_types == ["fire"]
+    audit = next(
+        item for item in build_nyra_emberveil_2014_profile(6).feature_audits
+        if item.feature_id == "elemental-affinity"
+    )
+    assert audit.automated is False
+    assert "damage bonus is bound" in (audit.notes or "")
