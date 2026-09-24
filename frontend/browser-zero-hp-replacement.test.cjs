@@ -58,6 +58,14 @@ function state() {
 
 {
   const target = state();
+  assert.equal(window.IRON_PIT_BROWSER_ZERO_HP.reduceToZero(target), "unconscious");
+  assert.equal(target.current_hp, 0);
+  assert.equal(target.active_modifiers.length, 1);
+  assert.equal(target.active_buff_effect_ids.includes("death-ward"), true);
+}
+
+{
+  const target = state();
   assert.equal(window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT.consumeInstantDeath(target), true);
   assert.equal(target.active_modifiers.length, 0);
   assert.match(window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT.consumeLog(target), /Death Ward negates an instant-death effect/);
