@@ -9,6 +9,7 @@ from app.content.shared_spells_2014 import beacon_of_hope_2014, lesser_restorati
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.persistent_hazards import PersistentHazardAction
+from app.domain.progression import PassiveModifierGrant
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
@@ -152,3 +153,17 @@ def cleansing_touch_2014() -> EffectRemovalAction:
         expends_spell_slot=False,
         animation="cleansing-touch",
     )
+
+
+def purity_of_spirit_2014() -> PassiveModifierGrant:
+    """Reuse Protection from Evil and Good modifier semantics as a passive feature."""
+    try:
+        protection = protection_from_evil_and_good_2014()
+        return PassiveModifierGrant(
+            source_id="purity-of-spirit",
+            source_name="Purity of Spirit",
+            modifier_effects=[effect.model_copy(deep=True) for effect in protection.modifier_effects],
+        )
+    except Exception:
+        logger.exception("Failed to compile 2014 Purity of Spirit passive modifiers")
+        raise
