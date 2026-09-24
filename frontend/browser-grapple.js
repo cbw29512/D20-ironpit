@@ -56,7 +56,9 @@
     return resolved;
   }
 
-  const speedIsZero = (state) => state.grapple_sources.length > 0 || Q().speedZero(state);
+  const speedIsZero = (state) => state.grapple_sources.some((source) =>
+    !C().prevented(state, "speed-reduction", { sourceIsMagical: Boolean(source.source_is_magical) }))
+    || Q().speedZero(state);
   function attackDisadvantage(state, targetId) {
     if (!state.grapple_sources.length) return 0;
     return state.grapple_sources.some((source) => source.source_id === targetId) ? 0 : 1;
