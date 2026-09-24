@@ -6,17 +6,30 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const DB = () => window.IRON_PIT_BROWSER_SPELL_DAMAGE_BONUS;
 
-  function saveAction(choice) {
+  function saveAction(choice, casterState) {
     const spell = choice.action;
     if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
+    let damageBonus = spell.damageBonus || 0;
+    let damageComponents = (spell.damageComponents || []).map((component) => ({ ...component }));
+    const usedSources = new Set();
+    if (damageComponents.length) {
+      damageComponents = damageComponents.map((component) => {
+        const result = DB()?.matches(casterState, spell.id, component.damageType, [...usedSources])
+          || { total: 0, sources: [] };
+        result.sources.forEach((source) => usedSources.add(source.sourceId));
+        return { ...component, damageBonus: (component.damageBonus || 0) + result.total };
+      });
+    } else if (spell.damageType) {
+      damageBonus += DB()?.matches(casterState, spell.id, spell.damageType).total || 0;
+    }
     return {
       id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
       range: spell.range + (spell.areaRadius || 0),
       damageDiceCount: spell.damageDiceCount,
-      damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
-      damageType: spell.damageType,
-      damageComponents: (spell.damageComponents || []).map((component) => ({ ...component })),
+      damageDiceSize: spell.damageDiceSize, damageBonus,
+      damageType: spell.damageType, damageComponents,
       successDamage: spell.successDamage || "none",
       magicalEffect: true, animation: spell.animation || "spell-save",
     };
@@ -52,7 +65,7 @@
     }];
 
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
-    const action = saveAction(choice);
+    const action = saveAction(choice, caster.state);
     let sharedDamageRolls = null;
     let sharedDamageComponentRolls = null;
     for (const targetId of choice.targetIds) {
