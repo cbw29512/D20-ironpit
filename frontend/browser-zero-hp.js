@@ -77,9 +77,7 @@
       if (state.is_dead || state.current_hp === 0) return "unchanged";
       state.current_hp = 0;
       let outcome = null;
-      if (Z()?.consumeZero(state)) {
-        outcome = "zero_hp_replacement";
-      } else if (state.template.kind === "monster") {
+      if (state.template.kind === "monster") {
         markDead(state); outcome = "dead";
       } else if (state.template.effect_bound_survival_save) {
         if (!U()) throw new Error("Effect-bound survival save runtime is not loaded.");
