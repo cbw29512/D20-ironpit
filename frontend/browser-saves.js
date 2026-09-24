@@ -114,6 +114,24 @@
     return [...shared];
   }
 
+  function componentDamageRolls(action, component, shared) {
+    try {
+      if (shared == null) return D().rollMany(component.diceCount, component.diceSize);
+      if (!Array.isArray(shared) || shared.length !== component.diceCount) {
+        throw new Error(`${action.name} shared typed damage roll count is invalid.`);
+      }
+      if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > component.diceSize)) {
+        throw new Error(`${action.name} shared typed damage rolls contain an invalid die result.`);
+      }
+      return [...shared];
+    } catch (error) {
+      console.error("Failed to resolve browser typed save damage rolls.", {
+        error, action: action?.id, damageType: component?.damageType,
+      });
+      throw error;
+    }
+  }
+
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, checkResource = options.checkResource !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
@@ -121,7 +139,9 @@
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const saveContext = {
       magicalEffect: Boolean(action.magicalEffect),
-      effectTags: action.damageType ? [action.damageType] : [],
+      effectTags: action.damageType
+        ? [action.damageType]
+        : (action.damageComponents || []).map((component) => component.damageType),
     };
     const advantageSources = DF().saveAdvantageSourceNames?.(
       target.state, action.saveAbility, saveContext,
@@ -137,19 +157,69 @@
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
     const count = action.damageDiceCount || 0;
-    if (count && !(save.succeeded && action.successDamage === "none")) {
-      if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
-      const rolls = damageRolls(action, count, options.sharedDamageRolls);
-      const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
-      const total = RD().evasionDamage(target.state, action.saveAbility, save.succeeded, action.successDamage, rawTotal);
-      const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
-      damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
-        rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
-      damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
-      if (applied) {
-        const affectedStates = states(options.setup);
-        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
-        window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+    const typedComponents = action.damageComponents || [];
+    if (typedComponents.length && count) {
+      throw new Error(`${action.name} cannot combine legacy and typed save damage fields.`);
+    }
+    if ((count || typedComponents.length) && !(save.succeeded && action.successDamage === "none")) {
+      if (typedComponents.length) {
+        const sharedComponents = options.sharedDamageComponentRolls ?? null;
+        if (sharedComponents != null && (!Array.isArray(sharedComponents)
+          || sharedComponents.length !== typedComponents.length)) {
+          throw new Error(`${action.name} shared typed damage component count is invalid.`);
+        }
+        damageComponents = typedComponents.map((component, index) => {
+          const rolls = componentDamageRolls(
+            action, component, sharedComponents == null ? null : sharedComponents[index],
+          );
+          const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (component.damageBonus || 0);
+          const total = RD().evasionDamage(
+            target.state, action.saveAbility, save.succeeded, action.successDamage, rawTotal,
+          );
+          const applied = A().adjustedDamage(
+            target.state, Math.max(0, total), component.damageType,
+          );
+          return {
+            source: component.source || action.name,
+            notation: `${component.diceCount}d${component.diceSize}+${component.damageBonus || 0}`,
+            rolls,
+            modifier: component.damageBonus || 0,
+            damage_type: component.damageType,
+            total: Math.max(0, total),
+            applied_total: applied,
+          };
+        });
+        const applied = damageComponents.reduce((sum, component) => sum + component.applied_total, 0);
+        damageRoll = {
+          notation: damageComponents.map((component) => component.notation).join(" + "),
+          rolls: damageComponents.flatMap((component) => component.rolls),
+          modifier: damageComponents.reduce((sum, component) => sum + component.modifier, 0),
+          total: applied,
+        };
+        if (applied) {
+          const affectedStates = states(options.setup);
+          const damageTypes = [...new Set(
+            damageComponents.filter((component) => component.applied_total > 0)
+              .map((component) => component.damage_type),
+          )];
+          damageOutcome = A().applyDamage(target.state, applied, false, damageTypes, affectedStates);
+          window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
+          C()?.endIfIncapacitated(target.state, affectedStates);
+        }
+      } else {
+        if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
+        const rolls = damageRolls(action, count, options.sharedDamageRolls);
+        const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
+        const total = RD().evasionDamage(target.state, action.saveAbility, save.succeeded, action.successDamage, rawTotal);
+        const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
+        damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
+          rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
+        damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
+        if (applied) {
+          const affectedStates = states(options.setup);
+          damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
+          window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+        }
       }
     }
     let appliedConditions = [];
