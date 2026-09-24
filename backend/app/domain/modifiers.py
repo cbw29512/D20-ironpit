@@ -32,6 +32,7 @@ class CombatModifier(BaseModel):
     source_id: str
     source_effect_id: str
     source_name: str | None = Field(default=None, min_length=1)
+    source_is_magical: bool = False
     kind: ModifierKind
     flat_bonus: int = 0
     dice_count: int = Field(default=0, ge=0, le=20)
