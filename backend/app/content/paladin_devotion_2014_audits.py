@@ -118,8 +118,10 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
             audits.append(_audit(
                 "purity-of-spirit", "Purity of Spirit", "subclass", automated=False,
                 notes=(
-                    "Must compose the existing Protection from Evil and Good typed defenses as an always-on "
-                    "self effect; possession prevention/termination remains to be reconciled generically."
+                    "The existing Protection from Evil and Good typed attack Disadvantage and typed charm/fright "
+                    "immunities are installed passively through the universal opening-modifier engine. Possession "
+                    "prevention/termination is not yet represented by the universal control-state engine, so the "
+                    "complete feature remains uncertified."
                 ),
             ))
         if level >= 16:
