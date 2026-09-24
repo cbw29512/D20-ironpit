@@ -267,6 +267,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "failed_save_reroll_grants": [item.model_dump() for item in progression.failed_save_reroll_grants],
         "failed_d20_test_override_grants": [item.model_dump() for item in progression.failed_d20_test_override_grants],
         "deferred_save_effect": progression.deferred_save_effect.model_dump() if progression.deferred_save_effect else None,
+        "zero_hp_temporary_hp_grant": progression.zero_hp_temporary_hp_grant.model_dump() if progression.zero_hp_temporary_hp_grant else None,
         "opening_targeting_ward": progression.opening_targeting_ward.model_dump() if progression.opening_targeting_ward else None,
         "danger_sense": progression.danger_sense, "reckless_attack": progression.reckless_attack,
         "frenzy": progression.frenzy, "frenzy_bonus_attack_2014": progression.frenzy_bonus_attack_2014,
