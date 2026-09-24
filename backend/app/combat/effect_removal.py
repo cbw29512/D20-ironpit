@@ -32,6 +32,11 @@ def choose_effect_removal_action(
             if resource is None or resource.current_uses < action.resource_cost:
                 continue
         effects = tracked_spell_effects(remover, setup, action)
+        if action.target_mode in {"ally", "self_or_ally"}:
+            opposing = [item for item in effects if item.source.side != remover.side]
+            if opposing:
+                return action, opposing[0]
+            continue
         if effects:
             return action, effects[0]
     return None
@@ -66,6 +71,8 @@ def resolve_effect_removal(
             if scores is None:
                 raise ValueError("Effect-removal ability check requires certified ability scores.")
             dc = 10 + effect.spell_level
+            if action.casting_ability is None:
+                raise ValueError("Effect-removal ability check requires a casting ability.")
             check = roll_d20(dice, scores.modifier(action.casting_ability), RollMode.NORMAL)
             check, succeeded = resolve_ability_check_outcome(
                 remover.state, action.casting_ability, check, dc,
