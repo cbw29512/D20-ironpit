@@ -15,7 +15,9 @@
       range: spell.range + (spell.areaRadius || 0),
       damageDiceCount: spell.damageDiceCount,
       damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
-      damageType: spell.damageType, successDamage: spell.successDamage || "none",
+      damageType: spell.damageType,
+      damageComponents: (spell.damageComponents || []).map((component) => ({ ...component })),
+      successDamage: spell.successDamage || "none",
       magicalEffect: true, animation: spell.animation || "spell-save",
     };
   }
@@ -52,6 +54,7 @@
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     const action = saveAction(choice);
     let sharedDamageRolls = null;
+    let sharedDamageComponentRolls = null;
     for (const targetId of choice.targetIds) {
       const target = members.get(targetId);
       const ward = spell.areaRadius ? null : (window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null);
@@ -61,15 +64,19 @@
       }
       const event = V().resolveAction(
         sequence, round, caster, target, action, S().distance(caster, target),
-        { spendAction: false, sharedDamageRolls },
+        { spendAction: false, sharedDamageRolls, sharedDamageComponentRolls },
       );
       sequence += 1;
       if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
       const chain = DR() ? DR().chain(sequence, round, caster, event, setup, turnKey)
         : { events: [event], sequence };
       events.push(...chain.events); sequence = chain.sequence;
-      if (sharedDamageRolls == null && event.damage_components?.length) {
-        sharedDamageRolls = [...event.damage_components[0].rolls];
+      if (event.damage_components?.length) {
+        if (action.damageComponents?.length && sharedDamageComponentRolls == null) {
+          sharedDamageComponentRolls = event.damage_components.map((component) => [...component.rolls]);
+        } else if (!action.damageComponents?.length && sharedDamageRolls == null) {
+          sharedDamageRolls = [...event.damage_components[0].rolls];
+        }
       }
     }
     return { events, sequence };
