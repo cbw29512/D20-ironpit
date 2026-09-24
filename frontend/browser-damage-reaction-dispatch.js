@@ -2,6 +2,7 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_DAMAGE_TRIGGERED_REACTIONS;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP_REWARDS;
 
   function appliedDamageTotal(event) {
     try {
@@ -66,8 +67,23 @@
   }
 
   function chain(nextSequence, round, source, event, setup, turnKey = null) {
-    const reactions = resolve(nextSequence, round, source, event, setup, turnKey);
-    return { events: [event, ...reactions.events], sequence: reactions.sequence };
+    try {
+      const events = [event];
+      let reactionSequence = nextSequence;
+      const reward = Z()?.resolve(reactionSequence, round, source, event, setup) || null;
+      if (reward) {
+        events.push(reward);
+        reactionSequence += 1;
+      }
+      const reactions = resolve(reactionSequence, round, source, event, setup, turnKey);
+      events.push(...reactions.events);
+      return { events, sequence: reactions.sequence };
+    } catch (error) {
+      console.error("Browser damage event-chain assembly failed.", {
+        source: source?.combatant_id, eventSequence: event?.sequence, error,
+      });
+      throw error;
+    }
   }
 
   window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH = {
