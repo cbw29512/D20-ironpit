@@ -32,6 +32,10 @@ def _resource_available(member: EncounterCombatant, action: HealingAction, turn_
 def _target_allowed(healer: EncounterCombatant, target: EncounterCombatant, action: HealingAction) -> bool:
     if target.state.is_dead or not target.state.is_alive or target.state.current_hp >= effective_max_hp(target.state):
         return False
+    creature_type = str(target.state.template.creature_type or "").split(" (")[0].lower()
+    excluded = {item.lower() for item in action.excluded_creature_types}
+    if creature_type and creature_type in excluded:
+        return False
     if CombatTrait.SWARM in target.state.template.combat_traits or _distance(healer, target) > action.range_ft:
         return False
     if action.target_mode == "self":
