@@ -233,7 +233,7 @@ def _healing(action: Any) -> dict[str, Any]:
     return {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
         "range": action.range_ft, "targetMode": action.target_mode, "maxTargets": action.max_targets,
-        "diceCount": action.dice_count, "diceSize": action.dice_size,
+        "areaRadiusFt": action.area_radius_ft, "diceCount": action.dice_count, "diceSize": action.dice_size,
         "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
         "resourceCost": action.resource_cost,
         "excludedCreatureTypes": list(action.excluded_creature_types),
