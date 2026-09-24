@@ -108,10 +108,10 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ))
         if level >= 14:
             audits.append(_audit(
-                "cleansing-touch", "Cleansing Touch", "class", automated=False,
+                "cleansing-touch", "Cleansing Touch", "class",
                 notes=(
-                    "The Charisma-modifier use resource is present in the prepared runtime. "
-                    "The touched-creature no-check spell-ending action still requires generic effect-removal binding."
+                    "Uses the generic tracked-spell effect-removal action at touch range, backed by the "
+                    "Charisma-modifier use resource and an automatic removal ceiling that covers spell levels 1-9."
                 ),
             ))
         if level >= 15:
