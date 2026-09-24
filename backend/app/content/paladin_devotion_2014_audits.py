@@ -96,6 +96,16 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "improved-divine-smite", "Improved Divine Smite", "class",
                 notes="Every hit with Aurelia's melee-weapon loadout carries a declarative 1d8 radiant on-hit rider.",
             ))
+        if level >= 13:
+            audits.append(_audit(
+                "devotion-oath-spells-4", "Oath of Devotion 4th-level Spells", "subclass",
+                automated=False,
+                notes=(
+                    "Guardian of Faith is bound to the universal persistent-hazard engine. "
+                    "Freedom of Movement reuses magical Paralyzed/Restrained prevention, but its remaining "
+                    "movement semantics are not yet fully automated; level 13 therefore remains uncertified."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)
