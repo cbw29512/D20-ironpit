@@ -67,6 +67,7 @@ class HealingAction(BaseModel):
     healing_bonus: int = Field(default=0, ge=0)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
+    excluded_creature_types: list[str] = Field(default_factory=list)
     animation: str = "healing"
 
 
