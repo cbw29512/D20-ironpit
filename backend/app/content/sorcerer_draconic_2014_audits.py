@@ -40,7 +40,7 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
                                  notes="Requires source-neutral spell-parameter transforms before options are selected."))
         if level >= 6:
             audits.append(_audit("elemental-affinity", "Elemental Affinity", "subclass", automated=False,
-                                 notes="Needs generic one-roll spell damage bonus and resource-backed typed resistance activation."))
+                                 notes="The one-roll fire spell damage bonus is bound generically; resource-backed fire resistance activation remains pending."))
         if level >= 14:
             audits.append(_audit("dragon-wings", "Dragon Wings", "subclass", automated=False,
                                  notes="Needs generic bonus-action movement-mode activation; Pit flight remains horizontal."))
