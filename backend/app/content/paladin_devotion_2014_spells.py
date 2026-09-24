@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
+from app.content.paladin_devotion_2014_level14 import divine_favor_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.debuffs import DebuffCounter
 from app.domain.effect_removal import EffectRemovalAction
@@ -71,23 +72,6 @@ def beacon_of_hope_2014() -> DefensiveSpellAction:
             SpellModifierEffect(kind="healing-maximize"),
         ],
         animation="beacon-of-hope", source=_SOURCE,
-    )
-
-
-def cleansing_touch_2014() -> EffectRemovalAction:
-    return EffectRemovalAction(
-        id="cleansing-touch",
-        name="Cleansing Touch",
-        level=0,
-        action_cost="action",
-        range_ft=5,
-        casting_ability="charisma",
-        target_mode="self_or_ally",
-        auto_remove_max_level=9,
-        resource_id="cleansing-touch",
-        resource_cost=1,
-        expends_spell_slot=False,
-        animation="cleansing-touch",
     )
 
 
@@ -211,4 +195,6 @@ def build_paladin_defensive_spells_2014(level: int, charisma_modifier: int) -> l
         actions.append(AID.model_copy(update={"source": source}))
     if level >= 13:
         actions.extend([death_ward_2014(), freedom_of_movement_2014()])
+    if level >= 14:
+        actions.append(divine_favor_2014())
     return actions
