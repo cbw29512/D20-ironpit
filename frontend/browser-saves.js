@@ -16,6 +16,9 @@
   const DO = () => window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }), sourceNameForRoll: () => null };
   const FR = () => window.IRON_PIT_BROWSER_FAILED_SAVE_REROLL || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }) };
   const BD = () => window.IRON_PIT_BROWSER_FAILED_D20_BONUS_DIE;
+  const TA = () => window.IRON_PIT_BROWSER_TIMED_AURAS || {
+    saveAdvantage: () => 0, saveAdvantageSourceNames: () => [],
+  };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -38,6 +41,7 @@
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
       + DG().dexSaveAdvantageSources(state, ability) + DF().saveAdvantage(state, ability, context)
+      + TA().saveAdvantage(state, ability, context)
       + sureFootedAdvantage(state, ability, context);
     const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state) || 0)
       + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
@@ -149,13 +153,18 @@
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const saveContext = {
       magicalEffect: Boolean(action.magicalEffect),
+      sourceIsSpell: Boolean(action.spellEffect),
+      sourceCreatureType: actor.state.template.creature_type || null,
       effectTags: action.damageType
         ? [action.damageType]
         : (action.damageComponents || []).map((component) => component.damageType),
     };
-    const advantageSources = DF().saveAdvantageSourceNames?.(
-      target.state, action.saveAbility, saveContext,
-    ) || [];
+    const advantageSources = [...new Set([
+      ...(DF().saveAdvantageSourceNames?.(
+        target.state, action.saveAbility, saveContext,
+      ) || []),
+      ...(TA().saveAdvantageSourceNames(target.state, action.saveAbility, saveContext) || []),
+    ])].sort();
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, saveContext);
     let resourceRemaining = options.resourceRemaining ?? null;
     if (action.resourceId && options.spendResource !== false) {
