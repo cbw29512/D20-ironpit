@@ -6,6 +6,7 @@
     "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed", "debuff-counter",
+    "zero-hp-replacement",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
@@ -24,6 +25,8 @@
     if (item.kind !== "condition-immunity" && item.condition_id) throw new Error(`${item.kind} does not accept a condition id.`);
     if (item.kind === "debuff-counter" && !item.debuff_counter) throw new Error("Debuff-counter modifiers require a counter definition.");
     if (item.kind !== "debuff-counter" && item.debuff_counter) throw new Error(`${item.kind} does not accept a debuff counter.`);
+    if (item.kind === "zero-hp-replacement" && !(item.replacement_hp > 0)) throw new Error("Zero-HP replacement requires positive replacement HP.");
+    if (item.kind !== "zero-hp-replacement" && ((item.replacement_hp || 0) || item.prevents_instant_death)) throw new Error(`${item.kind} does not accept zero-HP replacement fields.`);
     if (item.kind === "condition-immunity" && (item.flat_bonus || 0)) throw new Error("Condition immunity does not accept a flat bonus.");
     if (item.requires_magical_effect && item.kind !== "saving-throw-advantage") {
       throw new Error("Only saving-throw Advantage can require magical-effect context.");
