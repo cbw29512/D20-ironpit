@@ -68,11 +68,11 @@ def resolve_healing_amount(
     target: EncounterCombatant,
     action: HealingAction,
     dice: DiceProvider,
-) -> tuple[list[int], int, str, int]:
+) -> tuple[list[int], int, int, str, int]:
     if action.restore_to_effective_max:
         amount = effective_max_hp(target.state) - target.state.current_hp
         healed = restore_hit_points(target.state, amount)
-        return [], healed, "restore-to-effective-max", 0
+        return [], healed, healed, "restore-to-effective-max", 0
     rolls = (
         [action.dice_size for _ in range(action.dice_count)]
         if healing_is_maximized(target.state)
@@ -84,4 +84,4 @@ def resolve_healing_amount(
         f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}"
         if action.dice_count else str(action.healing_bonus)
     )
-    return rolls, healed, notation, action.healing_bonus
+    return rolls, total, healed, notation, action.healing_bonus
