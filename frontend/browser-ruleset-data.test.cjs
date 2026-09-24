@@ -162,3 +162,4 @@ assert.deepEqual(recoveredHellHound.recharge_rules, [{ resourceId: "fire-breath"
 assertRuleset(monsters2014, "2014", "2014 browser monsters");
 assert.equal(window.IRON_PIT_2014_MVP_READY, true);
 console.log("Browser combatants carry explicit isolated ruleset identity for 2014 and 2024.");
+// Exact-head retrigger after generated artifact sync.
