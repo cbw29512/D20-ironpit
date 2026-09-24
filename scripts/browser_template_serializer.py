@@ -44,6 +44,8 @@ def _hit_modifier(effect: Any) -> dict[str, Any]:
     row: dict[str, Any] = {"kind": effect.kind}
     if effect.flat_bonus:
         row["flatBonus"] = effect.flat_bonus
+    if effect.debuff_counter is not None:
+        row["debuffCounter"] = effect.debuff_counter.model_dump(mode="json")
     if effect.consume_on_attack_against:
         row["consumeOnAttackAgainst"] = True
     if effect.expires_at_start_of_source_turn:
