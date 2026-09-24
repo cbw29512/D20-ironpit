@@ -4,9 +4,10 @@ import logging
 
 from app.combat.condition_rules import is_incapacitated
 from app.combat.conditions import DODGE_EFFECT_ID, stand_from_prone
-from app.combat.grapple import speed_is_zero
+from app.combat.grapple import resolve_movement_countered_grapples, speed_is_zero
 from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
 from app.combat.modifier_stack import effective_speed
+from app.combat.timed_conditions import resolve_movement_countered_conditions
 from app.combat.opening_modifiers import opening_modifiers
 from app.combat.survivor import apply_survivor_start_turn_heal
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
@@ -51,7 +52,7 @@ def terminate_turn(state: CombatantState, reason: str) -> None:
     state.movement_remaining_ft = 0
 
 
-def begin_turn(state: CombatantState) -> None:
+def begin_turn(state: CombatantState) -> list[tuple[str, str, int]]:
     try:
         state.turn_terminated = False
         state.turn_termination_reason = None
@@ -60,10 +61,15 @@ def begin_turn(state: CombatantState) -> None:
         state.bonus_action_available = not incapacitated
         refresh_start_of_turn(state)
         speed = effective_speed(state)
-        state.movement_remaining_ft = 0 if speed_is_zero(state) else speed
+        state.movement_remaining_ft = speed
+        countered = resolve_movement_countered_conditions(state)
+        countered.extend(resolve_movement_countered_grapples(state))
+        if speed_is_zero(state):
+            state.movement_remaining_ft = 0
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)
         stand_from_prone(state)
+        return countered
     except Exception as exc:
         logger.exception("Failed to begin turn for %s.", state.template.name)
         raise RuntimeError("Turn state could not be initialized.") from exc
