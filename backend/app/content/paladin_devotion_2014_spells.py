@@ -6,6 +6,7 @@ from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.content.shared_spells_2014 import beacon_of_hope_2014, lesser_restoration_2014, sanctuary_2014
+from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction, SaveDamageComponent
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.persistent_hazards import PersistentHazardAction
@@ -40,14 +41,6 @@ def protection_from_evil_and_good_2014() -> DefensiveSpellAction:
         animation="protection", source=_SOURCE,
     )
 
-
-def dispel_magic_2014() -> EffectRemovalAction:
-    return EffectRemovalAction(
-        id="dispel-magic", name="Dispel Magic", level=3, action_cost="action",
-        range_ft=120, casting_ability="charisma", target_mode="enemy",
-        auto_remove_max_level=3, resource_id="spell-slot-3", resource_cost=1,
-        expends_spell_slot=True, animation="dispel-magic",
-    )
 
 
 def build_paladin_healing_actions_2014(level: int, charisma_modifier: int) -> list[HealingAction]:
