@@ -190,6 +190,20 @@ def _healing(action: Any) -> dict[str, Any]:
             "animation": action.animation}
 
 
+def _timed_aura(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "durationRounds": action.duration_rounds, "radiusFt": action.radius_ft,
+        "startTurnFixedDamage": action.start_turn_fixed_damage,
+        "damageType": _value(action.damage_type) if action.damage_type else None,
+        "savingThrowAdvantageAbilities": list(action.saving_throw_advantage_abilities),
+        "savingThrowAdvantageSourceCreatureTypes": list(action.saving_throw_advantage_source_creature_types),
+        "savingThrowAdvantageRequiresSpell": action.saving_throw_advantage_requires_spell,
+        "priority": action.priority, "animation": action.animation, "source": action.source,
+    }
+
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     return {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -256,6 +270,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
         "condition_immunities": list(template.condition_immunities),
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
+        "timed_aura_actions": [_timed_aura(item) for item in template.timed_aura_actions],
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
         "fighting_style": template.fighting_style, "fighting_styles": list(template.fighting_styles),
