@@ -413,15 +413,13 @@ Iron Pit lair-action ownership house rule:
 
 ## 20. Summons, forms, splitting, and temporary removal
 
-Do not ban or mechanically compress summons merely to fit the UI.
+**Summoning is currently disabled in Iron Pit.** A spell, feature, item, or monster ability that summons, conjures, creates, or calls a separate combat creature/entity is arena-unavailable for now and does not block certification when the rest of the source is fully supported.
 
-- Each summoned creature remains an independent mechanical entity with its own HP, actions, saves, conditions, and death.
-- Identical summons may be visually stacked (`Wolves ×8`) but are not one creature under the hood.
-- If legal summoned occupancy exceeds the standard arena, create the minimum temporary magical Summoning Annex necessary. It cannot be exploited for fleeing/kiting/unreachable flight.
-- AoE can affect only the subset whose actual occupied positions are in the area; resolve saves/damage per entity.
-- Summon initiative/control/command cost/source-death behavior follows the source RAW.
-- Transformations/Wild Shape/Polymorph are replacement forms, not extra bodies.
-- Split/spawn mechanics create independent entities when RAW requires.
+- Do not create summoned combatants, companion bodies, summoned guardians, or a Summoning Annex.
+- A source with a summon option keeps the exact RAW name and audit record, but Arena AI never selects that option.
+- When a canonical caster may legally prepare a different non-summoning combat spell instead, prefer that legal replacement for the Iron Pit combat loadout while retaining mandatory always-prepared summon spells in source metadata as arena-unavailable.
+- Transformations/Wild Shape/Polymorph are replacement forms, not summons, and remain separately governed by their own support status.
+- Split/spawn mechanics printed on an existing creature are not automatically classified as summons; they require their own explicit audit.
 - Swallow/engulf/banishment/ethereal/possession and similar mechanics use universal location/control/life-state structures rather than creature-name branches.
 
 ## 21. Combat AI: legality first
@@ -537,7 +535,6 @@ Future homebrew uses the same rules engine:
 
 A team loses when no member remains capable of meaningful combat action or legally returning an ally to active combat.
 
-- Valid summons can keep a team active.
 - Dead/disintegrated entities do not.
 - Petrified/banished/etc. are evaluated by their actual rules rather than automatically treated as dead.
 - A true stalemate with no meaningful path to progress is a draw.
