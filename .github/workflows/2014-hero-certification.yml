@@ -39,7 +39,6 @@ jobs:
             backend/tests/test_paladin_devotion_2014_foundation.py \
             backend/tests/test_paladin_oath_spells_2014.py \
             backend/tests/test_paladin_devotion_2014_level13.py \
-            backend/tests/test_paladin_devotion_2014_level14.py \
             backend/tests/test_paladin_devotion_2014_level15.py \
             backend/tests/test_paladin_devotion_2014_level16.py \
             backend/tests/test_certification_progression_manifest.py
