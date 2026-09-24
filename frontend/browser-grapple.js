@@ -23,9 +23,11 @@
   }
 
   function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false) {
-    if (I().immune(state, "grappled")) return [];
+    if (I().immune(state, "grappled", null, { sourceIsMagical: Boolean(sourceIsMagical) })) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
-    const effectiveRestrains = restrains && !I().immune(state, "restrained");
+    const effectiveRestrains = restrains && !I().immune(
+      state, "restrained", null, { sourceIsMagical: Boolean(sourceIsMagical) },
+    );
     state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains, source_is_magical: Boolean(sourceIsMagical) });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
