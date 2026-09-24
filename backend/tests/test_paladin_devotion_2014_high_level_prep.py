@@ -141,7 +141,7 @@ def test_level_seventeen_flame_strike_uses_one_save_with_two_typed_components() 
     assert flame_strike.id == "flame-strike"
     assert flame_strike.level == 5
     assert flame_strike.save_ability == "dexterity"
-    assert flame_strike.dc == 17
+    assert flame_strike.dc == 18
     assert flame_strike.success_damage == "half"
     assert [(item.dice_count, item.dice_size, item.damage_type) for item in flame_strike.damage_components] == [
         (4, 6, "fire"),
