@@ -22,6 +22,23 @@ _HERO_ONLY_PROGRESSION_FIELDS = {
 }
 
 
+
+def _strip_extension_defaults(value):
+    """Keep generated monster capability JSON stable for unused extension fields."""
+    if isinstance(value, list):
+        return [_strip_extension_defaults(item) for item in value]
+    if not isinstance(value, dict):
+        return value
+    cleaned = {}
+    for key, item in value.items():
+        if key == "replacement_hp" and item == 0:
+            continue
+        if key == "prevents_instant_death" and item is False:
+            continue
+        cleaned[key] = _strip_extension_defaults(item)
+    return cleaned
+
+
 def render_registry() -> str:
     try:
         monsters = build_legacy_monster_templates(include_capability_migrated=False)
@@ -30,11 +47,11 @@ def render_registry() -> str:
         if len(ids) != len(set(ids)):
             raise RuntimeError("Legacy runtime monster ids must be unique before capability export.")
         payload = [
-            definition.model_dump(
+            _strip_extension_defaults(definition.model_dump(
                 mode="json",
                 exclude_none=True,
                 exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS, "effect_removal_actions": True},
-            )
+            ))
             for definition in definitions
         ]
         return json.dumps(payload, indent=2, sort_keys=False) + "\n"

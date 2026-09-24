@@ -74,7 +74,18 @@
   function resolveTurn(sequence, round, member, setup) {
     try {
       enablePitRangePolicy();
-      const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); PA()?.sync(setup); S().beginTurn(member.state);
+      const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); PA()?.sync(setup);
+      const countered = S().beginTurn(member.state) || [];
+      for (const item of countered) {
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "feature",
+          actor_id: member.combatant_id, actor_name: member.state.template.name,
+          target_id: item.sourceId, removed_condition_ids: [item.debuffId],
+          movement_ft: item.movementCost, feature_id: "debuff-counter",
+          animation: "condition-ended",
+          description: `${member.state.template.name} spends ${item.movementCost} feet of movement to clear ${item.debuffId} using an active buff.`,
+        });
+      }
       const turnKey = `${round}:${member.combatant_id}`;
       const hooks = AH();
       if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");

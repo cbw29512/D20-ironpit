@@ -12,7 +12,19 @@ STUNNED = "stunned"
 
 
 def has_condition(state: CombatantState, condition_id: str) -> bool:
-    return condition_id in state.active_effect_ids and not condition_is_immune(state, condition_id)
+    if condition_id not in state.active_effect_ids:
+        return False
+    timed = [effect for effect in state.timed_effects if effect.effect_id == condition_id]
+    if timed:
+        return any(
+            not condition_is_immune(
+                state,
+                condition_id,
+                source_is_magical=effect.source_is_magical,
+            )
+            for effect in timed
+        )
+    return not condition_is_immune(state, condition_id)
 
 
 def is_incapacitated(state: CombatantState) -> bool:

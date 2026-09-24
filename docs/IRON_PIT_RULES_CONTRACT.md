@@ -45,6 +45,8 @@ A capability discovered while implementing a hero must be reusable by monsters, 
 
 **State/effect identity is universal.** Prone is Prone, Grappled is Grappled, Restrained is Restrained, Blinded is Blinded, Frightened is Frightened, Poisoned is Poisoned, and so on, regardless of which class feature, spell, weapon property, item, or monster ability caused it. Source definitions supply parameters such as DC, save ability, duration, repeat-save timing, range, damage, resource cost, and source ability name. The shared condition/effect engine supplies the mechanical behavior.
 
+**Buff/debuff interaction is universal.** Harmful combat states and penalties are represented as debuffs or debuff semantics; protective effects are buffs that may counter named debuffs. The engine resolves the counter by semantic identity plus declared qualifiers such as magical/nonmagical source, duration, resource requirement, or movement cost. A source ability must not receive a bespoke immunity/removal branch when the same result can be expressed as a reusable buff counter. Conditional counters pay their declared cost automatically when Arena policy has no meaningful reason to decline it; for example, a 5-foot movement cost that automatically clears a nonmagical Grappled/Restrained debuff is paid at the first legal opportunity.
+
 Invisibility is one universal condition regardless of source. A spell, feature, item, monster ability, or self-buff that grants invisibility applies the same `invisible` condition; source-specific activation cost, resource cost, duration, and companion effects belong to declarative source data rather than a source-specific invisibility resolver.
 
 The player-facing combat log must preserve the exact source ability name. Internal audit/certification data should additionally record the generic capability/primitive IDs used underneath so engine reuse remains provable without exposing implementation jargon to the player.
@@ -225,7 +227,8 @@ Permanent arena rules:
 - Default Arena AI does not voluntarily flee, kite, circle, run to map edges, seek cover, or reposition without an action-driven reason. If a supported offensive action is not yet reachable this turn but the pathfinder proves a legal eventual route to a usable position, the combatant advances as far as useful movement permits along that route. It does not stay still merely because it cannot attack this turn.
 - A combatant may pass through creature spaces only when the selected ruleset permits it, pays any required Difficult Terrain cost, and may not willingly end normal movement overlapping another creature.
 - Printed Walk, Fly, Climb, Swim, Burrow, Hover, and base-speed data remain source-derived and must not be rewritten merely to make a creature usable in the Pit.
-- Movement modes never become roster-eligibility filters. The magical Pit remains hospitable to aquatic, flying, burrowing, climbing, unusual-biology, breathing, and atmosphere requirements; this environmental hospitality does not grant free movement.
+- Movement modes never become roster-eligibility filters. The magical Pit remains hospitable to aquatic, flying, burrowing, climbing, unusual-biology, breathing, and atmosphere requirements. Every combatant may use its printed movement modes and make attacks as though the Pit were a valid native environment for those modes and its normal biology. Environmental hospitality removes habitat-only penalties such as underwater movement or attack penalties; it does not grant extra Speed, a movement mode the source does not have, free movement, altitude-based immunity, or protection from RAW combat effects that explicitly create Difficult Terrain, Speed penalties, conditions, or other debuffs.
+- Flying movement remains horizontal-only in the standard Iron Pit. Flyers may use their printed Fly Speed across the battlefield but may not gain altitude to become permanently unreachable.
 - Starting placement is deterministic and footprint-aware. Future manual legal placement is authoritative when explicitly selected by the user.
 - No environmental cover by default.
 - Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.
@@ -253,6 +256,7 @@ Resolve each damage component separately and preserve source qualifiers.
 - Rolled bonus damage and on-hit riders (for example Sneak Attack, Divine Smite, Frenzy, and equivalent universal riders) use the same runtime dice path when their source damage is expressed as dice.
 - Expected/average damage may be used only by Arena AI to rank otherwise legal tactical choices. AI valuation never becomes the damage applied to combat state or the audit log.
 - Genuinely fixed-damage rules remain fixed and do not fabricate dice. A source that says it deals a fixed amount must resolve that fixed amount, including any source-defined success/failure split.
+
 
 Universal dimensions include:
 
@@ -409,15 +413,13 @@ Iron Pit lair-action ownership house rule:
 
 ## 20. Summons, forms, splitting, and temporary removal
 
-Do not ban or mechanically compress summons merely to fit the UI.
+**Summoning is currently disabled in Iron Pit.** A spell, feature, item, or monster ability that summons, conjures, creates, or calls a separate combat creature/entity is arena-unavailable for now and does not block certification when the rest of the source is fully supported.
 
-- Each summoned creature remains an independent mechanical entity with its own HP, actions, saves, conditions, and death.
-- Identical summons may be visually stacked (`Wolves ×8`) but are not one creature under the hood.
-- If legal summoned occupancy exceeds the standard arena, create the minimum temporary magical Summoning Annex necessary. It cannot be exploited for fleeing/kiting/unreachable flight.
-- AoE can affect only the subset whose actual occupied positions are in the area; resolve saves/damage per entity.
-- Summon initiative/control/command cost/source-death behavior follows the source RAW.
-- Transformations/Wild Shape/Polymorph are replacement forms, not extra bodies.
-- Split/spawn mechanics create independent entities when RAW requires.
+- Do not create summoned combatants, companion bodies, summoned guardians, or a Summoning Annex.
+- A source with a summon option keeps the exact RAW name and audit record, but Arena AI never selects that option.
+- When a canonical caster may legally prepare a different non-summoning combat spell instead, prefer that legal replacement for the Iron Pit combat loadout while retaining mandatory always-prepared summon spells in source metadata as arena-unavailable.
+- Transformations/Wild Shape/Polymorph are replacement forms, not summons, and remain separately governed by their own support status.
+- Split/spawn mechanics printed on an existing creature are not automatically classified as summons; they require their own explicit audit.
 - Swallow/engulf/banishment/ethereal/possession and similar mechanics use universal location/control/life-state structures rather than creature-name branches.
 
 ## 21. Combat AI: legality first
@@ -533,7 +535,6 @@ Future homebrew uses the same rules engine:
 
 A team loses when no member remains capable of meaningful combat action or legally returning an ally to active combat.
 
-- Valid summons can keep a team active.
 - Dead/disintegrated entities do not.
 - Petrified/banished/etc. are evaluated by their actual rules rather than automatically treated as dead.
 - A true stalemate with no meaningful path to progress is a draw.

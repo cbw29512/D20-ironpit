@@ -5,6 +5,7 @@
   const U = () => window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const DODGE = "dodge";
   const PRONE = "prone";
@@ -111,6 +112,7 @@
     const before = state.current_hp;
     state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates);
+    if (Z()?.consumeZero(state)) return finish(state, "zero_hp_replacement", incoming, affectedStates);
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates);
     if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     const remaining = Math.max(0, amount - before);

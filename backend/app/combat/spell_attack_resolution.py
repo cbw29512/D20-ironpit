@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.undead_fortitude import consume_survival_save_log
+from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
 import logging
 
@@ -104,7 +105,7 @@ def resolve_spell_attack(
             if target.state.is_alive and not target.state.is_dead:
                 for index, effect in enumerate(spell.on_hit_modifier_effects):
                     add_modifier(target.state, build_spell_modifier(
-                        caster.combatant_id, target.combatant_id, spell.id, effect, index, round_number=round_number,
+                        caster.combatant_id, target.combatant_id, spell.id, effect, index, spell.name, round_number=round_number,
                     ))
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
@@ -122,7 +123,7 @@ def resolve_spell_attack(
             death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
             is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=spell.id, resource_remaining=remaining,
             concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
-            animation=spell.animation, description=description + consume_survival_save_log(target.state),
+            animation=spell.animation, description=description + consume_survival_save_log(target.state) + consume_zero_hp_replacement_log(target.state),
         )
         if ward is not None and event.saving_throw_roll is None:
             event.saving_throw_roll = ward.roll

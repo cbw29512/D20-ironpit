@@ -27,6 +27,12 @@ def _spell(
     )
 
 
+_DEATH_WARD = _spell(
+    "death-ward", "Death Ward", "buff",
+    "zero-hp-replacement", "instant-death-prevention",
+    level=4, min_level=13,
+)
+
 _PREPARED = (
     _spell("bless", "Bless", "buff", "modifier-stack", "concentration"),
     _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
@@ -59,6 +65,16 @@ _OATH = (
         level=3, min_level=9, oath_level=9,
     ),
     _spell("dispel-magic", "Dispel Magic", "utility", "effect-removal", level=3, min_level=9, oath_level=9),
+    _spell(
+        "freedom-of-movement", "Freedom of Movement", "buff",
+        "debuff-counter", "movement-cost-counter",
+        level=4, min_level=13, oath_level=13,
+    ),
+    _spell(
+        "guardian-of-faith", "Guardian of Faith", "control",
+        "arena-unavailable-summon",
+        level=4, min_level=13, oath_level=13,
+    ),
 )
 
 
@@ -83,11 +99,15 @@ def build_paladin_2014_spell_package(level: int, charisma_modifier: int) -> Clas
             raise ValueError(
                 f"2014 Paladin canonical spell package needs {count} prepared spells but defines {len(_PREPARED)}."
             )
+        prepared = list(_PREPARED[:count])
+        if level >= 13:
+            prepared = [spell for spell in prepared if spell.id != "purify-food-and-drink"]
+            prepared.append(_DEATH_WARD)
         oath = [spell for spell in _OATH if spell.always_prepared_from_level and level >= spell.always_prepared_from_level]
         return ClassSpellPackage(
             class_id="paladin",
             casting_ability="charisma",
-            spells=list(_PREPARED[:count]),
+            spells=prepared,
             always_prepared_spells=oath,
         )
     except Exception:

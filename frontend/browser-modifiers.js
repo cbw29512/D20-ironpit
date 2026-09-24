@@ -5,10 +5,12 @@
   const KINDS = new Set([
     "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
-    "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed",
+    "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed", "debuff-counter",
+    "zero-hp-replacement",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
+  const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { prevented: () => false };
 
   function validate(item) {
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
@@ -21,6 +23,10 @@
     if (item.kind === "saving-throw-flat" && !(item.flat_bonus || 0)) throw new Error("Flat saving-throw modifiers require a nonzero bonus.");
     if (item.kind === "condition-immunity" && !item.condition_id) throw new Error("Condition-immunity modifiers require a condition id.");
     if (item.kind !== "condition-immunity" && item.condition_id) throw new Error(`${item.kind} does not accept a condition id.`);
+    if (item.kind === "debuff-counter" && !item.debuff_counter) throw new Error("Debuff-counter modifiers require a counter definition.");
+    if (item.kind !== "debuff-counter" && item.debuff_counter) throw new Error(`${item.kind} does not accept a debuff counter.`);
+    if (item.kind === "zero-hp-replacement" && !(item.replacement_hp > 0)) throw new Error("Zero-HP replacement requires positive replacement HP.");
+    if (item.kind !== "zero-hp-replacement" && ((item.replacement_hp || 0) || item.prevents_instant_death)) throw new Error(`${item.kind} does not accept zero-HP replacement fields.`);
     if (item.kind === "condition-immunity" && (item.flat_bonus || 0)) throw new Error("Condition immunity does not accept a flat bonus.");
     if (item.requires_magical_effect && item.kind !== "saving-throw-advantage") {
       throw new Error("Only saving-throw Advantage can require magical-effect context.");
@@ -101,8 +107,17 @@
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
-  const effectiveSpeed = (state) => X()?.effectiveSpeed(state, Math.max(0, state.template.speed_ft + flat(state, "speed")))
-    ?? Math.max(0, state.template.speed_ft + flat(state, "speed"));
+  const effectiveSpeed = (state) => {
+    const speedDelta = (state.active_modifiers || []).filter((item) => item.kind === "speed")
+      .reduce((sum, item) => sum + (
+        (item.flat_bonus || 0) < 0
+        && C().prevented(state, "speed-reduction", { sourceIsMagical: Boolean(item.source_is_magical) })
+          ? 0
+          : (item.flat_bonus || 0)
+      ), 0);
+    const base = Math.max(0, state.template.speed_ft + speedDelta);
+    return X()?.effectiveSpeed(state, base) ?? base;
+  };
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;

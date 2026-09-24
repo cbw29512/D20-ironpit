@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-grapple.js",
+  "browser-heroes.js", "browser-debuff-counters.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
 ]) load(file);
 
@@ -54,7 +54,10 @@ const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroe
   const target = member("hero-1", heroTemplate);
   assert.equal(T.apply(target.state, "movement-ward", "caster", {
     sourceEffectId: "test-ward",
-    ownedMagicalConditionImmunities: ["paralyzed", "restrained"],
+    ownedDebuffCounters: [
+      { debuff_id: "paralyzed", source_scope: "magical", mode: "prevent", movement_cost_ft: 0 },
+      { debuff_id: "restrained", source_scope: "magical", mode: "prevent", movement_cost_ft: 0 },
+    ],
     useDefaultPoisonRecovery: false,
   }), "movement-ward");
   assert.equal(I.immune(target.state, "paralyzed", null, { sourceIsMagical: true }), true);

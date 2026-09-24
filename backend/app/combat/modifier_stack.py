@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
+from app.combat.debuff_counters import debuff_is_countered
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import d20_modifier, speed_after_exhaustion
 from app.domain.events import DiceRoll
@@ -82,9 +83,20 @@ def saving_throw_flat_bonus(state: CombatantState) -> int:
 
 
 def effective_speed(state: CombatantState) -> int:
-    base = max(0, state.template.speed_ft + sum(
-        item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED
-    ))
+    speed_delta = sum(
+        item.flat_bonus
+        for item in state.active_modifiers
+        if item.kind is ModifierKind.SPEED
+        and not (
+            item.flat_bonus < 0
+            and debuff_is_countered(
+                state,
+                "speed-reduction",
+                source_is_magical=item.source_is_magical,
+            )
+        )
+    )
+    base = max(0, state.template.speed_ft + speed_delta)
     return speed_after_exhaustion(state, base)
 
 

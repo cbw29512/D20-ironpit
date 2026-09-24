@@ -19,8 +19,26 @@ def begin_turn_with_events(
 ) -> tuple[list[BattleEvent], int]:
     """Initialize a turn and resolve auditable start-of-turn resource checks."""
     try:
-        begin_turn(state)
+        countered = begin_turn(state)
         events: list[BattleEvent] = []
+        for debuff_id, source_id, movement_cost in countered:
+            events.append(BattleEvent(
+                sequence=sequence,
+                round_number=round_number,
+                event_type="feature",
+                actor_id=actor_id,
+                actor_name=state.template.name,
+                target_id=source_id,
+                removed_condition_ids=[debuff_id],
+                movement_ft=movement_cost,
+                feature_id="debuff-counter",
+                animation="condition-ended",
+                description=(
+                    f"{state.template.name} spends {movement_cost} feet of movement to clear {debuff_id} "
+                    "using an active buff."
+                ),
+            ))
+            sequence += 1
         for check in resolve_recharge_checks(state, dice):
             threshold = (
                 str(check.minimum_roll)

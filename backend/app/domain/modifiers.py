@@ -5,6 +5,7 @@ from enum import StrEnum
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.combatants import DamageType
+from app.domain.debuffs import DebuffCounter
 
 
 class ModifierKind(StrEnum):
@@ -24,6 +25,8 @@ class ModifierKind(StrEnum):
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
+    DEBUFF_COUNTER = "debuff-counter"
+    ZERO_HP_REPLACEMENT = "zero-hp-replacement"
     OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
 
 
@@ -32,6 +35,7 @@ class CombatModifier(BaseModel):
     source_id: str
     source_effect_id: str
     source_name: str | None = Field(default=None, min_length=1)
+    source_is_magical: bool = False
     kind: ModifierKind
     flat_bonus: int = 0
     dice_count: int = Field(default=0, ge=0, le=20)
@@ -40,6 +44,9 @@ class CombatModifier(BaseModel):
     target_id: str | None = None
     weapon_id: str | None = None
     condition_id: str | None = None
+    debuff_counter: DebuffCounter | None = None
+    replacement_hp: int = Field(default=0, ge=0)
+    prevents_instant_death: bool = False
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -82,6 +89,14 @@ class CombatModifier(BaseModel):
             raise ValueError("Condition-immunity modifiers require a condition id.")
         if self.kind is not ModifierKind.CONDITION_IMMUNITY and self.condition_id is not None:
             raise ValueError(f"{self.kind.value} does not accept a condition id.")
+        if self.kind is ModifierKind.DEBUFF_COUNTER and self.debuff_counter is None:
+            raise ValueError("Debuff-counter modifiers require a counter definition.")
+        if self.kind is not ModifierKind.DEBUFF_COUNTER and self.debuff_counter is not None:
+            raise ValueError(f"{self.kind.value} does not accept a debuff counter.")
+        if self.kind is ModifierKind.ZERO_HP_REPLACEMENT and self.replacement_hp < 1:
+            raise ValueError("Zero-HP replacement modifiers require positive replacement HP.")
+        if self.kind is not ModifierKind.ZERO_HP_REPLACEMENT and (self.replacement_hp or self.prevents_instant_death):
+            raise ValueError(f"{self.kind.value} does not accept zero-HP replacement fields.")
         if self.kind is ModifierKind.ATTACKS_AGAINST_DISADVANTAGE and not self.source_creature_types:
             raise ValueError("Typed attack Disadvantage requires source creature types.")
         if self.source_creature_types and self.kind not in {

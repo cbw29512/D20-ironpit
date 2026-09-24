@@ -96,6 +96,22 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "improved-divine-smite", "Improved Divine Smite", "class",
                 notes="Every hit with Aurelia's melee-weapon loadout carries a declarative 1d8 radiant on-hit rider.",
             ))
+        if level >= 13:
+            audits.extend([
+                _audit(
+                    "freedom-of-movement", "Freedom of Movement", "subclass",
+                    notes="Universal buff/debuff counters implement its arena-relevant movement-control protections.",
+                ),
+                _audit(
+                    "guardian-of-faith", "Guardian of Faith", "subclass",
+                    combat=False, automated=False,
+                    notes="Always prepared by Oath of Devotion but arena-unavailable while Iron Pit summoning/created combat entities are disabled.",
+                ),
+                _audit(
+                    "death-ward", "Death Ward", "class",
+                    notes="Prepared as the legal non-summoning level-4 combat replacement; universal zero-HP replacement consumes the ward on first trigger.",
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)

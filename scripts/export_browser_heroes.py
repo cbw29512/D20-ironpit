@@ -92,6 +92,9 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
            "diceSize": effect.dice_size, "damageType": effect.damage_type}
     if effect.condition_id: row["conditionId"] = effect.condition_id
+    if effect.debuff_counter is not None: row["debuffCounter"] = effect.debuff_counter.model_dump(mode="json")
+    if effect.replacement_hp: row["replacementHp"] = effect.replacement_hp
+    if effect.prevents_instant_death: row["preventsInstantDeath"] = True
     if effect.source_creature_types: row["sourceCreatureTypes"] = list(effect.source_creature_types)
     if effect.save_ability: row["saveAbility"] = effect.save_ability
     if effect.save_dc is not None: row["saveDc"] = effect.save_dc
@@ -135,7 +138,7 @@ def _healing(action: Any) -> dict[str, Any]:
 
 
 def _timed_self_buff(action: Any) -> dict[str, Any]:
-    return {
+    row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
@@ -143,6 +146,9 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
     }
+    if action.debuff_counters:
+        row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
+    return row
 
 
 def _removal(action: Any) -> dict[str, Any]:

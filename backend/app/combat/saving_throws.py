@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.undead_fortitude import consume_survival_save_log
+from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
@@ -76,7 +77,14 @@ def resolve_save_action(
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
+        applied_conditions = apply_grapple(
+            target.state,
+            actor.combatant_id,
+            action.grapple_escape_dc,
+            action.range_ft,
+            restrains=action.restrains_while_grappled,
+            source_is_magical=action.magical_effect,
+        )
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if advantage_sources:
@@ -98,5 +106,5 @@ def resolve_save_action(
         is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
         resource_remaining=remaining,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
-        animation=action.animation, description=description + consume_survival_save_log(target.state),
+        animation=action.animation, description=description + consume_survival_save_log(target.state) + consume_zero_hp_replacement_log(target.state),
     )

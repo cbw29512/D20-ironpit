@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.debuff_counters import debuff_is_countered
 from app.combat.defensive_modifier_rules import condition_immunity_modifier_applies
 from app.domain.models import CombatantState, CombatantTemplate
 
@@ -20,9 +21,10 @@ def condition_is_immune(
     """
     if condition_id in state.template.condition_immunities:
         return True
-    if source_is_magical and any(
-        condition_id in effect.owned_magical_condition_immunities
-        for effect in state.timed_effects
+    if debuff_is_countered(
+        state,
+        condition_id,
+        source_is_magical=source_is_magical,
     ):
         return True
     if any(

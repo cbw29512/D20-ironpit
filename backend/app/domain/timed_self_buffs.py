@@ -5,6 +5,7 @@ import logging
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ActionCost, ConditionName, ConditionTiming
+from app.domain.debuffs import DebuffCounter
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
@@ -19,8 +20,9 @@ class TimedSelfBuffAction(BaseModel):
     resource_id: str
     resource_cost: int = Field(default=1, ge=1, le=200)
     duration_rounds: int = Field(ge=1, le=600)
-    condition_ids: list[ConditionName] = Field(min_length=1)
+    condition_ids: list[ConditionName] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
+    debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     expiry_timing: ConditionTiming = "source_turn_start"
     priority: int = 0
     animation: str = "buff"
@@ -34,6 +36,14 @@ class TimedSelfBuffAction(BaseModel):
                 raise ValueError("Timed self-buff condition ids must be unique.")
             if len(set(self.damage_resistances)) != len(self.damage_resistances):
                 raise ValueError("Timed self-buff damage resistances must be unique.")
+            counter_keys = {
+                (item.debuff_id, item.source_scope, item.mode, item.movement_cost_ft)
+                for item in self.debuff_counters
+            }
+            if len(counter_keys) != len(self.debuff_counters):
+                raise ValueError("Timed self-buff debuff counters must be unique.")
+            if not self.condition_ids and not self.damage_resistances and not self.debuff_counters:
+                raise ValueError("Timed self-buff requires at least one combat effect.")
             return self
         except ValueError:
             raise
