@@ -290,6 +290,10 @@ def defense_row(action: Any) -> dict[str, Any]:
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
         "damageResistances": list(action.damage_resistances),
         "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
+        "ownedMagicalConditionImmunities": list(action.owned_magical_condition_immunities),
+        "difficultTerrainBypassScope": action.difficult_terrain_bypass_scope,
+        "preventsMagicalSpeedReduction": action.prevents_magical_speed_reduction,
+        "nonmagicalGrappleEscapeMovementCostFt": action.nonmagical_grapple_escape_movement_cost_ft,
         "survivalWard": (
             {
                 "replacementHp": action.survival_ward.replacement_hp,
