@@ -4,6 +4,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const A = () => window.IRON_PIT_BROWSER_SPELL_AREA;
   const bloodied = (state) => state.current_hp * 2 <= S().effectiveMaxHp(state);
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const swarm = (state) => state.template.traits?.includes("swarm");
@@ -20,7 +21,7 @@
     const creatureType = String(target.state.template.creature_type || "").split(" (")[0].toLowerCase();
     const excluded = new Set((action.excludedCreatureTypes || []).map((value) => String(value).toLowerCase()));
     if (creatureType && excluded.has(creatureType)) return false;
-    if (distance(healer, target) > (action.range || 5)) return false;
+    if (action.areaRadiusFt == null && distance(healer, target) > (action.range || 5)) return false;
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
     if (action.targetMode === "other") return target.combatant_id !== healer.combatant_id;
@@ -82,11 +83,20 @@
 
   function groupTargets(healer, setup, action, turnKey = null) {
     if ((action.maxTargets || 1) <= 1 || !resourceAvailable(healer, action, turnKey)) return [];
-    return worthwhileTargets(healer, setup, action)
+    let targets = worthwhileTargets(healer, setup, action)
       .sort((a, b) => (a.state.current_hp > 0) - (b.state.current_hp > 0)
         || a.state.current_hp / S().effectiveMaxHp(a.state) - b.state.current_hp / S().effectiveMaxHp(b.state)
-        || a.combatant_id.localeCompare(b.combatant_id))
-      .slice(0, action.maxTargets || 1);
+        || a.combatant_id.localeCompare(b.combatant_id));
+    if (action.areaRadiusFt != null) {
+      const placement = A()?.bestFriendlyPlacement(
+        healer, setup, action.areaRadiusFt, action.range || 5,
+        targets.map((item) => item.combatant_id),
+      );
+      if (!placement) return [];
+      const allowed = new Set(placement.targetIds);
+      targets = targets.filter((item) => allowed.has(item.combatant_id));
+    }
+    return targets.slice(0, action.maxTargets || 1);
   }
 
   function selfRider(sequence, round, healer, action, healedOther) {
@@ -109,9 +119,17 @@
     };
   }
 
-  function resolveGroup(sequence, round, healer, targets, action, turnKey = null) {
+  function resolveGroup(sequence, round, healer, targets, action, turnKey = null, setup = null) {
     if ((action.maxTargets || 1) <= 1 || !targets.length || targets.length > action.maxTargets) throw new Error("Illegal group healing target set.");
     if (targets.some((target) => !targetAllowed(healer, target, action)) || !resourceAvailable(healer, action, turnKey)) throw new Error("Illegal group healing target or turn.");
+    if (action.areaRadiusFt != null) {
+      if (!setup) throw new Error("Area group healing requires the actual encounter setup.");
+      const ids = targets.map((target) => target.combatant_id);
+      const placement = A()?.bestFriendlyPlacement(
+        healer, setup, action.areaRadiusFt, action.range || 5, ids, ids,
+      );
+      if (!placement) throw new Error("Group healing targets do not fit one legal healing area.");
+    }
     if (slotHeal(action)) {
       if (!turnKey) throw new Error("Spell-slot group healing requires an active turn key.");
       C().markSlotSpellCast(healer.state, turnKey);
