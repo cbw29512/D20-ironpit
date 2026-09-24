@@ -290,6 +290,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "divine_smite_2014": progression.divine_smite_2014, "turn_unholy_2014": progression.turn_unholy_2014,
         "sacred_weapon_2014_bonus": progression.sacred_weapon_2014_bonus,
         "aura_of_protection_2014_bonus": progression.aura_of_protection_2014_bonus,
+        "paladin_aura_radius_2014_ft": progression.paladin_aura_radius_2014_ft,
         "aura_of_devotion_2014": progression.aura_of_devotion_2014,
         "aura_of_courage_2014": progression.aura_of_courage_2014,
         "survivor_heal_amount": progression.survivor_heal_amount,
