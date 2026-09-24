@@ -123,6 +123,7 @@ const goblin2014 = {
 };
 window.IRON_PIT_ACTION_ECONOMY = { available: () => true };
 window.IRON_PIT_BROWSER_STATE = {
+  ...window.IRON_PIT_BROWSER_STATE,
   distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
   effectiveMaxHp: (state) => state.template.max_hp || state.current_hp,
 };
