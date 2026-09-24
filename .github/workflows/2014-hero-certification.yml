@@ -2,6 +2,8 @@ name: 2014 Hero Certification
 
 on:
   push:
+    branches:
+      - main
   pull_request:
 
 permissions:
