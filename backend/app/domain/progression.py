@@ -6,6 +6,7 @@ from typing import Literal
 from app.domain.character_builds import AbilityName
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
+from app.domain.spell_modifiers import SpellModifierEffect
 
 
 class AbilityCheckMinimum(BaseModel):
@@ -59,6 +60,14 @@ class OpeningTargetingWard(BaseModel):
     save_ability: AbilityName = "wisdom"
     save_dc: int = Field(ge=1, le=40)
     ends_on_owner_attack: bool = True
+
+
+class PassiveModifierGrant(BaseModel):
+    """Source-owned passive effects compiled through the shared modifier engine at fight start."""
+
+    source_id: str
+    source_name: str = Field(min_length=1)
+    modifier_effects: list[SpellModifierEffect] = Field(min_length=1)
 
 
 class SavingThrowProficiencyGrant(BaseModel):
@@ -135,6 +144,7 @@ class ProgressionCombatFeatures(BaseModel):
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     opening_targeting_ward: OpeningTargetingWard | None = None
+    passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
