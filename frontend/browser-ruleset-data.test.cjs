@@ -25,8 +25,8 @@ const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
-assert.equal(heroes2014.length, 91, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-11");
-levels(fighters2014, 20); levels(barbarians2014, 20); levels(rogues2014, 20); levels(monks2014, 20); levels(paladins2014, 11);
+assert.equal(heroes2014.length, 92, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-12");
+levels(fighters2014, 20); levels(barbarians2014, 20); levels(rogues2014, 20); levels(monks2014, 20); levels(paladins2014, 12);
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
@@ -80,6 +80,7 @@ const paladin3 = paladins2014.find((hero) => hero.level === 3);
 const paladin6 = paladins2014.find((hero) => hero.level === 6);
 const paladin10 = paladins2014.find((hero) => hero.level === 10);
 const paladin11 = paladins2014.find((hero) => hero.level === 11);
+const paladin12 = paladins2014.find((hero) => hero.level === 12);
 assert.equal(paladin3.divine_smite_2014, true);
 assert.equal(paladin3.turn_unholy_2014, true);
 assert.ok(paladin6.aura_of_protection_2014_bonus > 0);
@@ -90,6 +91,8 @@ for (const attack of paladin11.attacks) {
     damageBonus: 0, damageType: "radiant",
   }]);
 }
+assert.equal(paladin12.ability_scores.strength, 20);
+assert.deepEqual(paladin12.spell_slots, [4, 3, 3]);
 assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "canonical browser monsters");
 for (const fixture of [
   "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
