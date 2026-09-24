@@ -26,4 +26,5 @@ jobs:
       - name: Run only current 2014 batch-targeted tests
         run: |
           pytest -q \
-            backend/tests/test_paladin_devotion_2014_level13_prep.py
+            backend/tests/test_paladin_devotion_2014_level13_prep.py \
+            backend/tests/test_paladin_devotion_2014_high_level_prep.py
