@@ -37,7 +37,7 @@
       E().spend(member.state, action.actionCost);
       member.state.resources[action.resourceId] -= action.resourceCost || 1;
       const applied = [];
-      let resistanceAttached = false;
+      let defensesAttached = false;
       (action.conditionIds || []).forEach((conditionId) => {
         const condition = T().apply(member.state, conditionId, member.combatant_id, {
           sourceEffectId: action.id,
@@ -46,12 +46,25 @@
           expiresRound: round + action.durationRounds,
           expiryTiming: action.expiryTiming || "source_turn_start",
           expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
-          ownedDamageResistances: resistanceAttached ? [] : [...(action.damageResistances || [])],
+          ownedDamageResistances: defensesAttached ? [] : [...(action.damageResistances || [])],
+          ownedDebuffCounters: defensesAttached ? [] : [...(action.debuffCounters || [])],
           useDefaultPoisonRecovery: false,
         });
-        if (condition) { applied.push(condition); resistanceAttached = true; }
+        if (condition) { applied.push(condition); defensesAttached = true; }
       });
-      if (!applied.length) throw new Error(`${action.name} applied no timed condition.`);
+      if (!defensesAttached && ((action.damageResistances || []).length || (action.debuffCounters || []).length)) {
+        T().apply(member.state, action.id, member.combatant_id, {
+          sourceEffectId: action.id,
+          sourceTemplate: member.state.template,
+          appliedRound: round,
+          expiresRound: round + action.durationRounds,
+          expiryTiming: action.expiryTiming || "source_turn_start",
+          expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
+          ownedDamageResistances: [...(action.damageResistances || [])],
+          ownedDebuffCounters: [...(action.debuffCounters || [])],
+          useDefaultPoisonRecovery: false,
+        });
+      }
 
       return {
         sequence, round_number: round, event_type: "feature",
