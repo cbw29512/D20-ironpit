@@ -27,7 +27,14 @@ def resolve_healing_support(
             return [], sequence
         before = {item.combatant_id: item.state.current_hp for item in targets}
         events, sequence = resolve_group_healing(
-            sequence, round_number, healer, targets, action, dice, turn_key,
+            sequence,
+            round_number,
+            healer,
+            targets,
+            action,
+            dice,
+            turn_key,
+            setup=setup,
         )
         healed_other = any(
             item.combatant_id != healer.combatant_id
