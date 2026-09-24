@@ -85,6 +85,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("turning-destruction-threshold")
     if features.slot_healing_other_self_rider:
         mechanics.add(features.slot_healing_other_self_rider.source_id)
+    if features.outgoing_healing_dice_maximizer:
+        mechanics.add(features.outgoing_healing_dice_maximizer.source_id)
     if features.once_per_turn_weapon_hit_damage_rider:
         mechanics.add(features.once_per_turn_weapon_hit_damage_rider.source_id)
     if features.ability_check_minimums:
