@@ -81,5 +81,10 @@
     "full_hero_certification": "batch PR/main gate",
     "full_repository_ci": "batch PR/main gate",
     "ready_rule": "No lane becomes READY until the full mandatory certification pipeline passes."
-  }
+  },
+  "shared_unlocks": [
+    "generic-failed-d20-additive-die",
+    "generic-spell-damage-bonus"
+  ],
+  "last_preparation_note": "Nyra Elemental Affinity fire damage bonus and Elian Empowered Evocation damage bonus now share the universal spell-damage grant; final batch smoke required."
 }
