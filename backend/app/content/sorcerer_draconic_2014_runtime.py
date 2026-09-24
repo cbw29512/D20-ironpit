@@ -84,7 +84,7 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             resources=_resources(level),
             weapon_masteries=[],
             wearing_heavy_armor=False,
-            visual=VisualLoadout(armor=None, main_hand="light-crossbow", off_hand="arcane-focus"),
+            visual=VisualLoadout(armor="unarmored", main_hand="light-crossbow", off_hand="arcane-focus"),
             source="D&D Basic Rules 2014: Human, Hermit, Equipment; D&D SRD 5.1 (2014): Sorcerer, Draconic Bloodline",
         )
     except Exception:
