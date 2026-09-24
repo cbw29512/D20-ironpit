@@ -18,7 +18,7 @@ window.IRON_PIT_BROWSER_STATE = {
 };
 
 vm.runInThisContext(fs.readFileSync("frontend/browser-healing.js", "utf8"), {
-  filename: "browser-healing.js",
+  filename: "browser-healing-policy.js", "browser-healing.js", "browser-group-healing.js",
 });
 
 const H = window.IRON_PIT_BROWSER_HEALING;
