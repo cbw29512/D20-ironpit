@@ -109,7 +109,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
             persistent_hazard_actions=build_paladin_persistent_hazard_actions_2014(level, charisma_modifier),
             healing_actions=build_paladin_healing_actions_2014(level, charisma_modifier),
             condition_removal_actions=build_paladin_condition_removal_actions_2014(level),
-            effect_removal_actions=([dispel_magic_2014()] if level >= 9 else []) + ([cleansing_touch_2014()] if level >= 14 else []),
+            effect_removal_actions=([dispel_magic_2014("charisma")] if level >= 9 else []) + ([cleansing_touch_2014()] if level >= 14 else []),
             saving_throw_bonuses=saves, skill_bonuses=_skill_bonuses(level, scores),
             weapon_masteries=[], fighting_style="Defense" if level >= 2 else None,
             fighting_styles=["Defense"] if level >= 2 else [], condition_immunities=[],
