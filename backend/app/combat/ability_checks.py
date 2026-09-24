@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
+from app.combat.failed_d20_bonus_die import apply_failed_d20_bonus_die
+from app.combat.dice import DiceProvider
 from app.domain.character_builds import AbilityName
 from app.domain.models import CombatantState, DiceRoll, RollRevision
 
@@ -65,10 +67,21 @@ def resolve_ability_check_outcome(
     ability: AbilityName,
     roll: DiceRoll,
     dc: int,
+    dice: DiceProvider | None = None,
 ) -> tuple[DiceRoll, bool]:
     """Apply universal post-roll ability-check revisions, then test against the DC."""
     try:
         revised = apply_ability_check_minimum(state, ability, roll)
+        has_bonus_grant = any(
+            "ability_check" in grant.test_kinds
+            for grant in state.template.progression_features.failed_d20_bonus_die_grants
+        )
+        if revised.total < dc and has_bonus_grant:
+            if dice is None:
+                raise ValueError("Ability-check bonus-die grants require a dice provider.")
+            revised, _, _ = apply_failed_d20_bonus_die(
+                state, revised, dc, dice, test_kind="ability_check",
+            )
         revised, _, _ = apply_failed_d20_test_override(
             state, revised, failed=revised.total < dc, test_kind="ability_check",
         )
