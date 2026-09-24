@@ -1,0 +1,31 @@
+from __future__ import annotations
+
+import logging
+
+from app.domain.actions import AbilityName
+from app.domain.effect_removal import EffectRemovalAction
+
+logger = logging.getLogger(__name__)
+_SOURCE = "D&D Basic Rules 2014 / SRD 5.1: Dispel Magic"
+
+
+def dispel_magic_2014(casting_ability: AbilityName) -> EffectRemovalAction:
+    """Build the shared 2014 Dispel Magic action for any legal casting ability."""
+    try:
+        return EffectRemovalAction(
+            id="dispel-magic",
+            name="Dispel Magic",
+            level=3,
+            action_cost="action",
+            range_ft=120,
+            casting_ability=casting_ability,
+            target_mode="enemy",
+            auto_remove_max_level=3,
+            resource_id="spell-slot-3",
+            resource_cost=1,
+            expends_spell_slot=True,
+            animation="dispel-magic",
+        )
+    except Exception:
+        logger.exception("Failed to compile shared 2014 Dispel Magic for %s.", casting_ability)
+        raise
