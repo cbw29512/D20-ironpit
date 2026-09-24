@@ -113,6 +113,8 @@ def resolve_save_action(
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
     save_context = SavingThrowContext(
         magical_effect=action.magical_effect,
+        source_is_spell=action.spell_effect,
+        source_creature_type=actor.state.template.creature_type,
         effect_tags=frozenset(
             {action.damage_type} if action.damage_type else {
                 component.damage_type for component in action.damage_components
@@ -122,6 +124,13 @@ def resolve_save_action(
     advantage_sources = saving_throw_advantage_source_names(
         target.state, action.save_ability, save_context,
     )
+    from app.combat.timed_auras import timed_aura_saving_throw_advantage_source_names
+    advantage_sources = sorted(set([
+        *advantage_sources,
+        *timed_aura_saving_throw_advantage_source_names(
+            target.state, action.save_ability, save_context,
+        ),
+    ]))
     save_roll, succeeded = resolve_saving_throw(
         target.state, action.save_ability, action.dc, dice, save_context,
     )
