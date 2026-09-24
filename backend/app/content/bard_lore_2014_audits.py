@@ -79,8 +79,13 @@ def build_bard_lore_2014_feature_audits(level: int) -> list[FeatureAudit]:
             audits.append(_audit("magical-secrets", "Magical Secrets", "class", automated=False,
                                  notes="Spell choices remain part of the pending combat spell package."))
         if level >= 14:
-            audits.append(_audit("peerless-skill", "Peerless Skill", "subclass", automated=False,
-                                 notes="Will reuse the generic Bardic Inspiration additive D20 bonus-die primitive."))
+            audits.append(_audit(
+                "peerless-skill", "Peerless Skill", "subclass",
+                notes=(
+                    "Uses the generic resource-backed failed-D20 additive die on Lyra's own ability checks, "
+                    "spending one Bardic Inspiration die of the current progression size."
+                ),
+            ))
         if level >= 20:
             audits.append(_audit(
                 "superior-inspiration", "Superior Inspiration", "class",
