@@ -99,11 +99,11 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
         if level >= 13:
             audits.append(_audit(
                 "devotion-oath-spells-4", "Oath of Devotion 4th-level Spells", "subclass",
-                automated=False,
                 notes=(
-                    "Guardian of Faith is bound to the universal persistent-hazard engine. "
-                    "Freedom of Movement reuses magical Paralyzed/Restrained prevention, but its remaining "
-                    "movement semantics are not yet fully automated; level 13 therefore remains uncertified."
+                    "Guardian of Faith uses the universal persistent-hazard engine. Freedom of Movement uses "
+                    "source-owned magical Paralyzed/Restrained prevention, difficult-terrain bypass, magical "
+                    "Speed-reduction prevention, and 5-foot nonmagical grapple escape. Its underwater clauses "
+                    "remain source-recorded but arena-neutral in the standard dry Iron Pit."
                 ),
             ))
         if level >= 14:
