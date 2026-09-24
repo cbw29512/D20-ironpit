@@ -43,7 +43,7 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
             weapon_masteries=[],
             fighting_style="Archery" if level >= 2 else None,
             fighting_styles=["Archery"] if level >= 2 else [],
-            combat_loadout_kind="ranged",
+            combat_loadout_kind="two-handed",
             feature_audits=build_ranger_hunter_2014_feature_audits(level),
             source_references=[
                 "D&D Basic Rules 2014: Human, Outlander, Equipment",
