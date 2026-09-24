@@ -115,7 +115,7 @@ def test_cleansing_touch_removes_opposing_spell_without_stripping_friendly_buff(
     assert effect.effect_id == "hostile-test-spell"
 
     event = resolve_effect_removal(
-        1, 1, paladin, setup, action, effect, FixedDiceProvider([]), "1:aurelia",
+        1, 1, paladin, setup, action, effect, FixedDiceProvider([1]), "1:aurelia",
     )
 
     assert paladin.state.action_available is False
