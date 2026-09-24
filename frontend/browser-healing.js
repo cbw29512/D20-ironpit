@@ -17,6 +17,9 @@
 
   function targetAllowed(healer, target, action) {
     if (target.state.is_dead || !target.state.is_alive || target.state.current_hp >= S().effectiveMaxHp(target.state) || swarm(target.state)) return false;
+    const creatureType = String(target.state.template.creature_type || "").split(" (")[0].toLowerCase();
+    const excluded = new Set((action.excludedCreatureTypes || []).map((value) => String(value).toLowerCase()));
+    if (creatureType && excluded.has(creatureType)) return false;
     if (distance(healer, target) > (action.range || 5)) return false;
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
