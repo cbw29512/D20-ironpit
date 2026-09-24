@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available
 from app.combat.bloodied import is_bloodied
+from app.combat.defensive_modifier_rules import healing_is_maximized
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -11,6 +12,17 @@ from app.domain.traits import CombatTrait
 
 def slot_heal(action: HealingAction) -> bool:
     return bool(action.resource_id and action.resource_id.startswith("spell-slot-"))
+
+
+def healing_dice_maximized(
+    healer: EncounterCombatant,
+    target: EncounterCombatant,
+) -> bool:
+    """Combine caster-owned and recipient-owned healing maximization semantics."""
+    return (
+        healer.state.template.progression_features.outgoing_healing_dice_maximizer is not None
+        or healing_is_maximized(target.state)
+    )
 
 
 def resource_available(
