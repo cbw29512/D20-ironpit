@@ -10,7 +10,7 @@ from app.content.shared_spell_attacks_2014 import fire_bolt_2014
 from app.content.shared_spell_saves_2014 import fireball_2014, shatter_2014
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
-from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
+from app.domain.progression import FailedD20BonusDieGrant, ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
 logger = logging.getLogger(__name__)
 _ALL_ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
@@ -154,6 +154,17 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             skill_bonuses=_skill_bonuses(level),
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[fey_ancestry],
+                failed_d20_bonus_die_grants=(
+                    [FailedD20BonusDieGrant(
+                        source_id="peerless-skill",
+                        source_name="Peerless Skill",
+                        resource_id="bardic-inspiration",
+                        resource_cost=1,
+                        dice_size=bardic_inspiration_die(level),
+                        test_kinds=["ability_check"],
+                    )]
+                    if level >= 14 else []
+                ),
             ),
             initiative_resource_refill_grants=superior,
             resources=_resources(level),
