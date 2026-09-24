@@ -14,6 +14,8 @@ def _resources(level: int) -> tuple[tuple[str, int], ...]:
     row = warlock_fiend_2014_level(level)
     resources = [(f"spell-slot-{row.pact_slot_level}", row.pact_slots)]
     resources.extend((f"mystic-arcanum-{spell_level}", 1) for spell_level in row.mystic_arcanum_levels)
+    if level >= 6:
+        resources.append(("dark-ones-own-luck", 1))
     return tuple(resources)
 
 
