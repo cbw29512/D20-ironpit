@@ -4,7 +4,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.spell_policy import SpellChoice
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import available_free_spell_cast, consume_free_spell_cast, mark_slot_spell_cast
 from app.combat.spell_damage_bonus import matching_spell_damage_bonuses
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
@@ -68,7 +68,10 @@ def resolve_spell(
         raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
 
     remaining = None
-    if choice.slot_level > 0:
+    free_grant = available_free_spell_cast(caster.state, spell.id) if choice.slot_level > 0 else None
+    if free_grant is not None:
+        remaining = consume_free_spell_cast(caster.state, free_grant)
+    elif choice.slot_level > 0:
         resource = _resource(caster.state, choice.slot_level)
         if resource is None or resource.current_uses < 1:
             raise ValueError(f"No level {choice.slot_level} spell slot remains.")
@@ -85,7 +88,15 @@ def resolve_spell(
             f" Area covers {len(placement.enemy_ids)} enemies and "
             f"{len(placement.friendly_ids)} unprotected allies."
         )
-    slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
+    slot_text = (
+        "cantrip"
+        if choice.slot_level == 0
+        else (
+            f"{free_grant.source_name} without expending a spell slot"
+            if free_grant is not None
+            else f"level {choice.slot_level} slot"
+        )
+    )
     events = [BattleEvent(
         sequence=sequence, round_number=round_number, event_type="feature",
         actor_id=caster.combatant_id, actor_name=caster.state.template.name,
