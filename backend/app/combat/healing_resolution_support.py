@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.combat.defensive_modifier_rules import healing_is_maximized
+from app.combat.healing_policy import healing_dice_maximized
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.zero_hp import restore_hit_points
@@ -65,6 +65,7 @@ def resolve_percentile_healing_gate(
 
 
 def resolve_healing_amount(
+    healer: EncounterCombatant,
     target: EncounterCombatant,
     action: HealingAction,
     dice: DiceProvider,
@@ -75,7 +76,7 @@ def resolve_healing_amount(
         return [], healed, healed, "restore-to-effective-max", 0
     rolls = (
         [action.dice_size for _ in range(action.dice_count)]
-        if healing_is_maximized(target.state)
+        if healing_dice_maximized(healer, target)
         else [dice.roll(action.dice_size) for _ in range(action.dice_count)]
     )
     total = sum(rolls) + action.healing_bonus
