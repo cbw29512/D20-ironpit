@@ -5,7 +5,7 @@ from app.combat.ability_checks import resolve_ability_check_outcome
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
-from app.combat.debuff_counters import movement_counter_cost
+from app.combat.debuff_counters import debuff_is_countered, movement_counter_cost
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.modifier_stack import effective_speed
@@ -91,7 +91,15 @@ def resolve_movement_countered_grapples(state: CombatantState) -> list[tuple[str
 
 
 def speed_is_zero(state: CombatantState) -> bool:
-    return bool(state.grapple_sources) or condition_speed_is_zero(state)
+    grapple_stops_speed = any(
+        not debuff_is_countered(
+            state,
+            "speed-reduction",
+            source_is_magical=source.source_is_magical,
+        )
+        for source in state.grapple_sources
+    )
+    return grapple_stops_speed or condition_speed_is_zero(state)
 
 
 def grapple_attack_disadvantage(state: CombatantState, target_id: str) -> int:
