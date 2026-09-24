@@ -64,5 +64,31 @@
     return candidates[0];
   }
 
-  window.IRON_PIT_BROWSER_SPELL_AREA = { areaSlotCount, bestPlacement };
+  function bestFriendlyPlacement(caster, setup, radius, spellRange, eligibleIds = [], requiredIds = []) {
+    const slotCount = areaSlotCount(radius);
+    const [, friends] = sides(caster, setup);
+    const eligible = new Set(eligibleIds);
+    const required = new Set(requiredIds);
+    const eligibleMembers = friends.filter((member) => eligible.has(member.combatant_id));
+    if (!eligibleMembers.length) return null;
+    const candidates = [];
+    for (const center of candidateCenters(caster, eligibleMembers, radius, spellRange)) {
+      for (let start = 0; start <= MAX_SLOTS - slotCount; start += 1) {
+        const targetIds = friends
+          .map((member, slot) => ({ member, slot }))
+          .filter(({ member, slot }) => eligible.has(member.combatant_id)
+            && inside(member, slot, start, slotCount, center, radius))
+          .map(({ member }) => member.combatant_id);
+        if (!targetIds.length || [...required].some((id) => !targetIds.includes(id))) continue;
+        candidates.push({ startSlot: start, slotCount, centerFt: center, targetIds });
+      }
+    }
+    if (!candidates.length) return null;
+    candidates.sort((a, b) => b.targetIds.length - a.targetIds.length
+      || Math.abs(caster.position_ft - a.centerFt) - Math.abs(caster.position_ft - b.centerFt)
+      || a.startSlot - b.startSlot);
+    return candidates[0];
+  }
+
+  window.IRON_PIT_BROWSER_SPELL_AREA = { areaSlotCount, bestFriendlyPlacement, bestPlacement };
 })();
