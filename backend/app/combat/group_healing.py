@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import spend
 from app.combat.defensive_modifier_rules import healing_is_maximized
+from app.combat.friendly_area import best_friendly_area_placement
 from app.combat.healing import _resource_available, _slot_heal, _target_allowed
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast
@@ -30,6 +31,18 @@ def choose_group_healing_targets(
         if target.state.current_hp == 0
         or target.state.current_hp * 2 <= effective_max_hp(target.state)
     ]
+    if action.area_radius_ft is not None:
+        placement = best_friendly_area_placement(
+            healer,
+            setup,
+            action.area_radius_ft,
+            action.range_ft,
+            {target.combatant_id for target in worthwhile},
+        )
+        if placement is None:
+            return []
+        allowed_ids = set(placement.target_ids)
+        worthwhile = [target for target in worthwhile if target.combatant_id in allowed_ids]
     return worthwhile[:action.max_targets]
 
 
@@ -46,6 +59,24 @@ def resolve_group_healing(
         raise ValueError("Group healing requires one or more legal targets within max_targets.")
     if any(not _target_allowed(healer, target, action) for target in targets):
         raise ValueError("Group healing contains an illegal target.")
+    if action.area_radius_ft is not None:
+        target_ids = {target.combatant_id for target in targets}
+        placement = best_friendly_area_placement(
+            healer,
+            EncounterSetup(
+                heroes=[] if healer.side != "heroes" else [healer, *[target for target in targets if target is not healer]],
+                monsters=[] if healer.side != "monsters" else [healer, *[target for target in targets if target is not healer]],
+                hero_total_levels=0,
+                monster_total_cr="0",
+                ruleset=healer.state.template.ruleset,
+            ),
+            action.area_radius_ft,
+            action.range_ft,
+            target_ids,
+            required_ids=target_ids,
+        )
+        if placement is None:
+            raise ValueError("Group healing targets do not fit one legal healing area.")
     if not _resource_available(healer, action, turn_key):
         raise ValueError("Group healing resource is unavailable.")
     if _slot_heal(action):
