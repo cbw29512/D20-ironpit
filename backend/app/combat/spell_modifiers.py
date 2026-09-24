@@ -29,6 +29,7 @@ def build_spell_modifier(
         id=f"{source_id}:{spell_id}:{target_id}:{index}",
         source_id=source_id,
         source_effect_id=spell_id,
+        source_is_magical=True,
         kind=ModifierKind(effect.kind),
         flat_bonus=effect.flat_bonus,
         dice_count=effect.dice_count,
