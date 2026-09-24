@@ -1,4 +1,10 @@
-from app.content.bard_lore_2014_progression import bard_lore_2014_level
+from app.content.bard_lore_2014_data import (
+    CANTRIPS_KNOWN,
+    FEATURE_LEVELS,
+    SPELLS_KNOWN,
+    SPELL_SLOTS,
+    bardic_inspiration_die,
+)
 from app.content.druid_land_2014_progression import druid_land_2014_level
 from app.content.ranger_hunter_2014_progression import ranger_hunter_2014_level
 from app.content.sorcerer_draconic_2014_progression import sorcerer_draconic_2014_level
@@ -7,11 +13,16 @@ from app.content.wizard_evoker_2014_progression import wizard_evoker_2014_level
 
 
 def test_2014_batch_spines_use_2014_breakpoints() -> None:
-    assert bard_lore_2014_level(3).features_added[-1] == "lore-cutting-words"
-    assert bard_lore_2014_level(5).bardic_die_size == 8
-    assert bard_lore_2014_level(10).bardic_die_size == 10
-    assert bard_lore_2014_level(15).bardic_die_size == 12
-    assert bard_lore_2014_level(20).features_added == ("superior-inspiration",)
+    assert FEATURE_LEVELS["cutting-words"] == 3
+    assert FEATURE_LEVELS["additional-magical-secrets"] == 6
+    assert FEATURE_LEVELS["peerless-skill"] == 14
+    assert FEATURE_LEVELS["superior-inspiration"] == 20
+    assert bardic_inspiration_die(5) == 8
+    assert bardic_inspiration_die(10) == 10
+    assert bardic_inspiration_die(15) == 12
+    assert SPELL_SLOTS[20] == (4, 3, 3, 3, 3, 2, 2, 1, 1)
+    assert SPELLS_KNOWN[19] == 22
+    assert CANTRIPS_KNOWN[9] == 4
 
     assert ranger_hunter_2014_level(2).spells_known == 2
     assert ranger_hunter_2014_level(3).features_added[-1] == "hunter-colossus-slayer"
