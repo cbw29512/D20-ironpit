@@ -16,6 +16,7 @@ from app.content.cleric_2014_level1_spells import (
 )
 from app.content.cleric_2014_level4_spells import death_ward_2014, guardian_of_faith_2014
 from app.content.cleric_2014_level5_spells import mass_cure_wounds_2014
+from app.content.cleric_2014_divine_intervention import divine_intervention_full_heal_2014
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
 from app.content.cleric_life_2014_runtime_support import (
     build_cleric_progression_2014,
@@ -40,8 +41,8 @@ logger = logging.getLogger(__name__)
 def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
     """Compile the currently certified RAW 2014 Life Cleric runtime."""
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Life Cleric runtime is currently certified through level 9.")
+        if level not in range(1, 11):
+            raise ValueError("2014 Life Cleric runtime is currently certified through level 10.")
         profile = build_seraphine_dawnshield_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -97,6 +98,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 healing_word_2014(wisdom_modifier, 3),
                 cure_wounds_2014(wisdom_modifier, 3),
                 *([mass_cure_wounds_2014(wisdom_modifier)] if level >= 9 else []),
+                *([divine_intervention_full_heal_2014(level)] if level >= 10 else []),
             ],
             condition_removal_actions=(
                 [lesser_restoration_2014()] if level >= 3 else []
@@ -127,7 +129,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 "D&D Basic Rules 2014: Hill Dwarf, Acolyte, Cleric, Life Domain, "
                 "Bless, Cure Wounds, Guiding Bolt, Healing Word, Inflict Wounds, "
                 "Sacred Flame, Shield of Faith, Aid, Lesser Restoration, Spiritual Weapon, "
-                "Beacon of Hope, Death Ward, Guardian of Faith, Mass Cure Wounds, Equipment"
+                "Beacon of Hope, Death Ward, Guardian of Faith, Mass Cure Wounds, Divine Intervention, Equipment"
             ),
         )
     except Exception:
