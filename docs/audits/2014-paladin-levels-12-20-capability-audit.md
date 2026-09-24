@@ -38,6 +38,21 @@ Repository inventory after level 12 certification found:
 3. **Freedom of Movement:** the repository contains the spell name in subclass overlay data, but no runnable 2014 universal implementation was found. Its arena-relevant behavior spans difficult-terrain immunity, prevention of magical speed reduction and paralysis/restraint, automatic escape from nonmagical restraints by spending movement, and underwater movement/attack normalization. No existing capability was found that can honestly represent the complete spell as one reusable action.
 4. **Certification consequence:** level 13 remains blocked on a generic/data-driven Freedom of Movement representation and an explicit Iron Pit disposition for Guardian of Faith. Do not extend Aurelia's certified level ranges or READY manifests until those behaviors are resolved and tested.
 
+## Reconciliation against the current universal engine
+
+The original level-13 inventory predates later universal work. Re-auditing the current branch changes the disposition of both oath spells:
+
+1. **Guardian of Faith — `ENGINE_EXISTS_BINDING_MISSING`.**
+   - The current generic `PersistentHazardAction` / `PersistentHazardState` model already supports the spell's relevant 2014 combat shape: legal stationary placement, Large footprint, 30-ft cast range, 10-ft movement-entry trigger, one trigger per hostile creature turn, Dexterity save, fixed 20 radiant damage on a failed save / 10 on success, and a 60-damage total capacity that removes the hazard.
+   - This should be bound as spell data, not implemented as a summoned creature and not given a Paladin-specific resolver.
+   - The long printed duration is source data; the normal Iron Pit fight lifecycle discards the encounter state afterward.
+
+2. **Freedom of Movement — partially reusable, still not complete.**
+   - Magical Paralyzed/Restrained prevention is now an existing source-owned timed-effect capability through `owned_magical_condition_immunities`; this portion is `ENGINE_EXISTS_BINDING_MISSING`.
+   - The remaining distinct mechanics still require focused universal inventory: ignoring difficult-terrain movement cost, preventing magical speed reduction, spending 5 ft of movement to escape nonmagical restraints/grapples, and underwater movement/attack normalization.
+   - Underwater normalization is currently arena-neutral in the standard dry Pit unless a supported effect creates a relevant water environment; do not use that arena-neutral disposition to erase the printed rule from source data.
+   - Do not certify level 13 until every arena-relevant Freedom of Movement piece is either bound to an existing generic mechanic or implemented as a genuinely reusable missing primitive.
+
 ## Gaps that require focused inventory before code
 
 1. **Freedom of Movement:** add only generic movement/condition-prevention pieces that are genuinely absent. Do not create a spell-name resolver.
