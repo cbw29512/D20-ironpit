@@ -3,7 +3,7 @@
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set([
-    "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
+    "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", "effect-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed",
   ]);
@@ -21,6 +21,8 @@
     if (item.kind === "saving-throw-flat" && !(item.flat_bonus || 0)) throw new Error("Flat saving-throw modifiers require a nonzero bonus.");
     if (item.kind === "condition-immunity" && !item.condition_id) throw new Error("Condition-immunity modifiers require a condition id.");
     if (item.kind !== "condition-immunity" && item.condition_id) throw new Error(`${item.kind} does not accept a condition id.`);
+    if (item.kind === "effect-immunity" && !item.effect_tag) throw new Error("Effect-immunity modifiers require an effect tag.");
+    if (item.kind !== "effect-immunity" && item.effect_tag) throw new Error(`${item.kind} does not accept an effect tag.`);
     if (item.kind === "condition-immunity" && (item.flat_bonus || 0)) throw new Error("Condition immunity does not accept a flat bonus.");
     if (item.requires_magical_effect && item.kind !== "saving-throw-advantage") {
       throw new Error("Only saving-throw Advantage can require magical-effect context.");
