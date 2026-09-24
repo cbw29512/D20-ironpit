@@ -210,6 +210,10 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
     }
     if effect.debuff_counter is not None:
         row["debuffCounter"] = effect.debuff_counter.model_dump(mode="json")
+    if effect.replacement_hp:
+        row["replacementHp"] = effect.replacement_hp
+    if effect.prevents_instant_death:
+        row["preventsInstantDeath"] = True
     if effect.consume_on_attack_against:
         row["consumeOnAttackAgainst"] = True
     if effect.expires_after_source_turns is not None:
