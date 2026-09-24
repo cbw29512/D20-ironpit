@@ -7,6 +7,7 @@ from app.content.cleric_life_2014_runtime import build_seraphine_dawnshield_2014
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 
 
+# Exact-head verification guard: level 18 remains one persistent Seraphine progression.
 def test_level_eighteen_advances_level_seventeen_without_rebuilding_seraphine() -> None:
     level_seventeen = build_seraphine_dawnshield_2014_profile(17)
     level_eighteen = build_seraphine_dawnshield_2014_profile(18)
