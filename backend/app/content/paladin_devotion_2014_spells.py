@@ -37,6 +37,10 @@ def protection_from_evil_and_good_2014() -> DefensiveSpellAction:
                 kind="condition-immunity", condition_id="frightened",
                 source_creature_types=_PROTECTED_TYPES,
             ),
+            SpellModifierEffect(
+                kind="effect-immunity", effect_tag="possession",
+                source_creature_types=_PROTECTED_TYPES,
+            ),
         ],
         animation="protection", source=_SOURCE,
     )
