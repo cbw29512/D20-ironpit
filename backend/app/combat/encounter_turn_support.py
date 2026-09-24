@@ -13,6 +13,7 @@ from app.combat.healing_support import resolve_healing_support
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
 from app.combat.pit_policy import save_distance, target_order
+from app.combat.timed_auras import choose_timed_aura_action, resolve_timed_aura_activation
 from app.combat.timed_self_buffs import choose_timed_self_buff_action, resolve_timed_self_buff
 from app.combat.saving_throws import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -82,6 +83,10 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             sequence, round_number, member, setup, dice,
         )
         events.extend(paladin_events)
+        timed_aura = choose_timed_aura_action(member)
+        if timed_aura is not None:
+            events.append(resolve_timed_aura_activation(sequence, round_number, member, timed_aura))
+            sequence += 1
         self_buff = choose_timed_self_buff_action(member)
         if self_buff is not None:
             events.append(resolve_timed_self_buff(sequence, round_number, member, self_buff))
