@@ -5,6 +5,8 @@ import logging
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.sorcerer_draconic_2014_data import ability_scores
 from app.content.sorcerer_draconic_2014_progression import sorcerer_draconic_2014_level
+from app.content.shared_spell_attacks_2014 import fire_bolt_2014
+from app.content.shared_spell_saves_2014 import disintegrate_2014, fireball_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
@@ -70,6 +72,13 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
         if level not in range(1, 21):
             raise ValueError("2014 Draconic Sorcerer build support covers levels 1 through 20.")
         scores = ability_scores(level)
+        spell_attack_bonus = proficiency_bonus(level) + scores.modifier("charisma")
+        spell_save_dc = 8 + proficiency_bonus(level) + scores.modifier("charisma")
+        save_spells = []
+        if level >= 5:
+            save_spells.append(fireball_2014(spell_save_dc))
+        if level >= 11:
+            save_spells.append(disintegrate_2014(spell_save_dc))
         return CombatantTemplate(
             id=f"nyra-emberveil-2014-l{level}", name="Nyra Emberveil",
             archetype="Sorcerer", level=level, kind="character", ruleset="2014",
@@ -78,6 +87,8 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             max_hp=fixed_hit_points(level, 6, scores.modifier("constitution")) + level,
             speed_ft=30, initiative_bonus=scores.modifier("dexterity"),
             weapon_attack=_attack(level),
+            spell_attack_actions=[fire_bolt_2014(spell_attack_bonus, level)],
+            spell_save_actions=save_spells,
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("constitution", "charisma")),
             skill_bonuses=_skills(level),
             progression_features=ProgressionCombatFeatures(),
