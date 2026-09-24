@@ -169,7 +169,15 @@ def _save(action: Any) -> dict[str, Any]:
         "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
         "range": action.range_ft, "damageDiceCount": action.damage_dice_count,
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
-        "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
+        "damageType": action.damage_type,
+        "damageComponents": [{
+            "source": component.source,
+            "diceCount": component.dice_count,
+            "diceSize": component.dice_size,
+            "damageBonus": component.damage_bonus,
+            "damageType": component.damage_type,
+        } for component in action.damage_components],
+        "successDamage": action.success_damage, "animation": action.animation,
     }
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
@@ -195,6 +203,13 @@ def _spell(action: Any) -> dict[str, Any]:
         "range": action.range_ft, "saveAbility": action.save_ability, "dc": action.dc,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "damageComponents": [{
+            "source": component.source,
+            "diceCount": component.dice_count,
+            "diceSize": component.dice_size,
+            "damageBonus": component.damage_bonus,
+            "damageType": component.damage_type,
+        } for component in action.damage_components],
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
         "concentration": action.concentration, "animation": action.animation,
     }
