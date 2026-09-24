@@ -73,7 +73,7 @@
         const hpBefore = target.state.current_hp;
         if (applied) A().applyDamage(target.state, applied, false, [action.damageType], states);
         events.push({
-          sequence: sequence++, round_number: round, event_type: "damage",
+          sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: source.combatant_id, actor_name: source.state.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           damage_roll: { notation: String(raw), rolls: [], modifier: raw, total: applied },
