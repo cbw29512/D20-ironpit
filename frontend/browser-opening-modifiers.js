@@ -4,6 +4,17 @@
   function build(template) {
     try {
       const modifiers = [];
+      for (const [index, grant] of (template?.passive_modifier_grants || []).entries()) {
+        modifiers.push({
+          id: `${template.id}:${grant.source_id}:passive:${index}`,
+          source_id: template.id,
+          source_effect_id: grant.source_id,
+          source_name: grant.source_name,
+          kind: grant.kind,
+          condition_id: grant.condition_id || null,
+          source_creature_types: [...(grant.source_creature_types || [])],
+        });
+      }
       const ward = template?.opening_targeting_ward;
       if (ward) {
         modifiers.push({
