@@ -76,7 +76,14 @@ def resolve_save_action(
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
+        applied_conditions = apply_grapple(
+            target.state,
+            actor.combatant_id,
+            action.grapple_escape_dc,
+            action.range_ft,
+            restrains=action.restrains_while_grappled,
+            source_is_magical=action.magical_effect,
+        )
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if advantage_sources:
