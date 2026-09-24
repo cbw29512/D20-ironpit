@@ -62,6 +62,22 @@ def test_2014_seraphine_level_one_spell_package() -> None:
     ]
 
 
+def test_2014_seraphine_cantrip_progression_matches_raw_cleric_table() -> None:
+    level_one = build_cleric_2014_spell_package(1, 3)
+    level_four = build_cleric_2014_spell_package(4, 4)
+    level_ten = build_cleric_2014_spell_package(10, 5)
+
+    assert [spell.id for spell in level_one.cantrips] == [
+        "guidance", "sacred-flame", "thaumaturgy",
+    ]
+    assert [spell.id for spell in level_four.cantrips] == [
+        "guidance", "sacred-flame", "thaumaturgy", "mending",
+    ]
+    assert [spell.id for spell in level_ten.cantrips] == [
+        "guidance", "sacred-flame", "thaumaturgy", "mending", "light",
+    ]
+
+
 def test_2014_seraphine_level_two_extends_level_one_spell_capacity() -> None:
     level_one = build_seraphine_dawnshield_2014_profile(1)
     level_two = build_seraphine_dawnshield_2014_profile(2)
