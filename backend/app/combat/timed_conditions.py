@@ -7,6 +7,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
 from app.domain.models import BattleEvent, CombatantState, CombatantTemplate, EncounterCombatant, EncounterSetup, TimedEffect
+from app.domain.movement import DifficultTerrainScope
 from app.domain.runtime import TimedTurnBehavior
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,7 @@ def apply_timed_condition(
     ends_if_source_dead: bool = False,
     owned_damage_resistances: list[DamageType] | None = None,
     owned_magical_condition_immunities: list[str] | None = None,
+    difficult_terrain_bypass_scope: DifficultTerrainScope | None = None,
     zero_hp_replacement_hp: int = 0,
     prevents_nondamage_instant_death: bool = False,
     use_default_poison_recovery: bool = True,
@@ -92,6 +94,7 @@ def apply_timed_condition(
             ends_if_source_dead=ends_if_source_dead,
             owned_damage_resistances=owned_damage_resistances or [],
             owned_magical_condition_immunities=owned_magical_condition_immunities or [],
+            difficult_terrain_bypass_scope=difficult_terrain_bypass_scope,
             zero_hp_replacement_hp=zero_hp_replacement_hp,
             prevents_nondamage_instant_death=prevents_nondamage_instant_death,
         ))
