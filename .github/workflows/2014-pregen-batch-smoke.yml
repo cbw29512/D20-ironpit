@@ -1,0 +1,29 @@
+name: 2014 Pregen Batch Smoke
+
+on:
+  push:
+    branches:
+      - "batch/2014-*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pregen-2014-batch-smoke-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  targeted-pregen-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Run only current 2014 batch-targeted tests
+        run: |
+          pytest -q \
+            backend/tests/test_paladin_devotion_2014_level13_prep.py
