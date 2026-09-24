@@ -20,6 +20,7 @@ from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.spell_damage_bonus import matching_spell_damage_bonuses
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.zero_hp import apply_damage
 from app.domain.combatants import DamageType
@@ -37,15 +38,26 @@ def _slot_resource(caster: EncounterCombatant, spell: SpellAttackAction, turn_ke
     return next((item for item in caster.state.resources if item.id == f"spell-slot-{spell.level}" and item.current_uses > 0), None)
 
 
-def _damage(spell: SpellAttackAction, critical: bool, dice):
-    count = spell.damage_dice_count * (2 if critical else 1)
-    rolls = [dice.roll(spell.damage_dice_size) for _ in range(count)]
-    total = sum(rolls) + spell.damage_bonus; notation = f"{count}d{spell.damage_dice_size}+{spell.damage_bonus}"
-    damage_type = DamageType(spell.damage_type) if spell.damage_type else None
-    if damage_type is None:
-        return DiceRoll(notation=notation, rolls=rolls, modifier=spell.damage_bonus, total=total), []
-    component = DamageRollComponent(source=spell.name, notation=notation, rolls=rolls, modifier=spell.damage_bonus, damage_type=damage_type, total=total)
-    return DiceRoll(notation=notation, rolls=rolls, modifier=spell.damage_bonus, total=total), [component]
+def _damage(state, spell: SpellAttackAction, critical: bool, dice):
+    try:
+        count = spell.damage_dice_count * (2 if critical else 1)
+        rolls = [dice.roll(spell.damage_dice_size) for _ in range(count)]
+        matches = matching_spell_damage_bonuses(state, spell.id, spell.damage_type)
+        damage_bonus = spell.damage_bonus + sum(amount for _, _, amount in matches)
+        total = sum(rolls) + damage_bonus
+        notation = f"{count}d{spell.damage_dice_size}+{damage_bonus}"
+        damage_type = DamageType(spell.damage_type) if spell.damage_type else None
+        names = [name for _, name, _ in matches]
+        if damage_type is None:
+            return DiceRoll(notation=notation, rolls=rolls, modifier=damage_bonus, total=total), [], names
+        component = DamageRollComponent(
+            source=spell.name, notation=notation, rolls=rolls, modifier=damage_bonus,
+            damage_type=damage_type, total=total,
+        )
+        return DiceRoll(notation=notation, rolls=rolls, modifier=damage_bonus, total=total), [component], names
+    except Exception:
+        logger.exception("Failed spell-attack damage resolution for %s.", state.template.name)
+        raise
 
 
 def resolve_spell_attack(
@@ -95,9 +107,9 @@ def resolve_spell_attack(
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
-        damage_roll = None; damage_components = []
+        damage_roll = None; damage_components = []; spell_bonus_names = []
         if hit:
-            damage_roll, rolled = _damage(spell, critical, dice)
+            damage_roll, rolled, spell_bonus_names = _damage(caster.state, spell, critical, dice)
             applied_total, damage_components = apply_damage_defenses(target.state, rolled); damage_roll.total = applied_total
             affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
             apply_damage(target.state, applied_total, critical=critical,
@@ -112,6 +124,8 @@ def resolve_spell_attack(
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
+        if spell_bonus_names:
+            description += f" {' and '.join(spell_bonus_names)} adds its spell damage bonus."
         if ward is not None:
             description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
         event = BattleEvent(
