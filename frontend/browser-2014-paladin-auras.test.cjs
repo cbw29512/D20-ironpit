@@ -104,3 +104,22 @@ function setup(sourceTemplate, targetPosition = 5) {
 }
 
 console.log("2014 Paladin browser aura parity passed.");
+
+
+{
+  const { ally, battle } = setup(template("Aurelia 18", {
+    aura_of_protection_2014_bonus: 4,
+    paladin_aura_radius_2014_ft: 30,
+    aura_of_devotion_2014: true,
+    aura_of_courage_2014: true,
+  }), 25);
+  A.sync(battle);
+  assert.equal(M.savingThrowFlat(ally.state), 4);
+  assert.equal(I.immune(ally.state, "charmed"), true);
+  assert.equal(I.immune(ally.state, "frightened"), true);
+  ally.position_ft = 35;
+  A.sync(battle);
+  assert.equal(M.savingThrowFlat(ally.state), 0);
+  assert.equal(I.immune(ally.state, "charmed"), false);
+  assert.equal(I.immune(ally.state, "frightened"), false);
+}
