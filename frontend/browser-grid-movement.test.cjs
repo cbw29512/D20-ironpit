@@ -50,6 +50,32 @@ assert.equal(M.movementStepCostFt(map, mover, { x: 1, y: 1 }, [mover, ally]), 5)
 assert.equal(M.movementStepCostFt(map, mover, { x: 1, y: 1 }, [mover, hostile]), null);
 assert.equal(M.movementStepCostFt(map, mover, { x: 1, y: 1 }, [mover, incapacitated]), 10);
 
+const bypassMover = member("bypass", "heroes", 0, 0);
+bypassMover.state.template.difficult_terrain_bypass_grants = [
+  { source_id: "lands-stride", source_name: "Land's Stride", scope: "nonmagical" },
+];
+bypassMover.state.timed_effects = [];
+assert.equal(
+  M.movementStepCostFt(map, bypassMover, { x: 1, y: 1 }, [bypassMover, incapacitated]),
+  5,
+);
+assert.equal(
+  window.IRON_PIT_BROWSER_GRID_MOVEMENT_SUPPORT.ignoresDifficultTerrain(bypassMover, true),
+  false,
+);
+
+const wardedMover = member("warded", "heroes", 0, 0);
+wardedMover.state.template.difficult_terrain_bypass_grants = [];
+wardedMover.state.timed_effects = [{ difficult_terrain_bypass_scope: "all" }];
+assert.equal(
+  window.IRON_PIT_BROWSER_GRID_MOVEMENT_SUPPORT.ignoresDifficultTerrain(wardedMover, false),
+  true,
+);
+assert.equal(
+  window.IRON_PIT_BROWSER_GRID_MOVEMENT_SUPPORT.ignoresDifficultTerrain(wardedMover, true),
+  true,
+);
+
 const target = member("target", "monsters", 3, 3);
 const plan = M.planToward(map, mover, target, [mover, target], 5, 30);
 assert.deepEqual(plan.path, [{ x: 1, y: 1 }, { x: 2, y: 2 }]);
