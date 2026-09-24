@@ -2,6 +2,7 @@ from app.combat.effect_removal import resolve_effect_removal
 from app.combat.effect_removal_targets import tracked_spell_effects
 from app.combat.modifier_stack import add_modifier
 from app.combat.state import build_combatant_state
+from app.content.paladin_2014_spell_package import build_paladin_2014_spell_package
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -46,6 +47,13 @@ def test_level_14_adds_three_cleansing_touch_uses_and_no_other_progression_chang
     assert cleansing.resource_id == "cleansing-touch"
     assert cleansing.resource_cost == 1
     assert cleansing.expends_spell_slot is False
+
+    package = build_paladin_2014_spell_package(14, hero.ability_scores.modifier("charisma"))
+    assert package is not None
+    assert len(package.spells) == 10
+    assert package.spells[-2].id == "locate-creature"
+    assert package.spells[-1].id == "death-ward"
+    assert package.spells[-2].required_capabilities == ["arena-out-of-scope"]
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["cleansing-touch"].combat_relevant is True
