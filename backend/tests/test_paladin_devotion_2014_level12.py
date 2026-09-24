@@ -45,8 +45,9 @@ def test_aurelia_level12_prepared_spell_capacity_is_explicitly_covered() -> None
     profile = build_aurelia_brightshield_2014_profile(12)
     charisma_modifier = profile.final_ability_scores.modifier("charisma")
     package = build_paladin_2014_spell_package(12, charisma_modifier)
-    prepared = [spell for spell in package.spells if spell.prepared]
 
-    assert len(prepared) == 9
-    magic_weapon = next(spell for spell in prepared if spell.id == "magic-weapon")
-    assert set(magic_weapon.capability_ids) == {"modifier-stack", "concentration"}
+    # ClassSpellPackage.spells is the canonical prepared/known level-1+ list;
+    # always-prepared oath spells are deliberately stored separately.
+    assert len(package.spells) == 9
+    magic_weapon = next(spell for spell in package.spells if spell.id == "magic-weapon")
+    assert set(magic_weapon.required_capabilities) == {"modifier-stack", "concentration"}
