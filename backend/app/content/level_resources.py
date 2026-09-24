@@ -73,6 +73,12 @@ def cleric_2014_channel_divinity_uses(level: int) -> int:
     return 3
 
 
+def cleric_2014_divine_intervention_uses(level: int) -> int:
+    """2014 Cleric Divine Intervention attempt available after each fresh fight reset."""
+    level = _checked_level(level)
+    return 1 if level >= 10 else 0
+
+
 def cleric_channel_divinity_uses(level: int) -> int:
     """2024 Cleric Channel Divinity uses; feature begins at level 2."""
     level = _checked_level(level)
