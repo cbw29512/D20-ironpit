@@ -67,7 +67,6 @@ def test_aurelia_prepared_high_level_slots_and_resources_match_2014_progression(
 
 def test_high_level_preparation_keeps_unfinished_features_explicitly_uncertified() -> None:
     expected_blocked = {
-        13: "devotion-oath-spells-4",
         20: "holy-nimbus",
     }
     for level, feature_id in expected_blocked.items():
@@ -117,7 +116,7 @@ def test_purity_of_spirit_typed_defenses_use_opening_modifier_engine() -> None:
     humanoid = build_commoner().model_copy(update={"ruleset": "2014", "creature_type": "humanoid"})
 
     purity = [item for item in state.active_modifiers if item.source_effect_id == "purity-of-spirit"]
-    assert len(purity) == 3
+    assert len(purity) == 4
     assert {item.source_name for item in purity} == {"Purity of Spirit"}
     assert attacks_against_disadvantage_sources(state, fiend) == 1
     assert attacks_against_disadvantage_sources(state, humanoid) == 0
