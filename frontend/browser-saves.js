@@ -176,7 +176,7 @@
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
       resource_remaining: resourceRemaining,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
-      animation: action.animation || "save-effect", description: description + survivalLog };
+      animation: action.animation || "save-effect", description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(target.state) || "") };
   }
 
   window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveOnHitConditionSave, resolveSavingThrow, saveMode };
