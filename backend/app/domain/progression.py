@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field, model_validator
 from typing import Literal
 
 from app.domain.character_builds import AbilityName
+from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 
 
 class AbilityCheckMinimum(BaseModel):
@@ -127,6 +128,7 @@ class ProgressionCombatFeatures(BaseModel):
     turning_failure_damage: AbilityScaledDamageRider | None = None
     turning_failure_destroy_max_cr: str | None = None
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
+    once_per_turn_weapon_hit_damage_rider: OncePerTurnWeaponHitDamageRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
