@@ -55,17 +55,28 @@ def guiding_bolt_2014(attack_bonus: int) -> SpellAttackAction:
         raise
 
 
-def inflict_wounds_2014(attack_bonus: int) -> SpellAttackAction:
+def inflict_wounds_2014(attack_bonus: int, slot_level: int = 1) -> SpellAttackAction:
     try:
+        if not 1 <= slot_level <= 9:
+            raise ValueError("2014 Inflict Wounds slot level must be between 1 and 9.")
+        suffixes = {1: "st", 2: "nd", 3: "rd"}
+        ordinal = f"{slot_level}{suffixes.get(slot_level, 'th')}"
         return SpellAttackAction(
-            id="inflict-wounds", name="Inflict Wounds", level=1, action_cost="action",
-            attack_kind="melee", range_ft=5, attack_bonus=attack_bonus,
-            damage_dice_count=3, damage_dice_size=10, damage_type="necrotic",
+            id="inflict-wounds" if slot_level == 1 else f"inflict-wounds-l{slot_level}",
+            name="Inflict Wounds" if slot_level == 1 else f"Inflict Wounds ({ordinal}-Level)",
+            level=slot_level,
+            action_cost="action",
+            attack_kind="melee",
+            range_ft=5,
+            attack_bonus=attack_bonus,
+            damage_dice_count=3 + (slot_level - 1),
+            damage_dice_size=10,
+            damage_type="necrotic",
             animation="spell-attack",
             source="D&D Basic Rules 2014: Inflict Wounds",
         )
     except Exception:
-        logger.exception("Failed to build 2014 Inflict Wounds.")
+        logger.exception("Failed to build 2014 Inflict Wounds at slot level %s.", slot_level)
         raise
 
 
