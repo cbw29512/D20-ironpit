@@ -16,6 +16,7 @@ def build_spell_modifier(
     spell_id: str,
     effect: SpellModifierEffect,
     index: int,
+    source_name: str | None = None,
     *,
     concentration_required: bool = False,
     round_number: int | None = None,
@@ -29,6 +30,7 @@ def build_spell_modifier(
         id=f"{source_id}:{spell_id}:{target_id}:{index}",
         source_id=source_id,
         source_effect_id=spell_id,
+        source_name=source_name,
         source_is_magical=True,
         kind=ModifierKind(effect.kind),
         flat_bonus=effect.flat_bonus,
@@ -38,6 +40,8 @@ def build_spell_modifier(
         target_id=target_id,
         condition_id=effect.condition_id,
         debuff_counter=effect.debuff_counter,
+        replacement_hp=effect.replacement_hp,
+        prevents_instant_death=effect.prevents_instant_death,
         source_creature_types=list(effect.source_creature_types),
         save_ability=effect.save_ability,
         save_dc=effect.save_dc,
@@ -58,7 +62,7 @@ def apply_spell_modifiers(
 ) -> list[CombatModifier]:
     built = [
         (target, build_spell_modifier(
-            source_id, target_id, spell.id, effect, index,
+            source_id, target_id, spell.id, effect, index, spell.name,
             concentration_required=spell.concentration, round_number=round_number,
         ))
         for target_id, target in targets
