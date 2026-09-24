@@ -14,6 +14,12 @@ window.IRON_PIT_BROWSER_CONDITION_RULES = { incapacitated: () => false };
 window.IRON_PIT_BROWSER_OPENING_MODIFIERS = { build: () => [] };
 window.IRON_PIT_BROWSER_EXHAUSTION = {};
 window.IRON_PIT_BROWSER_HEROIC_INSPIRATION = { grant: () => {} };
+window.IRON_PIT_BROWSER_POOLED_HEALING = {
+  capacity: (member, numerator, denominator) => {
+    const maximum = member.state.template.max_hp || member.state.current_hp;
+    return Math.max(0, Math.floor(maximum * numerator / denominator) - member.state.current_hp);
+  },
+};
 window.IRON_PIT_BROWSER_ZERO_HP = {
   reduceToZero: (state) => {
     state.current_hp = 0;
