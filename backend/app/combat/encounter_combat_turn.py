@@ -26,6 +26,7 @@ from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
+from app.combat.timed_auras import resolve_enemy_start_turn_auras
 from app.combat.timed_effect_control import suppresses_voluntary_turn
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
@@ -49,7 +50,13 @@ def resolve_combat_turn(
             sequence, round_number, attacker.combatant_id, attacker.state, dice,
         )
         events.extend(start_events)
+        aura_events, sequence = resolve_enemy_start_turn_auras(
+            sequence, round_number, attacker, setup,
+        )
+        events.extend(aura_events)
         turn_key = f"{round_number}:{attacker.combatant_id}"
+        if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
         if suppresses_voluntary_turn(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
         if forced_retreat_active(attacker.state):
