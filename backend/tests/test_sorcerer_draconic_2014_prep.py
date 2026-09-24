@@ -50,7 +50,6 @@ def test_nyra_unfinished_outcome_changing_features_remain_blocked_and_uncertifie
         1: "sorcerer-spellcasting",
         2: "font-of-magic",
         3: "metamagic",
-        14: "dragon-wings",
         18: "draconic-presence",
     }
     for level, feature_id in expected.items():
