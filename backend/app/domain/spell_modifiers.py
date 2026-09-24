@@ -5,11 +5,12 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, DamageTypeName
+from app.domain.debuffs import DebuffCounter
 
 SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die", "saving-throw-advantage",
     "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
-    "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "speed",
+    "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "speed", "debuff-counter",
 ]
 
 
@@ -22,6 +23,7 @@ class SpellModifierEffect(BaseModel):
     dice_size: int = Field(default=0, ge=0, le=100)
     damage_type: DamageTypeName | None = None
     condition_id: ConditionName | None = None
+    debuff_counter: DebuffCounter | None = None
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: AbilityName | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -44,6 +46,10 @@ class SpellModifierEffect(BaseModel):
             raise ValueError("Condition immunity requires a condition id.")
         if self.kind != "condition-immunity" and self.condition_id is not None:
             raise ValueError(f"{self.kind} does not accept a condition id.")
+        if self.kind == "debuff-counter" and self.debuff_counter is None:
+            raise ValueError("Debuff counter effects require a counter definition.")
+        if self.kind != "debuff-counter" and self.debuff_counter is not None:
+            raise ValueError(f"{self.kind} does not accept a debuff counter.")
         if self.kind == "attacks-against-disadvantage" and not self.source_creature_types:
             raise ValueError("Typed attack Disadvantage requires source creature types.")
         if self.source_creature_types and self.kind not in {"attacks-against-disadvantage", "condition-immunity"}:
