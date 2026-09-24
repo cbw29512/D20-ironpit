@@ -190,7 +190,7 @@
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
       feature_id: d20Override.featureId || override.featureId || extra.featureId || (recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
       resource_remaining: deferredEffectArmed?.resourceRemaining ?? null,
-      animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog };
+      animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(actualTarget.state) || "") };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
