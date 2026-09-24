@@ -148,10 +148,11 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ))
         if level >= 20:
             audits.append(_audit(
-                "holy-nimbus", "Holy Nimbus", "subclass", automated=False,
+                "holy-nimbus", "Holy Nimbus", "subclass",
                 notes=(
-                    "The 1/long-rest resource is present. Activation, timed 30-foot start-turn radiant damage, "
-                    "and fiend/undead spell-save Advantage still require universal composition."
+                    "Uses the universal timed-aura engine: Action activation, 1/long-rest resource, "
+                    "1-minute duration, 30-foot hostile start-turn radiant damage, and defender-owned "
+                    "Advantage on saving throws against spells from Fiends and Undead."
                 ),
             ))
         return audits
