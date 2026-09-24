@@ -111,7 +111,7 @@ def resolve_escape_grapple(
     check_ability, check_name, bonus, mode = _escape_choice(state)
     check = roll_d20(dice, bonus + d20_modifier(state), mode)
     check, success = resolve_ability_check_outcome(
-        state, check_ability, check, source.escape_dc,
+        state, check_ability, check, source.escape_dc, dice,
     )
     tactical_used = False
     if not success:
