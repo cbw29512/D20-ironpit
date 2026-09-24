@@ -32,6 +32,7 @@ _CANTRIPS = (
     _spell("sacred-flame", "Sacred Flame", "damage", "save-damage", "cantrip-scaling", level=0),
     _spell("thaumaturgy", "Thaumaturgy", "utility", "arena-out-of-scope", level=0),
     _spell("mending", "Mending", "utility", "arena-out-of-scope", level=0, min_level=4),
+    _spell("light", "Light", "utility", "arena-out-of-scope", level=0, min_level=10),
 )
 
 # Clerics prepare from the class list after each long rest. This deterministic
