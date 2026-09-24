@@ -101,7 +101,10 @@ def test_timed_magical_condition_prevention_expires_with_owning_effect() -> None
         "movement-ward",
         "caster",
         source_effect_id="test-ward",
-        owned_magical_condition_immunities=["paralyzed", "restrained"],
+        owned_debuff_counters=[
+            DebuffCounter(debuff_id="paralyzed", source_scope="magical"),
+            DebuffCounter(debuff_id="restrained", source_scope="magical"),
+        ],
         use_default_poison_recovery=False,
     )
     effect = target.timed_effects[0]
