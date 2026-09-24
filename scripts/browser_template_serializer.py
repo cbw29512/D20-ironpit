@@ -357,6 +357,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         ]
     if features.deferred_save_effect:
         row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
+    if features.zero_hp_temporary_hp_grant:
+        row["zero_hp_temporary_hp_grant"] = features.zero_hp_temporary_hp_grant.model_dump()
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.once_per_turn_weapon_hit_damage_rider:
