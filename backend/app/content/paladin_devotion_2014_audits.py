@@ -138,8 +138,8 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ))
         if level >= 18:
             audits.append(_audit(
-                "aura-improvements", "Aura Improvements", "class", automated=False,
-                notes="Prepared breakpoint only; shared Paladin aura radius must become data-driven 30 feet.",
+                "aura-improvements", "Aura Improvements", "class",
+                notes="The shared 2014 Paladin aura resolver reads a source-owned radius: 10 feet normally and 30 feet from level 18.",
             ))
         if level >= 19:
             audits.append(_audit(
