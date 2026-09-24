@@ -27,6 +27,8 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["restrainsWhileGrappled"] = True
     if effect.condition_id:
         row["conditionId"] = effect.condition_id
+    if effect.effect_tag:
+        row["effectTag"] = effect.effect_tag
         if effect.expires_at_start_of_source_turn:
             row["expiresAtStartOfSourceTurn"] = True
         if effect.expiry_timing:
