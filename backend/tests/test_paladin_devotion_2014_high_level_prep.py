@@ -1,5 +1,5 @@
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.defensive_modifier_rules import attacks_against_disadvantage_sources
+from app.combat.defensive_modifier_rules import attacks_against_disadvantage_sources, effect_is_immune
 from app.combat.state import build_combatant_state
 from app.content.monsters import build_commoner
 from app.content.certified_hero_progressions import CERTIFIED_HERO_PROGRESSIONS
@@ -125,13 +125,15 @@ def test_purity_of_spirit_typed_defenses_use_opening_modifier_engine() -> None:
     assert condition_is_immune(state, "charmed", fiend) is True
     assert condition_is_immune(state, "frightened", fiend) is True
     assert condition_is_immune(state, "charmed", humanoid) is False
+    assert effect_is_immune(state, "possession", fiend) is True
+    assert effect_is_immune(state, "possession", humanoid) is False
 
     audit = next(
         item for item in build_aurelia_brightshield_2014_profile(15).feature_audits
         if item.feature_id == "purity-of-spirit"
     )
-    assert audit.automated is False
-    assert "Possession" in (audit.notes or "")
+    assert audit.automated is True
+    assert "possession-effect immunity" in (audit.notes or "")
 
 
 def test_level_seventeen_flame_strike_uses_one_save_with_two_typed_components() -> None:
