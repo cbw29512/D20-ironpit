@@ -7,6 +7,7 @@
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
   const B = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS;
+  const TA = () => window.IRON_PIT_BROWSER_TIMED_AURAS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -56,6 +57,8 @@
     if (channel) { events.push(...channel.events); sequence = channel.sequence; }
     const paladin = P()?.resolveChannel(sequence, round, member, setup);
     if (paladin) { events.push(...paladin.events); sequence = paladin.sequence; }
+    const timedAura = TA()?.choose(member);
+    if (timedAura) events.push(TA().activate(sequence++, round, member, timedAura));
     const selfBuff = B()?.choose(member);
     if (selfBuff) events.push(B().resolve(sequence++, round, member, selfBuff));
     return { events, sequence };
