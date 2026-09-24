@@ -104,7 +104,7 @@ def resolve_spell_attack(
             if target.state.is_alive and not target.state.is_dead:
                 for index, effect in enumerate(spell.on_hit_modifier_effects):
                     add_modifier(target.state, build_spell_modifier(
-                        caster.combatant_id, target.combatant_id, spell.id, effect, index, round_number=round_number,
+                        caster.combatant_id, target.combatant_id, spell.id, effect, index, spell.name, round_number=round_number,
                     ))
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
