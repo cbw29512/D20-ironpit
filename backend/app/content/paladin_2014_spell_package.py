@@ -59,6 +59,16 @@ _OATH = (
         level=3, min_level=9, oath_level=9,
     ),
     _spell("dispel-magic", "Dispel Magic", "utility", "effect-removal", level=3, min_level=9, oath_level=9),
+    _spell(
+        "freedom-of-movement", "Freedom of Movement", "buff",
+        "debuff-counter", "movement-cost-counter",
+        level=4, min_level=13, oath_level=13,
+    ),
+    _spell(
+        "guardian-of-faith", "Guardian of Faith", "control",
+        "stationary-triggered-area", "fixed-save-damage",
+        level=4, min_level=13, oath_level=13,
+    ),
 )
 
 
