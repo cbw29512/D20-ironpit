@@ -9,6 +9,7 @@ from app.content.shared_healing_spells_2014 import cure_wounds_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
+from app.domain.movement import DifficultTerrainBypassGrant
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
 
@@ -106,6 +107,14 @@ def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
             skill_bonuses=_skills(level),
             progression_features=ProgressionCombatFeatures(
                 once_per_turn_weapon_hit_damage_rider=colossus,
+                difficult_terrain_bypass_grants=(
+                    [DifficultTerrainBypassGrant(
+                        source_id="lands-stride",
+                        source_name="Land's Stride",
+                        scope="nonmagical",
+                    )]
+                    if level >= 8 else []
+                ),
                 evasion=level >= 15,
             ),
             resources=_resources(level),
