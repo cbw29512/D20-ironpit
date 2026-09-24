@@ -8,10 +8,19 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
 
   function slotLevel(caster, action, turnKey) {
-    if (action.level === 0) return 0;
-    if (!C().slotSpellAvailable(caster.state, turnKey)) return null;
-    const resourceId = `spell-slot-${action.level}`;
-    return (caster.state.resources?.[resourceId] || 0) > 0 ? action.level : null;
+    try {
+      if (action.level === 0) return 0;
+      if (!C().slotSpellAvailable(caster.state, turnKey)) return null;
+      const levels = Object.entries(caster.state.resources || {})
+        .filter(([id, uses]) => id.startsWith("spell-slot-") && uses > 0)
+        .map(([id]) => Number(id.slice("spell-slot-".length)))
+        .filter((level) => Number.isInteger(level) && level >= action.level)
+        .sort((a, b) => a - b);
+      return levels.length ? levels[0] : null;
+    } catch (error) {
+      console.error("Failed to select legal spell slot.", { spell: action?.id, error });
+      throw error;
+    }
   }
 
   function legalSingleTargets(caster, setup, action) {
