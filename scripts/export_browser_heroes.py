@@ -177,7 +177,8 @@ def _healing(action: Any) -> dict[str, Any]:
             "targetMode": action.target_mode, "maxTargets": action.max_targets,
             "diceCount": action.dice_count, "diceSize": action.dice_size,
             "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
-            "resourceCost": action.resource_cost, "animation": action.animation}
+            "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
+            "animation": action.animation}
 
 
 def _timed_self_buff(action: Any) -> dict[str, Any]:
