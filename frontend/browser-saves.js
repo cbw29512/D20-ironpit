@@ -234,7 +234,14 @@
     }
     let appliedConditions = [];
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
-      appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
+      appliedConditions = G().apply(
+        target.state,
+        actor.combatant_id,
+        action.grappleEscapeDc,
+        action.range,
+        Boolean(action.restrainsWhileGrappled),
+        Boolean(action.magicalEffect),
+      );
     }
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
