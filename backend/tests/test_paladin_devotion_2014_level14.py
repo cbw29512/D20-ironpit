@@ -26,6 +26,7 @@ def _member(combatant_id: str, level: int, position: int) -> EncounterCombatant:
 def test_level_14_adds_three_cleansing_touch_uses_and_no_other_progression_change() -> None:
     level13 = build_aurelia_brightshield_2014(13)
     hero = build_aurelia_brightshield_2014(14)
+    assert hero.level == 14
     profile = build_aurelia_brightshield_2014_profile(14)
 
     resources = {item.id: item.max_uses for item in hero.resources}
