@@ -117,7 +117,7 @@ def resolve_weapon_damage(
         _append_bonus_component(components, dice, frenzy_bonus_damage(attacker, attack, turn_key), critical=critical)
         _append_bonus_component(
             components, dice,
-            once_per_turn_weapon_hit_bonus_damage(attacker, attack, turn_key),
+            once_per_turn_weapon_hit_bonus_damage(attacker, attack, turn_key, target),
             critical=critical,
         )
         _append_bonus_component(
