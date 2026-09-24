@@ -1,6 +1,6 @@
 from app.combat.modifier_stack import add_modifier
 from app.combat.state import build_combatant_state
-from app.combat.zero_hp import apply_damage
+from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
 from app.combat.zero_hp_replacement import (
     consume_instant_death_prevention,
     consume_zero_hp_replacement_log,
@@ -41,6 +41,27 @@ def test_zero_hp_replacement_consumes_source_owned_buff_once() -> None:
     second = apply_damage(state, 5)
     assert second == "unconscious"
     assert state.current_hp == 0
+
+
+def test_death_ward_does_not_trigger_on_non_damage_set_to_zero() -> None:
+    state = build_combatant_state(build_aurelia_brightshield_2014(13))
+    state.active_buff_effect_ids.append("death-ward")
+    add_modifier(state, CombatModifier(
+        id="caster:death-ward:target:0",
+        source_id="caster",
+        source_effect_id="death-ward",
+        source_name="Death Ward",
+        source_is_magical=True,
+        kind=ModifierKind.ZERO_HP_REPLACEMENT,
+        replacement_hp=1,
+        prevents_instant_death=True,
+    ))
+
+    outcome = reduce_to_zero_hit_points(state)
+
+    assert outcome == "unconscious"
+    assert state.current_hp == 0
+    assert any(item.source_effect_id == "death-ward" for item in state.active_modifiers)
 
 
 def test_zero_hp_replacement_can_negate_future_non_damage_instant_death() -> None:
