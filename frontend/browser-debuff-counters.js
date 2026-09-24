@@ -13,8 +13,11 @@
     try {
       const mode = options.mode || null;
       const sourceIsMagical = Boolean(options.sourceIsMagical);
-      return (state.timed_effects || []).flatMap((effect) => effect.owned_debuff_counters || [])
-        .filter((counter) => counter.debuff_id === debuffId
+      const owned = (state.timed_effects || []).flatMap((effect) => effect.owned_debuff_counters || []);
+      owned.push(...(state.active_modifiers || [])
+        .filter((item) => item.kind === "debuff-counter" && item.debuff_counter)
+        .map((item) => item.debuff_counter));
+      return owned.filter((counter) => counter.debuff_id === debuffId
           && scopeMatches(counter, sourceIsMagical)
           && (!mode || counter.mode === mode));
     } catch (error) {
