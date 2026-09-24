@@ -62,6 +62,7 @@ class HealingAction(BaseModel):
     range_ft: int = Field(default=5, ge=0)
     target_mode: HealingTargetMode = "self_or_ally"
     max_targets: int = Field(default=1, ge=1, le=20)
+    area_radius_ft: int | None = Field(default=None, ge=5)
     dice_count: int = Field(default=0, ge=0, le=40)
     dice_size: int = Field(default=6, ge=2, le=100)
     healing_bonus: int = Field(default=0, ge=0)
