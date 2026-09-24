@@ -363,6 +363,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["spell_damage_bonus_grants"] = [
             item.model_dump() for item in features.spell_damage_bonus_grants
         ]
+    if features.free_spell_cast_grants:
+        row["free_spell_cast_grants"] = [
+            item.model_dump() for item in features.free_spell_cast_grants
+        ]
     if features.deferred_save_effect:
         row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
     if features.zero_hp_temporary_hp_grant:
