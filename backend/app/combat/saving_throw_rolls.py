@@ -14,6 +14,7 @@ from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
+from app.combat.failed_d20_bonus_die import apply_failed_d20_bonus_die
 from app.combat.failed_save_reroll import apply_failed_save_reroll
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
@@ -101,6 +102,10 @@ def resolve_saving_throw(
             if reroll is not None:
                 revision = _indomitable_revision(roll, reroll)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
+        if roll.total < dc:
+            roll, _, _ = apply_failed_d20_bonus_die(
+                state, roll, dc, dice, test_kind="saving_throw",
+            )
         if roll.total < dc:
             roll, _, _ = apply_failed_save_reroll(state, roll, dice)
         roll, _, _ = apply_failed_d20_test_override(
