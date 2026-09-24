@@ -11,6 +11,7 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
+  const DB = () => window.IRON_PIT_BROWSER_SPELL_DAMAGE_BONUS;
 
   function slotResource(caster, spell, turnKey) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
@@ -44,14 +45,17 @@
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [];
+    let damageRoll = null, damageComponents = [], descriptionSpellBonusNames = [];
     if (hit) {
       const count = spell.damageDiceCount * (critical ? 2 : 1), rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
-      const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
+      const bonus = DB()?.matches(caster.state, spell.id, spell.damageType) || { total: 0, sources: [] };
+      const damageBonus = (spell.damageBonus || 0) + bonus.total;
+      const raw = rolls.reduce((sum, value) => sum + value, 0) + damageBonus;
       const applied = spell.damageType ? A().adjustedDamage(target.state, raw, spell.damageType) : 0;
-      damageRoll = { notation: `${count}d${spell.damageDiceSize}+${spell.damageBonus || 0}`, rolls, modifier: spell.damageBonus || 0, total: applied };
-      if (spell.damageType) damageComponents = [{ source: spell.name, notation: damageRoll.notation, rolls: [...rolls], modifier: spell.damageBonus || 0,
+      damageRoll = { notation: `${count}d${spell.damageDiceSize}+${damageBonus}`, rolls, modifier: damageBonus, total: applied };
+      if (spell.damageType) damageComponents = [{ source: spell.name, notation: damageRoll.notation, rolls: [...rolls], modifier: damageBonus,
         damage_type: spell.damageType, total: raw, applied_total: applied }];
+      if (bonus.sources.length) descriptionSpellBonusNames = bonus.sources.map((source) => source.sourceName);
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
       A().applyDamage(target.state, applied, critical, spell.damageType && applied > 0 ? [spell.damageType] : [], states);
       if (target.state.is_alive && !target.state.is_dead) (spell.onHitModifierEffects || []).forEach((effect, index) => {
@@ -62,6 +66,7 @@
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
+    if (descriptionSpellBonusNames.length) description += ` ${descriptionSpellBonusNames.join(" and ")} adds its spell damage bonus.`;
     const event = {
       sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, attack_name: spell.name, target_ac: targetAc,
