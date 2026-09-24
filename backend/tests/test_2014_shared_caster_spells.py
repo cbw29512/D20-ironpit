@@ -35,7 +35,8 @@ def test_sorcerer_and_wizard_use_supported_attack_and_save_spell_primitives() ->
     wizard = build_elian_starweaver_2014(17)
     assert [item.id for item in wizard.spell_attack_actions] == ["fire-bolt"]
     assert wizard.spell_attack_actions[0].damage_dice_count == 4
-    assert {item.id for item in wizard.spell_save_actions} == {"fireball", "disintegrate"}
+    assert {item.id for item in wizard.spell_save_actions} == {"poison-spray", "fireball", "disintegrate"}
+    assert next(item for item in wizard.spell_save_actions if item.id == "poison-spray").success_damage == "half"
 
 
 def test_fiend_warlock_fireball_tracks_current_pact_slot_level() -> None:
