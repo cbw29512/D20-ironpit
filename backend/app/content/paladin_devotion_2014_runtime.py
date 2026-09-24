@@ -11,6 +11,7 @@ from app.content.paladin_devotion_2014_spells import (
     dispel_magic_2014,
     build_paladin_persistent_hazard_actions_2014,
     cleansing_touch_2014,
+    purity_of_spirit_2014,
 )
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, ResourceDefinition, VisualLoadout
@@ -119,6 +120,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
                 paladin_aura_radius_2014_ft=30 if level >= 18 else 10,
                 aura_of_devotion_2014=level >= 7,
                 aura_of_courage_2014=level >= 10,
+                passive_modifier_grants=[purity_of_spirit_2014()] if level >= 15 else [],
             ),
             visual=VisualLoadout(armor="chain-mail", main_hand="longsword", off_hand="shield"),
             source="D&D SRD 5.1 (2014): Paladin, Oath of Devotion; Basic Rules 2014: Human, Noble, Equipment",
