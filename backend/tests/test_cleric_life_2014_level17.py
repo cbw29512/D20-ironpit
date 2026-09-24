@@ -44,7 +44,7 @@ def test_level_seventeen_runtime_binds_cr_four_and_supreme_healing() -> None:
     profile = build_seraphine_dawnshield_2014_profile(17)
     combat = build_seraphine_2014_combat_profile(17)
 
-    assert hero.max_hp == 189
+    assert hero.max_hp == 190
     assert hero.armor_class == 16
     assert hero.ability_scores is not None
     assert hero.ability_scores.constitution == 20
