@@ -44,6 +44,9 @@ class CombatModifier(BaseModel):
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
     requires_magical_effect: bool = False
+    # Source provenance is data, not inferred from an ability name. Generic
+    # defenses may use it when RAW distinguishes magical from nonmagical effects.
+    source_is_magical: bool = False
     concentration_required: bool = False
     consume_on_attack_against: bool = False
     consume_on_saving_throw: bool = False
