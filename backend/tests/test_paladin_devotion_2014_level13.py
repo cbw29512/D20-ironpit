@@ -1,4 +1,6 @@
+from app.combat.defensive_spell_resolution import resolve_defensive_spell
 from app.combat.modifier_stack import add_modifier
+from app.combat.precombat_spells import choose_defensive_spell
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
 from app.combat.zero_hp_replacement import (
@@ -8,6 +10,7 @@ from app.combat.zero_hp_replacement import (
 from app.content.paladin_2014_spell_package import build_paladin_2014_spell_package
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
+from app.domain.encounters import EncounterCombatant
 from app.domain.modifiers import CombatModifier, ModifierKind
 
 
@@ -108,3 +111,42 @@ def test_paladin_level_13_uses_non_summoning_combat_replacement() -> None:
     assert audits["death-ward"].automated is True
     assert audits["guardian-of-faith"].combat_relevant is False
     assert audits["guardian-of-faith"].automated is False
+
+
+def test_death_ward_is_the_level_13_free_setup_cast_and_spends_only_the_slot() -> None:
+    hero = build_aurelia_brightshield_2014(13)
+    state = build_combatant_state(hero)
+    member = EncounterCombatant(
+        combatant_id="aurelia",
+        side="heroes",
+        position_ft=0,
+        state=state,
+    )
+
+    choice = choose_defensive_spell(member)
+    assert choice is not None
+    spell, slot_level, resource = choice
+    assert spell.id == "death-ward"
+    assert slot_level == 4
+    assert resource.current_uses == 1
+
+    event = resolve_defensive_spell(
+        1,
+        member,
+        [member],
+        spell,
+        slot_level,
+        resource,
+        [state],
+    )
+
+    assert state.action_available is True
+    assert resource.current_uses == 0
+    assert state.opening_buff_spell_id == "death-ward"
+    assert "death-ward" in state.active_buff_effect_ids
+    assert any(
+        item.kind is ModifierKind.ZERO_HP_REPLACEMENT
+        and item.source_effect_id == "death-ward"
+        for item in state.active_modifiers
+    )
+    assert event.feature_id == "death-ward"
