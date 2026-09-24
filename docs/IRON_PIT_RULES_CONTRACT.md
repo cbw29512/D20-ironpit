@@ -467,12 +467,26 @@ Normal spell AI:
 
 - use only spells actually known/prepared/provided by the source/build;
 - no free matchup-specific spell invention;
-- no upcasting for now; lower-level spells use their printed/native slot level only;
-- prioritize highest available native spell level, then work downward, then cantrips when leveled offense is exhausted/not meaningful;
+- legal upcasting is allowed when the spell is actually known/prepared/provided, the higher-level slot exists, and the source spell defines scaling at higher slot levels;
+- an upcast consumes the higher-level slot and must use the source-defined scaling exactly; never invent non-RAW scaling or matchup-only spells;
+- when a newly unlocked spell level has no better meaningful combat choice, the AI may prefer a legal upcast of an established damage or healing spell rather than forcing a weaker native-level option;
+- prioritize the strongest useful legal spell-slot use, then work downward, then cantrips when leveled offense is exhausted/not meaningful;
 - one enemy: prefer useful high-damage single-target options before AoE;
 - multiple enemies: prefer useful high-damage AoE before single-target options;
 - damage-first unless control/utility is a defining source identity or is otherwise clearly the meaningful legal action;
 - selected-target spell counts and source geometry remain authoritative.
+
+### 2014 Turn Undead arena mapping
+
+For the 2014 ruleset, Iron Pit preserves Turn Undead's failed-save removal-from-effective-combat intent without forced flee-path movement inside the arena grid.
+
+- A failed 2014 Turn Undead save applies the source-bound `trembling` effect.
+- While Trembling persists, the target cannot take an Action, Bonus Action, or Reaction and cannot move voluntarily.
+- The target uses its normal behavior profile once the effect ends; Iron Pit does not force retreat movement for this 2014 arena mapping.
+- Trembling ends immediately when the affected creature takes damage.
+- At the end of each affected creature's turn, it repeats the Wisdom saving throw against the original Cleric save DC; a success ends Trembling.
+- Destroy Undead still resolves before control is applied: an eligible Undead that fails the save is destroyed instead of receiving Trembling.
+- This mapping is an explicit Iron Pit arena rule for 2014 Turn Undead and must use the shared timed/source-bound control lifecycle rather than Cleric-specific turn-state code.
 
 ## 23. Weapons, loadouts, and masteries
 
