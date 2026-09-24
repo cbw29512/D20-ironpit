@@ -84,15 +84,14 @@ def build_high_level_cleric_life_2014_audits(level: int) -> list[FeatureAudit]:
                     "Destroy Undead (CR 4)",
                     "class",
                     source=CLERIC,
-                    automated=False,
-                    notes="Depends on the universal Turn Undead resolution path.",
+                    notes="Uses the shared turning-save destruction threshold with CR 4 source data.",
                 ),
                 _audit(
                     "supreme-healing",
                     "Supreme Healing",
                     "subclass",
                     source=LIFE,
-                    notes="Candidate binding to the existing universal healing-maximize semantic.",
+                    notes="Uses the universal caster-owned outgoing healing-dice maximizer.",
                 ),
             ])
         if level >= 18:
