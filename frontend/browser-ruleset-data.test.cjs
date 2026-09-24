@@ -31,7 +31,7 @@ levels(barbarians2014, 20);
 levels(rogues2014, 20);
 levels(monks2014, 20);
 levels(paladins2014, 11);
-levels(clerics2014, clerics2014.length);
+levels(clerics2014, clerics2014.length); // Cleric count is intentionally derived from the exported progression.
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
