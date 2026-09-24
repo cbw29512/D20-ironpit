@@ -54,6 +54,9 @@
   const conditionImmune = (state, conditionId, sourceTemplate = null) => (state.active_modifiers || [])
     .some((item) => item.kind === "condition-immunity" && item.condition_id === conditionId
       && sourceMatches(item, sourceTemplate));
+  const effectImmune = (state, effectTag, sourceTemplate = null) => (state.active_modifiers || [])
+    .some((item) => item.kind === "effect-immunity" && item.effect_tag === effectTag
+      && sourceMatches(item, sourceTemplate));
   const targetingGate = (state) => (state.active_modifiers || [])
     .filter((item) => item.kind === "targeting-save-gate")
     .sort((a, b) => (b.save_dc || 0) - (a.save_dc || 0) || a.id.localeCompare(b.id))[0] || null;
@@ -66,7 +69,7 @@
   }
 
   window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = {
-    attacksAgainstDisadvantage, conditionImmune, consumeSavingThrowModifiers, deathSaveAdvantage, healingMaximized,
+    attacksAgainstDisadvantage, conditionImmune, effectImmune, consumeSavingThrowModifiers, deathSaveAdvantage, healingMaximized,
     removeOwnerAttackEnding, saveAdvantage, saveAdvantageSourceNames, saveDisadvantage, targetingGate,
   };
 })();
