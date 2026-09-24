@@ -42,7 +42,10 @@
     if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
 
     let remaining = null;
-    if (choice.slotLevel > 0) {
+    const freeGrant = choice.slotLevel > 0 ? C().availableFreeSpellCast(caster.state, spell.id) : null;
+    if (freeGrant) {
+      remaining = C().consumeFreeSpellCast(caster.state, freeGrant);
+    } else if (choice.slotLevel > 0) {
       const resourceId = `spell-slot-${choice.slotLevel}`;
       if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
       C().markSlotSpellCast(caster.state, turnKey);
@@ -56,7 +59,9 @@
     const detail = placement
       ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
       : "";
-    const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
+    const slotText = choice.slotLevel === 0 ? "cantrip"
+      : freeGrant ? `${freeGrant.source_name} without expending a spell slot`
+        : `level ${choice.slotLevel} slot`;
     const events = [{
       sequence: sequence++, round_number: round, event_type: "feature",
       actor_id: caster.combatant_id, actor_name: caster.state.template.name,
