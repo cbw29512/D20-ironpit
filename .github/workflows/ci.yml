@@ -181,6 +181,7 @@ jobs:
           node frontend/browser-2014-paladin-level13.test.cjs
           node frontend/browser-2014-paladin-level14.test.cjs
           node frontend/browser-2014-paladin-level15.test.cjs
+          node frontend/browser-2014-paladin-level16.test.cjs
           node frontend/browser-2014-paladin-entrypoints.test.cjs
           node frontend/browser-spell-slot-healing.test.cjs
           node frontend/browser-ongoing-spell-control.test.cjs
