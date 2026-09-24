@@ -116,6 +116,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
                 turn_unholy_2014=level >= 3,
                 sacred_weapon_2014_bonus=charisma_modifier if level >= 3 else 0,
                 aura_of_protection_2014_bonus=aura_bonus,
+                paladin_aura_radius_2014_ft=30 if level >= 18 else 10,
                 aura_of_devotion_2014=level >= 7,
                 aura_of_courage_2014=level >= 10,
             ),
