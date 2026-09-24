@@ -82,3 +82,21 @@ def test_elemental_affinity_prepares_generic_fire_spell_damage_bonus() -> None:
     )
     assert audit.automated is False
     assert "damage bonus is bound" in (audit.notes or "")
+
+
+def test_dragon_wings_use_existing_movement_fingerprint_and_horizontal_pit_speed() -> None:
+    thirteen = build_nyra_emberveil_2014(13)
+    fourteen = build_nyra_emberveil_2014(14)
+
+    assert thirteen.speed_ft == 30
+    assert thirteen.movement_modes.walk_ft == 30
+    assert thirteen.movement_modes.fly_ft == 0
+    assert fourteen.speed_ft == 60
+    assert fourteen.movement_modes.walk_ft == 30
+    assert fourteen.movement_modes.fly_ft == 60
+
+    audit = next(
+        item for item in build_nyra_emberveil_2014_profile(14).feature_audits
+        if item.feature_id == "dragon-wings"
+    )
+    assert audit.automated is True
