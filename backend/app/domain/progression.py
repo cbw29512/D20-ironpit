@@ -180,6 +180,7 @@ class ProgressionCombatFeatures(BaseModel):
     divine_smite_2014: bool = False
     turn_unholy_2014: bool = False
     aura_of_protection_2014_bonus: int = Field(default=0, ge=0, le=10)
+    paladin_aura_radius_2014_ft: int = Field(default=10, ge=0, le=120)
     aura_of_devotion_2014: bool = False
     aura_of_courage_2014: bool = False
     sacred_weapon_2014_bonus: int = Field(default=0, ge=0, le=10)
