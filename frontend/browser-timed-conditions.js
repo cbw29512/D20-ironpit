@@ -37,6 +37,8 @@
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
       owned_magical_condition_immunities: [...(options.ownedMagicalConditionImmunities || [])],
       difficult_terrain_bypass_scope: options.difficultTerrainBypassScope || null,
+      prevents_magical_speed_reduction: Boolean(options.preventsMagicalSpeedReduction),
+      nonmagical_grapple_escape_movement_cost_ft: options.nonmagicalGrappleEscapeMovementCostFt || 0,
       zero_hp_replacement_hp: options.zeroHpReplacementHp || 0,
       prevents_nondamage_instant_death: Boolean(options.preventsNondamageInstantDeath),
     });
