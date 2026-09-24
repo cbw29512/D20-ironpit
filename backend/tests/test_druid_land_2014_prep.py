@@ -34,3 +34,32 @@ def test_wild_shape_and_land_features_remain_explicitly_uncertified() -> None:
     assert audits["beast-spells"].automated is False
     assert audits["archdruid"].automated is False
     assert all(item.class_id != "druid" for item in CERTIFIED_HERO_PROGRESSIONS)
+
+
+def test_natures_ward_reuses_universal_poison_and_typed_condition_immunity() -> None:
+    nine = build_thalen_greenbough_2014(9)
+    ten = build_thalen_greenbough_2014(10)
+
+    assert "poisoned" not in nine.condition_immunities
+    assert "poisoned" in ten.condition_immunities
+    assert [item.value for item in nine.damage_immunities] == []
+    assert [item.value for item in ten.damage_immunities] == ["poison"]
+
+    grants = ten.progression_features.passive_modifier_grants
+    assert len(grants) == 1
+    grant = grants[0]
+    assert grant.source_id == "natures-ward"
+    assert grant.source_name == "Nature's Ward"
+    assert {
+        (effect.kind, effect.condition_id, tuple(effect.source_creature_types))
+        for effect in grant.modifier_effects
+    } == {
+        ("condition-immunity", "charmed", ("elemental", "fey")),
+        ("condition-immunity", "frightened", ("elemental", "fey")),
+    }
+
+    audit = next(
+        item for item in build_thalen_greenbough_2014_profile(10).feature_audits
+        if item.feature_id == "natures-ward"
+    )
+    assert audit.automated is True
