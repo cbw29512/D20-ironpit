@@ -7,6 +7,7 @@ from app.domain.character_builds import AbilityName
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.spell_modifiers import SpellModifierEffect
+from app.domain.spell_damage import SpellDamageBonusGrant
 
 
 class AbilityCheckMinimum(BaseModel):
@@ -170,6 +171,7 @@ class ProgressionCombatFeatures(BaseModel):
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
     deferred_save_effect: DeferredSaveEffect | None = None
     zero_hp_temporary_hp_grant: ZeroHpTemporaryHpGrant | None = None
+    spell_damage_bonus_grants: list[SpellDamageBonusGrant] = Field(default_factory=list)
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
