@@ -7,7 +7,7 @@ from app.content.weapon_catalog import build_weapon
 from app.content.wizard_evoker_2014_data import ability_scores
 from app.content.wizard_evoker_2014_progression import wizard_evoker_2014_level
 from app.content.shared_spell_attacks_2014 import fire_bolt_2014
-from app.content.shared_spell_saves_2014 import disintegrate_2014, fireball_2014
+from app.content.shared_spell_saves_2014 import disintegrate_2014, fireball_2014, poison_spray_2014
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.spell_damage import SpellDamageBonusGrant
@@ -72,7 +72,10 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
         scores = ability_scores(level)
         spell_attack_bonus = proficiency_bonus(level) + scores.modifier("intelligence")
         spell_save_dc = 8 + proficiency_bonus(level) + scores.modifier("intelligence")
-        save_spells = []
+        poison_spray = poison_spray_2014(spell_save_dc, level)
+        if level >= 6:
+            poison_spray = poison_spray.model_copy(update={"success_damage": "half"})
+        save_spells = [poison_spray]
         if level >= 5:
             save_spells.append(fireball_2014(spell_save_dc))
         if level >= 11:
