@@ -14,6 +14,7 @@
       id: `${sourceId}:${spell.id}:${targetId}:${index}`,
       source_id: sourceId,
       source_effect_id: spell.id,
+      source_is_magical: true,
       kind: effect.kind,
       flat_bonus: effect.flatBonus || 0,
       dice_count: effect.diceCount || 0,
