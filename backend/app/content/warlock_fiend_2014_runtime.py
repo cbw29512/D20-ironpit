@@ -8,7 +8,7 @@ from app.content.warlock_fiend_2014_progression import warlock_fiend_2014_level
 from app.content.shared_spell_saves_2014 import fireball_2014, poison_spray_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.progression import ProgressionCombatFeatures
+from app.domain.progression import ProgressionCombatFeatures, ZeroHpTemporaryHpGrant
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +88,13 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
             spell_save_actions=save_spells,
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("wisdom", "charisma")),
             skill_bonuses=_skills(level),
-            progression_features=ProgressionCombatFeatures(),
+            progression_features=ProgressionCombatFeatures(
+                zero_hp_temporary_hp_grant=ZeroHpTemporaryHpGrant(
+                    source_id="dark-ones-blessing",
+                    source_name="Dark One's Blessing",
+                    temporary_hp=max(1, level + scores.modifier("charisma")),
+                ),
+            ),
             resources=_resources(level),
             weapon_masteries=[],
             wearing_heavy_armor=False,
