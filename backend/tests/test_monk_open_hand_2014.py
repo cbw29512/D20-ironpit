@@ -157,10 +157,10 @@ def test_evasion_reuses_shared_rogue_primitive() -> None:
     assert evasion_damage(monk, "dexterity", False, "half", 21) == 10
 
 
-def test_2014_certified_catalog_reaches_ninety_three_hero_snapshots() -> None:
+def test_2014_certified_catalog_reaches_ninety_five_hero_snapshots() -> None:
     entries = [entry for entry in build_all_certified_hero_entries() if entry[1].ruleset == "2014"]
     monks = [entry for entry in entries if entry[0][0] == "monk"]
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
-    assert len(entries) == 93
+    assert len(entries) == 95
     assert [entry[0][1] for entry in monks] == list(range(1, 21))
-    assert [entry[0][1] for entry in paladins] == list(range(1, 14))
+    assert [entry[0][1] for entry in paladins] == list(range(1, 16))
