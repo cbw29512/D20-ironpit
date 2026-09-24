@@ -120,6 +120,16 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     "self/willing ally, no roll, Charisma-modifier uses per long rest."
                 ),
             ))
+        if level >= 15:
+            audits.append(_audit(
+                "purity-of-spirit", "Purity of Spirit", "subclass",
+                notes=(
+                    "Permanent Protection from Evil and Good defenses compile as generic passive modifiers: "
+                    "attack Disadvantage plus Charmed/Frightened immunity against aberrations, celestials, "
+                    "elementals, fey, fiends, and undead. Possession remains arena-neutral until a certified "
+                    "possession mechanic enters active content."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)

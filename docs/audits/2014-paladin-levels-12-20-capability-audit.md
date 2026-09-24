@@ -44,7 +44,7 @@ Repository inventory after level 12 certification found:
 1. **Freedom of Movement / Death Ward:** keep both as generic source-owned buffs; no Paladin-specific resolver.
 2. **Guardian of Faith:** no engine work while summons/created combat entities are disabled. Revisit only if the global summon policy changes.
 3. **Cleansing Touch:** resolved as `ENGINE_EXISTS_PARAMETER_DELTA`. The generic effect-removal action now supports level-0 feature actions; Cleansing Touch uses an Action, 5-foot self/willing-ally targeting, automatic removal through spell level 9, no ability check, no spell slot, and Charisma-modifier uses. Arena AI orders it before Dispel Magic so a class-feature use is not replaced by an unnecessary spell-slot expenditure.
-4. **Purity of Spirit:** reuse the existing typed defenses from *protection from evil and good* and separately inventory the possession/prevention semantics that are not yet represented.
+4. **Purity of Spirit:** resolved as a permanent source-owned buff compiled into the existing typed defenses from *protection from evil and good*: qualifying creature types have Disadvantage attacking Aurelia and cannot Charm or Frighten her. Possession remains `ARENA_NEUTRAL` until a certified possession mechanic enters active content.
 5. **Flame Strike:** verify a save-damage action can carry both fire and radiant components through one Dexterity save and half-on-success semantics.
 6. **Holy Nimbus:** verify generic start-of-turn area damage and source-creature-type-gated save advantage. Only missing generic pieces may become new engine primitives.
 
@@ -53,7 +53,7 @@ Repository inventory after level 12 certification found:
 1. Level 12: certified on main.
 2. Level 13 after the 4/3/3/1 resource vector, Freedom of Movement, and Death Ward pass Python/browser parity; Guardian of Faith remains source-visible but arena-unavailable by contract.
 3. Level 14: Cleansing Touch reuses generic effect removal; certification requires exact-head Python/browser/resource parity before READY.
-4. Level 15 after *protection from evil and good* composition is certified for the persistent self effect.
+4. Level 15 after Purity of Spirit compiles the existing *protection from evil and good* typed defenses as permanent passive modifiers with Python/browser parity and exact-head certification.
 5. Level 16 ASI.
 6. Level 17 after *flame strike* parity; *commune* remains explicitly noncombat.
 7. Level 18 aura-radius parameterization.

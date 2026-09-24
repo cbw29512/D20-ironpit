@@ -25,8 +25,8 @@ const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
-assert.equal(heroes2014.length, 94, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-14");
-levels(fighters2014, 20); levels(barbarians2014, 20); levels(rogues2014, 20); levels(monks2014, 20); levels(paladins2014, 14);
+assert.equal(heroes2014.length, 95, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-15");
+levels(fighters2014, 20); levels(barbarians2014, 20); levels(rogues2014, 20); levels(monks2014, 20); levels(paladins2014, 15);
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
@@ -93,6 +93,18 @@ for (const attack of paladin11.attacks) {
 }
 assert.equal(paladin12.ability_scores.strength, 20);
 assert.deepEqual([paladin12.resources["spell-slot-1"], paladin12.resources["spell-slot-2"], paladin12.resources["spell-slot-3"]], [4, 3, 3]);
+const paladin15 = paladins2014.find((hero) => hero.level === 15);
+assert.ok(paladin15);
+assert.equal(paladin15.resources["spell-slot-4"], 2);
+assert.equal(paladin15.passive_modifier_grants.length, 3);
+assert.deepEqual(
+  paladin15.passive_modifier_grants.map((item) => [item.source_id, item.source_name, item.kind, item.condition_id]),
+  [
+    ["purity-of-spirit", "Purity of Spirit", "attacks-against-disadvantage", null],
+    ["purity-of-spirit", "Purity of Spirit", "condition-immunity", "charmed"],
+    ["purity-of-spirit", "Purity of Spirit", "condition-immunity", "frightened"],
+  ],
+);
 assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "canonical browser monsters");
 for (const fixture of [
   "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
