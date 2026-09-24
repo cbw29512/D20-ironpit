@@ -31,33 +31,52 @@ def _save_action(choice: SpellChoice, caster_state) -> SavingThrowAction:
         upcast_levels = choice.slot_level - spell.level
         if spell.damage_components and upcast_levels and spell.upcast_dice_per_level:
             raise ValueError("Split-component spell upcasting requires explicit component scaling data.")
+
         target_range = spell.range_ft + (spell.area_radius_ft or 0)
         damage_bonus = spell.damage_bonus
-        damage_dice_count = spell.damage_dice_count + (upcast_levels * spell.upcast_dice_per_level)
+        damage_dice_count = spell.damage_dice_count + (
+            upcast_levels * spell.upcast_dice_per_level
+        )
         components = [component.model_copy(deep=True) for component in spell.damage_components]
-    used_sources: set[str] = set()
-    if components:
-        adjusted = []
-        for component in components:
+        used_sources: set[str] = set()
+
+        if components:
+            adjusted = []
+            for component in components:
+                matches = matching_spell_damage_bonuses(
+                    caster_state,
+                    spell.id,
+                    component.damage_type,
+                    excluded_source_ids=used_sources,
+                )
+                used_sources.update(source_id for source_id, _, _ in matches)
+                adjusted.append(component.model_copy(update={
+                    "damage_bonus": component.damage_bonus
+                    + sum(amount for _, _, amount in matches),
+                }))
+            components = adjusted
+        elif spell.damage_type is not None:
             matches = matching_spell_damage_bonuses(
-                caster_state, spell.id, component.damage_type,
-                excluded_source_ids=used_sources,
+                caster_state,
+                spell.id,
+                spell.damage_type,
             )
-            used_sources.update(source_id for source_id, _, _ in matches)
-            adjusted.append(component.model_copy(update={
-                "damage_bonus": component.damage_bonus + sum(amount for _, _, amount in matches),
-            }))
-        components = adjusted
-    elif spell.damage_type is not None:
-        matches = matching_spell_damage_bonuses(caster_state, spell.id, spell.damage_type)
-        damage_bonus += sum(amount for _, _, amount in matches)
+            damage_bonus += sum(amount for _, _, amount in matches)
+
         return SavingThrowAction(
-            id=spell.id, name=spell.name, save_ability=spell.save_ability, dc=spell.dc,
-            range_ft=target_range, damage_dice_count=damage_dice_count,
-            damage_dice_size=spell.damage_dice_size, damage_bonus=damage_bonus,
-            damage_type=spell.damage_type, damage_components=components,
+            id=spell.id,
+            name=spell.name,
+            save_ability=spell.save_ability,
+            dc=spell.dc,
+            range_ft=target_range,
+            damage_dice_count=damage_dice_count,
+            damage_dice_size=spell.damage_dice_size,
+            damage_bonus=damage_bonus,
+            damage_type=spell.damage_type,
+            damage_components=components,
             success_damage=spell.success_damage,
-            magical_effect=True, animation=spell.animation,
+            magical_effect=True,
+            animation=spell.animation,
         )
     except ValueError:
         raise
