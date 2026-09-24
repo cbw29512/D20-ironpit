@@ -4,7 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ActionCost, DamageTypeName, SaveDamageComponent
+from app.domain.actions import AbilityName, ActionCost, ConditionName, DamageTypeName, SaveDamageComponent
+from app.domain.movement import DifficultTerrainScope
 
 from app.domain.spell_modifiers import SpellModifierEffect, SpellModifierKind
 from app.domain.zero_hp_effects import SurvivalWard
@@ -32,6 +33,10 @@ class DefensiveSpellAction(BaseModel):
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     survival_ward: SurvivalWard | None = None
+    owned_magical_condition_immunities: list[ConditionName] = Field(default_factory=list)
+    difficult_terrain_bypass_scope: DifficultTerrainScope | None = None
+    prevents_magical_speed_reduction: bool = False
+    nonmagical_grapple_escape_movement_cost_ft: int = Field(default=0, ge=0)
     concentration: bool = False
     priority: int = 0
     animation: str = "precombat-defense"
@@ -40,7 +45,13 @@ class DefensiveSpellAction(BaseModel):
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
-        if not direct_hp and not self.damage_resistances and not self.modifier_effects and self.survival_ward is None:
+        movement_defense = (
+            bool(self.owned_magical_condition_immunities)
+            or self.difficult_terrain_bypass_scope is not None
+            or self.prevents_magical_speed_reduction
+            or self.nonmagical_grapple_escape_movement_cost_ft > 0
+        )
+        if not direct_hp and not self.damage_resistances and not self.modifier_effects and self.survival_ward is None and not movement_defense:
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
         if self.concentration and (direct_hp or self.damage_resistances):
             raise ValueError("Concentration defenses require source-owned modifier effects.")
