@@ -66,7 +66,9 @@ _PREPARED = (
     _spell("commune", "Commune", "utility", "arena-out-of-scope", level=5, min_level=9),
     _spell("harm", "Harm", "damage", "save-damage", level=6, min_level=11),
     _spell("heal", "Heal", "healing", "healing", level=6, min_level=11),
-    _spell("blade-barrier", "Blade Barrier", "damage", "area-effect", "concentration", level=6, min_level=11),
+    # Level 20 adds one prepared choice but no new spell level. Keep that delta noncombat
+    # and let the arena AI use legal upcasts of already-supported damage/healing spells.
+    _spell("word-of-recall", "Word of Recall", "utility", "arena-out-of-scope", level=6, min_level=11),
     _spell("fire-storm", "Fire Storm", "damage", "save-damage", "area-effect", level=7, min_level=13),
     _spell("regenerate", "Regenerate", "healing", "healing", level=7, min_level=13),
     _spell("earthquake", "Earthquake", "damage", "area-effect", "concentration", level=8, min_level=15),
