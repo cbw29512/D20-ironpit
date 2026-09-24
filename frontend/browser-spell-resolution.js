@@ -36,7 +36,7 @@
       damageDiceSize: spell.damageDiceSize, damageBonus,
       damageType: spell.damageType, damageComponents,
       successDamage: spell.successDamage || "none",
-      magicalEffect: true, animation: spell.animation || "spell-save",
+      magicalEffect: true, spellEffect: true, animation: spell.animation || "spell-save",
     };
   }
 
