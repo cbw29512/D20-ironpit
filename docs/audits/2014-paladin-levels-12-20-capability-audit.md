@@ -52,7 +52,7 @@ Repository inventory after level 12 certification found:
 
 1. Level 12: certified on main.
 2. Level 13 after the 4/3/3/1 resource vector, Freedom of Movement, and Death Ward pass Python/browser parity; Guardian of Faith remains source-visible but arena-unavailable by contract.
-3. Level 14 after Cleansing Touch is proven to reuse or minimally extend generic effect removal.
+3. Level 14 after Cleansing Touch reuses generic effect removal with an Action, 5-foot self-or-ally target, automatic spell removal through level 9, and Charisma-modifier long-rest uses; no Paladin-specific resolver is permitted.
 4. Level 15 after *protection from evil and good* composition is certified for the persistent self effect.
 5. Level 16 ASI.
 6. Level 17 after *flame strike* parity; *commune* remains explicitly noncombat.
