@@ -56,7 +56,6 @@ def test_varek_pact_slots_and_mystic_arcanum_resources_match_2014_progression() 
 
 def test_varek_fiend_mechanics_remain_explicitly_blocked_and_uncertified() -> None:
     expected = {
-        6: "dark-ones-own-luck",
         10: "fiendish-resilience",
         14: "hurl-through-hell",
         20: "eldritch-master",
@@ -69,8 +68,10 @@ def test_varek_fiend_mechanics_remain_explicitly_blocked_and_uncertified() -> No
     first = build_varek_ashenmark_2014_profile(1)
     pact = next(item for item in first.feature_audits if item.feature_id == "pact-magic")
     blessing = next(item for item in first.feature_audits if item.feature_id == "dark-ones-blessing")
+    luck = next(item for item in build_varek_ashenmark_2014_profile(6).feature_audits if item.feature_id == "dark-ones-own-luck")
     assert pact.automated is False
-    assert blessing.automated is False
+    assert blessing.automated is True
+    assert luck.automated is True
 
     assert all(
         not (
