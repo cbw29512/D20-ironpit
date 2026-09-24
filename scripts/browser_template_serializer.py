@@ -348,6 +348,15 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["saving_throw_advantage_grants"] = [
             item.model_dump() for item in features.saving_throw_advantage_grants
         ]
+    if features.passive_modifier_grants:
+        row["passive_modifier_grants"] = [
+            {
+                "sourceId": grant.source_id,
+                "sourceName": grant.source_name,
+                "modifierEffects": [_modifier_effect(effect) for effect in grant.modifier_effects],
+            }
+            for grant in features.passive_modifier_grants
+        ]
     if features.bloodied_start_turn_heal_amount:
         row["bloodied_start_turn_heal_amount"] = features.bloodied_start_turn_heal_amount
     if features.death_save_advantage:
