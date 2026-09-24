@@ -4,6 +4,7 @@ from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.actions import ConditionRemovalAction, HealingAction
+from app.domain.debuffs import DebuffCounter
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
@@ -82,6 +83,51 @@ def dispel_magic_2014() -> EffectRemovalAction:
     )
 
 
+def freedom_of_movement_2014() -> DefensiveSpellAction:
+    counters = [
+        DebuffCounter(debuff_id="difficult-terrain"),
+        DebuffCounter(debuff_id="speed-reduction", source_scope="magical"),
+        DebuffCounter(debuff_id="paralyzed", source_scope="magical"),
+        DebuffCounter(debuff_id="restrained", source_scope="magical"),
+        DebuffCounter(
+            debuff_id="grappled",
+            source_scope="nonmagical",
+            mode="remove-with-movement",
+            movement_cost_ft=5,
+        ),
+        DebuffCounter(
+            debuff_id="restrained",
+            source_scope="nonmagical",
+            mode="remove-with-movement",
+            movement_cost_ft=5,
+        ),
+        DebuffCounter(debuff_id="underwater-movement-penalty"),
+        DebuffCounter(debuff_id="underwater-attack-penalty"),
+    ]
+    return DefensiveSpellAction(
+        id="freedom-of-movement",
+        name="Freedom of Movement",
+        level=4,
+        action_cost="action",
+        range_ft=5,
+        duration_minutes=60,
+        target_policy="friendly",
+        target_count=1,
+        concentration=False,
+        priority=85,
+        modifier_effects=[
+            SpellModifierEffect(
+                kind="debuff-counter",
+                debuff_counter=counter,
+                expires_after_source_turns=600,
+            )
+            for counter in counters
+        ],
+        animation="freedom-of-movement",
+        source=_SOURCE,
+    )
+
+
 def build_paladin_healing_actions_2014(level: int, charisma_modifier: int) -> list[HealingAction]:
     actions = [HealingAction(
         id="lay-on-hands-heal", name="Lay on Hands", action_cost="action", range_ft=5,
@@ -125,4 +171,6 @@ def build_paladin_defensive_spells_2014(level: int, charisma_modifier: int) -> l
         actions.append(beacon_of_hope_2014())
     if level >= 10:
         actions.append(AID.model_copy(update={"source": source}))
+    if level >= 13:
+        actions.append(freedom_of_movement_2014())
     return actions
