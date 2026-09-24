@@ -86,8 +86,36 @@ def build_paladin_defensive_spells_2014(level: int, charisma_modifier: int) -> l
         actions.append(beacon_of_hope_2014())
     if level >= 10:
         actions.append(AID.model_copy(update={"source": source}))
+    if level >= 13:
+        actions.append(freedom_of_movement_2014())
     return actions
 
+
+
+def freedom_of_movement_2014() -> DefensiveSpellAction:
+    """Compile Freedom of Movement from universal source-owned movement defenses."""
+    try:
+        return DefensiveSpellAction(
+            id="freedom-of-movement",
+            name="Freedom of Movement",
+            level=4,
+            action_cost="action",
+            range_ft=5,
+            duration_minutes=60,
+            target_policy="friendly",
+            target_count=1,
+            owned_magical_condition_immunities=["paralyzed", "restrained"],
+            difficult_terrain_bypass_scope="all",
+            prevents_magical_speed_reduction=True,
+            nonmagical_grapple_escape_movement_cost_ft=5,
+            concentration=False,
+            priority=46,
+            animation="freedom-of-movement",
+            source=_SOURCE,
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Freedom of Movement.")
+        raise
 
 def guardian_of_faith_2014(save_dc: int) -> PersistentHazardAction:
     """Bind Guardian of Faith to the shared stationary persistent-hazard schema."""
