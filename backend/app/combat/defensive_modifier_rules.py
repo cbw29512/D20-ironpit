@@ -117,6 +117,44 @@ def condition_immunity_modifier_applies(
     )
 
 
+
+def effect_immunity_modifier_applies(
+    modifier: CombatModifier,
+    effect_tag: str,
+    source: CombatantTemplate | None,
+) -> bool:
+    try:
+        return (
+            modifier.kind is ModifierKind.EFFECT_IMMUNITY
+            and modifier.effect_tag == effect_tag
+            and _source_type_matches(modifier, source)
+        )
+    except Exception:
+        logger.exception(
+            "Failed to resolve effect immunity modifier for tag=%s.", effect_tag,
+        )
+        raise
+
+
+def effect_is_immune(
+    state: CombatantState,
+    effect_tag: str,
+    source: CombatantTemplate | None = None,
+) -> bool:
+    try:
+        return any(
+            effect_immunity_modifier_applies(item, effect_tag, source)
+            for item in state.active_modifiers
+        )
+    except Exception:
+        logger.exception(
+            "Failed to resolve effect immunity for %s tag=%s.",
+            state.template.name,
+            effect_tag,
+        )
+        raise
+
+
 def targeting_save_gate(state: CombatantState) -> CombatModifier | None:
     gates = [item for item in state.active_modifiers if item.kind is ModifierKind.TARGETING_SAVE_GATE]
     return max(gates, key=lambda item: (item.save_dc or 0, item.id), default=None)
