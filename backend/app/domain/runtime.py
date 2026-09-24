@@ -108,6 +108,7 @@ class CombatantState(BaseModel):
     concentration: ConcentrationState | None = None
     survival_save_uses: dict[str, int] = Field(default_factory=dict)
     pending_survival_save_logs: list[str] = Field(default_factory=list)
+    pending_zero_hp_replacement_logs: list[str] = Field(default_factory=list)
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
