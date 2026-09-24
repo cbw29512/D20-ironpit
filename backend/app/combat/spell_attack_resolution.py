@@ -19,7 +19,7 @@ from app.combat.reckless_attack import attacks_against_reckless_advantage
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_modifiers import build_spell_modifier
-from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.spellcasting import available_free_spell_cast, consume_free_spell_cast, mark_slot_spell_cast, slot_spell_available
 from app.combat.spell_damage_bonus import matching_spell_damage_bonuses
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.zero_hp import apply_damage
@@ -73,16 +73,21 @@ def resolve_spell_attack(
         distance = distance_override_ft if distance_override_ft is not None else combatant_distance(caster, target)
         if distance > spell.range_ft:
             raise ValueError(f"{spell.name} target is out of range.")
-        resource = _slot_resource(caster, spell, turn_key)
-        if spell.level > 0 and resource is None:
+        free_grant = available_free_spell_cast(caster.state, spell.id) if spell.level > 0 else None
+        resource = None if free_grant is not None else _slot_resource(caster, spell, turn_key)
+        if spell.level > 0 and free_grant is None and resource is None:
             raise ValueError(f"No level {spell.level} spell slot remains for {spell.name}.")
         ward = check_targeting_ward(caster, target, dice)
         if ward is not None and not ward.succeeded:
-            if resource is not None:
+            remaining = None
+            if free_grant is not None:
+                remaining = consume_free_spell_cast(caster.state, free_grant)
+            elif resource is not None:
                 mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
+                remaining = resource.current_uses
             spend(caster.state, spell.action_cost)
             event = blocked_targeting_event(sequence, round_number, caster, target, spell.name, ward)
-            event.resource_remaining = resource.current_uses if resource is not None else None
+            event.resource_remaining = remaining
             return event
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
             caster.state, target.state, distance, target.combatant_id,
@@ -98,8 +103,12 @@ def resolve_spell_attack(
         attack_roll = apply_d20_bonus_dice(caster.state, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
         consume_next_attack_against_advantage(caster.state, target.combatant_id)
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
-        if resource is not None:
+        remaining = None
+        if free_grant is not None:
+            remaining = consume_free_spell_cast(caster.state, free_grant)
+        elif resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
+            remaining = resource.current_uses
         spend(caster.state, spell.action_cost)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
@@ -119,7 +128,6 @@ def resolve_spell_attack(
                     add_modifier(target.state, build_spell_modifier(
                         caster.combatant_id, target.combatant_id, spell.id, effect, index, round_number=round_number,
                     ))
-        remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
         if heroic_reroll:
