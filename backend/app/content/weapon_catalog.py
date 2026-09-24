@@ -89,6 +89,10 @@ _WEAPONS = {
         animation="projectile", normal_range_ft=20, long_range_ft=60,
         projectile="handaxe", mastery_property="Vex", light=True,
     ),
+    "light-crossbow": _ranged(
+        "light-crossbow", "Light Crossbow", 8, 80, 320, "Slow",
+        two_handed=True,
+    ),
     "longbow": _ranged(
         "longbow", "Longbow", 8, 150, 600, "Slow",
         heavy=True, two_handed=True,
