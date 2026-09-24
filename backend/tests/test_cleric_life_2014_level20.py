@@ -109,5 +109,7 @@ def test_level_twenty_spell_package_has_full_prepared_capacity() -> None:
 
     assert len(package.cantrips) == 5
     assert len(package.spells) == 25
-    assert package.spells[-1].id == "blade-barrier"
+    assert package.spells[-1].id == "word-of-recall"
+    assert package.spells[-1].role == "utility"
+    assert package.spells[-1].required_capabilities == ["arena-out-of-scope"]
     assert package.casting_ability == "wisdom"
