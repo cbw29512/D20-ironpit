@@ -18,7 +18,7 @@
       if ((healing.action.maxTargets || 1) > 1) {
         const targets = H().groupTargets(member, setup, healing.action, turnKey);
         if (targets.some((target) => target.state.current_hp === 0)) {
-          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey);
+          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey, setup);
           events.push(...result.events); sequence = result.sequence;
         }
       } else {
@@ -38,7 +38,7 @@
       if ((healing.action.maxTargets || 1) > 1) {
         const targets = H().groupTargets(member, setup, healing.action, turnKey);
         if (targets.length) {
-          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey);
+          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey, setup);
           events.push(...result.events); sequence = result.sequence;
         }
       } else {
