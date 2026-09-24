@@ -52,6 +52,8 @@ class TimedEffect(BaseModel):
     # timed effect clean up only the resistance contribution it owns while an
     # overlapping effect that grants the same type remains active.
     owned_damage_resistances: list[DamageType] = Field(default_factory=list)
+    zero_hp_replacement_hp: int = Field(default=0, ge=0)
+    prevents_nondamage_instant_death: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":

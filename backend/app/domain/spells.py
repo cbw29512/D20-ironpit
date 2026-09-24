@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
 
 from app.domain.spell_modifiers import SpellModifierEffect, SpellModifierKind
+from app.domain.zero_hp_effects import SurvivalWard
 
 SpellTargetPolicy = Literal["self", "friendly"]
 SpellAttackKind = Literal["melee", "ranged"]
@@ -30,6 +31,7 @@ class DefensiveSpellAction(BaseModel):
     current_hp_increase: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
+    survival_ward: SurvivalWard | None = None
     concentration: bool = False
     priority: int = 0
     animation: str = "precombat-defense"
@@ -38,7 +40,7 @@ class DefensiveSpellAction(BaseModel):
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
-        if not direct_hp and not self.damage_resistances and not self.modifier_effects:
+        if not direct_hp and not self.damage_resistances and not self.modifier_effects and self.survival_ward is None:
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
         if self.concentration and (direct_hp or self.damage_resistances):
             raise ValueError("Concentration defenses require source-owned modifier effects.")

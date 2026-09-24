@@ -9,13 +9,14 @@ from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
 from app.combat.source_bound_effects import end_damage_sensitive_effects
+from app.combat.survival_wards import consume_survival_ward
 from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
 from app.domain.models import CombatantState, DamageType
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
-    "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude", "survival_save",
+    "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude", "survival_save", "survival_ward",
 ]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
@@ -110,7 +111,9 @@ def reduce_to_zero_hit_points(
         if state.is_dead or state.current_hp == 0:
             return "unchanged"
         state.current_hp = 0
-        if state.template.kind == "monster":
+        if consume_survival_ward(state):
+            outcome = "survival_ward"
+        elif state.template.kind == "monster":
             outcome = _mark_dead(state)
         elif resolve_effect_bound_survival_save(state, dice):
             outcome = "survival_save"
@@ -157,6 +160,8 @@ def apply_damage(
         state.current_hp = max(0, hp_before - amount)
         if state.current_hp > 0:
             return _finish_damage(state, "damaged", incoming, dice, affected_states)
+        if consume_survival_ward(state):
+            return _finish_damage(state, "survival_ward", incoming, dice, affected_states)
         if resolve_undead_fortitude(
             state, incoming, types, critical=critical, dice=dice,
         ):
@@ -177,3 +182,24 @@ def apply_damage(
     except Exception as exc:
         logger.exception("Zero-HP damage resolution failed for %s.", state.template.name)
         raise RuntimeError("Zero-HP damage could not be resolved.") from exc
+
+
+def apply_instant_death(
+    state: CombatantState,
+    *,
+    affected_states: list[CombatantState] | None = None,
+) -> ZeroHpOutcome:
+    """Resolve an effect that kills without dealing damage."""
+    try:
+        if state.is_dead:
+            return "unchanged"
+        if consume_survival_ward(state, nondamage_instant_death=True):
+            return "survival_ward"
+        outcome = _mark_dead(state)
+        if state.concentration is not None:
+            from app.combat.concentration import end_concentration_if_incapacitated
+            end_concentration_if_incapacitated(state, affected_states)
+        return outcome
+    except Exception as exc:
+        logger.exception("Instant-death resolution failed for %s.", state.template.name)
+        raise RuntimeError("Instant-death effect could not be resolved.") from exc

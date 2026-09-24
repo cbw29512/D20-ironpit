@@ -40,6 +40,8 @@ def apply_timed_condition(
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
     owned_damage_resistances: list[DamageType] | None = None,
+    zero_hp_replacement_hp: int = 0,
+    prevents_nondamage_instant_death: bool = False,
     use_default_poison_recovery: bool = True,
 ) -> str | None:
     """Apply one source-owned timed condition and its optional passive defenses.
@@ -88,6 +90,8 @@ def apply_timed_condition(
             ends_if_source_incapacitated=ends_if_source_incapacitated,
             ends_if_source_dead=ends_if_source_dead,
             owned_damage_resistances=owned_damage_resistances or [],
+            zero_hp_replacement_hp=zero_hp_replacement_hp,
+            prevents_nondamage_instant_death=prevents_nondamage_instant_death,
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
