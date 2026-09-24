@@ -267,6 +267,7 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
         "damageResistances": [_value(item) for item in action.damage_resistances],
+        "debuffCounters": [item.model_dump(mode="json") for item in action.debuff_counters],
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
     }
