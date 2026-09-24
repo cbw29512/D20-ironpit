@@ -207,3 +207,18 @@ def test_cleansing_touch_reuses_effect_removal_without_roll_or_spell_slot() -> N
     assert _slot(remover, 3).current_uses == before_level3
     assert remover.state.action_available is False
     assert not target.state.active_modifiers
+
+
+
+def test_level14_divine_favor_is_existing_bonus_damage_composition() -> None:
+    _, paladin, _ = _setup(14)
+    spell = _spell(paladin, "divine-favor")
+
+    assert spell.level == 1
+    assert spell.action_cost == "bonus_action"
+    assert spell.concentration is True
+    assert spell.target_policy == "self"
+    assert len(spell.modifier_effects) == 1
+    effect = spell.modifier_effects[0]
+    assert effect.kind == "bonus-damage"
+    assert (effect.dice_count, effect.dice_size, effect.damage_type) == (1, 4, "radiant")
