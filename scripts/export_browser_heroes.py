@@ -93,6 +93,8 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
            "diceSize": effect.dice_size, "damageType": effect.damage_type}
     if effect.condition_id: row["conditionId"] = effect.condition_id
     if effect.debuff_counter is not None: row["debuffCounter"] = effect.debuff_counter.model_dump(mode="json")
+    if effect.replacement_hp: row["replacementHp"] = effect.replacement_hp
+    if effect.prevents_instant_death: row["preventsInstantDeath"] = True
     if effect.source_creature_types: row["sourceCreatureTypes"] = list(effect.source_creature_types)
     if effect.save_ability: row["saveAbility"] = effect.save_ability
     if effect.save_dc is not None: row["saveDc"] = effect.save_dc
