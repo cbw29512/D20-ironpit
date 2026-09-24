@@ -36,7 +36,9 @@ def _target_allowed(healer: EncounterCombatant, target: EncounterCombatant, acti
     excluded = {item.lower() for item in action.excluded_creature_types}
     if creature_type and creature_type in excluded:
         return False
-    if CombatTrait.SWARM in target.state.template.combat_traits or _distance(healer, target) > action.range_ft:
+    if CombatTrait.SWARM in target.state.template.combat_traits:
+        return False
+    if action.area_radius_ft is None and _distance(healer, target) > action.range_ft:
         return False
     if action.target_mode == "self":
         return target.combatant_id == healer.combatant_id
