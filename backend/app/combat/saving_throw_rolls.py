@@ -18,6 +18,7 @@ from app.combat.failed_d20_bonus_die import apply_failed_d20_bonus_die
 from app.combat.failed_save_reroll import apply_failed_save_reroll
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
+from app.combat.timed_auras import timed_aura_saving_throw_advantage_sources
 from app.combat.rolls import roll_d20
 from app.combat.saving_throw_traits import sure_footed_advantage
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
@@ -39,6 +40,7 @@ def saving_throw_mode(
             + dodge_dex_save_advantage_sources(state, ability)
             + sure_footed_advantage(state, ability, context)
             + saving_throw_advantage_sources(state, ability, context)
+            + timed_aura_saving_throw_advantage_sources(state, ability, context)
         )
         disadvantage = (
             saving_throw_disadvantage_sources(state)
