@@ -351,6 +351,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["miss_to_hit_override_source_name"] = features.miss_to_hit_override_source_name
     if features.failed_save_reroll_grants:
         row["failed_save_reroll_grants"] = [item.model_dump() for item in features.failed_save_reroll_grants]
+    if features.failed_d20_bonus_die_grants:
+        row["failed_d20_bonus_die_grants"] = [
+            item.model_dump() for item in features.failed_d20_bonus_die_grants
+        ]
     if features.failed_d20_test_override_grants:
         row["failed_d20_test_override_grants"] = [
             item.model_dump() for item in features.failed_d20_test_override_grants
