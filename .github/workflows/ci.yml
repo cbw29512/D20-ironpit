@@ -86,7 +86,16 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
       - name: Certify Python rules reference
         working-directory: backend
-        run: pytest -q
+        run: |
+          set -o pipefail
+          pytest -q 2>&1 | tee ../ci-pytest.log
+      - name: Upload CI pytest log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-pytest-${{ github.sha }}
+          path: ci-pytest.log
+          retention-days: 1
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
