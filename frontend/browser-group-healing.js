@@ -28,7 +28,7 @@
     const remaining = healer.state.resources[action.resourceId];
     const events = [];
     for (const target of targets) {
-      const maximized = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.healingMaximized(target.state) || false;
+      const maximized = P().healingMaximized(healer, target);
       const rolls = Array.from(
         { length: action.diceCount || 0 },
         () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6),
