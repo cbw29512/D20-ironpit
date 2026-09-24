@@ -92,6 +92,7 @@ const protection = {
     { kind: "attacks-against-disadvantage", sourceCreatureTypes: protectedTypes },
     { kind: "condition-immunity", conditionId: "charmed", sourceCreatureTypes: protectedTypes },
     { kind: "condition-immunity", conditionId: "frightened", sourceCreatureTypes: protectedTypes },
+    { kind: "effect-immunity", effectTag: "possession", sourceCreatureTypes: protectedTypes },
   ],
 };
 const sanctuary = {
@@ -119,6 +120,8 @@ const beacon = {
   assert.equal(DM.attacksAgainstDisadvantage(ally.state, template("Human", { creature_type: "Humanoid" })), 0);
   assert.equal(I.immune(ally.state, "charmed", template("Fiend", { creature_type: "Fiend" })), true);
   assert.equal(I.immune(ally.state, "charmed", template("Human", { creature_type: "Humanoid" })), false);
+  assert.equal(DM.effectImmune(ally.state, "possession", template("Fiend", { creature_type: "Fiend" })), true);
+  assert.equal(DM.effectImmune(ally.state, "possession", template("Human", { creature_type: "Humanoid" })), false);
 }
 
 {
