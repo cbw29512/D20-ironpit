@@ -66,6 +66,8 @@ class HealingAction(BaseModel):
     dice_count: int = Field(default=0, ge=0, le=40)
     dice_size: int = Field(default=6, ge=2, le=100)
     healing_bonus: int = Field(default=0, ge=0)
+    restore_to_effective_max: bool = False
+    percentile_success_max: int | None = Field(default=None, ge=1, le=100)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
     excluded_creature_types: list[str] = Field(default_factory=list)
