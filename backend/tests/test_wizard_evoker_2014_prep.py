@@ -28,7 +28,7 @@ def test_evoker_missing_mechanics_remain_explicitly_blocked_and_uncertified() ->
     profile = build_elian_starweaver_2014_profile(20)
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["wizard-spellcasting"].automated is False
-    assert audits["potent-cantrip"].automated is False
+    assert audits["potent-cantrip"].automated is True
     assert audits["empowered-evocation"].automated is True
     assert audits["overchannel"].automated is False
     assert audits["spell-mastery"].automated is False
