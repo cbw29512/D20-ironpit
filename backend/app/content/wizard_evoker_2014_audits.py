@@ -60,8 +60,11 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ])
         if level >= 6:
             audits.append(_audit(
-                "potent-cantrip", "Potent Cantrip", "subclass", automated=False,
-                notes="Requires cantrip-specific half-damage-on-success binding through generic save-damage behavior.",
+                "potent-cantrip", "Potent Cantrip", "subclass",
+                notes=(
+                    "Poison Spray is a legal single-target Wizard save cantrip and reuses the generic "
+                    "save-damage path with success_damage='half' from level 6 onward."
+                ),
             ))
         if level >= 10:
             audits.append(_audit(
