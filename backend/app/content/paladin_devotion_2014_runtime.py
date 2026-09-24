@@ -9,6 +9,7 @@ from app.content.paladin_devotion_2014_spells import (
     build_paladin_defensive_spells_2014,
     build_paladin_healing_actions_2014,
     dispel_magic_2014,
+    build_paladin_persistent_hazard_actions_2014,
 )
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, ResourceDefinition, VisualLoadout
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 _SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
-    11: (4, 3, 3), 12: (4, 3, 3),
+    11: (4, 3, 3), 12: (4, 3, 3), 13: (4, 3, 3, 1),
 }
 
 
@@ -69,8 +70,8 @@ def _improved_divine_smite(level: int) -> list[OnHitDamage]:
 
 def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 13):
-            raise ValueError("2014 Devotion Paladin certification covers levels 1 through 12.")
+        if level not in range(1, 14):
+            raise ValueError("2014 Devotion Paladin build support covers levels 1 through 13; certification remains separately gated.")
         scores = _scores(level)
         charisma_modifier = scores.modifier("charisma")
         aura_bonus = charisma_modifier if level >= 6 else 0
@@ -91,6 +92,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
             alternate_weapon_attacks=[javelin],
             attack_action=build_extra_attack(level),
             defensive_spell_actions=build_paladin_defensive_spells_2014(level, charisma_modifier),
+            persistent_hazard_actions=build_paladin_persistent_hazard_actions_2014(level, charisma_modifier),
             healing_actions=build_paladin_healing_actions_2014(level, charisma_modifier),
             condition_removal_actions=build_paladin_condition_removal_actions_2014(level),
             effect_removal_actions=[dispel_magic_2014()] if level >= 9 else [],
