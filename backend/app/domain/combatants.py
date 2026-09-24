@@ -9,6 +9,7 @@ from app.domain.character_builds import AbilityScores
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.movement import MovementModes
+from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import DamageReactionAttack, ParryReaction, RedirectAttackReaction
 from app.domain.recharge import RechargeRule
@@ -59,6 +60,7 @@ class CombatantTemplate(BaseModel):
     movement_modes: MovementModes
     initiative_bonus: int
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
+    passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
