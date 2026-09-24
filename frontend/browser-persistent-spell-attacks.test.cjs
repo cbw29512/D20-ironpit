@@ -49,7 +49,7 @@ window.IRON_PIT_BROWSER_ATTACK = {
   },
 };
 window.IRON_PIT_BROWSER_SPELL_MODIFIERS = { build: () => ({}) };
-window.IRON_PIT_BROWSER_CONDITION_RULES = { autoCritical: () => false };
+window.IRON_PIT_BROWSER_CONDITION_RULES = { autoCritical: () => false, incapacitated: () => false };
 window.IRON_PIT_BROWSER_SAP = { consume: () => 0, disadvantage: () => 0 };
 window.IRON_PIT_DICE = {
   rollMany: (count) => Array.from({ length: count }, () => 4),
