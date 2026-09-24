@@ -66,7 +66,6 @@ def test_high_level_preparation_keeps_unfinished_features_explicitly_uncertified
         13: "devotion-oath-spells-4",
         15: "purity-of-spirit",
         17: "devotion-oath-spells-5",
-        18: "aura-improvements",
         20: "holy-nimbus",
     }
     for level, feature_id in expected_blocked.items():
@@ -96,5 +95,15 @@ def test_cleansing_touch_is_no_check_generic_effect_removal() -> None:
     audit = next(
         item for item in build_aurelia_brightshield_2014_profile(14).feature_audits
         if item.feature_id == "cleansing-touch"
+    )
+    assert audit.automated is True
+
+
+def test_level_eighteen_aura_radius_is_prepared() -> None:
+    runtime = build_aurelia_brightshield_2014(18)
+    assert runtime.progression_features.paladin_aura_radius_2014_ft == 30
+    audit = next(
+        item for item in build_aurelia_brightshield_2014_profile(18).feature_audits
+        if item.feature_id == "aura-improvements"
     )
     assert audit.automated is True
