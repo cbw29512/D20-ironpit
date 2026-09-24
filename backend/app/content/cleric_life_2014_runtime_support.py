@@ -112,7 +112,7 @@ def build_cleric_resources_2014(level: int) -> list[ResourceDefinition]:
 def build_cleric_progression_2014(level: int) -> ProgressionCombatFeatures:
     try:
         return ProgressionCombatFeatures(
-            turning_failure_destroy_max_cr=("1" if level >= 8 else "1/2" if level >= 5 else None),
+            turning_failure_destroy_max_cr=("2" if level >= 11 else "1" if level >= 8 else "1/2" if level >= 5 else None),
             slot_healing_other_self_rider=(
                 SlotHealingSelfRider(
                     source_id="blessed-healer",
