@@ -64,6 +64,14 @@ def choose_healing_target(
         return None
     allies = setup.heroes if healer.side == "heroes" else setup.monsters
     legal = [target for target in allies if _target_allowed(healer, target, action)]
+    if action.restore_to_effective_max and legal:
+        return min(
+            legal,
+            key=lambda target: (
+                target.state.current_hp / effective_max_hp(target.state),
+                target.combatant_id,
+            ),
+        )
     others = [target for target in legal if target.combatant_id != healer.combatant_id]
     downed = [target for target in others if target.state.current_hp == 0]
     if downed:
@@ -118,24 +126,88 @@ def resolve_healing(
             raise ValueError("Spell-slot healing requires an active turn key.")
         mark_slot_spell_cast(healer.state, turn_key)
     spend(healer.state, action.action_cost)
-    rolls = [action.dice_size for _ in range(action.dice_count)] if healing_is_maximized(target.state) else [dice.roll(action.dice_size) for _ in range(action.dice_count)]
-    total = sum(rolls) + action.healing_bonus
-    hp_before = target.state.current_hp
-    healed = restore_hit_points(target.state, total)
     remaining = None
     if action.resource_id is not None:
         resource = next(item for item in healer.state.resources if item.id == action.resource_id)
         resource.current_uses -= action.resource_cost
         remaining = resource.current_uses
-    notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}" if action.dice_count else str(action.healing_bonus)
+
+    feature_roll = None
+    if action.percentile_success_max is not None:
+        rolled = dice.roll(100)
+        feature_roll = DiceRoll(
+            notation="1d100",
+            rolls=[rolled],
+            selected_roll=rolled,
+            total=rolled,
+        )
+        if rolled > action.percentile_success_max:
+            return BattleEvent(
+                sequence=sequence,
+                round_number=round_number,
+                event_type="feature",
+                actor_id=healer.combatant_id,
+                actor_name=healer.state.template.name,
+                target_id=target.combatant_id,
+                target_name=target.state.template.name,
+                feature_roll=feature_roll,
+                hp_before=target.state.current_hp,
+                hp_after=target.state.current_hp,
+                death_save_successes=target.state.death_save_successes,
+                death_save_failures=target.state.death_save_failures,
+                is_stable=target.state.is_stable,
+                is_dead=target.state.is_dead,
+                feature_id=action.id,
+                resource_remaining=remaining,
+                animation=action.animation,
+                description=(
+                    f"{healer.state.template.name} uses {action.name} and rolls {rolled} on d100; "
+                    f"the intervention fails (needed {action.percentile_success_max} or lower)."
+                ),
+            )
+
+    hp_before = target.state.current_hp
+    if action.restore_to_effective_max:
+        rolls = []
+        total = effective_max_hp(target.state) - target.state.current_hp
+        healed = restore_hit_points(target.state, total)
+        notation = "restore-to-effective-max"
+        modifier = 0
+    else:
+        rolls = (
+            [action.dice_size for _ in range(action.dice_count)]
+            if healing_is_maximized(target.state)
+            else [dice.roll(action.dice_size) for _ in range(action.dice_count)]
+        )
+        total = sum(rolls) + action.healing_bonus
+        healed = restore_hit_points(target.state, total)
+        notation = (
+            f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}"
+            if action.dice_count
+            else str(action.healing_bonus)
+        )
+        modifier = action.healing_bonus
+
+    description = (
+        f"{healer.state.template.name} uses {action.name} on {target.state.template.name} "
+        f"and restores {healed} HP."
+    )
+    if feature_roll is not None:
+        description = (
+            f"{healer.state.template.name} uses {action.name} and rolls "
+            f"{feature_roll.total} on d100; the intervention succeeds. "
+            f"{target.state.template.name} is restored for {healed} HP."
+        )
+
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="healing",
         actor_id=healer.combatant_id, actor_name=healer.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name,
-        healing_roll=DiceRoll(notation=notation, rolls=rolls, modifier=action.healing_bonus, total=total),
+        feature_roll=feature_roll,
+        healing_roll=DiceRoll(notation=notation, rolls=rolls, modifier=modifier, total=healed),
         hp_before=hp_before, hp_after=target.state.current_hp,
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead,
         feature_id=action.id, resource_remaining=remaining, animation=action.animation,
-        description=f"{healer.state.template.name} uses {action.name} on {target.state.template.name} and restores {healed} HP.",
+        description=description,
     )
