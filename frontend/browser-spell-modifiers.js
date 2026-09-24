@@ -21,7 +21,7 @@
       dice_count: effect.diceCount || 0,
       dice_size: effect.diceSize || 0,
       damage_type: effect.damageType || null,
-      target_id: targetId,
+      target_id: effect.kind === "bonus-damage" && targetId === sourceId ? null : targetId,
       condition_id: effect.conditionId || null,
       debuff_counter: effect.debuffCounter || null,
       replacement_hp: effect.replacementHp || 0,
