@@ -81,3 +81,21 @@ def test_high_level_preparation_keeps_unfinished_features_explicitly_uncertified
         if item.class_id == "paladin" and item.template_builder is build_aurelia_brightshield_2014
     )
     assert certified.max_level == 12
+
+
+def test_cleansing_touch_is_no_check_generic_effect_removal() -> None:
+    runtime = build_aurelia_brightshield_2014(14)
+    action = next(item for item in runtime.effect_removal_actions if item.id == "cleansing-touch")
+    assert action.action_cost == "action"
+    assert action.range_ft == 5
+    assert action.target_mode == "self_or_ally"
+    assert action.resource_id == "cleansing-touch"
+    assert action.resource_cost == 1
+    assert action.expends_spell_slot is False
+    assert action.auto_remove_max_level == 9
+
+    audit = next(
+        item for item in build_aurelia_brightshield_2014_profile(14).feature_audits
+        if item.feature_id == "cleansing-touch"
+    )
+    assert audit.automated is True
