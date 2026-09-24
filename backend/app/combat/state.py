@@ -4,7 +4,7 @@ import logging
 
 from app.combat.condition_rules import is_incapacitated
 from app.combat.conditions import DODGE_EFFECT_ID, stand_from_prone
-from app.combat.grapple import speed_is_zero
+from app.combat.grapple import speed_is_zero, spend_movement_to_escape_nonmagical_grapples
 from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
 from app.combat.modifier_stack import effective_speed
 from app.combat.opening_modifiers import opening_modifiers
@@ -61,7 +61,11 @@ def begin_turn(state: CombatantState) -> None:
         state.bonus_action_available = not incapacitated and not suppresses_bonus_action(state)
         refresh_start_of_turn(state)
         speed = effective_speed(state)
-        state.movement_remaining_ft = 0 if speed_is_zero(state) or suppresses_movement(state) else speed
+        if suppresses_movement(state):
+            state.movement_remaining_ft = 0
+        else:
+            remaining = spend_movement_to_escape_nonmagical_grapples(state, speed)
+            state.movement_remaining_ft = 0 if speed_is_zero(state) else remaining
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)
         stand_from_prone(state)
