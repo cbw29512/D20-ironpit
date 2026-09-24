@@ -5,6 +5,7 @@ from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modif
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.spell_policy import SpellChoice
 from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spell_damage_bonus import matching_spell_damage_bonuses
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -16,17 +17,34 @@ def _resource(state, level: int):
     return next((item for item in state.resources if item.id == resource_id), None)
 
 
-def _save_action(choice: SpellChoice) -> SavingThrowAction:
+def _save_action(choice: SpellChoice, caster_state) -> SavingThrowAction:
     spell = choice.action
     if choice.slot_level != spell.level:
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     target_range = spell.range_ft + (spell.area_radius_ft or 0)
+    damage_bonus = spell.damage_bonus
+    components = [component.model_copy(deep=True) for component in spell.damage_components]
+    used_sources: set[str] = set()
+    if components:
+        adjusted = []
+        for component in components:
+            matches = matching_spell_damage_bonuses(
+                caster_state, spell.id, component.damage_type,
+                excluded_source_ids=used_sources,
+            )
+            used_sources.update(source_id for source_id, _, _ in matches)
+            adjusted.append(component.model_copy(update={
+                "damage_bonus": component.damage_bonus + sum(amount for _, _, amount in matches),
+            }))
+        components = adjusted
+    elif spell.damage_type is not None:
+        matches = matching_spell_damage_bonuses(caster_state, spell.id, spell.damage_type)
+        damage_bonus += sum(amount for _, _, amount in matches)
     return SavingThrowAction(
         id=spell.id, name=spell.name, save_ability=spell.save_ability, dc=spell.dc,
         range_ft=target_range, damage_dice_count=spell.damage_dice_count,
-        damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
-        damage_type=spell.damage_type,
-        damage_components=[component.model_copy(deep=True) for component in spell.damage_components],
+        damage_dice_size=spell.damage_dice_size, damage_bonus=damage_bonus,
+        damage_type=spell.damage_type, damage_components=components,
         success_damage=spell.success_damage,
         magical_effect=True, animation=spell.animation,
     )
@@ -79,7 +97,7 @@ def resolve_spell(
     members = [*setup.heroes, *setup.monsters]
     by_id = {member.combatant_id: member for member in members}
     affected_states = [member.state for member in members]
-    save_action = _save_action(choice)
+    save_action = _save_action(choice, caster.state)
     shared_damage_rolls: list[int] | None = None
     shared_damage_component_rolls: list[list[int]] | None = None
     for target_id in choice.target_ids:
