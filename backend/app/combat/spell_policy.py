@@ -21,13 +21,25 @@ class SpellChoice:
 
 
 def _slot_level(caster: EncounterCombatant, action: SpellSaveAction, turn_key: str) -> int | None:
-    if action.level == 0:
-        return 0
-    if not slot_spell_available(caster.state, turn_key):
-        return None
-    resource_id = f"spell-slot-{action.level}"
-    resource = next((item for item in caster.state.resources if item.id == resource_id), None)
-    return action.level if resource is not None and resource.current_uses > 0 else None
+    """Return the lowest available legal slot at or above a spell's printed level."""
+    try:
+        if action.level == 0:
+            return 0
+        if not slot_spell_available(caster.state, turn_key):
+            return None
+        available: list[int] = []
+        for resource in caster.state.resources:
+            if not resource.id.startswith("spell-slot-") or resource.current_uses < 1:
+                continue
+            try:
+                slot_level = int(resource.id.removeprefix("spell-slot-"))
+            except ValueError:
+                continue
+            if slot_level >= action.level:
+                available.append(slot_level)
+        return min(available) if available else None
+    except Exception:
+        raise
 
 
 def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, action: SpellSaveAction):
