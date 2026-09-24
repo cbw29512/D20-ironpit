@@ -114,7 +114,7 @@ def build_cleric_life_2014_feature_audits(level: int) -> list[FeatureAudit]:
         if level >= 11:
             audits.append(_audit(
                 "destroy-undead-2", "Destroy Undead (CR 2)", "class", source=CLERIC,
-                automated=False, notes="Depends on the universal Turn Undead resolution path.",
+                notes="Uses the shared turning-save destruction threshold with CR 2 source data.",
             ))
         if level >= 12:
             audits.append(_audit("asi-12", "Ability Score Improvement", "class", source=CLERIC))
