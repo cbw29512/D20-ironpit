@@ -119,7 +119,7 @@ def resolve_enemy_start_turn_auras(
                 if applied:
                     apply_damage(target.state, applied, damage_types={DamageType(action.damage_type)}, affected_states=affected_states)
                 events.append(BattleEvent(
-                    sequence=sequence, round_number=round_number, event_type="damage",
+                    sequence=sequence, round_number=round_number, event_type="feature",
                     actor_id=source.combatant_id, actor_name=source.state.template.name,
                     target_id=target.combatant_id, target_name=target.state.template.name,
                     damage_components=components, hp_before=hp_before, hp_after=target.state.current_hp,
