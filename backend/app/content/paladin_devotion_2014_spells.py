@@ -5,7 +5,6 @@ from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.debuffs import DebuffCounter
-from app.domain.effect_removal import EffectRemovalAction
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 _PROTECTED_TYPES = ["aberration", "celestial", "elemental", "fey", "fiend", "undead"]
@@ -71,31 +70,6 @@ def beacon_of_hope_2014() -> DefensiveSpellAction:
             SpellModifierEffect(kind="healing-maximize"),
         ],
         animation="beacon-of-hope", source=_SOURCE,
-    )
-
-
-def cleansing_touch_2014() -> EffectRemovalAction:
-    return EffectRemovalAction(
-        id="cleansing-touch",
-        name="Cleansing Touch",
-        level=0,
-        action_cost="action",
-        range_ft=5,
-        target_mode="self_or_ally",
-        auto_remove_max_level=9,
-        resource_id="cleansing-touch",
-        resource_cost=1,
-        expends_spell_slot=False,
-        animation="cleansing-touch",
-    )
-
-
-def dispel_magic_2014() -> EffectRemovalAction:
-    return EffectRemovalAction(
-        id="dispel-magic", name="Dispel Magic", level=3, action_cost="action",
-        range_ft=120, casting_ability="charisma", target_mode="enemy",
-        auto_remove_max_level=3, resource_id="spell-slot-3", resource_cost=1,
-        expends_spell_slot=True, animation="dispel-magic",
     )
 
 
