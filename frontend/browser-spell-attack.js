@@ -24,10 +24,19 @@
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
     if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
-    const resourceId = slotResource(caster, spell, turnKey);
-    if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
+    const freeGrant = spell.level > 0 ? C().availableFreeSpellCast(caster.state, spell.id) : null;
+    const resourceId = freeGrant ? null : slotResource(caster, spell, turnKey);
+    if (spell.level > 0 && !freeGrant && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
-    if (ward && !ward.succeeded) { if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; } E().spend(caster.state, spell.actionCost); const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward); event.resource_remaining = resourceId ? caster.state.resources[resourceId] : null; return event; }
+    if (ward && !ward.succeeded) {
+      let remaining = null;
+      if (freeGrant) remaining = C().consumeFreeSpellCast(caster.state, freeGrant);
+      else if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; remaining = caster.state.resources[resourceId]; }
+      E().spend(caster.state, spell.actionCost);
+      const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
+      event.resource_remaining = remaining;
+      return event;
+    }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
@@ -37,7 +46,9 @@
     const attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll);
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
-    if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
+    let remaining = null;
+    if (freeGrant) remaining = C().consumeFreeSpellCast(caster.state, freeGrant);
+    else if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; remaining = caster.state.resources[resourceId]; }
     E().spend(caster.state, spell.actionCost);
     const natural = attackRoll.selected_roll;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
@@ -76,7 +87,7 @@
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, weapon_id: null, projectile: null, feature_id: spell.id,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
-      resource_remaining: resourceId ? caster.state.resources[resourceId] : null, animation: spell.animation || "spell-attack",
+      resource_remaining: remaining, animation: spell.animation || "spell-attack",
       description: description + survivalLog,
     };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
