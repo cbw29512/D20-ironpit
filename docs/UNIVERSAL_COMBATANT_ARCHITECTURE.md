@@ -324,6 +324,17 @@ YES -> represent the needed fact and use/add one shared mechanic.
 
 Arena-out-of-scope is a deliberate product-scope classification, never a substitute for an outcome-changing RAW rule.
 
+## Permanent passive buff compilation
+
+Always-on combat protections are declarative source data, not bespoke turn resolvers.
+
+- A permanent source-owned buff that maps to existing modifier semantics is stored as passive modifier grants on the immutable combatant template.
+- Fresh combat state compiles those grants into the same universal active-modifier stack used by spells and other buffs.
+- The grant supplies only source identity and parameters such as modifier kind, condition id, and qualifying source creature types.
+- Existing attack, saving-throw, condition-immunity, buff/debuff, and lifecycle rules consume the compiled modifiers without checking class, subclass, monster, spell, or feature names.
+- Passive modifiers are rebuilt from the template for every match; combat never mutates the source template.
+- Player-facing logs/cards retain the printed source ability name while internal runtime/audit data may retain the generic modifier kind.
+
 ## Shared capability pattern
 
 For any new combat mechanic:
