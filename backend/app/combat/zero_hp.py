@@ -112,9 +112,7 @@ def reduce_to_zero_hit_points(
         if state.is_dead or state.current_hp == 0:
             return "unchanged"
         state.current_hp = 0
-        if consume_zero_hp_replacement(state):
-            outcome = "zero_hp_replacement"
-        elif state.template.kind == "monster":
+        if state.template.kind == "monster":
             outcome = _mark_dead(state)
         elif resolve_effect_bound_survival_save(state, dice):
             outcome = "survival_save"
