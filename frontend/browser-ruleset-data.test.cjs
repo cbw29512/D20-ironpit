@@ -93,6 +93,18 @@ for (const attack of paladin11.attacks) {
 }
 assert.equal(paladin12.ability_scores.strength, 20);
 assert.deepEqual([paladin12.resources["spell-slot-1"], paladin12.resources["spell-slot-2"], paladin12.resources["spell-slot-3"]], [4, 3, 3]);
+const paladin15 = paladins2014.find((hero) => hero.level === 15);
+assert.ok(paladin15);
+assert.equal(paladin15.resources["spell-slot-4"], 2);
+assert.equal(paladin15.passive_modifier_grants.length, 3);
+assert.deepEqual(
+  paladin15.passive_modifier_grants.map((item) => [item.source_id, item.source_name, item.kind, item.condition_id]),
+  [
+    ["purity-of-spirit", "Purity of Spirit", "attacks-against-disadvantage", null],
+    ["purity-of-spirit", "Purity of Spirit", "condition-immunity", "charmed"],
+    ["purity-of-spirit", "Purity of Spirit", "condition-immunity", "frightened"],
+  ],
+);
 assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "canonical browser monsters");
 for (const fixture of [
   "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
