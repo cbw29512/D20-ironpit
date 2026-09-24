@@ -76,6 +76,7 @@ def resolve_attack_effects(
         hit_damage = resolve_attack_hit_damage(
             attacker, defender, attack, dice, critical, mode, active_turn_key,
             bonus_damage, affected_states, sneak_attack_ally_available,
+            target_event_id=actual_event_id,
             brutal_strike_disadvantage=brutal_strike_disadvantage,
         )
         result.damage_roll = hit_damage.damage_roll
