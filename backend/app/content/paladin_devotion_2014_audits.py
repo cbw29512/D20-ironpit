@@ -112,6 +112,14 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     notes="Prepared as the legal non-summoning level-4 combat replacement; universal zero-HP replacement consumes the ward on first trigger.",
                 ),
             ])
+        if level >= 14:
+            audits.append(_audit(
+                "cleansing-touch", "Cleansing Touch", "class",
+                notes=(
+                    "Reuses the universal effect-removal action: Action, touch range, "
+                    "self/willing ally, no roll, Charisma-modifier uses per long rest."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)
