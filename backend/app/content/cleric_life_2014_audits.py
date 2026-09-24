@@ -96,11 +96,11 @@ def build_cleric_life_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 _audit("asi-8", "Ability Score Improvement", "class", source=CLERIC),
                 _audit(
                     "destroy-undead-1", "Destroy Undead (CR 1)", "class", source=CLERIC,
-                    automated=False, notes="Depends on the universal Turn Undead resolution path.",
+                    notes="Uses the shared turning-save destruction threshold with CR 1 source data.",
                 ),
                 _audit(
-                    "divine-strike", "Divine Strike", "subclass", source=LIFE, automated=False,
-                    notes="Requires audit/binding to a generic once-per-turn weapon-hit damage rider.",
+                    "divine-strike", "Divine Strike", "subclass", source=LIFE,
+                    notes="Uses the universal once-per-turn weapon-hit damage rider.",
                 ),
             ])
         if level >= 10:
