@@ -9,4 +9,6 @@ class SavingThrowContext:
 
     condition_id: str | None = None
     magical_effect: bool = False
+    source_is_spell: bool = False
+    source_creature_type: str | None = None
     effect_tags: frozenset[str] = frozenset()
