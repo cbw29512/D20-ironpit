@@ -235,7 +235,7 @@ For the 2014 Cleric's Divine Intervention feature, Iron Pit uses one determinist
 - Roll percentile dice. The intervention succeeds when the d100 result is less than or equal to the Cleric's current level, matching the printed 2014 success chance before level 20.
 - A failed attempt still spends the Action and the attempt for that fight.
 - On a successful intervention, the deity fully restores one legal living creature on the Cleric's side to that creature's effective maximum Hit Points. The Cleric may be the target.
-- Arena AI chooses the legal living party member with the lowest current-HP / effective-max-HP ratio; ties are deterministic.
+- Arena AI considers the intervention once at least one legal living party member is Bloodied or at 0 HP, then chooses the legal target with the lowest current-HP / effective-max-HP ratio; ties are deterministic.
 - The effect uses the universal healing/life-state pipeline. Divine Intervention is source/presentation metadata, not a healing-engine name switch.
 - The player-facing log must display **Divine Intervention** and whether the percentile request succeeded or failed.
 - This policy is an explicit deterministic Iron Pit interpretation of the 2014 feature's DM-chosen intervention result; it does not redefine generic healing or percentile checks for other sources.
