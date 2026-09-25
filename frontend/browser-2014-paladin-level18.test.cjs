@@ -32,5 +32,10 @@ assert.equal(hero.aura_of_devotion_2014, true);
 assert.equal(hero.aura_of_courage_2014, true);
 assert.deepEqual(hero.spell_save_actions, level17.spell_save_actions);
 assert.deepEqual(hero.passive_modifier_grants, level17.passive_modifier_grants);
+assert.equal(hero.canonical_prepared_spells.length, 13);
+const locateObject = hero.canonical_prepared_spells.find((spell) => spell.id === "locate-object");
+assert.ok(locateObject);
+assert.equal(locateObject.level, 2);
+assert.deepEqual(locateObject.requiredCapabilities, ["arena-out-of-scope"]);
 
 console.log("2014 Paladin level 18 aura-expansion browser parity passed.");
