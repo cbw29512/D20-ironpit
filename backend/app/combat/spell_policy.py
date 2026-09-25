@@ -74,7 +74,10 @@ def choose_spell(
         for index, action in enumerate(caster.state.template.spell_save_actions):
             if action.action_cost == "reaction" or action.concentration or not is_available(caster.state, action.action_cost):
                 continue
-            for slot_level in legal_slot_levels(\n                caster.state, turn_key, action.level,\n                higher_slot_scaling=action.upcast_dice_per_level > 0,\n            ):
+            for slot_level in legal_slot_levels(
+                caster.state, turn_key, action.level,
+                higher_slot_scaling=action.upcast_dice_per_level > 0,
+            ):
                 scaled = spell_at_slot(action, slot_level)
                 if action.area_radius_ft is not None:
                     placement = best_area_placement(caster, setup, action.area_radius_ft, action.range_ft, protected_ally_ids)
