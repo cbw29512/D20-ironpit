@@ -6,12 +6,12 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.paladin_devotion_2014_attacks import build_extra_attack, build_javelin_attack, build_longsword_attack
 from app.content.paladin_devotion_2014_level14 import cleansing_touch_2014
 from app.content.paladin_devotion_2014_level15 import purity_of_spirit_2014
+from app.content.paladin_devotion_2014_level17 import flame_strike_2014
 from app.content.paladin_devotion_2014_spells import (
     build_paladin_condition_removal_actions_2014,
     build_paladin_defensive_spells_2014,
     build_paladin_healing_actions_2014,
     dispel_magic_2014,
-    flame_strike_2014,
 )
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, ResourceDefinition, VisualLoadout
