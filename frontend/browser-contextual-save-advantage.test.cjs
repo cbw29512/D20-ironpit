@@ -81,5 +81,48 @@ const converted = window.IRON_PIT_BROWSER_SPELL_RESOLUTION.saveAction({
   },
 });
 assert.equal(converted.magicalEffect, true);
+assert.deepEqual(converted.effectTags, []);
+
+const poisonTemplate = {
+  id: "dwarf-test",
+  name: "Dwarf Test",
+  saving_throw_bonuses: { constitution: 0 },
+  saving_throw_advantage_grants: [{
+    source_id: "dwarven-resilience",
+    source_name: "Dwarven Resilience",
+    abilities: ["constitution"],
+    required_effect_tags: ["poison"],
+  }],
+};
+const poisonState = {
+  template: poisonTemplate,
+  active_effect_ids: [],
+  active_modifiers: window.IRON_PIT_BROWSER_OPENING_MODIFIERS.build(poisonTemplate),
+};
+
+window.IRON_PIT_DICE = queuedDice([3, 18]);
+const poison = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+  poisonState, "constitution", 99, { effectTags: ["poison"] },
+);
+assert.equal(poison.roll.mode, "advantage");
+assert.deepEqual(poison.roll.rolls, [3, 18]);
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS.saveAdvantageSourceNames(
+    poisonState, "constitution", { effectTags: ["poison"] },
+  ),
+  ["Dwarven Resilience"],
+);
+
+window.IRON_PIT_DICE = queuedDice([11]);
+const ordinaryPoisonState = {
+  template: poisonTemplate,
+  active_effect_ids: [],
+  active_modifiers: window.IRON_PIT_BROWSER_OPENING_MODIFIERS.build(poisonTemplate),
+};
+const ordinarySave = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+  ordinaryPoisonState, "constitution", 99, {},
+);
+assert.equal(ordinarySave.roll.mode, "normal");
+assert.deepEqual(ordinarySave.roll.rolls, [11]);
 
 console.log("Browser contextual saving-throw Advantage regressions passed.");
