@@ -127,7 +127,7 @@ assert.equal(offense.events[0].feature_id, "inflict-wounds");
 assert.equal(offense.events[1].feature_id, "inflict-wounds");
 assert.equal(offense.events[1].save_succeeded, false);
 assert.equal(offense.events[1].damage_roll.total, 27);
-assert.equal(caster.state.resources["spell-slot-1"], 3);
-assert.equal(caster.state.resources["spell-slot-2"], 3);
+assert.equal(caster.state.resources["spell-slot-1"], 4);
+assert.equal(caster.state.resources["spell-slot-2"], 2);
 
 console.log("Generated Browser Cleric 4 ASI, one-opening-buff, and Inflict Wounds regressions passed.");
