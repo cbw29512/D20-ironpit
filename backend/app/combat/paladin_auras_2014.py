@@ -33,12 +33,21 @@ def _clear_aura_modifiers(setup: EncounterSetup) -> None:
         ]
 
 
+def _aura_radius_ft(source: EncounterCombatant) -> int:
+    try:
+        return source.state.template.progression_features.aura_radius_2014_ft
+    except Exception:
+        logger.exception("Failed to read 2014 aura radius for %s.", source.combatant_id)
+        raise
+
+
 def _nearby_sources(target: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
     side_members = setup.heroes if target.side == "heroes" else setup.monsters
     return [
         source for source in side_members
         if _active_source(source)
-        and combatant_distance(source, target) <= 10
+        and _aura_radius_ft(source) > 0
+        and combatant_distance(source, target) <= _aura_radius_ft(source)
     ]
 
 
@@ -85,7 +94,7 @@ def _apply_condition_aura(
 
 
 def sync_paladin_auras_2014(setup: EncounterSetup) -> None:
-    """Refresh non-stacking 10-foot 2014 Paladin aura effects from current encounter positions."""
+    """Refresh non-stacking 2014 Paladin auras using each source's declared radius."""
     try:
         _clear_aura_modifiers(setup)
         for target in _members(setup):
