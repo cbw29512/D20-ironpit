@@ -66,12 +66,18 @@
   }
 
   function readyMonsterCards(registry = window.IRON_PIT_BROWSER_MONSTERS) {
-    return Object.values(registry || {}).map((monster) => ({
-      id: `catalog-${monster.id}`, name: monster.name, challenge_rating: monster.challenge_rating,
-      monster_type: monster.archetype, armor_class: monster.armor_class, hit_points: monster.max_hp,
-      ruleset: monster.ruleset, kind: "monster", coverage_status: "raw_ready",
-      runnable_template_id: monster.id, blockers: [],
-    }));
+    try {
+      return Object.values(registry || {}).map((monster) => ({
+        id: `catalog-${monster.id}`, name: monster.name, challenge_rating: monster.challenge_rating,
+        monster_type: monster.archetype, creature_type: monster.creature_type || null,
+        armor_class: monster.armor_class, hit_points: monster.max_hp,
+        ruleset: monster.ruleset, kind: "monster", coverage_status: "raw_ready",
+        runnable_template_id: monster.id, blockers: [],
+      }));
+    } catch (error) {
+      console.error("Failed to build ready monster catalog cards.", error);
+      throw error;
+    }
   }
 
   async function buildMonsters2024() {
