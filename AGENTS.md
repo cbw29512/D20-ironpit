@@ -19,8 +19,8 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 
 ## Current lane (2026-09-25)
 
-- Single active pregen lane: **2014 Life Cleric 1–20**.
-- 2014 Fighter / Barbarian / Rogue / Monk / Paladin are already 1–20 on `main`. Do not reopen those progressions.
+- Single active pregen lane: **2014 Lore Bard 1–20**.
+- 2014 Fighter / Barbarian / Rogue / Monk / Paladin / Cleric are already 1–20 on `main`. Do not reopen those progressions.
 - No new 2024 class expansion until 2014 hits 12×20 certified and is re-audited.
 - One agent on this repository at a time. Coloring-book / Bestiary work stays out of this repo.
 - Heavy GitHub Actions stay gated to `main` / PRs into `main` / `workflow_dispatch`. Do not re-enable `feat/2014-*` artifact sync.
