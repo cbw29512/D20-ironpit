@@ -4,6 +4,8 @@ from pydantic import BaseModel, Field, model_validator
 from typing import Literal
 
 from app.domain.character_builds import AbilityName
+from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
+from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 
 
 class AbilityCheckMinimum(BaseModel):
