@@ -11,9 +11,11 @@ def test_2014_death_ward_is_data_bound_to_generic_survival_ward() -> None:
     assert spell.duration_minutes == 480
     assert spell.target_policy == "friendly"
     assert spell.concentration is False
-    assert spell.survival_ward is not None
-    assert spell.survival_ward.replacement_hp == 1
-    assert spell.survival_ward.prevents_nondamage_instant_death is True
+    assert len(spell.modifier_effects) == 1
+    ward = spell.modifier_effects[0]
+    assert ward.kind == "zero-hp-replacement"
+    assert ward.replacement_hp == 1
+    assert ward.prevents_instant_death is True
 
 
 def test_2014_guardian_of_faith_is_data_bound_to_generic_hazard() -> None:
