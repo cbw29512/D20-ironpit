@@ -117,6 +117,8 @@ class CombatModifier(BaseModel):
             raise ValueError("Only saving-throw Advantage can require a magical-effect context.")
         if self.requires_spell_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
             raise ValueError("Only saving-throw Advantage can require a spell-effect context.")
+        if self.required_effect_tags and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
+            raise ValueError("Only saving-throw Advantage can require effect tags.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
             raise ValueError("Only attack-advantage defender modifiers can be consumed by the next attack.")
         if self.consume_on_saving_throw and self.kind is not ModifierKind.SAVING_THROW_DISADVANTAGE:
