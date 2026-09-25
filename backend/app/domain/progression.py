@@ -1,72 +1,24 @@
 from __future__ import annotations
 
 from pydantic import BaseModel, Field, model_validator
-from typing import Literal
 
 from app.domain.character_builds import AbilityName
+
+
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
-
-
-class AbilityCheckMinimum(BaseModel):
-    """Declarative floor for one ability-check family; resolution remains name-agnostic."""
-
-    source_id: str
-    ability: AbilityName
-    minimum_source: Literal["ability_score"] = "ability_score"
-
-
-class AbilityScaledDamageRider(BaseModel):
-    """Damage dice count derived from one ability modifier."""
-
-    source_id: str
-    ability: AbilityName
-    dice_size: int = Field(ge=2, le=100)
-    damage_type: str
-
-
-class SlotHealingSelfRider(BaseModel):
-    """Heal the source after a slotted healing spell restores HP to another creature."""
-
-    source_id: str
-    flat_bonus: int = Field(default=0, ge=0)
-    per_slot_level: int = Field(default=0, ge=0)
-
-
-class EffectBoundSurvivalSave(BaseModel):
-    """Immutable zero-HP replacement parameters; no class identity enters resolution."""
-
-    source_id: str
-    required_effect_id: str
-    save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"] = "constitution"
-    initial_dc: int = Field(ge=1)
-    dc_increment: int = Field(default=0, ge=0)
-    replacement_hp: int = Field(ge=1)
-
-
-class FirstRoundExtraTurnGrant(BaseModel):
-    """Source-tagged extra first-round turn at an initiative offset."""
-
-    source_id: str
-    source_name: str
-    initiative_offset: int = Field(ge=-30, le=30)
-
-
-class OpeningTargetingWard(BaseModel):
-    """Passive targeting-save gate installed when combat state is created."""
-
-    source_id: str
-    save_ability: AbilityName = "wisdom"
-    save_dc: int = Field(ge=1, le=40)
-    ends_on_owner_attack: bool = True
-
-
-class SavingThrowProficiencyGrant(BaseModel):
-    """Source-tagged saving throw proficiencies granted by progression data."""
-
-    source_id: str
-    abilities: list[AbilityName] = Field(min_length=1)
-
+from app.domain.progression_primitives import (
+    AbilityCheckMinimum,
+    AbilityScaledDamageRider,
+    DeferredSaveEffect,
+    EffectBoundSurvivalSave,
+    FailedD20TestOverrideGrant,
+    FailedSaveRerollGrant,
+    FirstRoundExtraTurnGrant,
+    OpeningTargetingWard,
+    SavingThrowProficiencyGrant,
+    SlotHealingSelfRider,
+)
 
 class SavingThrowAdvantageGrant(BaseModel):
     """Passive source-tagged Advantage on matching saving throws."""
@@ -96,42 +48,6 @@ class SavingThrowAdvantageGrant(BaseModel):
         self.source_creature_types = normalized
         self.required_effect_tags = effect_tags
         return self
-
-
-class FailedSaveRerollGrant(BaseModel):
-    """Source-tagged, resource-backed reroll of a failed saving throw."""
-
-    source_id: str
-    source_name: str
-    resource_id: str
-    resource_cost: int = Field(default=1, ge=1)
-
-
-class FailedD20TestOverrideGrant(BaseModel):
-    """Resource-backed replacement of a failed eligible D20 Test roll."""
-
-    source_id: str
-    source_name: str
-    resource_id: str
-    replacement_roll: int = Field(default=20, ge=1, le=20)
-    test_kinds: list[Literal["attack", "saving_throw", "ability_check"]] = Field(min_length=1)
-
-
-class DeferredSaveEffect(BaseModel):
-    """Hit-armed effect later resolved by a generic Action and saving throw."""
-
-    source_id: str
-    source_name: str
-    trigger_weapon_ids: list[str] = Field(min_length=1)
-    resource_id: str
-    resource_cost: int = Field(default=1, ge=1)
-    save_ability: AbilityName
-    save_dc: int = Field(ge=1, le=40)
-    failure_sets_zero_hp: bool = False
-    success_damage_dice_count: int = Field(default=0, ge=0, le=40)
-    success_damage_dice_size: int = Field(default=10, ge=2, le=100)
-    success_damage_type: str | None = None
-    max_active_targets: int = Field(default=1, ge=1, le=20)
 
 
 class ProgressionCombatFeatures(BaseModel):
