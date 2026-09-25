@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ActionCost, DamageTypeName
+from app.domain.actions import AbilityName, ActionCost\nfrom app.domain.save_damage import DamageTypeName, SaveDamageComponent
 
 from app.domain.spell_modifiers import SpellModifierEffect, SpellModifierKind
 
