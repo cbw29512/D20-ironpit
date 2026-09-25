@@ -27,6 +27,28 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 
 See `docs/CURRENT_OPERATING_STATUS.md`.
 
+
+## Mandatory context-transfer / anti-rot gate
+
+Before substantial Iron Pit work begins, after a material merge, when switching agents/sessions, before resuming an older branch, and before handing off unfinished work, run the repository context-transfer procedure in:
+
+- `.agents/skills/iron-pit-context-transfer/SKILL.md`
+- `docs/CONTEXT_TRANSFER_CONTRACT.md`
+
+A context transfer is valid only for the exact repository state it records. If `main` changes, an active PR head changes, or CI reruns on a new head, prior transfer claims about counts, blockers, readiness, or verification are stale until rebuilt.
+
+Do not copy forward:
+- remembered certification counts;
+- prior-head CI status;
+- old blockers without checking current code;
+- superseded branches;
+- chat-only implementation decisions;
+- historical assumptions from stacked PRs.
+
+Every feature/mechanic tranche includes a continuous debt audit of the touched subsystem. Correctness, parity, schema/state, edition-isolation, and certification-truth debt found there is part of the tranche and must be fixed before opening unrelated mechanic work. Architecture duplication in the touched subsystem should be collapsed in the same tranche when practical. Cosmetic cleanup may be parked.
+
+The transfer packet is a cache; the repository is the database.
+
 ## Non-negotiable engineering contract
 
 - Act as a systems/rules architect, not a mock-up generator.
