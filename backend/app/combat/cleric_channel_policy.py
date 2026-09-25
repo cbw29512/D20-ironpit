@@ -69,13 +69,14 @@ def choose_channel_divinity(cleric: EncounterCombatant, setup: EncounterSetup) -
     preserve = _worth_preserving(cleric, setup)
     if preserve:
         return ChannelDivinityChoice("preserve-life", preserve)
+    is_2014 = cleric.state.template.ruleset == "2014"
     downed = _downed_other_ally(cleric, setup)
-    if downed is not None and not any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources):
+    if not is_2014 and downed is not None and not any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources):
         return ChannelDivinityChoice("divine-spark-heal", (downed,))
     undead = _undead_targets(cleric, setup)
     if undead:
         return ChannelDivinityChoice("turn-undead", undead)
-    if any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources):
+    if is_2014 or any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources):
         return None
     enemy = _nearest_enemy(cleric, setup)
     return ChannelDivinityChoice("divine-spark-damage", (enemy,)) if enemy is not None else None

@@ -7,8 +7,13 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.debuff_counters import movement_counter_cost
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
-from app.domain.models import BattleEvent, CombatantState, CombatantTemplate, DebuffCounter, EncounterCombatant, EncounterSetup, TimedEffect
+from app.domain.models import CombatantState, CombatantTemplate, DebuffCounter, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
+from app.combat.timed_condition_lifecycle import (
+    expire_start_of_turn_conditions,
+    remove_effect_group,
+    remove_effect_instance,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +29,11 @@ def apply_timed_condition(
     source_effect_id: str | None = None,
     source_template: CombatantTemplate | None = None,
     source_is_magical: bool = False,
+    suppress_action: bool = False,
+    suppress_bonus_action: bool = False,
+    suppress_reactions: bool = False,
+    suppress_movement: bool = False,
+    zero_hp_replacement_hp: int = 0,
     applied_round: int | None = None,
     expires_round: int | None = None,
     expires_at_start_of_source_turn: bool = True,
@@ -88,6 +98,11 @@ def apply_timed_condition(
             ends_if_source_incapacitated=ends_if_source_incapacitated,
             ends_if_source_dead=ends_if_source_dead,
             source_is_magical=source_is_magical,
+            suppress_action=suppress_action,
+            suppress_bonus_action=suppress_bonus_action,
+            suppress_reactions=suppress_reactions,
+            suppress_movement=suppress_movement,
+            zero_hp_replacement_hp=zero_hp_replacement_hp,
             owned_damage_resistances=owned_damage_resistances or [],
             owned_debuff_counters=owned_debuff_counters or [],
         ))
@@ -103,36 +118,6 @@ def apply_timed_condition(
             source_effect_id,
         )
         raise
-
-
-def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
-    state.timed_effects = [item for item in state.timed_effects if item != effect]
-    still_active = any(item.effect_id == effect.effect_id for item in state.timed_effects)
-    if not still_active and effect.effect_id in state.active_effect_ids:
-        state.active_effect_ids.remove(effect.effect_id)
-        return True
-    return not still_active
-
-
-def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]:
-    if effect.source_effect_id is None:
-        return [effect.effect_id] if remove_effect_instance(state, effect) else []
-    grouped = [
-        item for item in list(state.timed_effects)
-        if item.source_id == effect.source_id and item.source_effect_id == effect.source_effect_id
-    ]
-    removed: list[str] = []
-    for item in grouped:
-        if remove_effect_instance(state, item):
-            removed.append(item.effect_id)
-    state.active_modifiers = [
-        item for item in state.active_modifiers
-        if not (
-            item.source_id == effect.source_id
-            and item.source_effect_id == effect.source_effect_id
-        )
-    ]
-    return removed
 
 
 def resolve_movement_countered_conditions(state: CombatantState) -> list[tuple[str, str, int]]:
@@ -154,40 +139,3 @@ def resolve_movement_countered_conditions(state: CombatantState) -> list[tuple[s
             resolved.append((condition_id, effect.source_id, cost))
     return resolved
 
-
-def _source_start_expired(effect: TimedEffect, round_number: int) -> bool:
-    source_start = effect.expiry_timing == "source_turn_start" or effect.expires_at_start_of_source_turn
-    return source_start and (effect.expires_round is None or round_number >= effect.expires_round)
-
-
-def expire_start_of_turn_conditions(
-    sequence: int,
-    round_number: int,
-    source: EncounterCombatant,
-    setup: EncounterSetup,
-) -> tuple[list[BattleEvent], int]:
-    events: list[BattleEvent] = []
-    for target in [*setup.heroes, *setup.monsters]:
-        expiring = [
-            effect for effect in target.state.timed_effects
-            if effect.source_id == source.combatant_id and _source_start_expired(effect, round_number)
-        ]
-        for effect in expiring:
-            removed = remove_effect_group(target.state, effect)
-            if not removed:
-                continue
-            events.append(BattleEvent(
-                sequence=sequence,
-                round_number=round_number,
-                event_type="feature",
-                actor_id=source.combatant_id,
-                actor_name=source.state.template.name,
-                target_id=target.combatant_id,
-                target_name=target.state.template.name,
-                removed_condition_ids=removed,
-                feature_id=effect.source_effect_id or "condition-ended",
-                animation="condition-ended",
-                description=f"{target.state.template.name} is no longer affected by {effect.source_effect_id or effect.effect_id}.",
-            ))
-            sequence += 1
-    return events, sequence

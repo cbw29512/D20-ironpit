@@ -86,7 +86,7 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
       - name: Certify Python rules reference
         working-directory: backend
-        run: pytest -q
+        run: timeout 20m pytest -vv --durations=25
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
@@ -153,6 +153,16 @@ jobs:
           node frontend/browser-debuff-counters.test.cjs
           node frontend/browser-bonus-damage-modifiers.test.cjs
           node frontend/browser-action-healing.test.cjs
+          node frontend/browser-healing-creature-type-exclusions.test.cjs
+          node frontend/browser-group-healing-area.test.cjs
+          node frontend/browser-pooled-healing.test.cjs
+          node frontend/browser-outgoing-healing-maximize.test.cjs
+          node frontend/browser-once-per-turn-hit-damage.test.cjs
+          node frontend/browser-persistent-spell-attacks.test.cjs
+          node frontend/browser-persistent-hazards.test.cjs
+          node frontend/browser-turn-undead-2014.test.cjs
+          node frontend/browser-divine-intervention-2014.test.cjs
+          node frontend/browser-cleric9-2014.test.cjs
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-condition-lifecycle.test.cjs
           node frontend/browser-condition-removal.test.cjs
@@ -279,6 +289,14 @@ jobs:
           grep -q 'browser-spell-effects.js' index.html
           grep -q 'browser-spell-modifiers.js' index.html
           grep -q 'browser-healing.js' index.html
+          grep -q 'browser-healing-policy.js' index.html
+          grep -q 'browser-healing-resolution.js' index.html
+          grep -q 'browser-group-healing.js' index.html
+          grep -q 'browser-pooled-healing.js' index.html
+          grep -q 'browser-persistent-spell-attack-support.js' index.html
+          grep -q 'browser-persistent-spell-attacks.js' index.html
+          grep -q 'browser-persistent-hazards.js' index.html
+          grep -q 'browser-once-per-turn-hit-damage.js' index.html
           grep -q 'browser-cleric-channel.js' index.html
           grep -q 'browser-spell-area.js' index.html
           grep -q 'browser-spell-policy.js' index.html
@@ -367,6 +385,14 @@ jobs:
           grep -q 'browser-spell-modifiers.js' frontend/index.html
           grep -q 'browser-multiattack.js' frontend/index.html
           grep -q 'browser-healing.js' frontend/index.html
+          grep -q 'browser-healing-policy.js' frontend/index.html
+          grep -q 'browser-healing-resolution.js' frontend/index.html
+          grep -q 'browser-group-healing.js' frontend/index.html
+          grep -q 'browser-pooled-healing.js' frontend/index.html
+          grep -q 'browser-persistent-spell-attack-support.js' frontend/index.html
+          grep -q 'browser-persistent-spell-attacks.js' frontend/index.html
+          grep -q 'browser-persistent-hazards.js' frontend/index.html
+          grep -q 'browser-once-per-turn-hit-damage.js' frontend/index.html
           grep -q 'browser-cleric-channel.js' frontend/index.html
           grep -q 'browser-spell-area.js' frontend/index.html
           grep -q 'browser-spell-policy.js' frontend/index.html

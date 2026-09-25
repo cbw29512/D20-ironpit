@@ -18,12 +18,14 @@ for (const file of [
   "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
   "browser-dodge.js", "browser-saves.js", "browser-2014-monk.js", "browser-condition-lifecycle.js", "browser-charge.js",
   "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
-  "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
+  "browser-multiattack.js", "browser-spellcasting.js", "browser-spell-area.js",
+  "browser-healing-policy.js", "browser-healing-resolution.js", "browser-group-healing.js", "browser-healing.js",
+  "browser-condition-removal.js",
   "browser-support.js", "browser-formation.js", "browser-arena-map.js", "browser-grid-geometry.js",
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
-  "browser-steady-aim.js", "browser-ability-hook-installation.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
+  "browser-steady-aim.js", "browser-persistent-spell-attacks.js", "browser-ability-hook-installation.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const { resolveRuleset, selectedRuleset } = window.IRON_PIT_BROWSER_ENGINE;

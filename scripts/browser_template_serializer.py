@@ -252,13 +252,36 @@ def _spell_attack(action: Any) -> dict[str, Any]:
 
 
 def _healing(action: Any) -> dict[str, Any]:
-    return {
-        "id": action.id, "name": action.name, "actionCost": action.action_cost,
-        "range": action.range_ft, "targetMode": action.target_mode, "maxTargets": action.max_targets,
-        "diceCount": action.dice_count, "diceSize": action.dice_size,
-        "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
-        "resourceCost": action.resource_cost, "animation": action.animation,
-    }
+    try:
+        return {
+            "id": action.id, "name": action.name, "actionCost": action.action_cost,
+            "range": action.range_ft, "targetMode": action.target_mode, "maxTargets": action.max_targets,
+            "areaRadiusFt": action.area_radius_ft, "diceCount": action.dice_count, "diceSize": action.dice_size,
+            "healingBonus": action.healing_bonus, "restoreToEffectiveMax": action.restore_to_effective_max,
+            "percentileSuccessMax": action.percentile_success_max, "resourceId": action.resource_id,
+            "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
+            "animation": action.animation,
+        }
+    except Exception:
+        logger.exception("Failed to serialize healing action %s.", action.id)
+        raise
+
+
+def persistent_hazard_row(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            "durationRounds": action.duration_rounds, "footprintSize": _value(action.footprint_size),
+            "triggerRadiusFt": action.trigger_radius_ft, "saveAbility": action.save_ability,
+            "dc": action.dc, "failureDamage": action.failure_damage,
+            "successDamage": action.success_damage, "damageType": action.damage_type,
+            "maxTotalDamage": action.max_total_damage, "animation": action.animation,
+            "source": action.source,
+        }
+    except Exception:
+        logger.exception("Failed to serialize persistent hazard %s.", action.id)
+        raise
 
 
 def defense_row(action: Any) -> dict[str, Any]:
@@ -348,6 +371,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
+    if features.once_per_turn_weapon_hit_damage_rider:
+        row["once_per_turn_weapon_hit_damage_rider"] = features.once_per_turn_weapon_hit_damage_rider.model_dump()
+    if features.outgoing_healing_dice_maximizer:
+        row["outgoing_healing_dice_maximizer"] = features.outgoing_healing_dice_maximizer.model_dump()
     if features.athletics_advantage:
         row["athletics_advantage"] = True
     if features.saving_throw_proficiency_grants:
@@ -400,6 +427,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "source": template.source, **_progression_features(template),
         }
         if template.kind == "monster":
+            row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
             row["source_bonus_action_names"] = list(template.source_bonus_action_names)
@@ -428,6 +456,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions:
             row["healingActions"] = [_healing(item) for item in template.healing_actions]
+        if template.persistent_hazard_actions:
+            row["persistent_hazard_actions"] = [
+                persistent_hazard_row(item) for item in template.persistent_hazard_actions
+            ]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.timed_self_buff_actions:

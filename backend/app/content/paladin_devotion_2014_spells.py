@@ -4,6 +4,7 @@ from app.content.character_math import proficiency_bonus
 from app.content.cleric_life_domain import AID
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.content.paladin_devotion_2014_level14 import divine_favor_2014
+from app.content.shared_spells_2014 import death_ward_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.debuffs import DebuffCounter
 from app.domain.effect_removal import EffectRemovalAction
@@ -122,30 +123,6 @@ def freedom_of_movement_2014() -> DefensiveSpellAction:
             for counter in counters
         ],
         animation="freedom-of-movement",
-        source=_SOURCE,
-    )
-
-
-def death_ward_2014() -> DefensiveSpellAction:
-    return DefensiveSpellAction(
-        id="death-ward",
-        name="Death Ward",
-        level=4,
-        action_cost="action",
-        range_ft=5,
-        duration_minutes=480,
-        target_policy="friendly",
-        target_count=1,
-        concentration=False,
-        priority=95,
-        modifier_effects=[
-            SpellModifierEffect(
-                kind="zero-hp-replacement",
-                replacement_hp=1,
-                prevents_instant_death=True,
-            ),
-        ],
-        animation="death-ward",
         source=_SOURCE,
     )
 

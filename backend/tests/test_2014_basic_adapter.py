@@ -1,3 +1,4 @@
+from app.content.capability_compiler import compile_combatant
 from app.content.monster_capabilities_2014 import load_2014_mvp_definitions
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -47,6 +48,8 @@ def test_bulk_adapter_preserves_hand_certified_mvp_combat_semantics():
         adapted = adapt_basic_monster_2014(source[source_id])
         expected = hand[f"2014-{source_id}"]
         assert adapted.ruleset == expected.ruleset == "2014"
+        assert adapted.creature_type == source[source_id].creature_type
+        assert compile_combatant(adapted).creature_type == source[source_id].creature_type
         assert adapted.armor_class == expected.armor_class
         assert adapted.max_hp == expected.max_hp
         assert adapted.speed_ft == expected.speed_ft

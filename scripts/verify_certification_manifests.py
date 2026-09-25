@@ -36,6 +36,7 @@ def _mechanics(template: Any) -> list[str]:
         *(f"saving-throw-action:{item.id}" for item in template.saving_throw_actions),
         *(f"spell-save-action:{item.id}" for item in template.spell_save_actions),
         *(f"spell-attack-action:{item.id}" for item in template.spell_attack_actions),
+        *(f"persistent-spell-attack:{item.id}" for item in template.persistent_spell_attack_actions),
         *(f"defensive-spell-action:{item.id}" for item in template.defensive_spell_actions),
         *(f"healing-action:{item.id}" for item in template.healing_actions),
         *(f"condition-removal-action:{item.id}" for item in template.condition_removal_actions),
@@ -80,8 +81,14 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.effect_bound_survival_save.source_id)
     if features.turning_failure_damage:
         mechanics.add(features.turning_failure_damage.source_id)
+    if features.turning_failure_destroy_max_cr:
+        mechanics.add("turning-destruction-threshold")
     if features.slot_healing_other_self_rider:
         mechanics.add(features.slot_healing_other_self_rider.source_id)
+    if features.outgoing_healing_dice_maximizer:
+        mechanics.add(features.outgoing_healing_dice_maximizer.source_id)
+    if features.once_per_turn_weapon_hit_damage_rider:
+        mechanics.add(features.once_per_turn_weapon_hit_damage_rider.source_id)
     if features.ability_check_minimums:
         mechanics.update(rule.source_id for rule in features.ability_check_minimums)
     if features.saving_throw_proficiency_grants:

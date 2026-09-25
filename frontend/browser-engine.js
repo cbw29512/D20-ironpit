@@ -72,6 +72,7 @@
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
         ruleset,
         map_definition: mapDefinition,
+        persistent_hazards: [],
       };
     } catch (error) { console.error("Failed to build browser encounter setup", { selection, error }); throw error; }
   }

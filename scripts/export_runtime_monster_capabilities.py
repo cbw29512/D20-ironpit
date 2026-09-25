@@ -7,6 +7,7 @@ from pathlib import Path
 
 from app.content.capability_from_template import definition_from_template
 from app.content.legacy_monster_roster import build_legacy_monster_templates
+from app.content.monster_creature_types import complete_monster_creature_types
 
 logger = logging.getLogger(__name__)
 _OUTPUT = Path("backend/app/content/data/combatant_capabilities_v1.json")
@@ -43,7 +44,9 @@ def _strip_extension_defaults(value):
 
 def render_registry() -> str:
     try:
-        monsters = build_legacy_monster_templates(include_capability_migrated=False)
+        monsters = complete_monster_creature_types(
+            build_legacy_monster_templates(include_capability_migrated=False)
+        )
         definitions = [definition_from_template(monster) for monster in monsters]
         ids = [definition.id for definition in definitions]
         if len(ids) != len(set(ids)):

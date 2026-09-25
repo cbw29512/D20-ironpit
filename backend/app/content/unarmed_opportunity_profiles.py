@@ -5,6 +5,7 @@ import re
 
 from app.content.all_pregen_combat_profiles import build_all_pregen_combat_profiles
 from app.content.monster_catalog import load_monster_rows
+from app.content.pregen_combat_profiles import PregenCombatProfile
 from app.domain.models import CombatantTemplate
 from app.domain.unarmed import UnarmedStrikeDamage
 
@@ -34,16 +35,27 @@ def monster_unarmed_profile(row: dict[str, object]) -> UnarmedStrikeDamage:
     return _profile(score, int(pb.group("pb")))
 
 
-def _character_profiles() -> dict[str, UnarmedStrikeDamage]:
+def _character_profiles(
+    combat_profiles: dict[str, PregenCombatProfile] | None = None,
+) -> dict[str, UnarmedStrikeDamage]:
+    profiles = combat_profiles if combat_profiles is not None else build_all_pregen_combat_profiles()
     return {
         template_id: _profile(profile.abilities.strength, 2 + (profile.level - 1) // 4)
-        for template_id, profile in build_all_pregen_combat_profiles().items()
+        for template_id, profile in profiles.items()
     }
 
 
-def complete_unarmed_opportunity_profiles(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
+def complete_unarmed_opportunity_profiles(
+    templates: list[CombatantTemplate],
+    *,
+    character_combat_profiles: dict[str, PregenCombatProfile] | None = None,
+) -> list[CombatantTemplate]:
     try:
-        characters = _character_profiles() if any(item.kind == "character" for item in templates) else {}
+        characters = (
+            _character_profiles(character_combat_profiles)
+            if any(item.kind == "character" for item in templates)
+            else {}
+        )
         monster_rows = (
             {str(row["name"]): row for row in load_monster_rows()}
             if any(item.kind == "monster" for item in templates)

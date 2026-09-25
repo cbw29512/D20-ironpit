@@ -16,11 +16,12 @@
     ["wizard", "Wizard", "Elian Starweaver", "evoker", "Evoker"],
   ];
   const SUBCLASS_2014 = {
-    fighter: ["champion", "Champion"],
-    barbarian: ["path-berserker", "Path of the Berserker"],
-    rogue: ["thief", "Thief"],
-    monk: ["way-open-hand", "Way of the Open Hand"],
-    paladin: ["oath-devotion", "Oath of Devotion"],
+    fighter: { id: "champion", name: "Champion", unlockLevel: 3 },
+    barbarian: { id: "path-berserker", name: "Path of the Berserker", unlockLevel: 3 },
+    cleric: { id: "life-domain", name: "Life Domain", unlockLevel: 1 },
+    rogue: { id: "thief", name: "Thief", unlockLevel: 3 },
+    monk: { id: "way-open-hand", name: "Way of the Open Hand", unlockLevel: 3 },
+    paladin: { id: "oath-devotion", name: "Oath of Devotion", unlockLevel: 3 },
   };
 
   function readyHeroIndex(ruleset = "2024") {
@@ -51,12 +52,13 @@
     const runtimes = [...readyHeroIndex("2014").values()]
       .sort((left, right) => left.class_id.localeCompare(right.class_id) || left.level - right.level);
     return runtimes.map((runtime) => {
-      const subclass = runtime.level >= 3 ? SUBCLASS_2014[runtime.class_id] : null;
+      const subclassRule = SUBCLASS_2014[runtime.class_id] || null;
+      const subclass = subclassRule && runtime.level >= subclassRule.unlockLevel ? subclassRule : null;
       return {
         id: `hero-2014-${runtime.class_id}-l${runtime.level}`, name: runtime.name,
         class_id: runtime.class_id, class_name: runtime.archetype, level: runtime.level,
         build_id: runtime.build_id || "canonical-2014", build_name: "Canonical 2014 RAW Progression",
-        subclass_id: subclass?.[0] || null, subclass_name: subclass?.[1] || null,
+        subclass_id: subclass?.id || null, subclass_name: subclass?.name || null,
         ruleset: "2014", kind: "character", coverage_status: "raw_ready",
         runnable_template_id: runtime.id, blockers: [],
       };
@@ -64,12 +66,18 @@
   }
 
   function readyMonsterCards(registry = window.IRON_PIT_BROWSER_MONSTERS) {
-    return Object.values(registry || {}).map((monster) => ({
-      id: `catalog-${monster.id}`, name: monster.name, challenge_rating: monster.challenge_rating,
-      monster_type: monster.archetype, armor_class: monster.armor_class, hit_points: monster.max_hp,
-      ruleset: monster.ruleset, kind: "monster", coverage_status: "raw_ready",
-      runnable_template_id: monster.id, blockers: [],
-    }));
+    try {
+      return Object.values(registry || {}).map((monster) => ({
+        id: `catalog-${monster.id}`, name: monster.name, challenge_rating: monster.challenge_rating,
+        monster_type: monster.archetype, creature_type: monster.creature_type || null,
+        armor_class: monster.armor_class, hit_points: monster.max_hp,
+        ruleset: monster.ruleset, kind: "monster", coverage_status: "raw_ready",
+        runnable_template_id: monster.id, blockers: [],
+      }));
+    } catch (error) {
+      console.error("Failed to build ready monster catalog cards.", error);
+      throw error;
+    }
   }
 
   async function buildMonsters2024() {

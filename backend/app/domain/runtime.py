@@ -9,6 +9,7 @@ from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.debuffs import DebuffCounter
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
+from app.domain.persistent_spell_attacks import PersistentSpellAttackState
 
 TimedTurnBehavior = Literal["normal", "forced_retreat"]
 
@@ -45,6 +46,11 @@ class TimedEffect(BaseModel):
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
     source_is_magical: bool = False
+    suppress_action: bool = False
+    suppress_bonus_action: bool = False
+    suppress_reactions: bool = False
+    suppress_movement: bool = False
+    zero_hp_replacement_hp: int = Field(default=0, ge=0)
     # Universal source ownership for temporary typed resistances. This lets a
     # timed effect clean up only the resistance contribution it owns while an
     # overlapping effect that grants the same type remains active.
@@ -104,6 +110,7 @@ class CombatantState(BaseModel):
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
+    persistent_spell_attacks: list[PersistentSpellAttackState] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
     survival_save_uses: dict[str, int] = Field(default_factory=dict)

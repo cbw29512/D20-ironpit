@@ -8,6 +8,7 @@ from app.combat.grapple import resolve_movement_countered_grapples, speed_is_zer
 from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
 from app.combat.modifier_stack import effective_speed
 from app.combat.timed_conditions import resolve_movement_countered_conditions
+from app.combat.timed_effect_control import suppresses_action, suppresses_bonus_action, suppresses_movement, suppresses_reactions
 from app.combat.opening_modifiers import opening_modifiers
 from app.combat.survivor import apply_survivor_start_turn_heal
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
@@ -33,8 +34,8 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
 
 
 def refresh_reaction(state: CombatantState) -> None:
-    """A creature regains its Reaction at the start of its turn, even if Incapacitated."""
-    state.reaction_available = True
+    """Refresh the Reaction opportunity, subject to active timed suppression."""
+    state.reaction_available = not suppresses_reactions(state)
 
 
 def refresh_start_of_turn(state: CombatantState) -> None:
@@ -57,14 +58,18 @@ def begin_turn(state: CombatantState) -> list[tuple[str, str, int]]:
         state.turn_terminated = False
         state.turn_termination_reason = None
         incapacitated = is_incapacitated(state)
-        state.action_available = not incapacitated
-        state.bonus_action_available = not incapacitated
+        state.action_available = not incapacitated and not suppresses_action(state)
+        state.bonus_action_available = not incapacitated and not suppresses_bonus_action(state)
         refresh_start_of_turn(state)
         speed = effective_speed(state)
-        state.movement_remaining_ft = speed
+        # Establish the turn's movement budget before resolving movement-cost
+        # debuff counters. A qualifying buff such as Freedom of Movement must
+        # be able to spend movement to clear a nonmagical grapple even though
+        # that grapple would otherwise reduce effective movement to zero.
+        state.movement_remaining_ft = 0 if suppresses_movement(state) else speed
         countered = resolve_movement_countered_conditions(state)
         countered.extend(resolve_movement_countered_grapples(state))
-        if speed_is_zero(state):
+        if speed_is_zero(state) or suppresses_movement(state):
             state.movement_remaining_ft = 0
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)
