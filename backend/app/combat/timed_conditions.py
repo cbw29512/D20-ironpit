@@ -113,6 +113,33 @@ def apply_timed_condition(
         raise
 
 
+def timed_action_cost_suppressed(state: CombatantState, cost: str) -> bool:
+    """Return whether an active timed effect suppresses this action-economy cost."""
+    try:
+        field = {
+            "action": "suppress_action",
+            "bonus_action": "suppress_bonus_action",
+            "reaction": "suppress_reaction",
+        }.get(cost)
+        if field is None:
+            raise ValueError(f"Unknown action cost for timed suppression: {cost}")
+        return any(bool(getattr(effect, field)) for effect in state.timed_effects)
+    except (TypeError, ValueError):
+        raise
+    except Exception as exc:
+        logger.exception("Timed action suppression lookup failed for %s.", state.template.name)
+        raise RuntimeError("Timed action suppression could not be resolved.") from exc
+
+
+def timed_movement_suppressed(state: CombatantState) -> bool:
+    """Return whether any active timed effect blocks voluntary movement."""
+    try:
+        return any(effect.suppress_movement for effect in state.timed_effects)
+    except Exception as exc:
+        logger.exception("Timed movement suppression lookup failed for %s.", state.template.name)
+        raise RuntimeError("Timed movement suppression could not be resolved.") from exc
+
+
 def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
     state.timed_effects = [item for item in state.timed_effects if item != effect]
     still_active = any(item.effect_id == effect.effect_id for item in state.timed_effects)
