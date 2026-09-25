@@ -313,6 +313,7 @@ def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
             "diceCount": action.dice_count, "diceSize": action.dice_size,
             "testKinds": list(action.test_kinds), "durationRounds": action.duration_rounds,
             "priority": action.priority, "animation": action.animation,
+            **({"exclusiveGroup": action.exclusive_group} if action.exclusive_group else {}),
         }
     except Exception:
         logger.exception("Failed to serialize d20 bonus-die action %s.", action.id)
