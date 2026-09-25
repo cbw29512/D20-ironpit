@@ -44,6 +44,8 @@ def test_level18_snapshot_binds_empty_body_as_universal_timed_self_buff() -> Non
     profile = build_kael_stillwater_2014_profile(18)
     fingerprint = build_kael_2014_combat_profile(18)
 
+    assert hero.speed_ft == 60
+    assert fingerprint.speed_ft == 60
     assert next(item for item in hero.resources if item.id == "ki").max_uses == 18
     assert fingerprint.resources == (("ki", 18), ("wholeness-of-body", 1))
     assert len(hero.timed_self_buff_actions) == 1

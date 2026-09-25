@@ -24,7 +24,7 @@ assert.deepEqual(hero.ability_scores, {
 });
 assert.equal(hero.armor_class, 20);
 assert.equal(hero.max_hp, 143);
-assert.equal(hero.speed_ft, 55);
+assert.equal(hero.speed_ft, 60);
 assert.equal(hero.resources.ki, 20);
 assert.equal(hero.deferred_save_effect.save_dc, 19);
 assert.equal(hero.opening_targeting_ward.save_dc, 19);
