@@ -52,6 +52,7 @@ class CombatModifier(BaseModel):
     save_dc: int | None = Field(default=None, ge=1, le=40)
     requires_magical_effect: bool = False
     requires_spell_effect: bool = False
+    required_effect_tags: list[str] = Field(default_factory=list)
     concentration_required: bool = False
     consume_on_attack_against: bool = False
     consume_on_saving_throw: bool = False
@@ -119,6 +120,10 @@ class CombatModifier(BaseModel):
             raise ValueError("Only saving-throw Advantage can require a spell-effect context.")
         if self.required_effect_tags and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
             raise ValueError("Only saving-throw Advantage can require effect tags.")
+        effect_tags = [item.strip().casefold() for item in self.required_effect_tags]
+        if any(not item for item in effect_tags) or len(set(effect_tags)) != len(effect_tags):
+            raise ValueError("Saving-throw Advantage effect tags must be non-empty and unique.")
+        self.required_effect_tags = effect_tags
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
             raise ValueError("Only attack-advantage defender modifiers can be consumed by the next attack.")
         if self.consume_on_saving_throw and self.kind is not ModifierKind.SAVING_THROW_DISADVANTAGE:
