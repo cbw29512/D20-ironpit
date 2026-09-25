@@ -117,7 +117,11 @@
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-    const saveContext = { magicalEffect: Boolean(action.magicalEffect) };
+    const saveContext = {
+      magicalEffect: Boolean(action.magicalEffect),
+      spellEffect: Boolean(options.spellEffect),
+      sourceCreatureType: actor.state.template.creature_type || null,
+    };
     const advantageSources = DF().saveAdvantageSourceNames?.(
       target.state, action.saveAbility, saveContext,
     ) || [];
