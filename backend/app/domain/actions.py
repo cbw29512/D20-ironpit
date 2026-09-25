@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.size import CreatureSize
+from app.domain.save_damage import DamageTypeName, SaveDamageComponent\nfrom app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 
 AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
