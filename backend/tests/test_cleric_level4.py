@@ -67,7 +67,7 @@ def test_cleric_four_expected_value_uses_inflict_wounds_in_close_combat() -> Non
     setup = EncounterSetup(heroes=[caster], monsters=[target], hero_total_levels=4, monster_total_cr="1")
 
     events, sequence = resolve_best_spell_offense(
-        1, 1, caster, setup, "1:cleric", FixedDiceProvider([1, 10, 9, 8, 7]),
+        1, 1, caster, setup, "1:cleric", FixedDiceProvider([1, 10, 9, 8]),
     )
 
     assert sequence == 3
