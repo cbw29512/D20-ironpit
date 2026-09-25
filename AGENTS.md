@@ -4,17 +4,28 @@
 
 Before changing combat code, read:
 
-1. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
-2. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
-3. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
-4. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
-5. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — authoritative separation of legal Action candidates from Arena tactical selection.
-6. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
-7. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
-8. current source/runtime code and permanent tests.
-9. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+1. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
+2. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
+3. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
+4. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
+5. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
+6. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — authoritative separation of legal Action candidates from Arena tactical selection.
+7. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
+8. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
+9. current source/runtime code and permanent tests.
+10. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
+
+## Current lane (2026-09-25)
+
+- Single active pregen lane: **2014 Life Cleric 1–20**.
+- 2014 Fighter / Barbarian / Rogue / Monk / Paladin are already 1–20 on `main`. Do not reopen those progressions.
+- No new 2024 class expansion until 2014 hits 12×20 certified and is re-audited.
+- One agent on this repository at a time. Coloring-book / Bestiary work stays out of this repo.
+- Heavy GitHub Actions stay gated to `main` / PRs into `main` / `workflow_dispatch`. Do not re-enable `feat/2014-*` artifact sync.
+
+See `docs/CURRENT_OPERATING_STATUS.md`.
 
 ## Non-negotiable engineering contract
 
