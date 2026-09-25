@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.character_builds import AbilityScores
 from app.domain.effect_removal import EffectRemovalAction
+from app.domain.d20_bonus_dice import D20BonusDieAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.movement import MovementModes
 from app.domain.passive_modifiers import PassiveModifierGrant
