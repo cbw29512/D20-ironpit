@@ -100,7 +100,7 @@ def resolve_attack_roll(
             attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice,
         )
         d20_bonus_source_name = None
-        if base_roll.selected_roll != 1:
+        if base_roll.selected_roll not in {1, 20}:
             roll, d20_bonus_source_name = apply_d20_bonus_die_if_useful(
                 attacker, "attack", roll, effective_armor_class(defender), dice, round_number,
             )
