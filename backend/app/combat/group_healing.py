@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import spend
-from app.combat.defensive_modifier_rules import healing_is_maximized
+from app.combat.healing_maximize import healing_dice_are_maximized
 from app.combat.healing import _resource_available, _slot_heal, _target_allowed
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast
