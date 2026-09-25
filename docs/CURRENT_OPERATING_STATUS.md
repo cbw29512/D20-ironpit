@@ -71,3 +71,5 @@ Do not restore per-push certification on feature branches. Run generators locall
 3. Never implement a class-named resolver when a universal primitive exists.
 4. Ask one clarification question rather than guessing RAW.
 5. Do not start a second class while 2014 Cleric is open.
+6. Before resuming after an interruption/session/agent/branch change, execute `docs/CONTEXT_TRANSFER_SKILL.md`; stale SHA/context packets are invalid.
+7. Every implementation tranche includes continuous touched-subsystem audit and debt cleanup; outcome-changing debt blocks forward feature work.
