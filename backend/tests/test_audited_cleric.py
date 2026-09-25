@@ -38,6 +38,7 @@ def test_seraphine_level_one_package_is_raw_audited() -> None:
     assert [spell.id for spell in spells.spells] == ["bless", "cure-wounds", "guiding-bolt", "shield-of-faith"]
     assert [spell.id for spell in template.spell_save_actions] == ["sacred-flame"]
     assert [spell.id for spell in template.spell_attack_actions] == ["guiding-bolt"]
+    assert template.spell_attack_actions[0].upcast_dice_per_level == 1
     assert [spell.id for spell in template.defensive_spell_actions] == ["bless", "shield-of-faith"]
     assert [spell.id for spell in template.healing_actions] == ["cure-wounds"]
 
