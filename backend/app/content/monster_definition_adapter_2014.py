@@ -123,6 +123,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     return CombatantDefinition(
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
+        creature_type=monster.creature_type,
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
         armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=movement.walk_ft,
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
