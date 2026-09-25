@@ -103,6 +103,9 @@ assert.equal(paladin16.ability_scores.charisma, 19);
 assert.equal(paladin16.aura_of_protection_2014_bonus, 4);
 assert.equal(paladin16.sacred_weapon_2014_bonus, 4);
 assert.equal(paladin16.resources["cleansing-touch"], 4);
+const paladin18 = paladins2014.find((hero) => hero.level === 18);
+assert.ok(paladin18);
+assert.equal(paladin18.aura_radius_2014_ft, 30);
 assert.deepEqual(
   paladin15.passive_modifier_grants.map((item) => [item.source_id, item.source_name, item.kind, item.condition_id]),
   [
