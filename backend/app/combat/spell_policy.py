@@ -7,7 +7,7 @@ from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import AreaPlacement, best_area_placement
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -49,24 +49,6 @@ def spell_at_slot(action: SpellSaveAction, slot_level: int) -> SpellSaveAction:
         raise RuntimeError("Spell higher-slot scaling could not be evaluated.") from exc
 
 
-def legal_save_spell_slots(caster: EncounterCombatant, action: SpellSaveAction, turn_key: str) -> tuple[int, ...]:
-    try:
-        if action.level == 0:
-            return (0,)
-        if not slot_spell_available(caster.state, turn_key):
-            return ()
-        maximum = 9 if action.upcast_dice_per_level > 0 else action.level
-        levels = []
-        for level in range(action.level, maximum + 1):
-            resource = next((item for item in caster.state.resources if item.id == f"spell-slot-{level}"), None)
-            if resource is not None and resource.current_uses > 0:
-                levels.append(level)
-        return tuple(levels)
-    except Exception as exc:
-        logger.exception("Failed to determine legal slot levels for %s.", action.id)
-        raise RuntimeError("Spell-slot options could not be evaluated.") from exc
-
-
 def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, action: SpellSaveAction):
     try:
         enemies = setup.monsters if caster.side == "heroes" else setup.heroes
@@ -92,7 +74,7 @@ def choose_spell(
         for index, action in enumerate(caster.state.template.spell_save_actions):
             if action.action_cost == "reaction" or action.concentration or not is_available(caster.state, action.action_cost):
                 continue
-            for slot_level in legal_save_spell_slots(caster, action, turn_key):
+            for slot_level in legal_slot_levels(\n                caster.state, turn_key, action.level,\n                higher_slot_scaling=action.upcast_dice_per_level > 0,\n            ):
                 scaled = spell_at_slot(action, slot_level)
                 if action.area_radius_ft is not None:
                     placement = best_area_placement(caster, setup, action.area_radius_ft, action.range_ft, protected_ally_ids)
