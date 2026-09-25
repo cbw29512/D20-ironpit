@@ -13,7 +13,8 @@ const load = (name) => vm.runInThisContext(
 
 for (const file of [
   "browser-heroes.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-state.js", "browser-spellcasting.js", "browser-healing.js",
+  "browser-state.js", "browser-spellcasting.js", "browser-spell-area.js",
+  "browser-healing-policy.js", "browser-group-healing.js", "browser-healing.js",
 ]) load(file);
 
 const H = window.IRON_PIT_BROWSER_HEROES;
