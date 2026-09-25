@@ -4,7 +4,7 @@
 
 This audit is anchored to the 2014 lane and the D&D SRD 5.1 Paladin / Oath of Devotion rules. It does not certify any level and must not be used to advance READY state by itself.
 
-Current certified runtime stops at Aurelia level 12. The purpose of this document is to decompose levels 13–20 into universal combat mechanics before any new resolver is written.
+Current certified runtime stops at Aurelia level 15. The purpose of this document is to decompose the remaining levels through 20 into universal combat mechanics before any new resolver is written.
 
 ## RAW progression inventory
 
@@ -13,7 +13,7 @@ Current certified runtime stops at Aurelia level 12. The purpose of this documen
 | 13 | 4th-level spell slots; Devotion oath spells *freedom of movement*, *guardian of faith* | 4/3/3/1 slots. *Freedom of movement* uses universal buff/debuff counters. *Guardian of Faith* remains in RAW/Oath metadata but is arena-unavailable under the current no-summons/created-entity rule. Aurelia prepares *death ward* as the legal non-summoning 4th-level combat replacement. |
 | 14 | Cleansing Touch | Effect-removal action: action economy + Charisma-modifier uses per long rest + target spell-effect removal. Compare against existing `effect_removal_actions` / Dispel Magic machinery; do not create a Paladin-specific remover. |
 | 15 | Purity of Spirit | Persistent self effect equivalent to always being under *protection from evil and good*. Compose the spell's existing universal defenses if present; otherwise identify the missing generic creature-type defense primitive. |
-| 16 | Ability Score Improvement | Existing canonical ability-score/derived-stat progression. No new combat primitive. |
+| 16 | Ability Score Improvement | Canonical +2 Charisma ASI through existing ability-score progression. Derived Charisma modifier updates Aura of Protection, Sacred Weapon, Cleansing Touch uses, Persuasion, and spell preparation. No new combat primitive. |
 | 17 | 5th-level spell slots; Devotion oath spells *commune*, *flame strike* | Slot resource is existing. *Commune* is noncombat for Iron Pit. *Flame strike* should reuse save-damage/AoE primitives with its two damage components if the current multi-component save-damage path supports them. |
 | 18 | Aura improvements | Parameter change only: Aura of Protection / Courage / Devotion radius 10 ft → 30 ft. Reuse the same aura capabilities with data-driven radius. |
 | 19 | Ability Score Improvement | Existing canonical ability-score/derived-stat progression. No new combat primitive. |
@@ -54,7 +54,7 @@ Repository inventory after level 12 certification found:
 2. Level 13 after the 4/3/3/1 resource vector, Freedom of Movement, and Death Ward pass Python/browser parity; Guardian of Faith remains source-visible but arena-unavailable by contract.
 3. Level 14: Cleansing Touch reuses generic effect removal; certification requires exact-head Python/browser/resource parity before READY.
 4. Level 15 after Purity of Spirit compiles the existing *protection from evil and good* typed defenses as permanent passive modifiers with Python/browser parity and exact-head certification.
-5. Level 16 ASI.
+5. Level 16: canonical +2 Charisma ASI, 4/3/3/2 slots retained, prepared capacity rises to 12; legal Find Steed remains summon-unavailable and Create Food and Water remains noncombat under existing arena contracts.
 6. Level 17 after *flame strike* parity; *commune* remains explicitly noncombat.
 7. Level 18 aura-radius parameterization.
 8. Level 19 ASI.

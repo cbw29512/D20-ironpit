@@ -48,6 +48,11 @@ _PREPARED = (
     # spell required by Aurelia's level-12 CHA modifier + half-level preparation count.
     _spell("magic-weapon", "Magic Weapon", "buff", "modifier-stack", "concentration", level=2, min_level=5),
     _spell("divine-favor", "Divine Favor", "buff", "modifier-stack", "bonus-damage", "concentration"),
+    # Level 16 raises Aurelia's prepared-spell capacity to 12. These two legal 2014 Paladin spells
+    # fill the additional preparation slots without inventing combat behavior: Find Steed is governed
+    # by the global no-summons arena rule, while Create Food and Water cannot alter a Pit fight.
+    _spell("find-steed", "Find Steed", "utility", "arena-unavailable-summon", level=2, min_level=5),
+    _spell("create-food-and-water", "Create Food and Water", "utility", "arena-out-of-scope", level=3, min_level=9),
 )
 
 _OATH = (
