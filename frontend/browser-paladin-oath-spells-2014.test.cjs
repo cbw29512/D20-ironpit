@@ -13,6 +13,7 @@ const load = (name) => vm.runInThisContext(
 load("browser-rolls.js");
 load("browser-condition-rules.js");
 load("browser-action-economy.js");
+load("browser-rogue-defenses.js");
 load("browser-modifiers.js");
 load("browser-state.js");
 load("browser-defensive-modifier-rules.js");
@@ -20,6 +21,9 @@ load("browser-condition-immunity.js");
 load("browser-concentration.js");
 load("browser-spell-modifiers.js");
 load("browser-timed-conditions.js");
+load("browser-zero-hp.js");
+load("browser-attack.js");
+load("browser-save-damage.js");
 load("browser-saves.js");
 load("browser-targeting-wards.js");
 load("browser-spellcasting.js");
@@ -223,6 +227,29 @@ const beacon = {
   assert.equal(PRE.typedRelevant(paladin, { heroes: [paladin], monsters: [humanoid] }, protection), false);
   const fiend = member("fiend", "monsters", 10, template("Fiend", { kind: "monster", creature_type: "Fiend" }));
   assert.equal(PRE.typedRelevant(paladin, { heroes: [paladin], monsters: [fiend] }, protection), true);
+}
+
+{
+  const caster = member("caster17", "heroes", 0, template("Caster 17"));
+  const target = member("target17", "monsters", 30, template("Target 17", {
+    kind: "monster", damage_resistances: ["fire"],
+    saving_throw_bonuses: { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 },
+  }));
+  caster.state.template.name = "Aurelia Brightshield";
+  const flame = {
+    id: "flame-strike", name: "Flame Strike", saveAbility: "dexterity", dc: 18, range: 70,
+    successDamage: "half", magicalEffect: true, damageDiceCount: 0, damageBonus: 0, damageType: null,
+    damageComponents: [
+      { diceCount: 4, diceSize: 6, damageBonus: 0, damageType: "fire" },
+      { diceCount: 4, diceSize: 6, damageBonus: 0, damageType: "radiant" },
+    ],
+  };
+  queued([1, 6, 6, 6, 6, 4, 4, 4, 4]);
+  const event = window.IRON_PIT_BROWSER_SAVES.resolveAction(1, 1, caster, target, flame, 30, { spendAction: false });
+  assert.deepEqual(event.damage_components.map((part) => [part.damage_type, part.total, part.applied_total]), [
+    ["fire", 24, 12], ["radiant", 16, 16],
+  ]);
+  assert.equal(event.damage_roll.total, 28);
 }
 
 console.log("2014 Devotion Paladin oath-spell browser parity passed.");

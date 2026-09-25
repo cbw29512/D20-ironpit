@@ -40,6 +40,7 @@ window.IRON_PIT_DICE = {
   },
 };
 
+load("browser-save-damage.js");
 load("browser-saves.js");
 load("browser-spell-resolution.js");
 
@@ -69,8 +70,11 @@ const choice = {
   action: {
     id: "shared-flame", name: "Shared Flame", level: 0, actionCost: "action",
     range: 60, areaRadius: 10, saveAbility: "dexterity", dc: 10,
-    damageDiceCount: 2, damageDiceSize: 6, damageBonus: 0,
-    damageType: "fire", successDamage: "half", upcastDicePerLevel: 0,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0,
+    damageType: null, successDamage: "half", upcastDicePerLevel: 0,
+    damageComponents: [
+      { diceCount: 2, diceSize: 6, damageBonus: 0, damageType: "fire" },
+    ],
   },
   slotLevel: 0,
   targetIds: targets.map((target) => target.combatant_id),

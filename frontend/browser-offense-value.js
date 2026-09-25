@@ -94,9 +94,13 @@
   }
 
   function saveSpell(target, action) {
-    if (!(action.damageDiceCount > 0) || !action.damageType) return 0;
+    const parts = action.damageComponents?.length ? action.damageComponents
+      : ((action.damageDiceCount || 0) > 0 ? [{ diceCount: action.damageDiceCount, diceSize: action.damageDiceSize,
+        damageBonus: action.damageBonus || 0, damageType: action.damageType }] : []);
+    if (!parts.length || parts.some((part) => !part.damageType)) return 0;
     const success = saveSuccess(target, action);
-    const full = meanDamage(action.damageDiceCount, action.damageDiceSize, action.damageBonus || 0) * damageFactor(target.state, action.damageType);
+    const full = parts.reduce((sum, part) => sum + meanDamage(part.diceCount, part.diceSize, part.damageBonus || 0)
+      * damageFactor(target.state, part.damageType), 0);
     const onSuccess = action.successDamage === "half" ? full * 0.5 : 0;
     return Math.max(0, (1 - success) * full + success * onSuccess);
   }

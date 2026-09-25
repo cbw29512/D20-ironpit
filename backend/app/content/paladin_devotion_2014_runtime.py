@@ -6,6 +6,7 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.paladin_devotion_2014_attacks import build_extra_attack, build_javelin_attack, build_longsword_attack
 from app.content.paladin_devotion_2014_level14 import cleansing_touch_2014
 from app.content.paladin_devotion_2014_level15 import purity_of_spirit_2014
+from app.content.paladin_devotion_2014_level17 import flame_strike_2014
 from app.content.paladin_devotion_2014_spells import (
     build_paladin_condition_removal_actions_2014,
     build_paladin_defensive_spells_2014,
@@ -21,7 +22,7 @@ _SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
     11: (4, 3, 3), 12: (4, 3, 3), 13: (4, 3, 3, 1), 14: (4, 3, 3, 1),
-    15: (4, 3, 3, 2), 16: (4, 3, 3, 2),
+    15: (4, 3, 3, 2), 16: (4, 3, 3, 2), 17: (4, 3, 3, 3, 1),
 }
 
 
@@ -78,8 +79,8 @@ def _improved_divine_smite(level: int) -> list[OnHitDamage]:
 
 def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 17):
-            raise ValueError("2014 Devotion Paladin runtime covers levels 1 through 16.")
+        if level not in range(1, 18):
+            raise ValueError("2014 Devotion Paladin runtime covers levels 1 through 17.")
         scores = _scores(level)
         charisma_modifier = scores.modifier("charisma")
         aura_bonus = charisma_modifier if level >= 6 else 0
@@ -101,6 +102,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
             attack_action=build_extra_attack(level),
             passive_modifier_grants=purity_of_spirit_2014() if level >= 15 else [],
             defensive_spell_actions=build_paladin_defensive_spells_2014(level, charisma_modifier),
+            spell_save_actions=[flame_strike_2014(level, charisma_modifier)] if level >= 17 else [],
             healing_actions=build_paladin_healing_actions_2014(level, charisma_modifier),
             condition_removal_actions=build_paladin_condition_removal_actions_2014(level),
             effect_removal_actions=(

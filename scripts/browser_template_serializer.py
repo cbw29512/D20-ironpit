@@ -171,6 +171,12 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    if action.damage_components:
+        row["damageComponents"] = [
+            {"diceCount": item.dice_count, "diceSize": item.dice_size,
+             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
+            for item in action.damage_components
+        ]
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
     if action.area:
@@ -200,6 +206,12 @@ def _spell(action: Any) -> dict[str, Any]:
     }
     if action.area_radius_ft is not None:
         row["areaRadius"] = action.area_radius_ft
+    if action.damage_components:
+        row["damageComponents"] = [
+            {"diceCount": item.dice_count, "diceSize": item.dice_size,
+             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
+            for item in action.damage_components
+        ]
     return row
 
 

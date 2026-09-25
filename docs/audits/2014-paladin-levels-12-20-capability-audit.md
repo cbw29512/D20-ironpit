@@ -4,7 +4,7 @@
 
 This audit is anchored to the 2014 lane and the D&D SRD 5.1 Paladin / Oath of Devotion rules. It does not certify any level and must not be used to advance READY state by itself.
 
-Current certified runtime stops at Aurelia level 15. The purpose of this document is to decompose the remaining levels through 20 into universal combat mechanics before any new resolver is written.
+Current certified runtime stops at Aurelia level 16. The purpose of this document is to decompose the remaining levels through 20 into universal combat mechanics before any new resolver is written.
 
 ## RAW progression inventory
 
@@ -14,7 +14,7 @@ Current certified runtime stops at Aurelia level 15. The purpose of this documen
 | 14 | Cleansing Touch | Effect-removal action: action economy + Charisma-modifier uses per long rest + target spell-effect removal. Compare against existing `effect_removal_actions` / Dispel Magic machinery; do not create a Paladin-specific remover. |
 | 15 | Purity of Spirit | Persistent self effect equivalent to always being under *protection from evil and good*. Compose the spell's existing universal defenses if present; otherwise identify the missing generic creature-type defense primitive. |
 | 16 | Ability Score Improvement | Canonical +2 Charisma ASI through existing ability-score progression. Derived Charisma modifier updates Aura of Protection, Sacred Weapon, Cleansing Touch uses, Persuasion, and spell preparation. No new combat primitive. |
-| 17 | 5th-level spell slots; Devotion oath spells *commune*, *flame strike* | Slot resource is existing. *Commune* is noncombat for Iron Pit. *Flame strike* should reuse save-damage/AoE primitives with its two damage components if the current multi-component save-damage path supports them. |
+| 17 | 5th-level spell slots; Devotion oath spells *commune*, *flame strike* | Slot resource is existing. *Commune* is noncombat for Iron Pit. *Flame strike* reuses save-damage/AoE primitives plus the universal multi-component save-damage path: one Dexterity save, 4d6 fire + 4d6 radiant, half of each on success. |
 | 18 | Aura improvements | Parameter change only: Aura of Protection / Courage / Devotion radius 10 ft → 30 ft. Reuse the same aura capabilities with data-driven radius. |
 | 19 | Ability Score Improvement | Existing canonical ability-score/derived-stat progression. No new combat primitive. |
 | 20 | Holy Nimbus | Composite timed self effect: Action activation, 1/long-rest resource, 1-minute duration, 30-ft bright-light enemy start-of-turn radiant damage, plus advantage on saves against spells cast by fiends/undead. Reuse timed-self-effect lifecycle and start-of-turn damage hooks; audit whether source-creature-type-gated save advantage is already generic before adding anything. |
@@ -45,7 +45,7 @@ Repository inventory after level 12 certification found:
 2. **Guardian of Faith:** no engine work while summons/created combat entities are disabled. Revisit only if the global summon policy changes.
 3. **Cleansing Touch:** resolved as `ENGINE_EXISTS_PARAMETER_DELTA`. The generic effect-removal action now supports level-0 feature actions; Cleansing Touch uses an Action, 5-foot self/willing-ally targeting, automatic removal through spell level 9, no ability check, no spell slot, and Charisma-modifier uses. Arena AI orders it before Dispel Magic so a class-feature use is not replaced by an unnecessary spell-slot expenditure.
 4. **Purity of Spirit:** resolved as a permanent source-owned buff compiled into the existing typed defenses from *protection from evil and good*: qualifying creature types have Disadvantage attacking Aurelia and cannot Charm or Frighten her. Possession remains `ARENA_NEUTRAL` until a certified possession mechanic enters active content.
-5. **Flame Strike:** verify a save-damage action can carry both fire and radiant components through one Dexterity save and half-on-success semantics.
+5. **Flame Strike:** preflight classification was `ENGINE_TRULY_MISSING` only for the generic multi-component save-damage shape; the source ability itself is `ENGINE_EXISTS_COMPOSITION` once that primitive exists. The universal save action now carries independently typed components under one save; Flame Strike binds 4d6 fire + 4d6 radiant with half of each on success and the existing area-targeting path.
 6. **Holy Nimbus:** verify generic start-of-turn area damage and source-creature-type-gated save advantage. Only missing generic pieces may become new engine primitives.
 
 ## Certification sequence
@@ -55,7 +55,7 @@ Repository inventory after level 12 certification found:
 3. Level 14: Cleansing Touch reuses generic effect removal; certification requires exact-head Python/browser/resource parity before READY.
 4. Level 15 after Purity of Spirit compiles the existing *protection from evil and good* typed defenses as permanent passive modifiers with Python/browser parity and exact-head certification.
 5. Level 16: canonical +2 Charisma ASI, 4/3/3/2 slots retained, prepared capacity rises to 12; legal Find Steed remains summon-unavailable and Create Food and Water remains noncombat under existing arena contracts.
-6. Level 17 after *flame strike* parity; *commune* remains explicitly noncombat.
+6. Level 17 after universal multi-component save damage plus *flame strike* Python/browser parity; *commune* remains explicitly noncombat.
 7. Level 18 aura-radius parameterization.
 8. Level 19 ASI.
 9. Level 20 Holy Nimbus as a composition of universal timed/action/resource/aura/start-turn/save-defense mechanics.
