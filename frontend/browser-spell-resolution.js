@@ -16,6 +16,7 @@
       damageDiceCount: spell.damageDiceCount,
       damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
       damageType: spell.damageType, successDamage: spell.successDamage || "none",
+      damageComponents: (spell.damageComponents || []).map((item) => ({ ...item })),
       magicalEffect: true, animation: spell.animation || "spell-save",
     };
   }
@@ -69,7 +70,7 @@
         : { events: [event], sequence };
       events.push(...chain.events); sequence = chain.sequence;
       if (sharedDamageRolls == null && event.damage_components?.length) {
-        sharedDamageRolls = [...event.damage_components[0].rolls];
+        sharedDamageRolls = event.damage_components.map((component) => [...component.rolls]);
       }
     }
     return { events, sequence };
