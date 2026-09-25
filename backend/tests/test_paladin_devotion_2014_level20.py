@@ -12,6 +12,7 @@ from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import DamageType, RollMode
+from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.saving_throw_context import SavingThrowContext
 
 
@@ -136,3 +137,33 @@ def test_holy_nimbus_enemy_turn_start_emanation_uses_range_and_radiant_defenses(
     )
     assert later == []
     assert later_sequence == sequence
+
+
+def test_timed_self_buff_preserves_semantic_save_effect_tags() -> None:
+    _, paladin, _ = _setup()
+    begin_turn(paladin.state)
+    base = paladin.state.template.timed_self_buff_actions[0]
+    tagged = base.model_copy(update={
+        "start_turn_emanation_damage": None,
+        "saving_throw_advantage_grants": [
+            SavingThrowAdvantageGrant(
+                source_id="tagged-defense",
+                source_name="Tagged Defense",
+                abilities=["wisdom"],
+                required_effect_tags=["poison"],
+            )
+        ],
+    })
+
+    resolve_timed_self_buff(1, 1, paladin, tagged)
+
+    assert saving_throw_mode(
+        paladin.state,
+        "wisdom",
+        SavingThrowContext(effect_tags=frozenset({"poison"})),
+    ) is RollMode.ADVANTAGE
+    assert saving_throw_mode(
+        paladin.state,
+        "wisdom",
+        SavingThrowContext(),
+    ) is RollMode.NORMAL

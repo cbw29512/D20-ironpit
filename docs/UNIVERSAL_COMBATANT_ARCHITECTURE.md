@@ -116,6 +116,7 @@ Examples:
 - Disadvantage is one engine primitive. Poisoned, Frightened, long range, or other qualifying states are Disadvantage sources/triggers.
 - Damage is one engine primitive. Slashing, Piercing, Fire, and similar values are damage types; resistance, immunity, and vulnerability modify that same damage pipeline.
 - Saving Throw is one engine primitive. Ability, DC, success/failure effect, repeat timing, and recharge/use limits are declarative parameters around the shared save resolver.
+- Contextual save defenses stay defender-owned and declarative. A source may require semantic effect tags such as `poison`; the incoming save/effect supplies those tags, and the shared save modifier stack performs the match alongside magical/spell/source-creature qualifiers. Never branch on race, class, monster, spell, or feature names to grant that Advantage.
 
 A helper dedicated to determining whether a source is active is allowed, but it must not roll dice, choose a separate roll mode, duplicate the primitive's resolution rules, or bypass the canonical resolver.
 

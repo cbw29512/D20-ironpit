@@ -41,6 +41,7 @@ def _saving_throw_advantage_modifiers(
             and item.save_ability == ability
             and (not item.requires_magical_effect or resolved_context.magical_effect)
             and (not item.requires_spell_effect or resolved_context.spell_effect)
+            and set(item.required_effect_tags).issubset(resolved_context.effect_tags)
             and (
                 not item.source_creature_types
                 or (

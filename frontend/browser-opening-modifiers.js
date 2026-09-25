@@ -39,6 +39,7 @@
             requires_magical_effect: Boolean(grant.requires_magical_effect),
             requires_spell_effect: Boolean(grant.requires_spell_effect),
             source_creature_types: [...(grant.source_creature_types || [])],
+            required_effect_tags: [...(grant.required_effect_tags || [])],
           });
         }
       }

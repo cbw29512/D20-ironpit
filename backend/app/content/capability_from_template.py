@@ -85,6 +85,8 @@ def _save(action) -> dict[str, object]:
         "resource_cost": action.resource_cost, "requires_no_active_grapple": action.requires_no_active_grapple,
         "magical_effect": action.magical_effect, "animation": action.animation,
     }
+    if action.effect_tags:
+        result["effect_tags"] = list(action.effect_tags)
     if action.damage_dice_count:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
         result["damage_type"] = action.damage_type

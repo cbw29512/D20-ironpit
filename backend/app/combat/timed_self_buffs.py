@@ -122,6 +122,7 @@ def resolve_timed_self_buff(
                     requires_magical_effect=grant.requires_magical_effect,
                     requires_spell_effect=grant.requires_spell_effect,
                     source_creature_types=list(grant.source_creature_types),
+                    required_effect_tags=list(grant.required_effect_tags),
                 ))
 
         return BattleEvent(

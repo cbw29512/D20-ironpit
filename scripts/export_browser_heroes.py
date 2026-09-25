@@ -73,6 +73,8 @@ def _save(action: Any) -> dict[str, Any]:
         "grappleEscapeDc": action.grapple_escape_dc, "restrainsWhileGrappled": action.restrains_while_grappled,
         "magicalEffect": action.magical_effect, "animation": action.animation,
     }
+    if action.effect_tags:
+        row["effectTags"] = list(action.effect_tags)
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,
@@ -91,6 +93,7 @@ def _spell(action: Any) -> dict[str, Any]:
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
         "concentration": action.concentration, "animation": action.animation,
     }
+    if action.effect_tags: row["effectTags"] = list(action.effect_tags)
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
     if action.damage_components:
         row["damageComponents"] = [
@@ -150,6 +153,13 @@ def _healing(action: Any) -> dict[str, Any]:
             "resourceCost": action.resource_cost, "animation": action.animation}
 
 
+def _save_advantage_grant(grant: Any) -> dict[str, Any]:
+    row = grant.model_dump(mode="json")
+    if not grant.required_effect_tags:
+        row.pop("required_effect_tags", None)
+    return row
+
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -163,7 +173,7 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
     if action.saving_throw_advantage_grants:
         row["savingThrowAdvantageGrants"] = [
-            item.model_dump(mode="json") for item in action.saving_throw_advantage_grants
+            _save_advantage_grant(item) for item in action.saving_throw_advantage_grants
         ]
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
@@ -254,7 +264,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             item.model_dump() for item in progression.saving_throw_proficiency_grants
         ],
         "saving_throw_advantage_grants": [
-            item.model_dump() for item in progression.saving_throw_advantage_grants
+            _save_advantage_grant(item) for item in progression.saving_throw_advantage_grants
         ],
         "first_round_extra_turn_grants": [
             item.model_dump() for item in progression.first_round_extra_turn_grants
