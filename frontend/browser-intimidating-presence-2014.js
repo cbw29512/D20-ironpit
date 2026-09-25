@@ -6,6 +6,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const immunityKey = (sourceId) => `${FEATURE}:immune:${sourceId}`;
 
@@ -69,9 +70,7 @@
     for (const effect of [...target.state.timed_effects]) {
       if (effect.source_effect_id !== FEATURE) continue;
       const source = members.get(effect.source_id); if (!source) continue;
-      const lineOfSight = !target.state.active_effect_ids.includes("blinded")
-        && !source.state.active_effect_ids.includes("invisible");
-      if (lineOfSight && S().distance(target, source) <= 60) continue;
+      if (Q().canSee(target.state, source.state) && S().distance(target, source) <= 60) continue;
       const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
       events.push({
         sequence: sequence++, round_number: round, event_type: "feature",
