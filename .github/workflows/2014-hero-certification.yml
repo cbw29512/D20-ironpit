@@ -1,8 +1,11 @@
 name: 2014 Hero Certification
 
 on:
+  workflow_dispatch:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
 
 permissions:
   contents: read
