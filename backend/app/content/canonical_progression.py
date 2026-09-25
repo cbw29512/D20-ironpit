@@ -19,12 +19,12 @@ def advance_template_data(
     if previous.level is None or next_level != previous.level + 1:
         raise ValueError("Canonical runtime progression must advance exactly one level at a time.")
     hero = HERO_BY_CLASS[class_id]
-    assert_canonical_identity(class_id, previous.name, previous.level)
-    if previous.id != canonical_template_id(class_id, previous.level):
+    assert_canonical_identity(class_id, previous.name, previous.level, previous.ruleset)
+    if previous.id != canonical_template_id(class_id, previous.level, previous.ruleset):
         raise ValueError("Previous canonical runtime template identity drifted.")
     data = previous.model_dump()
     data.update(
-        id=canonical_template_id(class_id, next_level),
+        id=canonical_template_id(class_id, next_level, previous.ruleset),
         name=hero.hero_name,
         archetype=hero.class_name,
         level=next_level,
@@ -44,7 +44,7 @@ def advance_profile_data(
     data = previous.model_dump()
     data.update(
         id=f"build-{slug}-l{next_level}",
-        template_id=canonical_template_id(previous.class_id, next_level),
+        template_id=canonical_template_id(previous.class_id, next_level, previous.ruleset),
         level=next_level,
     )
     return data
