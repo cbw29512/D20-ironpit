@@ -62,6 +62,7 @@ class TimedSelfBuffAction(BaseModel):
                     item.requires_magical_effect,
                     item.requires_spell_effect,
                     tuple(item.source_creature_types),
+                    tuple(item.required_effect_tags),
                 )
                 for item in self.saving_throw_advantage_grants
             }
