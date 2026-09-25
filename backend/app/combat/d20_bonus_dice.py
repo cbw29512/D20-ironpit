@@ -46,7 +46,6 @@ def target_allowed(
         raise RuntimeError("D20 bonus-die target could not be validated.") from exc
 
 
-
 def choose_d20_bonus_die_action(
     source: EncounterCombatant,
     setup,
