@@ -37,10 +37,14 @@ def resolve_save_action(
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
     source_type = str(actor.state.template.creature_type).split(" (")[0].strip().casefold() if actor.state.template.creature_type else None
+    effect_tags = {str(tag).strip().casefold() for tag in action.effect_tags if str(tag).strip()}
+    if str(action.damage_type or "").casefold() == "poison":
+        effect_tags.add("poison")
     save_context = SavingThrowContext(
         magical_effect=action.magical_effect,
         spell_effect=spell_effect,
         source_creature_type=source_type,
+        effect_tags=frozenset(effect_tags),
     )
     advantage_sources = saving_throw_advantage_source_names(
         target.state, action.save_ability, save_context,
