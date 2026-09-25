@@ -10,6 +10,7 @@ from app.combat.defensive_modifier_rules import (
     saving_throw_advantage_sources,
     saving_throw_disadvantage_sources as modifier_save_disadvantage_sources,
 )
+from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
@@ -79,6 +80,8 @@ def resolve_saving_throw(
     dc: int,
     dice: DiceProvider,
     context: SavingThrowContext | None = None,
+    *,
+    round_number: int | None = None,
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
@@ -94,6 +97,12 @@ def resolve_saving_throw(
             dice,
         )
         consume_saving_throw_modifiers(state)
+        if state.active_d20_bonus_dice:
+            if round_number is None:
+                raise ValueError("Active d20 bonus die requires saving-throw round context.")
+            roll, _ = apply_d20_bonus_die_if_useful(
+                state, "saving_throw", roll, dc, dice, round_number,
+            )
         if roll.total < dc:
             from app.combat.indomitable import use_indomitable
 
