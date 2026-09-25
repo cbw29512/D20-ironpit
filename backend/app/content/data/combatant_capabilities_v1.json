@@ -7,6 +7,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Fey (Goblinoid)",
     "size": "small",
     "armor_class": 15,
     "max_hp": 10,
@@ -43,8 +44,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -183,6 +184,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Fey (Goblinoid)",
     "size": "small",
     "armor_class": 12,
     "max_hp": 7,
@@ -219,8 +221,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -330,6 +332,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Fey (Goblinoid)",
     "size": "medium",
     "armor_class": 18,
     "max_hp": 11,
@@ -366,8 +369,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -492,6 +495,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon",
     "size": "small",
     "armor_class": 14,
     "max_hp": 7,
@@ -528,8 +532,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -642,6 +646,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Fey (Goblinoid)",
     "size": "small",
     "armor_class": 17,
     "max_hp": 21,
@@ -678,8 +683,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -845,6 +850,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 11,
@@ -881,8 +887,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -991,6 +997,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 10,
     "max_hp": 4,
@@ -1027,8 +1034,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1110,6 +1117,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 16,
     "max_hp": 11,
@@ -1146,8 +1154,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1255,6 +1263,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "small",
     "armor_class": 13,
     "max_hp": 7,
@@ -1291,8 +1300,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1376,6 +1385,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 9,
@@ -1412,8 +1422,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1493,6 +1503,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "small",
     "armor_class": 12,
     "max_hp": 7,
@@ -1529,8 +1540,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1627,6 +1638,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Monstrosity",
     "size": "large",
     "armor_class": 11,
     "max_hp": 19,
@@ -1663,8 +1675,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1744,6 +1756,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 12,
     "max_hp": 19,
@@ -1780,8 +1793,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1863,6 +1876,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 11,
@@ -1899,8 +1913,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -1989,6 +2003,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 14,
     "max_hp": 22,
@@ -2025,8 +2040,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2115,6 +2130,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 11,
     "max_hp": 19,
@@ -2151,8 +2167,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2251,6 +2267,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 11,
     "max_hp": 22,
@@ -2287,8 +2304,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2417,6 +2434,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "small",
     "armor_class": 12,
     "max_hp": 3,
@@ -2453,8 +2471,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2538,6 +2556,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 10,
     "max_hp": 17,
@@ -2574,8 +2593,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2655,6 +2674,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 4,
@@ -2691,8 +2711,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2774,6 +2794,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 10,
     "max_hp": 15,
@@ -2810,8 +2831,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -2891,6 +2912,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 15,
@@ -2927,8 +2949,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3010,6 +3032,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "small",
     "armor_class": 12,
     "max_hp": 3,
@@ -3046,8 +3069,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3127,6 +3150,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 11,
     "max_hp": 13,
@@ -3163,8 +3187,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3249,6 +3273,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 10,
     "max_hp": 11,
@@ -3285,8 +3310,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3368,6 +3393,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 13,
     "max_hp": 42,
@@ -3404,8 +3430,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3490,6 +3516,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Undead",
     "size": "large",
     "armor_class": 12,
     "max_hp": 45,
@@ -3526,8 +3553,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3641,6 +3668,7 @@
     "challenge_rating": "5",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast (Dinosaur)",
     "size": "huge",
     "armor_class": 14,
     "max_hp": 114,
@@ -3677,8 +3705,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3779,6 +3807,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Undead",
     "size": "large",
     "armor_class": 13,
     "max_hp": 22,
@@ -3815,8 +3844,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -3905,6 +3934,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast (Dinosaur)",
     "size": "large",
     "armor_class": 13,
     "max_hp": 51,
@@ -3941,8 +3971,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4051,6 +4081,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 10,
     "max_hp": 4,
@@ -4087,8 +4118,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4166,6 +4197,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Elemental",
     "size": "medium",
     "armor_class": 11,
     "max_hp": 11,
@@ -4202,8 +4234,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4353,6 +4385,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid (Druid)",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 44,
@@ -4389,8 +4422,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4612,6 +4645,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Monstrosity",
     "size": "large",
     "armor_class": 11,
     "max_hp": 26,
@@ -4648,8 +4682,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4750,6 +4784,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Plant",
     "size": "small",
     "armor_class": 9,
     "max_hp": 10,
@@ -4786,8 +4821,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4867,6 +4902,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 5,
@@ -4903,8 +4939,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -4982,6 +5018,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 1,
@@ -5018,8 +5055,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5095,6 +5132,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 2,
@@ -5131,8 +5169,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5210,6 +5248,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 3,
@@ -5246,8 +5285,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5325,6 +5364,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 1,
@@ -5361,8 +5401,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5441,6 +5481,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 13,
     "max_hp": 1,
@@ -5477,8 +5518,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5554,6 +5595,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 10,
     "max_hp": 2,
@@ -5590,8 +5632,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5669,6 +5711,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 1,
@@ -5705,8 +5748,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5784,6 +5827,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 10,
     "max_hp": 1,
@@ -5820,8 +5864,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -5899,6 +5943,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 2,
@@ -5935,8 +5980,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6014,6 +6059,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 13,
     "max_hp": 1,
@@ -6050,8 +6096,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6127,6 +6173,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "small",
     "armor_class": 12,
     "max_hp": 4,
@@ -6163,8 +6210,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6244,6 +6291,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 13,
@@ -6280,8 +6328,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6363,6 +6411,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast (Dinosaur)",
     "size": "large",
     "armor_class": 13,
     "max_hp": 68,
@@ -6399,8 +6448,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6482,6 +6531,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 12,
     "max_hp": 42,
@@ -6518,8 +6568,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6620,6 +6670,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 10,
     "max_hp": 11,
@@ -6656,8 +6707,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6737,6 +6788,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast (Dinosaur)",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 13,
@@ -6773,8 +6825,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6856,6 +6908,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 11,
     "max_hp": 13,
@@ -6892,8 +6945,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -6973,6 +7026,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 13,
     "max_hp": 30,
@@ -7009,8 +7063,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7097,6 +7151,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 10,
     "max_hp": 5,
@@ -7133,8 +7188,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7218,6 +7273,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "small",
     "armor_class": 13,
     "max_hp": 4,
@@ -7254,8 +7310,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7335,6 +7391,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 11,
     "max_hp": 19,
@@ -7371,8 +7428,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7454,6 +7511,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Celestial",
     "size": "large",
     "armor_class": 12,
     "max_hp": 19,
@@ -7490,8 +7548,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7577,6 +7635,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 11,
     "max_hp": 5,
@@ -7613,8 +7672,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7698,6 +7757,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 13,
     "max_hp": 22,
@@ -7734,8 +7794,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7815,6 +7875,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 5,
@@ -7851,8 +7912,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -7937,6 +7998,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 10,
     "max_hp": 11,
@@ -7973,8 +8035,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8056,6 +8118,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 13,
     "max_hp": 45,
@@ -8092,8 +8155,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8175,6 +8238,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 11,
     "max_hp": 19,
@@ -8211,8 +8275,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8294,6 +8358,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Giant",
     "size": "large",
     "armor_class": 11,
     "max_hp": 68,
@@ -8330,8 +8395,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8463,6 +8528,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Monstrosity",
     "size": "large",
     "armor_class": 13,
     "max_hp": 59,
@@ -8499,8 +8565,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8599,6 +8665,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 13,
     "max_hp": 52,
@@ -8635,8 +8702,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8739,6 +8806,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 16,
@@ -8775,8 +8843,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -8904,6 +8972,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 9,
@@ -8940,8 +9009,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9052,6 +9121,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 12,
     "max_hp": 13,
@@ -9088,8 +9158,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9181,6 +9251,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 15,
     "max_hp": 13,
@@ -9217,8 +9288,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9310,6 +9381,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 13,
     "max_hp": 13,
@@ -9346,8 +9418,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9456,6 +9528,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 15,
     "max_hp": 52,
@@ -9492,8 +9565,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9646,6 +9719,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Aberration",
     "size": "medium",
     "armor_class": 14,
     "max_hp": 54,
@@ -9682,8 +9756,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9818,6 +9892,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Monstrosity",
     "size": "large",
     "armor_class": 12,
     "max_hp": 59,
@@ -9854,8 +9929,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -9965,6 +10040,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "small",
     "armor_class": 14,
     "max_hp": 9,
@@ -10001,8 +10077,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10093,6 +10169,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Monstrosity",
     "size": "large",
     "armor_class": 10,
     "max_hp": 25,
@@ -10129,8 +10206,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10226,6 +10303,7 @@
     "challenge_rating": "6",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon",
     "size": "large",
     "armor_class": 14,
     "max_hp": 127,
@@ -10262,8 +10340,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10409,6 +10487,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 14,
     "max_hp": 11,
@@ -10445,8 +10524,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10543,6 +10622,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 22,
@@ -10579,8 +10659,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10678,6 +10758,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 11,
@@ -10714,8 +10795,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10815,6 +10896,7 @@
     "challenge_rating": "4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast (Dinosaur)",
     "size": "huge",
     "armor_class": 17,
     "max_hp": 90,
@@ -10851,8 +10933,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -10953,6 +11035,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast (Dinosaur)",
     "size": "huge",
     "armor_class": 15,
     "max_hp": 68,
@@ -10989,8 +11072,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11094,6 +11177,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Celestial",
     "size": "large",
     "armor_class": 13,
     "max_hp": 26,
@@ -11130,8 +11214,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11246,6 +11330,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Celestial",
     "size": "huge",
     "armor_class": 14,
     "max_hp": 42,
@@ -11282,8 +11367,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11381,6 +11466,7 @@
     "challenge_rating": "5",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "huge",
     "armor_class": 14,
     "max_hp": 85,
@@ -11417,8 +11503,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11558,6 +11644,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "huge",
     "armor_class": 12,
     "max_hp": 60,
@@ -11594,8 +11681,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11724,6 +11811,7 @@
     "challenge_rating": "8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast (Dinosaur)",
     "size": "huge",
     "armor_class": 13,
     "max_hp": 136,
@@ -11760,8 +11848,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -11899,6 +11987,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Construct",
     "size": "medium",
     "armor_class": 18,
     "max_hp": 33,
@@ -11935,8 +12024,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12046,6 +12135,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Construct",
     "size": "small",
     "armor_class": 17,
     "max_hp": 14,
@@ -12082,8 +12172,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12174,6 +12264,7 @@
     "challenge_rating": "5",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Elemental",
     "size": "large",
     "armor_class": 17,
     "max_hp": 147,
@@ -12210,8 +12301,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12357,6 +12448,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Plant",
     "size": "huge",
     "armor_class": 13,
     "max_hp": 59,
@@ -12393,8 +12485,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12479,6 +12571,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 9,
@@ -12515,8 +12608,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12609,6 +12702,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Monstrosity",
     "size": "tiny",
     "armor_class": 14,
     "max_hp": 5,
@@ -12645,8 +12739,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12737,6 +12831,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Elemental",
     "size": "medium",
     "armor_class": 15,
     "max_hp": 67,
@@ -12773,8 +12868,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -12881,6 +12976,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Aberration",
     "size": "medium",
     "armor_class": 11,
     "max_hp": 11,
@@ -12917,8 +13013,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13011,6 +13107,7 @@
     "challenge_rating": "4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 18,
     "max_hp": 75,
@@ -13047,8 +13144,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13203,6 +13300,7 @@
     "challenge_rating": "4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 14,
     "max_hp": 82,
@@ -13239,8 +13337,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13341,6 +13439,7 @@
     "challenge_rating": "5",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Giant",
     "size": "huge",
     "armor_class": 13,
     "max_hp": 105,
@@ -13377,8 +13476,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13519,6 +13618,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "huge",
     "armor_class": 12,
     "max_hp": 90,
@@ -13555,8 +13655,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13638,6 +13738,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Fiend (Devil)",
     "size": "medium",
     "armor_class": 9,
     "max_hp": 9,
@@ -13674,8 +13775,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13766,6 +13867,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Monstrosity",
     "size": "large",
     "armor_class": 14,
     "max_hp": 68,
@@ -13802,8 +13904,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -13938,6 +14040,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Undead",
     "size": "large",
     "armor_class": 8,
     "max_hp": 85,
@@ -13974,8 +14077,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14064,6 +14167,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Celestial",
     "size": "large",
     "armor_class": 12,
     "max_hp": 59,
@@ -14100,8 +14204,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14194,6 +14298,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 1,
@@ -14230,8 +14335,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14320,6 +14425,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Undead",
     "size": "medium",
     "armor_class": 14,
     "max_hp": 13,
@@ -14356,8 +14462,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14471,6 +14577,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 1,
@@ -14507,8 +14614,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14600,6 +14707,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 27,
@@ -14636,8 +14744,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14772,6 +14880,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 32,
@@ -14808,8 +14917,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -14920,6 +15029,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 5,
@@ -14956,8 +15066,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15050,6 +15160,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Plant",
     "size": "medium",
     "armor_class": 5,
     "max_hp": 18,
@@ -15086,8 +15197,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15191,6 +15302,7 @@
     "challenge_rating": "5",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Elemental",
     "size": "medium",
     "armor_class": 19,
     "max_hp": 84,
@@ -15227,8 +15339,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15375,6 +15487,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Undead",
     "size": "medium",
     "armor_class": 8,
     "max_hp": 15,
@@ -15411,8 +15524,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15501,6 +15614,7 @@
     "challenge_rating": "5",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "huge",
     "armor_class": 13,
     "max_hp": 92,
@@ -15537,8 +15651,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15643,6 +15757,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 12,
     "max_hp": 45,
@@ -15679,8 +15794,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15766,6 +15881,7 @@
     "challenge_rating": "0",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "tiny",
     "armor_class": 13,
     "max_hp": 1,
@@ -15802,8 +15918,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -15885,6 +16001,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 22,
@@ -15921,8 +16038,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16007,6 +16124,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Fiend",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 22,
@@ -16043,8 +16161,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16156,6 +16274,7 @@
     "challenge_rating": "1",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Swarm of Tiny Beasts",
     "size": "medium",
     "armor_class": 13,
     "max_hp": 28,
@@ -16192,8 +16311,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16308,6 +16427,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Fiend",
     "size": "medium",
     "armor_class": 15,
     "max_hp": 58,
@@ -16344,8 +16464,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16502,6 +16622,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "medium",
     "armor_class": 17,
     "max_hp": 33,
@@ -16538,8 +16659,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16695,6 +16816,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "medium",
     "armor_class": 17,
     "max_hp": 65,
@@ -16731,8 +16853,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -16886,6 +17008,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "medium",
     "armor_class": 17,
     "max_hp": 38,
@@ -16922,8 +17045,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17080,6 +17203,7 @@
     "challenge_rating": "4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "medium",
     "armor_class": 17,
     "max_hp": 75,
@@ -17116,8 +17240,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17270,6 +17394,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "medium",
     "armor_class": 16,
     "max_hp": 32,
@@ -17306,8 +17431,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17462,6 +17587,7 @@
     "challenge_rating": "7",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "large",
     "armor_class": 18,
     "max_hp": 127,
@@ -17498,8 +17624,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17661,6 +17787,7 @@
     "challenge_rating": "9",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "large",
     "armor_class": 18,
     "max_hp": 152,
@@ -17697,8 +17824,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -17858,6 +17985,7 @@
     "challenge_rating": "8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "large",
     "armor_class": 18,
     "max_hp": 136,
@@ -17894,8 +18022,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18058,6 +18186,7 @@
     "challenge_rating": "10",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "large",
     "armor_class": 18,
     "max_hp": 178,
@@ -18094,8 +18223,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18254,6 +18383,7 @@
     "challenge_rating": "6",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Dragon (Chromatic)",
     "size": "large",
     "armor_class": 17,
     "max_hp": 123,
@@ -18290,8 +18420,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18452,6 +18582,7 @@
     "challenge_rating": "1/2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Fey",
     "size": "large",
     "armor_class": 13,
     "max_hp": 26,
@@ -18488,8 +18619,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18579,6 +18710,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Swarm of Tiny Beasts",
     "size": "large",
     "armor_class": 12,
     "max_hp": 11,
@@ -18615,8 +18747,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18726,6 +18858,7 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Swarm of Tiny Beasts",
     "size": "medium",
     "armor_class": 10,
     "max_hp": 14,
@@ -18762,8 +18895,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -18873,6 +19006,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Swarm of Tiny Undead",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 49,
@@ -18909,8 +19043,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -19030,6 +19164,7 @@
     "challenge_rating": "2",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 15,
     "max_hp": 52,
@@ -19066,8 +19201,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -19201,6 +19336,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 18,
     "max_hp": 52,
@@ -19237,8 +19373,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -19400,6 +19536,7 @@
     "challenge_rating": "1/8",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 15,
     "max_hp": 9,
@@ -19436,8 +19573,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
@@ -19522,6 +19659,7 @@
     "challenge_rating": "3",
     "kind": "monster",
     "ruleset": "2024",
+    "creature_type": "Humanoid",
     "size": "medium",
     "armor_class": 17,
     "max_hp": 65,
@@ -19558,8 +19696,8 @@
       "bloodied_start_turn_heal_amount": 0,
       "death_save_advantage": false,
       "death_save_recovery_minimum": 20,
-      "critical_move_fraction": 0.0,
-      "tactical_shift_fraction": 0.0
+      "critical_move_fraction": 0,
+      "tactical_shift_fraction": 0
     },
     "attacks": [
       {
