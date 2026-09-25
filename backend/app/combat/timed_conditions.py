@@ -125,6 +125,13 @@ def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]
     for item in grouped:
         if remove_effect_instance(state, item):
             removed.append(item.effect_id)
+    state.active_modifiers = [
+        item for item in state.active_modifiers
+        if not (
+            item.source_id == effect.source_id
+            and item.source_effect_id == effect.source_effect_id
+        )
+    ]
     return removed
 
 
