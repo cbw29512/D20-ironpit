@@ -17,7 +17,7 @@ from app.content.monk_open_hand_2014_runtime import build_kael_stillwater_2014
 from app.content.monsters import build_commoner
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import ResourceDefinition
+from app.domain.models import DamageType, ResourceDefinition
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
@@ -234,7 +234,7 @@ def test_level17_flame_strike_reuses_multi_component_save_damage() -> None:
     paladin = _member(build_aurelia_brightshield_2014(17), "aurelia", "heroes", 0)
     target_template = build_commoner().model_copy(update={
         "ruleset": "2014",
-        "damage_resistances": ["fire"],
+        "damage_resistances": [DamageType.FIRE],
         "saving_throw_bonuses": {"strength": 0, "dexterity": 0, "constitution": 0, "intelligence": 0, "wisdom": 0, "charisma": 0},
     })
     target = _member(target_template, "target", "monsters", 30)
