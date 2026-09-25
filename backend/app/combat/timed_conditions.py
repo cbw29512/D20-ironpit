@@ -24,6 +24,11 @@ def apply_timed_condition(
     source_effect_id: str | None = None,
     source_template: CombatantTemplate | None = None,
     source_is_magical: bool = False,
+    suppress_action: bool = False,
+    suppress_bonus_action: bool = False,
+    suppress_reactions: bool = False,
+    suppress_movement: bool = False,
+    zero_hp_replacement_hp: int = 0,
     applied_round: int | None = None,
     expires_round: int | None = None,
     expires_at_start_of_source_turn: bool = True,
@@ -53,6 +58,11 @@ def apply_timed_condition(
             effect_id,
             source_template,
             source_is_magical=source_is_magical,
+            suppress_action=suppress_action,
+            suppress_bonus_action=suppress_bonus_action,
+            suppress_reactions=suppress_reactions,
+            suppress_movement=suppress_movement,
+            zero_hp_replacement_hp=zero_hp_replacement_hp,
         ):
             return None
         if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
