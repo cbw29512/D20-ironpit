@@ -84,6 +84,8 @@ def resolve_timed_self_buff(
                 expires_at_start_of_source_turn=action.expiry_timing == "source_turn_start",
                 owned_damage_resistances=action.damage_resistances if not defenses_attached else [],
                 owned_debuff_counters=action.debuff_counters if not defenses_attached else [],
+                ends_if_source_incapacitated=action.ends_if_source_incapacitated,
+                ends_if_source_dead=action.ends_if_source_dead,
                 use_default_poison_recovery=False,
             )
             if condition is not None:
@@ -93,6 +95,7 @@ def resolve_timed_self_buff(
             action.damage_resistances
             or action.debuff_counters
             or action.saving_throw_advantage_grants
+            or action.friendly_save_advantage_aura is not None
             or action.start_turn_emanation_damage is not None
         ):
             apply_timed_condition(
@@ -107,6 +110,8 @@ def resolve_timed_self_buff(
                 expires_at_start_of_source_turn=action.expiry_timing == "source_turn_start",
                 owned_damage_resistances=action.damage_resistances,
                 owned_debuff_counters=action.debuff_counters,
+                ends_if_source_incapacitated=action.ends_if_source_incapacitated,
+                ends_if_source_dead=action.ends_if_source_dead,
                 use_default_poison_recovery=False,
             )
 
