@@ -27,6 +27,7 @@ class D20BonusDieAction(BaseModel):
     dice_size: int = Field(ge=2, le=100)
     test_kinds: list[D20TestKind] = Field(min_length=1)
     duration_rounds: int = Field(ge=1, le=600)
+    exclusive_group: str | None = Field(default=None, min_length=1)
     priority: int = 0
     animation: str = "inspiration"
 
@@ -54,6 +55,7 @@ class ActiveD20BonusDieGrant(BaseModel):
     dice_count: int = Field(default=1, ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
     test_kinds: list[D20TestKind] = Field(min_length=1)
+    exclusive_group: str | None = Field(default=None, min_length=1)
     applied_round: int = Field(ge=1)
     expires_round: int = Field(ge=2)
 
