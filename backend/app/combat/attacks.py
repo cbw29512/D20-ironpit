@@ -49,6 +49,7 @@ def resolve_attack(
         mode = roll_resolution.mode
         heroic_reroll = roll_resolution.heroic_reroll
         brutal_strike_disadvantage = roll_resolution.brutal_strike_disadvantage
+        d20_bonus_source_name = roll_resolution.d20_bonus_source_name
         if spend_action: spend(attacker, "action")
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
@@ -129,6 +130,8 @@ def resolve_attack(
             applied_conditions=applied_conditions,
             deferred_effect_armed=deferred_effect_armed,
         )
+        if d20_bonus_source_name:
+            description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
             save_damage, on_hit_save, cunning_strike_obscure, cunning_strike, topple,
         )
