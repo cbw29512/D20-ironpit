@@ -1,18 +1,29 @@
 from __future__ import annotations
 
 import logging
+from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
+from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
 
 
+class TimedEmanationDamage(BaseModel):
+    """Fixed typed damage emitted by an active timed effect at a declared turn-start window."""
+
+    trigger: Literal["enemy_turn_start"] = "enemy_turn_start"
+    radius_ft: int = Field(ge=1, le=120)
+    fixed_damage: int = Field(ge=1, le=500)
+    damage_type: DamageType
+
+
 class TimedSelfBuffAction(BaseModel):
-    """Declarative self-buff composed from universal condition and resistance mechanics."""
+    """Declarative timed self effect composed from universal combat primitives."""
 
     id: str
     name: str
@@ -23,6 +34,8 @@ class TimedSelfBuffAction(BaseModel):
     condition_ids: list[ConditionName] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
+    saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
+    start_turn_emanation_damage: TimedEmanationDamage | None = None
     expiry_timing: ConditionTiming = "source_turn_start"
     priority: int = 0
     animation: str = "buff"
@@ -42,7 +55,25 @@ class TimedSelfBuffAction(BaseModel):
             }
             if len(counter_keys) != len(self.debuff_counters):
                 raise ValueError("Timed self-buff debuff counters must be unique.")
-            if not self.condition_ids and not self.damage_resistances and not self.debuff_counters:
+            grant_keys = {
+                (
+                    item.source_id,
+                    tuple(item.abilities),
+                    item.requires_magical_effect,
+                    item.requires_spell_effect,
+                    tuple(item.source_creature_types),
+                )
+                for item in self.saving_throw_advantage_grants
+            }
+            if len(grant_keys) != len(self.saving_throw_advantage_grants):
+                raise ValueError("Timed self-buff saving-throw Advantage grants must be unique.")
+            if not (
+                self.condition_ids
+                or self.damage_resistances
+                or self.debuff_counters
+                or self.saving_throw_advantage_grants
+                or self.start_turn_emanation_damage is not None
+            ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")
             return self
         except ValueError:
