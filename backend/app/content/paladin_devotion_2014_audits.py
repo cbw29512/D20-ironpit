@@ -130,6 +130,20 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     "possession mechanic enters active content."
                 ),
             ))
+        if level >= 17:
+            audits.extend([
+                _audit(
+                    "commune", "Commune", "subclass", combat=False, automated=False,
+                    notes="Always prepared by Oath of Devotion but noncombat in the standard Iron Pit.",
+                ),
+                _audit(
+                    "flame-strike", "Flame Strike", "subclass",
+                    notes=(
+                        "One Dexterity save drives generic 10-foot-radius area damage with independent "
+                        "4d6 fire and 4d6 radiant components; each component uses the shared damage pipeline."
+                    ),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)
