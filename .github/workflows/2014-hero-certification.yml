@@ -85,6 +85,7 @@ jobs:
           node frontend/browser-2014-monk-level19.test.cjs
           node frontend/browser-2014-monk-level20.test.cjs
           node frontend/browser-initiative-resource-refill.test.cjs
+          node frontend/browser-d20-bonus-dice.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-turn-undead-2014.test.cjs
           node frontend/browser-divine-intervention-2014.test.cjs
