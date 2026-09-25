@@ -49,7 +49,7 @@ def spell_at_slot(action: SpellSaveAction, slot_level: int) -> SpellSaveAction:
         raise RuntimeError("Spell higher-slot scaling could not be evaluated.") from exc
 
 
-def _slot_levels(caster: EncounterCombatant, action: SpellSaveAction, turn_key: str) -> tuple[int, ...]:
+def legal_save_spell_slots(caster: EncounterCombatant, action: SpellSaveAction, turn_key: str) -> tuple[int, ...]:
     try:
         if action.level == 0:
             return (0,)
@@ -92,7 +92,7 @@ def choose_spell(
         for index, action in enumerate(caster.state.template.spell_save_actions):
             if action.action_cost == "reaction" or action.concentration or not is_available(caster.state, action.action_cost):
                 continue
-            for slot_level in _slot_levels(caster, action, turn_key):
+            for slot_level in legal_save_spell_slots(caster, action, turn_key):
                 scaled = spell_at_slot(action, slot_level)
                 if action.area_radius_ft is not None:
                     placement = best_area_placement(caster, setup, action.area_radius_ft, action.range_ft, protected_ally_ids)
