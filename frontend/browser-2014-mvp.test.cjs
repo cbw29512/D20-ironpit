@@ -19,17 +19,20 @@ const barbarians2014 = heroes2014.filter((hero) => hero.class_id === "barbarian"
 const rogues2014 = heroes2014.filter((hero) => hero.class_id === "rogue");
 const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
-assert.equal(heroes2014.length, 100, "2014 browser hero roster must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-20");
+const clerics2014 = heroes2014.filter((hero) => hero.class_id === "cleric");
+assert.equal(heroes2014.length, 120, "2014 browser hero roster must contain Fighter, Barbarian, Rogue, Monk, Paladin, and Cleric 1-20");
 assert.equal(fighters2014.length, 20);
 assert.equal(barbarians2014.length, 20);
 assert.equal(rogues2014.length, 20);
 assert.equal(monks2014.length, 20);
 assert.equal(paladins2014.length, 20);
+assert.equal(clerics2014.length, 20);
 assert.ok(fighters2014.every((hero) => hero.name === "Karnok Stoneward"));
 assert.ok(barbarians2014.every((hero) => hero.name === "Rokhan Stonefury"));
 assert.ok(rogues2014.every((hero) => hero.name === "Mara Quickstep"));
 assert.ok(monks2014.every((hero) => hero.name === "Kael Stillwater"));
 assert.ok(paladins2014.every((hero) => hero.name === "Aurelia Brightshield"));
+assert.ok(clerics2014.every((hero) => hero.name === "Seraphine Dawnshield"));
 for (const hero of heroes2014) assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
 for (const id of [
   "2014-giant-centipede", "2014-giant-poisonous-snake", "2014-giant-scorpion", "2014-giant-wasp",
@@ -78,4 +81,4 @@ assert.throws(
   /Unknown certified monster for 2014/,
 );
 
-console.log("Certified 2014 Fighter, Berserker, Thief, Open Hand Monk, and Devotion Paladin roster checks passed.");
+console.log("Certified 2014 Fighter, Berserker, Thief, Open Hand Monk, Devotion Paladin, and Life Cleric roster checks passed.");
