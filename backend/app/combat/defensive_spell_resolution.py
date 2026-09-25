@@ -4,7 +4,6 @@ from collections.abc import Iterable
 
 from app.combat.spell_modifiers import apply_spell_modifiers
 from app.combat.temporary_hp import grant_temporary_hit_points
-from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, DamageType
 from app.domain.runtime import CombatantState
@@ -62,20 +61,6 @@ def resolve_defensive_spell(
             typed = DamageType(damage_type)
             if typed not in target.state.temporary_damage_resistances:
                 target.state.temporary_damage_resistances.append(typed)
-        if spell.survival_ward is not None:
-            apply_timed_condition(
-                target.state,
-                f"survival-ward:{spell.id}",
-                member.combatant_id,
-                source_effect_id=spell.id,
-                applied_round=1,
-                expires_round=1 + spell.duration_minutes * 10,
-                expires_at_start_of_source_turn=False,
-                expiry_timing="target_turn_start",
-                zero_hp_replacement_hp=spell.survival_ward.replacement_hp,
-                prevents_nondamage_instant_death=spell.survival_ward.prevents_nondamage_instant_death,
-                use_default_poison_recovery=False,
-            )
         if not spell.concentration and spell.id not in target.state.active_buff_effect_ids:
             target.state.active_buff_effect_ids.append(spell.id)
     apply_spell_modifiers(
@@ -90,8 +75,6 @@ def resolve_defensive_spell(
         details.append(f"+{spell.current_hp_increase} current Hit Points")
     if spell.damage_resistances:
         details.append("resistance to " + ", ".join(spell.damage_resistances))
-    if spell.survival_ward is not None:
-        details.append(f"survival ward to {spell.survival_ward.replacement_hp} HP")
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
     if spell.concentration:
         details.append("Concentration")
