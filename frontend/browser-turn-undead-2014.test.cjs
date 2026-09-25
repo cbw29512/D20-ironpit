@@ -12,7 +12,6 @@ window.IRON_PIT_BROWSER_GRAPPLE = { speedIsZero: () => false };
 window.IRON_PIT_BROWSER_MODIFIERS = { effectiveSpeed: (state) => state.template.speed_ft, expireTargetTurn: () => {} };
 window.IRON_PIT_BROWSER_CONDITION_RULES = { incapacitated: () => false };
 window.IRON_PIT_BROWSER_OPENING_MODIFIERS = { build: () => [] };
-window.IRON_PIT_BROWSER_EXHAUSTION = {};
 window.IRON_PIT_BROWSER_HEROIC_INSPIRATION = { grant: () => {} };
 window.IRON_PIT_BROWSER_POOLED_HEALING = {
   capacity: (member, numerator, denominator) => {
@@ -33,6 +32,7 @@ window.IRON_PIT_BROWSER_ZERO_HP = {
 load("browser-timed-conditions.js");
 load("browser-action-economy.js");
 load("browser-state.js");
+load("browser-exhaustion.js");
 load("browser-turn-creature-effects.js");
 load("browser-source-bound-effects.js");
 load("browser-condition-lifecycle.js");
