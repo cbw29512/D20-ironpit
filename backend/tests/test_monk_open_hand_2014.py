@@ -163,4 +163,4 @@ def test_2014_certified_catalog_reaches_one_hundred_hero_snapshots() -> None:
     paladins = [entry for entry in entries if entry[0][0] == "paladin"]
     assert len(entries) == 100
     assert [entry[0][1] for entry in monks] == list(range(1, 21))
-    assert [entry[0][1] for entry in paladins] == list(range(1, 20))
+    assert [entry[0][1] for entry in paladins] == list(range(1, 21))
