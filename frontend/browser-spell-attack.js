@@ -11,20 +11,23 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
+  const P = () => window.IRON_PIT_BROWSER_SPELL_ATTACK_POLICY;
 
-  function slotResource(caster, spell, turnKey) {
-    if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
-    const id = `spell-slot-${spell.level}`;
+  function slotResource(caster, slotLevel, turnKey) {
+    if (slotLevel === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
+    const id = `spell-slot-${slotLevel}`;
     return (caster.state.resources?.[id] || 0) > 0 ? id : null;
   }
 
-  function resolve(sequence, round, caster, target, spell, setup, turnKey) {
+  function resolve(sequence, round, caster, target, spell, setup, turnKey, slotLevel = null) {
     if (spell.actionCost === "reaction" || !E().available(caster.state, spell.actionCost)) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
     const distance = S().distance(caster, target);
     if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
-    const resourceId = slotResource(caster, spell, turnKey);
-    if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
+    const castLevel = slotLevel ?? spell.level;
+    const scaledSpell = P().scaledSpell(spell, castLevel);
+    const resourceId = slotResource(caster, castLevel, turnKey);
+    if (castLevel > 0 && !resourceId) throw new Error(`No level ${castLevel} spell slot remains for ${spell.name}.`);
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) { if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; } E().spend(caster.state, spell.actionCost); const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward); event.resource_remaining = resourceId ? caster.state.resources[resourceId] : null; return event; }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
@@ -46,14 +49,16 @@
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [];
     if (hit) {
-      const count = spell.damageDiceCount * (critical ? 2 : 1), rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
-      const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
-      const applied = spell.damageType ? A().adjustedDamage(target.state, raw, spell.damageType) : 0;
-      damageRoll = { notation: `${count}d${spell.damageDiceSize}+${spell.damageBonus || 0}`, rolls, modifier: spell.damageBonus || 0, total: applied };
-      if (spell.damageType) damageComponents = [{ source: spell.name, notation: damageRoll.notation, rolls: [...rolls], modifier: spell.damageBonus || 0,
-        damage_type: spell.damageType, total: raw, applied_total: applied }];
+      const count = scaledSpell.damageDiceCount * (critical ? 2 : 1);
+      const rolls = window.IRON_PIT_DICE.rollMany(count, scaledSpell.damageDiceSize);
+      const raw = rolls.reduce((sum, value) => sum + value, 0) + (scaledSpell.damageBonus || 0);
+      const applied = scaledSpell.damageType ? A().adjustedDamage(target.state, raw, scaledSpell.damageType) : 0;
+      damageRoll = { notation: `${count}d${scaledSpell.damageDiceSize}+${scaledSpell.damageBonus || 0}`, rolls,
+        modifier: scaledSpell.damageBonus || 0, total: applied };
+      if (scaledSpell.damageType) damageComponents = [{ source: spell.name, notation: damageRoll.notation, rolls: [...rolls],
+        modifier: scaledSpell.damageBonus || 0, damage_type: scaledSpell.damageType, total: raw, applied_total: applied }];
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
-      A().applyDamage(target.state, applied, critical, spell.damageType && applied > 0 ? [spell.damageType] : [], states);
+      A().applyDamage(target.state, applied, critical, scaledSpell.damageType && applied > 0 ? [scaledSpell.damageType] : [], states);
       if (target.state.is_alive && !target.state.is_dead) (spell.onHitModifierEffects || []).forEach((effect, index) => {
         M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
       });
