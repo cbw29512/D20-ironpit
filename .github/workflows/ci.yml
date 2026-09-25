@@ -86,7 +86,7 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
       - name: Certify Python rules reference
         working-directory: backend
-        run: pytest -q
+        run: timeout 20m pytest -vv --durations=25
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
