@@ -3,7 +3,13 @@
 
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
-  const T = () => window.IRON_PIT_BROWSER_TIMED || {\n    resolveMovementCounters: () => [],\n    suppressesAction: () => false,\n    suppressesBonusAction: () => false,\n    suppressesMovement: () => false,\n    suppressesReactions: () => false,\n  };
+  const T = () => window.IRON_PIT_BROWSER_TIMED || {
+    resolveMovementCounters: () => [],
+    suppressesAction: () => false,
+    suppressesBonusAction: () => false,
+    suppressesMovement: () => false,
+    suppressesReactions: () => false,
+  };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
