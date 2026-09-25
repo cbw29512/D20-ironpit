@@ -47,6 +47,7 @@ from app.content.monsters_target_not_full_hp import build_target_not_full_hp_mon
 from app.content.monsters_venom import build_venom_monsters
 from app.content.monsters_wolves import build_dire_wolf, build_wolf
 from app.content.monsters_zero_engine import build_zero_engine_monsters
+from app.content.monster_creature_types import complete_monster_creature_types
 from app.content.movement_modes import complete_monster_movement_modes
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.models import CombatantTemplate
@@ -80,6 +81,7 @@ def build_legacy_monster_templates(*, include_capability_migrated: bool = True) 
     ]
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)
+    monsters = complete_monster_creature_types(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
     monsters = complete_monster_reaction_fingerprints(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)
