@@ -50,7 +50,7 @@ def resolve_save_action(
         target.state, action.save_ability, save_context,
     )
     save_roll, succeeded = resolve_saving_throw(
-        target.state, action.save_ability, action.dc, dice, save_context,
+        target.state, action.save_ability, action.dc, dice, save_context, round_number=round_number,
     )
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
