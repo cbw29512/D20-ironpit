@@ -61,6 +61,15 @@ def test_disengage_teleport_and_forced_movement_do_not_provoke() -> None:
         assert reactor.state.reaction_available is True
 
 
+def test_invisible_mover_does_not_provoke_opportunity_attack() -> None:
+    setup, reactor, mover = _setup()
+    mover.state.active_effect_ids.append("invisible")
+    assert resolve_opportunity_attack(
+        1, 1, reactor, mover, setup, 5, 10, "speed", FixedDiceProvider([19])
+    ) is None
+    assert reactor.state.reaction_available is True
+
+
 def test_incapacitated_or_blinded_reactor_cannot_make_opportunity_attack() -> None:
     for condition in ("stunned", "blinded"):
         setup, reactor, mover = _setup()
