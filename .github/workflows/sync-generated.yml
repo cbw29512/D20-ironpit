@@ -1,14 +1,9 @@
 name: Sync Generated Certification Artifacts
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
-      - audit/raw-combat-log-figures-20260830
-      - reconcile/2014-ruleset-isolation
-      - "feat/2014-*"
-      - "feat/2024-*"
-      - "feat/paired-*"
+    branches: [main]
 
 permissions:
   contents: write

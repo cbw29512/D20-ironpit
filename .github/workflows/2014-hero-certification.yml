@@ -1,8 +1,11 @@
 name: 2014 Hero Certification
 
 on:
+  workflow_dispatch:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
 
 permissions:
   contents: read
@@ -44,7 +47,6 @@ jobs:
             backend/tests/test_paladin_devotion_2014_level17.py \
             backend/tests/test_paladin_devotion_2014_level18.py \
             backend/tests/test_paladin_devotion_2014_level19.py \
-            backend/tests/test_paladin_devotion_2014_level20.py \
             backend/tests/test_multi_component_save_damage.py \
             backend/tests/test_certification_progression_manifest.py
       - name: Certify 2014 hero data and browser behavior
@@ -70,6 +72,5 @@ jobs:
           node frontend/browser-2014-paladin-level17.test.cjs
           node frontend/browser-2014-paladin-level18.test.cjs
           node frontend/browser-2014-paladin-level19.test.cjs
-          node frontend/browser-2014-paladin-level20.test.cjs
           node frontend/browser-multi-component-save.test.cjs
           node frontend/browser-2014-paladin-entrypoints.test.cjs

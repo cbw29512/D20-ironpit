@@ -1,11 +1,15 @@
 name: Paired Edition Monster Report
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
-      - "feat/paired-*"
+    branches: [main]
   pull_request:
+    branches: [main]
+    paths:
+      - "backend/app/content/**"
+      - "scripts/report_paired_monster_progress.py"
+      - ".github/workflows/paired-edition-report.yml"
 
 permissions:
   contents: read
