@@ -2,6 +2,7 @@
   "use strict";
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
 
   function active(member, action) {
@@ -52,7 +53,12 @@
         });
         if (condition) { applied.push(condition); defensesAttached = true; }
       });
-      if (!defensesAttached && ((action.damageResistances || []).length || (action.debuffCounters || []).length)) {
+      if (!defensesAttached && (
+        (action.damageResistances || []).length
+        || (action.debuffCounters || []).length
+        || (action.savingThrowAdvantageGrants || []).length
+        || action.startTurnEmanationDamage
+      )) {
         T().apply(member.state, action.id, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
@@ -64,6 +70,22 @@
           ownedDebuffCounters: [...(action.debuffCounters || [])],
           useDefaultPoisonRecovery: false,
         });
+      }
+
+      for (const grant of action.savingThrowAdvantageGrants || []) {
+        for (const ability of grant.abilities || []) {
+          M().add(member.state, {
+            id: `${member.combatant_id}:${action.id}:save-advantage:${ability}`,
+            source_id: member.combatant_id,
+            source_effect_id: action.id,
+            source_name: grant.source_name,
+            kind: "saving-throw-advantage",
+            save_ability: ability,
+            requires_magical_effect: Boolean(grant.requires_magical_effect),
+            requires_spell_effect: Boolean(grant.requires_spell_effect),
+            source_creature_types: [...(grant.source_creature_types || [])],
+          });
+        }
       }
 
       return {

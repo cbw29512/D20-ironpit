@@ -62,7 +62,7 @@
       }
       const event = V().resolveAction(
         sequence, round, caster, target, action, S().distance(caster, target),
-        { spendAction: false, sharedDamageRolls },
+        { spendAction: false, sharedDamageRolls, spellEffect: true },
       );
       sequence += 1;
       if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);

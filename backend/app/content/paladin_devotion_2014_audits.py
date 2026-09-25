@@ -165,6 +165,15 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     "slot table also advances to two 5th-level slots."
                 ),
             ))
+        if level >= 20:
+            audits.append(_audit(
+                "holy-nimbus", "Holy Nimbus", "subclass",
+                notes=(
+                    "Action, 1/long rest, 10-round timed self effect. A universal 30-foot enemy-turn-start "
+                    "emanation deals 10 radiant damage, while timed source-type-qualified save modifiers grant "
+                    "Advantage against spells cast by fiends and undead. No Paladin-specific resolver."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)

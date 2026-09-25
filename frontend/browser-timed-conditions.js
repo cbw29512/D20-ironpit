@@ -53,6 +53,9 @@
     );
     const removed = [];
     for (const item of grouped) if (removeEffect(state, item)) removed.push(item.effect_id);
+    state.active_modifiers = (state.active_modifiers || []).filter((item) => !(
+      item.source_id === effect.source_id && item.source_effect_id === effect.source_effect_id
+    ));
     return removed;
   }
 

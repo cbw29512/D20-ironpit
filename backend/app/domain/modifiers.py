@@ -51,6 +51,7 @@ class CombatModifier(BaseModel):
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
     requires_magical_effect: bool = False
+    requires_spell_effect: bool = False
     concentration_required: bool = False
     consume_on_attack_against: bool = False
     consume_on_saving_throw: bool = False
@@ -101,6 +102,7 @@ class CombatModifier(BaseModel):
             raise ValueError("Typed attack Disadvantage requires source creature types.")
         if self.source_creature_types and self.kind not in {
             ModifierKind.ATTACKS_AGAINST_DISADVANTAGE, ModifierKind.CONDITION_IMMUNITY,
+            ModifierKind.SAVING_THROW_ADVANTAGE,
         }:
             raise ValueError(f"{self.kind.value} does not accept source creature types.")
         if self.kind in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and not self.save_ability:
@@ -113,6 +115,8 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a save ability.")
         if self.requires_magical_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
             raise ValueError("Only saving-throw Advantage can require a magical-effect context.")
+        if self.requires_spell_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
+            raise ValueError("Only saving-throw Advantage can require a spell-effect context.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
             raise ValueError("Only attack-advantage defender modifiers can be consumed by the next attack.")
         if self.consume_on_saving_throw and self.kind is not ModifierKind.SAVING_THROW_DISADVANTAGE:

@@ -13,7 +13,13 @@
       return (state.active_modifiers || []).filter((item) =>
         item.kind === "saving-throw-advantage"
         && item.save_ability === ability
-        && (!item.requires_magical_effect || Boolean(context.magicalEffect)));
+        && (!item.requires_magical_effect || Boolean(context.magicalEffect))
+        && (!item.requires_spell_effect || Boolean(context.spellEffect))
+        && (
+          !(item.source_creature_types || []).length
+          || (item.source_creature_types || []).map((value) => value.toLowerCase())
+            .includes(String(context.sourceCreatureType || "").split(" (")[0].trim().toLowerCase())
+        ));
     } catch (error) {
       console.error("Failed to resolve browser saving-throw Advantage sources", {
         error, combatant: state?.template?.name, ability,

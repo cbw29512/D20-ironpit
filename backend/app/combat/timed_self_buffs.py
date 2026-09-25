@@ -3,9 +3,11 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.modifier_stack import add_modifier
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent
+from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 
 logger = logging.getLogger(__name__)
@@ -87,7 +89,12 @@ def resolve_timed_self_buff(
             if condition is not None:
                 applied.append(condition)
                 defenses_attached = True
-        if not defenses_attached and (action.damage_resistances or action.debuff_counters):
+        if not defenses_attached and (
+            action.damage_resistances
+            or action.debuff_counters
+            or action.saving_throw_advantage_grants
+            or action.start_turn_emanation_damage is not None
+        ):
             apply_timed_condition(
                 member.state,
                 action.id,
@@ -102,6 +109,20 @@ def resolve_timed_self_buff(
                 owned_debuff_counters=action.debuff_counters,
                 use_default_poison_recovery=False,
             )
+
+        for grant in action.saving_throw_advantage_grants:
+            for ability in grant.abilities:
+                add_modifier(member.state, CombatModifier(
+                    id=f"{member.combatant_id}:{action.id}:save-advantage:{ability}",
+                    source_id=member.combatant_id,
+                    source_effect_id=action.id,
+                    source_name=grant.source_name,
+                    kind=ModifierKind.SAVING_THROW_ADVANTAGE,
+                    save_ability=ability,
+                    requires_magical_effect=grant.requires_magical_effect,
+                    requires_spell_effect=grant.requires_spell_effect,
+                    source_creature_types=list(grant.source_creature_types),
+                ))
 
         return BattleEvent(
             sequence=sequence,

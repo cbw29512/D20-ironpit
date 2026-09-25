@@ -94,6 +94,7 @@ def resolve_spell(
             abs(caster.position_ft - target.position_ft), dice, setup,
             turn_key=turn_key, spend_action=False,
             shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
+            spell_effect=True,
         )
         event = chain[0]
         if ward is not None:

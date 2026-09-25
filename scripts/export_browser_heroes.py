@@ -161,6 +161,12 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
     }
     if action.debuff_counters:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
+    if action.saving_throw_advantage_grants:
+        row["savingThrowAdvantageGrants"] = [
+            item.model_dump(mode="json") for item in action.saving_throw_advantage_grants
+        ]
+    if action.start_turn_emanation_damage is not None:
+        row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     return row
 
 

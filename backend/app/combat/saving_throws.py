@@ -29,13 +29,19 @@ def resolve_save_action(
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
     check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | list[list[int]] | None = None, affected_states: list[CombatantState] | None = None,
+    spell_effect: bool = False,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     if check_resource and not action_resource_available(actor.state, action):
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
-    save_context = SavingThrowContext(magical_effect=action.magical_effect)
+    source_type = str(actor.state.template.creature_type).split(" (")[0].strip().casefold() if actor.state.template.creature_type else None
+    save_context = SavingThrowContext(
+        magical_effect=action.magical_effect,
+        spell_effect=spell_effect,
+        source_creature_type=source_type,
+    )
     advantage_sources = saving_throw_advantage_source_names(
         target.state, action.save_ability, save_context,
     )

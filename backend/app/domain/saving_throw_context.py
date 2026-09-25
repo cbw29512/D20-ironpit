@@ -9,3 +9,5 @@ class SavingThrowContext:
 
     condition_id: str | None = None
     magical_effect: bool = False
+    spell_effect: bool = False
+    source_creature_type: str | None = None

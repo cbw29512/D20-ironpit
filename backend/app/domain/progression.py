@@ -73,11 +73,19 @@ class SavingThrowAdvantageGrant(BaseModel):
     source_name: str = Field(min_length=1)
     abilities: list[AbilityName] = Field(min_length=1)
     requires_magical_effect: bool = False
+    requires_spell_effect: bool = False
+    source_creature_types: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_abilities(self) -> "SavingThrowAdvantageGrant":
         if len(set(self.abilities)) != len(self.abilities):
             raise ValueError("Saving-throw Advantage abilities must be unique.")
+        normalized = [item.strip().casefold() for item in self.source_creature_types]
+        if any(not item for item in normalized):
+            raise ValueError("Saving-throw Advantage source creature types must be non-empty.")
+        if len(set(normalized)) != len(normalized):
+            raise ValueError("Saving-throw Advantage source creature types must be unique.")
+        self.source_creature_types = normalized
         return self
 
 

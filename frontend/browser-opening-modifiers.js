@@ -37,6 +37,8 @@
             kind: "saving-throw-advantage",
             save_ability: ability,
             requires_magical_effect: Boolean(grant.requires_magical_effect),
+            requires_spell_effect: Boolean(grant.requires_spell_effect),
+            source_creature_types: [...(grant.source_creature_types || [])],
           });
         }
       }

@@ -40,6 +40,15 @@ def _saving_throw_advantage_modifiers(
             if item.kind is ModifierKind.SAVING_THROW_ADVANTAGE
             and item.save_ability == ability
             and (not item.requires_magical_effect or resolved_context.magical_effect)
+            and (not item.requires_spell_effect or resolved_context.spell_effect)
+            and (
+                not item.source_creature_types
+                or (
+                    resolved_context.source_creature_type is not None
+                    and resolved_context.source_creature_type.casefold()
+                    in {value.casefold() for value in item.source_creature_types}
+                )
+            )
         ]
     except Exception:
         logger.exception(
