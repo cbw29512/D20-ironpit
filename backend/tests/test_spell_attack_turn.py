@@ -61,3 +61,24 @@ def test_live_turn_rescues_zero_hp_ally_before_offensive_spell_attack() -> None:
     assert ally.state.current_hp > 0
     assert all(event.feature_id != "guiding-bolt" for event in events)
     assert caster.state.resources[0].current_uses == 1
+
+
+def test_live_turn_upcasts_guiding_bolt_when_higher_slot_is_stronger() -> None:
+    caster = _member("caster-upcast", "heroes", 0, caster=True)
+    caster.state.resources.append(caster.state.resources[0].model_copy(update={
+        "id": "spell-slot-2", "name": "Level 2 Slot", "current_uses": 1, "max_uses": 1,
+    }))
+    target = _member("target-upcast", "monsters", 30)
+    setup = EncounterSetup(heroes=[caster], monsters=[target], hero_total_levels=1, monster_total_cr="1")
+
+    events, sequence = resolve_combat_turn(
+        1, 1, caster, target, setup,
+        FixedDiceProvider([15, 6, 5, 4, 3, 2]),
+    )
+
+    assert sequence == 2
+    assert events[0].feature_id == "guiding-bolt"
+    assert events[0].damage_roll is not None and events[0].damage_roll.total == 20
+    slots = {item.id: item.current_uses for item in caster.state.resources}
+    assert slots["spell-slot-1"] == 2
+    assert slots["spell-slot-2"] == 0
