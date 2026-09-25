@@ -36,6 +36,7 @@ def _audit(
 
 def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
     try:
+        aura_radius = 30 if level >= 18 else 10
         audits = [
             _audit("human-ability-increase", "Human Ability Score Increase", "species", combat=False),
             _audit("lay-on-hands", "Lay on Hands", "class"),
@@ -79,17 +80,17 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
         if level >= 6:
             audits.append(_audit(
                 "aura-of-protection", "Aura of Protection", "class",
-                notes="The strongest 10-foot Paladin save bonus is recalculated from live encounter positions.",
+                notes=f"The strongest Paladin save bonus within {aura_radius} feet is recalculated from live encounter positions.",
             ))
         if level >= 7:
             audits.append(_audit(
                 "aura-of-devotion", "Aura of Devotion", "subclass",
-                notes="Charm immunity propagates dynamically to allies within 10 feet.",
+                notes=f"Charm immunity propagates dynamically to allies within {aura_radius} feet.",
             ))
         if level >= 10:
             audits.append(_audit(
                 "aura-of-courage", "Aura of Courage", "class",
-                notes="Fear immunity propagates dynamically to allies within 10 feet.",
+                notes=f"Fear immunity propagates dynamically to allies within {aura_radius} feet.",
             ))
         if level >= 11:
             audits.append(_audit(
@@ -144,6 +145,14 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 18:
+            audits.append(_audit(
+                "aura-improvements", "Aura Improvements", "class",
+                notes=(
+                    "Reuses the existing Aura of Protection, Aura of Courage, and Aura of Devotion "
+                    "resolution with the source-owned aura radius increased from 10 feet to 30 feet."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)
