@@ -1,4 +1,5 @@
 from app.content.character_resource_audit import assert_character_resources_raw_ready
+from app.content.paladin_2014_spell_package import build_paladin_2014_spell_package, prepared_count_2014
 from app.content.paladin_devotion_2014_combat_profile import build_aurelia_brightshield_2014_combat_profile
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
@@ -20,6 +21,15 @@ def test_level_18_is_incremental_aura_expansion_progression() -> None:
     assert [resources[f"spell-slot-{level}"] for level in range(1, 6)] == [4, 3, 3, 3, 1]
     assert resources["lay-on-hands"] == 90
     assert resources["cleansing-touch"] == 4
+
+    charisma_modifier = hero.ability_scores.modifier("charisma")
+    assert prepared_count_2014(18, charisma_modifier) == 13
+    package = build_paladin_2014_spell_package(18, charisma_modifier)
+    assert package is not None
+    assert len(package.spells) == 13
+    locate_object = next(spell for spell in package.spells if spell.id == "locate-object")
+    assert locate_object.spell_level == 2
+    assert locate_object.required_capabilities == ["arena-out-of-scope"]
 
     features17 = level17.progression_features
     features18 = hero.progression_features
