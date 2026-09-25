@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 from app.combat.condition_rules import is_incapacitated
+from app.combat.timed_conditions import timed_action_cost_suppressed
 from app.domain.models import CombatantState
 
 ActionCost = Literal["action", "bonus_action", "reaction"]
