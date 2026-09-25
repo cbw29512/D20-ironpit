@@ -14,7 +14,7 @@ from app.content.cleric_2014_level1_spells import (
     sacred_flame_2014,
     shield_of_faith_2014,
 )
-from app.content.cleric_2014_level4_spells import death_ward_2014, guardian_of_faith_2014
+from app.content.cleric_2014_level4_spells import guardian_of_faith_2014
 from app.content.cleric_2014_level5_spells import mass_cure_wounds_2014
 from app.content.cleric_2014_divine_intervention import divine_intervention_full_heal_2014
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
@@ -26,6 +26,7 @@ from app.content.cleric_life_2014_runtime_support import (
     seraphine_warhammer,
 )
 from app.content.shared_spells_2014 import (
+    death_ward_2014,
     aid_2014,
     beacon_of_hope_2014,
     lesser_restoration_2014,
