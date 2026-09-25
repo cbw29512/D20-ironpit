@@ -7,6 +7,7 @@ from typing import Any
 
 from app.content.canonical_hero_policy import canonical_spell_package
 from app.content.certified_heroes import build_all_certified_hero_entries
+from app.content.class_spell_progression import CASTING_ABILITIES
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -131,6 +132,39 @@ def _spell_attack(action: Any) -> dict[str, Any]:
     return row
 
 
+def _persistent_spell_attack(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id,
+            "name": action.name,
+            "attack": _spell_attack(action.attack),
+            "durationRounds": action.duration_rounds,
+            "moveFt": action.move_ft,
+            "attackReachFt": action.attack_reach_ft,
+            "upcastIntervalLevels": action.upcast_interval_levels,
+        }
+    except Exception:
+        logger.exception("Failed to serialize persistent spell attack %s.", action.id)
+        raise
+
+
+def _persistent_hazard(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            "durationRounds": action.duration_rounds, "footprintSize": _value(action.footprint_size),
+            "triggerRadiusFt": action.trigger_radius_ft, "saveAbility": action.save_ability,
+            "dc": action.dc, "failureDamage": action.failure_damage,
+            "successDamage": action.success_damage, "damageType": action.damage_type,
+            "maxTotalDamage": action.max_total_damage, "animation": action.animation,
+            "source": action.source,
+        }
+    except Exception:
+        logger.exception("Failed to serialize persistent hazard %s.", action.id)
+        raise
+
+
 def _defense(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
            "range": action.range_ft, "durationMinutes": action.duration_minutes,
@@ -146,11 +180,17 @@ def _defense(action: Any) -> dict[str, Any]:
 
 
 def _healing(action: Any) -> dict[str, Any]:
-    return {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
-            "targetMode": action.target_mode, "maxTargets": action.max_targets,
-            "diceCount": action.dice_count, "diceSize": action.dice_size,
-            "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
-            "resourceCost": action.resource_cost, "animation": action.animation}
+    try:
+        return {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
+                "targetMode": action.target_mode, "maxTargets": action.max_targets, "areaRadiusFt": action.area_radius_ft,
+                "diceCount": action.dice_count, "diceSize": action.dice_size,
+                "healingBonus": action.healing_bonus, "restoreToEffectiveMax": action.restore_to_effective_max,
+                "percentileSuccessMax": action.percentile_success_max, "resourceId": action.resource_id,
+                "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
+                "animation": action.animation}
+    except Exception:
+        logger.exception("Failed to serialize healing action %s.", action.id)
+        raise
 
 
 def _save_advantage_grant(grant: Any) -> dict[str, Any]:
@@ -208,13 +248,14 @@ def _effect_removal(action: Any) -> dict[str, Any]:
 
 def _spell_package(class_id: str, level: int, template: CombatantTemplate):
     if not (
-        template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions
-        or template.healing_actions
+        template.spell_save_actions or template.spell_attack_actions or template.persistent_spell_attack_actions
+        or template.persistent_hazard_actions or template.defensive_spell_actions or template.healing_actions
     ):
         return None
     casting_modifier = None
-    if class_id == "paladin" and template.ability_scores is not None:
-        casting_modifier = template.ability_scores.modifier("charisma")
+    casting_ability = CASTING_ABILITIES.get(class_id)
+    if casting_ability is not None and template.ability_scores is not None:
+        casting_modifier = template.ability_scores.modifier(casting_ability)
     return canonical_spell_package(class_id, level, template.ruleset, casting_modifier)
 
 
@@ -231,6 +272,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
+        "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
         "condition_immunities": list(template.condition_immunities),
         "passive_modifier_grants": [item.model_dump(mode="json") for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
@@ -298,8 +340,14 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.turning_failure_damage:
         row["turning_failure_damage"] = progression.turning_failure_damage.model_dump()
+    if progression.turning_failure_destroy_max_cr:
+        row["turning_failure_destroy_max_cr"] = progression.turning_failure_destroy_max_cr
     if progression.slot_healing_other_self_rider:
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
+    if progression.outgoing_healing_dice_maximizer:
+        row["outgoing_healing_dice_maximizer"] = progression.outgoing_healing_dice_maximizer.model_dump()
+    if progression.once_per_turn_weapon_hit_damage_rider:
+        row["once_per_turn_weapon_hit_damage_rider"] = progression.once_per_turn_weapon_hit_damage_rider.model_dump()
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
@@ -314,6 +362,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+    if template.persistent_spell_attack_actions:
+        row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
     if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
     if template.effect_removal_actions: row["effect_removal_actions"] = [_effect_removal(item) for item in template.effect_removal_actions]
