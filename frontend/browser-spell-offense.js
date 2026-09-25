@@ -8,24 +8,37 @@
   const SR = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
 
   function choose(member, setup, turnKey) {
-    const attack = AP()?.choose(member, setup, turnKey) || null;
-    const save = SP()?.choose(member, setup, turnKey) || null;
-    if (!attack && !save) return null;
-    const useAttack = !save || (attack && (attack.expectedDamage > save.expectedDamage
-      || (attack.expectedDamage === save.expectedDamage && attack.action.level <= save.action.level)));
-    return useAttack ? { kind: "attack", choice: attack } : { kind: "save", choice: save };
+    try {
+      const attack = AP()?.choose(member, setup, turnKey) || null;
+      const save = SP()?.choose(member, setup, turnKey) || null;
+      if (!attack && !save) return null;
+      const useAttack = !save || (attack && (attack.expectedDamage > save.expectedDamage
+        || (attack.expectedDamage === save.expectedDamage && attack.slotLevel <= save.slotLevel)));
+      return useAttack ? { kind: "attack", choice: attack } : { kind: "save", choice: save };
+    } catch (error) {
+      console.error("Browser spell-offense selection failed", { member: member?.combatant_id, error });
+      throw error;
+    }
   }
 
   function resolveChoice(sequence, round, member, setup, turnKey, selected) {
-    if (!selected) return { events: [], sequence };
-    if (selected.kind === "attack") {
-      const event = AR().resolve(sequence, round, member, selected.choice.target, selected.choice.action, setup, turnKey);
-      sequence += 1;
-      if (!DR()) return { events: [event], sequence };
-      return DR().chain(sequence, round, member, event, setup, turnKey);
+    try {
+      if (!selected) return { events: [], sequence };
+      if (selected.kind === "attack") {
+        const event = AR().resolve(
+          sequence, round, member, selected.choice.target, selected.choice.action, setup, turnKey,
+          selected.choice.slotLevel,
+        );
+        sequence += 1;
+        if (!DR()) return { events: [event], sequence };
+        return DR().chain(sequence, round, member, event, setup, turnKey);
+      }
+      if (selected.kind === "save") return SR().resolve(sequence, round, member, setup, selected.choice, turnKey);
+      throw new Error(`Unknown spell-offense choice kind: ${String(selected.kind)}.`);
+    } catch (error) {
+      console.error("Browser spell-offense resolution failed", { member: member?.combatant_id, error });
+      throw error;
     }
-    if (selected.kind === "save") return SR().resolve(sequence, round, member, setup, selected.choice, turnKey);
-    throw new Error(`Unknown spell-offense choice kind: ${String(selected.kind)}.`);
   }
 
   function resolve(sequence, round, member, setup, turnKey) {
