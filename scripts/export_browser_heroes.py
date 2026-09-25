@@ -193,6 +193,21 @@ def _healing(action: Any) -> dict[str, Any]:
         raise
 
 
+def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id, "name": action.name, "actionCost": action.action_cost,
+            "range": action.range_ft, "targetMode": action.target_mode,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "diceCount": action.dice_count, "diceSize": action.dice_size,
+            "testKinds": list(action.test_kinds), "durationRounds": action.duration_rounds,
+            "priority": action.priority, "animation": action.animation,
+        }
+    except Exception:
+        logger.exception("Failed to serialize d20 bonus-die action %s.", action.id)
+        raise
+
+
 def _save_advantage_grant(grant: Any) -> dict[str, Any]:
     row = grant.model_dump(mode="json")
     if not grant.required_effect_tags:
@@ -272,6 +287,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
+        "d20BonusDieActions": [_d20_bonus_die_action(item) for item in template.d20_bonus_die_actions],
         "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
         "condition_immunities": list(template.condition_immunities),
         "passive_modifier_grants": [item.model_dump(mode="json") for item in template.passive_modifier_grants],
