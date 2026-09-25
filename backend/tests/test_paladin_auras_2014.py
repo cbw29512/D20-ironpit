@@ -100,3 +100,23 @@ def test_multiple_paladin_protection_auras_use_only_the_strongest_bonus() -> Non
     assert saving_throw_flat_bonus(ally.state) == 3
     assert saving_throw_flat_bonus(first.state) == 3
     assert saving_throw_flat_bonus(stronger.state) == 3
+
+def test_level18_aura_expansion_uses_each_sources_declared_radius() -> None:
+    level17_setup, level17, level17_ally = _setup(17, ally_position=25)
+    sync_paladin_auras_2014(level17_setup)
+    assert level17.state.template.progression_features.aura_radius_2014_ft == 10
+    assert saving_throw_flat_bonus(level17_ally.state) == 0
+
+    setup, paladin, ally = _setup(18, ally_position=25)
+    sync_paladin_auras_2014(setup)
+    assert paladin.state.template.progression_features.aura_radius_2014_ft == 30
+    assert saving_throw_flat_bonus(ally.state) == 4
+    assert condition_is_immune(ally.state, "charmed") is True
+    assert condition_is_immune(ally.state, "frightened") is True
+
+    ally.position_ft = 35
+    sync_paladin_auras_2014(setup)
+    assert saving_throw_flat_bonus(ally.state) == 0
+    assert condition_is_immune(ally.state, "charmed") is False
+    assert condition_is_immune(ally.state, "frightened") is False
+
