@@ -21,6 +21,7 @@ const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const guidingBolt = {
   id: "guiding-bolt", name: "Guiding Bolt", level: 1, actionCost: "action", range: 120,
   attackBonus: 5, damageDiceCount: 4, damageDiceSize: 6, damageBonus: 0, damageType: "radiant",
+  upcastDicePerLevel: 1,
   onHitModifierEffects: [{
     kind: "attacks-against-advantage", flatBonus: 0, diceCount: 0, diceSize: 0, damageType: null,
     consumeOnAttackAgainst: true, expiresAfterSourceTurns: 1,
@@ -43,7 +44,7 @@ function dice(values) {
 function member(id, side, position, options = {}) {
   const template = structuredClone(base);
   template.id = `template-${id}`; template.name = id; template.armor_class = options.armorClass ?? 10;
-  template.resources = options.caster ? { "spell-slot-1": 1 } : {};
+  template.resources = options.caster ? { "spell-slot-1": 1, "spell-slot-2": 1 } : {};
   template.spell_attack_actions = options.caster ? [guidingBolt] : [];
   template.spell_save_actions = [];
   return { combatant_id: id, side, position_ft: position, state: S.buildState(template) };
@@ -52,15 +53,16 @@ function member(id, side, position, options = {}) {
 const caster = member("caster", "heroes", 0, { caster: true });
 const target = member("target", "monsters", 30);
 const setup = { heroes: [caster], monsters: [target] };
-dice([15, 6, 5, 4, 3]);
+dice([15, 6, 5, 4, 3, 2]);
 const turn = T.resolveTurn(1, 1, caster, setup);
 
 assert.equal(turn.sequence, 2);
 assert.equal(turn.events.length, 1);
 assert.equal(turn.events[0].feature_id, "guiding-bolt");
 assert.equal(turn.events[0].hit, true);
-assert.equal(turn.events[0].damage_roll.total, 18);
-assert.equal(caster.state.resources["spell-slot-1"], 0);
+assert.equal(turn.events[0].damage_roll.total, 20);
+assert.equal(caster.state.resources["spell-slot-1"], 1);
+assert.equal(caster.state.resources["spell-slot-2"], 0);
 assert.equal(caster.state.action_available, false);
 assert.equal(target.state.active_modifiers.length, 1);
 
