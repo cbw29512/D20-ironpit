@@ -409,7 +409,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         row: dict[str, Any] = {
             "id": template.id, "name": template.name, "archetype": template.archetype,
             "level": template.level, "challenge_rating": template.challenge_rating, "kind": template.kind,
-            "ruleset": template.ruleset, "creature_type": template.creature_type, "size": template.size.value,
+            "ruleset": template.ruleset, "size": template.size.value,
             "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
             "initiative_bonus": template.initiative_bonus,
@@ -427,6 +427,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "source": template.source, **_progression_features(template),
         }
         if template.kind == "monster":
+            row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
             row["source_bonus_action_names"] = list(template.source_bonus_action_names)
