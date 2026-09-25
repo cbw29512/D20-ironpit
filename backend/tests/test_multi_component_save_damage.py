@@ -28,7 +28,10 @@ def _actor() -> EncounterCombatant:
 
 def test_one_save_resolves_typed_damage_components_independently() -> None:
     target_template = build_goblin_warrior().model_copy(
-        update={"damage_resistances": [DamageType.FIRE]},
+        update={
+            "damage_resistances": [DamageType.FIRE],
+            "saving_throw_bonuses": {"dexterity": 2},
+        },
     )
     target = EncounterCombatant(
         combatant_id="target", side="monsters", position_ft=30,
