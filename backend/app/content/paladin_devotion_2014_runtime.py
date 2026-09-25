@@ -22,16 +22,16 @@ _SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
     11: (4, 3, 3), 12: (4, 3, 3), 13: (4, 3, 3, 1), 14: (4, 3, 3, 1),
-    15: (4, 3, 3, 2), 16: (4, 3, 3, 2), 17: (4, 3, 3, 3, 1), 18: (4, 3, 3, 3, 1),
+    15: (4, 3, 3, 2), 16: (4, 3, 3, 2), 17: (4, 3, 3, 3, 1), 18: (4, 3, 3, 3, 1), 19: (4, 3, 3, 3, 2),
 }
 
 
 def _scores(level: int) -> AbilityScores:
     strength = 16 + (2 if level >= 4 else 0) + (2 if level >= 12 else 0)
-    charisma = 15 + (2 if level >= 8 else 0) + (2 if level >= 16 else 0)
+    charisma = 15 + (2 if level >= 8 else 0) + (2 if level >= 16 else 0) + (1 if level >= 19 else 0)
     return AbilityScores(
         strength=strength,
-        dexterity=11,
+        dexterity=11 + (1 if level >= 19 else 0),
         constitution=14,
         intelligence=9,
         wisdom=13,
@@ -79,8 +79,8 @@ def _improved_divine_smite(level: int) -> list[OnHitDamage]:
 
 def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 19):
-            raise ValueError("2014 Devotion Paladin runtime covers levels 1 through 18.")
+        if level not in range(1, 20):
+            raise ValueError("2014 Devotion Paladin runtime covers levels 1 through 19.")
         scores = _scores(level)
         charisma_modifier = scores.modifier("charisma")
         aura_bonus = charisma_modifier if level >= 6 else 0

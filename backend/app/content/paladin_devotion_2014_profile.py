@@ -25,7 +25,10 @@ def _species() -> list[AbilityIncrease]:
 
 
 def _advancements(level: int) -> list[AbilityIncrease]:
-    milestones = ((4, "strength", 2), (8, "charisma", 2), (12, "strength", 2), (16, "charisma", 2))
+    milestones = (
+        (4, "strength", 2), (8, "charisma", 2), (12, "strength", 2), (16, "charisma", 2),
+        (19, "charisma", 1), (19, "dexterity", 1),
+    )
     return [
         AbilityIncrease(ability=ability, amount=amount)
         for required, ability, amount in milestones
@@ -46,8 +49,8 @@ def _final(
 
 def build_aurelia_brightshield_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 19):
-            raise ValueError("2014 Aurelia profile covers levels 1 through 18.")
+        if level not in range(1, 20):
+            raise ValueError("2014 Aurelia profile covers levels 1 through 19.")
         base = _base()
         species = _species()
         advances = _advancements(level)

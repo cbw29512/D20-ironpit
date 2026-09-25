@@ -153,6 +153,18 @@ def build_paladin_2014_feature_audits(level: int) -> list[FeatureAudit]:
                     "resolution with the source-owned aura radius increased from 10 feet to 30 feet."
                 ),
             ))
+        if level >= 19:
+            audits.append(_audit(
+                "ability-score-improvement-l19",
+                "Ability Score Improvement (+1 Charisma, +1 Dexterity)",
+                "class",
+                notes=(
+                    "Split ASI caps Charisma at 20 and raises Dexterity to 12. Aura of Protection, "
+                    "Sacred Weapon, Cleansing Touch, spell DC/preparation, Persuasion, initiative, and "
+                    "Dexterity-derived values all recompile from the shared ability scores. The Paladin "
+                    "slot table also advances to two 5th-level slots."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile 2014 Paladin feature audits at level %s", level)

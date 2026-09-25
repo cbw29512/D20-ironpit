@@ -16,7 +16,7 @@ Current certified runtime stops at Aurelia level 16. The purpose of this documen
 | 16 | Ability Score Improvement | Canonical +2 Charisma ASI through existing ability-score progression. Derived Charisma modifier updates Aura of Protection, Sacred Weapon, Cleansing Touch uses, Persuasion, and spell preparation. No new combat primitive. |
 | 17 | 5th-level spell slots; Devotion oath spells *commune*, *flame strike* | Slot resource is existing. *Commune* is noncombat for Iron Pit. *Flame strike* reuses save-damage/AoE primitives plus the universal multi-component save-damage path: one Dexterity save, 4d6 fire + 4d6 radiant, half of each on success. |
 | 18 | Aura improvements | Resolved as a parameter-only delta: the existing Protection / Courage / Devotion aura engine reads source-owned `aura_radius_2014_ft`; levels 6–17 use 10 ft and level 18+ uses 30 ft. No new aura resolver. |
-| 19 | Ability Score Improvement | Existing canonical ability-score/derived-stat progression. No new combat primitive. |
+| 19 | Ability Score Improvement; 5th-level slot progression | Split +1 Charisma / +1 Dexterity through the existing ability-score pipeline: CHA 19→20, DEX 11→12. Derived Aura of Protection, Sacred Weapon, Cleansing Touch, spell DC/preparation, Persuasion, initiative, and Dexterity values update automatically. Spell slots advance 4/3/3/3/1 → 4/3/3/3/2. Prepared capacity becomes 14; Raise Dead is retained as a legal arena-neutral preparation. No new combat primitive. |
 | 20 | Holy Nimbus | Composite timed self effect: Action activation, 1/long-rest resource, 1-minute duration, 30-ft bright-light enemy start-of-turn radiant damage, plus advantage on saves against spells cast by fiends/undead. Reuse timed-self-effect lifecycle and start-of-turn damage hooks; audit whether source-creature-type-gated save advantage is already generic before adding anything. |
 
 ## Existing engine capabilities already confirmed in the current Paladin lane
@@ -57,7 +57,7 @@ Repository inventory after level 12 certification found:
 5. Level 16: canonical +2 Charisma ASI, 4/3/3/2 slots retained, prepared capacity rises to 12; legal Find Steed remains summon-unavailable and Create Food and Water remains noncombat under existing arena contracts.
 6. Level 17 after universal multi-component save damage plus *flame strike* Python/browser parity; *commune* remains explicitly noncombat.
 7. Level 18 aura-radius parameterization.
-8. Level 19 ASI.
+8. Level 19 split ASI + second 5th-level slot + legal 14-spell preparation package.
 9. Level 20 Holy Nimbus as a composition of universal timed/action/resource/aura/start-turn/save-defense mechanics.
 
 No level is READY merely because its row appears in this audit. Certification remains earned through runtime behavior, Python tests, browser parity, generated manifests, and CI.
