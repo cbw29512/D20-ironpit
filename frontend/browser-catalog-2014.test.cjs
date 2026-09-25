@@ -52,7 +52,7 @@ load("browser-catalog.js");
   assert.equal(paladins.find((card) => card.level === 3).subclass_id, "oath-devotion");
   assert.equal(clerics.find((card) => card.level === 1).subclass_id, "life-domain");
   assert.ok(catalog.heroes.every((card) => card.build_id === "canonical-2014"));
-  const skeleton = catalog.monsters.find((card) => card.id === "2014-skeleton");
+  const skeleton = catalog.monsters.find((card) => card.runnable_template_id === "2014-skeleton");
   assert.equal(skeleton?.creature_type?.toLowerCase(), "undead");
   console.log("2014 catalog exposes six complete canonical 1-20 progressions including Life Cleric, with monster creature types preserved.");
 })().catch((error) => {
