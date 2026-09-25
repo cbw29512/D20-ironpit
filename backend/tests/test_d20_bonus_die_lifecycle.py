@@ -9,11 +9,12 @@ from app.combat.d20_bonus_dice import (
     resolve_d20_bonus_die_grant,
 )
 from app.combat.dice import FixedDiceProvider
-from app.combat.encounter_setup import build_encounter_setup
+from app.combat.state import build_combatant_state
 from app.content.bard_2014_inspiration import build_bardic_inspiration_2014
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.domain.events import DiceRoll
-from app.domain.models import EncounterSelection, ResourceDefinition
+from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.models import ResourceDefinition
 
 
 def _setup():
@@ -26,11 +27,18 @@ def _setup():
     })
     ally = build_karnok_stoneward_2014(5).model_copy(update={"id": "ally-fixture", "name": "Ally"})
     enemy = build_karnok_stoneward_2014(5).model_copy(update={"id": "enemy-fixture", "name": "Enemy"})
-    return build_encounter_setup(EncounterSelection(
-        hero_templates=[bard, ally],
-        monster_templates=[enemy],
-        starting_distance_ft=30,
-    ))
+    return EncounterSetup(
+        heroes=[
+            EncounterCombatant(combatant_id="hero-bard", side="heroes", position_ft=0, state=build_combatant_state(bard)),
+            EncounterCombatant(combatant_id="hero-ally", side="heroes", position_ft=20, state=build_combatant_state(ally)),
+        ],
+        monsters=[
+            EncounterCombatant(combatant_id="monster-enemy", side="monsters", position_ft=30, state=build_combatant_state(enemy)),
+        ],
+        hero_total_levels=10,
+        monster_total_cr="5",
+        ruleset="2014",
+    )
 
 
 def test_grant_spend_and_expire_are_fresh_fight_state() -> None:
