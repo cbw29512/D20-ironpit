@@ -57,6 +57,10 @@ _PREPARED = (
     # 2nd-level 2014 Paladin preparation and does not alter a standard Iron Pit combat,
     # so it fills the new preparation slot without adding a combat resolver.
     _spell("locate-object", "Locate Object", "utility", "arena-out-of-scope", level=2, min_level=5),
+    # Level 19 reaches 14 prepared spells after the split ASI caps Charisma at 20.
+    # Raise Dead is a legal 5th-level Paladin spell with a one-hour casting time, so
+    # it is retained as source/legal-build data without entering arena action selection.
+    _spell("raise-dead", "Raise Dead", "utility", "arena-out-of-scope", level=5, min_level=17),
 )
 
 _OATH = (
