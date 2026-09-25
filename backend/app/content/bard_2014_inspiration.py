@@ -24,6 +24,7 @@ def build_bardic_inspiration_2014(level: int) -> D20BonusDieAction:
             dice_size=row.bardic_inspiration_die,
             test_kinds=["attack", "saving_throw", "ability_check"],
             duration_rounds=100,
+            exclusive_group="bardic-inspiration",
             priority=25,
             animation="inspiration",
         )
