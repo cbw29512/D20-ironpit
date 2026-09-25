@@ -113,7 +113,7 @@ def resolve_healing(
             raise ValueError("Spell-slot healing requires an active turn key.")
         mark_slot_spell_cast(healer.state, turn_key)
     spend(healer.state, action.action_cost)
-    rolls = [action.dice_size for _ in range(action.dice_count)] if healing_is_maximized(target.state) else [dice.roll(action.dice_size) for _ in range(action.dice_count)]
+    rolls = [action.dice_size for _ in range(action.dice_count)] if healing_dice_are_maximized(healer, target) else [dice.roll(action.dice_size) for _ in range(action.dice_count)]
     total = sum(rolls) + action.healing_bonus
     hp_before = target.state.current_hp
     healed = restore_hit_points(target.state, total)
