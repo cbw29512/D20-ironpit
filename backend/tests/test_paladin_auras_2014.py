@@ -65,7 +65,7 @@ def test_devotion_and_courage_grant_dynamic_condition_immunity() -> None:
     assert condition_is_immune(ally.state, "frightened") is False
 
 
-def test_incapacitated_or_dead_paladin_stops_granting_auras() -> None:
+def test_unconscious_or_dead_paladin_stops_granting_auras() -> None:
     setup, paladin, ally = _setup(10)
     sync_paladin_auras_2014(setup)
     assert saving_throw_flat_bonus(paladin.state) == 3
@@ -86,6 +86,17 @@ def test_incapacitated_or_dead_paladin_stops_granting_auras() -> None:
     sync_paladin_auras_2014(setup)
     assert saving_throw_flat_bonus(ally.state) == 0
     assert condition_is_immune(ally.state, "frightened") is False
+
+
+def test_conscious_incapacitated_paladin_still_grants_auras() -> None:
+    setup, paladin, ally = _setup(10)
+    paladin.state.active_effect_ids.append("stunned")
+
+    sync_paladin_auras_2014(setup)
+
+    assert saving_throw_flat_bonus(ally.state) == 3
+    assert condition_is_immune(ally.state, "charmed") is True
+    assert condition_is_immune(ally.state, "frightened") is True
 
 
 def test_multiple_paladin_protection_auras_use_only_the_strongest_bonus() -> None:
