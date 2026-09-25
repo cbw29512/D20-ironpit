@@ -7,7 +7,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.debuff_counters import movement_counter_cost
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
-from app.domain.models import CombatantState, CombatantTemplate, DebuffCounter
+from app.domain.models import CombatantState, CombatantTemplate, DebuffCounter, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
 from app.combat.timed_condition_lifecycle import (
     expire_start_of_turn_conditions,
@@ -63,11 +63,6 @@ def apply_timed_condition(
             effect_id,
             source_template,
             source_is_magical=source_is_magical,
-            suppress_action=suppress_action,
-            suppress_bonus_action=suppress_bonus_action,
-            suppress_reactions=suppress_reactions,
-            suppress_movement=suppress_movement,
-            zero_hp_replacement_hp=zero_hp_replacement_hp,
         ):
             return None
         if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
@@ -103,6 +98,11 @@ def apply_timed_condition(
             ends_if_source_incapacitated=ends_if_source_incapacitated,
             ends_if_source_dead=ends_if_source_dead,
             source_is_magical=source_is_magical,
+            suppress_action=suppress_action,
+            suppress_bonus_action=suppress_bonus_action,
+            suppress_reactions=suppress_reactions,
+            suppress_movement=suppress_movement,
+            zero_hp_replacement_hp=zero_hp_replacement_hp,
             owned_damage_resistances=owned_damage_resistances or [],
             owned_debuff_counters=owned_debuff_counters or [],
         ))
