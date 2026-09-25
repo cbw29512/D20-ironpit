@@ -4,6 +4,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.bloodied import is_bloodied
 from app.combat.defensive_modifier_rules import healing_is_maximized
 from app.combat.dice import DiceProvider
+from app.combat.healing_maximize import healing_dice_are_maximized
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.zero_hp import restore_hit_points
