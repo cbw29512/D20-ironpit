@@ -7,6 +7,7 @@ from app.content.canonical_combat_build_policy import (
     canonical_background_increases,
 )
 from app.content.canonical_spell_policy import canonical_spell_package
+from app.content.class_spell_progression import CASTING_ABILITIES
 from app.content.hero_progressions import COMBAT_PLAN_BY_CLASS, HERO_BY_CLASS
 from app.content.melee_loadout_policy import choose_melee_loadout
 from app.domain.character_builds import CharacterBuildProfile, FeatureAudit, RulesetId
@@ -116,9 +117,10 @@ def assert_canonical_profile_policy(profile: CharacterBuildProfile) -> None:
 
     plan = canonical_combat_plan(profile.class_id)
     if plan.mode in {"caster", "hybrid"}:
+        casting_ability = CASTING_ABILITIES.get(profile.class_id)
         casting_modifier = (
-            profile.final_ability_scores.modifier("charisma")
-            if profile.class_id == "paladin" else None
+            profile.final_ability_scores.modifier(casting_ability)
+            if casting_ability is not None else None
         )
         canonical_spell_package(profile.class_id, profile.level, profile.ruleset, casting_modifier)
     expected_loadout = canonical_melee_loadout(profile)
