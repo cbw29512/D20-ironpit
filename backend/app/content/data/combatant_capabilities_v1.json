@@ -4500,6 +4500,7 @@
         "damage_bonus": 0,
         "damage_type": "necrotic",
         "success_damage": "half",
+        "damage_components": [],
         "upcast_dice_per_level": 1,
         "concentration": false,
         "animation": "inflict-wounds"
@@ -4517,6 +4518,7 @@
         "damage_bonus": 0,
         "damage_type": "necrotic",
         "success_damage": "half",
+        "damage_components": [],
         "upcast_dice_per_level": 1,
         "concentration": false,
         "animation": "inflict-wounds"
