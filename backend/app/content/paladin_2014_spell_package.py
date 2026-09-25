@@ -53,6 +53,10 @@ _PREPARED = (
     # by the global no-summons arena rule, while Create Food and Water cannot alter a Pit fight.
     _spell("find-steed", "Find Steed", "utility", "arena-unavailable-summon", level=2, min_level=5),
     _spell("create-food-and-water", "Create Food and Water", "utility", "arena-out-of-scope", level=3, min_level=9),
+    # Level 18 raises Aurelia's prepared-spell capacity to 13. Locate Object is a legal
+    # 2nd-level 2014 Paladin preparation and does not alter a standard Iron Pit combat,
+    # so it fills the new preparation slot without adding a combat resolver.
+    _spell("locate-object", "Locate Object", "utility", "arena-out-of-scope", level=2, min_level=5),
 )
 
 _OATH = (

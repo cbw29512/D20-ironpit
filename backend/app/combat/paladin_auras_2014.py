@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.condition_rules import is_incapacitated
+from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -22,7 +22,13 @@ def _members(setup: EncounterSetup) -> list[EncounterCombatant]:
 
 def _active_source(member: EncounterCombatant) -> bool:
     state = member.state
-    return state.is_alive and not state.is_dead and state.current_hp > 0 and not is_incapacitated(state)
+    return (
+        state.is_alive
+        and not state.is_dead
+        and state.current_hp > 0
+        and not state.is_unconscious
+        and not has_condition(state, "unconscious")
+    )
 
 
 def _clear_aura_modifiers(setup: EncounterSetup) -> None:
@@ -33,12 +39,21 @@ def _clear_aura_modifiers(setup: EncounterSetup) -> None:
         ]
 
 
+def _aura_radius_ft(source: EncounterCombatant) -> int:
+    try:
+        return source.state.template.progression_features.aura_radius_2014_ft
+    except Exception:
+        logger.exception("Failed to read 2014 aura radius for %s.", source.combatant_id)
+        raise
+
+
 def _nearby_sources(target: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
     side_members = setup.heroes if target.side == "heroes" else setup.monsters
     return [
         source for source in side_members
         if _active_source(source)
-        and combatant_distance(source, target) <= 10
+        and _aura_radius_ft(source) > 0
+        and combatant_distance(source, target) <= _aura_radius_ft(source)
     ]
 
 
@@ -85,7 +100,7 @@ def _apply_condition_aura(
 
 
 def sync_paladin_auras_2014(setup: EncounterSetup) -> None:
-    """Refresh non-stacking 10-foot 2014 Paladin aura effects from current encounter positions."""
+    """Refresh non-stacking 2014 Paladin auras using each source's declared radius."""
     try:
         _clear_aura_modifiers(setup)
         for target in _members(setup):

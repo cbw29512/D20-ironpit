@@ -19,12 +19,12 @@ const barbarians2014 = heroes2014.filter((hero) => hero.class_id === "barbarian"
 const rogues2014 = heroes2014.filter((hero) => hero.class_id === "rogue");
 const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
-assert.equal(heroes2014.length, 97, "2014 browser hero roster must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-17");
+assert.equal(heroes2014.length, 98, "2014 browser hero roster must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-18");
 assert.equal(fighters2014.length, 20);
 assert.equal(barbarians2014.length, 20);
 assert.equal(rogues2014.length, 20);
 assert.equal(monks2014.length, 20);
-assert.equal(paladins2014.length, 17);
+assert.equal(paladins2014.length, 18);
 assert.ok(fighters2014.every((hero) => hero.name === "Karnok Stoneward"));
 assert.ok(barbarians2014.every((hero) => hero.name === "Rokhan Stonefury"));
 assert.ok(rogues2014.every((hero) => hero.name === "Mara Quickstep"));

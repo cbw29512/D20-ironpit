@@ -43,7 +43,7 @@ function setup(sourceTemplate, targetPosition = 5) {
 }
 
 {
-  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2 }));
+  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2, aura_radius_2014_ft: 10 }));
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 2);
   assert.equal(M.savingThrowFlat(source.state), 2);
@@ -60,6 +60,7 @@ function setup(sourceTemplate, targetPosition = 5) {
 {
   const { ally, battle } = setup(template("Aurelia", {
     aura_of_protection_2014_bonus: 3,
+    aura_radius_2014_ft: 10,
     aura_of_devotion_2014: true,
     aura_of_courage_2014: true,
   }));
@@ -74,7 +75,8 @@ function setup(sourceTemplate, targetPosition = 5) {
 
 {
   const { source, ally, battle } = setup(template("Aurelia", {
-    aura_of_protection_2014_bonus: 3, aura_of_devotion_2014: true, aura_of_courage_2014: true,
+    aura_of_protection_2014_bonus: 3, aura_radius_2014_ft: 10,
+    aura_of_devotion_2014: true, aura_of_courage_2014: true,
   }));
   A.sync(battle);
   assert.equal(M.savingThrowFlat(source.state), 3);
@@ -94,13 +96,46 @@ function setup(sourceTemplate, targetPosition = 5) {
 }
 
 {
-  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2 }));
-  const stronger = member("aurelia-8", "heroes", 5, template("Aurelia 8", { aura_of_protection_2014_bonus: 3 }));
+  const { source, ally, battle } = setup(template("Aurelia", {
+    aura_of_protection_2014_bonus: 3,
+    aura_radius_2014_ft: 10,
+    aura_of_devotion_2014: true,
+    aura_of_courage_2014: true,
+  }));
+  source.state.active_effect_ids.push("stunned");
+  A.sync(battle);
+  assert.equal(M.savingThrowFlat(ally.state), 3);
+  assert.equal(I.immune(ally.state, "charmed"), true);
+  assert.equal(I.immune(ally.state, "frightened"), true);
+}
+
+{
+  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2, aura_radius_2014_ft: 10 }));
+  const stronger = member("aurelia-8", "heroes", 5, template("Aurelia 8", { aura_of_protection_2014_bonus: 3, aura_radius_2014_ft: 10 }));
   battle.heroes.splice(1, 0, stronger);
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 3);
   assert.equal(M.savingThrowFlat(source.state), 3);
   assert.equal(M.savingThrowFlat(stronger.state), 3);
+}
+
+{
+  const { ally, battle } = setup(template("Aurelia 18", {
+    aura_of_protection_2014_bonus: 4,
+    aura_radius_2014_ft: 30,
+    aura_of_devotion_2014: true,
+    aura_of_courage_2014: true,
+  }), 25);
+  A.sync(battle);
+  assert.equal(M.savingThrowFlat(ally.state), 4);
+  assert.equal(I.immune(ally.state, "charmed"), true);
+  assert.equal(I.immune(ally.state, "frightened"), true);
+
+  ally.position_ft = 35;
+  A.sync(battle);
+  assert.equal(M.savingThrowFlat(ally.state), 0);
+  assert.equal(I.immune(ally.state, "charmed"), false);
+  assert.equal(I.immune(ally.state, "frightened"), false);
 }
 
 console.log("2014 Paladin browser aura parity passed.");

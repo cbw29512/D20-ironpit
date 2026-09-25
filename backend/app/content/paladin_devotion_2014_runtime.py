@@ -22,7 +22,7 @@ _SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2),
     6: (4, 2), 7: (4, 3), 8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2),
     11: (4, 3, 3), 12: (4, 3, 3), 13: (4, 3, 3, 1), 14: (4, 3, 3, 1),
-    15: (4, 3, 3, 2), 16: (4, 3, 3, 2), 17: (4, 3, 3, 3, 1),
+    15: (4, 3, 3, 2), 16: (4, 3, 3, 2), 17: (4, 3, 3, 3, 1), 18: (4, 3, 3, 3, 1),
 }
 
 
@@ -79,11 +79,12 @@ def _improved_divine_smite(level: int) -> list[OnHitDamage]:
 
 def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Devotion Paladin runtime covers levels 1 through 17.")
+        if level not in range(1, 19):
+            raise ValueError("2014 Devotion Paladin runtime covers levels 1 through 18.")
         scores = _scores(level)
         charisma_modifier = scores.modifier("charisma")
         aura_bonus = charisma_modifier if level >= 6 else 0
+        aura_radius = 30 if level >= 18 else (10 if level >= 6 else 0)
         saves = saving_throw_bonuses(scores, level, ("wisdom", "charisma"))
         longsword = build_longsword_attack(level, scores).model_copy(
             update={"on_hit_damage": _improved_divine_smite(level)},
@@ -119,6 +120,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
                 turn_unholy_2014=level >= 3,
                 sacred_weapon_2014_bonus=charisma_modifier if level >= 3 else 0,
                 aura_of_protection_2014_bonus=aura_bonus,
+                aura_radius_2014_ft=aura_radius,
                 aura_of_devotion_2014=level >= 7,
                 aura_of_courage_2014=level >= 10,
             ),

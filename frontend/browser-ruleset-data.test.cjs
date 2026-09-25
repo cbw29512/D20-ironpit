@@ -25,8 +25,8 @@ const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
 assertRuleset(heroes2024, "2024", "2024 browser heroes");
 assertRuleset(heroes2014, "2014", "2014 browser heroes");
-assert.equal(heroes2014.length, 97, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-17");
-levels(fighters2014, 20); levels(barbarians2014, 20); levels(rogues2014, 20); levels(monks2014, 20); levels(paladins2014, 17);
+assert.equal(heroes2014.length, 98, "2014 browser heroes must contain Fighter 1-20, Barbarian 1-20, Rogue 1-20, Monk 1-20, and Paladin 1-18");
+levels(fighters2014, 20); levels(barbarians2014, 20); levels(rogues2014, 20); levels(monks2014, 20); levels(paladins2014, 18);
 for (const hero of heroes2014) {
   assert.deepEqual(hero.weapon_masteries, [], `${hero.id} must not expose 2024 Weapon Mastery`);
   assert.ok(hero.attacks.every((attack) => attack.masteryProperty == null), `${hero.id} attacks must not carry mastery properties`);
@@ -103,6 +103,9 @@ assert.equal(paladin16.ability_scores.charisma, 19);
 assert.equal(paladin16.aura_of_protection_2014_bonus, 4);
 assert.equal(paladin16.sacred_weapon_2014_bonus, 4);
 assert.equal(paladin16.resources["cleansing-touch"], 4);
+const paladin18 = paladins2014.find((hero) => hero.level === 18);
+assert.ok(paladin18);
+assert.equal(paladin18.aura_radius_2014_ft, 30);
 assert.deepEqual(
   paladin15.passive_modifier_grants.map((item) => [item.source_id, item.source_name, item.kind, item.condition_id]),
   [

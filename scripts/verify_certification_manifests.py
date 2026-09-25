@@ -162,6 +162,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("turn-the-unholy-2014")
     if features.aura_of_protection_2014_bonus:
         mechanics.add("aura-of-protection-2014")
+    if features.aura_radius_2014_ft:
+        mechanics.add("paladin-aura-radius-2014")
     if features.aura_of_devotion_2014:
         mechanics.add("aura-of-devotion-2014")
     if features.aura_of_courage_2014:

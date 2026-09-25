@@ -65,7 +65,7 @@ def test_devotion_and_courage_grant_dynamic_condition_immunity() -> None:
     assert condition_is_immune(ally.state, "frightened") is False
 
 
-def test_incapacitated_or_dead_paladin_stops_granting_auras() -> None:
+def test_unconscious_or_dead_paladin_stops_granting_auras() -> None:
     setup, paladin, ally = _setup(10)
     sync_paladin_auras_2014(setup)
     assert saving_throw_flat_bonus(paladin.state) == 3
@@ -88,6 +88,17 @@ def test_incapacitated_or_dead_paladin_stops_granting_auras() -> None:
     assert condition_is_immune(ally.state, "frightened") is False
 
 
+def test_conscious_incapacitated_paladin_still_grants_auras() -> None:
+    setup, paladin, ally = _setup(10)
+    paladin.state.active_effect_ids.append("stunned")
+
+    sync_paladin_auras_2014(setup)
+
+    assert saving_throw_flat_bonus(ally.state) == 3
+    assert condition_is_immune(ally.state, "charmed") is True
+    assert condition_is_immune(ally.state, "frightened") is True
+
+
 def test_multiple_paladin_protection_auras_use_only_the_strongest_bonus() -> None:
     setup, first, ally = _setup(6)
     stronger = _member(build_aurelia_brightshield_2014(8), "aurelia-8", "heroes", 5)
@@ -100,3 +111,23 @@ def test_multiple_paladin_protection_auras_use_only_the_strongest_bonus() -> Non
     assert saving_throw_flat_bonus(ally.state) == 3
     assert saving_throw_flat_bonus(first.state) == 3
     assert saving_throw_flat_bonus(stronger.state) == 3
+
+def test_level18_aura_expansion_uses_each_sources_declared_radius() -> None:
+    level17_setup, level17, level17_ally = _setup(17, ally_position=25)
+    sync_paladin_auras_2014(level17_setup)
+    assert level17.state.template.progression_features.aura_radius_2014_ft == 10
+    assert saving_throw_flat_bonus(level17_ally.state) == 0
+
+    setup, paladin, ally = _setup(18, ally_position=25)
+    sync_paladin_auras_2014(setup)
+    assert paladin.state.template.progression_features.aura_radius_2014_ft == 30
+    assert saving_throw_flat_bonus(ally.state) == 4
+    assert condition_is_immune(ally.state, "charmed") is True
+    assert condition_is_immune(ally.state, "frightened") is True
+
+    ally.position_ft = 35
+    sync_paladin_auras_2014(setup)
+    assert saving_throw_flat_bonus(ally.state) == 0
+    assert condition_is_immune(ally.state, "charmed") is False
+    assert condition_is_immune(ally.state, "frightened") is False
+
