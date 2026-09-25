@@ -39,9 +39,12 @@ def test_level_seven_runtime_adds_only_level_seven_spell_capacity() -> None:
 
     death_ward = next(item for item in hero.defensive_spell_actions if item.id == "death-ward")
     assert death_ward.level == 4
-    assert death_ward.survival_ward is not None
-    assert death_ward.survival_ward.replacement_hp == 1
-    assert death_ward.survival_ward.prevents_nondamage_instant_death is True
+    zero_hp = next(
+        effect for effect in death_ward.modifier_effects
+        if effect.kind == "zero-hp-replacement"
+    )
+    assert zero_hp.replacement_hp == 1
+    assert zero_hp.prevents_instant_death is True
 
     assert [item.id for item in hero.persistent_hazard_actions] == ["guardian-of-faith"]
     guardian = hero.persistent_hazard_actions[0]
