@@ -18,8 +18,8 @@ from app.content.cleric_2014_level4_spells import guardian_of_faith_2014
 from app.content.cleric_2014_level5_spells import mass_cure_wounds_2014
 from app.content.cleric_2014_divine_intervention import divine_intervention_full_heal_2014
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
+from app.content.cleric_life_2014_progression_support import build_cleric_progression_2014
 from app.content.cleric_life_2014_runtime_support import (
-    build_cleric_progression_2014,
     build_cleric_resources_2014,
     build_seraphine_weapon_attack,
     seraphine_light_crossbow,
