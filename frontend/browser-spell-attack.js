@@ -18,10 +18,10 @@
     return (caster.state.resources?.[id] || 0) > 0 ? id : null;
   }
 
-  function resolve(sequence, round, caster, target, spell, setup, turnKey) {
+  function resolve(sequence, round, caster, target, spell, setup, turnKey, options = {}) {
     if (spell.actionCost === "reaction" || !E().available(caster.state, spell.actionCost)) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
-    const distance = S().distance(caster, target);
+    const distance = options.distanceOverrideFt ?? S().distance(caster, target);
     if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
