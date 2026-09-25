@@ -19,8 +19,29 @@
     }
   }
 
+  function auraRadius(source) {
+    try {
+      const template = source?.state?.template || {};
+      const hasAura = (template.aura_of_protection_2014_bonus || 0) > 0
+        || template.aura_of_devotion_2014 === true
+        || template.aura_of_courage_2014 === true;
+      if (!hasAura) return 0;
+      const radius = template.aura_radius_2014_ft;
+      if (!Number.isInteger(radius) || radius <= 0) {
+        throw new Error(`${template.name || source?.combatant_id} has a 2014 Paladin aura without a valid radius.`);
+      }
+      return radius;
+    } catch (error) {
+      console.error("Failed to read browser 2014 Paladin aura radius.", { error, combatant: source?.combatant_id });
+      throw error;
+    }
+  }
+
   function nearbySources(target, setup) {
-    return allies(target, setup).filter((source) => S().active(source) && S().distance(source, target) <= 10);
+    return allies(target, setup).filter((source) => {
+      const radius = auraRadius(source);
+      return radius > 0 && S().active(source) && S().distance(source, target) <= radius;
+    });
   }
 
   function saveAura(target, sources) {
