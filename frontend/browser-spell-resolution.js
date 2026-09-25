@@ -6,77 +6,87 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const P = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
 
   function saveAction(choice) {
-    const spell = choice.action;
-    if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
-    return {
-      id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
-      range: spell.range + (spell.areaRadius || 0),
-      damageDiceCount: spell.damageDiceCount,
-      damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
-      damageType: spell.damageType, successDamage: spell.successDamage || "none",
-      damageComponents: (spell.damageComponents || []).map((item) => ({ ...item })),
-      magicalEffect: true, effectTags: [...(spell.effectTags || [])],
-      animation: spell.animation || "spell-save",
-    };
+    try {
+      const spell = P().scaledSpell(choice.action, choice.slotLevel);
+      return {
+        id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
+        range: spell.range + (spell.areaRadius || 0),
+        damageDiceCount: spell.damageDiceCount,
+        damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
+        damageType: spell.damageType, successDamage: spell.successDamage || "none",
+        damageComponents: (spell.damageComponents || []).map((item) => ({ ...item })),
+        magicalEffect: true, effectTags: [...(spell.effectTags || [])],
+        animation: spell.animation || "spell-save",
+      };
+    } catch (error) {
+      console.error("Browser save-spell compilation failed", { spell: choice?.action?.id, error });
+      throw error;
+    }
   }
 
   function resolve(sequence, round, caster, setup, choice, turnKey) {
-    const spell = choice.action;
-    if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
-    if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
-    if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
+    try {
+      const spell = choice.action;
+      P().scaledSpell(spell, choice.slotLevel);
+      if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
+      if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
 
-    let remaining = null;
-    if (choice.slotLevel > 0) {
-      const resourceId = `spell-slot-${choice.slotLevel}`;
-      if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
-      C().markSlotSpellCast(caster.state, turnKey);
-      caster.state.resources[resourceId] -= 1;
-      remaining = caster.state.resources[resourceId];
-    }
-    E().spend(caster.state, spell.actionCost);
-    window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.removeOwnerAttackEnding(caster.state);
-
-    const placement = choice.placement;
-    const detail = placement
-      ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
-      : "";
-    const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
-    const events = [{
-      sequence: sequence++, round_number: round, event_type: "feature",
-      actor_id: caster.combatant_id, actor_name: caster.state.template.name,
-      feature_id: spell.id, resource_remaining: remaining, animation: spell.animation || "spell-save",
-      description: `${caster.state.template.name} casts ${spell.name} using a ${slotText}.${detail}`,
-    }];
-
-    const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
-    const action = saveAction(choice);
-    let sharedDamageRolls = null;
-    for (const targetId of choice.targetIds) {
-      const target = members.get(targetId);
-      const ward = spell.areaRadius ? null : (window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null);
-      if (ward && !ward.succeeded) {
-        events.push(window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence++, round, caster, target, spell.name, ward));
-        continue;
+      let remaining = null;
+      if (choice.slotLevel > 0) {
+        const resourceId = `spell-slot-${choice.slotLevel}`;
+        if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
+        C().markSlotSpellCast(caster.state, turnKey);
+        caster.state.resources[resourceId] -= 1;
+        remaining = caster.state.resources[resourceId];
       }
-      const event = V().resolveAction(
-        sequence, round, caster, target, action, S().distance(caster, target),
-        { spendAction: false, sharedDamageRolls, spellEffect: true },
-      );
-      sequence += 1;
-      if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
-      const chain = DR() ? DR().chain(sequence, round, caster, event, setup, turnKey)
-        : { events: [event], sequence };
-      events.push(...chain.events); sequence = chain.sequence;
-      if (sharedDamageRolls == null && event.damage_components?.length) {
-        sharedDamageRolls = action.damageComponents?.length
-          ? event.damage_components.map((component) => [...component.rolls])
-          : [...event.damage_components[0].rolls];
+      E().spend(caster.state, spell.actionCost);
+      window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.removeOwnerAttackEnding(caster.state);
+
+      const placement = choice.placement;
+      const detail = placement
+        ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
+        : "";
+      const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
+      const events = [{
+        sequence: sequence++, round_number: round, event_type: "feature",
+        actor_id: caster.combatant_id, actor_name: caster.state.template.name,
+        feature_id: spell.id, resource_remaining: remaining, animation: spell.animation || "spell-save",
+        description: `${caster.state.template.name} casts ${spell.name} using a ${slotText}.${detail}`,
+      }];
+
+      const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+      const action = saveAction(choice);
+      let sharedDamageRolls = null;
+      for (const targetId of choice.targetIds) {
+        const target = members.get(targetId);
+        const ward = spell.areaRadius ? null : (window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null);
+        if (ward && !ward.succeeded) {
+          events.push(window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence++, round, caster, target, spell.name, ward));
+          continue;
+        }
+        const event = V().resolveAction(
+          sequence, round, caster, target, action, S().distance(caster, target),
+          { spendAction: false, sharedDamageRolls, spellEffect: true },
+        );
+        sequence += 1;
+        if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
+        const chain = DR() ? DR().chain(sequence, round, caster, event, setup, turnKey)
+          : { events: [event], sequence };
+        events.push(...chain.events); sequence = chain.sequence;
+        if (sharedDamageRolls == null && event.damage_components?.length) {
+          sharedDamageRolls = action.damageComponents?.length
+            ? event.damage_components.map((component) => [...component.rolls])
+            : [...event.damage_components[0].rolls];
+        }
       }
+      return { events, sequence };
+    } catch (error) {
+      console.error("Browser save-spell resolution failed", { caster: caster?.combatant_id, error });
+      throw error;
     }
-    return { events, sequence };
   }
 
   window.IRON_PIT_BROWSER_SPELL_RESOLUTION = { resolve, saveAction };
