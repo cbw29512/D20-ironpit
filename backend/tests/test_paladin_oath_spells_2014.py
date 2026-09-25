@@ -8,6 +8,7 @@ from app.combat.effect_removal import choose_effect_removal_action, resolve_effe
 from app.combat.healing import resolve_healing
 from app.combat.modifier_stack import add_modifier
 from app.combat.saving_throw_rolls import saving_throw_mode
+from app.combat.saving_throws import resolve_save_action
 from app.combat.state import build_combatant_state
 from app.combat.targeting_wards import check_targeting_ward
 from app.combat.timed_conditions import apply_timed_condition
@@ -226,3 +227,29 @@ def test_level14_divine_favor_is_existing_bonus_damage_composition() -> None:
     effect = spell.modifier_effects[0]
     assert effect.kind == "bonus-damage"
     assert (effect.dice_count, effect.dice_size, effect.damage_type) == (1, 4, "radiant")
+
+
+
+def test_level17_flame_strike_reuses_multi_component_save_damage() -> None:
+    paladin = _member(build_aurelia_brightshield_2014(17), "aurelia", "heroes", 0)
+    target_template = build_commoner().model_copy(update={
+        "ruleset": "2014",
+        "damage_resistances": ["fire"],
+        "saving_throw_bonuses": {"strength": 0, "dexterity": 0, "constitution": 0, "intelligence": 0, "wisdom": 0, "charisma": 0},
+    })
+    target = _member(target_template, "target", "monsters", 30)
+    flame = paladin.state.template.spell_save_actions[0]
+
+    event = resolve_save_action(
+        1, 1, paladin, target, flame, 30,
+        FixedDiceProvider([1, 6, 6, 6, 6, 4, 4, 4, 4]),
+        spend_action=False,
+    )
+
+    assert flame.id == "flame-strike"
+    assert flame.dc == 18
+    assert [(item.damage_type.value, item.total, item.applied_total) for item in event.damage_components] == [
+        ("fire", 24, 12),
+        ("radiant", 16, 16),
+    ]
+    assert event.damage_roll is not None and event.damage_roll.total == 28
