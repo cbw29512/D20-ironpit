@@ -125,6 +125,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
            "attackKind": action.attack_kind, "range": action.range_ft, "attackBonus": action.attack_bonus,
            "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
            "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+           "upcastDicePerLevel": action.upcast_dice_per_level,
            "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
            "animation": action.animation}
     if action.source: row["source"] = action.source
