@@ -4,6 +4,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const SP = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
 
   function resourceAvailable(member, resourceId, cost = 1) {
     try {
@@ -66,7 +67,7 @@
       }
       for (const action of member.state.template.spell_save_actions || []) {
         if (action.actionCost === "reaction" || action.concentration || !E().available(member.state, action.actionCost)) continue;
-        if (!spellLevelAvailable(member, action.level, turnKey)) continue;
+        if (!SP().slotLevels(member, action, turnKey).length) continue;
         ranges.push({ family: "spell", range: (action.range || 0) + (action.areaRadius || 0) });
       }
       return ranges;
