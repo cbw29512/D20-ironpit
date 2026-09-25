@@ -54,9 +54,14 @@ def build_certified_hero_entries_for_ruleset(
     ruleset: RulesetId,
 ) -> list[tuple[HeroBuildKey, CombatantTemplate]]:
     """Return validated canonical hero entries for one explicit ruleset."""
+    combat_profiles = build_all_pregen_combat_profiles()
     entries = [
-        entry for entry in build_all_certified_hero_entries()
-        if entry[1].ruleset == ruleset
+        _validated(
+            progression.template_builder(level),
+            progression.profile(level),
+            combat_profiles,
+        )
+        for progression, level in iter_certified_progression_levels(ruleset)
     ]
     if not entries:
         raise ValueError(f"No certified hero entries are registered for ruleset {ruleset}.")
