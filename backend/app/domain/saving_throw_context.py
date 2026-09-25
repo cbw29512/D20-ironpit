@@ -11,3 +11,4 @@ class SavingThrowContext:
     magical_effect: bool = False
     spell_effect: bool = False
     source_creature_type: str | None = None
+    effect_tags: frozenset[str] = frozenset()
