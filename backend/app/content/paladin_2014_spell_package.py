@@ -81,6 +81,12 @@ _OATH = (
         "arena-unavailable-summon",
         level=4, min_level=13, oath_level=13,
     ),
+    _spell("commune", "Commune", "utility", "arena-out-of-scope", level=5, min_level=17, oath_level=17),
+    _spell(
+        "flame-strike", "Flame Strike", "damage",
+        "save-damage", "area-damage", "multi-component-damage",
+        level=5, min_level=17, oath_level=17,
+    ),
 )
 
 
