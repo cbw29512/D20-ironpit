@@ -61,6 +61,10 @@ _PREPARED = (
     # Raise Dead is a legal 5th-level Paladin spell with a one-hour casting time, so
     # it is retained as source/legal-build data without entering arena action selection.
     _spell("raise-dead", "Raise Dead", "utility", "arena-out-of-scope", level=5, min_level=17),
+    # Level 20 raises Aurelia's prepared-spell capacity to 15. Magic Circle is a legal
+    # 3rd-level 2014 Paladin spell with a 1-minute casting time, so it remains source/legal
+    # build data and cannot alter a standard Iron Pit combat.
+    _spell("magic-circle", "Magic Circle", "utility", "arena-out-of-scope", level=3, min_level=9),
 )
 
 _OATH = (
