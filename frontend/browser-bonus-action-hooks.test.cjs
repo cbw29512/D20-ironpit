@@ -67,6 +67,7 @@ assert.deepEqual(registrations, [
   ["second-wind", 20, ["2014", "2024"]],
   ["steady-aim", 25, ["2024"]],
   ["adrenaline-rush", 30, ["2024"]],
+  ["persistent-spell-attack", 40, ["2014"]],
   ["monk-bonus-attack-2014", 100, ["2014"]],
   ["frenzy-bonus-attack-2014", 110, ["2014"]],
   ["rage-maintain", 120, ["2024"]],
