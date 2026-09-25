@@ -39,7 +39,7 @@
     return effectId;
   }
 
-  function removeEffect(state, effect) {
+  const suppressesAction = (state) => (state.timed_effects || []).some((effect) => effect.suppress_action);\n  const suppressesBonusAction = (state) => (state.timed_effects || []).some((effect) => effect.suppress_bonus_action);\n  const suppressesReactions = (state) => (state.timed_effects || []).some((effect) => effect.suppress_reactions);\n  const suppressesMovement = (state) => (state.timed_effects || []).some((effect) => effect.suppress_movement);\n  const suppressesVoluntaryTurn = (state) => suppressesAction(state) && suppressesBonusAction(state) && suppressesMovement(state);\n\n  function removeEffect(state, effect) {
     state.timed_effects = state.timed_effects.filter((item) => item !== effect);
     const stillActive = state.timed_effects.some((item) => item.effect_id === effect.effect_id);
     if (!stillActive) state.active_effect_ids = state.active_effect_ids.filter((id) => id !== effect.effect_id);
@@ -106,5 +106,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, ownsDamageResistance, removeEffect, removeGroup, resolveMovementCounters };
+  window.IRON_PIT_BROWSER_TIMED = {\n    apply, expireSourceStart, ownsDamageResistance, removeEffect, removeGroup, resolveMovementCounters,\n    suppressesAction, suppressesBonusAction, suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,\n  };
 })();
