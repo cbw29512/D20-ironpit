@@ -8,7 +8,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 }, DF = () => window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS || { saveAdvantage: () => 0, saveAdvantageSourceNames: () => [] };
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll, savingThrowFlat: () => 0 };
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll, savingThrowFlat: () => 0 }, DB = () => window.IRON_PIT_BROWSER_D20_BONUS_DICE;
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { saveDisadvantage: () => 0 };
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || { evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
@@ -64,7 +64,7 @@
     const modifiers = M();
     const bonus = baseBonus + (modifiers.savingThrowFlat?.(state) || 0);
     const baseRoll = R().d20(bonus, saveMode(state, ability, context));
-    let roll = modifiers.applyD20Bonus?.(state, "saving-throw-bonus-die", baseRoll) || baseRoll;
+    let roll = modifiers.applyD20Bonus?.(state, "saving-throw-bonus-die", baseRoll) || baseRoll; if ((state.active_d20_bonus_dice || []).length) { if (!Number.isInteger(context.roundNumber)) throw new Error("Active d20 bonus die requires saving-throw round context."); roll = DB().applyIfUseful(state, "saving_throw", roll, dc, context.roundNumber).roll; }
     DF().consumeSavingThrowModifiers?.(state);
     if (roll.total < dc) {
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
@@ -86,13 +86,13 @@
     return { roll, succeeded: roll.total >= dc };
   }
 
-  function resolveOnHitConditionSave(target, attack, sourceTemplate = null) {
+  function resolveOnHitConditionSave(target, attack, sourceTemplate = null, round = null) {
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     if (I().immune(target.state, effect.conditionId, sourceTemplate)) return null;
     const effectTags = effect.conditionId === "poisoned" ? ["poison"] : [];
-    const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { conditionId: effect.conditionId, effectTags });
+    const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { conditionId: effect.conditionId, effectTags, roundNumber: round });
     let appliedCondition = null;
     if (!save.succeeded && !target.state.active_effect_ids.includes(effect.conditionId)) {
       target.state.active_effect_ids.push(effect.conditionId); appliedCondition = effect.conditionId;
@@ -121,7 +121,7 @@
     const effectTags = [...new Set([...(action.effectTags || []).map((tag) => String(tag).trim().toLowerCase()).filter(Boolean), ...(String(action.damageType || "").trim().toLowerCase() === "poison" ? ["poison"] : [])])];
     const saveContext = {
       magicalEffect: Boolean(action.magicalEffect), spellEffect: Boolean(options.spellEffect),
-      sourceCreatureType: actor.state.template.creature_type || null, effectTags,
+      sourceCreatureType: actor.state.template.creature_type || null, effectTags, roundNumber: round,
     };
     const advantageSources = DF().saveAdvantageSourceNames?.(
       target.state, action.saveAbility, saveContext,
