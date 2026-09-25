@@ -18,7 +18,8 @@ def test_level19_asi_recompiles_all_changed_combat_values() -> None:
 
     assert hero.armor_class == 20
     assert hero.max_hp == 136
-    assert hero.speed_ft == 55
+    assert hero.speed_ft == 60
+    assert combat.speed_ft == 60
     assert hero.initiative_bonus == 5
 
     assert {item.id: item.max_uses for item in hero.resources} == {
