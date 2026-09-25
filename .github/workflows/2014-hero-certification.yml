@@ -31,9 +31,33 @@ jobs:
         run: |
           python scripts/export_browser_heroes.py
           python scripts/prepare_static_site.py
-      - name: Certify 2014 Paladin Python behavior
+      - name: Certify 2014 hero Python behavior
         run: |
           pytest -q \
+            backend/tests/test_cleric_life_2014_progression.py \
+            backend/tests/test_cleric_life_2014_level2.py \
+            backend/tests/test_cleric_life_2014_level3.py \
+            backend/tests/test_cleric_life_2014_level4.py \
+            backend/tests/test_cleric_life_2014_level5.py \
+            backend/tests/test_cleric_life_2014_level6.py \
+            backend/tests/test_cleric_life_2014_level7.py \
+            backend/tests/test_cleric_life_2014_level8.py \
+            backend/tests/test_cleric_life_2014_level9.py \
+            backend/tests/test_cleric_life_2014_level10.py \
+            backend/tests/test_cleric_life_2014_level11.py \
+            backend/tests/test_cleric_life_2014_level12.py \
+            backend/tests/test_cleric_life_2014_level13.py \
+            backend/tests/test_cleric_life_2014_level14.py \
+            backend/tests/test_cleric_life_2014_level15.py \
+            backend/tests/test_cleric_life_2014_level16.py \
+            backend/tests/test_cleric_life_2014_level17.py \
+            backend/tests/test_cleric_life_2014_level18.py \
+            backend/tests/test_cleric_life_2014_level19.py \
+            backend/tests/test_cleric_life_2014_level20.py \
+            backend/tests/test_once_per_turn_hit_damage.py \
+            backend/tests/test_group_healing_area.py \
+            backend/tests/test_healing_creature_type_exclusions.py \
+            backend/tests/test_pooled_healing.py \
             backend/tests/test_monk_open_hand_2014.py \
             backend/tests/test_monk_open_hand_2014_level18.py \
             backend/tests/test_paladin_2014_spell_package.py \
@@ -62,6 +86,16 @@ jobs:
           node frontend/browser-2014-monk-level20.test.cjs
           node frontend/browser-initiative-resource-refill.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
+          node frontend/browser-turn-undead-2014.test.cjs
+          node frontend/browser-divine-intervention-2014.test.cjs
+          node frontend/browser-cleric9-2014.test.cjs
+          node frontend/browser-healing-creature-type-exclusions.test.cjs
+          node frontend/browser-group-healing-area.test.cjs
+          node frontend/browser-pooled-healing.test.cjs
+          node frontend/browser-outgoing-healing-maximize.test.cjs
+          node frontend/browser-once-per-turn-hit-damage.test.cjs
+          node frontend/browser-persistent-spell-attacks.test.cjs
+          node frontend/browser-persistent-hazards.test.cjs
           node frontend/browser-2014-monk-entrypoints.test.cjs
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
