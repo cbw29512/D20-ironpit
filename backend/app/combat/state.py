@@ -62,10 +62,14 @@ def begin_turn(state: CombatantState) -> list[tuple[str, str, int]]:
         state.bonus_action_available = not incapacitated and not suppresses_bonus_action(state)
         refresh_start_of_turn(state)
         speed = effective_speed(state)
-        state.movement_remaining_ft = 0 if speed_is_zero(state) or suppresses_movement(state) else speed
+        # Establish the turn's movement budget before resolving movement-cost
+        # debuff counters. A qualifying buff such as Freedom of Movement must
+        # be able to spend movement to clear a nonmagical grapple even though
+        # that grapple would otherwise reduce effective movement to zero.
+        state.movement_remaining_ft = 0 if suppresses_movement(state) else speed
         countered = resolve_movement_countered_conditions(state)
         countered.extend(resolve_movement_countered_grapples(state))
-        if speed_is_zero(state):
+        if speed_is_zero(state) or suppresses_movement(state):
             state.movement_remaining_ft = 0
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)
