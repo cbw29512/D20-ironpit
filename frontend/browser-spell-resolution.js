@@ -8,9 +8,16 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const P = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
 
+  function scaledSpell(action, slotLevel) {
+    const policy = P();
+    if (policy?.scaledSpell) return policy.scaledSpell(action, slotLevel);
+    if ((action.level === 0 && slotLevel === 0) || slotLevel === action.level) return action;
+    throw new Error("Browser spell policy runtime is required for higher-slot save-spell scaling.");
+  }
+
   function saveAction(choice) {
     try {
-      const spell = P().scaledSpell(choice.action, choice.slotLevel);
+      const spell = scaledSpell(choice.action, choice.slotLevel);
       return {
         id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
         range: spell.range + (spell.areaRadius || 0),
@@ -30,7 +37,7 @@
   function resolve(sequence, round, caster, setup, choice, turnKey) {
     try {
       const spell = choice.action;
-      P().scaledSpell(spell, choice.slotLevel);
+      scaledSpell(spell, choice.slotLevel);
       if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
       if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
 
