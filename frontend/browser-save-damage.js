@@ -3,7 +3,10 @@
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const D = () => window.IRON_PIT_DICE;
-  const R = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES;
+  const R = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || {
+    evasionDamage: (_state, _ability, succeeded, successDamage, total) =>
+      succeeded && successDamage === "half" ? Math.floor(total / 2) : total,
+  };
 
   function sharedRolls(action, shared, index) {
     if (shared == null) return null;
