@@ -46,7 +46,7 @@ Repository inventory after level 12 certification found:
 3. **Cleansing Touch:** resolved as `ENGINE_EXISTS_PARAMETER_DELTA`. The generic effect-removal action now supports level-0 feature actions; Cleansing Touch uses an Action, 5-foot self/willing-ally targeting, automatic removal through spell level 9, no ability check, no spell slot, and Charisma-modifier uses. Arena AI orders it before Dispel Magic so a class-feature use is not replaced by an unnecessary spell-slot expenditure.
 4. **Purity of Spirit:** resolved as a permanent source-owned buff compiled into the existing typed defenses from *protection from evil and good*: qualifying creature types have Disadvantage attacking Aurelia and cannot Charm or Frighten her. Possession remains `ARENA_NEUTRAL` until a certified possession mechanic enters active content.
 5. **Flame Strike:** preflight classification was `ENGINE_TRULY_MISSING` only for the generic multi-component save-damage shape; the source ability itself is `ENGINE_EXISTS_COMPOSITION` once that primitive exists. The universal save action now carries independently typed components under one save; Flame Strike binds 4d6 fire + 4d6 radiant with half of each on success and the existing area-targeting path.
-6. **Holy Nimbus:** verify generic start-of-turn area damage and source-creature-type-gated save advantage. Only missing generic pieces may become new engine primitives.
+6. **Holy Nimbus:** contextual source-creature-type-gated save Advantage reuses the existing modifier engine. The only missing semantic remainder was active source-owned enemy-turn-start area damage, now represented by a generic timed emanation component on `TimedSelfBuffAction`; no Paladin-named resolver is permitted.
 
 ## Certification sequence
 
