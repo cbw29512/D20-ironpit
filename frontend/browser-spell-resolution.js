@@ -70,7 +70,9 @@
         : { events: [event], sequence };
       events.push(...chain.events); sequence = chain.sequence;
       if (sharedDamageRolls == null && event.damage_components?.length) {
-        sharedDamageRolls = event.damage_components.map((component) => [...component.rolls]);
+        sharedDamageRolls = action.damageComponents?.length
+          ? event.damage_components.map((component) => [...component.rolls])
+          : [...event.damage_components[0].rolls];
       }
     }
     return { events, sequence };
