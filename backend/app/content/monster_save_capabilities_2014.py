@@ -84,8 +84,6 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 for item in action.get("effect_tags", [])
                 if str(item).strip()
             }
-            if str(action.get("damage_type", "")).casefold() == "poison":
-                effect_tags.add("poison")
             result.append(SaveCapabilityDefinition(
                 id=str(action["id"]), name=str(action["name"]),
                 save_ability=str(action["save_ability"]), dc=int(action["dc"]),
