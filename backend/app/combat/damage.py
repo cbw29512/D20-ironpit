@@ -10,6 +10,7 @@ from app.combat.dice import DiceProvider
 from app.combat.divine_smite_2014 import divine_smite_bonus_damage
 from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.modifier_stack import bonus_damage_modifiers
+from app.combat.once_per_turn_hit_damage import once_per_turn_weapon_hit_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
 from app.combat.sneak_attack import sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
