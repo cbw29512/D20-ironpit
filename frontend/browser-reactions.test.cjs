@@ -68,6 +68,12 @@ function redirectTemplate() {
   }
 }
 {
+  dice(); const { hero, monster, fight } = setup();
+  hero.state.active_effect_ids.push("invisible");
+  assert.equal(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed"), null);
+  assert.equal(monster.state.reaction_available, true);
+}
+{
   for (const condition of ["stunned", "blinded"]) {
     dice(); const { hero, monster, fight } = setup(); monster.state.active_effect_ids.push(condition);
     assert.equal(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed"), null);

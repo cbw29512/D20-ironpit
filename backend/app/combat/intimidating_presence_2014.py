@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import has_condition
+from app.combat.condition_rules import can_see, has_condition
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition, remove_effect_group
@@ -106,8 +106,7 @@ def end_invalid_presence(
         source = members.get(effect.source_id)
         if source is None:
             continue
-        line_of_sight = not has_condition(target.state, "blinded") and not has_condition(source.state, "invisible")
-        if line_of_sight and combatant_distance(target, source) <= 60:
+        if can_see(target.state, source.state) and combatant_distance(target, source) <= 60:
             continue
         removed = remove_effect_group(target.state, effect)
         if not removed:
