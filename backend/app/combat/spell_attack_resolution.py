@@ -52,13 +52,14 @@ def _damage(spell: SpellAttackAction, critical: bool, dice):
 def resolve_spell_attack(
     sequence: int, round_number: int, caster: EncounterCombatant, target: EncounterCombatant,
     spell: SpellAttackAction, setup: EncounterSetup, turn_key: str, dice,
+    *, distance_override_ft: int | None = None,
 ) -> BattleEvent:
     try:
         if spell.action_cost == "reaction" or not is_available(caster.state, spell.action_cost):
             raise ValueError(f"{spell.name} cannot be cast in this action window.")
         if target.side == caster.side or target.state.is_dead or not target.state.is_alive:
             raise ValueError(f"{spell.name} requires a living enemy target.")
-        distance = combatant_distance(caster, target)
+        distance = combatant_distance(caster, target) if distance_override_ft is None else distance_override_ft
         if distance > spell.range_ft:
             raise ValueError(f"{spell.name} target is out of range.")
         resource = _slot_resource(caster, spell, turn_key)
