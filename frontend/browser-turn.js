@@ -93,6 +93,9 @@
         sequence, round, member, setup, turnKey, events: [],
       });
       events.push(...start.events); sequence = start.sequence;
+      if (window.IRON_PIT_BROWSER_TIMED?.suppressesVoluntaryTurn(member.state)) {
+        return finalize(events, sequence, round, member, setup, turnKey, false);
+      }
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
       let bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "beforeEscape");
