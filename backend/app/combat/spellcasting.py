@@ -31,3 +31,33 @@ def mark_slot_spell_cast(state: CombatantState, turn_key: str) -> None:
     except Exception as exc:
         logger.exception("Failed to mark spell-slot expenditure for %s.", state.template.id)
         raise RuntimeError("Spell-slot expenditure could not be recorded.") from exc
+
+
+def legal_slot_levels(
+    state: CombatantState,
+    turn_key: str,
+    printed_level: int,
+    *,
+    higher_slot_scaling: bool = False,
+) -> tuple[int, ...]:
+    """Return spell-slot levels Iron Pit may legally choose for one declared spell."""
+    try:
+        if printed_level == 0:
+            return (0,)
+        if not 1 <= printed_level <= 9:
+            raise ValueError("Printed spell level must be between 0 and 9.")
+        if not slot_spell_available(state, turn_key):
+            return ()
+        maximum = 9 if higher_slot_scaling else printed_level
+        available: list[int] = []
+        for level in range(printed_level, maximum + 1):
+            resource_id = f"spell-slot-{level}"
+            resource = next((item for item in state.resources if item.id == resource_id), None)
+            if resource is not None and resource.current_uses > 0:
+                available.append(level)
+        return tuple(available)
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to determine legal spell slots for %s.", state.template.id)
+        raise RuntimeError("Legal spell-slot levels could not be evaluated.") from exc

@@ -8,20 +8,32 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
 
-def _spell(spell_id: str, level: int, radius: int | None = None, range_ft: int = 150):
+def _spell(
+    spell_id: str,
+    level: int,
+    radius: int | None = None,
+    range_ft: int = 150,
+    upcast_dice_per_level: int = 0,
+):
     return SpellSaveAction(
         id=spell_id, name=spell_id.title(), level=level, range_ft=range_ft,
         area_radius_ft=radius, save_ability="dexterity", dc=12,
         damage_dice_count=1, damage_dice_size=6, damage_type="fire",
-        success_damage="half",
+        success_damage="half", upcast_dice_per_level=upcast_dice_per_level,
     )
 
 
 def _caster(spells, slots):
     base = build_karnok_stoneward()
-    resources = [ResourceDefinition(id=f"spell-slot-{level}", name=f"Level {level} Slot", max_uses=count) for level, count in slots.items()]
+    resources = [
+        ResourceDefinition(id=f"spell-slot-{level}", name=f"Level {level} Slot", max_uses=count)
+        for level, count in slots.items()
+    ]
     template = base.model_copy(update={"spell_save_actions": spells, "resources": resources})
-    return EncounterCombatant(combatant_id="caster", side="heroes", position_ft=0, state=build_combatant_state(template))
+    return EncounterCombatant(
+        combatant_id="caster", side="heroes", position_ft=0,
+        state=build_combatant_state(template),
+    )
 
 
 def _monster(index: int, position: int):
@@ -93,7 +105,7 @@ def test_resolving_aoe_spends_one_slot_and_uses_safe_enemy_only_placement() -> N
     assert caster.state.action_available is False
 
 
-def test_higher_level_slot_does_not_upcast_lower_level_spell() -> None:
+def test_higher_level_slot_does_not_upcast_spell_without_declared_scaling() -> None:
     caster = _caster([_spell("fireball", 3, 20), _spell("spark", 0)], {4: 1})
     setup = _setup(caster, [_monster(i, 30) for i in range(3)])
     choice = choose_spell(caster, setup, "1:caster")
@@ -101,3 +113,25 @@ def test_higher_level_slot_does_not_upcast_lower_level_spell() -> None:
     assert choice.action.id == "spark"
     assert choice.slot_level == 0
     assert next(item for item in caster.state.resources if item.id == "spell-slot-4").current_uses == 1
+
+
+def test_declared_upcast_uses_highest_damage_legal_slot_and_scales_dice() -> None:
+    caster = _caster([_spell("scaling-flame", 3, upcast_dice_per_level=1)], {3: 1, 4: 1})
+    target = _monster(0, 30)
+    target.state.template.saving_throw_bonuses["dexterity"] = 0
+    setup = _setup(caster, [target])
+
+    choice = choose_spell(caster, setup, "1:caster")
+    assert choice is not None
+    assert choice.action.id == "scaling-flame"
+    assert choice.slot_level == 4
+
+    events, _ = resolve_spell(
+        1, 1, caster, setup, choice, "1:caster",
+        FixedDiceProvider([1, 6, 5]),
+    )
+    save_event = next(event for event in events if event.event_type == "saving_throw")
+    assert save_event.damage_components[0].rolls == [6, 5]
+    assert save_event.damage_roll is not None and save_event.damage_roll.total == 11
+    assert next(item for item in caster.state.resources if item.id == "spell-slot-4").current_uses == 0
+    assert next(item for item in caster.state.resources if item.id == "spell-slot-3").current_uses == 1

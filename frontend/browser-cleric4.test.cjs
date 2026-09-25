@@ -111,7 +111,7 @@ assert.equal(forbiddenRebuff.events.length, 0, "A caster may never cast a second
 assert.equal(caster.state.resources["spell-slot-2"], 3);
 
 S.beginTurn(caster.state);
-const rolls = [1, 10, 9];
+const rolls = [1, 10, 9, 8];
 window.IRON_PIT_DICE = {
   roll: (sides) => {
     assert.ok(rolls.length, `fixed dice exhausted before d${sides}`);
@@ -126,8 +126,9 @@ assert.equal(offense.sequence, 3);
 assert.equal(offense.events[0].feature_id, "inflict-wounds");
 assert.equal(offense.events[1].feature_id, "inflict-wounds");
 assert.equal(offense.events[1].save_succeeded, false);
-assert.equal(offense.events[1].damage_roll.total, 19);
-assert.equal(caster.state.resources["spell-slot-1"], 3);
-assert.equal(caster.state.resources["spell-slot-2"], 3);
+assert.equal(offense.events[1].damage_roll.total, 27);
+assert.equal(caster.state.resources["spell-slot-1"], 4);
+assert.equal(caster.state.resources["spell-slot-2"], 2);
+assert.equal(rolls.length, 0, "Inflict Wounds upcast consumes exactly one save d20 plus three damage dice.");
 
 console.log("Generated Browser Cleric 4 ASI, one-opening-buff, and Inflict Wounds regressions passed.");

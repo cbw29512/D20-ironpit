@@ -23,11 +23,11 @@ const S = window.IRON_PIT_BROWSER_STATE;
 const P = window.IRON_PIT_BROWSER_SPELL_POLICY;
 const X = window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
-const spell = (id, level, areaRadius = null, range = 150) => ({
+const spell = (id, level, areaRadius = null, range = 150, upcastDicePerLevel = 0) => ({
   id, name: id, level, actionCost: "action", range, areaRadius,
   saveAbility: "dexterity", dc: 12, damageDiceCount: 1, damageDiceSize: 6,
   damageBonus: 0, damageType: "fire", successDamage: "half",
-  concentration: false, animation: "spell-save",
+  upcastDicePerLevel, concentration: false, animation: "spell-save",
 });
 const member = (id, side, position, template = base) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
@@ -89,4 +89,21 @@ function caster(spells, slots) {
   assert.equal(c.state.resources["spell-slot-4"], 1);
 }
 
-console.log("Browser spell priority, ally-safe AoE, and printed-level slot regressions passed.");
+{
+  const c = caster([spell("scaling-flame", 3, null, 150, 1)], { 3: 1, 4: 1 });
+  const target = member("monster-0", "monsters", 30);
+  target.state.template.saving_throw_bonuses.dexterity = 0;
+  const setup = { heroes: [c], monsters: [target] };
+  const choice = P.choose(c, setup, "1:caster");
+  assert.equal(choice.action.id, "scaling-flame");
+  assert.equal(choice.slotLevel, 4);
+  window.IRON_PIT_DICE = queuedDice([1, 6, 5]);
+  const result = X.resolve(1, 1, c, setup, choice, "1:caster");
+  const saveEvent = result.events.find((event) => event.event_type === "saving_throw");
+  assert.deepEqual(saveEvent.damage_components[0].rolls, [6, 5]);
+  assert.equal(saveEvent.damage_roll.total, 11);
+  assert.equal(c.state.resources["spell-slot-4"], 0);
+  assert.equal(c.state.resources["spell-slot-3"], 1);
+}
+
+console.log("Browser spell priority, ally-safe AoE, and declared save-spell upcasting regressions passed.");

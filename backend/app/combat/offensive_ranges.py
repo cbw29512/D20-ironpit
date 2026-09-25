@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spellcasting import legal_slot_levels, slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
 from app.domain.size import size_at_most
@@ -83,7 +83,10 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
         for action in attacker.state.template.spell_save_actions:
             if action.action_cost == "reaction" or action.concentration or not is_available(attacker.state, action.action_cost):
                 continue
-            if not _spell_level_available(attacker, action.level, turn_key):
+            if not legal_slot_levels(
+                attacker.state, turn_key, action.level,
+                higher_slot_scaling=action.upcast_dice_per_level > 0,
+            ):
                 continue
             maximum = action.range_ft + (action.area_radius_ft or 0)
             ranges.append(("spell", maximum))

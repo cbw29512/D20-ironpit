@@ -67,17 +67,17 @@ def test_cleric_four_expected_value_uses_inflict_wounds_in_close_combat() -> Non
     setup = EncounterSetup(heroes=[caster], monsters=[target], hero_total_levels=4, monster_total_cr="1")
 
     events, sequence = resolve_best_spell_offense(
-        1, 1, caster, setup, "1:cleric", FixedDiceProvider([1, 10, 9]),
+        1, 1, caster, setup, "1:cleric", FixedDiceProvider([1, 10, 9, 8]),
     )
 
     assert sequence == 3
     assert events[0].feature_id == "inflict-wounds"
     assert events[1].feature_id == "inflict-wounds"
     assert events[1].save_succeeded is False
-    assert events[1].damage_roll is not None and events[1].damage_roll.total == 19
+    assert events[1].damage_roll is not None and events[1].damage_roll.total == 27
     slots = {item.id: item.current_uses for item in caster.state.resources}
-    assert slots["spell-slot-1"] == 3
-    assert slots["spell-slot-2"] == 3
+    assert slots["spell-slot-1"] == 4
+    assert slots["spell-slot-2"] == 2
 
 
 def test_seraphine_certified_registry_exposes_level_four() -> None:
