@@ -11,6 +11,11 @@ from app.domain.size import CreatureSize
 from app.combat.dice import FixedDiceProvider
 
 
+class _NoRollDice:
+    def roll(self, sides: int) -> int:
+        raise AssertionError(f"Duplicate hazard trigger unexpectedly rolled d{sides}.")
+
+
 def _member(template, combatant_id: str, side: str, x: int, y: int):
     member = EncounterCombatant(
         combatant_id=combatant_id,
@@ -79,7 +84,7 @@ def test_stationary_hazard_cast_and_first_entry_trigger_are_generic() -> None:
     assert setup.persistent_hazards[0].remaining_damage_capacity == 40
 
     again, sequence = resolve_persistent_hazard_entries(
-        sequence, 1, goblin, setup, FixedDiceProvider([]), "1:goblin",
+        sequence, 1, goblin, setup, _NoRollDice(), "1:goblin",
     )
     assert again == []
 
