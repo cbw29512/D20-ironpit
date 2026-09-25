@@ -70,6 +70,7 @@ def build_guiding_bolt(attack_bonus: int) -> SpellAttackAction:
         damage_dice_count=4,
         damage_dice_size=6,
         damage_type="radiant",
+        upcast_dice_per_level=1,
         on_hit_modifier_effects=[
             SpellModifierEffect(
                 kind="attacks-against-advantage",
