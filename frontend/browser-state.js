@@ -3,7 +3,7 @@
 
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
-  const T = () => window.IRON_PIT_BROWSER_TIMED || { resolveMovementCounters: () => [] };
+  const T = () => window.IRON_PIT_BROWSER_TIMED || {\n    resolveMovementCounters: () => [],\n    suppressesAction: () => false,\n    suppressesBonusAction: () => false,\n    suppressesMovement: () => false,\n    suppressesReactions: () => false,\n  };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
@@ -22,7 +22,7 @@
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
-      grapple_sources: [], timed_effects: [], deferred_effects: [], active_modifiers: OM().build(template), concentration: null,
+      grapple_sources: [], timed_effects: [], deferred_effects: [], persistent_spell_attacks: [], active_modifiers: OM().build(template), concentration: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
@@ -41,7 +41,7 @@
     state.action_available = false; state.bonus_action_available = false; state.movement_remaining_ft = 0;
   }
 
-  function refreshReaction(state) { state.reaction_available = true; }
+  function refreshReaction(state) { state.reaction_available = !T().suppressesReactions(state); }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
     const survivor = state.template.bloodied_start_turn_heal_amount || state.template.survivor_heal_amount || 0;
@@ -63,7 +63,7 @@
       ...(G()?.resolveMovementCounters?.(state) || []),
     ];
     const speedZero = G()?.speedIsZero(state) || false;
-    if (speedZero) state.movement_remaining_ft = 0;
+    if (speedZero || T().suppressesMovement(state)) state.movement_remaining_ft = 0;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
     if (state.active_effect_ids.includes("prone") && speed > 0 && !speedZero) {
       state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(speed / 2));
