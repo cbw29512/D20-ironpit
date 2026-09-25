@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.dice import DiceProvider
+from app.combat.pit_policy import is_backline
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant, D20BonusDieAction, D20TestKind
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent, DiceRoll
@@ -44,6 +45,45 @@ def target_allowed(
         )
         raise RuntimeError("D20 bonus-die target could not be validated.") from exc
 
+
+
+def choose_d20_bonus_die_action(
+    source: EncounterCombatant,
+    setup,
+) -> tuple[D20BonusDieAction, EncounterCombatant] | None:
+    """Choose one legal support grant without embedding source/class identity."""
+    try:
+        choices: list[tuple[D20BonusDieAction, EncounterCombatant]] = []
+        allies = setup.heroes if source.side == "heroes" else setup.monsters
+        for action in source.state.template.d20_bonus_die_actions:
+            if not is_available(source.state, action.action_cost):
+                continue
+            resource = _resource(source, action)
+            if resource is None or resource.current_uses < action.resource_cost:
+                continue
+            for target in allies:
+                if not target_allowed(source, target, action):
+                    continue
+                if any(
+                    item.source_id == source.combatant_id and item.source_effect_id == action.id
+                    for item in target.state.active_d20_bonus_dice
+                ):
+                    continue
+                choices.append((action, target))
+        if not choices:
+            return None
+        return min(
+            choices,
+            key=lambda choice: (
+                -choice[0].priority,
+                int(is_backline(choice[1])),
+                -choice[1].state.template.weapon_attack.attack_bonus,
+                choice[1].combatant_id,
+            ),
+        )
+    except Exception as exc:
+        logger.exception("Failed to choose d20 bonus-die support action for %s.", source.combatant_id)
+        raise RuntimeError("D20 bonus-die support choice could not be resolved.") from exc
 
 def resolve_d20_bonus_die_grant(
     sequence: int,
