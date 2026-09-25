@@ -1,7 +1,7 @@
 from app.combat.offensive_ranges import offensive_ranges_for_target
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
-from app.domain.combatants import ResourceDefinition
+from app.domain.runtime import ResourceState
 from app.domain.encounters import EncounterCombatant
 from app.domain.spells import SpellSaveAction
 
@@ -38,11 +38,12 @@ def test_save_spell_range_remains_available_through_legal_upcast_slot() -> None:
         ),
     ]
     caster.state.resources = [
-        ResourceDefinition(
+        ResourceState(
             id="spell-slot-2",
             name="Level 2 Slot",
+            current_uses=1,
             max_uses=1,
-        ).model_copy(update={"current_uses": 1}),
+        ),
     ]
 
     ranges = offensive_ranges_for_target(caster, target, "1:caster")
