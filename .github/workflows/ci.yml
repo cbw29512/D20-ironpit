@@ -13,7 +13,7 @@ concurrency:
 
 # Exact-head certification for RAW combat, source parity, figure identity, full SRD roster visibility, six-slot UI, Battle Lab, and Pages root entry.
 jobs:
-  combat-certification:
+  source-and-python:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -87,124 +87,6 @@ jobs:
       - name: Certify Python rules reference
         working-directory: backend
         run: timeout 20m pytest -vv --durations=25
-      - name: Validate browser JavaScript syntax
-        run: |
-          for file in frontend/*.js; do node --check "$file"; done
-      - name: Run browser combat regressions
-        run: |
-          node frontend/browser-ability-hooks.test.cjs
-          node frontend/browser-recharge.test.cjs
-          node frontend/browser-turn-start-hooks.test.cjs
-          node frontend/browser-main-action-selection.test.cjs
-          node frontend/browser-main-action-pre-move.test.cjs
-          node frontend/browser-main-action-post-move.test.cjs
-          node frontend/browser-main-action-providers.test.cjs
-          node frontend/browser-main-action-provider-dependencies.test.cjs
-          node frontend/browser-action-surge-selector.test.cjs
-          node frontend/browser-bonus-action-hooks.test.cjs
-          node frontend/browser-attack-outcome-hooks.test.cjs
-          node frontend/browser-deferred-save-effect.test.cjs
-          node frontend/browser-2014-monk-level19.test.cjs
-          node frontend/browser-2014-monk-level20.test.cjs
-          node frontend/browser-initiative-resource-refill.test.cjs
-          node frontend/browser-turn-end-lifecycle-hooks.test.cjs
-          node frontend/browser-effect-bound-survival.test.cjs
-          node frontend/battle-lab.test.cjs
-          node frontend/browser-execution.test.cjs
-          node frontend/browser-audit.test.cjs
-          node frontend/browser-roll-revisions.test.cjs
-          node frontend/browser-dice-recording.test.cjs
-          node frontend/browser-engine.test.cjs
-          node frontend/browser-ruleset-isolation.test.cjs
-          node frontend/browser-formation.test.cjs
-          node frontend/browser-conditional-damage.test.cjs
-          node frontend/browser-swarm.test.cjs
-          node frontend/browser-rage.test.cjs
-          node frontend/browser-instinctive-pounce.test.cjs
-          node frontend/browser-barbarian3.test.cjs
-          node frontend/browser-sneak-attack.test.cjs
-          node frontend/browser-vex.test.cjs
-          node frontend/browser-graze.test.cjs
-          node frontend/browser-topple.test.cjs
-          node frontend/browser-light-weapons.test.cjs
-          node frontend/browser-defense-style.test.cjs
-          node frontend/browser-fighter-progression.test.cjs
-          node frontend/browser-fighter9.test.cjs
-          node frontend/browser-heroic-inspiration.test.cjs
-          node frontend/browser-champion.test.cjs
-          node frontend/browser-fighter4.test.cjs
-          node frontend/browser-fighter5.test.cjs
-          node frontend/browser-beast2.test.cjs
-          node frontend/browser-batch3.test.cjs
-          node frontend/browser-deathmatch.test.cjs
-          node frontend/browser-zero-hp-lifecycle.test.cjs
-          node frontend/browser-zero-hp-replacement.test.cjs
-          node frontend/browser-undead-fortitude.test.cjs
-          node frontend/browser-control.test.cjs
-          node frontend/browser-poison.test.cjs
-          node frontend/browser-mixed-damage.test.cjs
-          node frontend/browser-venom.test.cjs
-          node frontend/browser-mixed-multiattack.test.cjs
-          node frontend/browser-expansion.test.cjs
-          node frontend/browser-generated-monsters.test.cjs
-          node frontend/browser-creature-types.test.cjs
-          node frontend/browser-monster-saves.test.cjs
-          node frontend/browser-condition-immunity.test.cjs
-          node frontend/browser-debuff-counters.test.cjs
-          node frontend/browser-bonus-damage-modifiers.test.cjs
-          node frontend/browser-action-healing.test.cjs
-          node frontend/browser-healing-creature-type-exclusions.test.cjs
-          node frontend/browser-group-healing-area.test.cjs
-          node frontend/browser-pooled-healing.test.cjs
-          node frontend/browser-outgoing-healing-maximize.test.cjs
-          node frontend/browser-once-per-turn-hit-damage.test.cjs
-          node frontend/browser-persistent-spell-attacks.test.cjs
-          node frontend/browser-persistent-hazards.test.cjs
-          node frontend/browser-turn-undead-2014.test.cjs
-          node frontend/browser-divine-intervention-2014.test.cjs
-          node frontend/browser-cleric9-2014.test.cjs
-          node frontend/browser-action-condition.test.cjs
-          node frontend/browser-condition-lifecycle.test.cjs
-          node frontend/browser-condition-removal.test.cjs
-          node frontend/browser-timed-self-buffs.test.cjs
-          node frontend/browser-reactions.test.cjs
-          node frontend/browser-parry-effective-ac.test.cjs
-          node frontend/browser-reaction-movement.test.cjs
-          node frontend/browser-damage-triggered-reactions.test.cjs
-          node frontend/browser-spell-area.test.cjs
-          node frontend/browser-spell-resolution.test.cjs
-          node frontend/browser-spell-policy.test.cjs
-          node frontend/browser-precombat-spells.test.cjs
-          node frontend/browser-modifiers-concentration.test.cjs
-          node frontend/browser-next-attack-advantage.test.cjs
-          node frontend/browser-attack-advantage.test.cjs
-          node frontend/browser-guiding-bolt.test.cjs
-          node frontend/browser-spell-attack-turn.test.cjs
-          node frontend/browser-shield-of-faith.test.cjs
-          node frontend/browser-bless.test.cjs
-          node frontend/browser-cleric1.test.cjs
-          node frontend/browser-cleric2.test.cjs
-          node frontend/browser-cleric4.test.cjs
-          node frontend/browser-2014-paladin.test.cjs
-          node frontend/browser-2014-paladin-auras.test.cjs
-          node frontend/browser-paladin-oath-spells-2014.test.cjs
-          node frontend/browser-2014-paladin-level13.test.cjs
-          node frontend/browser-2014-paladin-level14.test.cjs
-          node frontend/browser-2014-paladin-level15.test.cjs
-          node frontend/browser-2014-paladin-level16.test.cjs
-          node frontend/browser-2014-paladin-entrypoints.test.cjs
-          node frontend/browser-spell-slot-healing.test.cjs
-          node frontend/browser-ongoing-spell-control.test.cjs
-          node frontend/browser-forced-retreat-turn.test.cjs
-          node frontend/browser-fear-ui.test.cjs
-          node frontend/battle-log-format.test.cjs
-          node frontend/figure-visuals.test.cjs
-          node frontend/figure-portraits.test.cjs
-          node frontend/encounter-picker.test.cjs
-          node frontend/encounter-wiring.test.cjs
-          node frontend/browser-dodge.test.cjs
-          node frontend/browser-grid-dodge-fallback.test.cjs
-          node frontend/browser-turbo.test.cjs
       - name: Prove production fight path is backend-free
         run: |
           ! grep -R -q 'IRON_PIT_API_BASE' frontend scripts
@@ -411,3 +293,139 @@ jobs:
           grep -q 'CONTEXT.*production' netlify.toml
           grep -q 'pip install -e ./backend' netlify.toml
           grep -q 'prepare_static_site.py' netlify.toml
+
+  browser-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Validate browser JavaScript syntax
+        run: |
+          for file in frontend/*.js; do node --check "$file"; done
+      - name: Run browser combat regressions
+        run: |
+          node frontend/browser-ability-hooks.test.cjs
+          node frontend/browser-recharge.test.cjs
+          node frontend/browser-turn-start-hooks.test.cjs
+          node frontend/browser-main-action-selection.test.cjs
+          node frontend/browser-main-action-pre-move.test.cjs
+          node frontend/browser-main-action-post-move.test.cjs
+          node frontend/browser-main-action-providers.test.cjs
+          node frontend/browser-main-action-provider-dependencies.test.cjs
+          node frontend/browser-action-surge-selector.test.cjs
+          node frontend/browser-bonus-action-hooks.test.cjs
+          node frontend/browser-attack-outcome-hooks.test.cjs
+          node frontend/browser-deferred-save-effect.test.cjs
+          node frontend/browser-2014-monk-level19.test.cjs
+          node frontend/browser-2014-monk-level20.test.cjs
+          node frontend/browser-initiative-resource-refill.test.cjs
+          node frontend/browser-turn-end-lifecycle-hooks.test.cjs
+          node frontend/browser-effect-bound-survival.test.cjs
+          node frontend/battle-lab.test.cjs
+          node frontend/browser-execution.test.cjs
+          node frontend/browser-audit.test.cjs
+          node frontend/browser-roll-revisions.test.cjs
+          node frontend/browser-dice-recording.test.cjs
+          node frontend/browser-engine.test.cjs
+          node frontend/browser-ruleset-isolation.test.cjs
+          node frontend/browser-formation.test.cjs
+          node frontend/browser-conditional-damage.test.cjs
+          node frontend/browser-swarm.test.cjs
+          node frontend/browser-rage.test.cjs
+          node frontend/browser-instinctive-pounce.test.cjs
+          node frontend/browser-barbarian3.test.cjs
+          node frontend/browser-sneak-attack.test.cjs
+          node frontend/browser-vex.test.cjs
+          node frontend/browser-graze.test.cjs
+          node frontend/browser-topple.test.cjs
+          node frontend/browser-light-weapons.test.cjs
+          node frontend/browser-defense-style.test.cjs
+          node frontend/browser-fighter-progression.test.cjs
+          node frontend/browser-fighter9.test.cjs
+          node frontend/browser-heroic-inspiration.test.cjs
+          node frontend/browser-champion.test.cjs
+          node frontend/browser-fighter4.test.cjs
+          node frontend/browser-fighter5.test.cjs
+          node frontend/browser-beast2.test.cjs
+          node frontend/browser-batch3.test.cjs
+          node frontend/browser-deathmatch.test.cjs
+          node frontend/browser-zero-hp-lifecycle.test.cjs
+          node frontend/browser-zero-hp-replacement.test.cjs
+          node frontend/browser-undead-fortitude.test.cjs
+          node frontend/browser-control.test.cjs
+          node frontend/browser-poison.test.cjs
+          node frontend/browser-mixed-damage.test.cjs
+          node frontend/browser-venom.test.cjs
+          node frontend/browser-mixed-multiattack.test.cjs
+          node frontend/browser-expansion.test.cjs
+          node frontend/browser-generated-monsters.test.cjs
+          node frontend/browser-creature-types.test.cjs
+          node frontend/browser-monster-saves.test.cjs
+          node frontend/browser-condition-immunity.test.cjs
+          node frontend/browser-debuff-counters.test.cjs
+          node frontend/browser-bonus-damage-modifiers.test.cjs
+          node frontend/browser-action-healing.test.cjs
+          node frontend/browser-healing-creature-type-exclusions.test.cjs
+          node frontend/browser-group-healing-area.test.cjs
+          node frontend/browser-pooled-healing.test.cjs
+          node frontend/browser-outgoing-healing-maximize.test.cjs
+          node frontend/browser-once-per-turn-hit-damage.test.cjs
+          node frontend/browser-persistent-spell-attacks.test.cjs
+          node frontend/browser-persistent-hazards.test.cjs
+          node frontend/browser-turn-undead-2014.test.cjs
+          node frontend/browser-divine-intervention-2014.test.cjs
+          node frontend/browser-cleric9-2014.test.cjs
+          node frontend/browser-action-condition.test.cjs
+          node frontend/browser-condition-lifecycle.test.cjs
+          node frontend/browser-condition-removal.test.cjs
+          node frontend/browser-timed-self-buffs.test.cjs
+          node frontend/browser-reactions.test.cjs
+          node frontend/browser-parry-effective-ac.test.cjs
+          node frontend/browser-reaction-movement.test.cjs
+          node frontend/browser-damage-triggered-reactions.test.cjs
+          node frontend/browser-spell-area.test.cjs
+          node frontend/browser-spell-resolution.test.cjs
+          node frontend/browser-spell-policy.test.cjs
+          node frontend/browser-precombat-spells.test.cjs
+          node frontend/browser-modifiers-concentration.test.cjs
+          node frontend/browser-next-attack-advantage.test.cjs
+          node frontend/browser-attack-advantage.test.cjs
+          node frontend/browser-guiding-bolt.test.cjs
+          node frontend/browser-spell-attack-turn.test.cjs
+          node frontend/browser-shield-of-faith.test.cjs
+          node frontend/browser-bless.test.cjs
+          node frontend/browser-cleric1.test.cjs
+          node frontend/browser-cleric2.test.cjs
+          node frontend/browser-cleric4.test.cjs
+          node frontend/browser-2014-paladin.test.cjs
+          node frontend/browser-2014-paladin-auras.test.cjs
+          node frontend/browser-paladin-oath-spells-2014.test.cjs
+          node frontend/browser-2014-paladin-level13.test.cjs
+          node frontend/browser-2014-paladin-level14.test.cjs
+          node frontend/browser-2014-paladin-level15.test.cjs
+          node frontend/browser-2014-paladin-level16.test.cjs
+          node frontend/browser-2014-paladin-entrypoints.test.cjs
+          node frontend/browser-spell-slot-healing.test.cjs
+          node frontend/browser-ongoing-spell-control.test.cjs
+          node frontend/browser-forced-retreat-turn.test.cjs
+          node frontend/browser-fear-ui.test.cjs
+          node frontend/battle-log-format.test.cjs
+          node frontend/figure-visuals.test.cjs
+          node frontend/figure-portraits.test.cjs
+          node frontend/encounter-picker.test.cjs
+          node frontend/encounter-wiring.test.cjs
+          node frontend/browser-dodge.test.cjs
+          node frontend/browser-grid-dodge-fallback.test.cjs
+          node frontend/browser-turbo.test.cjs
+
+  combat-certification:
+    if: ${{ always() }}
+    needs: [source-and-python, browser-regressions]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all exact-head certification lanes
+        run: |
+          test "${{ needs.source-and-python.result }}" = "success"
+          test "${{ needs.browser-regressions.result }}" = "success"
