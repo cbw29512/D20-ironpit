@@ -24,19 +24,22 @@ def test_all_edition_registry_contains_exact_certified_2014_progressions() -> No
     rogues = [(key, template) for key, template in heroes_2014 if key[0] == "rogue"]
     monks = [(key, template) for key, template in heroes_2014 if key[0] == "monk"]
     paladins = [(key, template) for key, template in heroes_2014 if key[0] == "paladin"]
+    clerics = [(key, template) for key, template in heroes_2014 if key[0] == "cleric"]
 
-    assert len(heroes_2014) == 100
+    assert len(heroes_2014) == 120
     assert [key[1] for key, _ in fighters] == list(range(1, 21))
     assert [key[1] for key, _ in barbarians] == list(range(1, 21))
     assert [key[1] for key, _ in rogues] == list(range(1, 21))
     assert [key[1] for key, _ in monks] == list(range(1, 21))
     assert [key[1] for key, _ in paladins] == list(range(1, 21))
+    assert [key[1] for key, _ in clerics] == list(range(1, 21))
     assert {key[2] for key, _ in heroes_2014} == {"canonical-2014"}
     assert {template.name for _, template in fighters} == {"Karnok Stoneward"}
     assert {template.name for _, template in barbarians} == {"Rokhan Stonefury"}
     assert {template.name for _, template in rogues} == {"Mara Quickstep"}
     assert {template.name for _, template in monks} == {"Kael Stillwater"}
     assert {template.name for _, template in paladins} == {"Aurelia Brightshield"}
+    assert {template.name for _, template in clerics} == {"Seraphine Dawnshield"}
     assert all(template.weapon_masteries == [] for _, template in heroes_2014)
 
 
@@ -48,7 +51,8 @@ def test_arena_fingerprints_stay_2024_while_all_edition_registry_adds_2014() -> 
     rogue_ids = {f"mara-quickstep-2014-l{level}" for level in range(1, 21)}
     monk_ids = {f"kael-stillwater-2014-l{level}" for level in range(1, 21)}
     paladin_ids = {f"aurelia-brightshield-2014-l{level}" for level in range(1, 21)}
-    ids_2014 = fighter_ids | barbarian_ids | rogue_ids | monk_ids | paladin_ids
+    cleric_ids = {f"seraphine-dawnshield-2014-l{level}" for level in range(1, 21)}
+    ids_2014 = fighter_ids | barbarian_ids | rogue_ids | monk_ids | paladin_ids | cleric_ids
 
     assert ids_2014.isdisjoint(arena_profiles)
     assert ids_2014.issubset(all_profiles)
