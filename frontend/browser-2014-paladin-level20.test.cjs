@@ -226,4 +226,30 @@ const afterExpiry = H.runPhase(turnStart, {
 assert.equal(afterExpiry.events.length, 0);
 assert.equal(target.state.current_hp, before - 5);
 
+const taggedHero = structuredClone(hero);
+const taggedAction = structuredClone(nimbus);
+taggedAction.startTurnEmanationDamage = null;
+taggedAction.savingThrowAdvantageGrants = [{
+  source_id: "tagged-defense",
+  source_name: "Tagged Defense",
+  abilities: ["wisdom"],
+  required_effect_tags: ["poison"],
+}];
+const taggedPaladin = {
+  combatant_id: "tagged-aurelia",
+  side: "heroes",
+  position_ft: 0,
+  state: S.buildState(taggedHero),
+};
+S.beginTurn(taggedPaladin.state);
+B.resolve(1, 1, taggedPaladin, taggedAction);
+assert.deepEqual(
+  D.saveAdvantageSourceNames(taggedPaladin.state, "wisdom", { effectTags: ["poison"] }),
+  ["Tagged Defense"],
+);
+assert.deepEqual(
+  D.saveAdvantageSourceNames(taggedPaladin.state, "wisdom", {}),
+  [],
+);
+
 console.log("2014 Paladin level 20 Holy Nimbus browser parity passed.");
