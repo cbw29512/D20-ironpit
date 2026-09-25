@@ -9,7 +9,7 @@ from app.combat.d20_bonus_dice import (
     resolve_d20_bonus_die_grant,
 )
 from app.combat.dice import FixedDiceProvider
-from app.combat.state import build_combatant_state
+from app.combat.state import begin_turn, build_combatant_state
 from app.content.bard_2014_inspiration import build_bardic_inspiration_2014
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.domain.events import DiceRoll
@@ -61,6 +61,7 @@ def test_grant_spend_and_expire_are_fresh_fight_state() -> None:
     assert revised.total == 21
     assert ally.state.active_d20_bonus_dice == []
 
+    begin_turn(bard.state)
     resolve_d20_bonus_die_grant(2, 2, bard, ally, action)
     assert expire_d20_bonus_dice(ally.state, 101) == []
     assert expire_d20_bonus_dice(ally.state, 102) == ["bardic-inspiration"]
