@@ -99,10 +99,16 @@ def _save_success_probability(target, action: SpellSaveAction) -> float:
 
 
 def save_spell_expected_damage(target: EncounterCombatant, action: SpellSaveAction) -> float:
-    if not action.damage_dice_count or not action.damage_type:
+    components = action.damage_components or ([] if not action.damage_dice_count else [action])
+    if not components:
         return 0.0
     success = _save_success_probability(target, action)
-    factor = _damage_factor(target.state, DamageType(action.damage_type))
-    full = _mean_damage(action.damage_dice_count, action.damage_dice_size, action.damage_bonus) * factor
+    full = sum(
+        _mean_damage(item.dice_count if hasattr(item, "dice_count") else item.damage_dice_count,
+                     item.dice_size if hasattr(item, "dice_size") else item.damage_dice_size,
+                     item.damage_bonus)
+        * _damage_factor(target.state, DamageType(item.damage_type))
+        for item in components
+    )
     on_success = full * 0.5 if action.success_damage == "half" else 0.0
     return max(0.0, (1 - success) * full + success * on_success)
