@@ -26,6 +26,7 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
         range_ft=target_range, damage_dice_count=spell.damage_dice_count,
         damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
         damage_type=spell.damage_type, success_damage=spell.success_damage,
+        damage_components=list(spell.damage_components),
         magical_effect=True, animation=spell.animation,
     )
 
@@ -78,7 +79,7 @@ def resolve_spell(
     by_id = {member.combatant_id: member for member in members}
     affected_states = [member.state for member in members]
     save_action = _save_action(choice)
-    shared_damage_rolls: list[int] | None = None
+    shared_damage_rolls: list[int] | list[list[int]] | None = None
     for target_id in choice.target_ids:
         target = by_id[target_id]
         ward = check_targeting_ward(caster, target, dice) if spell.area_radius_ft is None else None
@@ -99,5 +100,5 @@ def resolve_spell(
             event.description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
         events.extend(chain)
         if shared_damage_rolls is None and event.damage_components:
-            shared_damage_rolls = list(event.damage_components[0].rolls)
+            shared_damage_rolls = [list(component.rolls) for component in event.damage_components]
     return events, sequence
