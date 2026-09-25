@@ -4,7 +4,7 @@
 
 This audit is anchored to the 2014 lane and the D&D SRD 5.1 Paladin / Oath of Devotion rules. It does not certify any level and must not be used to advance READY state by itself.
 
-Current certified runtime stops at Aurelia level 15. The purpose of this document is to decompose the remaining levels through 20 into universal combat mechanics before any new resolver is written.
+Current certified runtime stops at Aurelia level 16. The purpose of this document is to decompose the remaining levels through 20 into universal combat mechanics before any new resolver is written.
 
 ## RAW progression inventory
 
@@ -45,7 +45,7 @@ Repository inventory after level 12 certification found:
 2. **Guardian of Faith:** no engine work while summons/created combat entities are disabled. Revisit only if the global summon policy changes.
 3. **Cleansing Touch:** resolved as `ENGINE_EXISTS_PARAMETER_DELTA`. The generic effect-removal action now supports level-0 feature actions; Cleansing Touch uses an Action, 5-foot self/willing-ally targeting, automatic removal through spell level 9, no ability check, no spell slot, and Charisma-modifier uses. Arena AI orders it before Dispel Magic so a class-feature use is not replaced by an unnecessary spell-slot expenditure.
 4. **Purity of Spirit:** resolved as a permanent source-owned buff compiled into the existing typed defenses from *protection from evil and good*: qualifying creature types have Disadvantage attacking Aurelia and cannot Charm or Frighten her. Possession remains `ARENA_NEUTRAL` until a certified possession mechanic enters active content.
-5. **Flame Strike:** resolved as `ENGINE_TRULY_MISSING` only for the generic multi-component save-damage shape. The universal save action now carries independently typed components under one save; Flame Strike binds 4d6 fire + 4d6 radiant with half of each on success and the existing area-targeting path.
+5. **Flame Strike:** preflight classification was `ENGINE_TRULY_MISSING` only for the generic multi-component save-damage shape; the source ability itself is `ENGINE_EXISTS_COMPOSITION` once that primitive exists. The universal save action now carries independently typed components under one save; Flame Strike binds 4d6 fire + 4d6 radiant with half of each on success and the existing area-targeting path.
 6. **Holy Nimbus:** verify generic start-of-turn area damage and source-creature-type-gated save advantage. Only missing generic pieces may become new engine primitives.
 
 ## Certification sequence
