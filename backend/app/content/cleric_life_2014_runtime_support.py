@@ -144,7 +144,7 @@ def build_cleric_progression_2014(level: int) -> ProgressionCombatFeatures:
                     source_id="dwarven-resilience",
                     source_name="Dwarven Resilience",
                     abilities=_ABILITIES,
-                    against_effect_tags=["poison", "poisoned"],
+                    required_effect_tags=["poison"],
                 )
             ],
         )
