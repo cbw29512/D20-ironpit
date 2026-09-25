@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-spellcasting.js",
-  "browser-spell-modifiers.js", "browser-spell-attack.js",
+  "browser-spell-modifiers.js", "browser-offense-value.js", "browser-spell-attack-policy.js", "browser-spell-attack.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -21,6 +21,7 @@ const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const guidingBolt = {
   id: "guiding-bolt", name: "Guiding Bolt", level: 1, actionCost: "action", range: 120,
   attackBonus: 5, damageDiceCount: 4, damageDiceSize: 6, damageBonus: 0, damageType: "radiant",
+  upcastDicePerLevel: 1,
   onHitModifierEffects: [{
     kind: "attacks-against-advantage", flatBonus: 0, diceCount: 0, diceSize: 0, damageType: null,
     consumeOnAttackAgainst: true, expiresAfterSourceTurns: 1,
@@ -98,10 +99,12 @@ function setup(targetAc = 10) {
 {
   const { caster, target, arena } = setup();
   caster.state.resources = { "spell-slot-2": 1 };
-  dice([20]);
-  assert.throws(() => X.resolve(1, 1, caster, target, guidingBolt, arena, "1:caster"), /No level 1 spell slot/);
-  assert.equal(caster.state.resources["spell-slot-2"], 1);
-  assert.equal(caster.state.action_available, true);
+  dice([15, 6, 5, 4, 3, 2]);
+  const event = X.resolve(1, 1, caster, target, guidingBolt, arena, "1:caster", 2);
+  assert.equal(event.hit, true);
+  assert.equal(event.damage_roll.total, 20);
+  assert.equal(caster.state.resources["spell-slot-2"], 0);
+  assert.equal(caster.state.action_available, false);
 }
 
 console.log("Browser Guiding Bolt spell-attack regressions passed.");
