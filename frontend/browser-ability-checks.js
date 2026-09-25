@@ -26,9 +26,15 @@
     }
   }
 
-  function resolve(state, ability, roll, dc) {
+  function resolve(state, ability, roll, dc, options = {}) {
     try {
       let revised = applyMinimum(state, ability, roll);
+      if ((state.active_d20_bonus_dice || []).length) {
+        if (!Number.isInteger(options.round)) throw new Error("Active d20 bonus die requires ability-check round context.");
+        const bonus = window.IRON_PIT_BROWSER_D20_BONUS_DICE;
+        if (!bonus) throw new Error("D20 bonus-die runtime is not loaded for an active ability-check grant.");
+        revised = bonus.applyIfUseful(state, "ability_check", revised, dc, options.round).roll;
+      }
       const grants = state.template.failed_d20_test_override_grants || [];
       const eligible = grants.some((grant) => (grant.test_kinds || []).includes("ability_check"));
       if (eligible && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
