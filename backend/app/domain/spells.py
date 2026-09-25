@@ -62,6 +62,7 @@ class SpellAttackAction(BaseModel):
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     animation: str = "spell-attack"
     source: str | None = None
