@@ -12,6 +12,7 @@
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { saveDisadvantage: () => 0 };
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || { evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
+  const SD = () => window.IRON_PIT_BROWSER_SAVE_DAMAGE;
   const D = () => window.IRON_PIT_DICE;
   const DO = () => window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }), sourceNameForRoll: () => null };
   const FR = () => window.IRON_PIT_BROWSER_FAILED_SAVE_REROLL || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }) };
@@ -130,8 +131,18 @@
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
+    if (action.damageComponents?.length) {
+      if (!SD()) throw new Error("Multi-component save damage runtime is not loaded.");
+      const resolved = SD().resolve(target.state, action, save.succeeded, options.sharedDamageRolls);
+      damageComponents = resolved.components; damageRoll = resolved.roll;
+      if (resolved.appliedTotal) {
+        const affectedStates = states(options.setup);
+        damageOutcome = A().applyDamage(target.state, resolved.appliedTotal, false, resolved.damageTypes, affectedStates);
+        window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+      }
+    }
     const count = action.damageDiceCount || 0;
-    if (count && !(save.succeeded && action.successDamage === "none")) {
+    if (!action.damageComponents?.length && count && !(save.succeeded && action.successDamage === "none")) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
