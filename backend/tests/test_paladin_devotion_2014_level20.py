@@ -118,7 +118,7 @@ def test_holy_nimbus_enemy_turn_start_emanation_uses_range_and_radiant_defenses(
     before = target.state.current_hp
 
     events, sequence = resolve_target_turn_start_emanations(
-        2, 1, target, setup, FixedDiceProvider([]),
+        2, 1, target, setup, FixedDiceProvider([1]),
     )
 
     assert sequence == 3
@@ -132,7 +132,7 @@ def test_holy_nimbus_enemy_turn_start_emanation_uses_range_and_radiant_defenses(
 
     target.position_ft = 35
     later, later_sequence = resolve_target_turn_start_emanations(
-        sequence, 2, target, setup, FixedDiceProvider([]),
+        sequence, 2, target, setup, FixedDiceProvider([1]),
     )
     assert later == []
     assert later_sequence == sequence
