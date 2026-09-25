@@ -7,8 +7,7 @@ from app.content.paladin_devotion_2014_level14 import divine_favor_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.debuffs import DebuffCounter
 from app.domain.effect_removal import EffectRemovalAction
-from app.domain.save_damage import SaveDamageComponent
-from app.domain.spells import DefensiveSpellAction, SpellModifierEffect, SpellSaveAction
+from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 _PROTECTED_TYPES = ["aberration", "celestial", "elemental", "fey", "fiend", "undead"]
 _SOURCE = "D&D SRD 5.1 (2014): Paladin and Oath of Devotion spells"
@@ -149,30 +148,6 @@ def death_ward_2014() -> DefensiveSpellAction:
         animation="death-ward",
         source=_SOURCE,
     )
-
-
-def flame_strike_2014(level: int, charisma_modifier: int) -> SpellSaveAction:
-    try:
-        if level < 17:
-            raise ValueError("2014 Flame Strike requires Paladin level 17.")
-        return SpellSaveAction(
-            id="flame-strike",
-            name="Flame Strike",
-            level=5,
-            action_cost="action",
-            range_ft=60,
-            area_radius_ft=10,
-            save_ability="dexterity",
-            dc=8 + proficiency_bonus(level) + charisma_modifier,
-            success_damage="half",
-            damage_components=[
-                SaveDamageComponent(dice_count=4, dice_size=6, damage_type="fire"),
-                SaveDamageComponent(dice_count=4, dice_size=6, damage_type="radiant"),
-            ],
-            animation="flame-strike",
-        )
-    except Exception:
-        raise
 
 
 def build_paladin_healing_actions_2014(level: int, charisma_modifier: int) -> list[HealingAction]:
