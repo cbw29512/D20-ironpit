@@ -26,18 +26,21 @@ def _actor() -> EncounterCombatant:
     )
 
 
-def test_one_save_resolves_typed_damage_components_independently() -> None:
-    target_template = build_goblin_warrior().model_copy(
+def _target() -> EncounterCombatant:
+    template = build_goblin_warrior().model_copy(
         update={
             "damage_resistances": [DamageType.FIRE],
             "saving_throw_bonuses": {"dexterity": 2},
         },
     )
-    target = EncounterCombatant(
+    return EncounterCombatant(
         combatant_id="target", side="monsters", position_ft=30,
-        state=build_combatant_state(target_template),
+        state=build_combatant_state(template),
     )
 
+
+def test_one_save_resolves_typed_damage_components_independently() -> None:
+    target = _target()
     event = resolve_save_action(
         1, 1, _actor(), target, _action(40), 30, FixedDiceProvider([1, 6, 4]),
     )
@@ -52,14 +55,7 @@ def test_one_save_resolves_typed_damage_components_independently() -> None:
 
 
 def test_successful_save_halves_each_typed_component_before_defenses() -> None:
-    target_template = build_goblin_warrior().model_copy(
-        update={"damage_resistances": [DamageType.FIRE]},
-    )
-    target = EncounterCombatant(
-        combatant_id="target", side="monsters", position_ft=30,
-        state=build_combatant_state(target_template),
-    )
-
+    target = _target()
     event = resolve_save_action(
         1, 1, _actor(), target, _action(1), 30, FixedDiceProvider([20, 5, 3]),
     )
