@@ -8,7 +8,8 @@ from app.combat.effect_removal import choose_effect_removal_action, resolve_effe
 from app.combat.healing import resolve_healing
 from app.combat.modifier_stack import add_modifier
 from app.combat.saving_throw_rolls import saving_throw_mode
-from app.combat.saving_throws import resolve_save_action
+from app.combat.spell_policy import SpellChoice
+from app.combat.spell_resolution import resolve_spell
 from app.combat.state import build_combatant_state
 from app.combat.targeting_wards import check_targeting_ward
 from app.combat.timed_conditions import apply_timed_condition
@@ -240,12 +241,23 @@ def test_level17_flame_strike_reuses_multi_component_save_damage() -> None:
     target = _member(target_template, "target", "monsters", 30)
     flame = paladin.state.template.spell_save_actions[0]
 
-    event = resolve_save_action(
-        1, 1, paladin, target, flame, 30,
-        FixedDiceProvider([1, 6, 6, 6, 6, 4, 4, 4, 4]),
-        spend_action=False,
+    setup = EncounterSetup(
+        heroes=[paladin], monsters=[target], hero_total_levels=17,
+        monster_total_cr="0", ruleset="2014",
     )
+    choice = SpellChoice(
+        action=flame,
+        slot_level=5,
+        target_ids=(target.combatant_id,),
+    )
+    events, sequence = resolve_spell(
+        1, 1, paladin, setup, choice, "1:aurelia",
+        FixedDiceProvider([1, 6, 6, 6, 6, 4, 4, 4, 4]),
+    )
+    event = events[1]
 
+    assert sequence == 3
+    assert events[0].feature_id == "flame-strike"
     assert flame.id == "flame-strike"
     assert flame.dc == 18
     assert [(item.damage_type.value, item.total, item.applied_total) for item in event.damage_components] == [
