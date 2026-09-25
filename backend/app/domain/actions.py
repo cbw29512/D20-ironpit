@@ -4,7 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.save_damage import DamageTypeName, SaveDamageComponent\nfrom app.domain.size import CreatureSize
+from app.domain.save_damage import DamageTypeName, SaveDamageComponent
+from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 
 AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
@@ -13,10 +14,6 @@ HealingTargetMode = Literal["self", "ally", "self_or_ally", "other"]
 ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
 ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
-DamageTypeName = Literal[
-    "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
-    "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
-]
 ConditionName = Literal[
     "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
     "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
@@ -116,6 +113,7 @@ class SavingThrowAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
+    damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     resource_id: str | None = None
