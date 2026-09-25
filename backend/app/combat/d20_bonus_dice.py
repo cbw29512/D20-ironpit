@@ -61,6 +61,7 @@ def resolve_d20_bonus_die_grant(
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if not target_allowed(source, target, action):
             raise ValueError(f"{target.state.template.name} is not a legal target for {action.name}.")
+        expire_d20_bonus_dice(target.state, round_number)
         if any(
             item.source_id == source.combatant_id and item.source_effect_id == action.id
             for item in target.state.active_d20_bonus_dice
@@ -108,6 +109,7 @@ def eligible_d20_bonus_dice(
     round_number: int,
 ) -> list[ActiveD20BonusDieGrant]:
     try:
+        expire_d20_bonus_dice(state, round_number)
         return [
             item for item in state.active_d20_bonus_dice
             if test_kind in item.test_kinds and item.expires_round > round_number
