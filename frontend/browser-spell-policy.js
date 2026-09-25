@@ -21,13 +21,9 @@
   }
 
   function slotLevels(caster, action, turnKey) {
-    if (action.level === 0) return [0];
-    if (!C().slotSpellAvailable(caster.state, turnKey)) return [];
-    const maximum = action.upcastDicePerLevel > 0 ? 9 : action.level, levels = [];
-    for (let level = action.level; level <= maximum; level += 1) {
-      if ((caster.state.resources?.[`spell-slot-${level}`] || 0) > 0) levels.push(level);
-    }
-    return levels;
+    return C().legalSlotLevels(caster.state, turnKey, action.level, {
+      higherSlotScaling: (action.upcastDicePerLevel || 0) > 0,
+    });
   }
 
   function slotLevel(caster, action, turnKey) {
