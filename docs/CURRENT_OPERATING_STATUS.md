@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-25 against `main` after PR #380 merged.
+Recorded 2026-09-25 against `main` after PR #388 merged.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -20,6 +20,7 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2014 | Rogue (Thief) | 1–20 |
 | 2014 | Monk (Open Hand) | 1–20 |
 | 2014 | Paladin (Devotion) | 1–20 |
+| 2014 | Cleric (Life) | 1–20 |
 | 2024 | Fighter | 1–18 |
 | 2024 | Rogue | 1–20 |
 | 2024 | Cleric (Life) | 1–12 |
@@ -34,15 +35,11 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **Finish remaining 2014 canonical pregens before any new 2024 class expansion.**
 
-Next class: **2014 Life Cleric, one persistent 1–20 progression.**
-Relevant open work to rebase onto current `main` rather than stacking new PRs:
+Next class: **2014 Lore Bard, one persistent 1–20 progression.**
 
-- #361 Build 2014 Life Cleric as one persistent level 1-20 progression
-- #364 / #366 later 2014 Cleric completion slices
-- #363 approved spell upcasting + 2014 Turn Undead
-- #355 2014-first sequencing lock (merge or close once this file is the lock)
+2014 Life Cleric 1–20 merged in PR #388. Older Cleric PRs #361, #364, and #366 are superseded and closed.
 
-After 2014 Cleric 1–20: Bard, Druid, Ranger, Sorcerer, Warlock, Wizard (2014), then 240/240 2014 re-audit.
+After 2014 Bard 1–20: Druid, Ranger, Sorcerer, Warlock, Wizard (2014), then 240/240 2014 re-audit.
 
 Do **not** open or merge 2024 Cleric 13+, 2024 Fighter 19+, or 2024 Barbarian 8+ until that 2014 gate.
 
@@ -70,4 +67,4 @@ Do not restore per-push certification on feature branches. Run generators locall
 2. Never hand-edit generated artifacts.
 3. Never implement a class-named resolver when a universal primitive exists.
 4. Ask one clarification question rather than guessing RAW.
-5. Do not start a second class while 2014 Cleric is open.
+5. Do not start a second class while the active 2014 class progression is open.
