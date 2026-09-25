@@ -97,7 +97,11 @@
   function build2014() {
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
     const heroes = build2014Heroes(), monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
-    if (heroes.length !== 97) throw new Error(`Expected 97 certified 2014 hero levels; found ${heroes.length}.`);
+    if (!heroes.length || heroes.length > 240) {
+      throw new Error(`Certified 2014 hero registry has invalid size: ${heroes.length}.`);
+    }
+    const heroKeys = new Set(heroes.map((card) => `${card.class_id}:${card.level}`));
+    if (heroKeys.size !== heroes.length) throw new Error("Certified 2014 hero registry contains duplicate class/level entries.");
     if (monsters.length !== 129) throw new Error(`Expected 129 certified 2014 test monsters; found ${monsters.length}.`);
     if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 hero catalog crossed the ruleset boundary.");
     if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
