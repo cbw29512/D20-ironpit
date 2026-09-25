@@ -63,4 +63,13 @@ assert.deepEqual(event.damage_components.map((part) => [part.damage_type, part.t
 ]);
 assert.equal(event.damage_roll.total, 7);
 assert.equal(target.state.current_hp, 13);
+
+window.__rolls = [[5], [3]];
+const halved = window.IRON_PIT_BROWSER_SAVE_DAMAGE.resolve(target.state, action, true);
+assert.deepEqual(halved.components.map((part) => [part.damage_type, part.total, part.applied_total]), [
+  ["fire", 2, 1],
+  ["radiant", 1, 1],
+]);
+assert.equal(halved.appliedTotal, 2);
+
 console.log("Browser multi-component save damage parity passed.");
