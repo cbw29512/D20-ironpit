@@ -33,6 +33,7 @@
       if (!targetAllowed(source, target, action)) {
         throw new Error(target.state.template.name + " is not a legal target for " + action.name + ".");
       }
+      expire(target.state, round);
       const active = target.state.active_d20_bonus_dice || (target.state.active_d20_bonus_dice = []);
       if (active.some((item) => item.source_id === source.combatant_id && item.source_effect_id === action.id)) {
         throw new Error(target.state.template.name + " already has " + action.name + " from this source.");
@@ -67,6 +68,7 @@
 
   function eligible(state, testKind, round) {
     try {
+      expire(state, round);
       return (state.active_d20_bonus_dice || []).filter(
         (item) => (item.test_kinds || []).includes(testKind) && item.expires_round > round,
       );
