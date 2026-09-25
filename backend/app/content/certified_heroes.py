@@ -7,6 +7,7 @@ from app.content.certified_hero_progressions import iter_certified_progression_l
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.hero_progressions import CANONICAL_BUILD_ID
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
+from app.content.pregen_combat_profiles import PregenCombatProfile
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
@@ -19,23 +20,32 @@ HeroCatalogReady = tuple[str, str]
 def _validated(
     template: CombatantTemplate,
     profile: CharacterBuildProfile,
+    combat_profiles: dict[str, PregenCombatProfile],
 ) -> tuple[HeroBuildKey, CombatantTemplate]:
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, template)
-    combat_profile = build_all_pregen_combat_profiles().get(template.id)
+    combat_profile = combat_profiles.get(template.id)
     if combat_profile is None:
         raise ValueError(f"Certified hero {template.id} lacks a combat fingerprint.")
     assert_pregen_combat_stats(template, combat_profile)
     assert_character_resources_raw_ready(template, profile, combat_profile)
-    template = complete_unarmed_opportunity_profiles([template])[0]
+    template = complete_unarmed_opportunity_profiles(
+        [template],
+        character_combat_profiles=combat_profiles,
+    )[0]
     build_id = CANONICAL_BUILD_ID if profile.ruleset == "2024" else f"{CANONICAL_BUILD_ID}-2014"
     return (profile.class_id, profile.level, build_id), template
 
 
 def build_all_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
     """Validate every registered hero level across every supported ruleset."""
+    combat_profiles = build_all_pregen_combat_profiles()
     return [
-        _validated(progression.template_builder(level), progression.profile(level))
+        _validated(
+            progression.template_builder(level),
+            progression.profile(level),
+            combat_profiles,
+        )
         for progression, level in iter_certified_progression_levels()
     ]
 
