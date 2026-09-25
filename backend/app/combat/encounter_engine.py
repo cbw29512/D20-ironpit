@@ -20,6 +20,7 @@ from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
+from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
 
@@ -99,6 +100,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, "target_turn_start", dice,
                 )
                 events.extend(lifecycle_events)
+                emanation_events, sequence = resolve_target_turn_start_emanations(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(emanation_events)
 
                 death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
                 if death_event is not None:
