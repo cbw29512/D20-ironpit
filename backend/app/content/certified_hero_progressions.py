@@ -71,6 +71,7 @@ from app.content.rogue_thief_2014_profile import build_mara_quickstep_2014_profi
 from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
+from app.domain.rulesets import RulesetId
 
 ProfileBuilder = Callable[[], CharacterBuildProfile]
 ProfileLevelBuilder = Callable[[int], CharacterBuildProfile]
@@ -80,6 +81,7 @@ TemplateLevelBuilder = Callable[[int], CombatantTemplate]
 @dataclass(frozen=True)
 class CertifiedHeroProgression:
     class_id: str
+    ruleset: RulesetId
     template_builder: TemplateLevelBuilder
     profile_builders: tuple[ProfileBuilder, ...] = ()
     profile_level_builder: ProfileLevelBuilder | None = None
@@ -100,7 +102,7 @@ class CertifiedHeroProgression:
 
 CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
-        class_id="fighter", template_builder=build_karnok_stoneward_level,
+        class_id="fighter", ruleset="2024", template_builder=build_karnok_stoneward_level,
         profile_builders=(
             build_karnok_stoneward_profile, build_karnok_stoneward_level2_profile,
             build_karnok_stoneward_level3_profile, build_karnok_stoneward_level4_profile,
@@ -114,11 +116,11 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         ),
     ),
     CertifiedHeroProgression(
-        class_id="fighter", template_builder=build_karnok_stoneward_2014,
+        class_id="fighter", ruleset="2014", template_builder=build_karnok_stoneward_2014,
         profile_level_builder=build_karnok_stoneward_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(
-        class_id="barbarian", template_builder=build_rokhan_stonefury_level,
+        class_id="barbarian", ruleset="2024", template_builder=build_rokhan_stonefury_level,
         profile_builders=(
             build_rokhan_stonefury_profile, build_rokhan_stonefury_level2_profile,
             build_rokhan_stonefury_level3_profile, build_rokhan_stonefury_level4_profile,
@@ -127,11 +129,11 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         ),
     ),
     CertifiedHeroProgression(
-        class_id="barbarian", template_builder=build_rokhan_stonefury_2014,
+        class_id="barbarian", ruleset="2014", template_builder=build_rokhan_stonefury_2014,
         profile_level_builder=build_rokhan_stonefury_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(
-        class_id="cleric", template_builder=build_seraphine_dawnshield_level,
+        class_id="cleric", ruleset="2024", template_builder=build_seraphine_dawnshield_level,
         profile_builders=(
             build_seraphine_dawnshield_profile, build_seraphine_dawnshield_level2_profile,
             build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
@@ -142,11 +144,11 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         ),
     ),
     CertifiedHeroProgression(
-        class_id="cleric", template_builder=build_seraphine_dawnshield_2014,
+        class_id="cleric", ruleset="2014", template_builder=build_seraphine_dawnshield_2014,
         profile_level_builder=build_seraphine_dawnshield_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(
-        class_id="rogue", template_builder=build_mara_quickstep_level,
+        class_id="rogue", ruleset="2024", template_builder=build_mara_quickstep_level,
         profile_builders=(
             build_mara_quickstep_profile, build_mara_quickstep_level2_profile,
             build_mara_quickstep_level3_profile, build_mara_quickstep_level4_profile,
@@ -159,19 +161,26 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
         ),
     ),
     CertifiedHeroProgression(
-        class_id="rogue", template_builder=build_mara_quickstep_2014,
+        class_id="rogue", ruleset="2014", template_builder=build_mara_quickstep_2014,
         profile_level_builder=build_mara_quickstep_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(
-        class_id="monk", template_builder=build_kael_stillwater_2014,
+        class_id="monk", ruleset="2014", template_builder=build_kael_stillwater_2014,
         profile_level_builder=build_kael_stillwater_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(
-        class_id="paladin", template_builder=build_aurelia_brightshield_2014,
+        class_id="paladin", ruleset="2014", template_builder=build_aurelia_brightshield_2014,
         profile_level_builder=build_aurelia_brightshield_2014_profile, max_level=20,
     ),
 )
 
 
-def iter_certified_progression_levels() -> list[tuple[CertifiedHeroProgression, int]]:
-    return [(progression, level) for progression in CERTIFIED_HERO_PROGRESSIONS for level in progression.levels]
+def iter_certified_progression_levels(
+    ruleset: RulesetId | None = None,
+) -> list[tuple[CertifiedHeroProgression, int]]:
+    return [
+        (progression, level)
+        for progression in CERTIFIED_HERO_PROGRESSIONS
+        if ruleset is None or progression.ruleset == ruleset
+        for level in progression.levels
+    ]
