@@ -74,6 +74,7 @@ class CombatantTemplate(BaseModel):
     persistent_hazard_actions: list[PersistentHazardAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
+    d20_bonus_die_actions: list[D20BonusDieAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     initiative_resource_refill_grants: list[InitiativeResourceRefillGrant] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
