@@ -91,7 +91,10 @@
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     if (I().immune(target.state, effect.conditionId, sourceTemplate)) return null;
-    const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { conditionId: effect.conditionId });
+    const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
+      conditionId: effect.conditionId,
+      effectTags: effect.conditionId === "poisoned" ? ["poison"] : [],
+    });
     let appliedCondition = null;
     if (!save.succeeded && !target.state.active_effect_ids.includes(effect.conditionId)) {
       target.state.active_effect_ids.push(effect.conditionId); appliedCondition = effect.conditionId;
@@ -117,10 +120,15 @@
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+    const effectTags = new Set(
+      (action.effectTags || []).map((tag) => String(tag).trim().toLowerCase()).filter(Boolean),
+    );
+    if (String(action.damageType || "").trim().toLowerCase() === "poison") effectTags.add("poison");
     const saveContext = {
       magicalEffect: Boolean(action.magicalEffect),
       spellEffect: Boolean(options.spellEffect),
       sourceCreatureType: actor.state.template.creature_type || null,
+      effectTags: [...effectTags],
     };
     const advantageSources = DF().saveAdvantageSourceNames?.(
       target.state, action.saveAbility, saveContext,
