@@ -1,7 +1,6 @@
-import pytest
-
 from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
+from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
@@ -94,7 +93,7 @@ def test_guiding_bolt_uses_ranged_attack_disadvantage_in_close_combat() -> None:
     assert event.attack_roll.selected_roll == 2
 
 
-def test_guiding_bolt_does_not_use_higher_slot_while_upcasting_is_deferred() -> None:
+def test_guiding_bolt_uses_declared_higher_slot_and_scales_damage() -> None:
     setup, caster, _, target = _setup()
     caster.state.resources = [
         item.model_copy(update={"id": "spell-slot-2", "name": "Level 2 Slot", "current_uses": 1, "max_uses": 1})
@@ -102,7 +101,16 @@ def test_guiding_bolt_does_not_use_higher_slot_while_upcasting_is_deferred() -> 
     ]
     spell = caster.state.template.spell_attack_actions[0]
 
-    with pytest.raises(ValueError, match="No level 1 spell slot"):
-        resolve_spell_attack(1, 1, caster, target, spell, setup, "1:caster", FixedDiceProvider([20]))
-    assert caster.state.resources[0].current_uses == 1
-    assert caster.state.action_available is True
+    choice = choose_spell_attack(caster, setup, "1:caster")
+    assert choice is not None and choice.slot_level == 2
+
+    event = resolve_spell_attack(
+        1, 1, caster, target, spell, setup, "1:caster",
+        FixedDiceProvider([15, 6, 5, 4, 3, 2]),
+        slot_level=choice.slot_level,
+    )
+
+    assert event.hit is True
+    assert event.damage_roll is not None and event.damage_roll.total == 20
+    assert caster.state.resources[0].current_uses == 0
+    assert caster.state.action_available is False
