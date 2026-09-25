@@ -13,6 +13,7 @@ const load = (name) => vm.runInThisContext(
 load("browser-rolls.js");
 load("browser-condition-rules.js");
 load("browser-action-economy.js");
+load("browser-rogue-defenses.js");
 load("browser-modifiers.js");
 load("browser-state.js");
 load("browser-defensive-modifier-rules.js");
@@ -20,6 +21,8 @@ load("browser-condition-immunity.js");
 load("browser-concentration.js");
 load("browser-spell-modifiers.js");
 load("browser-timed-conditions.js");
+load("browser-zero-hp.js");
+load("browser-attack.js");
 load("browser-save-damage.js");
 load("browser-saves.js");
 load("browser-targeting-wards.js");
