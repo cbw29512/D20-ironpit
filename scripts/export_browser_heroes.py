@@ -287,7 +287,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
-        "d20BonusDieActions": [_d20_bonus_die_action(item) for item in template.d20_bonus_die_actions],
         "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
         "condition_immunities": list(template.condition_immunities),
         "passive_modifier_grants": [item.model_dump(mode="json") for item in template.passive_modifier_grants],
@@ -360,6 +359,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["turning_failure_destroy_max_cr"] = progression.turning_failure_destroy_max_cr
     if progression.slot_healing_other_self_rider:
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
+    if template.d20_bonus_die_actions:
+        row["d20BonusDieActions"] = [_d20_bonus_die_action(item) for item in template.d20_bonus_die_actions]
     if progression.outgoing_healing_dice_maximizer:
         row["outgoing_healing_dice_maximizer"] = progression.outgoing_healing_dice_maximizer.model_dump()
     if progression.once_per_turn_weapon_hit_damage_rider:
