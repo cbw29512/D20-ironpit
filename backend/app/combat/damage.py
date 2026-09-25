@@ -122,6 +122,9 @@ def resolve_weapon_damage(
             brutal_strike_bonus_damage(attacker, attack, turn_key, has_disadvantage=brutal_strike_disadvantage),
             critical=critical,
         )
+        _append_bonus_component(
+            components, dice, once_per_turn_weapon_hit_bonus_damage(attacker, attack, turn_key), critical=critical,
+        )
         _append_bonus_component(components, dice, divine_smite_bonus_damage(attacker, target, attack), critical=critical)
         for modifier in bonus_damage_modifiers(attacker, target_event_id):
             components.append(roll_damage_component(
