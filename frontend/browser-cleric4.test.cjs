@@ -111,7 +111,7 @@ assert.equal(forbiddenRebuff.events.length, 0, "A caster may never cast a second
 assert.equal(caster.state.resources["spell-slot-2"], 3);
 
 S.beginTurn(caster.state);
-const rolls = [1, 10, 9, 8];
+const rolls = [1, 10, 9, 8, 7];
 window.IRON_PIT_DICE = {
   roll: (sides) => {
     assert.ok(rolls.length, `fixed dice exhausted before d${sides}`);
