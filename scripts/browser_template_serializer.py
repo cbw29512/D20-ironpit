@@ -204,9 +204,10 @@ def _spell(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
-        "effectTags": list(action.effect_tags),
         "concentration": action.concentration, "animation": action.animation,
     }
+    if action.effect_tags:
+        row["effectTags"] = list(action.effect_tags)
     if action.area_radius_ft is not None:
         row["areaRadius"] = action.area_radius_ft
     if action.damage_components:
@@ -280,6 +281,13 @@ def defense_row(action: Any) -> dict[str, Any]:
     return row
 
 
+def _save_advantage_grant(grant: Any) -> dict[str, Any]:
+    row = grant.model_dump(mode="json")
+    if not grant.required_effect_tags:
+        row.pop("required_effect_tags", None)
+    return row
+
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -293,7 +301,7 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
     if action.saving_throw_advantage_grants:
         row["savingThrowAdvantageGrants"] = [
-            item.model_dump(mode="json") for item in action.saving_throw_advantage_grants
+            _save_advantage_grant(item) for item in action.saving_throw_advantage_grants
         ]
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
@@ -348,7 +356,7 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         ]
     if features.saving_throw_advantage_grants:
         row["saving_throw_advantage_grants"] = [
-            item.model_dump() for item in features.saving_throw_advantage_grants
+            _save_advantage_grant(item) for item in features.saving_throw_advantage_grants
         ]
     if features.bloodied_start_turn_heal_amount:
         row["bloodied_start_turn_heal_amount"] = features.bloodied_start_turn_heal_amount
