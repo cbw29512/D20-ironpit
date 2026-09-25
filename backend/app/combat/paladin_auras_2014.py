@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.condition_rules import is_incapacitated
+from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -22,7 +22,13 @@ def _members(setup: EncounterSetup) -> list[EncounterCombatant]:
 
 def _active_source(member: EncounterCombatant) -> bool:
     state = member.state
-    return state.is_alive and not state.is_dead and state.current_hp > 0 and not is_incapacitated(state)
+    return (
+        state.is_alive
+        and not state.is_dead
+        and state.current_hp > 0
+        and not state.is_unconscious
+        and not has_condition(state, "unconscious")
+    )
 
 
 def _clear_aura_modifiers(setup: EncounterSetup) -> None:
