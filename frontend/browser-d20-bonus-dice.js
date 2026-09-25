@@ -3,6 +3,7 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const D = () => window.IRON_PIT_DICE;
 
   function targetAllowed(source, target, action) {
@@ -21,6 +22,47 @@
     }
   }
 
+  function conflicts(source, target, action, round) {
+    return (target.state.active_d20_bonus_dice || []).some((item) =>
+      item.expires_round > round && (
+        (item.source_id === source.combatant_id && item.source_effect_id === action.id)
+        || (action.exclusiveGroup && item.exclusive_group === action.exclusiveGroup)
+      ));
+  }
+
+  function attackBonus(member) {
+    const template = member.state.template;
+    const primary = (template.attacks || []).find((item) => item.id === template.primary_attack_id)
+      || (template.attacks || [])[0];
+    return primary?.bonus || 0;
+  }
+
+  function choose(source, setup, round) {
+    try {
+      const resources = source.state.resources || {};
+      const allies = source.side === "heroes" ? setup.heroes : setup.monsters;
+      const choices = [];
+      for (const action of source.state.template.d20BonusDieActions || []) {
+        if (!E().available(source.state, action.actionCost)
+            || (resources[action.resourceId] || 0) < (action.resourceCost || 1)) continue;
+        for (const target of allies) {
+          if (targetAllowed(source, target, action) && !conflicts(source, target, action, round)) {
+            choices.push({ action, target });
+          }
+        }
+      }
+      choices.sort((a, b) =>
+        (b.action.priority || 0) - (a.action.priority || 0)
+        || Number(F().isBackline(a.target)) - Number(F().isBackline(b.target))
+        || attackBonus(b.target) - attackBonus(a.target)
+        || a.target.combatant_id.localeCompare(b.target.combatant_id));
+      return choices[0] || null;
+    } catch (error) {
+      console.error("Browser d20 bonus-die support choice failed.", { source: source?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function resolveGrant(sequence, round, source, target, action) {
     try {
       if (!E().available(source.state, action.actionCost)) {
@@ -35,20 +77,16 @@
       }
       expire(target.state, round);
       const active = target.state.active_d20_bonus_dice || (target.state.active_d20_bonus_dice = []);
-      if (active.some((item) => item.source_id === source.combatant_id && item.source_effect_id === action.id)) {
-        throw new Error(target.state.template.name + " already has " + action.name + " from this source.");
+      if (conflicts(source, target, action, round)) {
+        throw new Error(target.state.template.name + " already has an exclusive " + action.name + " grant.");
       }
       E().spend(source.state, action.actionCost);
       resources[action.resourceId] -= action.resourceCost || 1;
       active.push({
-        source_id: source.combatant_id,
-        source_effect_id: action.id,
-        source_name: action.name,
-        dice_count: action.diceCount || 1,
-        dice_size: action.diceSize,
-        test_kinds: [...action.testKinds],
-        applied_round: round,
-        expires_round: round + action.durationRounds,
+        source_id: source.combatant_id, source_effect_id: action.id, source_name: action.name,
+        dice_count: action.diceCount || 1, dice_size: action.diceSize,
+        test_kinds: [...action.testKinds], exclusive_group: action.exclusiveGroup || null,
+        applied_round: round, expires_round: round + action.durationRounds,
       });
       return {
         sequence, round_number: round, event_type: "feature",
@@ -80,8 +118,7 @@
 
   function consume(state, grant, roll) {
     try {
-      const active = state.active_d20_bonus_dice || [];
-      const index = active.indexOf(grant);
+      const active = state.active_d20_bonus_dice || [], index = active.indexOf(grant);
       if (index < 0) throw new Error("Selected d20 bonus-die grant is not active.");
       const bonusRolls = Array.from({ length: grant.dice_count || 1 }, () => D().roll(grant.dice_size));
       active.splice(index, 1);
@@ -97,6 +134,18 @@
     }
   }
 
+  function applyIfUseful(state, testKind, roll, targetTotal, round) {
+    if (roll.total >= targetTotal) return { roll, sourceName: null };
+    const useful = eligible(state, testKind, round).filter(
+      (grant) => roll.total + (grant.dice_count || 1) * grant.dice_size >= targetTotal);
+    if (!useful.length) return { roll, sourceName: null };
+    useful.sort((a, b) =>
+      ((b.dice_count || 1) * b.dice_size) - ((a.dice_count || 1) * a.dice_size)
+      || a.source_effect_id.localeCompare(b.source_effect_id));
+    const grant = useful[0];
+    return { roll: consume(state, grant, roll), sourceName: grant.source_name };
+  }
+
   function expire(state, round) {
     try {
       const active = state.active_d20_bonus_dice || [];
@@ -109,5 +158,7 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_D20_BONUS_DICE = { consume, eligible, expire, resolveGrant, targetAllowed };
+  window.IRON_PIT_BROWSER_D20_BONUS_DICE = {
+    applyIfUseful, choose, consume, eligible, expire, resolveGrant, targetAllowed,
+  };
 })();
