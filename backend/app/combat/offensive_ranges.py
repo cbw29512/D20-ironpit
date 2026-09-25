@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.spell_attack_policy import legal_spell_attack_slots
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
@@ -78,7 +79,7 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
         for action in attacker.state.template.spell_attack_actions:
             if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
                 continue
-            if _spell_level_available(attacker, action.level, turn_key):
+            if legal_spell_attack_slots(attacker, action, turn_key):
                 ranges.append(("spell", action.range_ft))
         for action in attacker.state.template.spell_save_actions:
             if action.action_cost == "reaction" or action.concentration or not is_available(attacker.state, action.action_cost):
