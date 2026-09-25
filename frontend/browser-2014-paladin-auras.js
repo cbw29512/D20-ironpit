@@ -8,6 +8,9 @@
   ]);
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
+    has: (state, id) => state.active_effect_ids?.includes(id) || false,
+  };
 
   const members = (setup) => [...(setup?.heroes || []), ...(setup?.monsters || [])];
   const allies = (target, setup) => target.side === "heroes" ? setup.heroes : setup.monsters;
@@ -37,10 +40,21 @@
     }
   }
 
+  function activeAuraSource(source) {
+    try {
+      const state = source.state;
+      return state.is_alive && !state.is_dead && state.current_hp > 0
+        && !state.is_unconscious && !Q().has(state, "unconscious");
+    } catch (error) {
+      console.error("Failed to evaluate browser 2014 Paladin aura source.", { error, combatant: source?.combatant_id });
+      throw error;
+    }
+  }
+
   function nearbySources(target, setup) {
     return allies(target, setup).filter((source) => {
       const radius = auraRadius(source);
-      return radius > 0 && S().active(source) && S().distance(source, target) <= radius;
+      return radius > 0 && activeAuraSource(source) && S().distance(source, target) <= radius;
     });
   }
 
