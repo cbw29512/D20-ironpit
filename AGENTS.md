@@ -5,15 +5,16 @@
 Before changing combat code, read:
 
 1. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
-2. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
-3. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
-4. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
-5. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
-6. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — authoritative separation of legal Action candidates from Arena tactical selection.
-7. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
-8. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
-9. current source/runtime code and permanent tests.
-10. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+2. `docs/CONTEXT_TRANSFER_SKILL.md` — mandatory anti-drift handoff/resume protocol; exact SHA freshness and continuous debt audit.
+3. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
+4. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
+5. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
+6. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
+7. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — authoritative separation of legal Action candidates from Arena tactical selection.
+8. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
+9. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
+10. current source/runtime code and permanent tests.
+11. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
@@ -46,6 +47,17 @@ See `docs/CURRENT_OPERATING_STATUS.md`.
 - Before creating any new combat primitive, resolver, helper module, or rules hook, inspect both the Python rules-reference engine and browser production engine for an existing equivalent or composable primitive. Reuse or extend the shared primitive first; never add a second implementation merely because one side is easier to change.
 - New mechanics require an explicit parity map: identify the Python resolution point, browser resolution point, shared/declarative data, lifecycle/reset behavior, and permanent tests before implementation. If one engine already supports the behavior, port/reuse that model rather than redesigning it independently.
 - Before certification/merge, perform a technical-debt pass over the tranche: remove dead helpers/imports, collapse duplicated construction or calculations, reject speculative abstractions with no current consumer, keep generated data generated, and verify that independent certification fingerprints remain independent rather than being "deduplicated" into the runtime they audit.
+
+## Mandatory context-transfer / anti-rot gate
+
+- Before resuming work after an interruption, session/agent change, branch change, merge, or long pause, execute `docs/CONTEXT_TRANSFER_SKILL.md`.
+- A handoff without exact repository/main/branch/head/base SHAs is not valid engineering context.
+- If the active PR head, base, authority docs, or current `main` differs from the recorded transfer packet, mark the packet stale and rebuild context from repository truth before coding.
+- Treat technical-debt discovery as part of feature implementation, not a future cleanup project.
+- Every tranche must audit its touched subsystem before and after implementation and classify debt as `MUST_FIX_NOW`, `FIX_WITH_CURRENT_TRANCHE`, or `PARKED_CLEANUP`.
+- `MUST_FIX_NOW` includes anything that can alter combat outcomes, violate RAW/contracts, corrupt state, create Python/browser disagreement, leak editions, duplicate universal mechanics, or falsely certify content.
+- Do not open a competing implementation of an active universal mechanic. Reconcile or close the existing lane first.
+- Before changing lanes, produce a fresh context transfer packet with one exact next action.
 
 ## Mandatory uncertainty and clarification gate
 
