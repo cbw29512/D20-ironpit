@@ -406,3 +406,12 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 - Python/browser parity stays mandatory.
 - Production source-size limits stay enforced.
 - Active means executable and certified.
+
+
+## Timed source-owned emanations
+
+Timed self effects may declare a source-owned emanation that resolves against opposing combatants at a fixed lifecycle window. The source ability supplies declarative parameters such as trigger, radius, fixed damage, and damage type; engine dispatch must not branch on the source ability name.
+
+For an `enemy_turn_start` emanation, the universal turn-start phase discovers active source-owned timed effects, evaluates shared battlefield distance/geometry, applies the normal typed damage-defense and zero-HP lifecycle, and emits the source ability name only as presentation/audit metadata. Expiry remains owned by the underlying timed-effect lifecycle, so ending the timed effect automatically ends its emanation and any source-owned modifiers.
+
+Python and browser implementations must preserve behavioral parity. A new named class, spell, monster, or item feature that has the same timing/range/damage semantics binds to this component instead of adding another resolver.
