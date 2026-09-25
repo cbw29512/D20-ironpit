@@ -65,17 +65,21 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
 
 
 def _save(action: Any) -> dict[str, Any]:
-    return {
+    row = {
         "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
         "range": action.range_ft, "targetMaxSize": _value(action.target_max_size) if action.target_max_size else None,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type, "successDamage": action.success_damage,
-        "damageComponents": [{"diceCount": item.dice_count, "diceSize": item.dice_size,
-             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
-            for item in action.damage_components],
         "grappleEscapeDc": action.grapple_escape_dc, "restrainsWhileGrappled": action.restrains_while_grappled,
         "magicalEffect": action.magical_effect, "animation": action.animation,
     }
+    if action.damage_components:
+        row["damageComponents"] = [
+            {"diceCount": item.dice_count, "diceSize": item.dice_size,
+             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
+            for item in action.damage_components
+        ]
+    return row
 
 
 def _spell(action: Any) -> dict[str, Any]:
@@ -84,13 +88,16 @@ def _spell(action: Any) -> dict[str, Any]:
         "range": action.range_ft, "saveAbility": action.save_ability, "dc": action.dc,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
-        "damageComponents": [{"diceCount": item.dice_count, "diceSize": item.dice_size,
-             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
-            for item in action.damage_components],
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
         "concentration": action.concentration, "animation": action.animation,
     }
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
+    if action.damage_components:
+        row["damageComponents"] = [
+            {"diceCount": item.dice_count, "diceSize": item.dice_size,
+             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
+            for item in action.damage_components
+        ]
     return row
 
 
