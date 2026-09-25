@@ -46,8 +46,8 @@ def _final(
 
 def build_aurelia_brightshield_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Aurelia profile covers levels 1 through 17.")
+        if level not in range(1, 19):
+            raise ValueError("2014 Aurelia profile covers levels 1 through 18.")
         base = _base()
         species = _species()
         advances = _advancements(level)
