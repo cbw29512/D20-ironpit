@@ -64,6 +64,7 @@ assert.equal(bolt.attackBonus, 5);
 assert.equal(bolt.damageDiceCount, 4);
 assert.equal(bolt.damageDiceSize, 6);
 assert.equal(bolt.damageType, "radiant");
+assert.equal(bolt.upcastDicePerLevel, 1);
 assert.equal(bolt.onHitModifierEffects[0].consumeOnAttackAgainst, true);
 assert.equal(bolt.onHitModifierEffects[0].expiresAfterSourceTurns, 1);
 
