@@ -17,6 +17,7 @@ from app.content.druid_land_2014_level10 import (
     natures_ward_condition_immunities_2014,
     natures_ward_debuff_counters_2014,
 )
+from app.content.druid_land_2014_level14 import natures_sanctuary_2014
 from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_profile
 from app.content.weapon_catalog import build_weapon
 from app.domain.debuffs import DebuffCounter
@@ -62,8 +63,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 13.")
+        if level not in range(1, 15):
+            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 14.")
         profile = build_thalen_greenbough_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -115,9 +116,10 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
             replacement_form_actions=(
                 [wild_shape_action_2014(level)] if level >= 2 else []
             ),
-            passive_modifier_grants=(
-                natures_ward_condition_immunities_2014() if level >= 10 else []
-            ),
+            passive_modifier_grants=[
+                *(natures_ward_condition_immunities_2014() if level >= 10 else []),
+                *(natures_sanctuary_2014(save_dc) if level >= 14 else []),
+            ],
             damage_immunities=[DamageType.POISON] if level >= 10 else [],
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
