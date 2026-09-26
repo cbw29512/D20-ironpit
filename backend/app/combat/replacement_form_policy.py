@@ -5,7 +5,7 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.replacement_forms import resolve_replacement_form_action
 from app.combat.resources import resource_available
-from app.combat.spell_policy import choose_named_spell
+from app.combat.spell_fixed_slot_policy import choose_named_spell
 from app.combat.spell_resolution import resolve_spell
 from app.content.replacement_form_compiler import compile_replacement_form_template
 from app.content.replacement_form_registry import replacement_form_source_template
