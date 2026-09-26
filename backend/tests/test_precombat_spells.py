@@ -59,7 +59,7 @@ def test_precombat_does_not_use_higher_level_slot_when_upcasting_is_deferred() -
 
 
 def test_concentration_defense_rejects_anonymous_lifecycle_effects() -> None:
-    with pytest.raises(ValueError, match="source-owned modifier effects"):
+    with pytest.raises(ValueError, match="source-owned modifier or timed-condition effects"):
         DefensiveSpellAction(
             id="unsafe", name="Unsafe", level=1, duration_minutes=10,
             temporary_hp=5, concentration=True,
