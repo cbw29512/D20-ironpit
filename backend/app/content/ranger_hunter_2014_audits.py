@@ -138,4 +138,14 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             ),
         ]
+    if level >= 11:
+        rows.append(FeatureAudit(
+            feature_id="volley", feature_name="Multiattack (Volley)",
+            source_reference="D&D Basic Rules 2014: Hunter 11",
+            category="subclass", combat_relevant=True, automated=True,
+            notes=(
+                "Uses the universal area-weapon-attack action: choose a point in weapon range, "
+                "find opposing creatures within 10 feet, then resolve one normal longbow attack per target."
+            ),
+        ))
     return rows
