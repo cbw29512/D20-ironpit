@@ -114,6 +114,19 @@ def _audits(level: int) -> list[FeatureAudit]:
                 notes="Adds another favored terrain; overland travel benefits remain outside an in-progress Iron Pit fight.",
             ),
         ]
+    if level >= 7:
+        rows.append(
+            FeatureAudit(
+                feature_id="steel-will",
+                feature_name="Defensive Tactics (Steel Will)",
+                source_reference="D&D Basic Rules 2014: Hunter 7",
+                category="subclass", combat_relevant=True, automated=True,
+                notes=(
+                    "Canonical Hunter choice is Steel Will. It reuses universal saving-throw Advantage "
+                    "tagged to frightened effects; no Ranger-specific resolver."
+                ),
+            )
+        )
     return rows
 
 
@@ -149,8 +162,8 @@ def _level_one() -> CharacterBuildProfile:
 
 def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 7):
-            raise ValueError("2014 Rowan profile currently covers levels 1 through 6.")
+        if level not in range(1, 8):
+            raise ValueError("2014 Rowan profile currently covers levels 1 through 7.")
         profile = _level_one()
         if level == 1:
             return profile
@@ -201,6 +214,18 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
         data.update(
             feature_audits=_audits(6),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 6"],
+        )
+        profile = CharacterBuildProfile(**data)
+        if level == 6:
+            return profile
+        data = advance_profile_data(profile, 7)
+        data.update(
+            feature_audits=_audits(7),
+            source_references=[
+                *profile.source_references,
+                "D&D Basic Rules 2014: Ranger 7",
+                "D&D Basic Rules 2014: Hunter 7",
+            ],
         )
         return CharacterBuildProfile(**data)
     except Exception:
