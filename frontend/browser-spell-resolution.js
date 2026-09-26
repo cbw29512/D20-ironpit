@@ -124,7 +124,17 @@
         remaining = caster.state.resources[resourceId];
       }
       E().spend(caster.state, spell.actionCost);
-      const rangeRemaining = P().spendRangeModifier(caster.state, choice.rangeModifier || null);
+      const rangeRemaining = choice.rangeModifier
+        ? (P()?.spendRangeModifier
+          ? P().spendRangeModifier(caster.state, choice.rangeModifier)
+          : (() => {
+              const current = caster.state.resources?.[choice.rangeModifier.resourceId] || 0;
+              const cost = choice.rangeModifier.resourceCost || 1;
+              if (current < cost) throw new Error(`Insufficient ${choice.rangeModifier.resourceId} for ${choice.rangeModifier.name}.`);
+              caster.state.resources[choice.rangeModifier.resourceId] = current - cost;
+              return caster.state.resources[choice.rangeModifier.resourceId];
+            })())
+        : null;
       window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.removeOwnerAttackEnding(caster.state);
       CE()?.applyTimedResistance(caster, scaledSpell(spell, choice.slotLevel), round);
 
