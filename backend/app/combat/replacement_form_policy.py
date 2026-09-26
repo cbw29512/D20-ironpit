@@ -65,6 +65,7 @@ def resolve_replacement_form_setup(
             state.template,
             source,
             retain_spellcasting=action.retain_spellcasting,
+            retained_spell_action_ids=action.retained_spell_action_ids,
         )
         result = resolve_replacement_form_action(state, action, active)
         event = BattleEvent(
