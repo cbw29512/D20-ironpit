@@ -93,6 +93,10 @@ _PREPARED = (
         "mirage-arcane", "Mirage Arcane", "utility",
         "arena-out-of-scope", level=7, min_level=13,
     ),
+    _spell(
+        "transport-via-plants", "Transport via Plants", "utility",
+        "arena-out-of-scope", level=6, min_level=14,
+    ),
 )
 
 
