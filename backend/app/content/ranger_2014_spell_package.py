@@ -31,6 +31,10 @@ _SPELLS = (
         id="daylight", name="Daylight", spell_level=3, min_character_level=9,
         role="utility", required_capabilities=["arena-out-of-scope"],
     ),
+    CanonicalSpellChoice(
+        id="water-walk", name="Water Walk", spell_level=3, min_character_level=11,
+        role="utility", required_capabilities=["arena-out-of-scope"],
+    ),
 )
 
 
