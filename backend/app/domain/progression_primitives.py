@@ -76,6 +76,18 @@ class FailedD20TestOverrideGrant(BaseModel):
     test_kinds: list[Literal["attack", "saving_throw", "ability_check"]] = Field(min_length=1)
 
 
+class ResourceBackedD20BonusDie(BaseModel):
+    """Spend a declared resource when a matching failed d20 test can be improved."""
+
+    source_id: str
+    source_name: str
+    resource_id: str
+    resource_cost: int = Field(default=1, ge=1)
+    dice_count: int = Field(default=1, ge=1, le=20)
+    dice_size: int = Field(ge=2, le=100)
+    test_kinds: list[Literal["attack", "saving_throw", "ability_check"]] = Field(min_length=1)
+
+
 class DeferredSaveEffect(BaseModel):
     source_id: str
     source_name: str
