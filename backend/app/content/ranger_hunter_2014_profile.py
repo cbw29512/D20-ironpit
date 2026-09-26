@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def _scores() -> AbilityScores:
-    return AbilityScores(strength=13, dexterity=15, constitution=14, intelligence=10, wisdom=10, charisma=10)
+    return AbilityScores(strength=12, dexterity=15, constitution=14, intelligence=10, wisdom=13, charisma=8)
 
 
 def _species_increases() -> list[AbilityIncrease]:
@@ -76,7 +76,7 @@ def _audits(level: int) -> list[FeatureAudit]:
 def _level_one() -> CharacterBuildProfile:
     base = _scores()
     species = _species_increases()
-    final = base.model_copy(update={"dexterity": 17, "wisdom": 11})
+    final = base.model_copy(update={"dexterity": 17, "wisdom": 14})
     return CharacterBuildProfile(
         id="build-rowan-ashtrail-2014-l1",
         template_id="rowan-ashtrail-2014-l1",
@@ -92,7 +92,7 @@ def _level_one() -> CharacterBuildProfile:
         background_equipment_option="package",
         background_equipment=["Staff", "Hunting Trap", "Traveler's Clothes", "10 gp"],
         skill_proficiencies=["Athletics", "Survival", "Perception", "Stealth", "Insight", "Investigation"],
-        weapon_masteries=[], combat_loadout_kind=None,
+        weapon_masteries=[], combat_loadout_kind="dual-wield",
         feature_audits=_audits(1),
         source_references=[
             "D&D Basic Rules 2014: Wood Elf",
