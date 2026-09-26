@@ -62,8 +62,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 13.")
+        if level not in range(1, 15):
+            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 14.")
         profile = build_rowan_ashtrail_2014_profile(level)
         scores = profile.final_ability_scores
         dexterity = scores.modifier("dexterity")
