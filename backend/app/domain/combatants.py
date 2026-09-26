@@ -23,7 +23,7 @@ from app.domain.replacement_form_actions import ReplacementFormAction
 from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
-from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier, ResourceBackedSpellSaveDisadvantage
+from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier, ResourceBackedSpellRangeModifier, ResourceBackedSpellSaveDisadvantage
 from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
@@ -90,6 +90,7 @@ class CombatantTemplate(BaseModel):
     resource_conversion_actions: list[ResourceConversionAction] = Field(default_factory=list)
     spell_save_disadvantage_options: list[ResourceBackedSpellSaveDisadvantage] = Field(default_factory=list)
     spell_range_modifiers: list[ResourceBackedSpellRangeModifier] = Field(default_factory=list)
+    spell_duration_modifiers: list[ResourceBackedSpellDurationModifier] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     replacement_form_actions: list[ReplacementFormAction] = Field(default_factory=list)
     concentration_repeat_save_actions: list[ConcentrationRepeatSaveAction] = Field(default_factory=list)
