@@ -17,6 +17,7 @@ from app.combat.modifier_stack import (
     effective_armor_class, next_attack_against_advantage_sources,
 )
 from app.combat.reckless_attack import attacks_against_reckless_advantage
+from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_modifiers import build_spell_modifier
@@ -85,6 +86,11 @@ def resolve_spell_attack(
         base_roll = roll_d20(dice, spell.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(caster.state, base_roll, target_ac, dice)
         attack_roll = apply_d20_bonus_dice(caster.state, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
+        reaction_penalty = apply_reaction_roll_penalty_if_useful(
+            caster, setup, "attack", attack_roll, dice, threshold=target_ac,
+        )
+        if reaction_penalty is not None:
+            attack_roll = reaction_penalty.roll
         consume_next_attack_against_advantage(caster.state, target.combatant_id)
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
         if resource is not None:
@@ -113,6 +119,11 @@ def resolve_spell_attack(
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
+        if reaction_penalty is not None:
+            description += (
+                f" {reaction_penalty.source_name} uses {reaction_penalty.action_id} "
+                f"to subtract {reaction_penalty.penalty_total} from the attack roll."
+            )
         if ward is not None:
             description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
         event = BattleEvent(
