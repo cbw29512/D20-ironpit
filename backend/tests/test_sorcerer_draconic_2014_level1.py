@@ -10,7 +10,7 @@ def test_level_one_draconic_resilience_and_spellcasting() -> None:
     profile = build_nyra_emberveil_2014_profile(1)
     package = build_sorcerer_2014_spell_package(1)
 
-    assert profile.subclass_id == "draconic-sorcery"
+    assert profile.subclass_id == "draconic-bloodline"
     assert hero.armor_class == 14
     assert hero.max_hp == 7
     assert hero.saving_throw_bonuses["constitution"] == 2
