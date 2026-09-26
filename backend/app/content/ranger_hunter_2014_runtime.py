@@ -7,11 +7,13 @@ from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.attack_bonus_rules import compile_weapon_attack_bonus
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.cleric_2014_level1_spells import cure_wounds_2014
+from app.content.shared_spells_2014 import lesser_restoration_2014
 from app.content.druid_2014_level1_spells import longstrider_2014
 from app.content.ranger_2014_progression import ranger_2014_level
 from app.content.ranger_hunter_2014_level3 import colossus_slayer_2014
 from app.content.ranger_hunter_2014_profile import build_rowan_ashtrail_2014_profile
 from app.content.weapon_catalog import build_weapon
+from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
@@ -32,6 +34,21 @@ def _weapon(level: int, weapon_id: str, dexterity: int) -> WeaponAttack:
     )
 
 
+def _attack_action(level: int, longbow: WeaponAttack, shortsword: WeaponAttack) -> AttackActionDefinition | None:
+    if level < 5:
+        return None
+    choices = [longbow.id, shortsword.id]
+    return AttackActionDefinition(
+        id="extra-attack",
+        name="Extra Attack",
+        slots=[
+            AttackActionSlot(attack_ids=choices),
+            AttackActionSlot(attack_ids=choices),
+        ],
+        is_attack_action=True,
+    )
+
+
 def _resources(level: int) -> list[ResourceDefinition]:
     return [
         ResourceDefinition(id=f"spell-slot-{spell_level}", name=f"Spell Slot {spell_level}", max_uses=uses)
@@ -42,8 +59,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 5):
-            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 4.")
+        if level not in range(1, 6):
+            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 5.")
         profile = build_rowan_ashtrail_2014_profile(level)
         scores = profile.final_ability_scores
         dexterity = scores.modifier("dexterity")
@@ -60,8 +77,10 @@ def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
             max_hp=fixed_hit_points(level, 10, scores.modifier("constitution")),
             speed_ft=35, initiative_bonus=dexterity,
             weapon_attack=longbow, alternate_weapon_attacks=[shortsword],
+            attack_action=_attack_action(level, longbow, shortsword),
             defensive_spell_actions=[longstrider_2014()] if level >= 2 else [],
             healing_actions=[cure_wounds_2014(scores.modifier("wisdom"), 0)] if level >= 2 else [],
+            condition_removal_actions=[lesser_restoration_2014()] if level >= 5 else [],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "dexterity")),
             skill_bonuses={
                 "athletics": scores.modifier("strength") + proficiency_bonus(level),
