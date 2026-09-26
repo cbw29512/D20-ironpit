@@ -40,11 +40,11 @@ _CANTRIPS = (
 # it appends legal choices in deterministic combat-first order. Magical Secrets
 # entries at levels 10/14/18 count against Spells Known exactly as RAW requires.
 _KNOWN = (
-    _spell("charm-person", "Charm Person", "control", "condition"),
-    _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
     _spell("healing-word", "Healing Word", "healing", "healing", "bonus-action"),
-    _spell("thunderwave", "Thunderwave", "damage", "save-damage", "forced-movement"),
-    _spell("cure-wounds", "Cure Wounds", "healing", "healing", min_level=2),
+    _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
+    _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
+    _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope"),
+    _spell("identify", "Identify", "utility", "arena-out-of-scope", min_level=2),
     _spell("hold-person", "Hold Person", "control", "condition", "repeat-save", level=2, min_level=3),
     _spell(
         "lesser-restoration", "Lesser Restoration", "healing",
@@ -83,11 +83,8 @@ _KNOWN = (
         "fire-storm", "Fire Storm", "damage", "save-damage", "area-effect",
         "magical-secrets", level=7, min_level=14,
     ),
-    _spell(
-        "comprehend-languages", "Comprehend Languages", "utility",
-        "arena-out-of-scope", level=1, min_level=15,
-    ),
-    _spell("identify", "Identify", "utility", "arena-out-of-scope", level=1, min_level=17),
+    _spell("unseen-servant", "Unseen Servant", "utility", "arena-out-of-scope", level=1, min_level=15),
+    _spell("illusory-script", "Illusory Script", "utility", "arena-out-of-scope", level=1, min_level=17),
     _spell(
         "death-ward", "Death Ward", "buff",
         "zero-hp-replacement", "instant-death-prevention",
