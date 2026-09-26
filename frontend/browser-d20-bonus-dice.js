@@ -146,6 +146,38 @@
     return { roll: consume(state, grant, roll), sourceName: grant.source_name };
   }
 
+  function applyResourceBackedIfUseful(state, testKind, roll, targetTotal) {
+    try {
+      if (roll.total >= targetTotal) return { roll, sourceName: null };
+      const resources = state.resources || {};
+      const rules = (state.template.resource_backed_d20_bonus_dice || []).filter((rule) =>
+        (rule.test_kinds || []).includes(testKind)
+        && (resources[rule.resource_id] || 0) >= (rule.resource_cost || 1)
+        && roll.total + (rule.dice_count || 1) * rule.dice_size >= targetTotal
+      );
+      if (!rules.length) return { roll, sourceName: null };
+      rules.sort((a, b) =>
+        ((b.dice_count || 1) * b.dice_size) - ((a.dice_count || 1) * a.dice_size)
+        || a.source_id.localeCompare(b.source_id));
+      const rule = rules[0];
+      const bonusRolls = Array.from({ length: rule.dice_count || 1 }, () => D().roll(rule.dice_size));
+      resources[rule.resource_id] -= rule.resource_cost || 1;
+      return {
+        roll: {
+          ...roll,
+          notation: roll.notation + " + " + (rule.dice_count || 1) + "d" + rule.dice_size
+            + " [" + rule.source_name + "]",
+          rolls: [...(roll.rolls || []), ...bonusRolls],
+          total: roll.total + bonusRolls.reduce((sum, value) => sum + value, 0),
+        },
+        sourceName: rule.source_name,
+      };
+    } catch (error) {
+      console.error("Browser resource-backed d20 bonus failed.", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
   function expire(state, round) {
     try {
       const active = state.active_d20_bonus_dice || [];
@@ -159,6 +191,6 @@
   }
 
   window.IRON_PIT_BROWSER_D20_BONUS_DICE = {
-    applyIfUseful, choose, consume, eligible, expire, resolveGrant, targetAllowed,
+    applyIfUseful, applyResourceBackedIfUseful, choose, consume, eligible, expire, resolveGrant, targetAllowed,
   };
 })();
