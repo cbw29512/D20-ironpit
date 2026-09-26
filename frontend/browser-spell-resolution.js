@@ -61,7 +61,7 @@
         if (!CONC()) throw new Error("Browser Concentration runtime is not loaded.");
         const durationRounds = (spell.durationMinutes || 0) * 10;
         if (durationRounds <= 0) throw new Error("Concentration save spell requires a positive duration.");
-        CONC().start(caster.state, caster.combatant_id, spell.id, round, allStates, round + durationRounds);
+        CONC().start(caster.state, caster.combatant_id, spell.id, round, allStates, round + durationRounds, choice.slotLevel > 0 ? choice.slotLevel : null);
       }
 
       const placement = choice.placement;
