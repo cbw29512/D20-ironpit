@@ -148,10 +148,11 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
                 feature_id="distant-spell",
                 feature_name="Metamagic: Distant Spell",
                 source_reference="D&D Basic Rules 2014: Sorcerer 3, Metamagic",
-                category="class", combat_relevant=True, automated=False,
+                category="class", combat_relevant=True, automated=True,
                 notes=(
-                    "Selected as Nyra's third Metamagic option. Certification remains gated until the shared "
-                    "resource-backed spell-range multiplier has Python/browser parity."
+                    "Selected as Nyra's third Metamagic option. The shared resource-backed spell-range "
+                    "modifier doubles qualifying spell range and spends 1 Sorcery Point only when extended "
+                    "range is actually required, with Python/browser parity."
                 ),
             ),
             FeatureAudit(
