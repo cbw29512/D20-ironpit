@@ -106,13 +106,13 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 feature_name="Circle Spells (Forest, 3rd level)",
                 source_reference="D&D Basic Rules 2014: Circle of the Land — Forest",
                 category="subclass",
-                combat_relevant=True,
+                combat_relevant=False,
                 automated=False,
                 notes=(
-                    "Forest grants Call Lightning and Plant Growth. Plant Growth has no normal plants "
-                    "to affect on the default Pit battlefield. Call Lightning remains fail-closed until "
-                    "the standard Pit explicitly defines sufficient vertical storm-cloud space and the "
-                    "universal concentration repeat-save Action is completed in Python and browser."
+                    "Forest grants Call Lightning and Plant Growth, both preserved in source metadata. "
+                    "Plant Growth has no normal plants to affect on the default Pit battlefield. Call Lightning "
+                    "requires vertical storm-cloud placement that the standard x/y-only, horizontal-flight Pit "
+                    "does not model, so Arena AI never selects it. Neither unavailable spell blocks certification."
                 ),
             )
         )
