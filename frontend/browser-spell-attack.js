@@ -11,7 +11,7 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-  const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
+  const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };\n  const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
 
   function slotResource(caster, spell, turnKey) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
@@ -27,7 +27,7 @@
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
-    if (ward && !ward.succeeded) { if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; } E().spend(caster.state, spell.actionCost); const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward); event.resource_remaining = resourceId ? caster.state.resources[resourceId] : null; return event; }
+    if (ward && !ward.succeeded) { if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; } E().spend(caster.state, spell.actionCost); CE()?.applyTimedResistance(caster, spell, round); const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward); event.resource_remaining = resourceId ? caster.state.resources[resourceId] : null; return event; }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
@@ -44,6 +44,7 @@
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
+    CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
