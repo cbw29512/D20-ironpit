@@ -228,6 +228,14 @@ def _spell(action: Any) -> dict[str, Any]:
             "expiryTiming": action.failed_save_timed_effect.expiry_timing,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
+    if action.failed_save_modifier_effects:
+        row["failedSaveModifierEffects"] = [
+            _modifier_effect(effect) for effect in action.failed_save_modifier_effects
+        ]
+    if action.area is not None:
+        row["area"] = action.area.model_dump(mode="json")
+    if action.duration_minutes is not None:
+        row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None:
         row["areaRadius"] = action.area_radius_ft
     if action.damage_components:
