@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.canonical_progression import advance_profile_data
 from app.content.sorcerer_draconic_2014_audits import build_sorcerer_draconic_2014_feature_audits
 from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile
 
@@ -10,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 def build_nyra_emberveil_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level != 1:
-            raise ValueError("2014 Nyra profile currently covers level 1.")
+        if level not in (1, 2):
+            raise ValueError("2014 Nyra profile currently covers levels 1 through 2.")
         base = AbilityScores(strength=8, dexterity=12, constitution=10, intelligence=13, wisdom=14, charisma=15)
         species = [
             AbilityIncrease(ability="charisma", amount=2),
@@ -19,7 +20,7 @@ def build_nyra_emberveil_2014_profile(level: int) -> CharacterBuildProfile:
             AbilityIncrease(ability="constitution", amount=1),
         ]
         final = AbilityScores(strength=8, dexterity=13, constitution=11, intelligence=13, wisdom=14, charisma=17)
-        return CharacterBuildProfile(
+        profile = CharacterBuildProfile(
             id="build-nyra-emberveil-2014-l1",
             template_id="nyra-emberveil-2014-l1",
             character_name="Nyra Emberveil",
@@ -44,6 +45,14 @@ def build_nyra_emberveil_2014_profile(level: int) -> CharacterBuildProfile:
                 "D&D Basic Rules 2014: Equipment",
             ],
         )
+        if level == 1:
+            return profile
+        data = advance_profile_data(profile, 2)
+        data.update(
+            feature_audits=build_sorcerer_draconic_2014_feature_audits(2),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Sorcerer 2"],
+        )
+        return CharacterBuildProfile(**data)
     except Exception:
         logger.exception("Failed to compile 2014 Nyra Emberveil profile at level %s.", level)
         raise
