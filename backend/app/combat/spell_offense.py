@@ -44,6 +44,7 @@ def resolve_best_spell_offense(
                 repeat,
                 turn_key,
                 dice,
+                range_modifier=attack.range_modifier,
             )
 
         if attack is None and save is None:
