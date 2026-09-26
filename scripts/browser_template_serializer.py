@@ -524,6 +524,21 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.timed_self_buff_actions:
             row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
+        if template.replacement_form_actions:
+            row["replacement_form_actions"] = [
+                {
+                    "id": item.id,
+                    "name": item.name,
+                    "actionCost": item.action_cost,
+                    "formTemplateId": item.form_template_id,
+                    "resourceId": item.resource_id,
+                    "resourceCost": item.resource_cost,
+                    "voluntaryRevertAction": item.voluntary_revert_action,
+                    "retainSpellcasting": item.retain_spellcasting,
+                    "source": item.source,
+                }
+                for item in template.replacement_form_actions
+            ]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
