@@ -20,13 +20,21 @@ const rogues2014 = heroes2014.filter((hero) => hero.class_id === "rogue");
 const monks2014 = heroes2014.filter((hero) => hero.class_id === "monk");
 const paladins2014 = heroes2014.filter((hero) => hero.class_id === "paladin");
 const clerics2014 = heroes2014.filter((hero) => hero.class_id === "cleric");
-assert.equal(heroes2014.length, 120, "2014 browser hero roster must contain Fighter, Barbarian, Rogue, Monk, Paladin, and Cleric 1-20");
+const bards2014 = heroes2014.filter((hero) => hero.class_id === "bard");
+assert.ok(heroes2014.length >= 120, "2014 browser hero roster must preserve the six completed 1-20 progressions");
 assert.equal(fighters2014.length, 20);
 assert.equal(barbarians2014.length, 20);
 assert.equal(rogues2014.length, 20);
 assert.equal(monks2014.length, 20);
 assert.equal(paladins2014.length, 20);
 assert.equal(clerics2014.length, 20);
+if (bards2014.length) {
+  assert.deepEqual(
+    bards2014.map((hero) => hero.level).sort((a, b) => a - b),
+    Array.from({ length: bards2014.length }, (_, i) => i + 1),
+  );
+  assert.ok(bards2014.every((hero) => hero.name === "Lyra Silverstring"));
+}
 assert.ok(fighters2014.every((hero) => hero.name === "Karnok Stoneward"));
 assert.ok(barbarians2014.every((hero) => hero.name === "Rokhan Stonefury"));
 assert.ok(rogues2014.every((hero) => hero.name === "Mara Quickstep"));
