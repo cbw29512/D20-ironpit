@@ -14,6 +14,7 @@ from app.content.ranger_hunter_2014_level3 import colossus_slayer_2014
 from app.content.ranger_hunter_2014_level11 import volley_2014
 from app.content.ranger_hunter_2014_profile import build_rowan_ashtrail_2014_profile
 from app.content.shared_lands_stride_2014 import lands_stride_2014
+from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
@@ -61,8 +62,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 13):
-            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 12.")
+        if level not in range(1, 14):
+            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 13.")
         profile = build_rowan_ashtrail_2014_profile(level)
         scores = profile.final_ability_scores
         dexterity = scores.modifier("dexterity")
@@ -88,7 +89,10 @@ def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
                 [volley_2014(longbow.id, longbow.weapon.long_range_ft or longbow.weapon.normal_range_ft or 150)]
                 if level >= 11 else []
             ),
-            defensive_spell_actions=[longstrider_2014()] if level >= 2 else [],
+            defensive_spell_actions=(
+                [longstrider_2014(), *([freedom_of_movement_2014()] if level >= 13 else [])]
+                if level >= 2 else []
+            ),
             healing_actions=[cure_wounds_2014(scores.modifier("wisdom"), 0)] if level >= 2 else [],
             condition_removal_actions=[lesser_restoration_2014()] if level >= 5 else [],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "dexterity")),
