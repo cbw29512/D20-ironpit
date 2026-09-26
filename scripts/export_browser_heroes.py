@@ -322,7 +322,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
         "failed_save_reroll_grants": [item.model_dump() for item in progression.failed_save_reroll_grants],
         "failed_d20_test_override_grants": [item.model_dump() for item in progression.failed_d20_test_override_grants],
-        "resource_backed_d20_bonus_dice": [item.model_dump() for item in progression.resource_backed_d20_bonus_dice],
         "deferred_save_effect": progression.deferred_save_effect.model_dump() if progression.deferred_save_effect else None,
         "opening_targeting_ward": progression.opening_targeting_ward.model_dump() if progression.opening_targeting_ward else None,
         "danger_sense": progression.danger_sense, "reckless_attack": progression.reckless_attack,
@@ -390,6 +389,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["once_per_turn_weapon_hit_damage_rider"] = progression.once_per_turn_weapon_hit_damage_rider.model_dump()
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
+    if progression.resource_backed_d20_bonus_dice:
+        row["resource_backed_d20_bonus_dice"] = [
+            item.model_dump() for item in progression.resource_backed_d20_bonus_dice
+        ]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
     if progression.indomitable_bonus: row["indomitable_bonus"] = progression.indomitable_bonus
     if progression.tactical_master_sap_weapon_ids: row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)
