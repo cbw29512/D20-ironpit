@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ActionCost, ConditionName
 from app.domain.save_damage import DamageTypeName, SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
+from app.domain.targeting import AreaTargeting
 
 from app.domain.spell_modifiers import SpellModifierEffect, SpellModifierKind
 
@@ -84,6 +85,7 @@ class SpellSaveAction(BaseModel):
     action_cost: ActionCost = "action"
     range_ft: int = Field(ge=0)
     area_radius_ft: int | None = Field(default=None, ge=5)
+    area: AreaTargeting | None = None
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     damage_dice_count: int = Field(default=0, ge=0, le=40)
@@ -97,13 +99,19 @@ class SpellSaveAction(BaseModel):
     requires_target_hearing: bool = False
     requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
+    failed_save_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
+    duration_minutes: int | None = Field(default=None, ge=1)
     animation: str = "spell-save"
 
     @model_validator(mode="after")
     def validate_spell(self) -> "SpellSaveAction":
         if self.area_radius_ft is not None and self.area_radius_ft % 5:
             raise ValueError("Iron Pit area spell radii must use 5-foot increments.")
+        if self.area_radius_ft is not None and self.area is not None:
+            raise ValueError("Save spells must use either legacy radius geometry or universal area geometry, not both.")
+        if self.concentration and self.duration_minutes is None:
+            raise ValueError("Concentration save spells require a certified duration.")
         if self.damage_components and (self.damage_dice_count or self.damage_type is not None or self.damage_bonus):
             raise ValueError("Multi-component save spells cannot also define legacy single-component damage.")
         if self.damage_dice_count and self.damage_type is None:
