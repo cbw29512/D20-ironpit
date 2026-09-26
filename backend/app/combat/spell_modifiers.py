@@ -61,6 +61,8 @@ def apply_spell_modifiers(
     spell: DefensiveSpellAction,
     round_number: int,
     affected_states: Iterable[CombatantState] | None = None,
+    *,
+    duration_minutes: int | None = None,
 ) -> list[CombatModifier]:
     built = [
         (target, build_spell_modifier(
@@ -71,7 +73,7 @@ def apply_spell_modifiers(
         for index, effect in enumerate(spell.modifier_effects)
     ]
     modifiers = [modifier for _, modifier in built]
-    duration_rounds = spell.duration_minutes * 10
+    duration_rounds = (spell.duration_minutes if duration_minutes is None else duration_minutes) * 10
     expires_round = round_number + duration_rounds + (1 if round_number == 0 else 0)
     if spell.concentration:
         start_concentration(
