@@ -173,4 +173,12 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             ),
         ]
+    if level >= 15:
+        rows.append(FeatureAudit(
+            feature_id="superior-hunters-defense-evasion",
+            feature_name="Superior Hunter's Defense (Evasion)",
+            source_reference="D&D Basic Rules 2014: Hunter 15",
+            category="subclass", combat_relevant=True, automated=True,
+            notes="Canonical Hunter choice reuses the universal Evasion save-damage primitive already used by Rogue.",
+        ))
     return rows
