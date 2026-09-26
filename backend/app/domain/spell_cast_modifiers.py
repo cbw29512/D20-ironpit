@@ -28,3 +28,17 @@ class ResourceBackedSpellRangeModifier(BaseModel):
     minimum_base_range_ft: int = Field(default=5, ge=0)
     priority: int = 0
     source: str | None = None
+
+
+class ResourceBackedSpellDurationModifier(BaseModel):
+    """Spend a finite resource to multiply a qualifying spell duration."""
+
+    id: str
+    name: str
+    resource_id: str
+    resource_cost: int = Field(default=1, ge=1)
+    duration_multiplier: int = Field(default=2, ge=1, le=10)
+    maximum_duration_minutes: int = Field(default=1440, ge=1)
+    minimum_base_duration_minutes: int = Field(default=1, ge=1)
+    priority: int = 0
+    source: str | None = None
