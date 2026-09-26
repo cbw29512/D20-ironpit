@@ -38,6 +38,8 @@ def _strip_extension_defaults(value):
             continue
         if key in {"effect_tags", "required_effect_tags"} and item == []:
             continue
+        if key == "replacement_form_actions" and item == []:
+            continue
         cleaned[key] = _strip_extension_defaults(item)
     return cleaned
 
