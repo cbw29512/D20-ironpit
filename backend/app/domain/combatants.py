@@ -24,7 +24,8 @@ from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
 from app.domain.spell_cast_modifiers import ResourceBackedSpellSaveDisadvantage
-from app.domain.spell_cast_effects import SpellCastTimedResistance\nfrom app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.spell_cast_effects import SpellCastTimedResistance
+from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
@@ -77,7 +78,8 @@ class CombatantTemplate(BaseModel):
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
-    spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)\n    spell_cast_timed_resistances: list[SpellCastTimedResistance] = Field(default_factory=list)
+    spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
+    spell_cast_timed_resistances: list[SpellCastTimedResistance] = Field(default_factory=list)
     persistent_spell_attack_actions: list[PersistentSpellAttackAction] = Field(default_factory=list)
     persistent_hazard_actions: list[PersistentHazardAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
