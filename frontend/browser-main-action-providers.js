@@ -93,7 +93,7 @@
 
     register({
       id: "area-weapon-attack", category: C().AREA_WEAPON_ATTACK, rulesets: BOTH,
-      discover: ({ member, setup }) => {
+      discover: ({ member, setup, opportunityProfile }) => {
         const runtime = AW();
         if (!runtime) {
           if (member.state.template.area_weapon_attack_actions?.length) {
@@ -101,7 +101,7 @@
           }
           return null;
         }
-        const selected = runtime.choose(member, setup);
+        const selected = runtime.choose(member, setup, opportunityProfile !== "actionSurgeAttack");
         return selected ? { payload: { selected } } : null;
       },
       resolve: ({ sequence, round, member, setup }, candidate) =>
