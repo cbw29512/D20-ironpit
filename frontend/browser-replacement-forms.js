@@ -9,7 +9,7 @@
     return Object.fromEntries([...keys].map((key) => [key, Math.max(owner?.[key] ?? -99, form?.[key] ?? -99)]));
   }
 
-  function compileActiveTemplate(owner, form, retainSpellcasting = false) {
+  function compileActiveTemplate(owner, form, retainSpellcasting = false, retainedSpellActionIds = []) {
     try {
       if (!owner || owner.kind !== "character") throw new Error("Replacement-form owner must be a character.");
       if (!form || form.kind !== "monster") throw new Error("Replacement-form source must be a monster/beast template.");
@@ -28,18 +28,24 @@
         replacement_form_actions: structuredClone(owner.replacement_form_actions || []),
         source: (owner.source || "") + "; replacement form: " + (form.source || form.name),
       });
+      const allowed = new Set(retainedSpellActionIds || []);
+      const keep = (actions) => structuredClone((actions || []).filter((action) => allowed.has(action.id)));
       if (retainSpellcasting) {
-        active.spell_save_actions = structuredClone(owner.spell_save_actions || []);
-        active.spell_attack_actions = structuredClone(owner.spell_attack_actions || []);
-        active.defensive_spell_actions = structuredClone(owner.defensive_spell_actions || []);
-        active.healingActions = structuredClone(owner.healingActions || []);
-        active.condition_removal_actions = structuredClone(owner.condition_removal_actions || []);
+        active.spell_save_actions = keep(owner.spell_save_actions);
+        active.spell_attack_actions = keep(owner.spell_attack_actions);
+        active.persistent_spell_attack_actions = keep(owner.persistent_spell_attack_actions);
+        active.defensive_spell_actions = keep(owner.defensive_spell_actions);
+        active.healingActions = keep(owner.healingActions);
+        active.condition_removal_actions = keep(owner.condition_removal_actions);
+        active.effect_removal_actions = keep(owner.effect_removal_actions);
       } else {
         active.spell_save_actions = [];
         active.spell_attack_actions = [];
+        active.persistent_spell_attack_actions = [];
         active.defensive_spell_actions = [];
         active.healingActions = [];
         active.condition_removal_actions = [];
+        active.effect_removal_actions = [];
       }
       return active;
     } catch (error) {
@@ -57,7 +63,7 @@
     try {
       const source = formRegistry(state.template.ruleset)[action.formTemplateId];
       if (!source) throw new Error("Unknown replacement form template: " + action.formTemplateId);
-      const activeTemplate = compileActiveTemplate(state.template, source, Boolean(action.retainSpellcasting));
+      const activeTemplate = compileActiveTemplate(state.template, source, Boolean(action.retainSpellcasting), action.retainedSpellActionIds || []);
       return enter(state, action, activeTemplate);
     } catch (error) {
       console.error("Browser replacement form action failed", { combatant: state?.template?.name, action: action?.id, error });
