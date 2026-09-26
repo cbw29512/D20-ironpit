@@ -111,30 +111,18 @@ def choose_spell(
 
 
 
-def choose_named_spell(
+def choose_spell_action_at_slot(
     caster: EncounterCombatant,
     setup: EncounterSetup,
-    turn_key: str,
-    spell_id: str,
+    action: SpellSaveAction,
+    slot_level: int,
     protected_ally_ids: set[str] | None = None,
 ) -> SpellChoice | None:
-    """Choose one declared save spell by id without changing global spell prioritization."""
+    """Choose targets for one already-declared save spell at a fixed slot level."""
     try:
-        action = next(
-            (item for item in caster.state.template.spell_save_actions if item.id == spell_id),
-            None,
-        )
-        if action is None or action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
+        if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             return None
-        levels = legal_slot_levels(
-            caster.state,
-            turn_key,
-            action.level,
-            higher_slot_scaling=action.upcast_dice_per_level > 0,
-        )
-        if not levels:
-            return None
-        slot_level = levels[-1]
+        spell_at_slot(action, slot_level)
         protected = protected_ally_ids or set()
         if action.area is not None:
             placements = [
@@ -184,6 +172,45 @@ def choose_named_spell(
             slot_level=slot_level,
             target_ids=(target.combatant_id,),
             expected_damage=0.0,
+        )
+    except Exception:
+        logger.exception(
+            "Failed to choose fixed-slot save spell %s for %s.",
+            action.id,
+            caster.combatant_id,
+        )
+        raise
+
+
+def choose_named_spell(
+    caster: EncounterCombatant,
+    setup: EncounterSetup,
+    turn_key: str,
+    spell_id: str,
+    protected_ally_ids: set[str] | None = None,
+) -> SpellChoice | None:
+    """Choose one declared save spell by id without changing global spell prioritization."""
+    try:
+        action = next(
+            (item for item in caster.state.template.spell_save_actions if item.id == spell_id),
+            None,
+        )
+        if action is None:
+            return None
+        levels = legal_slot_levels(
+            caster.state,
+            turn_key,
+            action.level,
+            higher_slot_scaling=action.upcast_dice_per_level > 0,
+        )
+        if not levels:
+            return None
+        return choose_spell_action_at_slot(
+            caster,
+            setup,
+            action,
+            levels[-1],
+            protected_ally_ids,
         )
     except Exception:
         logger.exception(
