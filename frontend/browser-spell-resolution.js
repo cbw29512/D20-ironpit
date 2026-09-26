@@ -9,7 +9,7 @@
   const P = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const CONC = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
-  const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
+  const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;\n  const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
   const H = () => window.IRON_PIT_BROWSER_SPELL_SAVE_DISADVANTAGE;
 
   function scaledSpell(action, slotLevel) {
@@ -124,6 +124,7 @@
       }
       E().spend(caster.state, spell.actionCost);
       window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.removeOwnerAttackEnding(caster.state);
+      CE()?.applyTimedResistance(caster, scaledSpell(spell, choice.slotLevel), round);
 
       const allStates = [...setup.heroes, ...setup.monsters].map((member) => member.state);
       if (spell.concentration) {
