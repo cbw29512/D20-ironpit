@@ -7,6 +7,22 @@ from app.domain.replacement_form_actions import ReplacementFormAction
 
 logger = logging.getLogger(__name__)
 
+_BEAST_SPELL_ACTION_IDS = [
+    "produce-flame",
+    "poison-spray",
+    "faerie-fire",
+    "healing-word",
+    "cure-wounds",
+    "lesser-restoration",
+    "dispel-magic",
+]
+_ARCHDRUID_SPELL_ACTION_IDS = [
+    *_BEAST_SPELL_ACTION_IDS,
+    "longstrider",
+    "barkskin",
+    "freedom-of-movement",
+]
+
 
 def wild_shape_action_2014(level: int) -> ReplacementFormAction:
     try:
@@ -20,6 +36,11 @@ def wild_shape_action_2014(level: int) -> ReplacementFormAction:
             resource_cost=1,
             voluntary_revert_action="bonus_action",
             retain_spellcasting=level >= 18,
+            retained_spell_action_ids=(
+                list(_ARCHDRUID_SPELL_ACTION_IDS)
+                if level >= 20
+                else list(_BEAST_SPELL_ACTION_IDS) if level >= 18 else []
+            ),
             setup_spell_id="faerie-fire",
             source="D&D Basic Rules 2014: Druid — Wild Shape",
         )
