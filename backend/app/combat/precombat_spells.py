@@ -55,10 +55,7 @@ def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | N
             continue
         slot = _slot_resource(member, spell)
         if slot is not None:
-            duration_modifier = choose_spell_duration_modifier(
-                member.state, base_duration_minutes=spell.duration_minutes,
-            )
-            return spell, slot[0], slot[1], duration_modifier
+            return spell, slot[0], slot[1]
     return None
 
 
@@ -86,7 +83,10 @@ def prepare_defenses(
         choice = choose_defensive_spell(member, setup)
         if choice is None:
             continue
-        spell, slot_level, resource, duration_modifier = choice
+        spell, slot_level, resource = choice
+        duration_modifier = choose_spell_duration_modifier(
+            member.state, base_duration_minutes=spell.duration_minutes,
+        )
         targets = select_defensive_targets(member, setup, spell, slot_level)
         events.append(resolve_defensive_spell(
             sequence, member, targets, spell, slot_level, resource, affected_states,
