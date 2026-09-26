@@ -24,7 +24,7 @@ def build_nyra_emberveil_2014_profile(level: int) -> CharacterBuildProfile:
             template_id="nyra-emberveil-2014-l1",
             character_name="Nyra Emberveil",
             class_id="sorcerer", class_name="Sorcerer", level=1, ruleset="2014",
-            subclass_id="draconic-sorcery", subclass_name="Draconic Sorcery", build_id="fire-damage",
+            subclass_id="draconic-bloodline", subclass_name="Draconic Bloodline", build_id="fire-damage",
             species_id="half-elf", species_name="Half-Elf",
             background_id="charlatan", background_name="Charlatan",
             base_ability_scores=base, species_increases=species,
