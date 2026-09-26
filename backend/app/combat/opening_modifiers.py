@@ -34,6 +34,15 @@ def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
                 save_dc=ward.save_dc,
                 ends_on_owner_attack=ward.ends_on_owner_attack,
             ))
+        for index, counter in enumerate(features.passive_debuff_counters):
+            modifiers.append(CombatModifier(
+                id=f"{template.id}:passive-debuff-counter:{index}",
+                source_id=template.id,
+                source_effect_id=f"passive-debuff-counter-{index}",
+                source_name=template.name,
+                kind=ModifierKind.DEBUFF_COUNTER,
+                debuff_counter=counter,
+            ))
         for grant in features.saving_throw_advantage_grants:
             for ability in grant.abilities:
                 modifiers.append(CombatModifier(
