@@ -9,7 +9,8 @@
   const P = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const CONC = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
-  const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;\n  const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
+  const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
+  const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
   const H = () => window.IRON_PIT_BROWSER_SPELL_SAVE_DISADVANTAGE;
 
   function scaledSpell(action, slotLevel) {
