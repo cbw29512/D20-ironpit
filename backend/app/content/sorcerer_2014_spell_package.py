@@ -24,16 +24,18 @@ _CANTRIPS = (
 _KNOWN = (
     _spell("burning-hands", "Burning Hands", "damage", "save-damage", "area", level=1),
     _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope", level=1),
+    _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope", level=1),
 )
 
 
 def build_sorcerer_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level != 1:
-            raise ValueError("2014 Sorcerer spell package currently covers level 1.")
+        if level not in (1, 2):
+            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 2.")
+        spells_known = 2 if level == 1 else 3
         return ClassSpellPackage(
             class_id="sorcerer", casting_ability="charisma",
-            cantrips=list(_CANTRIPS), spells=list(_KNOWN),
+            cantrips=list(_CANTRIPS), spells=list(_KNOWN[:spells_known]),
         )
     except Exception:
         logger.exception("Failed to build 2014 Sorcerer spell package at level %s.", level)
