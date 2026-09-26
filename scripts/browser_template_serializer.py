@@ -550,6 +550,19 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for item in template.replacement_form_actions
             ]
+        if template.concentration_repeat_save_actions:
+            row["concentration_repeat_save_actions"] = [
+                {
+                    "id": item.id,
+                    "name": item.name,
+                    "sourceSpellId": item.source_spell_id,
+                    "actionCost": item.action_cost,
+                    "priority": item.priority,
+                    "animation": item.animation,
+                    "source": item.source,
+                }
+                for item in template.concentration_repeat_save_actions
+            ]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
