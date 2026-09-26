@@ -12,6 +12,10 @@ from app.combat.conditional_attack_advantage import conditional_attack_advantage
 from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.next_attack_disadvantage import (
+    consume_next_attack_disadvantage,
+    next_attack_disadvantage_sources,
+)
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice,
     attack_roll_flat_bonus,
@@ -60,7 +64,10 @@ def resolve_attack_roll(
             attacker, defender, distance_ft, defender_event_id,
         )
         disadvantage_total = (
-            other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
+            other_disadvantage_sources
+            + condition_disadvantage
+            + sap_disadvantage(attacker)
+            + next_attack_disadvantage_sources(attacker)
         )
         reckless_advantage = reckless_attack_advantage(attacker, attack)
         reckless_advantage, brutal_disadvantage = brutal_strike_attack_sources(
@@ -105,6 +112,7 @@ def resolve_attack_roll(
                 attacker, "attack", roll, effective_armor_class(defender), dice, round_number,
             )
         consume_next_attack_against_advantage(attacker, defender_event_id)
+        consume_next_attack_disadvantage(attacker)
         consume_sap(attacker)
         consume_attacks_against_advantage(defender)
         extend_rage_from_attack(attacker, round_number)
