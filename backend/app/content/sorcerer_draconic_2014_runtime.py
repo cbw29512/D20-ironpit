@@ -21,8 +21,8 @@ _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom",
 
 def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 17):
-            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 16.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 20.")
         profile = build_nyra_emberveil_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
