@@ -28,6 +28,7 @@
         + DG().dexSaveAdvantageSources(state, ability) + DF().saveAdvantage(state, ability, context)
         + sureFootedAdvantage(state, ability, context);
       const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state) || 0)
+        + (context.disadvantageSources || []).length
         + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
       return R().modeFromSources(advantage, disadvantage);
     } catch (error) {
