@@ -13,6 +13,7 @@ def compile_replacement_form_template(
     form: CombatantTemplate,
     *,
     retain_spellcasting: bool = False,
+    retained_spell_action_ids: list[str] | None = None,
 ) -> CombatantTemplate:
     """Compose an active replacement-form template without mutating either source template."""
     try:
@@ -63,14 +64,16 @@ def compile_replacement_form_template(
             "source": f"{original.source}; replacement form: {form.source}",
         }
         if retain_spellcasting:
+            allowed = set(retained_spell_action_ids or [])
+            keep = lambda actions: [action for action in actions if action.id in allowed]
             update.update({
-                "spell_save_actions": original.spell_save_actions,
-                "spell_attack_actions": original.spell_attack_actions,
-                "persistent_spell_attack_actions": original.persistent_spell_attack_actions,
-                "defensive_spell_actions": original.defensive_spell_actions,
-                "healing_actions": original.healing_actions,
-                "condition_removal_actions": original.condition_removal_actions,
-                "effect_removal_actions": original.effect_removal_actions,
+                "spell_save_actions": keep(original.spell_save_actions),
+                "spell_attack_actions": keep(original.spell_attack_actions),
+                "persistent_spell_attack_actions": keep(original.persistent_spell_attack_actions),
+                "defensive_spell_actions": keep(original.defensive_spell_actions),
+                "healing_actions": keep(original.healing_actions),
+                "condition_removal_actions": keep(original.condition_removal_actions),
+                "effect_removal_actions": keep(original.effect_removal_actions),
             })
         else:
             update.update({
