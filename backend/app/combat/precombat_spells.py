@@ -23,6 +23,7 @@ def defensive_spell_active(member: EncounterCombatant, setup: EncounterSetup, sp
     return any(
         spell.id in target.state.active_buff_effect_ids
         or any(modifier.source_effect_id == spell.id for modifier in target.state.active_modifiers)
+        or any(effect.source_effect_id == spell.id for effect in target.state.timed_effects)
         for target in allies
     )
 
