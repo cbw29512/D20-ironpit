@@ -97,6 +97,18 @@ _PREPARED = (
         "transport-via-plants", "Transport via Plants", "utility",
         "arena-out-of-scope", level=6, min_level=14,
     ),
+    _spell(
+        "control-weather", "Control Weather", "utility",
+        "arena-out-of-scope", level=8, min_level=15,
+    ),
+    _spell(
+        "heroes-feast", "Heroes' Feast", "buff",
+        "arena-out-of-scope", level=6, min_level=16,
+    ),
+    _spell(
+        "true-resurrection", "True Resurrection", "healing",
+        "arena-out-of-scope", level=9, min_level=17,
+    ),
 )
 
 
