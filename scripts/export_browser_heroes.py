@@ -224,6 +224,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "damageResistances": [_value(item) for item in action.damage_resistances],
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
+        "endsIfSourceIncapacitated": action.ends_if_source_incapacitated,
+        "endsIfSourceDead": action.ends_if_source_dead,
     }
     if action.debuff_counters:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
@@ -231,6 +233,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["savingThrowAdvantageGrants"] = [
             _save_advantage_grant(item) for item in action.saving_throw_advantage_grants
         ]
+    if action.friendly_save_advantage_aura is not None:
+        row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     return row
