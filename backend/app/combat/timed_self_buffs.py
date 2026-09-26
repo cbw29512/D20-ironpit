@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.concentration import start_concentration
 from app.combat.modifier_stack import add_modifier
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.timed_self_buff_policy import (
@@ -25,6 +26,7 @@ def resolve_timed_self_buff(
     action: TimedSelfBuffAction,
     *,
     spend_action_cost: bool = True,
+    affected_states=None,
 ) -> BattleEvent:
     """Spend source-defined economy/resources and apply one source-owned timed buff."""
     try:
@@ -67,6 +69,7 @@ def resolve_timed_self_buff(
             or action.debuff_counters
             or action.saving_throw_advantage_grants
             or action.friendly_save_advantage_aura is not None
+            or action.hostile_start_turn_condition_aura is not None
             or action.start_turn_emanation_damage is not None
         ):
             apply_timed_condition(
@@ -84,6 +87,16 @@ def resolve_timed_self_buff(
                 ends_if_source_incapacitated=action.ends_if_source_incapacitated,
                 ends_if_source_dead=action.ends_if_source_dead,
                 use_default_poison_recovery=False,
+            )
+
+        if action.concentration:
+            start_concentration(
+                member.state,
+                member.combatant_id,
+                action.id,
+                round_number,
+                affected_states,
+                expires_round=round_number + action.duration_rounds,
             )
 
         for grant in action.saving_throw_advantage_grants:
@@ -113,6 +126,7 @@ def resolve_timed_self_buff(
             feature_id=action.id,
             resource_remaining=resource.current_uses if resource is not None else None,
             animation=action.animation,
+            concentration_started_effect_id=action.id if action.concentration else None,
             description=f"{member.state.template.name} uses {action.name}.",
         )
     except (ValueError, RuntimeError):
