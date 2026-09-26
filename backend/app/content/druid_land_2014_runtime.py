@@ -14,6 +14,7 @@ from app.content.druid_2014_progression import druid_2014_level
 from app.content.druid_2014_wild_shape import wild_shape_action_2014
 from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_profile
 from app.content.weapon_catalog import build_weapon
+from app.domain.debuffs import DebuffCounter
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
@@ -56,8 +57,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 6):
-            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 5.")
+        if level not in range(1, 7):
+            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 6.")
         profile = build_thalen_greenbough_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -115,8 +116,23 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
                         source_name="Fey Ancestry",
                         abilities=_ABILITIES,
                         required_effect_tags=["charm"],
-                    )
+                    ),
+                    *([
+                        SavingThrowAdvantageGrant(
+                            source_id="lands-stride",
+                            source_name="Land's Stride",
+                            abilities=_ABILITIES,
+                            requires_magical_effect=True,
+                            required_effect_tags=["plant-impediment"],
+                        )
+                    ] if level >= 6 else []),
                 ],
+                passive_debuff_counters=(
+                    [DebuffCounter(
+                        debuff_id="difficult-terrain",
+                        source_scope="nonmagical",
+                    )] if level >= 6 else []
+                ),
             ),
             saving_throw_bonuses=saving_throw_bonuses(
                 scores,
