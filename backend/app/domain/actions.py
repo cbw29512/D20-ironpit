@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.save_damage import DamageTypeName, SaveDamageComponent
+from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 
@@ -125,6 +126,7 @@ class SavingThrowAction(BaseModel):
     requires_no_active_grapple: bool = False
     magical_effect: bool = False
     effect_tags: list[str] = Field(default_factory=list)
+    failed_save_timed_effect: FailedSaveTimedEffect | None = None
     animation: str = "save-effect"
 
 
