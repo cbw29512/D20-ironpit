@@ -95,6 +95,10 @@ def _spell(action: Any) -> dict[str, Any]:
         "concentration": action.concentration, "animation": action.animation,
     }
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
+    if action.failed_save_modifier_effects:
+        row["failedSaveModifierEffects"] = [_modifier_effect(effect) for effect in action.failed_save_modifier_effects]
+    if action.area is not None: row["area"] = action.area.model_dump(mode="json")
+    if action.duration_minutes is not None: row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
     if action.damage_components:
         row["damageComponents"] = [
@@ -410,6 +414,22 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
     if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
     if template.effect_removal_actions: row["effect_removal_actions"] = [_effect_removal(item) for item in template.effect_removal_actions]
+    if template.replacement_form_actions:
+        row["replacement_form_actions"] = [
+            {
+                "id": item.id,
+                "name": item.name,
+                "actionCost": item.action_cost,
+                "formTemplateId": item.form_template_id,
+                "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost,
+                "voluntaryRevertAction": item.voluntary_revert_action,
+                "retainSpellcasting": item.retain_spellcasting,
+                "setupSpellId": item.setup_spell_id,
+                "source": item.source,
+            }
+            for item in template.replacement_form_actions
+        ]
     if template.attack_action:
         row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name,
                                 "isAttackAction": template.attack_action.is_attack_action,
