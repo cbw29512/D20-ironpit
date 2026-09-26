@@ -24,11 +24,22 @@
     if (spell.actionCost === "reaction" || !E().available(caster.state, spell.actionCost)) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
-    if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
+    const rangeModifier = options.rangeModifier || null;
+    const allowedRange = spell.range * (rangeModifier?.rangeMultiplier || 1);
+    if (distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
-    if (ward && !ward.succeeded) { if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; } E().spend(caster.state, spell.actionCost); CE()?.applyTimedResistance(caster, spell, round); const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward); event.resource_remaining = resourceId ? caster.state.resources[resourceId] : null; return event; }
+    if (ward && !ward.succeeded) {
+      if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
+      E().spend(caster.state, spell.actionCost);
+      const rangeRemaining = window.IRON_PIT_BROWSER_SPELL_POLICY.spendRangeModifier(caster.state, rangeModifier);
+      CE()?.applyTimedResistance(caster, spell, round);
+      const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
+      event.resource_remaining = resourceId ? caster.state.resources[resourceId] : rangeRemaining;
+      if (rangeModifier) event.description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
+      return event;
+    }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
@@ -45,6 +56,7 @@
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
+    const rangeRemaining = window.IRON_PIT_BROWSER_SPELL_POLICY.spendRangeModifier(caster.state, rangeModifier);
     CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
@@ -69,6 +81,7 @@
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
+    if (rangeModifier) description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
     if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
     const event = {
       sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,
@@ -79,7 +92,7 @@
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, weapon_id: null, projectile: null, feature_id: spell.id,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
-      resource_remaining: resourceId ? caster.state.resources[resourceId] : null, animation: spell.animation || "spell-attack",
+      resource_remaining: resourceId ? caster.state.resources[resourceId] : rangeRemaining, animation: spell.animation || "spell-attack",
       description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(target.state) || ""),
     };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
