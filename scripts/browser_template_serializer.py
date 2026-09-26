@@ -544,6 +544,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for item in template.resource_conversion_actions
             ]
+        if template.spell_save_disadvantage_options:
+            row["spellSaveDisadvantageOptions"] = [
+                {
+                    "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                    "resourceCost": item.resource_cost, "targetPolicy": item.target_policy,
+                    "priority": item.priority, "source": item.source,
+                }
+                for item in template.spell_save_disadvantage_options
+            ]
         recharge = recharge_rows(template)
         if recharge:
             row["recharge_rules"] = recharge
