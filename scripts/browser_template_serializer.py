@@ -190,6 +190,12 @@ def _save(action: Any) -> dict[str, Any]:
         row["magicalEffect"] = True
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
+    if action.failed_save_timed_effect is not None:
+        row["failedSaveTimedEffect"] = {
+            "effectId": action.failed_save_timed_effect.effect_id,
+            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
+            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+        }
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
@@ -208,6 +214,12 @@ def _spell(action: Any) -> dict[str, Any]:
     }
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
+    if action.failed_save_timed_effect is not None:
+        row["failedSaveTimedEffect"] = {
+            "effectId": action.failed_save_timed_effect.effect_id,
+            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
+            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+        }
     if action.area_radius_ft is not None:
         row["areaRadius"] = action.area_radius_ft
     if action.damage_components:
