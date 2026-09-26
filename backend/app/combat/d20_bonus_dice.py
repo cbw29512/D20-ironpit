@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.d20_bonus_die_support import grant_conflicts, resource_for, target_allowed
 from app.combat.dice import DiceProvider
+from app.combat.resources import resource_available, spend_resource
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant, D20BonusDieAction, D20TestKind
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent, DiceRoll
@@ -150,3 +151,44 @@ def expire_d20_bonus_dice(state, round_number: int) -> list[str]:
     except Exception as exc:
         logger.exception("Failed to expire d20 bonus dice for %s.", state.template.name)
         raise RuntimeError("D20 bonus-die expiry could not be resolved.") from exc
+
+
+def apply_resource_backed_d20_bonus_if_useful(
+    state,
+    test_kind: D20TestKind,
+    roll: DiceRoll,
+    target_total: int,
+    dice: DiceProvider,
+) -> tuple[DiceRoll, str | None]:
+    """Spend a source-neutral resource-backed bonus die only when it can rescue a failed test."""
+    try:
+        if roll.total >= target_total:
+            return roll, None
+        rules = [
+            item for item in state.template.progression_features.resource_backed_d20_bonus_dice
+            if test_kind in item.test_kinds
+            and resource_available(state, item.resource_id, item.resource_cost)
+            and roll.total + item.dice_count * item.dice_size >= target_total
+        ]
+        if not rules:
+            return roll, None
+        rule = max(
+            rules,
+            key=lambda item: (item.dice_count * item.dice_size, item.source_id),
+        )
+        bonus_rolls = [dice.roll(rule.dice_size) for _ in range(rule.dice_count)]
+        spend_resource(state, rule.resource_id, rule.resource_cost)
+        return roll.model_copy(update={
+            "notation": (
+                f"{roll.notation} + {rule.dice_count}d{rule.dice_size} "
+                f"[{rule.source_name}]"
+            ),
+            "rolls": [*roll.rolls, *bonus_rolls],
+            "total": roll.total + sum(bonus_rolls),
+        }), rule.source_name
+    except Exception as exc:
+        logger.exception(
+            "Failed to apply resource-backed d20 bonus die for %s.",
+            state.template.name,
+        )
+        raise RuntimeError("Resource-backed d20 bonus die could not be applied.") from exc
