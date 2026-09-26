@@ -1,0 +1,114 @@
+from __future__ import annotations
+
+import logging
+
+from app.content.armor_catalog import get_armor
+from app.content.armor_class_rules import compile_worn_armor_class
+from app.content.bard_2014_inspiration import build_bardic_inspiration_2014
+from app.content.bard_2014_initiative import build_bard_2014_initiative_refills
+from app.content.bard_lore_2014_profile import build_lyra_silverstring_2014_profile
+from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
+from app.content.cleric_2014_level1_spells import cure_wounds_2014, healing_word_2014
+from app.content.weapon_catalog import build_weapon
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
+
+logger = logging.getLogger(__name__)
+
+
+def _attack(level: int, scores) -> WeaponAttack:
+    weapon = build_weapon("rapier").model_copy(update={"mastery_property": None})
+    modifier = scores.modifier("dexterity")
+    return WeaponAttack(
+        id="lyra-2014-rapier",
+        weapon=weapon,
+        attack_bonus=proficiency_bonus(level) + modifier,
+        damage_bonus=modifier,
+        attack_ability="dexterity",
+        attack_ability_modifier=modifier,
+    )
+
+
+def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
+    from app.content.bard_2014_progression import bard_2014_level
+
+    row = bard_2014_level(level)
+    resources = [
+        ResourceDefinition(
+            id="bardic-inspiration",
+            name="Bardic Inspiration",
+            max_uses=max(1, charisma_modifier),
+        ),
+    ]
+    resources.extend(
+        ResourceDefinition(
+            id=f"spell-slot-{spell_level}",
+            name=f"Spell Slot {spell_level}",
+            max_uses=uses,
+        )
+        for spell_level, uses in enumerate(row.spell_slots, start=1)
+        if uses
+    )
+    return resources
+
+
+def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
+    """Compile the persistent 2014 College of Lore Bard runtime."""
+    try:
+        if level not in range(1, 21):
+            raise ValueError("2014 Lore Bard runtime covers levels 1 through 20.")
+        profile = build_lyra_silverstring_2014_profile(level)
+        scores = profile.final_ability_scores
+        pb = proficiency_bonus(level)
+        charisma_modifier = scores.modifier("charisma")
+        armor = get_armor("studded-leather")
+        armor_class = compile_worn_armor_class(
+            armor.base_ac,
+            armor.category,
+            scores.modifier("dexterity"),
+            [],
+            wielding_shield=False,
+            shield_trained=False,
+        )
+        jack_bonus = pb // 2 if level >= 2 else 0
+        healing = [healing_word_2014(charisma_modifier, 0)]
+        if level >= 2:
+            healing.append(cure_wounds_2014(charisma_modifier, 0))
+        return CombatantTemplate(
+            id=profile.template_id,
+            name=profile.character_name,
+            archetype="Bard",
+            level=level,
+            kind="character",
+            ruleset="2014",
+            ability_scores=scores,
+            armor_class=armor_class,
+            max_hp=fixed_hit_points(level, 8, scores.modifier("constitution")),
+            speed_ft=30,
+            initiative_bonus=scores.modifier("dexterity") + jack_bonus,
+            weapon_attack=_attack(level, scores),
+            healing_actions=healing,
+            d20_bonus_die_actions=[build_bardic_inspiration_2014(level)],
+            initiative_resource_refill_grants=build_bard_2014_initiative_refills(level),
+            saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
+            skill_bonuses={
+                "acrobatics": scores.modifier("dexterity") + pb,
+                "perception": scores.modifier("wisdom") + pb,
+                "performance": charisma_modifier + pb,
+                "persuasion": charisma_modifier + pb,
+            },
+            weapon_masteries=[],
+            resources=_resources(level, charisma_modifier),
+            visual=VisualLoadout(
+                armor=armor.id,
+                main_hand="rapier",
+                off_hand="lute",
+                body_style="humanoid",
+            ),
+            source=(
+                "D&D Basic Rules 2014: Half-Elf, Entertainer, Bard, College of Lore, "
+                "Bardic Inspiration, Healing Word, Cure Wounds, Equipment"
+            ),
+        )
+    except Exception:
+        logger.exception("Failed to compile 2014 Lyra Silverstring at level %s.", level)
+        raise
