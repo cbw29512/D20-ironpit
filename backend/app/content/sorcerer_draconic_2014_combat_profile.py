@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.content.character_math import proficiency_bonus
+from app.content.character_math import fixed_hit_points, proficiency_bonus
 from app.content.pregen_combat_profiles import AttackExpectation, PregenCombatProfile
 from app.content.sorcerer_2014_progression import sorcerer_2014_level
 from app.content.sorcerer_draconic_2014_profile import build_nyra_emberveil_2014_profile
@@ -30,7 +30,9 @@ def build_nyra_2014_combat_profile(level: int) -> PregenCombatProfile:
         return PregenCombatProfile(
             template_id=profile.template_id, archetype="Sorcerer", level=level,
             abilities=scores, save_proficiencies=("constitution", "charisma"),
-            armor_class=13 + dex, max_hp=7, speed_ft=30,
+            armor_class=13 + dex,
+            max_hp=fixed_hit_points(level, 6, scores.modifier("constitution")) + level,
+            speed_ft=30,
             skill_bonuses=(
                 ("arcana", scores.modifier("intelligence") + pb),
                 ("persuasion", cha + pb),
