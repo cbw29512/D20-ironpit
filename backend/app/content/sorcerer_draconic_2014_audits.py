@@ -4,8 +4,8 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level not in range(1, 9):
-        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 8.")
+    if level not in range(1, 10):
+        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 9.")
     rows = [
         FeatureAudit(
             feature_id="half-elf", feature_name="Half-Elf",
@@ -134,4 +134,12 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
                 notes="Reuses the existing universal effect-removal action and spell-slot resource path.",
             ),
         ]
+    if level >= 9:
+        rows.append(FeatureAudit(
+            feature_id="creation",
+            feature_name="Creation",
+            source_reference="D&D Basic Rules 2014: Creation",
+            category="spell", combat_relevant=False, automated=True,
+            notes="Legal fifth-level Sorcerer spell choice recorded as arena-neutral; no combat resolver is required.",
+        ))
     return rows
