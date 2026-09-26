@@ -47,8 +47,9 @@ def test_level_ten_binds_d10_inspiration_expertise_and_magical_secrets() -> None
     }
     assert "death-ward" in {item.id for item in hero.defensive_spell_actions}
 
-    flame_strike = hero.spell_save_actions[0]
-    assert flame_strike.id == "flame-strike"
+    flame_strike = next(
+        action for action in hero.spell_save_actions if action.id == "flame-strike"
+    )
     assert flame_strike.dc == 17
     assert flame_strike.success_damage == "half"
     assert [
