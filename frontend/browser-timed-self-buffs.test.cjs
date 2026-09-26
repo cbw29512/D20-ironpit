@@ -16,6 +16,7 @@ load("browser-action-economy.js");
 load("browser-condition-rules.js");
 load("browser-timed-conditions.js");
 load("browser-timed-self-buffs.js");
+load("browser-precombat-buffs.js");
 load("browser-attack.js");
 
 const damageTypes = [
@@ -93,6 +94,22 @@ window.IRON_PIT_BROWSER_STATE = {
 assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(bard, charmSetup), null);
 ally.state.active_effect_ids = ["charmed"];
 assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(bard, charmSetup).id, "countercharm");
+
+const openingBard = { combatant_id: "opening-bard", side: "heroes", position_ft: 0, state: state("Opening Bard") };
+const openingAlly = { combatant_id: "opening-ally", side: "heroes", position_ft: 20, state: state("Opening Ally") };
+const openingEnemy = { combatant_id: "opening-enemy", side: "monsters", position_ft: 40, state: state("Opening Enemy") };
+openingBard.state.template.timed_self_buff_actions = [countercharm];
+openingAlly.state.template.timed_self_buff_actions = [];
+openingEnemy.state.template.timed_self_buff_actions = [];
+const openingSetup = { heroes: [openingBard, openingAlly], monsters: [openingEnemy] };
+const openingPrep = window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS.prepare(openingSetup, 1);
+assert.equal(openingPrep.events.length, 1);
+assert.equal(openingPrep.events[0].feature_id, "countercharm");
+assert.equal(openingPrep.events[0].round_number, 0);
+assert.equal(openingBard.state.opening_buff_id, "countercharm");
+assert.equal(openingBard.state.action_available, true);
+assert.equal(openingBard.state.timed_effects[0].expires_round, 1);
+assert.match(openingPrep.events[0].description, /free opening buff/);
 
 const lowKi = { combatant_id: "low", side: "heroes", state: state("Low Ki") };
 lowKi.state.template.timed_self_buff_actions = [action];
