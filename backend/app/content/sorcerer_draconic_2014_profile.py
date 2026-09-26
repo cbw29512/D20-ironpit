@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 def build_nyra_emberveil_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 8):
-            raise ValueError("2014 Nyra profile currently covers levels 1 through 7.")
+        if level not in range(1, 9):
+            raise ValueError("2014 Nyra profile currently covers levels 1 through 8.")
         base = AbilityScores(strength=8, dexterity=12, constitution=10, intelligence=13, wisdom=14, charisma=15)
         species = [
             AbilityIncrease(ability="charisma", amount=2),
@@ -104,6 +104,24 @@ def build_nyra_emberveil_2014_profile(level: int) -> CharacterBuildProfile:
         data.update(
             feature_audits=build_sorcerer_draconic_2014_feature_audits(7),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Sorcerer 7"],
+        )
+        profile = CharacterBuildProfile(**data)
+        if level == 7:
+            return profile
+
+        increases = [
+            AbilityIncrease(ability="charisma", amount=1),
+            AbilityIncrease(ability="constitution", amount=1),
+        ]
+        values = profile.final_ability_scores.model_dump()
+        for increase in increases:
+            values[increase.ability] += increase.amount
+        data = advance_profile_data(profile, 8)
+        data.update(
+            advancement_increases=[*profile.advancement_increases, *increases],
+            final_ability_scores=AbilityScores(**values),
+            feature_audits=build_sorcerer_draconic_2014_feature_audits(8),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Sorcerer 8"],
         )
         return CharacterBuildProfile(**data)
     except Exception:
