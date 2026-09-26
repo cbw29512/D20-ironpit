@@ -85,10 +85,11 @@ def build_sorcerer_draconic_2014_high_level_audits(level: int) -> list[FeatureAu
                 feature_id="extended-spell",
                 feature_name="Metamagic: Extended Spell",
                 source_reference="D&D Basic Rules 2014: Sorcerer 3, Metamagic",
-                category="class", combat_relevant=True, automated=False,
+                category="class", combat_relevant=True, automated=True,
                 notes=(
-                    "Selected as Nyra's fourth Metamagic option. Certification remains gated on a shared "
-                    "resource-backed spell-duration multiplier with Python/browser parity."
+                    "Selected as Nyra's fourth Metamagic option. The universal resource-backed duration "
+                    "modifier spends 1 Sorcery Point and doubles a qualifying spell's duration up to 24 hours "
+                    "with Python/browser parity."
                 ),
             ),
             FeatureAudit(
@@ -104,11 +105,11 @@ def build_sorcerer_draconic_2014_high_level_audits(level: int) -> list[FeatureAu
             feature_id="draconic-presence",
             feature_name="Draconic Presence",
             source_reference="D&D Basic Rules 2014: Draconic Bloodline 18",
-            category="subclass", combat_relevant=True, automated=False,
+            category="subclass", combat_relevant=True, automated=True,
             notes=(
-                "Certification remains gated on a universal source-owned 60-foot hostile start-turn aura "
-                "that spends 5 Sorcery Points, requires concentration, applies a Wisdom save, and owns the "
-                "resulting Charmed/Frightened condition plus success immunity timing."
+                "Fear mode binds to the universal source-owned hostile start-turn aura: 60-foot radius, "
+                "5 Sorcery Points, concentration, Wisdom save, Frightened on failure, and source-specific "
+                "24-hour success immunity."
             ),
         ))
     if level >= 19:
