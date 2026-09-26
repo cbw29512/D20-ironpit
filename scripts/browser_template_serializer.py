@@ -252,6 +252,8 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         "kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
         "diceSize": effect.dice_size, "damageType": effect.damage_type,
     }
+    if effect.minimum_value:
+        row["minimumValue"] = effect.minimum_value
     if effect.debuff_counter is not None:
         row["debuffCounter"] = effect.debuff_counter.model_dump(mode="json")
     if effect.replacement_hp:
