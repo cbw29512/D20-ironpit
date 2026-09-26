@@ -74,8 +74,8 @@ _KNOWN = (
         "zero-hp-replacement", "instant-death-prevention",
         "magical-secrets", level=4, min_level=10,
     ),
-    _spell("heal", "Heal", "healing", "healing", level=6, min_level=11),
-    _spell("regenerate", "Regenerate", "healing", "healing", level=7, min_level=13),
+    _spell("find-the-path", "Find the Path", "utility", "arena-out-of-scope", level=6, min_level=11),
+    _spell("project-image", "Project Image", "utility", "arena-out-of-scope", level=7, min_level=13),
     _spell(
         "harm", "Harm", "damage", "save-damage", "magical-secrets",
         level=6, min_level=14,
