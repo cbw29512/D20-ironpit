@@ -42,11 +42,11 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
         rows.append(FeatureAudit(
             feature_id="font-of-magic", feature_name="Font of Magic",
             source_reference="D&D Basic Rules 2014: Sorcerer 2",
-            category="class", combat_relevant=True, automated=False,
+            category="class", combat_relevant=True, automated=True,
             notes=(
-                "ENGINE_TRULY_MISSING: Flexible Casting changes combat resources by converting Sorcery Points "
-                "to temporary spell slots or spell slots to Sorcery Points as a Bonus Action. Iron Pit has "
-                "generic resources and action economy but no certified resource-conversion primitive yet."
+                "Flexible Casting binds to the universal resource-conversion action: normal Bonus Action cost, "
+                "finite resource spending, bounded Sorcery Point gains, and temporary spell-slot overflow. "
+                "Arena automation creates a 1st-level slot only after all spell slots are exhausted."
             ),
         ))
     return rows
