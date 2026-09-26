@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.area_targeting import legal_area_placements\nfrom app.combat.condition_rules import can_see
+from app.combat.area_targeting import legal_area_placements
+from app.combat.condition_rules import can_see
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import best_area_placement
