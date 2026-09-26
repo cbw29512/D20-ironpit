@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 def build_thalen_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Thalen combat fingerprint currently covers levels 1 through 9.")
+        if level not in range(1, 11):
+            raise ValueError("2014 Thalen combat fingerprint currently covers levels 1 through 10.")
         abilities = AbilityScores(
             strength=8,
             dexterity=15,
@@ -27,7 +27,7 @@ def build_thalen_2014_combat_profile(level: int) -> PregenCombatProfile:
             abilities=abilities,
             save_proficiencies=("intelligence", "wisdom"),
             armor_class=15,
-            max_hp={1: 10, 2: 17, 3: 24, 4: 31, 5: 38, 6: 45, 7: 52, 8: 59, 9: 66}[level],
+            max_hp={1: 10, 2: 17, 3: 24, 4: 31, 5: 38, 6: 45, 7: 52, 8: 59, 9: 66, 10: 73}[level],
             speed_ft=35,
             skill_bonuses=(
                 ("insight", 9 if level >= 9 else (8 if level >= 8 else (7 if level >= 5 else (6 if level >= 4 else 5)))),
@@ -49,7 +49,9 @@ def build_thalen_2014_combat_profile(level: int) -> PregenCombatProfile:
                 7: (("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3), ("spell-slot-4", 1), ("wild-shape", 2)),
                 8: (("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3), ("spell-slot-4", 2), ("wild-shape", 2)),
                 9: (("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3), ("spell-slot-4", 3), ("spell-slot-5", 1), ("wild-shape", 2)),
+                10: (("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3), ("spell-slot-4", 3), ("spell-slot-5", 2), ("wild-shape", 2)),
             }[level],
+            damage_immunities=("poison",) if level >= 10 else (),
         )
     except Exception:
         logger.exception("Failed to compile Thalen's 2014 combat fingerprint at level %s.", level)
@@ -57,4 +59,4 @@ def build_thalen_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 
 def build_thalen_2014_combat_profiles() -> list[PregenCombatProfile]:
-    return [build_thalen_2014_combat_profile(level) for level in range(1, 10)]
+    return [build_thalen_2014_combat_profile(level) for level in range(1, 11)]
