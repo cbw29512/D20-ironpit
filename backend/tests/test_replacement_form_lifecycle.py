@@ -2,19 +2,15 @@ from __future__ import annotations
 
 from app.combat.replacement_forms import enter_replacement_form, revert_replacement_form
 from app.combat.state import build_combatant_state
+from app.content.druid_2014_wild_shape_forms import canonical_wild_shape_template_2014
 from app.content.druid_land_2014_runtime import build_thalen_greenbough_2014
+from app.content.replacement_form_compiler import compile_replacement_form_template
 from app.domain.combatants import ResourceDefinition
 
 
 def _wolf_form(template):
-    return template.model_copy(update={
-        "id": "test-wolf-form",
-        "name": "Wolf",
-        "kind": "monster",
-        "max_hp": 11,
-        "armor_class": 13,
-        "speed_ft": 40,
-    })
+    wolf = canonical_wild_shape_template_2014(2)
+    return compile_replacement_form_template(template, wolf)
 
 
 def test_replacement_form_spends_action_and_resource_but_preserves_concentration() -> None:
@@ -35,7 +31,8 @@ def test_replacement_form_spends_action_and_resource_but_preserves_concentration
 
     assert state.action_available is False
     assert state.replacement_form is not None
-    assert state.replacement_form.form_hp == 11
+    assert state.template.id.endswith("--form-2014-wolf")
+    assert state.replacement_form.form_hp == state.template.max_hp
     assert state.resources[0].current_uses == 1
     assert state.concentration is not None
     assert state.concentration.source_effect_id == "faerie-fire"
@@ -62,5 +59,6 @@ def test_voluntary_revert_uses_bonus_action_and_keeps_original_hp() -> None:
 
     assert result.reverted is True
     assert state.replacement_form is None
+    assert state.template.id == template.id
     assert state.current_hp == 6
     assert state.bonus_action_available is False
