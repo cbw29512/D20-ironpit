@@ -122,8 +122,12 @@ def choose_spell_action_at_slot(
     try:
         if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             return None
-        spell_at_slot(action, slot_level)
+        scaled = spell_at_slot(action, slot_level)
         protected = protected_ally_ids or set()
+        members = {
+            member.combatant_id: member
+            for member in [*setup.heroes, *setup.monsters]
+        }
         if action.area is not None:
             placements = [
                 item for item in legal_area_placements(caster, setup, action.area, action.range_ft)
@@ -144,7 +148,10 @@ def choose_spell_action_at_slot(
                 slot_level=slot_level,
                 target_ids=tuple(placement.enemy_ids),
                 placement=placement,
-                expected_damage=float(len(placement.enemy_ids)),
+                expected_damage=sum(
+                    save_spell_expected_damage(members[target_id], scaled)
+                    for target_id in placement.enemy_ids
+                ),
             )
         if action.area_radius_ft is not None:
             placement = best_area_placement(
@@ -161,17 +168,33 @@ def choose_spell_action_at_slot(
                 slot_level=slot_level,
                 target_ids=tuple((*placement.enemy_ids, *placement.friendly_ids)),
                 placement=placement,
-                expected_damage=float(len(placement.enemy_ids)),
+                expected_damage=(
+                    sum(
+                        save_spell_expected_damage(members[target_id], scaled)
+                        for target_id in placement.enemy_ids
+                    )
+                    - sum(
+                        save_spell_expected_damage(members[target_id], scaled)
+                        for target_id in placement.friendly_ids
+                    )
+                ),
             )
         legal = _legal_single_targets(caster, setup, action)
         if not legal:
             return None
-        target = min(legal, key=lambda item: (item.state.current_hp, item.combatant_id))
+        target = max(
+            legal,
+            key=lambda item: (
+                save_spell_expected_damage(item, scaled),
+                -item.state.current_hp,
+                item.combatant_id,
+            ),
+        )
         return SpellChoice(
             action=action,
             slot_level=slot_level,
             target_ids=(target.combatant_id,),
-            expected_damage=0.0,
+            expected_damage=save_spell_expected_damage(target, scaled),
         )
     except Exception:
         logger.exception(
