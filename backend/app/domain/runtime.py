@@ -51,6 +51,7 @@ class TimedEffect(BaseModel):
     suppress_bonus_action: bool = False
     suppress_reactions: bool = False
     suppress_movement: bool = False
+    next_attack_disadvantage: bool = False
     zero_hp_replacement_hp: int = Field(default=0, ge=0)
     # Universal source ownership for temporary typed resistances. This lets a
     # timed effect clean up only the resistance contribution it owns while an
