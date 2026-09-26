@@ -4,8 +4,8 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level not in (1, 2):
-        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 2.")
+    if level not in (1, 2, 3):
+        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 3.")
     rows = [
         FeatureAudit(
             feature_id="half-elf", feature_name="Half-Elf",
@@ -45,8 +45,28 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             category="class", combat_relevant=True, automated=True,
             notes=(
                 "Flexible Casting binds to the universal resource-conversion action: normal Bonus Action cost, "
-                "finite resource spending, bounded Sorcery Point gains, and temporary spell-slot overflow. "
-                "Arena automation creates a 1st-level slot only after all spell slots are exhausted."
+                "finite resource spending, bounded Sorcery Point gains, and temporary spell-slot overflow."
             ),
         ))
+    if level >= 3:
+        rows += [
+            FeatureAudit(
+                feature_id="heightened-spell", feature_name="Metamagic: Heightened Spell",
+                source_reference="D&D Basic Rules 2014: Sorcerer 3",
+                category="class", combat_relevant=True, automated=True,
+                notes=(
+                    "Spends 3 Sorcery Points through the universal resource system and supplies one contextual "
+                    "Disadvantage source to the first actual target saving against the spell."
+                ),
+            ),
+            FeatureAudit(
+                feature_id="subtle-spell", feature_name="Metamagic: Subtle Spell",
+                source_reference="D&D Basic Rules 2014: Sorcerer 3",
+                category="class", combat_relevant=False, automated=True,
+                notes=(
+                    "The current Pit does not model verbal/somatic suppression or perceptible casting as a "
+                    "combat legality gate, so removing those components is arena-neutral."
+                ),
+            ),
+        ]
     return rows
