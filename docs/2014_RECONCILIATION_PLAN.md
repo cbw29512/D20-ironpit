@@ -138,6 +138,13 @@ For each combat feature:
 
 The active Druid lane is the first explicit enforcement example: Nature's Ward must bind poison, disease, Charmed, and Frightened protections into existing damage/debuff/condition checks rather than adding a Druid-specific resolver.
 
+Migration status for this rule:
+
+- **Bound now:** 2014 Land Druid Nature's Ward uses typed damage immunity, generic debuff counters, and source-typed condition immunity.
+- **Cleaned now:** the shared condition-immunity resolver no longer recognizes the literal `protection-from-poison` source id; poison protection must arrive through semantic immunity/counter state.
+- **Retained semantic rule:** Petrified may block Poisoned because Petrified is itself combat state, not a feature/display-name dispatch.
+- **Next legacy migration:** Mindless Rage still has an active-Rage condition-immunity branch. Move that behavior to a reusable effect-conditional modifier binding when the Rage tranche is next touched; preserve edition-specific removal/suppression behavior and prove Python/browser parity before deleting the branch.
+
 ### Practical global workflow
 
 The canonical pregen program is executed in this order:
