@@ -5,7 +5,8 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.concentration import start_concentration
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
-from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance\nfrom app.combat.spell_choice import SpellChoice
+from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
+from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import spell_at_slot
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
 from app.combat.spellcasting import mark_slot_spell_cast
