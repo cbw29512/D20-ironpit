@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
+from app.combat.area_weapon_attacks import choose_area_weapon_attack, resolve_area_weapon_attack
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
@@ -138,6 +139,15 @@ def resolve_combat_turn(
         if deferred is not None:
             events.append(deferred); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        area_weapon = choose_area_weapon_attack(attacker, setup)
+        if area_weapon is not None:
+            area_events, sequence = resolve_area_weapon_attack(
+                sequence, round_number, attacker, setup, dice, area_weapon,
+            )
+            events.extend(area_events)
+            if area_events or not is_available(attacker.state, "action"):
+                return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         if attacker.state.template.attack_action is not None:
             action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
