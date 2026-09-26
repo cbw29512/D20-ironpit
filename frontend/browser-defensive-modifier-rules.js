@@ -63,8 +63,8 @@
   const conditionImmune = (state, conditionId, sourceTemplate = null) => (state.active_modifiers || [])
     .some((item) => item.kind === "condition-immunity" && item.condition_id === conditionId
       && sourceMatches(item, sourceTemplate));
-  const targetingGate = (state) => (state.active_modifiers || [])
-    .filter((item) => item.kind === "targeting-save-gate")
+  const targetingGate = (state, sourceTemplate = null) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "targeting-save-gate" && sourceMatches(item, sourceTemplate))
     .sort((a, b) => (b.save_dc || 0) - (a.save_dc || 0) || a.id.localeCompare(b.id))[0] || null;
 
   function removeOwnerAttackEnding(state) {
