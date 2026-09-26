@@ -262,6 +262,7 @@ jobs:
           grep -q 'browser-light-weapons.js' frontend/index.html
           grep -q 'browser-light-attack.js' frontend/index.html
           grep -q 'browser-standard-attack-action.js' frontend/index.html
+          grep -q 'browser-area-weapon-attacks.js' frontend/index.html
           grep -q 'browser-source-bound-effects.js' frontend/index.html
           grep -q 'browser-ongoing-spell-control.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
@@ -319,6 +320,7 @@ jobs:
           node frontend/browser-main-action-post-move.test.cjs
           node frontend/browser-main-action-providers.test.cjs
           node frontend/browser-main-action-provider-dependencies.test.cjs
+          node frontend/browser-area-weapon-attacks.test.cjs
           node frontend/browser-action-surge-selector.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
