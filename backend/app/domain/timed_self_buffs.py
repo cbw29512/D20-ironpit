@@ -44,7 +44,7 @@ class TimedSelfBuffAction(BaseModel):
     id: str
     name: str
     action_cost: ActionCost = "action"
-    resource_id: str
+    resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
     duration_rounds: int = Field(ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
