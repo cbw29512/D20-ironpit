@@ -152,10 +152,10 @@ def apply_damage(
         types = damage_types or set()
         amount = _after_temporary_hp(state, amount)
         amount, _ = apply_replacement_form_damage(state, amount)
-        if amount == 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
         if state.current_hp == 0:
             return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
+        if amount == 0:
+            return _finish_damage(state, "damaged", incoming, dice, affected_states)
         hp_before = state.current_hp
         state.current_hp = max(0, hp_before - amount)
         if state.current_hp > 0:
