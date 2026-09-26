@@ -79,6 +79,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke_of_luck_uses),),
+    "sorcerer": (),
 }
 _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", _barbarian_2014_finite_rage_uses),),
@@ -131,7 +132,7 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
     if profile.ruleset == "2024" and profile.class_id in FULL_CASTER_CLASSES:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
-    if profile.ruleset == "2014" and profile.class_id in {"bard", "cleric", "druid"}:
+    if profile.ruleset == "2014" and profile.class_id in {"bard", "cleric", "druid", "sorcerer"}:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
     if profile.ruleset == "2014" and profile.class_id == "ranger":
         resolved.update(ranger_2014_spell_slot_resources(profile.level))
