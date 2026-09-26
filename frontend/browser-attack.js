@@ -67,7 +67,8 @@
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
-    const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state);
+    const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state)
+      + (T()?.nextAttackDisadvantage(attacker.state) || 0);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const rangedDisadvantage = attack.kind === "ranged" && ((attack.normal && distance > attack.normal) || closeThreat);
     const recklessAdvantage = B2().attackAdvantage(attacker.state, attack);
@@ -81,7 +82,8 @@
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id), mode), M().effectiveArmorClass(target.state));
     let attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll); const d20Bonus = [1, 20].includes(heroic.roll.selected_roll) ? null : DB()?.applyIfUseful(attacker.state, "attack", attackRoll, M().effectiveArmorClass(target.state), round); if (d20Bonus) attackRoll = d20Bonus.roll; const rollPenalty = window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(attacker, extra.setup, "attack", attackRoll, M().effectiveArmorClass(target.state)); if (rollPenalty) attackRoll = rollPenalty.roll;
-    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
+    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+    T()?.consumeNextAttackDisadvantage(attacker.state); SAP().consume(attacker.state);
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
