@@ -10,6 +10,7 @@
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
 
   function slotResource(caster, spell, turnKey) {
@@ -30,11 +31,16 @@
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
-    const mode = R().modeFromSources(advantage, conditions.disadvantage + SAP().disadvantage(caster.state) + (closeThreat ? 1 : 0));
+    const mode = R().modeFromSources(
+      advantage,
+      conditions.disadvantage + SAP().disadvantage(caster.state)
+        + (T()?.nextAttackDisadvantage(caster.state) || 0) + (closeThreat ? 1 : 0),
+    );
     const targetAc = M().effectiveArmorClass(target.state);
     const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus, mode), targetAc);
     let attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll); const rollPenalty = window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(caster, setup, "attack", attackRoll, targetAc); if (rollPenalty) attackRoll = rollPenalty.roll;
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
+    T()?.consumeNextAttackDisadvantage(caster.state);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
