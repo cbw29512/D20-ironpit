@@ -11,6 +11,7 @@ from app.content.shared_invisibility_spells_2014 import greater_invisibility_201
 from app.content.sorcerer_2014_progression import sorcerer_2014_level
 from app.content.sorcerer_draconic_2014_profile import build_nyra_emberveil_2014_profile
 from app.content.sorcerer_draconic_2014_spells import burning_hands_2014, fire_bolt_2014, fireball_2014
+from app.content.sorcerer_draconic_2014_level18 import draconic_presence_fear_2014
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
@@ -74,6 +75,9 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             spell_save_disadvantage_options=([heightened_spell_2014()] if level >= 3 else []),
             spell_range_modifiers=([distant_spell_2014()] if level >= 10 else []),
             spell_duration_modifiers=([extended_spell_2014()] if level >= 17 else []),
+            timed_self_buff_actions=([
+                draconic_presence_fear_2014(8 + pb + cha)
+            ] if level >= 18 else []),
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
