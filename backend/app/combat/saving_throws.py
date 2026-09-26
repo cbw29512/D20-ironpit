@@ -34,7 +34,7 @@ def resolve_save_action(
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
     check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | list[list[int]] | None = None, affected_states: list[CombatantState] | None = None,
-    spell_effect: bool = False,
+    spell_effect: bool = False, save_disadvantage_sources: tuple[str, ...] = (),
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft):
@@ -53,6 +53,7 @@ def resolve_save_action(
         spell_effect=spell_effect,
         source_creature_type=source_type,
         effect_tags=frozenset(effect_tags),
+        disadvantage_sources=save_disadvantage_sources,
     )
     advantage_sources = saving_throw_advantage_source_names(
         target.state, action.save_ability, save_context,
@@ -111,6 +112,9 @@ def resolve_save_action(
     if advantage_sources:
         source_text = " and ".join(advantage_sources)
         description += f" {source_text} grants Advantage on the save."
+    if save_disadvantage_sources:
+        source_text = " and ".join(save_disadvantage_sources)
+        description += f" {source_text} imposes Disadvantage on the save."
     if target.state.template.progression_features.evasion and action.save_ability == "dexterity" and action.success_damage == "half":
         description += " Evasion reduces the damage."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
