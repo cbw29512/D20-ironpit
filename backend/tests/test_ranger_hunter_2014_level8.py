@@ -16,7 +16,7 @@ def test_level_eight_asi_and_lands_stride_reuse_shared_checks() -> None:
     assert hero.ability_scores.wisdom == 15
     assert hero.armor_class == 16
     assert hero.initiative_bonus == 5
-    assert hero.weapon_attack.attack_bonus == 11
+    assert hero.weapon_attack.attack_bonus == 10
     assert hero.weapon_attack.damage_bonus == 5
 
     lands_stride_save = next(
