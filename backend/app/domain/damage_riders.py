@@ -10,4 +10,5 @@ class OncePerTurnWeaponHitDamageRider(BaseModel):
     source_name: str = Field(min_length=1)
     dice_count: int = Field(ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
-    damage_type: str = Field(min_length=1)
+    damage_type: str | None = Field(default=None, min_length=1)
+    requires_target_below_max_hp: bool = False
