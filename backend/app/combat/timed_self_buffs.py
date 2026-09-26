@@ -23,18 +23,21 @@ def resolve_timed_self_buff(
     round_number: int,
     member: EncounterCombatant,
     action: TimedSelfBuffAction,
+    *,
+    spend_action_cost: bool = True,
 ) -> BattleEvent:
     """Spend source-defined economy/resources and apply one source-owned timed buff."""
     try:
         resource = timed_self_buff_resource(member, action)
-        if not is_available(member.state, action.action_cost):
+        if spend_action_cost and not is_available(member.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
         if action.resource_id is not None and (resource is None or resource.current_uses < action.resource_cost):
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if timed_self_buff_active(member, action):
             raise ValueError(f"{action.name} is already active.")
 
-        spend(member.state, action.action_cost)
+        if spend_action_cost:
+            spend(member.state, action.action_cost)
         if resource is not None:
             resource.current_uses -= action.resource_cost
         applied: list[str] = []
