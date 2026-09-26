@@ -533,6 +533,17 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["initiative_resource_refill_grants"] = [
                 item.model_dump() for item in template.initiative_resource_refill_grants
             ]
+        if template.resource_conversion_actions:
+            row["resource_conversion_actions"] = [
+                {
+                    "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                    "sourceResourceId": item.source_resource_id, "sourceCost": item.source_cost,
+                    "targetResourceId": item.target_resource_id, "targetGain": item.target_gain,
+                    "targetAllowsOverflow": item.target_allows_overflow,
+                    "automation": item.automation, "priority": item.priority, "source": item.source,
+                }
+                for item in template.resource_conversion_actions
+            ]
         recharge = recharge_rows(template)
         if recharge:
             row["recharge_rules"] = recharge
