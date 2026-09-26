@@ -56,7 +56,7 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             },
             weapon_masteries=[],
             resources=[ResourceDefinition(id="spell-slot-1", name="Spell Slot 1", max_uses=2)],
-            visual=VisualLoadout(armor=None, main_hand="light-crossbow", body_style="humanoid"),
+            visual=VisualLoadout(armor="unarmored", main_hand="light-crossbow", body_style="humanoid"),
             source="D&D Basic Rules 2014: Half-Elf; Charlatan; Sorcerer; Draconic Bloodline; Equipment",
         )
     except Exception:
