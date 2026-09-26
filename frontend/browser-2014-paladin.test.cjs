@@ -15,6 +15,7 @@ load("browser-modifiers.js");
 load("browser-state.js");
 load("browser-condition-immunity.js");
 load("browser-timed-conditions.js");
+load("browser-saving-throws.js");
 load("browser-saves.js");
 load("browser-turn-creature-effects.js");
 load("browser-2014-paladin.js");

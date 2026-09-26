@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-modifiers.js",
   "browser-state.js", "browser-spellcasting.js", "browser-spell-area.js",
   "browser-healing-policy.js", "browser-healing-resolution.js", "browser-healing.js",
-  "browser-rolls.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saves.js", "browser-offense-value.js",
+  "browser-rolls.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js", "browser-offense-value.js",
   "browser-spell-policy.js", "browser-spell-attack-policy.js",
 ]) load(file);
 

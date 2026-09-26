@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 global.window = globalThis;
-for (const file of ["browser-heroes.js", "browser-state.js", "browser-rolls.js", "browser-saves.js",
+for (const file of ["browser-heroes.js", "browser-state.js", "browser-rolls.js", "browser-saving-throws.js", "browser-saves.js",
   "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-modifiers.js",
   "browser-defensive-modifier-rules.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js"]) {
   vm.runInThisContext(fs.readFileSync(path.join(__dirname, file), "utf8"), { filename: file });

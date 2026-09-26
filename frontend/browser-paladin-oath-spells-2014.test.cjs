@@ -24,6 +24,7 @@ load("browser-timed-conditions.js");
 load("browser-zero-hp.js");
 load("browser-attack.js");
 load("browser-save-damage.js");
+load("browser-saving-throws.js");
 load("browser-saves.js");
 load("browser-targeting-wards.js");
 load("browser-spellcasting.js");
