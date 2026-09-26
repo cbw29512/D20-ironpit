@@ -97,6 +97,23 @@ def _audits(level: int) -> list[FeatureAudit]:
                 notes="Uses the universal Attack action with two weapon-attack slots.",
             )
         )
+    if level >= 6:
+        rows += [
+            FeatureAudit(
+                feature_id="favored-enemy-improvement-6",
+                feature_name="Favored Enemy Improvement",
+                source_reference="D&D Basic Rules 2014: Ranger 6",
+                category="class", combat_relevant=False, automated=True,
+                notes="Adds another favored enemy/language choice; the RAW tracking/recall benefit remains arena-neutral.",
+            ),
+            FeatureAudit(
+                feature_id="natural-explorer-improvement-6",
+                feature_name="Natural Explorer Improvement",
+                source_reference="D&D Basic Rules 2014: Ranger 6",
+                category="class", combat_relevant=False, automated=True,
+                notes="Adds another favored terrain; overland travel benefits remain outside an in-progress Iron Pit fight.",
+            ),
+        ]
     return rows
 
 
@@ -132,8 +149,8 @@ def _level_one() -> CharacterBuildProfile:
 
 def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 6):
-            raise ValueError("2014 Rowan profile currently covers levels 1 through 5.")
+        if level not in range(1, 7):
+            raise ValueError("2014 Rowan profile currently covers levels 1 through 6.")
         profile = _level_one()
         if level == 1:
             return profile
@@ -176,6 +193,14 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
         data.update(
             feature_audits=_audits(5),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 5"],
+        )
+        profile = CharacterBuildProfile(**data)
+        if level == 5:
+            return profile
+        data = advance_profile_data(profile, 6)
+        data.update(
+            feature_audits=_audits(6),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 6"],
         )
         return CharacterBuildProfile(**data)
     except Exception:
