@@ -44,9 +44,29 @@ def build_bard_2014_feature_audits(level: int) -> list[FeatureAudit]:
             ),
         ]
     if level >= 3:
+        rows += [
+            FeatureAudit(
+                feature_id="college-lore", feature_name="College of Lore",
+                source_reference="D&D Basic Rules 2014: College of Lore",
+                category="subclass", combat_relevant=False, automated=True,
+            ),
+            FeatureAudit(
+                feature_id="cutting-words", feature_name="Cutting Words",
+                source_reference="D&D Basic Rules 2014: College of Lore 3",
+                category="subclass", combat_relevant=True, automated=True,
+            ),
+            FeatureAudit(
+                feature_id="expertise", feature_name="Expertise",
+                source_reference="D&D Basic Rules 2014: Bard 3",
+                category="class", combat_relevant=False, automated=True,
+                notes="Canonical expertise choices are Performance and Persuasion.",
+            ),
+        ]
+    if level >= 5:
         rows.append(FeatureAudit(
-            feature_id="college-lore", feature_name="College of Lore",
-            source_reference="D&D Basic Rules 2014: College of Lore",
-            category="subclass", combat_relevant=False, automated=True,
+            feature_id="font-of-inspiration", feature_name="Font of Inspiration",
+            source_reference="D&D Basic Rules 2014: Bard 5",
+            category="class", combat_relevant=False, automated=True,
+            notes="Iron Pit resets resources between matches; short-rest recovery does not change in-fight resolution.",
         ))
     return rows
