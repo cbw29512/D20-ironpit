@@ -107,4 +107,19 @@ def build_bard_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 notes="Canonical selections are Flame Strike and Death Ward.",
             ),
         ]
+    if level >= 14:
+        rows += [
+            FeatureAudit(
+                feature_id="magical-secrets-2", feature_name="Magical Secrets",
+                source_reference="D&D Basic Rules 2014: Bard 14",
+                category="class", combat_relevant=True, automated=True,
+                notes="Canonical selections are Guiding Bolt and Shield of Faith; both reuse shared spell primitives.",
+            ),
+            FeatureAudit(
+                feature_id="peerless-skill", feature_name="Peerless Skill",
+                source_reference="D&D Basic Rules 2014: College of Lore 14",
+                category="subclass", combat_relevant=True, automated=True,
+                notes="Reuses the universal resource-backed d20 bonus-die trigger for ability checks.",
+            ),
+        ]
     return rows
