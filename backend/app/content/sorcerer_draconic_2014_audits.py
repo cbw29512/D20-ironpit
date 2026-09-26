@@ -4,8 +4,8 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level not in (1, 2, 3):
-        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 3.")
+    if level not in range(1, 5):
+        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 4.")
     rows = [
         FeatureAudit(
             feature_id="half-elf", feature_name="Half-Elf",
