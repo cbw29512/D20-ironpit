@@ -105,4 +105,20 @@ def build_druid_land_2014_high_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 14:
+        rows.append(
+            FeatureAudit(
+                feature_id="natures-sanctuary",
+                feature_name="Nature's Sanctuary",
+                source_reference="D&D Basic Rules 2014: Circle of the Land 14",
+                category="subclass",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Uses the universal targeting-save gate with Beast/Plant source filtering. "
+                    "A successful Wisdom save records the source creature's printed 24-hour immunity "
+                    "as fresh per-fight targeting-gate state; no Druid-specific resolver."
+                ),
+            )
+        )
     return rows
