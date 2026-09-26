@@ -69,4 +69,24 @@ def build_bard_2014_feature_audits(level: int) -> list[FeatureAudit]:
             category="class", combat_relevant=False, automated=True,
             notes="Iron Pit resets resources between matches; short-rest recovery does not change in-fight resolution.",
         ))
+    if level >= 6:
+        rows += [
+            FeatureAudit(
+                feature_id="countercharm", feature_name="Countercharm",
+                source_reference="D&D Basic Rules 2014: Bard 6",
+                category="class", combat_relevant=True, automated=True,
+                notes=(
+                    "Uses the universal timed friendly save-aura buff. Iron Pit may spend the "
+                    "single free opening-buff activation before initiative; later activation "
+                    "uses Countercharm's normal Action cost."
+                ),
+            ),
+            FeatureAudit(
+                feature_id="additional-magical-secrets",
+                feature_name="Additional Magical Secrets",
+                source_reference="D&D Basic Rules 2014: College of Lore 6",
+                category="subclass", combat_relevant=True, automated=True,
+                notes="Canonical bonus-known selections are Bless and Spiritual Weapon.",
+            ),
+        ]
     return rows
