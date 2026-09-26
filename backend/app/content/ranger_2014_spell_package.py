@@ -47,6 +47,10 @@ _SPELLS = (
         id="commune-with-nature", name="Commune with Nature", spell_level=5, min_character_level=17,
         role="utility", required_capabilities=["arena-out-of-scope"],
     ),
+    CanonicalSpellChoice(
+        id="tree-stride", name="Tree Stride", spell_level=5, min_character_level=19,
+        role="utility", required_capabilities=["arena-out-of-scope"],
+    ),
 )
 
 
