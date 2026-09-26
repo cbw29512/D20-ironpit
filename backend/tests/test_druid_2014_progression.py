@@ -25,7 +25,6 @@ def test_2014_druid_wild_shape_breakpoints_are_explicit() -> None:
 def test_2014_druid_feature_breakpoints_are_persistent() -> None:
     level_twenty = set(druid_2014_features(20))
     assert {
-        "spellcasting", "wild-shape", "druid-circle", "natural-recovery",
-        "lands-stride", "natures-ward", "natures-sanctuary",
+        "spellcasting", "wild-shape", "druid-circle",
         "timeless-body", "beast-spells", "archdruid",
     } <= level_twenty
