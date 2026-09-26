@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-condition-rules.js", "browser-modifiers.js", "browser-state.js",
-  "browser-concentration.js", "browser-spell-modifiers.js", "browser-precombat-spells.js",
+  "browser-timed-conditions.js", "browser-concentration.js", "browser-spell-modifiers.js", "browser-precombat-spells.js",
 ]) load(file);
 const S = window.IRON_PIT_BROWSER_STATE;
 const P = window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
@@ -19,7 +19,7 @@ const base = H["karnok-stoneward-l1"];
 const defense = (id, level, priority = 0) => ({
   id, name: id, level, actionCost: "action", range: 0, durationMinutes: 60,
   targetPolicy: "self", targetCount: 1,
-  temporaryHp: 5, temporaryHpPerSlotAbove: 5, damageResistances: [], modifierEffects: [],
+  temporaryHp: 5, temporaryHpPerSlotAbove: 5, damageResistances: [], conditionIds: [], modifierEffects: [],
   concentration: false, priority, animation: "precombat-defense",
 });
 function caster(spells, slots) {
@@ -71,6 +71,35 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
   const c = caster([spell], { 1: 1 });
   P.prepare({ heroes: [c], monsters: [enemy()] });
   assert.deepEqual(c.state.temporary_damage_resistances, ["fire"]);
+}
+
+{
+  const greaterInvisibility = {
+    ...defense("greater-invisibility", 4, 95),
+    name: "Greater Invisibility",
+    range: 5,
+    durationMinutes: 1,
+    targetPolicy: "friendly",
+    temporaryHp: 0,
+    temporaryHpPerSlotAbove: 0,
+    conditionIds: ["invisible"],
+    concentration: true,
+  };
+  const c = caster([greaterInvisibility], { 4: 2 });
+  const setup = { heroes: [c], monsters: [enemy()] };
+  const states = [c.state, setup.monsters[0].state];
+  const result = P.prepare(setup);
+  assert.equal(result.events[0].feature_id, "greater-invisibility");
+  assert.equal(c.state.resources["spell-slot-4"], 1);
+  assert.equal(c.state.action_available, true);
+  assert.equal(c.state.concentration.effect_id, "greater-invisibility");
+  assert.ok(c.state.active_effect_ids.includes("invisible"));
+  assert.equal(c.state.timed_effects[0].source_effect_id, "greater-invisibility");
+  assert.equal(c.state.timed_effects[0].applied_round, null, "browser round zero is serialized as null in timed state");
+  assert.equal(c.state.timed_effects[0].expires_round, 11);
+  C.end(c.state, states);
+  assert.equal(c.state.concentration, null);
+  assert.ok(!c.state.active_effect_ids.includes("invisible"));
 }
 
 {
