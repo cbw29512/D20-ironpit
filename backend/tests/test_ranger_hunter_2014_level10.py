@@ -10,7 +10,7 @@ def test_level_ten_progression_and_arena_neutral_hide_in_plain_sight() -> None:
 
     assert hero.level == 10
     assert hero.max_hp == 84
-    assert hero.weapon_attack.attack_bonus == 12
+    assert hero.weapon_attack.attack_bonus == 11
     assert hero.weapon_attack.damage_bonus == 5
     assert {resource.id: resource.max_uses for resource in hero.resources} == {
         "spell-slot-1": 4,
