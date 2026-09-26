@@ -43,6 +43,10 @@ _SPELLS = (
         id="locate-creature", name="Locate Creature", spell_level=4, min_character_level=15,
         role="utility", required_capabilities=["arena-out-of-scope"],
     ),
+    CanonicalSpellChoice(
+        id="commune-with-nature", name="Commune with Nature", spell_level=5, min_character_level=17,
+        role="utility", required_capabilities=["arena-out-of-scope"],
+    ),
 )
 
 
