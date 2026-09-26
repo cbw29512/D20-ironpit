@@ -431,6 +431,16 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             }
             for item in template.spell_save_disadvantage_options
         ]
+    if template.spell_range_modifiers:
+        row["spellRangeModifiers"] = [
+            {
+                "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost, "rangeMultiplier": item.range_multiplier,
+                "minimumBaseRangeFt": item.minimum_base_range_ft,
+                "priority": item.priority, "source": item.source,
+            }
+            for item in template.spell_range_modifiers
+        ]
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.turning_failure_damage:
