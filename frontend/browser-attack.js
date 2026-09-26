@@ -197,5 +197,4 @@
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
-  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack };
-})();
+  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack }; })();
