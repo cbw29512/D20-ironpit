@@ -46,8 +46,10 @@ Implemented shared state/lifecycle:
 
 ## Current certification boundary
 
-Levels 1–8 are the current registered 2014 Land Druid certification boundary on this branch.
+Levels 1–10 are the current registered 2014 Land Druid certification boundary on this branch.
 
 Level 5 is certified without inventing Call Lightning geometry. The permanent Pit contract defines one authoritative x/y grid and restricts flight to horizontal movement, so the spell's required vertical storm-cloud placement is not a legal standard-Pit action. Its generic concentration repeat-save capability remains available for future content whose geometry is legal.
 
 Plant Growth is likewise arena-neutral on the default battlefield because the Pit supplies no normal plants by default. Both source spells stay in the Forest Circle metadata and must be re-audited if a future arena mode adds qualifying vertical space or normal plants.
+
+Level 10 Nature's Ward is bound entirely through the canonical check/modifier pipeline: poison damage uses the shared typed-damage immunity check; Poisoned and disease use passive debuff counters; Charmed and Frightened use source-typed condition immunity against Fey and Elementals. The source name remains audit metadata and no Druid-specific combat resolver is permitted.
