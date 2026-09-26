@@ -4,8 +4,8 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level not in range(1, 8):
-        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 7.")
+    if level not in range(1, 9):
+        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 8.")
     rows = [
         FeatureAudit(
             feature_id="half-elf", feature_name="Half-Elf",
@@ -114,4 +114,24 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
                 "and Iron Pit opening-buff policy."
             ),
         ))
+    if level >= 8:
+        rows += [
+            FeatureAudit(
+                feature_id="ability-score-improvement-8",
+                feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Sorcerer 8",
+                category="class", combat_relevant=True, automated=True,
+                notes=(
+                    "+1 Charisma / +1 Constitution reaches CHA 20 and CON 12. Shared derived-stat math "
+                    "updates spell attack/DC, Charisma saves/skills, Constitution saves, and retroactive HP."
+                ),
+            ),
+            FeatureAudit(
+                feature_id="dispel-magic",
+                feature_name="Dispel Magic",
+                source_reference="D&D Basic Rules 2014: Dispel Magic",
+                category="spell", combat_relevant=True, automated=True,
+                notes="Reuses the existing universal effect-removal action and spell-slot resource path.",
+            ),
+        ]
     return rows
