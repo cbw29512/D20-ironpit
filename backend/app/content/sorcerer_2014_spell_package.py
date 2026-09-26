@@ -31,14 +31,14 @@ _KNOWN = (
     _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope", level=1),
     _spell("knock", "Knock", "utility", "arena-out-of-scope", level=2, min_level=3),
     _spell("detect-thoughts", "Detect Thoughts", "utility", "arena-out-of-scope", level=2, min_level=4),
-    _spell("fireball", "Fireball", "damage", "save-damage", "area", level=3, min_level=5),\n    _spell("clairvoyance", "Clairvoyance", "utility", "arena-out-of-scope", level=3, min_level=6),
+    _spell("fireball", "Fireball", "damage", "save-damage", "area", level=3, min_level=5),\n    _spell("clairvoyance", "Clairvoyance", "utility", "arena-out-of-scope", level=3, min_level=6),\n    _spell("greater-invisibility", "Greater Invisibility", "buff", "condition", "concentration", level=4, min_level=7),
 )
 
 
 def build_sorcerer_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 7):
-            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 6.")
+        if level not in range(1, 8):
+            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 7.")
         from app.content.sorcerer_2014_progression import sorcerer_2014_level
 
         row = sorcerer_2014_level(level)
