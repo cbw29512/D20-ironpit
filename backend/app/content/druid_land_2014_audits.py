@@ -116,4 +116,19 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 6:
+        rows.append(
+            FeatureAudit(
+                feature_id="lands-stride",
+                feature_name="Land's Stride",
+                source_reference="D&D Basic Rules 2014: Circle of the Land 6",
+                category="subclass",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Reuses the universal nonmagical Difficult Terrain counter and tagged saving-throw "
+                    "Advantage for magical plant impediments; no Druid-specific resolver."
+                ),
+            )
+        )
     return rows
