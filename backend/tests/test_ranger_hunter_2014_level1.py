@@ -18,7 +18,7 @@ def test_2014_ranger_level_one_is_legal_archer_baseline() -> None:
     assert hero.armor_class == 14
     assert hero.speed_ft == 35
     assert hero.ability_scores.dexterity == 17
-    assert hero.ability_scores.wisdom == 11
+    assert hero.ability_scores.wisdom == 14
     assert hero.weapon_attack.weapon.id == "longbow"
     assert hero.weapon_attack.attack_bonus == 5
     assert hero.weapon_attack.damage_bonus == 3
@@ -26,7 +26,7 @@ def test_2014_ranger_level_one_is_legal_archer_baseline() -> None:
     assert hero.saving_throw_bonuses["strength"] == 3
     assert hero.saving_throw_bonuses["dexterity"] == 5
     assert hero.skill_bonuses["stealth"] == 5
-    assert hero.skill_bonuses["perception"] == 2
+    assert hero.skill_bonuses["perception"] == 4
     assert profile.subclass_id is None
     assert row.spells_known == 0
     assert row.spell_slots == (0, 0, 0, 0, 0)
