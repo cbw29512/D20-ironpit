@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ConditionName, ConditionRemovalAction, HealingAction
+from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.capability_attacks import (
     AttackCapabilityDefinition,
     CapabilityActionSlot,
@@ -48,6 +49,7 @@ class CombatantDefinition(BaseModel):
     primary_attack_id: str
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: MultiattackCapabilityDefinition | None = None
+    area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     save_actions: list[SaveCapabilityDefinition] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
