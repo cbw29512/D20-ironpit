@@ -47,6 +47,12 @@ def _rogue_stroke_of_luck_uses(level: int) -> int:
     return 1 if level >= 20 else 0
 
 
+def _druid_2014_wild_shape_uses(level: int) -> int:
+    if level < 2 or level >= 20:
+        return 0
+    return 2
+
+
 def _barbarian_2014_finite_rage_uses(level: int) -> int:
     """Return only finite 2014 Rage uses; level 20 is audited as Unlimited separately."""
     return 0 if level >= 20 else barbarian_2014_rage_uses(level)
@@ -79,6 +85,7 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("channel-divinity", "Channel Divinity", cleric_2014_channel_divinity_uses),
         ("divine-intervention", "Divine Intervention", cleric_2014_divine_intervention_uses),
     ),
+    "druid": (("wild-shape", "Wild Shape", _druid_2014_wild_shape_uses),),
     "fighter": (
         ("second-wind", "Second Wind", fighter_2014_second_wind_uses),
         ("action-surge", "Action Surge", fighter_2014_action_surge_uses),
@@ -96,6 +103,7 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
 }
 _2014_UNLIMITED_CLASS_RESOURCES: dict[str, Callable[[int], tuple[str, ...]]] = {
     "barbarian": lambda level: ("rage",) if level >= 20 else (),
+    "druid": lambda level: ("wild-shape",) if level >= 20 else (),
 }
 _2024_SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "orc": (
@@ -120,7 +128,7 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
     if profile.ruleset == "2024" and profile.class_id in FULL_CASTER_CLASSES:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
-    if profile.ruleset == "2014" and profile.class_id in {"bard", "cleric"}:
+    if profile.ruleset == "2014" and profile.class_id in {"bard", "cleric", "druid"}:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
     if profile.ruleset == "2014" and profile.class_id == "paladin":
         resolved.update(_paladin_2014_spell_slots(profile.level))
