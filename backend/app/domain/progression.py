@@ -16,6 +16,7 @@ from app.domain.progression_primitives import (
     FailedSaveRerollGrant,
     FirstRoundExtraTurnGrant,
     OpeningTargetingWard,
+    ResourceBackedD20BonusDie,
     SavingThrowProficiencyGrant,
     SlotHealingSelfRider,
 )
@@ -66,6 +67,7 @@ class ProgressionCombatFeatures(BaseModel):
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
+    resource_backed_d20_bonus_dice: list[ResourceBackedD20BonusDie] = Field(default_factory=list)
     deferred_save_effect: DeferredSaveEffect | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
