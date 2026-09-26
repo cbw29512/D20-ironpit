@@ -188,4 +188,14 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
             category="class", combat_relevant=True, automated=True,
             notes="Canonical archer progression raises Wisdom from 17 to 19; shared math recomputes Wisdom-derived values.",
         ))
+    if level >= 17:
+        rows.append(FeatureAudit(
+            feature_id="spellcasting-5th-level", feature_name="Spellcasting (5th-level spells)",
+            source_reference="D&D Basic Rules 2014: Ranger 17",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "Unlocks one 5th-level spell slot and the tenth known Ranger spell. "
+                "The canonical known spell is Commune with Nature, retained as arena-out-of-scope utility."
+            ),
+        ))
     return rows
