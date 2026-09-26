@@ -92,7 +92,13 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             sequence += 1
         self_buff = choose_timed_self_buff_action(member, setup)
         if self_buff is not None:
-            events.append(resolve_timed_self_buff(sequence, round_number, member, self_buff))
+            events.append(resolve_timed_self_buff(
+                sequence,
+                round_number,
+                member,
+                self_buff,
+                affected_states=[entry.state for entry in [*setup.heroes, *setup.monsters]],
+            ))
             sequence += 1
             sync_friendly_save_auras(setup)
         return events, sequence
