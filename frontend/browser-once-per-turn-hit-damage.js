@@ -9,12 +9,19 @@
       if (!target) throw new Error(`${rider.source_name} requires target state for its hit qualification.`);
       if (target.current_hp >= target.template.max_hp) return null;
     }
+    if (rider.target_creature_types?.length) {
+      if (!target) throw new Error(`${rider.source_name} requires target state for its creature-type qualification.`);
+      const raw = target.template.creature_type || "";
+      const targetType = String(raw).split(" (", 1)[0].trim().toLowerCase();
+      if (!rider.target_creature_types.includes(targetType)) return null;
+    }
     if (attacker.feature_last_turn_keys[rider.source_id] === turnKey) return null;
     attacker.feature_last_turn_keys[rider.source_id] = turnKey;
     return {
       source: rider.source_name,
       diceCount: rider.dice_count,
       diceSize: rider.dice_size,
+      damageBonus: rider.flat_bonus || 0,
       damageType: rider.damage_type || attack?.damageType,
     };
   }
