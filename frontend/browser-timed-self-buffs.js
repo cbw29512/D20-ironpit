@@ -19,7 +19,7 @@
     try {
       const choices = (member.state.template.timed_self_buff_actions || []).filter((action) =>
         E().available(member.state, action.actionCost)
-        && (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1)
+        && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
         && !active(member, action));
       choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));
       return choices[0] || null;
@@ -32,11 +32,11 @@
   function resolve(sequence, round, member, action) {
     try {
       if (!E().available(member.state, action.actionCost)) throw new Error(`${action.name} action cost is unavailable.`);
-      if ((member.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
+      if (action.resourceId != null && (member.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
       if (active(member, action)) throw new Error(`${action.name} is already active.`);
 
       E().spend(member.state, action.actionCost);
-      member.state.resources[action.resourceId] -= action.resourceCost || 1;
+      if (action.resourceId != null) member.state.resources[action.resourceId] -= action.resourceCost || 1;
       const applied = [];
       let defensesAttached = false;
       (action.conditionIds || []).forEach((conditionId) => {
@@ -99,7 +99,7 @@
         actor_id: member.combatant_id, actor_name: member.state.template.name,
         target_id: member.combatant_id, target_name: member.state.template.name,
         applied_condition_ids: applied, feature_id: action.id,
-        resource_remaining: member.state.resources[action.resourceId],
+        resource_remaining: action.resourceId == null ? null : member.state.resources[action.resourceId],
         animation: action.animation || "buff",
         description: `${member.state.template.name} uses ${action.name}.`,
       };
