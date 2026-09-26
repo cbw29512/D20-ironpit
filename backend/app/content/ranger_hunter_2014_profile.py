@@ -150,6 +150,27 @@ def _audits(level: int) -> list[FeatureAudit]:
                 ),
             ),
         ]
+    if level >= 10:
+        rows += [
+            FeatureAudit(
+                feature_id="natural-explorer-improvement-10",
+                feature_name="Natural Explorer Improvement",
+                source_reference="D&D Basic Rules 2014: Ranger 10",
+                category="class", combat_relevant=False, automated=True,
+                notes="Adds another favored terrain; overland travel benefits remain outside an in-progress Iron Pit fight.",
+            ),
+            FeatureAudit(
+                feature_id="hide-in-plain-sight",
+                feature_name="Hide in Plain Sight",
+                source_reference="D&D Basic Rules 2014: Ranger 10",
+                category="class", combat_relevant=False, automated=False,
+                notes=(
+                    "Requires one minute of camouflage preparation using natural materials and then a qualifying "
+                    "solid surface. The standard open Pit provides neither setup requirement, so Arena AI cannot "
+                    "activate the feature; no fake stealth modifier is created."
+                ),
+            ),
+        ]
     return rows
 
 
@@ -185,8 +206,8 @@ def _level_one() -> CharacterBuildProfile:
 
 def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Rowan profile currently covers levels 1 through 9.")
+        if level not in range(1, 11):
+            raise ValueError("2014 Rowan profile currently covers levels 1 through 10.")
         profile = _level_one()
         if level == 1:
             return profile
@@ -271,6 +292,14 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
         data.update(
             feature_audits=_audits(9),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 9"],
+        )
+        profile = CharacterBuildProfile(**data)
+        if level == 9:
+            return profile
+        data = advance_profile_data(profile, 10)
+        data.update(
+            feature_audits=_audits(10),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 10"],
         )
         return CharacterBuildProfile(**data)
     except Exception:
