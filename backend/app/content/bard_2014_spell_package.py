@@ -45,7 +45,7 @@ _KNOWN = (
     _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
     _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope"),
     _spell("identify", "Identify", "utility", "arena-out-of-scope", min_level=2),
-    _spell("hold-person", "Hold Person", "control", "condition", "repeat-save", level=2, min_level=3),
+    _spell("animal-messenger", "Animal Messenger", "utility", "arena-out-of-scope", level=2, min_level=3),
     _spell(
         "lesser-restoration", "Lesser Restoration", "healing",
         "condition-removal", level=2, min_level=4,
