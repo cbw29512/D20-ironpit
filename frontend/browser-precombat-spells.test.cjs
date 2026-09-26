@@ -95,7 +95,7 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
   assert.equal(c.state.concentration.effect_id, "greater-invisibility");
   assert.ok(c.state.active_effect_ids.includes("invisible"));
   assert.equal(c.state.timed_effects[0].source_effect_id, "greater-invisibility");
-  assert.equal(c.state.timed_effects[0].applied_round, null, "browser round zero is serialized as null in timed state");
+  assert.equal(c.state.timed_effects[0].applied_round, 0);
   assert.equal(c.state.timed_effects[0].expires_round, 11);
   C.end(c.state, states);
   assert.equal(c.state.concentration, null);
