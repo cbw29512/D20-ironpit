@@ -71,7 +71,7 @@ def test_bless_applies_independent_attack_and_save_d4s_and_expires_cleanly() -> 
     assert len(events) == 1
     assert events[0].feature_id == "bless"
     assert events[0].concentration_started_effect_id == "bless"
-    assert caster.state.opening_buff_spell_id == "bless"
+    assert caster.state.opening_buff_id == "bless"
     assert caster.state.concentration is not None
     assert caster.state.concentration.effect_id == "bless"
     assert caster.state.concentration.expires_round == 11
@@ -136,4 +136,4 @@ def test_opening_buff_never_recasts_after_concentration_breaks() -> None:
 
     assert second_prep == []
     assert slot.current_uses == 1
-    assert caster.state.opening_buff_spell_id == "bless"
+    assert caster.state.opening_buff_id == "bless"
