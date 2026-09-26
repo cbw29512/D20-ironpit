@@ -35,6 +35,14 @@
         if (!bonus) throw new Error("D20 bonus-die runtime is not loaded for an active ability-check grant.");
         revised = bonus.applyIfUseful(state, "ability_check", revised, dc, options.round).roll;
       }
+      const resourceBacked = state.template.resource_backed_d20_bonus_dice || [];
+      if (resourceBacked.some((grant) => (grant.test_kinds || []).includes("ability_check"))) {
+        const bonus = window.IRON_PIT_BROWSER_D20_BONUS_DICE;
+        if (!bonus) throw new Error("Resource-backed d20 bonus runtime is not loaded.");
+        revised = bonus.applyResourceBackedIfUseful(
+          state, "ability_check", revised, dc,
+        ).roll;
+      }
       const grants = state.template.failed_d20_test_override_grants || [];
       const eligible = grants.some((grant) => (grant.test_kinds || []).includes("ability_check"));
       if (eligible && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
