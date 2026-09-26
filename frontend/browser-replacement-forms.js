@@ -4,6 +4,67 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const R = () => window.IRON_PIT_BROWSER_RESOURCES;
 
+  function mergeBonuses(owner = {}, form = {}) {
+    const keys = new Set([...Object.keys(owner || {}), ...Object.keys(form || {})]);
+    return Object.fromEntries([...keys].map((key) => [key, Math.max(owner?.[key] ?? -99, form?.[key] ?? -99)]));
+  }
+
+  function compileActiveTemplate(owner, form, retainSpellcasting = false) {
+    try {
+      if (!owner || owner.kind !== "character") throw new Error("Replacement-form owner must be a character.");
+      if (!form || form.kind !== "monster") throw new Error("Replacement-form source must be a monster/beast template.");
+      const active = structuredClone(form);
+      Object.assign(active, {
+        id: owner.id + "--form-" + form.id,
+        name: owner.name,
+        archetype: owner.archetype,
+        level: owner.level,
+        kind: owner.kind,
+        ruleset: owner.ruleset,
+        saving_throw_bonuses: mergeBonuses(owner.saving_throw_bonuses, form.saving_throw_bonuses),
+        skill_bonuses: mergeBonuses(owner.skill_bonuses, form.skill_bonuses),
+        resources: structuredClone(owner.resources || {}),
+        unlimited_resources: structuredClone(owner.unlimited_resources || []),
+        replacement_form_actions: structuredClone(owner.replacement_form_actions || []),
+        source: (owner.source || "") + "; replacement form: " + (form.source || form.name),
+      });
+      if (retainSpellcasting) {
+        active.spell_save_actions = structuredClone(owner.spell_save_actions || []);
+        active.spell_attack_actions = structuredClone(owner.spell_attack_actions || []);
+        active.defensive_spell_actions = structuredClone(owner.defensive_spell_actions || []);
+        active.healingActions = structuredClone(owner.healingActions || []);
+        active.condition_removal_actions = structuredClone(owner.condition_removal_actions || []);
+      } else {
+        active.spell_save_actions = [];
+        active.spell_attack_actions = [];
+        active.defensive_spell_actions = [];
+        active.healingActions = [];
+        active.condition_removal_actions = [];
+      }
+      return active;
+    } catch (error) {
+      console.error("Browser replacement form compilation failed", { owner: owner?.id, form: form?.id, error });
+      throw error;
+    }
+  }
+
+  function formRegistry(ruleset) {
+    if (ruleset === "2014") return window.IRON_PIT_BROWSER_MONSTERS_2014 || {};
+    return window.IRON_PIT_BROWSER_MONSTERS || {};
+  }
+
+  function resolveAction(state, action) {
+    try {
+      const source = formRegistry(state.template.ruleset)[action.formTemplateId];
+      if (!source) throw new Error("Unknown replacement form template: " + action.formTemplateId);
+      const activeTemplate = compileActiveTemplate(state.template, source, Boolean(action.retainSpellcasting));
+      return enter(state, action, activeTemplate);
+    } catch (error) {
+      console.error("Browser replacement form action failed", { combatant: state?.template?.name, action: action?.id, error });
+      throw error;
+    }
+  }
+
   function enter(state, action, activeTemplate) {
     try {
       if (state.replacement_form) throw new Error(state.template.name + " is already transformed.");
@@ -59,5 +120,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = { applyDamage, enter, revert };
+  window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = { applyDamage, compileActiveTemplate, enter, resolveAction, revert };
 })();
