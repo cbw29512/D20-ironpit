@@ -46,7 +46,7 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
   const c = caster([defense("stronger", 2, 1), defense("weaker", 1, 99)], { 1: 1, 2: 1 });
   const result = P.prepare({ heroes: [c], monsters: [enemy()] });
   assert.equal(result.events[0].feature_id, "stronger");
-  assert.equal(c.state.opening_buff_spell_id, "stronger");
+  assert.equal(c.state.opening_buff_id, "stronger");
   assert.equal(c.state.resources["spell-slot-2"], 0);
   assert.equal(c.state.resources["spell-slot-1"], 1);
 }
@@ -81,7 +81,7 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
   const first = P.prepare(setup);
   assert.equal(first.events[0].feature_id, "bless");
   assert.equal(first.events[0].concentration_started_effect_id, "bless");
-  assert.equal(c.state.opening_buff_spell_id, "bless");
+  assert.equal(c.state.opening_buff_id, "bless");
   C.end(c.state, states);
   c.state.resources["spell-slot-1"] = 1;
   const second = P.prepare(setup, 99);
