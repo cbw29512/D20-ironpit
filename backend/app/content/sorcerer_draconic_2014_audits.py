@@ -4,8 +4,8 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level not in range(1, 14):
-        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 9.")
+    if level not in range(1, 17):
+        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 16.")
     rows = [
         FeatureAudit(
             feature_id="half-elf", feature_name="Half-Elf",
@@ -189,5 +189,35 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             source_reference="D&D Basic Rules 2014: Teleport",
             category="class", combat_relevant=False, automated=True,
             notes="Legal seventh-level Sorcerer choice recorded as arena-neutral for Iron Pit combat.",
+        ))
+    if level >= 14:
+        rows.append(FeatureAudit(
+            feature_id="dragon-wings",
+            feature_name="Dragon Wings",
+            source_reference="D&D Basic Rules 2014: Draconic Bloodline 14",
+            category="subclass", combat_relevant=True, automated=True,
+            notes=(
+                "Permanent 30-foot flying speed binds directly to the universal movement fingerprint; "
+                "no source-name-specific movement resolver is used."
+            ),
+        ))
+    if level >= 15:
+        rows.append(FeatureAudit(
+            feature_id="tongues",
+            feature_name="Tongues",
+            source_reference="D&D Basic Rules 2014: Tongues",
+            category="class", combat_relevant=False, automated=True,
+            notes="Legal additional Sorcerer spell known; language comprehension is arena-neutral.",
+        ))
+    if level >= 16:
+        rows.append(FeatureAudit(
+            feature_id="ability-score-improvement-16",
+            feature_name="Ability Score Improvement",
+            source_reference="D&D Basic Rules 2014: Sorcerer 16",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "+2 Constitution raises Nyra from 14 to 16; shared derived-stat math updates Constitution "
+                "saves and retroactive hit points."
+            ),
         ))
     return rows
