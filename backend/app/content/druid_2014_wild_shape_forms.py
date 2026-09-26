@@ -33,3 +33,25 @@ def canonical_wild_shape_form_2014(level: int) -> CanonicalWildShapeForm:
     except Exception:
         logger.exception("Failed to resolve canonical 2014 Wild Shape form for level %s.", level)
         raise
+
+
+def canonical_wild_shape_template_2014(level: int):
+    try:
+        from app.content.monster_roster_2014 import build_basic_2014_monsters
+
+        form = canonical_wild_shape_form_2014(level)
+        by_id = {template.id: template for template in build_basic_2014_monsters()}
+        template = by_id.get(form.monster_id)
+        if template is None:
+            raise ValueError(
+                f"Canonical 2014 Wild Shape form {form.monster_id} is not in the certified 2014 monster roster."
+            )
+        if template.challenge_rating != form.challenge_rating:
+            raise ValueError(
+                f"Canonical Wild Shape form CR drift for {form.monster_id}: "
+                f"{template.challenge_rating} != {form.challenge_rating}."
+            )
+        return template.model_copy(deep=True)
+    except Exception:
+        logger.exception("Failed to compile canonical 2014 Wild Shape template for level %s.", level)
+        raise
