@@ -52,6 +52,7 @@ class CombatModifier(BaseModel):
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
+    success_immunity_hours: int | None = Field(default=None, ge=1)
     requires_magical_effect: bool = False
     requires_spell_effect: bool = False
     required_effect_tags: list[str] = Field(default_factory=list)
@@ -110,7 +111,7 @@ class CombatModifier(BaseModel):
             raise ValueError("Typed attack Disadvantage requires source creature types.")
         if self.source_creature_types and self.kind not in {
             ModifierKind.ATTACKS_AGAINST_DISADVANTAGE, ModifierKind.CONDITION_IMMUNITY,
-            ModifierKind.SAVING_THROW_ADVANTAGE,
+            ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE,
         }:
             raise ValueError(f"{self.kind.value} does not accept source creature types.")
         if self.kind in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and not self.save_ability:
@@ -119,6 +120,8 @@ class CombatModifier(BaseModel):
             raise ValueError("Targeting save gates require a DC.")
         if self.kind is not ModifierKind.TARGETING_SAVE_GATE and self.save_dc is not None:
             raise ValueError(f"{self.kind.value} does not accept a save DC.")
+        if self.kind is not ModifierKind.TARGETING_SAVE_GATE and self.success_immunity_hours is not None:
+            raise ValueError(f"{self.kind.value} does not accept targeting-gate success immunity.")
         if self.kind not in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and self.save_ability:
             raise ValueError(f"{self.kind.value} does not accept a save ability.")
         if self.requires_magical_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
