@@ -63,4 +63,19 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 notes="Rest-time recovery is outside an in-progress Iron Pit fight.",
             ),
         ]
+    if level >= 3:
+        rows.append(
+            FeatureAudit(
+                feature_id="circle-spells-2",
+                feature_name="Circle Spells (Forest, 2nd level)",
+                source_reference="D&D Basic Rules 2014: Circle of the Land — Forest",
+                category="subclass",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Forest grants Barkskin and Spider Climb. Barkskin uses the universal minimum-AC "
+                    "modifier; Spider Climb is arena-neutral on the flat Iron Pit battlefield."
+                ),
+            )
+        )
     return rows
