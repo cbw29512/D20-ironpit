@@ -24,7 +24,8 @@ from app.combat.reckless_attack import attacks_against_reckless_advantage
 from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
-from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance\nfrom app.combat.spell_modifiers import build_spell_modifier
+from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
+from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.zero_hp import apply_damage
