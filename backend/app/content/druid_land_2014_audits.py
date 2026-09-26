@@ -99,4 +99,21 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 notes="Canonical form advances to the certified CR 1/2 Crocodile and permits swimming forms.",
             ),
         ]
+    if level >= 5:
+        rows.append(
+            FeatureAudit(
+                feature_id="circle-spells-3",
+                feature_name="Circle Spells (Forest, 3rd level)",
+                source_reference="D&D Basic Rules 2014: Circle of the Land — Forest",
+                category="subclass",
+                combat_relevant=True,
+                automated=False,
+                notes=(
+                    "Forest grants Call Lightning and Plant Growth. Plant Growth has no normal plants "
+                    "to affect on the default Pit battlefield. Call Lightning remains fail-closed until "
+                    "the standard Pit explicitly defines sufficient vertical storm-cloud space and the "
+                    "universal concentration repeat-save Action is completed in Python and browser."
+                ),
+            )
+        )
     return rows
