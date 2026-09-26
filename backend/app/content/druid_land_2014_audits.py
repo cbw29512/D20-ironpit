@@ -170,4 +170,20 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             ),
         ]
+    if level >= 9:
+        rows.append(
+            FeatureAudit(
+                feature_id="circle-spells-5",
+                feature_name="Circle Spells (Forest, 5th level)",
+                source_reference="D&D Basic Rules 2014: Circle of the Land — Forest",
+                category="subclass",
+                combat_relevant=False,
+                automated=False,
+                notes=(
+                    "Forest grants Commune with Nature and Tree Stride. Commune with Nature is noncombat; "
+                    "Tree Stride has no legal destination trees on the default Pit battlefield. Both remain "
+                    "preserved in source metadata and do not block standard-arena certification."
+                ),
+            )
+        )
     return rows
