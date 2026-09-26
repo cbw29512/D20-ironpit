@@ -16,7 +16,7 @@ from app.combat.sneak_attack import sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
-BonusDamageSpec = tuple[str, int, int, DamageType]
+BonusDamageSpec = tuple[str, int, int, DamageType] | tuple[str, int, int, int, DamageType]
 
 
 def roll_damage_component(
@@ -56,9 +56,13 @@ def _append_bonus_component(
 ) -> None:
     if spec is None:
         return
-    source, dice_count, dice_size, damage_type = spec
+    if len(spec) == 4:
+        source, dice_count, dice_size, damage_type = spec
+        modifier = 0
+    else:
+        source, dice_count, dice_size, modifier, damage_type = spec
     components.append(roll_damage_component(
-        dice, source, dice_count, dice_size, 0, damage_type, critical,
+        dice, source, dice_count, dice_size, modifier, damage_type, critical,
     ))
 
 
