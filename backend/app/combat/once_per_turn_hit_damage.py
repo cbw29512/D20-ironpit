@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, DamageType, WeaponAttack
 
 logger = logging.getLogger(__name__)
-BonusDamageSpec = tuple[str, int, int, DamageType]
+BonusDamageSpec = tuple[str, int, int, int, DamageType]
 
 
 def once_per_turn_weapon_hit_bonus_damage(
@@ -28,6 +29,12 @@ def once_per_turn_weapon_hit_bonus_damage(
                 raise ValueError(f"{rider.source_name} requires target state for its hit qualification.")
             if target.current_hp >= target.template.max_hp:
                 return None
+        if rider.target_creature_types:
+            if target is None:
+                raise ValueError(f"{rider.source_name} requires target state for its creature-type qualification.")
+            target_type = base_creature_type(target.template.creature_type)
+            if target_type not in rider.target_creature_types:
+                return None
         if attacker.feature_last_turn_keys.get(rider.source_id) == turn_key:
             return None
         attacker.feature_last_turn_keys[rider.source_id] = turn_key
@@ -35,6 +42,7 @@ def once_per_turn_weapon_hit_bonus_damage(
             rider.source_name,
             rider.dice_count,
             rider.dice_size,
+            rider.flat_bonus,
             DamageType(rider.damage_type) if rider.damage_type is not None else attack.weapon.damage_type,
         )
     except ValueError:
