@@ -86,3 +86,28 @@ def revert_replacement_form(
     except Exception as exc:
         logger.exception("Failed to revert replacement form for %s.", state.template.name)
         raise RuntimeError("Replacement form could not be reverted.") from exc
+
+
+def apply_replacement_form_damage(
+    state: CombatantState,
+    amount: int,
+) -> tuple[int, bool]:
+    """Apply damage to active form HP and return (excess_damage, reverted)."""
+    try:
+        if amount < 0:
+            raise ValueError("Replacement-form damage cannot be negative.")
+        active = state.replacement_form
+        if active is None or amount == 0:
+            return amount, False
+        absorbed = min(active.form_hp, amount)
+        active.form_hp -= absorbed
+        excess = amount - absorbed
+        if active.form_hp > 0:
+            return 0, False
+        revert_replacement_form(state, spend_voluntary_action=False)
+        return excess, True
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to resolve replacement-form damage for %s.", state.template.name)
+        raise RuntimeError("Replacement-form damage could not be resolved.") from exc
