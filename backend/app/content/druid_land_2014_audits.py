@@ -131,4 +131,19 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 7:
+        rows.append(
+            FeatureAudit(
+                feature_id="circle-spells-4",
+                feature_name="Circle Spells (Forest, 4th level)",
+                source_reference="D&D Basic Rules 2014: Circle of the Land — Forest",
+                category="subclass",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Forest grants Divination and Freedom of Movement. Divination is arena-neutral. "
+                    "Freedom of Movement reuses the shared 2014 defensive-spell debuff-counter composition."
+                ),
+            )
+        )
     return rows
