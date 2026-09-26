@@ -4,6 +4,7 @@ import logging
 
 from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
+from app.content.bard_2014_countercharm import countercharm_2014
 from app.content.bard_2014_cutting_words import cutting_words_2014
 from app.content.bard_2014_inspiration import build_bardic_inspiration_2014
 from app.content.bard_2014_initiative import build_bard_2014_initiative_refills
@@ -101,6 +102,9 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             initiative_resource_refill_grants=build_bard_2014_initiative_refills(level),
             reaction_roll_penalty_actions=(
                 [cutting_words_2014(level)] if level >= 3 else []
+            ),
+            timed_self_buff_actions=(
+                [countercharm_2014()] if level >= 6 else []
             ),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
             skill_bonuses={
