@@ -6,7 +6,7 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.cleric_2014_level1_spells import cure_wounds_2014, healing_word_2014
-from app.content.druid_2014_level1_spells import longstrider_2014, poison_spray_2014, produce_flame_2014
+from app.content.druid_2014_level1_spells import faerie_fire_2014, longstrider_2014, poison_spray_2014, produce_flame_2014
 from app.content.druid_2014_progression import druid_2014_level
 from app.content.druid_2014_wild_shape import wild_shape_action_2014
 from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_profile
@@ -84,7 +84,10 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
             initiative_bonus=scores.modifier("dexterity"),
             weapon_attack=_scimitar(level, scores),
             spell_attack_actions=[produce_flame_2014(spell_attack, level)],
-            spell_save_actions=[poison_spray_2014(save_dc, level)],
+            spell_save_actions=[
+                poison_spray_2014(save_dc, level),
+                *([faerie_fire_2014(save_dc)] if level >= 2 else []),
+            ],
             defensive_spell_actions=[longstrider_2014()],
             healing_actions=[
                 healing_word_2014(wisdom_modifier, 0),
