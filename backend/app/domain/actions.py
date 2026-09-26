@@ -126,6 +126,7 @@ class SavingThrowAction(BaseModel):
     requires_no_active_grapple: bool = False
     magical_effect: bool = False
     effect_tags: list[str] = Field(default_factory=list)
+    requires_target_hearing: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     animation: str = "save-effect"
 
