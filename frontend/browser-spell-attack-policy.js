@@ -19,13 +19,18 @@
     for (const [index, spell] of (member.state.template.spell_attack_actions || []).entries()) {
       if (spell.actionCost === "reaction" || !E().available(member.state, spell.actionCost)) continue;
       if (!slotAvailable(member, spell, turnKey)) continue;
-      const castRange = P().effectiveRange(member.state, spell.range);
+      const policy = P();
+      const castRange = policy?.effectiveRange
+        ? policy.effectiveRange(member.state, spell.range)
+        : spell.range;
       for (const target of enemies) {
         const distance = S().distance(member, target);
         if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0 || distance > castRange) continue;
         candidates.push({
           spell, target, index, score: O().spellAttack(member, target, spell, setup),
-          rangeModifier: P().availableRangeModifier(member.state, spell.range, distance),
+          rangeModifier: policy?.availableRangeModifier
+            ? policy.availableRangeModifier(member.state, spell.range, distance)
+            : null,
         });
       }
     }
