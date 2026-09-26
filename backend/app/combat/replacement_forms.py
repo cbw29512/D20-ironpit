@@ -34,14 +34,15 @@ def enter_replacement_form(
     try:
         if state.replacement_form is not None:
             raise ValueError(f"{state.template.name} is already in a replacement form.")
-        if form_template.kind != "monster":
-            raise ValueError("Replacement form templates must use monster-form combat data.")
+        if form_template.kind != state.template.kind:
+            raise ValueError("Compiled replacement form must preserve the combatant lifecycle kind.")
         spend(state, action_cost)
         remaining = spend_resource(state, resource_id, resource_cost)
+        original_template = state.template
         state.replacement_form = ReplacementFormState(
             source_id=source_id,
             source_name=source_name,
-            original_template=state.template,
+            original_template=original_template,
             form_template=form_template,
             original_hp=state.current_hp,
             form_hp=form_template.max_hp,
@@ -50,6 +51,7 @@ def enter_replacement_form(
             resource_cost=resource_cost,
             voluntary_revert_action=voluntary_revert_action,
         )
+        state.template = form_template
         return ReplacementFormResult(
             source_id=source_id,
             form_name=form_template.name,
@@ -79,6 +81,7 @@ def revert_replacement_form(
             resource_remaining=None,
             reverted=True,
         )
+        state.template = active.original_template
         state.replacement_form = None
         return result
     except ValueError:
