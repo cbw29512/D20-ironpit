@@ -44,6 +44,7 @@
         E().available(member.state, action.actionCost)
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
         && !active(member, action)
+        && (!action.concentration || !member.state.concentration)
         && friendlyAuraRelevant(member, action, setup));
       choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));
       return choices[0] || null;
