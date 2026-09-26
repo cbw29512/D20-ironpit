@@ -68,6 +68,32 @@ assert.equal(expired.events[0].feature_id, "empty-body");
 assert.ok(!monk.state.active_effect_ids.includes("invisible"));
 assert.equal(window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(monk.state, 9, "fire"), 9);
 
+const countercharm = {
+  id: "countercharm", name: "Countercharm", actionCost: "action",
+  resourceId: null, resourceCost: 1, durationRounds: 1,
+  conditionIds: [], damageResistances: [], expiryTiming: "source_turn_end",
+  priority: 5, animation: "countercharm",
+  friendlySaveAdvantageAura: {
+    radius_ft: 30,
+    required_effect_tags: ["charmed", "frightened"],
+    requires_hearing: true,
+  },
+};
+const bard = { combatant_id: "bard", side: "heroes", position_ft: 0, state: state("Bard") };
+const ally = { combatant_id: "ally", side: "heroes", position_ft: 20, state: state("Ally") };
+const charmTarget = { combatant_id: "charm-target", side: "monsters", position_ft: 40, state: state("Charm Target") };
+bard.state.template.timed_self_buff_actions = [countercharm];
+ally.state.template.timed_self_buff_actions = [];
+charmTarget.state.template.timed_self_buff_actions = [];
+const charmSetup = { heroes: [bard, ally], monsters: [charmTarget] };
+window.IRON_PIT_BROWSER_STATE = {
+  distance: (a, b) => Math.abs((a.position_ft || 0) - (b.position_ft || 0)),
+  effectiveMaxHp: (s) => s.template.max_hp || 50,
+};
+assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(bard, charmSetup), null);
+ally.state.active_effect_ids = ["charmed"];
+assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(bard, charmSetup).id, "countercharm");
+
 const lowKi = { combatant_id: "low", side: "heroes", state: state("Low Ki") };
 lowKi.state.template.timed_self_buff_actions = [action];
 lowKi.state.resources.ki = 3;
@@ -82,7 +108,10 @@ window.IRON_PIT_BROWSER_CONDITION_REMOVAL = { chooseAction: () => null };
 window.IRON_PIT_BROWSER_EFFECT_REMOVAL = { choose: () => null };
 window.IRON_PIT_BROWSER_CLERIC_CHANNEL = { resolve: () => null };
 window.IRON_PIT_BROWSER_PALADIN_2014 = { resolveChannel: () => null };
-window.IRON_PIT_BROWSER_STATE = { effectiveMaxHp: (s) => s.template.max_hp || 50 };
+window.IRON_PIT_BROWSER_STATE = {
+  distance: (a, b) => Math.abs((a.position_ft || 0) - (b.position_ft || 0)),
+  effectiveMaxHp: (s) => s.template.max_hp || 50,
+};
 load("browser-support.js");
 
 const supportMonk = { combatant_id: "support-kael", side: "heroes", state: state("Support Kael") };
