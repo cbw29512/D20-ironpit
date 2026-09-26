@@ -55,7 +55,7 @@ def build_nyra_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_nyra_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_nyra_2014_combat_profile(level) for level in range(1, 4)]
+        return [build_nyra_2014_combat_profile(level) for level in range(1, 5)]
     except Exception:
         logger.exception("Failed to compile Nyra's 2014 combat fingerprints.")
         raise
