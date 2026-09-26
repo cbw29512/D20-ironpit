@@ -59,7 +59,7 @@
     if (paladin) { events.push(...paladin.events); sequence = paladin.sequence; }
     const d20Bonus = BI()?.choose(member, setup, round);
     if (d20Bonus) events.push(BI().resolveGrant(sequence++, round, member, d20Bonus.target, d20Bonus.action));
-    const selfBuff = B()?.choose(member);
+    const selfBuff = B()?.choose(member, setup);
     if (selfBuff) { events.push(B().resolve(sequence++, round, member, selfBuff)); window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS?.sync(setup); }
     return { events, sequence };
   }
