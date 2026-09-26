@@ -46,6 +46,7 @@ def _mechanics(template: Any) -> list[str]:
     }
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
+    mechanics.update(action.id for action in template.area_weapon_attack_actions)
     features = template.progression_features
     if features.critical_hit_minimum < 20:
         mechanics.add("expanded-critical-range")
