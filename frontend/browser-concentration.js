@@ -36,11 +36,12 @@
     return true;
   }
 
-  function start(owner, sourceId, effectId, roundNumber, states = [], expiresRound = null) {
+  function start(owner, sourceId, effectId, roundNumber, states = [], expiresRound = null, slotLevel = null) {
     if (owner.is_dead || Q().incapacitated(owner)) throw new Error("An Incapacitated or dead creature cannot start Concentration.");
     if (expiresRound != null && (!Number.isInteger(expiresRound) || expiresRound <= roundNumber)) throw new Error("Concentration expiry must be after the start round.");
     end(owner, states);
     owner.concentration = { source_id: sourceId, effect_id: effectId, started_round: roundNumber, expires_round: expiresRound };
+    if (slotLevel != null) owner.concentration.slot_level = slotLevel;
     return owner.concentration;
   }
 
