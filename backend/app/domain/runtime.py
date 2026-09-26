@@ -115,6 +115,7 @@ class CombatantState(BaseModel):
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
     persistent_spell_attacks: list[PersistentSpellAttackState] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
+    targeting_gate_immunity_keys: list[str] = Field(default_factory=list)
     active_d20_bonus_dice: list[ActiveD20BonusDieGrant] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
     replacement_form: ReplacementFormState | None = None
