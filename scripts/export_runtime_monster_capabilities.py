@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import json
 import logging
 from pathlib import Path
@@ -78,7 +79,17 @@ def main() -> None:
     try:
         rendered = render_registry()
         if args.check:
-            if not _OUTPUT.exists() or _OUTPUT.read_text(encoding="utf-8") != rendered:
+            current = _OUTPUT.read_text(encoding="utf-8") if _OUTPUT.exists() else ""
+            if current != rendered:
+                diff = difflib.unified_diff(
+                    current.splitlines(),
+                    rendered.splitlines(),
+                    fromfile=str(_OUTPUT),
+                    tofile="fresh-runtime-capabilities",
+                    lineterm="",
+                )
+                for line in list(diff)[:160]:
+                    print(line)
                 raise RuntimeError("Combat capability registry is stale; regenerate it before committing.")
             print(f"Capability registry is deterministic and current: {_OUTPUT}.")
             return
