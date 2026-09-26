@@ -6,7 +6,7 @@ from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.saving_throw_rolls import resolve_saving_throw, saving_throw_mode
 from app.combat.state import build_combatant_state
 from app.combat.timed_conditions import apply_timed_condition
-from app.combat.timed_self_buffs import resolve_timed_self_buff
+from app.combat.timed_self_buffs import choose_timed_self_buff_action, resolve_timed_self_buff
 from app.content.bard_2014_countercharm import countercharm_2014
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -56,6 +56,20 @@ def test_countercharm_is_at_will_and_uses_source_turn_end_lifecycle() -> None:
     assert action.friendly_save_advantage_aura.requires_hearing is True
     assert set(action.friendly_save_advantage_aura.required_effect_tags) == {"charmed", "frightened"}
 
+
+
+
+def test_countercharm_policy_does_not_spend_action_without_matching_threat() -> None:
+    setup, bard, ally = _setup()
+    assert choose_timed_self_buff_action(bard, setup) is None
+
+    apply_timed_condition(
+        ally.state, "charmed", "enemy", applied_round=1, expires_round=3,
+        expiry_timing="source_turn_end", use_default_poison_recovery=False,
+    )
+    choice = choose_timed_self_buff_action(bard, setup)
+    assert choice is not None
+    assert choice.id == "countercharm"
 
 def test_countercharm_live_aura_grants_only_matching_save_advantage() -> None:
     setup, bard, ally = _setup()
