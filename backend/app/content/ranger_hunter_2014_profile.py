@@ -16,6 +16,13 @@ def _species_increases() -> list[AbilityIncrease]:
     return [AbilityIncrease(ability="dexterity", amount=2), AbilityIncrease(ability="wisdom", amount=1)]
 
 
+def _apply(scores: AbilityScores, increases: list[AbilityIncrease]) -> AbilityScores:
+    values = scores.model_dump()
+    for increase in increases:
+        values[increase.ability] += increase.amount
+    return AbilityScores(**values)
+
+
 def _audits(level: int) -> list[FeatureAudit]:
     rows = [
         FeatureAudit(
@@ -70,6 +77,16 @@ def _audits(level: int) -> list[FeatureAudit]:
                 notes="Presence sensing reveals neither location nor number and does not alter standard arena combat.",
             ),
         ]
+    if level >= 4:
+        rows.append(
+            FeatureAudit(
+                feature_id="ability-score-improvement-4",
+                feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Ranger 4",
+                category="class", combat_relevant=True, automated=True,
+                notes="Canonical archer progression raises Dexterity from 17 to 19 and recomputes derived combat values.",
+            )
+        )
     return rows
 
 
@@ -105,8 +122,8 @@ def _level_one() -> CharacterBuildProfile:
 
 def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 4):
-            raise ValueError("2014 Rowan profile currently covers levels 1 through 3.")
+        if level not in range(1, 5):
+            raise ValueError("2014 Rowan profile currently covers levels 1 through 4.")
         profile = _level_one()
         if level == 1:
             return profile
@@ -130,6 +147,17 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
                 "D&D Basic Rules 2014: Ranger 3",
                 "D&D Basic Rules 2014: Hunter 3",
             ],
+        )
+        profile = CharacterBuildProfile(**data)
+        if level == 3:
+            return profile
+        increase = AbilityIncrease(ability="dexterity", amount=2)
+        data = advance_profile_data(profile, 4)
+        data.update(
+            advancement_increases=[*profile.advancement_increases, increase],
+            final_ability_scores=_apply(profile.final_ability_scores, [increase]),
+            feature_audits=_audits(4),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 4"],
         )
         return CharacterBuildProfile(**data)
     except Exception:
