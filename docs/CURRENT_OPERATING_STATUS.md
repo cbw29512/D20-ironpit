@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-25 against `main` after PR #388 merged.
+Recorded 2026-09-25 against `main` after PR #390 merged.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -21,6 +21,7 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2014 | Monk (Open Hand) | 1–20 |
 | 2014 | Paladin (Devotion) | 1–20 |
 | 2014 | Cleric (Life) | 1–20 |
+| 2014 | Bard (Lore) | 1–20 |
 | 2024 | Fighter | 1–18 |
 | 2024 | Rogue | 1–20 |
 | 2024 | Cleric (Life) | 1–12 |
@@ -35,11 +36,11 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **Finish remaining 2014 canonical pregens before any new 2024 class expansion.**
 
-Next class: **2014 Lore Bard, one persistent 1–20 progression.**
+Next class: **2014 Druid, one persistent 1–20 progression.**
 
 2014 Life Cleric 1–20 merged in PR #388. Older Cleric PRs #361, #364, and #366 are superseded and closed.
 
-After 2014 Bard 1–20: Druid, Ranger, Sorcerer, Warlock, Wizard (2014), then 240/240 2014 re-audit.
+After 2014 Druid 1–20: Ranger, Sorcerer, Warlock, Wizard (2014), then 240/240 2014 re-audit.
 
 Do **not** open or merge 2024 Cleric 13+, 2024 Fighter 19+, or 2024 Barbarian 8+ until that 2014 gate.
 
