@@ -451,9 +451,9 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["saving_throw_advantage_grants"] = [
             _save_advantage_grant(item) for item in features.saving_throw_advantage_grants
         ]
-    if features.passive_debuff_counters:
-        row["passive_debuff_counters"] = [
-            item.model_dump(mode="json") for item in features.passive_debuff_counters
+    if features.passive_debuff_counter_grants:
+        row["passive_debuff_counter_grants"] = [
+            item.model_dump(mode="json") for item in features.passive_debuff_counter_grants
         ]
     if features.bloodied_start_turn_heal_amount:
         row["bloodied_start_turn_heal_amount"] = features.bloodied_start_turn_heal_amount
