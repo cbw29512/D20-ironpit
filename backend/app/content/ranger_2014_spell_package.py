@@ -27,6 +27,10 @@ _SPELLS = (
         id="locate-object", name="Locate Object", spell_level=2, min_character_level=7,
         role="utility", required_capabilities=["arena-out-of-scope"],
     ),
+    CanonicalSpellChoice(
+        id="daylight", name="Daylight", spell_level=3, min_character_level=9,
+        role="utility", required_capabilities=["arena-out-of-scope"],
+    ),
 )
 
 
