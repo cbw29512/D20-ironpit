@@ -5,6 +5,7 @@ from app.content.bard_2014_spell_package import build_bard_2014_spell_package
 from app.content.cleric_2014_spell_package import build_cleric_2014_spell_package
 from app.content.paladin_2014_spell_package import build_paladin_2014_spell_package
 from app.content.ranger_2014_spell_package import build_ranger_2014_spell_package
+from app.content.sorcerer_2014_spell_package import build_sorcerer_2014_spell_package
 from app.domain.character_builds import RulesetId
 from app.domain.class_loadouts import ClassSpellPackage
 
@@ -35,5 +36,7 @@ def canonical_spell_package(
             return build_paladin_2014_spell_package(level, casting_modifier)
         if class_id == "ranger":
             return None if level < 2 else build_ranger_2014_spell_package(level)
+        if class_id == "sorcerer":
+            return build_sorcerer_2014_spell_package(level)
         return None
     return build_class_spell_package(class_id, level)  # type: ignore[arg-type]
