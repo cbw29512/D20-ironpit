@@ -34,7 +34,9 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
             damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
             damage_type=spell.damage_type, success_damage=spell.success_damage,
             damage_components=list(spell.damage_components),
-            magical_effect=True, effect_tags=list(spell.effect_tags), animation=spell.animation,
+            magical_effect=True, effect_tags=list(spell.effect_tags),
+            failed_save_timed_effect=spell.failed_save_timed_effect,
+            animation=spell.animation,
         )
     except Exception:
         logger.exception("Failed to compile save action for spell %s.", choice.action.id)
