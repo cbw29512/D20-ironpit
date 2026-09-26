@@ -122,4 +122,11 @@ def build_bard_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 notes="Reuses the universal resource-backed d20 bonus-die trigger for ability checks.",
             ),
         ]
+    if level >= 18:
+        rows.append(FeatureAudit(
+            feature_id="magical-secrets-3", feature_name="Magical Secrets",
+            source_reference="D&D Basic Rules 2014: Bard 18",
+            category="class", combat_relevant=True, automated=True,
+            notes="Canonical selections are Aid and Inflict Wounds; both reuse shared universal spell primitives.",
+        ))
     return rows
