@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-condition-immunity.js",
+  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-debuff-counters.js", "browser-condition-immunity.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
 ]) load(file);
@@ -66,7 +66,14 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must preserve the l
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const centipede = member("monster-1:centipede", "monsters", monsters["srd-giant-centipede"]);
-  hero.state.active_buff_effect_ids.push("protection-from-poison");
+  hero.state.active_modifiers.push({
+    id: "test:poison-protection",
+    source_id: hero.combatant_id,
+    source_effect_id: "test-poison-protection",
+    source_name: "Test Poison Protection",
+    kind: "debuff-counter",
+    debuff_counter: { debuff_id: "poisoned", source_scope: "any", mode: "prevent", movement_cost_ft: 0 },
+  });
   assert.equal(T.apply(hero.state, "poisoned", centipede.combatant_id), null);
   assert.equal(hero.state.active_effect_ids.includes("poisoned"), false);
 }
