@@ -21,7 +21,10 @@ from app.domain.size import size_at_most
 
 
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
-    if distance_ft > action.range_ft: return False
+    if distance_ft > action.range_ft:
+        return False
+    if action.requires_target_hearing and "deafened" in target.state.active_effect_ids:
+        return False
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
 
 
