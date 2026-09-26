@@ -54,7 +54,7 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 feature_id="bonus-cantrip", feature_name="Bonus Cantrip",
                 source_reference="D&D Basic Rules 2014: Circle of the Land 2",
                 category="subclass", combat_relevant=False, automated=True,
-                notes="Canonical Land build selects Druidcraft as the arena-neutral bonus cantrip.",
+                notes="Canonical Land build selects Mending as the arena-neutral bonus cantrip.",
             ),
             FeatureAudit(
                 feature_id="natural-recovery", feature_name="Natural Recovery",
