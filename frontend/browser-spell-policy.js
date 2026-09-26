@@ -78,12 +78,24 @@
 
   function choose(caster, setup, turnKey, protectedAllyIds = []) {
     try {
-      const candidates = [];
+      const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
       for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
         if (action.actionCost === "reaction" || action.concentration || !E().available(caster.state, action.actionCost)) continue;
         for (const castLevel of slotLevels(caster, action, turnKey)) {
-          const selected = chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds);
-          if (selected) candidates.push({ ...selected, index, score: selected.expectedDamage });
+          const scaled = scaledSpell(action, castLevel);
+          if (action.areaRadius) {
+            const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
+            if (!placement) continue;
+            const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0)
+              - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
+            candidates.push({ action, index, score, slotLevel: castLevel,
+              targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement });
+            continue;
+          }
+          for (const target of legalSingleTargets(caster, setup, action)) {
+            candidates.push({ action, index, score: O().saveSpell(target, scaled), slotLevel: castLevel,
+              targetIds: [target.combatant_id], placement: null, hp: target.state.current_hp });
+          }
         }
       }
       candidates.sort((a, b) => b.score - a.score || a.action.level - b.action.level
@@ -91,7 +103,7 @@
       if (!candidates.length) return null;
       const best = candidates[0];
       return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds,
-        placement: best.placement, expectedDamage: best.expectedDamage };
+        placement: best.placement, expectedDamage: best.score };
     } catch (error) {
       console.error("Browser save-spell selection failed", { caster: caster?.combatant_id, error });
       throw error;
