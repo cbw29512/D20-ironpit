@@ -30,7 +30,10 @@
   function resolveChoice(sequence, round, member, setup, turnKey, selected) {
     if (!selected) return { events: [], sequence };
     if (selected.kind === "attack") {
-      const event = AR().resolve(sequence, round, member, selected.choice.target, selected.choice.action, setup, turnKey);
+      const event = AR().resolve(
+        sequence, round, member, selected.choice.target, selected.choice.action, setup, turnKey,
+        { rangeModifier: selected.choice.rangeModifier || null },
+      );
       sequence += 1;
       if (!DR()) return { events: [event], sequence };
       return DR().chain(sequence, round, member, event, setup, turnKey);
