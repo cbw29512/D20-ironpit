@@ -209,6 +209,19 @@ def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
         raise
 
 
+def _reaction_roll_penalty(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "range": action.range_ft,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "diceCount": action.dice_count, "diceSize": action.dice_size,
+        "rollKinds": list(action.roll_kinds),
+        "requiresSourceSight": action.requires_source_sight,
+        "requiresTargetHearing": action.requires_target_hearing,
+        "blockedTargetConditionImmunity": action.blocked_target_condition_immunity,
+        "priority": action.priority, "animation": action.animation,
+    }
+
+
 def _save_advantage_grant(grant: Any) -> dict[str, Any]:
     row = grant.model_dump(mode="json")
     if not grant.required_effect_tags:
@@ -368,6 +381,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
     if template.d20_bonus_die_actions:
         row["d20BonusDieActions"] = [_d20_bonus_die_action(item) for item in template.d20_bonus_die_actions]
+    if template.reaction_roll_penalty_actions:
+        row["reactionRollPenaltyActions"] = [_reaction_roll_penalty(item) for item in template.reaction_roll_penalty_actions]
     if progression.outgoing_healing_dice_maximizer:
         row["outgoing_healing_dice_maximizer"] = progression.outgoing_healing_dice_maximizer.model_dump()
     if progression.once_per_turn_weapon_hit_damage_rider:
