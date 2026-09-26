@@ -38,3 +38,19 @@ def burning_hands_2014(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build 2014 Burning Hands.")
         raise
+
+
+def fireball_2014(save_dc: int) -> SpellSaveAction:
+    try:
+        return SpellSaveAction(
+            id="fireball", name="Fireball", level=3, action_cost="action",
+            range_ft=150,
+            area=AreaTargeting(shape="radius", origin="point", radius_ft=20),
+            save_ability="dexterity", dc=save_dc,
+            damage_dice_count=8, damage_dice_size=6, damage_type="fire",
+            success_damage="half", upcast_dice_per_level=1,
+            animation="spell-save",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Fireball.")
+        raise
