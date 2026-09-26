@@ -30,6 +30,10 @@ def test_2014_ranger_level_one_is_legal_archer_baseline() -> None:
     assert profile.subclass_id is None
     assert row.spells_known == 0
     assert row.spell_slots == (0, 0, 0, 0, 0)
+    grants = hero.progression_features.saving_throw_advantage_grants
+    assert len(grants) == 1
+    assert grants[0].source_id == "fey-ancestry"
+    assert grants[0].required_effect_tags == ["charm"]
 
 
 def test_2014_ranger_level_one_features_are_arena_neutral() -> None:
