@@ -38,6 +38,18 @@
     }
   }
 
+  function hostileAuraRelevant(member, action, setup) {
+    const aura = action.hostileStartTurnConditionAura;
+    if (!aura) return true;
+    if (!setup) return false;
+    const stateRuntime = window.IRON_PIT_BROWSER_STATE;
+    if (!stateRuntime?.distance) throw new Error("Timed hostile aura policy requires state distance.");
+    const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
+    return (enemies || []).some((target) =>
+      target.state.is_alive && !target.state.is_dead
+      && stateRuntime.distance(member, target) <= aura.radius_ft);
+  }
+
   function choose(member, setup = null) {
     try {
       const choices = (member.state.template.timed_self_buff_actions || []).filter((action) =>
@@ -45,7 +57,8 @@
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
         && !active(member, action)
         && (!action.concentration || !member.state.concentration)
-        && friendlyAuraRelevant(member, action, setup));
+        && friendlyAuraRelevant(member, action, setup)
+        && hostileAuraRelevant(member, action, setup));
       choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));
       return choices[0] || null;
     } catch (error) {
