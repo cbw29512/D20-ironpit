@@ -7,6 +7,7 @@ from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.bard_2014_countercharm import countercharm_2014
 from app.content.bard_2014_cutting_words import cutting_words_2014
 from app.content.bard_2014_inspiration import build_bardic_inspiration_2014
+from app.content.bard_2014_vicious_mockery import vicious_mockery_2014
 from app.content.bard_2014_initiative import build_bard_2014_initiative_refills
 from app.content.bard_lore_2014_profile import build_lyra_silverstring_2014_profile
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
@@ -108,9 +109,10 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
                 *([greater_invisibility_2014()] if level >= 8 else []),
                 *([death_ward_2014()] if level >= 10 else []),
             ],
-            spell_save_actions=(
-                [flame_strike_2014(8 + pb + charisma_modifier)] if level >= 10 else []
-            ),
+            spell_save_actions=[
+                vicious_mockery_2014(level, charisma_modifier),
+                *([flame_strike_2014(8 + pb + charisma_modifier)] if level >= 10 else []),
+            ],
             condition_removal_actions=(
                 [lesser_restoration_2014()] if level >= 4 else []
             ),
