@@ -418,6 +418,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["outgoing_healing_dice_maximizer"] = progression.outgoing_healing_dice_maximizer.model_dump()
     if progression.once_per_turn_weapon_hit_damage_rider:
         row["once_per_turn_weapon_hit_damage_rider"] = progression.once_per_turn_weapon_hit_damage_rider.model_dump()
+    if progression.once_per_turn_weapon_hit_damage_riders:
+        row["once_per_turn_weapon_hit_damage_riders"] = [
+            item.model_dump() for item in progression.once_per_turn_weapon_hit_damage_riders
+        ]
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.resource_backed_d20_bonus_dice:
