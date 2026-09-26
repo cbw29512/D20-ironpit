@@ -5,7 +5,8 @@ from dataclasses import dataclass
 
 from app.combat.action_economy import is_available, spend
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
-from app.combat.spell_policy import SpellChoice, choose_spell_action_at_slot
+from app.combat.spell_choice import SpellChoice
+from app.combat.spell_fixed_slot_policy import choose_spell_action_at_slot
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
