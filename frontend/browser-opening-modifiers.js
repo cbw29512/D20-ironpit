@@ -15,14 +15,14 @@
           source_creature_types: [...(grant.source_creature_types || [])],
         });
       }
-      for (const [index, counter] of (template?.passive_debuff_counters || []).entries()) {
+      for (const [index, grant] of (template?.passive_debuff_counter_grants || []).entries()) {
         modifiers.push({
-          id: `${template.id}:passive-debuff-counter:${index}`,
+          id: `${template.id}:${grant.source_id}:passive-debuff-counter:${index}`,
           source_id: template.id,
-          source_effect_id: `passive-debuff-counter-${index}`,
-          source_name: template.name,
+          source_effect_id: grant.source_id,
+          source_name: grant.source_name,
           kind: "debuff-counter",
-          debuff_counter: { ...counter },
+          debuff_counter: { ...grant.counter },
         });
       }
       const ward = template?.opening_targeting_ward;
