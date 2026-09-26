@@ -39,7 +39,15 @@ def apply_spell_cast_timed_resistance(
         for option in candidates:
             if option.qualifying_damage_type.value not in spell_types:
                 continue
-            if option.resistance_damage_type in caster.state.temporary_damage_resistances:
+            active_resistances = {
+                *caster.state.temporary_damage_resistances,
+                *(
+                    damage_type
+                    for effect in caster.state.timed_effects
+                    for damage_type in effect.owned_damage_resistances
+                ),
+            }
+            if option.resistance_damage_type in active_resistances:
                 continue
             resource = next(
                 (item for item in caster.state.resources if item.id == option.resource_id),
