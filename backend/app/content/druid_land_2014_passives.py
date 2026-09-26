@@ -3,12 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.content.druid_land_2014_level10 import natures_ward_debuff_counters_2014
-from app.domain.debuffs import DebuffCounter
-from app.domain.progression import (
-    PassiveDebuffCounterGrant,
-    ProgressionCombatFeatures,
-    SavingThrowAdvantageGrant,
-)
+from app.domain.progression import PassiveDebuffCounterGrant, ProgressionCombatFeatures, SavingThrowAdvantageGrant
+from app.content.shared_lands_stride_2014 import lands_stride_2014
 
 logger = logging.getLogger(__name__)
 _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
@@ -27,21 +23,9 @@ def druid_land_progression_features_2014(level: int) -> ProgressionCombatFeature
         ]
         debuff_counters: list[PassiveDebuffCounterGrant] = []
         if level >= 6:
-            save_advantage.append(SavingThrowAdvantageGrant(
-                source_id="lands-stride",
-                source_name="Land's Stride",
-                abilities=_ABILITIES,
-                requires_magical_effect=True,
-                required_effect_tags=["plant-impediment"],
-            ))
-            debuff_counters.append(PassiveDebuffCounterGrant(
-                source_id="lands-stride",
-                source_name="Land's Stride",
-                counter=DebuffCounter(
-                    debuff_id="difficult-terrain",
-                    source_scope="nonmagical",
-                ),
-            ))
+            lands_stride_save, lands_stride_counter = lands_stride_2014()
+            save_advantage.append(lands_stride_save)
+            debuff_counters.append(lands_stride_counter)
         if level >= 10:
             debuff_counters.extend(natures_ward_debuff_counters_2014())
         return ProgressionCombatFeatures(
