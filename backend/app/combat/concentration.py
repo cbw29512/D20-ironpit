@@ -70,6 +70,7 @@ def start_concentration(
     round_number: int,
     affected_states: Iterable[CombatantState] | None = None,
     expires_round: int | None = None,
+    slot_level: int | None = None,
 ) -> ConcentrationState:
     if owner.is_dead or is_incapacitated(owner):
         raise ValueError("An Incapacitated or dead creature cannot start Concentration.")
@@ -81,6 +82,7 @@ def start_concentration(
         effect_id=effect_id,
         started_round=round_number,
         expires_round=expires_round,
+        slot_level=slot_level,
     )
     return owner.concentration
 
