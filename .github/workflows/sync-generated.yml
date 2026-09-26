@@ -3,7 +3,7 @@ name: Sync Generated Certification Artifacts
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, feat/2014-druid-batched]
 
 permissions:
   contents: write
