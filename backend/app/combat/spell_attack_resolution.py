@@ -24,7 +24,7 @@ from app.combat.reckless_attack import attacks_against_reckless_advantage
 from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
-from app.combat.spell_modifiers import build_spell_modifier
+from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance\nfrom app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.zero_hp import apply_damage
@@ -75,6 +75,7 @@ def resolve_spell_attack(
             if resource is not None:
                 mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
             spend(caster.state, spell.action_cost)
+            apply_spell_cast_timed_resistance(caster, spell, round_number)
             event = blocked_targeting_event(sequence, round_number, caster, target, spell.name, ward)
             event.resource_remaining = resource.current_uses if resource is not None else None
             return event
@@ -107,6 +108,7 @@ def resolve_spell_attack(
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
         spend(caster.state, spell.action_cost)
+        apply_spell_cast_timed_resistance(caster, spell, round_number)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
