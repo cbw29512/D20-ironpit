@@ -28,6 +28,7 @@ def test_2014_ranger_level_one_is_legal_archer_baseline() -> None:
     assert hero.skill_bonuses["stealth"] == 5
     assert hero.skill_bonuses["perception"] == 4
     assert profile.subclass_id is None
+    assert profile.combat_loadout_kind == "dual-wield"
     assert row.spells_known == 0
     assert row.spell_slots == (0, 0, 0, 0, 0)
     grants = hero.progression_features.saving_throw_advantage_grants
