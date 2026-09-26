@@ -42,6 +42,7 @@ def resolve_defensive_spell(
     if any(
         spell.id in target.state.active_buff_effect_ids
         or any(modifier.source_effect_id == spell.id for modifier in target.state.active_modifiers)
+        or any(effect.source_effect_id == spell.id for effect in target.state.timed_effects)
         for target in targets
     ):
         raise ValueError(f"{spell.name} is already active on a selected target.")
@@ -75,6 +76,7 @@ def resolve_defensive_spell(
         details.append(f"+{spell.current_hp_increase} current Hit Points")
     if spell.damage_resistances:
         details.append("resistance to " + ", ".join(spell.damage_resistances))
+    details.extend(spell.condition_ids)
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
     if spell.concentration:
         details.append("Concentration")
