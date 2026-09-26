@@ -146,4 +146,28 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 8:
+        rows += [
+            FeatureAudit(
+                feature_id="ability-score-improvement-8",
+                feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Druid 8",
+                category="class",
+                combat_relevant=True,
+                automated=True,
+                notes="Canonical progression raises Wisdom from 18 to 20 and recompiles all Wisdom-derived combat values.",
+            ),
+            FeatureAudit(
+                feature_id="wild-shape-improvement-8",
+                feature_name="Wild Shape Improvement",
+                source_reference="D&D Basic Rules 2014: Druid 8",
+                category="class",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Canonical form advances to the certified CR 1 Brown Bear. The source progression now permits "
+                    "flying forms, while the standard Pit still applies its universal horizontal-flight arena rule."
+                ),
+            ),
+        ]
     return rows
