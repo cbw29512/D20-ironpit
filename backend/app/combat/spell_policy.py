@@ -56,6 +56,7 @@ def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, act
             target for target in enemies
             if target.state.is_alive and not target.state.is_dead and target.state.current_hp > 0
             and combatant_distance(caster, target) <= action.range_ft
+            and (not action.requires_target_hearing or "deafened" not in target.state.active_effect_ids)
         ]
     except Exception as exc:
         logger.exception("Failed to determine legal targets for spell %s.", action.id)
