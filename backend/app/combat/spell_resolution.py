@@ -8,6 +8,7 @@ from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modif
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import spell_at_slot
+from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -52,6 +53,7 @@ def resolve_spell(
             remaining = resource.current_uses
 
         spend(caster.state, spell.action_cost)
+        range_remaining = spend_spell_range_modifier(caster.state, choice.range_modifier)
         remove_owner_attack_ending_modifiers(caster.state)
         apply_spell_cast_timed_resistance(caster, spell, round_number)
 
@@ -76,7 +78,24 @@ def resolve_spell(
                 f"{len(placement.friendly_ids)} unprotected allies."
             )
         slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
-        events = [BattleEvent(
+        events: list[BattleEvent] = []
+        if choice.range_modifier is not None:
+            events.append(BattleEvent(
+                sequence=sequence,
+                round_number=round_number,
+                event_type="feature",
+                actor_id=caster.combatant_id,
+                actor_name=caster.state.template.name,
+                feature_id=choice.range_modifier.id,
+                resource_remaining=range_remaining,
+                animation="spell-range",
+                description=(
+                    f"{caster.state.template.name} uses {choice.range_modifier.name} "
+                    f"to extend {spell.name}'s range."
+                ),
+            ))
+            sequence += 1
+        events.append(BattleEvent(
             sequence=sequence,
             round_number=round_number,
             event_type="feature",
@@ -86,7 +105,7 @@ def resolve_spell(
             resource_remaining=remaining,
             animation=spell.animation,
             description=f"{caster.state.template.name} casts {spell.name} using a {slot_text}.{detail}",
-        )]
+        ))
         sequence += 1
 
         effect_events, sequence = resolve_spell_save_effect(
