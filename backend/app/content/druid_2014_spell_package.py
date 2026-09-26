@@ -85,6 +85,14 @@ _PREPARED = (
         "find-the-path", "Find the Path", "utility",
         "arena-out-of-scope", level=6, min_level=11,
     ),
+    _spell(
+        "wind-walk", "Wind Walk", "utility",
+        "arena-out-of-scope", level=6, min_level=12,
+    ),
+    _spell(
+        "mirage-arcane", "Mirage Arcane", "utility",
+        "arena-out-of-scope", level=7, min_level=13,
+    ),
 )
 
 
