@@ -7,6 +7,7 @@ from app.combat.action_economy import is_available
 from app.combat.condition_rules import can_see
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
+from app.combat.area_targeting import legal_area_placements
 from app.combat.spell_area import AreaPlacement, best_area_placement
 from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -106,4 +107,88 @@ def choose_spell(
         return max(candidates, key=lambda item: item[:3])[3] if candidates else None
     except Exception:
         logger.exception("Failed to choose save-based spell for %s.", caster.combatant_id)
+        raise
+
+
+
+def choose_named_spell(
+    caster: EncounterCombatant,
+    setup: EncounterSetup,
+    turn_key: str,
+    spell_id: str,
+    protected_ally_ids: set[str] | None = None,
+) -> SpellChoice | None:
+    """Choose one declared save spell by id without changing global spell prioritization."""
+    try:
+        action = next(
+            (item for item in caster.state.template.spell_save_actions if item.id == spell_id),
+            None,
+        )
+        if action is None or action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
+            return None
+        levels = legal_slot_levels(
+            caster.state,
+            turn_key,
+            action.level,
+            higher_slot_scaling=action.upcast_dice_per_level > 0,
+        )
+        if not levels:
+            return None
+        slot_level = levels[-1]
+        protected = protected_ally_ids or set()
+        if action.area is not None:
+            placements = [
+                item for item in legal_area_placements(caster, setup, action.area, action.range_ft)
+                if not item.friendly_ids
+            ]
+            if not placements:
+                return None
+            placement = max(
+                placements,
+                key=lambda item: (
+                    len(item.enemy_ids),
+                    len([target for target in item.enemy_ids if target not in protected]),
+                    -len(item.friendly_ids),
+                ),
+            )
+            return SpellChoice(
+                action=action,
+                slot_level=slot_level,
+                target_ids=tuple(placement.enemy_ids),
+                placement=placement,
+                expected_damage=float(len(placement.enemy_ids)),
+            )
+        if action.area_radius_ft is not None:
+            placement = best_area_placement(
+                caster,
+                setup,
+                action.area_radius_ft,
+                action.range_ft,
+                protected,
+            )
+            if placement is None:
+                return None
+            return SpellChoice(
+                action=action,
+                slot_level=slot_level,
+                target_ids=tuple((*placement.enemy_ids, *placement.friendly_ids)),
+                placement=placement,
+                expected_damage=float(len(placement.enemy_ids)),
+            )
+        legal = _legal_single_targets(caster, setup, action)
+        if not legal:
+            return None
+        target = min(legal, key=lambda item: (item.state.current_hp, item.combatant_id))
+        return SpellChoice(
+            action=action,
+            slot_level=slot_level,
+            target_ids=(target.combatant_id,),
+            expected_damage=0.0,
+        )
+    except Exception:
+        logger.exception(
+            "Failed to choose named save spell %s for %s.",
+            spell_id,
+            caster.combatant_id,
+        )
         raise
