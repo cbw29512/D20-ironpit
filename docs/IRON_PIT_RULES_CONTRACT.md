@@ -165,6 +165,16 @@ Normal initiative bonuses and ruleset-specific initiative mechanics apply, with 
 - Multiple natural-20 or natural-1 rollers use the same tie-reroll process among themselves.
 - Surprise is resolved separately according to the selected ruleset; it does not automatically move a creature to the bottom of initiative.
 
+## 7.1 Opening buff on arena entry
+
+- Before initiative is rolled, each combatant may activate **one legal available combat buff** as its opening buff.
+- This opening activation is free in action economy: it does not consume the combatant's Action, Bonus Action, or Reaction.
+- The buff still pays every other printed cost and requirement that remains meaningful in Iron Pit, including spell slots, charges, class resources, target/range legality, and Concentration.
+- A combatant receives only one opening-buff activation per fight. A spell, class feature, subclass feature, species feature, item effect, or other source competes for that same single opening-buff opportunity when it is otherwise legal.
+- The opening buff resolves in the precombat phase before initiative. Its normal duration/lifecycle begins there; source-turn timing continues normally once round 1 starts. An effect that lasts until the end of the source's next turn therefore expires at the end of that combatant's first turn.
+- Opening-buff selection is universal Arena policy. Do not create class-, spell-, or source-name exceptions. The source ability supplies its normal parameters and exact player-facing name; the shared precombat buff pipeline supplies the free activation.
+- Buffs that require a separate combat entity, an unavailable target, an unsupported outcome-changing mechanic, or another illegal precondition remain unavailable and do not bypass normal certification gates.
+
 ## 8. Action economy
 
 - Use the selected edition's RAW Action, Bonus Action, Reaction, movement, Extra Attack, Multiattack, and other action-economy rules.
