@@ -3,6 +3,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.character_builds import AbilityName
+from app.domain.debuffs import DebuffCounter
 
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
@@ -63,6 +64,7 @@ class ProgressionCombatFeatures(BaseModel):
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
+    passive_debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     opening_targeting_ward: OpeningTargetingWard | None = None
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
