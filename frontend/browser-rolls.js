@@ -60,7 +60,7 @@
   }
 
   function bonusComponent(spec, critical) {
-    return damageComponent({ ...spec, damageBonus: 0 }, critical);
+    return damageComponent({ ...spec, damageBonus: spec.damageBonus || 0 }, critical);
   }
 
   function conditionalActive(spec, attacker, target, mode) {
