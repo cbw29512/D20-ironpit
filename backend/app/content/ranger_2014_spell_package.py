@@ -35,6 +35,10 @@ _SPELLS = (
         id="water-walk", name="Water Walk", spell_level=3, min_character_level=11,
         role="utility", required_capabilities=["arena-out-of-scope"],
     ),
+    CanonicalSpellChoice(
+        id="freedom-of-movement", name="Freedom of Movement", spell_level=4, min_character_level=13,
+        role="buff", required_capabilities=["debuff-counter"],
+    ),
 )
 
 
