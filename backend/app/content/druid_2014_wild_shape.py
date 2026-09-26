@@ -20,6 +20,7 @@ def wild_shape_action_2014(level: int) -> ReplacementFormAction:
             resource_cost=1,
             voluntary_revert_action="bonus_action",
             retain_spellcasting=level >= 18,
+            setup_spell_id="faerie-fire",
             source="D&D Basic Rules 2014: Druid — Wild Shape",
         )
     except Exception:
