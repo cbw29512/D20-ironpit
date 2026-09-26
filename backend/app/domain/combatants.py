@@ -20,6 +20,7 @@ from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.recharge import RechargeRule
 from app.domain.replacement_form_actions import ReplacementFormAction
+from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
@@ -83,6 +84,7 @@ class CombatantTemplate(BaseModel):
     d20_bonus_die_actions: list[D20BonusDieAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     initiative_resource_refill_grants: list[InitiativeResourceRefillGrant] = Field(default_factory=list)
+    resource_conversion_actions: list[ResourceConversionAction] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     replacement_form_actions: list[ReplacementFormAction] = Field(default_factory=list)
     concentration_repeat_save_actions: list[ConcentrationRepeatSaveAction] = Field(default_factory=list)
