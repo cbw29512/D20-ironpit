@@ -21,9 +21,9 @@
     });
   }
 
-  function choose(member, setup) {
+  function choose(member, setup, requireAction = true) {
     try {
-      if (!E().available(member.state, "action")) return null;
+      if (requireAction && !E().available(member.state, "action")) return null;
       const normalCount = member.state.template.attack_action?.slots?.length || 1;
       const choices = [];
       for (const action of member.state.template.area_weapon_attack_actions || []) {
