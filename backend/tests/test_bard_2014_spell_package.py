@@ -36,11 +36,11 @@ def test_lore_additional_magical_secrets_are_bonus_known_spells() -> None:
 
 def test_magical_secrets_count_inside_bard_spells_known() -> None:
     level_ten = build_bard_2014_spell_package(10)
-    assert {"flame-strike", "mass-cure-wounds"} <= {spell.id for spell in level_ten.spells}
+    assert {"flame-strike", "death-ward"} <= {spell.id for spell in level_ten.spells}
     level_fourteen = build_bard_2014_spell_package(14)
-    assert {"harm", "fire-storm"} <= {spell.id for spell in level_fourteen.spells}
+    assert {"guiding-bolt", "shield-of-faith"} <= {spell.id for spell in level_fourteen.spells}
     level_eighteen = build_bard_2014_spell_package(18)
-    assert {"death-ward", "spirit-guardians"} <= {spell.id for spell in level_eighteen.spells}
+    assert {"aid", "inflict-wounds"} <= {spell.id for spell in level_eighteen.spells}
 
 
 def test_canonical_policy_routes_2014_bard_to_edition_specific_package() -> None:
