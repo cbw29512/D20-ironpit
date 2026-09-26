@@ -305,6 +305,22 @@ def _effect_removal(action: Any) -> dict[str, Any]:
     }
 
 
+def _resource_conversion(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id,
+        "name": action.name,
+        "actionCost": action.action_cost,
+        "sourceResourceId": action.source_resource_id,
+        "sourceCost": action.source_cost,
+        "targetResourceId": action.target_resource_id,
+        "targetGain": action.target_gain,
+        "targetAllowsOverflow": action.target_allows_overflow,
+        "automation": action.automation,
+        "priority": action.priority,
+        "source": action.source,
+    }
+
+
 def _spell_package(class_id: str, level: int, template: CombatantTemplate):
     if not (
         template.spell_save_actions or template.spell_attack_actions or template.persistent_spell_attack_actions
@@ -401,6 +417,19 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if template.initiative_resource_refill_grants:
         row["initiative_resource_refill_grants"] = [
             item.model_dump() for item in template.initiative_resource_refill_grants
+        ]
+    if template.resource_conversion_actions:
+        row["resource_conversion_actions"] = [
+            _resource_conversion(item) for item in template.resource_conversion_actions
+        ]
+    if template.spell_save_disadvantage_options:
+        row["spellSaveDisadvantageOptions"] = [
+            {
+                "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost, "targetPolicy": item.target_policy,
+                "priority": item.priority, "source": item.source,
+            }
+            for item in template.spell_save_disadvantage_options
         ]
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()

@@ -51,6 +51,8 @@ window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT = {
 
 load("browser-action-economy.js");
 load("browser-ability-hooks.js");
+load("browser-resources.js");
+load("browser-resource-conversion.js");
 load("browser-rage.js");
 load("browser-support.js");
 load("browser-steady-aim.js");
@@ -67,6 +69,7 @@ assert.deepEqual(registrations, [
   ["second-wind", 20, ["2014", "2024"]],
   ["steady-aim", 25, ["2024"]],
   ["adrenaline-rush", 30, ["2024"]],
+  ["resource-conversion", 30, ["2014", "2024"]],
   ["persistent-spell-attack", 40, ["2014"]],
   ["monk-bonus-attack-2014", 100, ["2014"]],
   ["frenzy-bonus-attack-2014", 110, ["2014"]],

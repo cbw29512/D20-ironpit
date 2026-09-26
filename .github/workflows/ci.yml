@@ -252,6 +252,8 @@ jobs:
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
           grep -q 'browser-initiative-resource-refill.js' frontend/index.html
+          grep -q 'browser-resource-conversion.js' frontend/index.html
+          grep -q 'browser-spell-save-disadvantage.js' frontend/index.html
           grep -q 'browser-d20-bonus-dice.js' frontend/index.html
           grep -q 'browser-barbarian2.js' frontend/index.html
           grep -q 'browser-barbarian3.js' frontend/index.html
@@ -328,6 +330,8 @@ jobs:
           node frontend/browser-2014-monk-level19.test.cjs
           node frontend/browser-2014-monk-level20.test.cjs
           node frontend/browser-initiative-resource-refill.test.cjs
+          node frontend/browser-resource-conversion.test.cjs
+          node frontend/browser-spell-save-disadvantage.test.cjs
           node frontend/browser-d20-bonus-dice.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs

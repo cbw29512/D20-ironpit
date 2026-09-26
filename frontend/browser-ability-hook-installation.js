@@ -8,6 +8,7 @@
     const installers = [
       ["Rage", window.IRON_PIT_BROWSER_RAGE?.installAbilityHooks],
       ["Support", window.IRON_PIT_BROWSER_SUPPORT?.installAbilityHooks],
+      ["Resource Conversion", window.IRON_PIT_BROWSER_RESOURCE_CONVERSION?.installAbilityHooks],
       ["Steady Aim", window.IRON_PIT_BROWSER_STATIONARY_ATTACK_ADVANTAGE?.installAbilityHooks],
       ["2014 Monk", window.IRON_PIT_BROWSER_MONK_2014?.installAbilityHooks],
       ["2014 Frenzy", window.IRON_PIT_BROWSER_FRENZY_2014?.installAbilityHooks],

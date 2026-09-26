@@ -43,6 +43,7 @@ def saving_throw_mode(
         disadvantage = (
             saving_throw_disadvantage_sources(state)
             + modifier_save_disadvantage_sources(state)
+            + len(context.disadvantage_sources if context is not None else ())
         )
         if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids:
             disadvantage += 1
