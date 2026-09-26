@@ -93,7 +93,7 @@ The migration changes orchestration, not those choices.
 
 The browser registers providers for all seven normal-turn Action families: spell offense, 2014 Intimidating Presence, Attack/Multiattack, area save, save action, standard attack, and Dodge. Provider discovery reuses the existing pure choice/legality paths; both normal-turn opportunities now resolve through the selector.
 
-`browser-spell-offense.js` exposes a pure `choose()` plus `resolveChoice()` split so discovery can select the same attack-vs-save spell without casting it. `browser-multiattack.js` exposes pure `available()` using the same slot legality checks as live Attack Action resolution.
+`browser-spell-offense.js` exposes a pure `choose()` plus `resolveChoice()` split so discovery can select the same offensive family without resolving it. That family includes ordinary cast-now attack/save spells and universal repeat Actions granted by an already-active Concentration spell. A repeat Action reuses the stored concentration spell/slot state, spends only its declared Action cost, does not spend another spell slot, and does not restore spellcasting while a replacement form blocks casting. `browser-multiattack.js` exposes pure `available()` using the same slot legality checks as live Attack Action resolution.
 
 The existing single-target save fallback is preserved exactly, including its historical behavior after the dedicated area-save opportunity. Policy cleanup is deliberately out of scope for this architecture migration.
 
