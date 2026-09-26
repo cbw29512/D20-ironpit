@@ -37,7 +37,7 @@ def test_level_five_base_spell_package_has_nine_prepared_spells() -> None:
     assert package.spells[-1].id == "dispel-magic"
 
 
-def test_level_five_forest_circle_spells_remain_fail_closed_until_call_lightning_is_supported() -> None:
+def test_level_five_forest_circle_spells_are_preserved_but_arena_unavailable() -> None:
     assert forest_circle_spell_ids_2014(5) == (
         "barkskin",
         "spider-climb",
@@ -48,5 +48,5 @@ def test_level_five_forest_circle_spells_remain_fail_closed_until_call_lightning
         item for item in build_druid_land_2014_feature_audits(5)
         if item.feature_id == "circle-spells-3"
     )
-    assert audit.combat_relevant is True
+    assert audit.combat_relevant is False
     assert audit.automated is False
