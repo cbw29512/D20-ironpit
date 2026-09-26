@@ -8,7 +8,7 @@ from app.domain.targeting import AreaTargeting
 logger = logging.getLogger(__name__)
 
 
-def fire_bolt_2014(attack_bonus: int, character_level: int) -> SpellAttackAction:
+def fire_bolt_2014(attack_bonus: int, character_level: int, damage_bonus: int = 0) -> SpellAttackAction:
     try:
         if not 1 <= character_level <= 20:
             raise ValueError("2014 Fire Bolt character level must be between 1 and 20.")
@@ -16,7 +16,7 @@ def fire_bolt_2014(attack_bonus: int, character_level: int) -> SpellAttackAction
         return SpellAttackAction(
             id="fire-bolt", name="Fire Bolt", level=0, action_cost="action",
             attack_kind="ranged", range_ft=120, attack_bonus=attack_bonus,
-            damage_dice_count=dice_count, damage_dice_size=10, damage_type="fire",
+            damage_dice_count=dice_count, damage_dice_size=10, damage_bonus=damage_bonus, damage_type="fire",
             animation="spell-attack", source="D&D Basic Rules 2014: Fire Bolt",
         )
     except Exception:
@@ -24,14 +24,14 @@ def fire_bolt_2014(attack_bonus: int, character_level: int) -> SpellAttackAction
         raise
 
 
-def burning_hands_2014(save_dc: int) -> SpellSaveAction:
+def burning_hands_2014(save_dc: int, damage_bonus: int = 0) -> SpellSaveAction:
     try:
         return SpellSaveAction(
             id="burning-hands", name="Burning Hands", level=1, action_cost="action",
             range_ft=15,
             area=AreaTargeting(shape="cone", origin="self", length_ft=15),
             save_ability="dexterity", dc=save_dc,
-            damage_dice_count=3, damage_dice_size=6, damage_type="fire",
+            damage_dice_count=3, damage_dice_size=6, damage_bonus=damage_bonus, damage_type="fire",
             success_damage="half", upcast_dice_per_level=1,
             animation="spell-save",
         )
@@ -40,14 +40,14 @@ def burning_hands_2014(save_dc: int) -> SpellSaveAction:
         raise
 
 
-def fireball_2014(save_dc: int) -> SpellSaveAction:
+def fireball_2014(save_dc: int, damage_bonus: int = 0) -> SpellSaveAction:
     try:
         return SpellSaveAction(
             id="fireball", name="Fireball", level=3, action_cost="action",
             range_ft=150,
             area=AreaTargeting(shape="radius", origin="point", radius_ft=20),
             save_ability="dexterity", dc=save_dc,
-            damage_dice_count=8, damage_dice_size=6, damage_type="fire",
+            damage_dice_count=8, damage_dice_size=6, damage_bonus=damage_bonus, damage_type="fire",
             success_damage="half", upcast_dice_per_level=1,
             animation="spell-save",
         )
