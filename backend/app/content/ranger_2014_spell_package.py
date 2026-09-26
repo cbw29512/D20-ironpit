@@ -15,6 +15,10 @@ _SPELLS = (
         id="cure-wounds", name="Cure Wounds", spell_level=1, min_character_level=2,
         role="healing", required_capabilities=["healing"],
     ),
+    CanonicalSpellChoice(
+        id="detect-magic", name="Detect Magic", spell_level=1, min_character_level=3,
+        role="utility", required_capabilities=["arena-out-of-scope"],
+    ),
 )
 
 
