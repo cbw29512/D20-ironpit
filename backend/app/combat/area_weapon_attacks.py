@@ -49,9 +49,11 @@ def _legal_target_ids(
 def choose_area_weapon_attack(
     member: EncounterCombatant,
     setup: EncounterSetup,
+    *,
+    require_action: bool = True,
 ) -> AreaWeaponAttackChoice | None:
     try:
-        if not is_available(member.state, "action"):
+        if require_action and not is_available(member.state, "action"):
             return None
         normal_count = len(member.state.template.attack_action.slots) if member.state.template.attack_action else 1
         choices: list[AreaWeaponAttackChoice] = []
