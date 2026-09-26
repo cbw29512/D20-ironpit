@@ -69,7 +69,7 @@
         || a.state.current_hp - b.state.current_hp || a.combatant_id.localeCompare(b.combatant_id));
       const target = legal[0];
       return { action, slotLevel: castLevel, targetIds: [target.combatant_id],
-        placement: null, expectedDamage: O().saveSpell(target, scaled) };
+        placement: null, expectedDamage: O().saveSpell(target, scaled), hp: target.state.current_hp };
     } catch (error) {
       console.error("Browser fixed-slot save-spell selection failed", { caster: caster?.combatant_id, spell: action?.id, error });
       throw error;
@@ -87,7 +87,7 @@
         }
       }
       candidates.sort((a, b) => b.score - a.score || a.action.level - b.action.level
-        || a.index - b.index);
+        || (a.hp ?? Number.MAX_SAFE_INTEGER) - (b.hp ?? Number.MAX_SAFE_INTEGER) || a.index - b.index);
       if (!candidates.length) return null;
       const best = candidates[0];
       return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds,
