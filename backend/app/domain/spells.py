@@ -95,6 +95,7 @@ class SpellSaveAction(BaseModel):
     upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
     effect_tags: list[str] = Field(default_factory=list)
     requires_target_hearing: bool = False
+    requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     concentration: bool = False
     animation: str = "spell-save"
