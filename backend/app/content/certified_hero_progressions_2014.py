@@ -49,7 +49,7 @@ CERTIFIED_HERO_PROGRESSIONS_2014: tuple[CertifiedHeroProgression, ...] = (
     ),
     CertifiedHeroProgression(
         class_id="sorcerer", ruleset="2014", template_builder=build_nyra_emberveil_2014,
-        profile_level_builder=build_nyra_emberveil_2014_profile, max_level=2,
+        profile_level_builder=build_nyra_emberveil_2014_profile, max_level=3,
     ),
     CertifiedHeroProgression(
         class_id="rogue", ruleset="2014", template_builder=build_mara_quickstep_2014,
