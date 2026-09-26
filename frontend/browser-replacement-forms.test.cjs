@@ -99,4 +99,56 @@ function state() {
   assert.equal(target.concentration.effect_id, "faerie-fire");
 }
 
+
+{
+  const owner = {
+    id: "thalen-greenbough-2014-l18", name: "Thalen Greenbough", archetype: "Druid",
+    level: 18, kind: "character", ruleset: "2014", resources: { "wild-shape": 2 },
+    unlimited_resources: [], saving_throw_bonuses: {}, skill_bonuses: {}, source: "2014 Druid",
+    spell_attack_actions: [{ id: "produce-flame" }],
+    spell_save_actions: [{ id: "poison-spray" }, { id: "faerie-fire" }],
+    persistent_spell_attack_actions: [],
+    defensive_spell_actions: [{ id: "longstrider" }, { id: "barkskin" }, { id: "freedom-of-movement" }],
+    healingActions: [{ id: "healing-word" }, { id: "cure-wounds" }],
+    condition_removal_actions: [{ id: "lesser-restoration" }],
+    effect_removal_actions: [{ id: "dispel-magic" }],
+  };
+  const form = {
+    id: "2014-brown-bear", name: "Brown Bear", kind: "monster", ruleset: "2014",
+    max_hp: 34, armor_class: 11, speed_ft: 40, size: "large",
+    saving_throw_bonuses: {}, skill_bonuses: {}, resources: {}, attacks: [],
+    source: "2014 Brown Bear",
+  };
+  const beastSpellIds = [
+    "produce-flame", "poison-spray", "faerie-fire", "healing-word",
+    "cure-wounds", "lesser-restoration", "dispel-magic",
+  ];
+  const active18 = window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.compileActiveTemplate(
+    owner, form, true, beastSpellIds,
+  );
+  const ids18 = [
+    ...(active18.spell_attack_actions || []), ...(active18.spell_save_actions || []),
+    ...(active18.persistent_spell_attack_actions || []), ...(active18.defensive_spell_actions || []),
+    ...(active18.healingActions || []), ...(active18.condition_removal_actions || []),
+    ...(active18.effect_removal_actions || []),
+  ].map((action) => action.id);
+  assert.deepEqual(new Set(ids18), new Set(beastSpellIds));
+  assert.ok(!ids18.includes("longstrider"));
+  assert.ok(!ids18.includes("barkskin"));
+  assert.ok(!ids18.includes("freedom-of-movement"));
+
+  const archdruidIds = [...beastSpellIds, "longstrider", "barkskin", "freedom-of-movement"];
+  const active20 = window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.compileActiveTemplate(
+    { ...owner, id: "thalen-greenbough-2014-l20", level: 20, unlimited_resources: ["wild-shape"] },
+    form, true, archdruidIds,
+  );
+  const ids20 = [
+    ...(active20.spell_attack_actions || []), ...(active20.spell_save_actions || []),
+    ...(active20.persistent_spell_attack_actions || []), ...(active20.defensive_spell_actions || []),
+    ...(active20.healingActions || []), ...(active20.condition_removal_actions || []),
+    ...(active20.effect_removal_actions || []),
+  ].map((action) => action.id);
+  assert.deepEqual(new Set(ids20), new Set(archdruidIds));
+}
+
 console.log("Browser replacement form lifecycle parity passed.");
