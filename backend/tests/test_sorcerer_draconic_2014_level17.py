@@ -34,11 +34,11 @@ def test_extended_spell_doubles_greater_invisibility_and_spends_one_point() -> N
 
     choice = choose_defensive_spell(nyra, setup)
     assert choice is not None
-    spell, slot_level, _, duration_modifier = choice
+    spell, slot_level, _ = choice
     assert spell.id == "greater-invisibility"
     assert slot_level == 4
-    assert duration_modifier is not None
-    assert duration_modifier.id == "extended-spell"
+    assert hero_modifier := nyra.state.template.spell_duration_modifiers[0]
+    assert hero_modifier.id == "extended-spell"
 
     before = next(item.current_uses for item in nyra.state.resources if item.id == "sorcery-points")
     events, _ = prepare_defenses(setup)
