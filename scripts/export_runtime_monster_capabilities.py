@@ -38,7 +38,9 @@ def _strip_extension_defaults(value):
             continue
         if key == "prevents_instant_death" and item is False:
             continue
-        if key in {"effect_tags", "required_effect_tags"} and item == []:
+        if key in {"effect_tags", "required_effect_tags", "failed_save_modifier_effects"} and item == []:
+            continue
+        if key == "concentration" and item is False:
             continue
         if key == "replacement_form_actions" and item == []:
             continue
