@@ -181,4 +181,11 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
             category="subclass", combat_relevant=True, automated=True,
             notes="Canonical Hunter choice reuses the universal Evasion save-damage primitive already used by Rogue.",
         ))
+    if level >= 16:
+        rows.append(FeatureAudit(
+            feature_id="ability-score-improvement-16", feature_name="Ability Score Improvement",
+            source_reference="D&D Basic Rules 2014: Ranger 16",
+            category="class", combat_relevant=True, automated=True,
+            notes="Canonical archer progression raises Wisdom from 17 to 19; shared math recomputes Wisdom-derived values.",
+        ))
     return rows
