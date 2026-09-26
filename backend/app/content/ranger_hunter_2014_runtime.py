@@ -9,11 +9,14 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.cleric_2014_level1_spells import cure_wounds_2014
 from app.content.druid_2014_level1_spells import longstrider_2014
 from app.content.ranger_2014_progression import ranger_2014_level
+from app.content.ranger_hunter_2014_level3 import colossus_slayer_2014
 from app.content.ranger_hunter_2014_profile import build_rowan_ashtrail_2014_profile
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
 logger = logging.getLogger(__name__)
+_ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 
 
 def _weapon(level: int, weapon_id: str, dexterity: int) -> WeaponAttack:
@@ -39,8 +42,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 3):
-            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 2.")
+        if level not in range(1, 4):
+            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 3.")
         profile = build_rowan_ashtrail_2014_profile(level)
         scores = profile.final_ability_scores
         dexterity = scores.modifier("dexterity")
@@ -69,6 +72,17 @@ def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
                 "investigation": scores.modifier("intelligence") + proficiency_bonus(level),
             },
             weapon_masteries=[],
+            progression_features=ProgressionCombatFeatures(
+                once_per_turn_weapon_hit_damage_rider=colossus_slayer_2014() if level >= 3 else None,
+                saving_throw_advantage_grants=[
+                    SavingThrowAdvantageGrant(
+                        source_id="fey-ancestry",
+                        source_name="Fey Ancestry",
+                        abilities=_ABILITIES,
+                        required_effect_tags=["charm"],
+                    )
+                ],
+            ),
             fighting_style="Archery" if level >= 2 else None,
             fighting_styles=["Archery"] if level >= 2 else [],
             resources=_resources(level),
