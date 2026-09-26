@@ -37,7 +37,7 @@ def test_extended_spell_doubles_greater_invisibility_and_spends_one_point() -> N
     spell, slot_level, _ = choice
     assert spell.id == "greater-invisibility"
     assert slot_level == 4
-    assert hero_modifier := nyra.state.template.spell_duration_modifiers[0]
+    hero_modifier = nyra.state.template.spell_duration_modifiers[0]
     assert hero_modifier.id == "extended-spell"
 
     before = next(item.current_uses for item in nyra.state.resources if item.id == "sorcery-points")
