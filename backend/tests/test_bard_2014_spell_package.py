@@ -22,9 +22,9 @@ def test_2014_bard_spell_package_matches_progression_counts() -> None:
         assert len(package.spells) == spells
 
 
-def test_2014_bard_level_one_preserves_basic_rules_quick_build_spells() -> None:
+def test_2014_bard_level_one_uses_legal_fully_supported_spell_choices() -> None:
     ids = {spell.id for spell in build_bard_2014_spell_package(1).spells}
-    assert ids == {"charm-person", "detect-magic", "healing-word", "thunderwave"}
+    assert ids == {"healing-word", "cure-wounds", "detect-magic", "comprehend-languages"}
 
 
 def test_lore_additional_magical_secrets_are_bonus_known_spells() -> None:
