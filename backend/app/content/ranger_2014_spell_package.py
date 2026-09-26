@@ -23,6 +23,10 @@ _SPELLS = (
         id="lesser-restoration", name="Lesser Restoration", spell_level=2, min_character_level=5,
         role="healing", required_capabilities=["condition-removal"],
     ),
+    CanonicalSpellChoice(
+        id="locate-object", name="Locate Object", spell_level=2, min_character_level=7,
+        role="utility", required_capabilities=["arena-out-of-scope"],
+    ),
 )
 
 
