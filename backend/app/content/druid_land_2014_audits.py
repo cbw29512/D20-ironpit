@@ -186,4 +186,20 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 10:
+        rows.append(
+            FeatureAudit(
+                feature_id="natures-ward",
+                feature_name="Nature's Ward",
+                source_reference="D&D Basic Rules 2014: Circle of the Land 10",
+                category="subclass",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Uses universal checks only: poison damage immunity, passive Poisoned/disease "
+                    "debuff prevention, and source-typed Charmed/Frightened immunity against Fey "
+                    "and Elementals. No Druid-specific resolver."
+                ),
+            )
+        )
     return rows
