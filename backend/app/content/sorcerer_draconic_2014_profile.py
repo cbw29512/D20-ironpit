@@ -60,6 +60,20 @@ def build_nyra_emberveil_2014_profile(level: int) -> CharacterBuildProfile:
             feature_audits=build_sorcerer_draconic_2014_feature_audits(3),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Sorcerer 3"],
         )
+        profile = CharacterBuildProfile(**data)
+        if level == 3:
+            return profile
+
+        increase = AbilityIncrease(ability="charisma", amount=2)
+        values = profile.final_ability_scores.model_dump()
+        values["charisma"] += increase.amount
+        data = advance_profile_data(profile, 4)
+        data.update(
+            advancement_increases=[*profile.advancement_increases, increase],
+            final_ability_scores=AbilityScores(**values),
+            feature_audits=build_sorcerer_draconic_2014_feature_audits(4),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Sorcerer 4"],
+        )
         return CharacterBuildProfile(**data)
     except Exception:
         logger.exception("Failed to compile 2014 Nyra Emberveil profile at level %s.", level)
