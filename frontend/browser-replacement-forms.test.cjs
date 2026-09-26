@@ -19,7 +19,7 @@ function state() {
     id: "thalen-l2", name: "Thalen", kind: "character", unlimited_resources: [], max_hp: 18,
   };
   return {
-    template: original, current_hp: 18, replacement_form: null,
+    template: original, current_hp: 18, temporary_hp: 0, replacement_form: null,
     action_available: true, bonus_action_available: true, reaction_available: true,
     turn_terminated: false, is_dead: false, is_unconscious: false,
     resources: { "wild-shape": 2 }, concentration: { effect_id: "faerie-fire" },
