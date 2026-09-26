@@ -553,6 +553,16 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for item in template.spell_save_disadvantage_options
             ]
+        if template.spell_range_modifiers:
+            row["spellRangeModifiers"] = [
+                {
+                    "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                    "resourceCost": item.resource_cost, "rangeMultiplier": item.range_multiplier,
+                    "minimumBaseRangeFt": item.minimum_base_range_ft,
+                    "priority": item.priority, "source": item.source,
+                }
+                for item in template.spell_range_modifiers
+            ]
         recharge = recharge_rows(template)
         if recharge:
             row["recharge_rules"] = recharge
