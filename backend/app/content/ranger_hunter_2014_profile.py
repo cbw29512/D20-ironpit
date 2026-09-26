@@ -3,8 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.content.canonical_progression import advance_profile_data
-from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile
 from app.content.ranger_hunter_2014_audits import build_ranger_hunter_2014_feature_audits
+from app.content.ranger_hunter_2014_high_profile import advance_rowan_ashtrail_2014_high
+from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
@@ -61,20 +62,20 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
         profile = _level_one()
         if level == 1:
             return profile
+
         data = advance_profile_data(profile, 2)
         data.update(
-            fighting_style="Archery",
-            fighting_styles=["Archery"],
+            fighting_style="Archery", fighting_styles=["Archery"],
             feature_audits=build_ranger_hunter_2014_feature_audits(2),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 2"],
         )
         profile = CharacterBuildProfile(**data)
         if level == 2:
             return profile
+
         data = advance_profile_data(profile, 3)
         data.update(
-            subclass_id="hunter",
-            subclass_name="Hunter",
+            subclass_id="hunter", subclass_name="Hunter",
             feature_audits=build_ranger_hunter_2014_feature_audits(3),
             source_references=[
                 *profile.source_references,
@@ -85,6 +86,7 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
         profile = CharacterBuildProfile(**data)
         if level == 3:
             return profile
+
         increase = AbilityIncrease(ability="dexterity", amount=2)
         data = advance_profile_data(profile, 4)
         data.update(
@@ -96,34 +98,20 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
         profile = CharacterBuildProfile(**data)
         if level == 4:
             return profile
-        data = advance_profile_data(profile, 5)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(5),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 5"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 5:
-            return profile
-        data = advance_profile_data(profile, 6)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(6),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 6"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 6:
-            return profile
-        data = advance_profile_data(profile, 7)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(7),
-            source_references=[
-                *profile.source_references,
-                "D&D Basic Rules 2014: Ranger 7",
-                "D&D Basic Rules 2014: Hunter 7",
-            ],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 7:
-            return profile
+
+        for next_level in (5, 6, 7):
+            data = advance_profile_data(profile, next_level)
+            refs = [*profile.source_references, f"D&D Basic Rules 2014: Ranger {next_level}"]
+            if next_level == 7:
+                refs.append("D&D Basic Rules 2014: Hunter 7")
+            data.update(
+                feature_audits=build_ranger_hunter_2014_feature_audits(next_level),
+                source_references=refs,
+            )
+            profile = CharacterBuildProfile(**data)
+            if level == next_level:
+                return profile
+
         increases = [
             AbilityIncrease(ability="dexterity", amount=1),
             AbilityIncrease(ability="wisdom", amount=1),
@@ -138,120 +126,7 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
         profile = CharacterBuildProfile(**data)
         if level == 8:
             return profile
-        data = advance_profile_data(profile, 9)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(9),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 9"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 9:
-            return profile
-        data = advance_profile_data(profile, 10)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(10),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 10"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 10:
-            return profile
-        data = advance_profile_data(profile, 11)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(11),
-            source_references=[
-                *profile.source_references,
-                "D&D Basic Rules 2014: Ranger 11",
-                "D&D Basic Rules 2014: Hunter 11",
-            ],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 11:
-            return profile
-        increase = AbilityIncrease(ability="wisdom", amount=2)
-        data = advance_profile_data(profile, 12)
-        data.update(
-            advancement_increases=[*profile.advancement_increases, increase],
-            final_ability_scores=_apply(profile.final_ability_scores, [increase]),
-            feature_audits=build_ranger_hunter_2014_feature_audits(12),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 12"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 12:
-            return profile
-        data = advance_profile_data(profile, 13)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(13),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 13"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 13:
-            return profile
-        data = advance_profile_data(profile, 14)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(14),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 14"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 14:
-            return profile
-        data = advance_profile_data(profile, 15)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(15),
-            source_references=[
-                *profile.source_references,
-                "D&D Basic Rules 2014: Ranger 15",
-                "D&D Basic Rules 2014: Hunter 15",
-            ],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 15:
-            return profile
-        increase = AbilityIncrease(ability="wisdom", amount=2)
-        data = advance_profile_data(profile, 16)
-        data.update(
-            advancement_increases=[*profile.advancement_increases, increase],
-            final_ability_scores=_apply(profile.final_ability_scores, [increase]),
-            feature_audits=build_ranger_hunter_2014_feature_audits(16),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 16"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 16:
-            return profile
-        data = advance_profile_data(profile, 17)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(17),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 17"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 17:
-            return profile
-        data = advance_profile_data(profile, 18)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(18),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 18"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 18:
-            return profile
-        increases = [
-            AbilityIncrease(ability="wisdom", amount=1),
-            AbilityIncrease(ability="constitution", amount=1),
-        ]
-        data = advance_profile_data(profile, 19)
-        data.update(
-            advancement_increases=[*profile.advancement_increases, *increases],
-            final_ability_scores=_apply(profile.final_ability_scores, increases),
-            feature_audits=build_ranger_hunter_2014_feature_audits(19),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 19"],
-        )
-        profile = CharacterBuildProfile(**data)
-        if level == 19:
-            return profile
-        data = advance_profile_data(profile, 20)
-        data.update(
-            feature_audits=build_ranger_hunter_2014_feature_audits(20),
-            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 20"],
-        )
-        return CharacterBuildProfile(**data)
+        return advance_rowan_ashtrail_2014_high(profile, level)
     except Exception:
         logger.exception("Failed to compile 2014 Rowan Ashtrail profile at level %s.", level)
         raise
