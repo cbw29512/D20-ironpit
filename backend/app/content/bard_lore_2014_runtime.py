@@ -10,6 +10,8 @@ from app.content.bard_2014_initiative import build_bard_2014_initiative_refills
 from app.content.bard_lore_2014_profile import build_lyra_silverstring_2014_profile
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.cleric_2014_level1_spells import cure_wounds_2014, healing_word_2014
+from app.content.paladin_devotion_2014_spells import dispel_magic_2014
+from app.content.shared_spells_2014 import lesser_restoration_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
 
@@ -89,6 +91,12 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             initiative_bonus=scores.modifier("dexterity") + jack_bonus,
             weapon_attack=_attack(level, scores),
             healing_actions=healing,
+            condition_removal_actions=(
+                [lesser_restoration_2014()] if level >= 4 else []
+            ),
+            effect_removal_actions=(
+                [dispel_magic_2014()] if level >= 5 else []
+            ),
             d20_bonus_die_actions=[build_bardic_inspiration_2014(level)],
             initiative_resource_refill_grants=build_bard_2014_initiative_refills(level),
             reaction_roll_penalty_actions=(
