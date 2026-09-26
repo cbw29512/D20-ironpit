@@ -23,6 +23,7 @@ _CANTRIPS = (
     _spell("mage-hand", "Mage Hand", "utility", "arena-out-of-scope"),
     _spell("prestidigitation", "Prestidigitation", "utility", "arena-out-of-scope"),
     _spell("message", "Message", "utility", "arena-out-of-scope"),
+    _spell("minor-illusion", "Minor Illusion", "utility", "arena-out-of-scope", min_level=10),
 )
 
 _KNOWN = (
@@ -36,13 +37,16 @@ _KNOWN = (
     _spell("greater-invisibility", "Greater Invisibility", "buff", "condition", "concentration", level=4, min_level=7),
     _spell("dispel-magic", "Dispel Magic", "control", "effect-removal", level=3, min_level=8),
     _spell("creation", "Creation", "utility", "arena-out-of-scope", level=5, min_level=9),
+    _spell("teleportation-circle", "Teleportation Circle", "utility", "arena-out-of-scope", level=5, min_level=10),
+    _spell("move-earth", "Move Earth", "utility", "arena-out-of-scope", level=6, min_level=11),
+    _spell("teleport", "Teleport", "utility", "arena-out-of-scope", level=7, min_level=13),
 )
 
 
 def build_sorcerer_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 9.")
+        if level not in range(1, 14):
+            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 13.")
         from app.content.sorcerer_2014_progression import sorcerer_2014_level
 
         row = sorcerer_2014_level(level)
