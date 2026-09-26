@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 def build_rowan_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level not in range(1, 15):
-            raise ValueError("2014 Rowan combat fingerprint currently covers levels 1 through 14.")
+        if level not in range(1, 16):
+            raise ValueError("2014 Rowan combat fingerprint currently covers levels 1 through 15.")
         profile = build_rowan_ashtrail_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -59,4 +59,4 @@ def build_rowan_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 
 def build_rowan_2014_combat_profiles() -> list[PregenCombatProfile]:
-    return [build_rowan_2014_combat_profile(level) for level in range(1, 15)]
+    return [build_rowan_2014_combat_profile(level) for level in range(1, 16)]
