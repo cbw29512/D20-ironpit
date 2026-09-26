@@ -90,7 +90,7 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             action, target = d20_bonus_choice
             events.append(resolve_d20_bonus_die_grant(sequence, round_number, member, target, action))
             sequence += 1
-        self_buff = choose_timed_self_buff_action(member)
+        self_buff = choose_timed_self_buff_action(member, setup)
         if self_buff is not None:
             events.append(resolve_timed_self_buff(sequence, round_number, member, self_buff))
             sequence += 1
