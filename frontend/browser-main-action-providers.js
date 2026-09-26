@@ -94,7 +94,14 @@
     register({
       id: "area-weapon-attack", category: C().AREA_WEAPON_ATTACK, rulesets: BOTH,
       discover: ({ member, setup }) => {
-        const selected = AW()?.choose(member, setup) || null;
+        const runtime = AW();
+        if (!runtime) {
+          if (member.state.template.area_weapon_attack_actions?.length) {
+            throw new Error("Area weapon attack runtime is not loaded.");
+          }
+          return null;
+        }
+        const selected = runtime.choose(member, setup);
         return selected ? { payload: { selected } } : null;
       },
       resolve: ({ sequence, round, member, setup }, candidate) =>
