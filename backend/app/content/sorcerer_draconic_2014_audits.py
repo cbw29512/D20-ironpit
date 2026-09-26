@@ -4,8 +4,8 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level not in range(1, 6):
-        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 4.")
+    if level not in range(1, 7):
+        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 6.")
     rows = [
         FeatureAudit(
             feature_id="half-elf", feature_name="Half-Elf",
@@ -89,6 +89,18 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             notes=(
                 "Uses the universal point-origin radius area, Dexterity saving throw, fire damage, "
                 "half-on-success, and per-slot-level upcast scaling."
+            ),
+        ))
+    if level >= 6:
+        rows.append(FeatureAudit(
+            feature_id="elemental-affinity",
+            feature_name="Elemental Affinity",
+            source_reference="D&D Basic Rules 2014: Draconic Bloodline 6",
+            category="subclass", combat_relevant=True, automated=True,
+            notes=(
+                "Fire ancestry adds Charisma modifier to one fire-spell damage roll through the normal "
+                "spell damage bonus field. A qualifying cast may spend 1 Sorcery Point through the universal "
+                "spell-cast timed-resistance trigger to gain fire resistance for 1 hour."
             ),
         ))
     return rows
