@@ -38,6 +38,63 @@
     }
   }
 
+  function resolveEffect(sequence, round, caster, setup, choice, turnKey) {
+    try {
+      const spell = scaledSpell(choice.action, choice.slotLevel);
+      const placement = choice.placement;
+      const members = new Map([...setup.heroes, ...setup.monsters]
+        .map((member) => [member.combatant_id, member]));
+      const action = saveAction(choice);
+      const events = [];
+      let sharedDamageRolls = null;
+
+      for (const targetId of choice.targetIds) {
+        const target = members.get(targetId);
+        if (!target) throw new Error(`Save-spell target ${targetId} is unavailable.`);
+        const ward = (spell.areaRadius || spell.area)
+          ? null
+          : (window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null);
+        if (ward && !ward.succeeded) {
+          events.push(window.IRON_PIT_BROWSER_TARGETING_WARDS
+            .blocked(sequence++, round, caster, target, spell.name, ward));
+          continue;
+        }
+        const event = V().resolveAction(
+          sequence, round, caster, target, action,
+          placement ? 0 : S().distance(caster, target),
+          { spendAction: false, sharedDamageRolls, spellEffect: true, setup },
+        );
+        sequence += 1;
+        if (ward) {
+          window.IRON_PIT_BROWSER_TARGETING_WARDS
+            .annotate(event, ward, caster.state.template.name);
+        }
+        if (event.save_succeeded === false && (spell.failedSaveModifierEffects || []).length) {
+          if (!SM() || !M()) throw new Error("Failed-save spell modifiers require browser modifier runtimes.");
+          spell.failedSaveModifierEffects.forEach((effect, index) => {
+            M().add(target.state, SM().build(
+              caster.combatant_id, target.combatant_id, spell, effect, index, round,
+            ));
+          });
+        }
+        const chain = DR()
+          ? DR().chain(sequence, round, caster, event, setup, turnKey)
+          : { events: [event], sequence };
+        events.push(...chain.events);
+        sequence = chain.sequence;
+        if (sharedDamageRolls == null && event.damage_components?.length) {
+          sharedDamageRolls = action.damageComponents?.length
+            ? event.damage_components.map((component) => [...component.rolls])
+            : [...event.damage_components[0].rolls];
+        }
+      }
+      return { events, sequence };
+    } catch (error) {
+      console.error("Browser save-spell effect resolution failed", { caster: caster?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function resolve(sequence, round, caster, setup, choice, turnKey) {
     try {
       const spell = choice.action;
@@ -61,7 +118,10 @@
         if (!CONC()) throw new Error("Browser Concentration runtime is not loaded.");
         const durationRounds = (spell.durationMinutes || 0) * 10;
         if (durationRounds <= 0) throw new Error("Concentration save spell requires a positive duration.");
-        CONC().start(caster.state, caster.combatant_id, spell.id, round, allStates, round + durationRounds, choice.slotLevel > 0 ? choice.slotLevel : null);
+        CONC().start(
+          caster.state, caster.combatant_id, spell.id, round, allStates,
+          round + durationRounds, choice.slotLevel > 0 ? choice.slotLevel : null,
+        );
       }
 
       const placement = choice.placement;
@@ -72,49 +132,19 @@
       const events = [{
         sequence: sequence++, round_number: round, event_type: "feature",
         actor_id: caster.combatant_id, actor_name: caster.state.template.name,
-        feature_id: spell.id, resource_remaining: remaining, animation: spell.animation || "spell-save",
+        feature_id: spell.id, resource_remaining: remaining,
+        animation: spell.animation || "spell-save",
         description: `${caster.state.template.name} casts ${spell.name} using a ${slotText}.${detail}`,
       }];
 
-      const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
-      const action = saveAction(choice);
-      let sharedDamageRolls = null;
-      for (const targetId of choice.targetIds) {
-        const target = members.get(targetId);
-        const ward = (spell.areaRadius || spell.area) ? null : (window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null);
-        if (ward && !ward.succeeded) {
-          events.push(window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence++, round, caster, target, spell.name, ward));
-          continue;
-        }
-        const event = V().resolveAction(
-          sequence, round, caster, target, action, placement ? 0 : S().distance(caster, target),
-          { spendAction: false, sharedDamageRolls, spellEffect: true, setup },
-        );
-        sequence += 1;
-        if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);
-        if (event.save_succeeded === false && (spell.failedSaveModifierEffects || []).length) {
-          if (!SM() || !M()) throw new Error("Failed-save spell modifiers require browser modifier runtimes.");
-          spell.failedSaveModifierEffects.forEach((effect, index) => {
-            M().add(target.state, SM().build(
-              caster.combatant_id, target.combatant_id, spell, effect, index, round,
-            ));
-          });
-        }
-        const chain = DR() ? DR().chain(sequence, round, caster, event, setup, turnKey)
-          : { events: [event], sequence };
-        events.push(...chain.events); sequence = chain.sequence;
-        if (sharedDamageRolls == null && event.damage_components?.length) {
-          sharedDamageRolls = action.damageComponents?.length
-            ? event.damage_components.map((component) => [...component.rolls])
-            : [...event.damage_components[0].rolls];
-        }
-      }
-      return { events, sequence };
+      const effect = resolveEffect(sequence, round, caster, setup, choice, turnKey);
+      events.push(...effect.events);
+      return { events, sequence: effect.sequence };
     } catch (error) {
       console.error("Browser save-spell resolution failed", { caster: caster?.combatant_id, error });
       throw error;
     }
   }
 
-  window.IRON_PIT_BROWSER_SPELL_RESOLUTION = { resolve, saveAction };
+  window.IRON_PIT_BROWSER_SPELL_RESOLUTION = { resolve, resolveEffect, saveAction };
 })();
