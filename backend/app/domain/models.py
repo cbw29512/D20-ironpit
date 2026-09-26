@@ -1,3 +1,4 @@
+from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.actions import (
     AttackActionDefinition,
     AttackActionSlot,
@@ -56,6 +57,7 @@ from app.domain.turbo import (
 )
 
 __all__ = [
+    "AreaWeaponAttackAction",
     "ArenaRoster",
     "AttackActionDefinition",
     "AttackActionSlot",
