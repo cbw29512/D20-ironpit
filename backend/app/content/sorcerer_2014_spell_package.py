@@ -40,13 +40,14 @@ _KNOWN = (
     _spell("teleportation-circle", "Teleportation Circle", "utility", "arena-out-of-scope", level=5, min_level=10),
     _spell("move-earth", "Move Earth", "utility", "arena-out-of-scope", level=6, min_level=11),
     _spell("teleport", "Teleport", "utility", "arena-out-of-scope", level=7, min_level=13),
+    _spell("tongues", "Tongues", "utility", "arena-out-of-scope", level=3, min_level=15),
 )
 
 
 def build_sorcerer_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 13.")
+        if level not in range(1, 17):
+            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 16.")
         from app.content.sorcerer_2014_progression import sorcerer_2014_level
 
         row = sorcerer_2014_level(level)
