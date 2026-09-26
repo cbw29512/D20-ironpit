@@ -127,7 +127,7 @@
     if (sneak) components.push(bonusComponent(sneak, critical));
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
-    const oncePerTurnHit = window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamage(attacker, turnKey);
+    const oncePerTurnHit = window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamage(attacker, turnKey, target, attack);
     if (oncePerTurnHit) components.push(bonusComponent(oncePerTurnHit, critical));
     const brutalStrike = window.IRON_PIT_BROWSER_BRUTAL_STRIKE?.bonusDamage(
       attacker, attack, turnKey, mode === "disadvantage",
