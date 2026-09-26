@@ -85,7 +85,7 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             feature_id="fireball",
             feature_name="Fireball",
             source_reference="D&D Basic Rules 2014: Fireball",
-            category="spell", combat_relevant=True, automated=True,
+            category="class", combat_relevant=True, automated=True,
             notes=(
                 "Uses the universal point-origin radius area, Dexterity saving throw, fire damage, "
                 "half-on-success, and per-slot-level upcast scaling."
@@ -108,7 +108,7 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             feature_id="greater-invisibility",
             feature_name="Greater Invisibility",
             source_reference="D&D Basic Rules 2014: Greater Invisibility",
-            category="spell", combat_relevant=True, automated=True,
+            category="class", combat_relevant=True, automated=True,
             notes=(
                 "Reuses the shared 2014 defensive-spell path, Invisible condition, concentration lifecycle, "
                 "and Iron Pit opening-buff policy."
@@ -130,7 +130,7 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
                 feature_id="dispel-magic",
                 feature_name="Dispel Magic",
                 source_reference="D&D Basic Rules 2014: Dispel Magic",
-                category="spell", combat_relevant=True, automated=True,
+                category="class", combat_relevant=True, automated=True,
                 notes="Reuses the existing universal effect-removal action and spell-slot resource path.",
             ),
         ]
@@ -139,7 +139,7 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             feature_id="creation",
             feature_name="Creation",
             source_reference="D&D Basic Rules 2014: Creation",
-            category="spell", combat_relevant=False, automated=True,
+            category="class", combat_relevant=False, automated=True,
             notes="Legal fifth-level Sorcerer spell choice recorded as arena-neutral; no combat resolver is required.",
         ))
     return rows
