@@ -27,7 +27,10 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
             feature_id="favored-enemy", feature_name="Favored Enemy",
             source_reference="D&D Basic Rules 2014: Ranger 1",
             category="class", combat_relevant=False, automated=True,
-            notes="Tracking and information-recall benefits do not alter standard Iron Pit combat at level 1.",
+            notes=(
+                "Canonical favored enemy: monstrosities. Tracking and information-recall benefits are arena-neutral "
+                "until Foe Slayer uses the stored creature-type choice at level 20."
+            ),
         ),
         FeatureAudit(
             feature_id="natural-explorer", feature_name="Natural Explorer",
@@ -89,7 +92,10 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 feature_id="favored-enemy-improvement-6", feature_name="Favored Enemy Improvement",
                 source_reference="D&D Basic Rules 2014: Ranger 6",
                 category="class", combat_relevant=False, automated=True,
-                notes="Adds another favored enemy/language choice; tracking/recall remains arena-neutral.",
+                notes=(
+                    "Canonical additional favored enemy: undead. Tracking/recall remains arena-neutral "
+                    "until Foe Slayer uses the stored creature-type choice at level 20."
+                ),
             ),
             FeatureAudit(
                 feature_id="natural-explorer-improvement-6", feature_name="Natural Explorer Improvement",
@@ -161,7 +167,10 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 feature_id="favored-enemy-improvement-14", feature_name="Favored Enemy Improvement",
                 source_reference="D&D Basic Rules 2014: Ranger 14",
                 category="class", combat_relevant=False, automated=True,
-                notes="Adds another favored enemy/language choice; tracking and recall remain arena-neutral.",
+                notes=(
+                    "Canonical additional favored enemy: fiends. Tracking and recall remain arena-neutral "
+                    "until Foe Slayer uses the stored creature-type choice at level 20."
+                ),
             ),
             FeatureAudit(
                 feature_id="vanish", feature_name="Vanish",
@@ -216,6 +225,17 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
             notes=(
                 "Canonical archer progression raises Wisdom 19 to 20 and Constitution 14 to 15. "
                 "The Wisdom increase improves Ranger spellcasting and the level-20 Foe Slayer modifier."
+            ),
+        ))
+    if level >= 20:
+        rows.append(FeatureAudit(
+            feature_id="foe-slayer", feature_name="Foe Slayer",
+            source_reference="D&D Basic Rules 2014: Ranger 20",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "Uses the RAW damage-roll option deterministically on the first successful weapon hit each turn "
+                "against Rowan's favored enemy types (monstrosity, undead, fiend). Reuses the generic "
+                "once-per-turn hit rider with a flat Wisdom modifier and creature-type qualification."
             ),
         ))
     return rows
