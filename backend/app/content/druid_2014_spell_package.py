@@ -81,6 +81,10 @@ _PREPARED = (
         "scrying", "Scrying", "utility",
         "arena-out-of-scope", level=5, min_level=10,
     ),
+    _spell(
+        "find-the-path", "Find the Path", "utility",
+        "arena-out-of-scope", level=6, min_level=11,
+    ),
 )
 
 
