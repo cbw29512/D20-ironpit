@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 def _resource(member: EncounterCombatant, action: TimedSelfBuffAction):
     try:
+        if action.resource_id is None:
+            return None
         return next((item for item in member.state.resources if item.id == action.resource_id), None)
     except Exception as exc:
         logger.exception("Timed self-buff resource lookup failed for %s.", member.combatant_id)
@@ -40,8 +42,7 @@ def choose_timed_self_buff_action(member: EncounterCombatant) -> TimedSelfBuffAc
             resource = _resource(member, action)
             if (
                 is_available(member.state, action.action_cost)
-                and resource is not None
-                and resource.current_uses >= action.resource_cost
+                and (action.resource_id is None or (resource is not None and resource.current_uses >= action.resource_cost))
                 and not timed_self_buff_active(member, action)
             ):
                 choices.append(action)
@@ -62,13 +63,14 @@ def resolve_timed_self_buff(
         resource = _resource(member, action)
         if not is_available(member.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
-        if resource is None or resource.current_uses < action.resource_cost:
+        if action.resource_id is not None and (resource is None or resource.current_uses < action.resource_cost):
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if timed_self_buff_active(member, action):
             raise ValueError(f"{action.name} is already active.")
 
         spend(member.state, action.action_cost)
-        resource.current_uses -= action.resource_cost
+        if resource is not None:
+            resource.current_uses -= action.resource_cost
         applied: list[str] = []
         defenses_attached = False
         for condition_id in action.condition_ids:
@@ -140,7 +142,7 @@ def resolve_timed_self_buff(
             target_name=member.state.template.name,
             applied_condition_ids=applied,
             feature_id=action.id,
-            resource_remaining=resource.current_uses,
+            resource_remaining=resource.current_uses if resource is not None else None,
             animation=action.animation,
             description=f"{member.state.template.name} uses {action.name}.",
         )
