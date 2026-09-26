@@ -155,4 +155,22 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
             category="class", combat_relevant=True, automated=True,
             notes="Canonical archer progression raises Wisdom from 15 to 17; shared math recomputes Wisdom-derived values.",
         ))
+    if level >= 14:
+        rows += [
+            FeatureAudit(
+                feature_id="favored-enemy-improvement-14", feature_name="Favored Enemy Improvement",
+                source_reference="D&D Basic Rules 2014: Ranger 14",
+                category="class", combat_relevant=False, automated=True,
+                notes="Adds another favored enemy/language choice; tracking and recall remain arena-neutral.",
+            ),
+            FeatureAudit(
+                feature_id="vanish", feature_name="Vanish",
+                source_reference="D&D Basic Rules 2014: Ranger 14",
+                category="class", combat_relevant=False, automated=False,
+                notes=(
+                    "Bonus Action Hide has no automatic legal Hide position in the standard Iron Pit arena, "
+                    "and the nonmagical tracking protection is noncombat. No Ranger-specific stealth resolver is created."
+                ),
+            ),
+        ]
     return rows
