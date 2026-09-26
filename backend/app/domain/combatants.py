@@ -16,6 +16,7 @@ from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import DamageReactionAttack, ParryReaction, RedirectAttackReaction
 from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
+from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.recharge import RechargeRule
 from app.domain.replacement_form_actions import ReplacementFormAction
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
@@ -82,6 +83,7 @@ class CombatantTemplate(BaseModel):
     initiative_resource_refill_grants: list[InitiativeResourceRefillGrant] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     replacement_form_actions: list[ReplacementFormAction] = Field(default_factory=list)
+    concentration_repeat_save_actions: list[ConcentrationRepeatSaveAction] = Field(default_factory=list)
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
