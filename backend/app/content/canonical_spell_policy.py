@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.canonical_spell_packages import build_class_spell_package
+from app.content.bard_2014_spell_package import build_bard_2014_spell_package
 from app.content.cleric_2014_spell_package import build_cleric_2014_spell_package
 from app.content.paladin_2014_spell_package import build_paladin_2014_spell_package
 from app.domain.character_builds import RulesetId
@@ -21,6 +22,8 @@ def canonical_spell_package(
     if class_id not in CASTER_CLASS_IDS:
         return None
     if ruleset == "2014":
+        if class_id == "bard":
+            return build_bard_2014_spell_package(level)
         if class_id == "cleric":
             if casting_modifier is None:
                 raise ValueError("2014 Cleric spell preparation requires the Wisdom modifier.")

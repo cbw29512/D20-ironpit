@@ -27,6 +27,7 @@ window.IRON_PIT_BROWSER_ROLLS = {
 };
 
 load("browser-dodge.js");
+load("browser-saving-throws.js");
 load("browser-saves.js");
 
 const actor = {

@@ -4,6 +4,7 @@ import logging
 from dataclasses import dataclass
 
 from app.combat.action_economy import is_available
+from app.combat.condition_rules import can_see
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import AreaPlacement, best_area_placement
@@ -56,6 +57,8 @@ def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, act
             target for target in enemies
             if target.state.is_alive and not target.state.is_dead and target.state.current_hp > 0
             and combatant_distance(caster, target) <= action.range_ft
+            and (not action.requires_target_hearing or "deafened" not in target.state.active_effect_ids)
+            and (not action.requires_target_sight or can_see(caster.state, target.state))
         ]
     except Exception as exc:
         logger.exception("Failed to determine legal targets for spell %s.", action.id)

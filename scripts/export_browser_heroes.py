@@ -193,6 +193,35 @@ def _healing(action: Any) -> dict[str, Any]:
         raise
 
 
+def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id, "name": action.name, "actionCost": action.action_cost,
+            "range": action.range_ft, "targetMode": action.target_mode,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "diceCount": action.dice_count, "diceSize": action.dice_size,
+            "testKinds": list(action.test_kinds), "durationRounds": action.duration_rounds,
+            "priority": action.priority, "animation": action.animation,
+            **({"exclusiveGroup": action.exclusive_group} if action.exclusive_group else {}),
+        }
+    except Exception:
+        logger.exception("Failed to serialize d20 bonus-die action %s.", action.id)
+        raise
+
+
+def _reaction_roll_penalty(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "range": action.range_ft,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "diceCount": action.dice_count, "diceSize": action.dice_size,
+        "rollKinds": list(action.roll_kinds),
+        "requiresSourceSight": action.requires_source_sight,
+        "requiresTargetHearing": action.requires_target_hearing,
+        "blockedTargetConditionImmunity": action.blocked_target_condition_immunity,
+        "priority": action.priority, "animation": action.animation,
+    }
+
+
 def _save_advantage_grant(grant: Any) -> dict[str, Any]:
     row = grant.model_dump(mode="json")
     if not grant.required_effect_tags:
@@ -215,6 +244,12 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["savingThrowAdvantageGrants"] = [
             _save_advantage_grant(item) for item in action.saving_throw_advantage_grants
         ]
+    if action.ends_if_source_incapacitated:
+        row["endsIfSourceIncapacitated"] = True
+    if action.ends_if_source_dead:
+        row["endsIfSourceDead"] = True
+    if action.friendly_save_advantage_aura is not None:
+        row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     return row
@@ -344,12 +379,20 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["turning_failure_destroy_max_cr"] = progression.turning_failure_destroy_max_cr
     if progression.slot_healing_other_self_rider:
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
+    if template.d20_bonus_die_actions:
+        row["d20BonusDieActions"] = [_d20_bonus_die_action(item) for item in template.d20_bonus_die_actions]
+    if template.reaction_roll_penalty_actions:
+        row["reactionRollPenaltyActions"] = [_reaction_roll_penalty(item) for item in template.reaction_roll_penalty_actions]
     if progression.outgoing_healing_dice_maximizer:
         row["outgoing_healing_dice_maximizer"] = progression.outgoing_healing_dice_maximizer.model_dump()
     if progression.once_per_turn_weapon_hit_damage_rider:
         row["once_per_turn_weapon_hit_damage_rider"] = progression.once_per_turn_weapon_hit_damage_rider.model_dump()
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
+    if progression.resource_backed_d20_bonus_dice:
+        row["resource_backed_d20_bonus_dice"] = [
+            item.model_dump() for item in progression.resource_backed_d20_bonus_dice
+        ]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
     if progression.indomitable_bonus: row["indomitable_bonus"] = progression.indomitable_bonus
     if progression.tactical_master_sap_weapon_ids: row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)

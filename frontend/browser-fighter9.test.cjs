@@ -79,6 +79,7 @@ load("browser-tactical-master.js");
 load("browser-graze.js");
 load("browser-modifiers.js");
 load("browser-attack.js");
+load("browser-saving-throws.js");
 load("browser-saves.js");
 load("browser-indomitable.js");
 

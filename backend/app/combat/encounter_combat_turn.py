@@ -13,6 +13,7 @@ from app.combat.dodge import resolve_dodge_action
 from app.combat.deferred_save_effect import cleanup_deferred_effects, resolve_deferred_save_effect
 from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, resolve_support_actions, save_choice
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
+from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
@@ -45,6 +46,7 @@ def resolve_combat_turn(
         cleanup_deferred_effects(setup)
         cleanup_grapples(setup)
         sync_paladin_auras_2014(setup)
+        sync_friendly_save_auras(setup)
         start_events, sequence = begin_turn_with_events(
             sequence, round_number, attacker.combatant_id, attacker.state, dice,
         )
@@ -100,6 +102,9 @@ def resolve_combat_turn(
             sequence, round_number, attacker, targets[0], dice, setup,
         )
         events.extend(charge_events)
+        if charged:
+            sync_paladin_auras_2014(setup)
+            sync_friendly_save_auras(setup)
         if charged or attacker.state.is_dead or attacker.state.is_unconscious:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
@@ -108,6 +113,7 @@ def resolve_combat_turn(
         )
         events.extend(movement_events)
         sync_paladin_auras_2014(setup)
+        sync_friendly_save_auras(setup)
         if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 

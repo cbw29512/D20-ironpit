@@ -3,6 +3,7 @@
 
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
 
   function build(sourceId, targetId, spell, effect, index, roundNumber = null) {
     let expiry = null;
@@ -40,11 +41,21 @@
     const built = targets.flatMap(({ targetId, state }) => (spell.modifierEffects || [])
       .map((effect, index) => ({ state, modifier: build(sourceId, targetId, spell, effect, index, roundNumber) })));
     const modifiers = built.map(({ modifier }) => modifier);
+    const durationRounds = spell.durationMinutes * 10;
+    const expiresRound = roundNumber + durationRounds + (roundNumber === 0 ? 1 : 0);
     if (spell.concentration) {
       if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
-      const durationRounds = spell.durationMinutes * 10;
-      const expiresRound = roundNumber + durationRounds + (roundNumber === 0 ? 1 : 0);
       C().start(owner, sourceId, spell.id, roundNumber, states, expiresRound);
+    }
+    if ((spell.conditionIds || []).length && !T()) throw new Error("Browser timed-condition runtime is not loaded.");
+    for (const { targetId, state } of targets) {
+      for (const conditionId of spell.conditionIds || []) {
+        T().apply(state, conditionId, sourceId, {
+          sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
+          appliedRound: roundNumber, expiresRound, expiryTiming: "source_turn_start",
+          useDefaultPoisonRecovery: false,
+        });
+      }
     }
     for (const { state, modifier } of built) M().add(state, modifier);
     return modifiers;

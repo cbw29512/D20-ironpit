@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.barbarian_berserker_2014_combat_profile import build_rokhan_2014_combat_profiles
+from app.content.bard_lore_2014_combat_profile import build_lyra_2014_combat_profiles
 from app.content.cleric_life_2014_combat_profile import build_seraphine_2014_combat_profiles
 from app.content.fighter_champion_2014_combat_profile import build_karnok_2014_combat_profiles
 from app.content.monk_open_hand_2014_combat_profile import build_kael_2014_combat_profiles
@@ -15,6 +16,7 @@ def build_all_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     edition_profiles = [
         *build_karnok_2014_combat_profiles(),
         *build_rokhan_2014_combat_profiles(),
+        *build_lyra_2014_combat_profiles(),
         *build_seraphine_2014_combat_profiles(),
         *build_mara_2014_combat_profiles(),
         *build_kael_2014_combat_profiles(),

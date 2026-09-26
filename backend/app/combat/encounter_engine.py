@@ -16,7 +16,7 @@ from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.intimidating_presence_2014 import end_invalid_presence
 from app.combat.initiative_resource_refill import resolve_initiative_resource_refills
 from app.combat.modifier_stack import expire_source_turn_modifiers
-from app.combat.precombat_spells import prepare_defenses
+from app.combat.precombat_buffs import prepare_opening_buffs
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
@@ -69,7 +69,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
     """Run the currently certified combat subset over a 1-6 vs. 1-6 encounter."""
     try:
         setup = build_encounter_setup(selection)
-        events, sequence = prepare_defenses(setup, 1)
+        events, sequence = prepare_opening_buffs(setup, 1)
         initiative = roll_encounter_initiative(setup, dice)
         combatants = [*setup.heroes, *setup.monsters]
         by_id = _combatant_index(combatants)

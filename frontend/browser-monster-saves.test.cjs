@@ -44,6 +44,7 @@ window.IRON_PIT_BROWSER_ROLLS = {
     return advantage > 0 ? "advantage" : "disadvantage";
   },
 };
+load("browser-saving-throws.js");
 load("browser-saves.js");
 const state = { template: goat, active_effect_ids: [] };
 assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "strength", { conditionId: "prone" }), "advantage");

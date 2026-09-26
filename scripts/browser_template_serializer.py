@@ -190,6 +190,16 @@ def _save(action: Any) -> dict[str, Any]:
         row["magicalEffect"] = True
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
+    if action.requires_target_hearing:
+        row["requiresTargetHearing"] = True
+    if action.requires_target_sight:
+        row["requiresTargetSight"] = True
+    if action.failed_save_timed_effect is not None:
+        row["failedSaveTimedEffect"] = {
+            "effectId": action.failed_save_timed_effect.effect_id,
+            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
+            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+        }
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
@@ -208,6 +218,16 @@ def _spell(action: Any) -> dict[str, Any]:
     }
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
+    if action.requires_target_hearing:
+        row["requiresTargetHearing"] = True
+    if action.requires_target_sight:
+        row["requiresTargetSight"] = True
+    if action.failed_save_timed_effect is not None:
+        row["failedSaveTimedEffect"] = {
+            "effectId": action.failed_save_timed_effect.effect_id,
+            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
+            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+        }
     if action.area_radius_ft is not None:
         row["areaRadius"] = action.area_radius_ft
     if action.damage_components:
@@ -292,6 +312,7 @@ def defense_row(action: Any) -> dict[str, Any]:
         "temporaryHp": action.temporary_hp,
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
         "damageResistances": list(action.damage_resistances),
+        "conditionIds": list(action.condition_ids),
         "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
         "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
     }
@@ -302,6 +323,35 @@ def defense_row(action: Any) -> dict[str, Any]:
     if action.source:
         row["source"] = action.source
     return row
+
+
+def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id, "name": action.name, "actionCost": action.action_cost,
+            "range": action.range_ft, "targetMode": action.target_mode,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "diceCount": action.dice_count, "diceSize": action.dice_size,
+            "testKinds": list(action.test_kinds), "durationRounds": action.duration_rounds,
+            "priority": action.priority, "animation": action.animation,
+            **({"exclusiveGroup": action.exclusive_group} if action.exclusive_group else {}),
+        }
+    except Exception:
+        logger.exception("Failed to serialize d20 bonus-die action %s.", action.id)
+        raise
+
+
+def _reaction_roll_penalty(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "range": action.range_ft,
+        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+        "diceCount": action.dice_count, "diceSize": action.dice_size,
+        "rollKinds": list(action.roll_kinds),
+        "requiresSourceSight": action.requires_source_sight,
+        "requiresTargetHearing": action.requires_target_hearing,
+        "blockedTargetConditionImmunity": action.blocked_target_condition_immunity,
+        "priority": action.priority, "animation": action.animation,
+    }
 
 
 def _save_advantage_grant(grant: Any) -> dict[str, Any]:
@@ -326,6 +376,12 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["savingThrowAdvantageGrants"] = [
             _save_advantage_grant(item) for item in action.saving_throw_advantage_grants
         ]
+    if action.ends_if_source_incapacitated:
+        row["endsIfSourceIncapacitated"] = True
+    if action.ends_if_source_dead:
+        row["endsIfSourceDead"] = True
+    if action.friendly_save_advantage_aura is not None:
+        row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     return row
@@ -456,6 +512,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions:
             row["healingActions"] = [_healing(item) for item in template.healing_actions]
+        if template.d20_bonus_die_actions:
+            row["d20BonusDieActions"] = [_d20_bonus_die_action(item) for item in template.d20_bonus_die_actions]
+        if template.reaction_roll_penalty_actions:
+            row["reactionRollPenaltyActions"] = [_reaction_roll_penalty(item) for item in template.reaction_roll_penalty_actions]
         if template.persistent_hazard_actions:
             row["persistent_hazard_actions"] = [
                 persistent_hazard_row(item) for item in template.persistent_hazard_actions

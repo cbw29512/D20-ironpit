@@ -4535,6 +4535,8 @@
         "success_damage": "half",
         "damage_components": [],
         "upcast_dice_per_level": 1,
+        "requires_target_hearing": false,
+        "requires_target_sight": false,
         "concentration": false,
         "animation": "inflict-wounds"
       },
@@ -4553,6 +4555,8 @@
         "success_damage": "half",
         "damage_components": [],
         "upcast_dice_per_level": 1,
+        "requires_target_hearing": false,
+        "requires_target_sight": false,
         "concentration": false,
         "animation": "inflict-wounds"
       }
@@ -4573,6 +4577,7 @@
         "max_hp_increase": 0,
         "current_hp_increase": 0,
         "damage_resistances": [],
+        "condition_ids": [],
         "modifier_effects": [
           {
             "kind": "speed",

@@ -8,9 +8,9 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-ability-checks.js",
+  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-d20-bonus-dice.js", "browser-ability-checks.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-d20-test-override.js", "browser-miss-to-hit-override.js", "browser-attack.js", "browser-saves.js",
+  "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-d20-test-override.js", "browser-miss-to-hit-override.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js",
 ]) load(file);
 
 const Q = window.IRON_PIT_BROWSER_CONDITION_RULES;
@@ -213,3 +213,26 @@ console.log("Browser condition/action-economy integration regressions passed.");
 require("./browser-condition-removal.test.cjs");
 require("./browser-condition-lifecycle.test.cjs");
 require("./browser-fighter-progression.test.cjs");
+
+
+{
+  const checking = member("resource-backed-d20-check");
+  checking.state.template.resource_backed_d20_bonus_dice = [{
+    source_id: "peerless-skill",
+    source_name: "Peerless Skill",
+    resource_id: "bardic-inspiration",
+    resource_cost: 1,
+    dice_count: 1,
+    dice_size: 10,
+    test_kinds: ["ability_check"],
+  }];
+  checking.state.resources["bardic-inspiration"] = 5;
+  window.IRON_PIT_DICE = { roll: () => 6, rollMany: (count) => Array.from({ length: count }, () => 6) };
+  const original = { notation: "1d20+3", rolls: [7], selected_roll: 7, modifier: 3, total: 10, mode: "normal", revisions: [] };
+  const resolved = window.IRON_PIT_BROWSER_ABILITY_CHECKS.resolve(checking.state, "dexterity", original, 16);
+  assert.equal(resolved.succeeded, true);
+  assert.equal(resolved.roll.total, 16);
+  assert.deepEqual(resolved.roll.rolls, [7, 6]);
+  assert.match(resolved.roll.notation, /Peerless Skill/);
+  assert.equal(checking.state.resources["bardic-inspiration"], 4);
+}

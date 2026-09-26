@@ -3,7 +3,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_TURN;
   const L = () => window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
-  const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
+  const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;

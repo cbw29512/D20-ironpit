@@ -35,17 +35,18 @@ def resolve_defensive_spell(
         raise ValueError(f"No level {slot_level} spell slot remains for {spell.name}.")
     if not targets:
         raise ValueError(f"{spell.name} has no legal precombat targets.")
-    if member.state.opening_buff_spell_id is not None:
+    if member.state.opening_buff_id is not None:
         raise ValueError(f"{member.state.template.name} already committed its one opening buff this battle.")
     if spell.concentration and member.state.concentration is not None:
         raise ValueError(f"{member.state.template.name} is already concentrating and will not replace the active buff automatically.")
     if any(
         spell.id in target.state.active_buff_effect_ids
         or any(modifier.source_effect_id == spell.id for modifier in target.state.active_modifiers)
+        or any(effect.source_effect_id == spell.id for effect in target.state.timed_effects)
         for target in targets
     ):
         raise ValueError(f"{spell.name} is already active on a selected target.")
-    member.state.opening_buff_spell_id = spell.id
+    member.state.opening_buff_id = spell.id
     resource.current_uses -= 1
     temp_hp_details: list[str] = []
     for target in targets:
@@ -75,6 +76,7 @@ def resolve_defensive_spell(
         details.append(f"+{spell.current_hp_increase} current Hit Points")
     if spell.damage_resistances:
         details.append("resistance to " + ", ".join(spell.damage_resistances))
+    details.extend(spell.condition_ids)
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
     if spell.concentration:
         details.append("Concentration")

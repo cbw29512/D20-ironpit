@@ -20,10 +20,11 @@ load("browser-catalog.js");
   assert.equal(catalog.ruleset, "2014");
   assert.equal(catalog.test_lane, true);
   assert.equal(catalog.hero_count, 240);
-  assert.equal(catalog.hero_ready_count, 120);
+  assert.equal(catalog.hero_ready_count, catalog.heroes.length);
+  assert.ok(catalog.hero_ready_count >= 120);
   assert.equal(catalog.monster_count, 327);
   assert.equal(catalog.monster_ready_count, 129);
-  assert.equal(catalog.heroes.length, 120);
+  assert.equal(catalog.heroes.length, catalog.hero_ready_count);
   assert.equal(catalog.monsters.length, 129);
   assert.ok(catalog.heroes.every((card) => card.ruleset === "2014" && card.kind === "character"));
   assert.ok(catalog.monsters.every((card) => card.ruleset === "2014" && card.kind === "monster"));
@@ -33,12 +34,20 @@ load("browser-catalog.js");
   const monks = catalog.heroes.filter((card) => card.class_id === "monk");
   const paladins = catalog.heroes.filter((card) => card.class_id === "paladin");
   const clerics = catalog.heroes.filter((card) => card.class_id === "cleric");
+  const bards = catalog.heroes.filter((card) => card.class_id === "bard");
   assert.deepEqual(fighters.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(barbarians.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(rogues.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(monks.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(paladins.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
   assert.deepEqual(clerics.map((card) => card.level), Array.from({ length: 20 }, (_, i) => i + 1));
+  if (bards.length) {
+    assert.deepEqual(
+      bards.map((card) => card.level),
+      Array.from({ length: bards.length }, (_, i) => i + 1),
+    );
+    assert.ok(bards.every((card) => card.name === "Lyra Silverstring"));
+  }
   assert.ok(fighters.every((card) => card.name === "Karnok Stoneward"));
   assert.ok(barbarians.every((card) => card.name === "Rokhan Stonefury"));
   assert.ok(rogues.every((card) => card.name === "Mara Quickstep"));

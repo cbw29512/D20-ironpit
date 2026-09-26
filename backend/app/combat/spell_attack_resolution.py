@@ -11,12 +11,17 @@ from app.combat.conditions import attack_roll_condition_sources
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.next_attack_disadvantage import (
+    consume_next_attack_disadvantage,
+    next_attack_disadvantage_sources,
+)
 from app.combat.modifier_stack import (
     add_modifier, apply_d20_bonus_dice, attacks_against_advantage_sources,
     consume_attacks_against_advantage, consume_next_attack_against_advantage,
     effective_armor_class, next_attack_against_advantage_sources,
 )
 from app.combat.reckless_attack import attacks_against_reckless_advantage
+from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_modifiers import build_spell_modifier
@@ -80,12 +85,24 @@ def resolve_spell_attack(
         advantage += attacks_against_reckless_advantage(target.state)
         advantage += next_attack_against_advantage_sources(caster.state, target.combatant_id)
         close_threat = spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
-        mode = resolve_roll_mode(advantage, condition_disadvantage + sap_disadvantage(caster.state) + int(close_threat))
+        mode = resolve_roll_mode(
+            advantage,
+            condition_disadvantage
+            + sap_disadvantage(caster.state)
+            + next_attack_disadvantage_sources(caster.state)
+            + int(close_threat),
+        )
         target_ac = effective_armor_class(target.state)
         base_roll = roll_d20(dice, spell.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(caster.state, base_roll, target_ac, dice)
         attack_roll = apply_d20_bonus_dice(caster.state, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
+        reaction_penalty = apply_reaction_roll_penalty_if_useful(
+            caster, setup, "attack", attack_roll, dice, threshold=target_ac,
+        )
+        if reaction_penalty is not None:
+            attack_roll = reaction_penalty.roll
         consume_next_attack_against_advantage(caster.state, target.combatant_id)
+        consume_next_attack_disadvantage(caster.state)
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
@@ -113,6 +130,11 @@ def resolve_spell_attack(
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
+        if reaction_penalty is not None:
+            description += (
+                f" {reaction_penalty.source_name} uses {reaction_penalty.action_id} "
+                f"to subtract {reaction_penalty.penalty_total} from the attack roll."
+            )
         if ward is not None:
             description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
         event = BattleEvent(

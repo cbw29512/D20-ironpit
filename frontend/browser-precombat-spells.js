@@ -13,7 +13,8 @@
     if (member.state.concentration?.effect_id === spell.id) return true;
     const side = member.side === "heroes" ? setup.heroes : setup.monsters;
     return side.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
-      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id));
+      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id)
+      || target.state.timed_effects?.some((effect) => effect.source_effect_id === spell.id));
   }
 
   function typedRelevant(member, setup, spell) {
@@ -27,7 +28,7 @@
   }
 
   function choose(member, setup = null) {
-    if (member.state.opening_buff_spell_id) return null;
+    if (member.state.opening_buff_id) return null;
     const spells = (member.state.template.defensive_spell_actions || [])
       .map((spell, index) => ({ spell, index }))
       .sort((a, b) => b.spell.level - a.spell.level
@@ -90,15 +91,16 @@
     const directHp = (spell.temporaryHp || 0) || (spell.maxHpIncrease || 0) || (spell.currentHpIncrease || 0);
     if (spell.concentration && (directHp || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
     if (!targets.length) throw new Error(`${spell.name} has no legal precombat targets.`);
-    if (member.state.opening_buff_spell_id) throw new Error(`${member.state.template.name} already committed its one opening buff this battle.`);
+    if (member.state.opening_buff_id) throw new Error(`${member.state.template.name} already committed its one opening buff this battle.`);
     if (spell.concentration && member.state.concentration) throw new Error(`${member.state.template.name} is already concentrating and will not replace the active buff automatically.`);
     if (targets.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
-      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id))) {
+      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id)
+      || target.state.timed_effects?.some((effect) => effect.source_effect_id === spell.id))) {
       throw new Error(`${spell.name} is already active on a selected target.`);
     }
     const resourceId = `spell-slot-${slotLevel}`;
     if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
-    member.state.opening_buff_spell_id = spell.id;
+    member.state.opening_buff_id = spell.id;
     member.state.resources[resourceId] -= 1;
     const tempHpDetails = [];
     for (const target of targets) {
@@ -118,6 +120,7 @@
     if (spell.maxHpIncrease) details.push(`+${spell.maxHpIncrease} Hit Point maximum`);
     if (spell.currentHpIncrease) details.push(`+${spell.currentHpIncrease} current Hit Points`);
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
+    details.push(...(spell.conditionIds || []));
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     if (spell.concentration) details.push("Concentration");
     const single = targets.length === 1 ? targets[0] : null;

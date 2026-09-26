@@ -4,8 +4,9 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ActionCost
+from app.domain.actions import AbilityName, ActionCost, ConditionName
 from app.domain.save_damage import DamageTypeName, SaveDamageComponent
+from app.domain.save_effects import FailedSaveTimedEffect
 
 from app.domain.spell_modifiers import SpellModifierEffect, SpellModifierKind
 
@@ -30,6 +31,7 @@ class DefensiveSpellAction(BaseModel):
     max_hp_increase: int = Field(default=0, ge=0)
     current_hp_increase: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
+    condition_ids: list[ConditionName] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
     priority: int = 0
@@ -39,10 +41,10 @@ class DefensiveSpellAction(BaseModel):
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
-        if not direct_hp and not self.damage_resistances and not self.modifier_effects:
+        if not direct_hp and not self.damage_resistances and not self.condition_ids and not self.modifier_effects:
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
         if self.concentration and (direct_hp or self.damage_resistances):
-            raise ValueError("Concentration defenses require source-owned modifier effects.")
+            raise ValueError("Concentration defenses require source-owned modifier or timed-condition effects.")
         if self.target_policy == "self" and (self.target_count != 1 or self.target_count_per_slot_above):
             raise ValueError("Self-target policy supports exactly one target.")
         return self
@@ -92,6 +94,9 @@ class SpellSaveAction(BaseModel):
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
     effect_tags: list[str] = Field(default_factory=list)
+    requires_target_hearing: bool = False
+    requires_target_sight: bool = False
+    failed_save_timed_effect: FailedSaveTimedEffect | None = None
     concentration: bool = False
     animation: str = "spell-save"
 

@@ -49,6 +49,7 @@ window.IRON_PIT_BROWSER_ZERO_HP = {
   },
 };
 window.IRON_PIT_BROWSER_TIMED = {
+  nextAttackDisadvantage: () => 0, consumeNextAttackDisadvantage: () => 0,
   apply: (state, effectId, sourceId, options) => {
     state.timed_effects.push({ effect_id: effectId, source_id: sourceId, ...options });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);

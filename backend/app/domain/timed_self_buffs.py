@@ -22,20 +22,39 @@ class TimedEmanationDamage(BaseModel):
     damage_type: DamageType
 
 
+class TimedFriendlySaveAura(BaseModel):
+    """Live friendly aura that grants save Advantage for matching effect tags."""
+
+    radius_ft: int = Field(ge=1, le=120)
+    required_effect_tags: list[str] = Field(min_length=1)
+    requires_hearing: bool = False
+
+    @model_validator(mode="after")
+    def validate_tags(self) -> "TimedFriendlySaveAura":
+        tags = [item.strip().casefold() for item in self.required_effect_tags]
+        if any(not item for item in tags) or len(set(tags)) != len(tags):
+            raise ValueError("Timed friendly save-aura effect tags must be non-empty and unique.")
+        self.required_effect_tags = tags
+        return self
+
+
 class TimedSelfBuffAction(BaseModel):
     """Declarative timed self effect composed from universal combat primitives."""
 
     id: str
     name: str
     action_cost: ActionCost = "action"
-    resource_id: str
+    resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
     duration_rounds: int = Field(ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
+    friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
+    ends_if_source_incapacitated: bool = False
+    ends_if_source_dead: bool = False
     expiry_timing: ConditionTiming = "source_turn_start"
     priority: int = 0
     animation: str = "buff"
@@ -72,6 +91,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.damage_resistances
                 or self.debuff_counters
                 or self.saving_throw_advantage_grants
+                or self.friendly_save_advantage_aura is not None
                 or self.start_turn_emanation_damage is not None
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")

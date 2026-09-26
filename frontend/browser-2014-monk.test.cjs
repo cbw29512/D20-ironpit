@@ -19,6 +19,7 @@ load("browser-dodge.js");
 load("browser-defensive-modifier-rules.js");
 load("browser-d20-test-override.js");
 load("browser-failed-save-reroll.js");
+load("browser-saving-throws.js");
 load("browser-saves.js");
 load("browser-timed-conditions.js");
 load("browser-2014-monk.js");

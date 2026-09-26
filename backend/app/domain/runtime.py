@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.debuffs import DebuffCounter
+from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
 from app.domain.persistent_spell_attacks import PersistentSpellAttackState
@@ -33,7 +34,7 @@ class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
     source_effect_id: str | None = None
-    applied_round: int | None = Field(default=None, ge=1)
+    applied_round: int | None = Field(default=None, ge=0)
     expires_round: int | None = Field(default=None, ge=1)
     expires_at_start_of_source_turn: bool = True
     expiry_timing: ConditionTiming | None = None
@@ -50,6 +51,7 @@ class TimedEffect(BaseModel):
     suppress_bonus_action: bool = False
     suppress_reactions: bool = False
     suppress_movement: bool = False
+    next_attack_disadvantage: bool = False
     zero_hp_replacement_hp: int = Field(default=0, ge=0)
     # Universal source ownership for temporary typed resistances. This lets a
     # timed effect clean up only the resistance contribution it owns while an
@@ -106,12 +108,13 @@ class CombatantState(BaseModel):
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
     active_buff_effect_ids: list[str] = Field(default_factory=list)
-    opening_buff_spell_id: str | None = None
+    opening_buff_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
     persistent_spell_attacks: list[PersistentSpellAttackState] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
+    active_d20_bonus_dice: list[ActiveD20BonusDieGrant] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
     survival_save_uses: dict[str, int] = Field(default_factory=dict)
     pending_survival_save_logs: list[str] = Field(default_factory=list)

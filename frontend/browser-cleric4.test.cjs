@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-modifiers.js", "browser-state.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
-  "browser-saves.js", "browser-concentration.js", "browser-spell-modifiers.js", "browser-spellcasting.js",
+  "browser-saving-throws.js", "browser-saves.js", "browser-concentration.js", "browser-spell-modifiers.js", "browser-spellcasting.js",
   "browser-spell-area.js", "browser-offense-value.js", "browser-spell-policy.js", "browser-spell-resolution.js",
   "browser-spell-attack-policy.js", "browser-spell-attack.js", "browser-spell-offense.js", "browser-precombat-spells.js",
 ]) load(file);
@@ -101,7 +101,7 @@ const setup = { heroes: [caster], monsters: [target] };
 const prep = P.prepare(setup, 1);
 assert.equal(prep.events.length, 1);
 assert.equal(prep.events[0].feature_id, "aid");
-assert.equal(caster.state.opening_buff_spell_id, "aid");
+assert.equal(caster.state.opening_buff_id, "aid");
 assert.equal(caster.state.resources["spell-slot-2"], 2);
 assert.equal(caster.state.concentration, null, "Aid is the single opening buff and does not require Concentration.");
 

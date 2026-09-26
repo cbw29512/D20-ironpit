@@ -63,6 +63,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.update(rule.source_id for rule in features.failed_save_reroll_grants)
     if features.failed_d20_test_override_grants:
         mechanics.update(rule.source_id for rule in features.failed_d20_test_override_grants)
+    if features.resource_backed_d20_bonus_dice:
+        mechanics.update(rule.source_id for rule in features.resource_backed_d20_bonus_dice)
     if features.deferred_save_effect:
         mechanics.add(features.deferred_save_effect.source_id)
     if features.athletics_advantage:

@@ -7,6 +7,7 @@
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
   const B = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS;
+  const BI = () => window.IRON_PIT_BROWSER_D20_BONUS_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -56,8 +57,10 @@
     if (channel) { events.push(...channel.events); sequence = channel.sequence; }
     const paladin = P()?.resolveChannel(sequence, round, member, setup);
     if (paladin) { events.push(...paladin.events); sequence = paladin.sequence; }
-    const selfBuff = B()?.choose(member);
-    if (selfBuff) events.push(B().resolve(sequence++, round, member, selfBuff));
+    const d20Bonus = BI()?.choose(member, setup, round);
+    if (d20Bonus) events.push(BI().resolveGrant(sequence++, round, member, d20Bonus.target, d20Bonus.action));
+    const selfBuff = B()?.choose(member, setup);
+    if (selfBuff) { events.push(B().resolve(sequence++, round, member, selfBuff)); window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS?.sync(setup); }
     return { events, sequence };
   }
 

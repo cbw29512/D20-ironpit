@@ -5,8 +5,10 @@ from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
+from app.combat.condition_rules import can_see
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
+from app.combat.timed_conditions import apply_timed_condition
 from app.combat.failed_d20_test_override import source_name_for_roll
 from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
 from app.combat.resources import action_resource_available, spend_action_resource
@@ -20,7 +22,10 @@ from app.domain.size import size_at_most
 
 
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
-    if distance_ft > action.range_ft: return False
+    if distance_ft > action.range_ft:
+        return False
+    if action.requires_target_hearing and "deafened" in target.state.active_effect_ids:
+        return False
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
 
 
@@ -32,7 +37,10 @@ def resolve_save_action(
     spell_effect: bool = False,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
-    if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
+    if not legal_save_action(action, target, distance_ft):
+        raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
+    if action.requires_target_sight and not can_see(actor.state, target.state):
+        raise ValueError(f"{action.name} requires the actor to see the target.")
     if check_resource and not action_resource_available(actor.state, action):
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
@@ -50,7 +58,7 @@ def resolve_save_action(
         target.state, action.save_ability, save_context,
     )
     save_roll, succeeded = resolve_saving_throw(
-        target.state, action.save_ability, action.dc, dice, save_context,
+        target.state, action.save_ability, action.dc, dice, save_context, round_number=round_number,
     )
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
@@ -69,6 +77,26 @@ def resolve_save_action(
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
+    if (
+        not succeeded
+        and target.state.is_alive
+        and not target.state.is_dead
+        and action.failed_save_timed_effect is not None
+    ):
+        rider = action.failed_save_timed_effect
+        apply_timed_condition(
+            target.state,
+            rider.effect_id,
+            actor.combatant_id,
+            source_effect_id=action.id,
+            source_template=actor.state.template,
+            source_is_magical=action.magical_effect,
+            applied_round=round_number,
+            expiry_timing=rider.expiry_timing,
+            next_attack_disadvantage=rider.next_attack_disadvantage,
+            affected_states=affected_states,
+            use_default_poison_recovery=False,
+        )
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
         applied_conditions = apply_grapple(
             target.state,
