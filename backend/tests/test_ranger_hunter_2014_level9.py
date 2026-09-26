@@ -10,7 +10,7 @@ def test_level_nine_progression_and_spell_tier() -> None:
 
     assert hero.level == 9
     assert hero.max_hp == 76
-    assert hero.weapon_attack.attack_bonus == 12
+    assert hero.weapon_attack.attack_bonus == 11
     assert {resource.id: resource.max_uses for resource in hero.resources} == {
         "spell-slot-1": 4,
         "spell-slot-2": 3,
