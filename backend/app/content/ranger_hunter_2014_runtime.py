@@ -17,6 +17,7 @@ from app.content.shared_lands_stride_2014 import lands_stride_2014
 from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
+from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
@@ -62,8 +63,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 20):
-            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 19.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 20.")
         profile = build_rowan_ashtrail_2014_profile(level)
         scores = profile.final_ability_scores
         dexterity = scores.modifier("dexterity")
@@ -107,6 +108,17 @@ def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
             weapon_masteries=[],
             progression_features=ProgressionCombatFeatures(
                 once_per_turn_weapon_hit_damage_rider=colossus_slayer_2014() if level >= 3 else None,
+                once_per_turn_weapon_hit_damage_riders=(
+                    [
+                        OncePerTurnWeaponHitDamageRider(
+                            source_id="foe-slayer",
+                            source_name="Foe Slayer",
+                            flat_bonus=scores.modifier("wisdom"),
+                            target_creature_types=["monstrosity", "undead", "fiend"],
+                        )
+                    ]
+                    if level >= 20 else []
+                ),
                 evasion=level >= 15,
                 ignore_unseen_target_attack_disadvantage=level >= 18,
                 saving_throw_advantage_grants=[
