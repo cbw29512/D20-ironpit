@@ -5,51 +5,17 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.modifier_stack import add_modifier
 from app.combat.timed_conditions import apply_timed_condition
+from app.combat.timed_self_buff_policy import (
+    choose_timed_self_buff_action,
+    timed_self_buff_active,
+    timed_self_buff_resource,
+)
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 
 logger = logging.getLogger(__name__)
-
-
-def _resource(member: EncounterCombatant, action: TimedSelfBuffAction):
-    try:
-        if action.resource_id is None:
-            return None
-        return next((item for item in member.state.resources if item.id == action.resource_id), None)
-    except Exception as exc:
-        logger.exception("Timed self-buff resource lookup failed for %s.", member.combatant_id)
-        raise RuntimeError("Timed self-buff resource could not be resolved.") from exc
-
-
-def timed_self_buff_active(member: EncounterCombatant, action: TimedSelfBuffAction) -> bool:
-    try:
-        return any(
-            effect.source_id == member.combatant_id and effect.source_effect_id == action.id
-            for effect in member.state.timed_effects
-        )
-    except Exception as exc:
-        logger.exception("Timed self-buff activity lookup failed for %s.", member.combatant_id)
-        raise RuntimeError("Timed self-buff activity could not be evaluated.") from exc
-
-
-def choose_timed_self_buff_action(member: EncounterCombatant) -> TimedSelfBuffAction | None:
-    """Choose the highest-priority legal inactive self-buff without mutating combat state."""
-    try:
-        choices = []
-        for action in member.state.template.timed_self_buff_actions:
-            resource = _resource(member, action)
-            if (
-                is_available(member.state, action.action_cost)
-                and (action.resource_id is None or (resource is not None and resource.current_uses >= action.resource_cost))
-                and not timed_self_buff_active(member, action)
-            ):
-                choices.append(action)
-        return max(choices, key=lambda item: item.priority, default=None)
-    except Exception as exc:
-        logger.exception("Timed self-buff choice failed for %s.", member.combatant_id)
-        raise RuntimeError("Timed self-buff policy could not be evaluated.") from exc
 
 
 def resolve_timed_self_buff(
@@ -60,7 +26,7 @@ def resolve_timed_self_buff(
 ) -> BattleEvent:
     """Spend source-defined economy/resources and apply one source-owned timed buff."""
     try:
-        resource = _resource(member, action)
+        resource = timed_self_buff_resource(member, action)
         if not is_available(member.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
         if action.resource_id is not None and (resource is None or resource.current_uses < action.resource_cost):
