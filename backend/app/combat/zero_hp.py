@@ -151,7 +151,7 @@ def apply_damage(
         incoming = amount
         types = damage_types or set()
         amount = _after_temporary_hp(state, amount)
-        amount, form_reverted = apply_replacement_form_damage(state, amount)
+        amount, _ = apply_replacement_form_damage(state, amount)
         if amount == 0:
             return _finish_damage(state, "damaged", incoming, dice, affected_states)
         if state.current_hp == 0:
