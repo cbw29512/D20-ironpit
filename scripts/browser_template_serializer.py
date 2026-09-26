@@ -190,6 +190,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["magicalEffect"] = True
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
+    if action.requires_target_hearing:
+        row["requiresTargetHearing"] = True
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = {
             "effectId": action.failed_save_timed_effect.effect_id,
@@ -214,6 +216,8 @@ def _spell(action: Any) -> dict[str, Any]:
     }
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
+    if action.requires_target_hearing:
+        row["requiresTargetHearing"] = True
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = {
             "effectId": action.failed_save_timed_effect.effect_id,
