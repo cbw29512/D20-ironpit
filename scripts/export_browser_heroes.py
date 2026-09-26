@@ -112,6 +112,7 @@ def _spell(action: Any) -> dict[str, Any]:
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
            "diceSize": effect.dice_size, "damageType": effect.damage_type}
+    if effect.minimum_value: row["minimumValue"] = effect.minimum_value
     if effect.condition_id: row["conditionId"] = effect.condition_id
     if effect.debuff_counter is not None: row["debuffCounter"] = effect.debuff_counter.model_dump(mode="json")
     if effect.replacement_hp: row["replacementHp"] = effect.replacement_hp
