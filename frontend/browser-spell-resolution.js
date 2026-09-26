@@ -10,6 +10,7 @@
   const CONC = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
+  const H = () => window.IRON_PIT_BROWSER_SPELL_SAVE_DISADVANTAGE;
 
   function scaledSpell(action, slotLevel) {
     const policy = P();
@@ -47,6 +48,7 @@
       const action = saveAction(choice);
       const events = [];
       let sharedDamageRolls = null;
+      let saveDisadvantage = H()?.choose(caster.state) || null;
 
       for (const targetId of choice.targetIds) {
         const target = members.get(targetId);
@@ -59,10 +61,20 @@
             .blocked(sequence++, round, caster, target, spell.name, ward));
           continue;
         }
+        let saveDisadvantageSources = [];
+        let modifierRemaining = null;
+        if (saveDisadvantage) {
+          modifierRemaining = H().spend(caster.state, saveDisadvantage);
+          saveDisadvantageSources = [saveDisadvantage.name];
+          saveDisadvantage = null;
+        }
         const event = V().resolveAction(
           sequence, round, caster, target, action,
           placement ? 0 : S().distance(caster, target),
-          { spendAction: false, sharedDamageRolls, spellEffect: true, setup },
+          {
+            spendAction: false, sharedDamageRolls, spellEffect: true, setup,
+            saveDisadvantageSources, resourceRemaining: modifierRemaining,
+          },
         );
         sequence += 1;
         if (ward) {
