@@ -4,9 +4,9 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level != 1:
-        raise ValueError("2014 Draconic Sorcerer audits currently cover level 1.")
-    return [
+    if level not in (1, 2):
+        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 2.")
+    rows = [
         FeatureAudit(
             feature_id="half-elf", feature_name="Half-Elf",
             source_reference="D&D Basic Rules 2014: Half-Elf",
@@ -38,3 +38,15 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             notes="Language and Charisma interaction are arena-neutral at level 1.",
         ),
     ]
+    if level >= 2:
+        rows.append(FeatureAudit(
+            feature_id="font-of-magic", feature_name="Font of Magic",
+            source_reference="D&D Basic Rules 2014: Sorcerer 2",
+            category="class", combat_relevant=True, automated=False,
+            notes=(
+                "ENGINE_TRULY_MISSING: Flexible Casting changes combat resources by converting Sorcery Points "
+                "to temporary spell slots or spell slots to Sorcery Points as a Bonus Action. Iron Pit has "
+                "generic resources and action economy but no certified resource-conversion primitive yet."
+            ),
+        ))
+    return rows
