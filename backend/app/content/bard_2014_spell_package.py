@@ -93,9 +93,8 @@ _KNOWN = (
         "max-hp-increase", "magical-secrets", level=2, min_level=18,
     ),
     _spell(
-        "spirit-guardians", "Spirit Guardians", "damage",
-        "persistent-damage", "concentration", "magical-secrets",
-        level=3, min_level=18,
+        "inflict-wounds", "Inflict Wounds", "damage",
+        "spell-attack", "magical-secrets", level=1, min_level=18,
     ),
 )
 
