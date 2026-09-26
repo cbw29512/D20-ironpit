@@ -3,10 +3,12 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from app.combat.spell_modifiers import apply_spell_modifiers
+from app.combat.spell_duration_modifiers import effective_spell_duration_minutes, spend_spell_duration_modifier
 from app.combat.temporary_hp import grant_temporary_hit_points
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, DamageType
 from app.domain.runtime import CombatantState
+from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 
@@ -30,6 +32,8 @@ def resolve_defensive_spell(
     slot_level: int,
     resource,
     affected_states: Iterable[CombatantState] | None = None,
+    *,
+    duration_modifier: ResourceBackedSpellDurationModifier | None = None,
 ) -> BattleEvent:
     if slot_level != spell.level:
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
@@ -50,6 +54,8 @@ def resolve_defensive_spell(
         raise ValueError(f"{spell.name} is already active on a selected target.")
     member.state.opening_buff_id = spell.id
     resource.current_uses -= 1
+    duration_remaining = spend_spell_duration_modifier(member.state, duration_modifier)
+    effective_duration = effective_spell_duration_minutes(spell.duration_minutes, duration_modifier)
     temp_hp_details: list[str] = []
     for target in targets:
         before = target.state.temporary_hp
@@ -70,6 +76,7 @@ def resolve_defensive_spell(
         member.state,
         [(target.combatant_id, target.state) for target in targets],
         member.combatant_id, spell, 0, affected_states,
+        duration_minutes=effective_duration,
     )
     details = [*temp_hp_details]
     if spell.max_hp_increase:
@@ -80,6 +87,8 @@ def resolve_defensive_spell(
         details.append("resistance to " + ", ".join(spell.damage_resistances))
     details.extend(spell.condition_ids)
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
+    if duration_modifier is not None:
+        details.append(f"{duration_modifier.name}: {effective_duration} minutes")
     if spell.concentration:
         details.append("Concentration")
     names = ", ".join(target.state.template.name for target in targets)
@@ -89,7 +98,8 @@ def resolve_defensive_spell(
         actor_id=member.combatant_id, actor_name=member.state.template.name,
         target_id=single.combatant_id if single else None,
         target_name=single.state.template.name if single else None,
-        feature_id=spell.id, resource_remaining=resource.current_uses,
+        feature_id=duration_modifier.id if duration_modifier is not None else spell.id,
+        resource_remaining=duration_remaining if duration_modifier is not None else resource.current_uses,
         concentration_started_effect_id=spell.id if spell.concentration else None,
         animation=spell.animation,
         description=(
