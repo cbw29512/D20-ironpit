@@ -12,26 +12,26 @@ def test_thalen_level_one_is_persistent_wood_elf_acolyte_druid() -> None:
         "wood-elf", "acolyte", "druid",
     )
     assert profile.final_ability_scores.model_dump() == {
-        "strength": 10,
-        "dexterity": 12,
-        "constitution": 10,
-        "intelligence": 13,
+        "strength": 8,
+        "dexterity": 15,
+        "constitution": 14,
+        "intelligence": 12,
         "wisdom": 16,
-        "charisma": 14,
+        "charisma": 10,
     }
     assert hero.ability_scores == profile.final_ability_scores
-    assert hero.max_hp == 8
-    assert hero.armor_class == 14
+    assert hero.max_hp == 10
+    assert hero.armor_class == 15
     assert hero.speed_ft == 35
-    assert hero.initiative_bonus == 1
+    assert hero.initiative_bonus == 2
 
 
 def test_thalen_level_one_runtime_binds_only_supported_combat_options() -> None:
     hero = build_thalen_greenbough_2014(1)
 
     assert hero.weapon_attack.weapon.id == "scimitar"
-    assert hero.weapon_attack.attack_bonus == 3
-    assert hero.weapon_attack.damage_bonus == 1
+    assert hero.weapon_attack.attack_bonus == 4
+    assert hero.weapon_attack.damage_bonus == 2
     assert {spell.id for spell in hero.spell_attack_actions} == {"produce-flame"}
     assert {spell.id for spell in hero.spell_save_actions} == {"poison-spray"}
     assert {spell.id for spell in hero.defensive_spell_actions} == {"longstrider"}
