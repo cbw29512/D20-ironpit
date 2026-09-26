@@ -30,7 +30,7 @@ const provider = (id, category, rulesets, discover = () => ({ payload: { id } })
 });
 
 assert.deepEqual(S.PROFILES.normalPreMove, ["replacement-form-setup", "spell-offense"]);
-assert.deepEqual(S.PROFILES.actionSurgeAttack, ["attack-action", "standard-attack"]);
+assert.deepEqual(S.PROFILES.actionSurgeAttack, ["area-weapon-attack", "attack-action", "standard-attack"]);
 assert.throws(() => S.discoverCandidates("unknown", ctx()), /Unknown Main Action opportunity profile/);
 assert.throws(
   () => S.discoverCandidates("normalPreMove", { sequence: 1, member: member() }),

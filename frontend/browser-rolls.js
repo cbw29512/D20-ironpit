@@ -60,7 +60,7 @@
   }
 
   function bonusComponent(spec, critical) {
-    return damageComponent({ ...spec, damageBonus: 0 }, critical);
+    return damageComponent({ ...spec, damageBonus: spec.damageBonus || 0 }, critical);
   }
 
   function conditionalActive(spec, attacker, target, mode) {
@@ -127,8 +127,8 @@
     if (sneak) components.push(bonusComponent(sneak, critical));
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
-    const oncePerTurnHit = window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamage(attacker, turnKey);
-    if (oncePerTurnHit) components.push(bonusComponent(oncePerTurnHit, critical));
+    const oncePerTurnHits = window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamages(attacker, turnKey, target, attack) || [];
+    for (const oncePerTurnHit of oncePerTurnHits) components.push(bonusComponent(oncePerTurnHit, critical));
     const brutalStrike = window.IRON_PIT_BROWSER_BRUTAL_STRIKE?.bonusDamage(
       attacker, attack, turnKey, mode === "disadvantage",
     );

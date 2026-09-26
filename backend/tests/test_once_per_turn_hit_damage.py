@@ -52,3 +52,32 @@ def test_once_per_turn_weapon_hit_rider_dice_double_on_critical() -> None:
     assert [part.source for part in components] == ["Warhammer", "Test Rider"]
     assert components[1].rolls == [6, 7]
     assert result.total == 23
+
+
+def test_once_per_turn_weapon_hit_rider_can_require_damaged_target_and_inherit_weapon_type() -> None:
+    attacker = _state_with_rider()
+    attacker.template.progression_features.once_per_turn_weapon_hit_damage_rider = OncePerTurnWeaponHitDamageRider(
+        source_id="qualified-rider",
+        source_name="Qualified Rider",
+        dice_count=1,
+        dice_size=8,
+        damage_type=None,
+        requires_target_below_max_hp=True,
+    )
+    target = build_combatant_state(build_seraphine_dawnshield_2014(7))
+    attack = attacker.template.weapon_attack
+
+    full, components = resolve_weapon_damage(
+        attacker, attack, FixedDiceProvider([4]), False, "normal", "1:attacker", target=target,
+    )
+    assert [part.source for part in components] == ["Warhammer"]
+    assert full.total == 5
+    assert attacker.feature_last_turn_keys.get("qualified-rider") is None
+
+    target.current_hp -= 1
+    damaged, components = resolve_weapon_damage(
+        attacker, attack, FixedDiceProvider([4, 6]), False, "normal", "1:attacker", target=target,
+    )
+    assert [part.source for part in components] == ["Warhammer", "Qualified Rider"]
+    assert components[1].damage_type == attack.weapon.damage_type
+    assert damaged.total == 11

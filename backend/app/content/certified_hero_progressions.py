@@ -6,12 +6,9 @@ from dataclasses import dataclass
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.audited_cleric_life_high_profile import (
-    build_seraphine_dawnshield_level7_profile,
-    build_seraphine_dawnshield_level8_profile,
-    build_seraphine_dawnshield_level9_profile,
-    build_seraphine_dawnshield_level10_profile,
-    build_seraphine_dawnshield_level11_profile,
-    build_seraphine_dawnshield_level12_profile,
+    build_seraphine_dawnshield_level7_profile, build_seraphine_dawnshield_level8_profile,
+    build_seraphine_dawnshield_level9_profile, build_seraphine_dawnshield_level10_profile,
+    build_seraphine_dawnshield_level11_profile, build_seraphine_dawnshield_level12_profile,
 )
 from app.content.audited_cleric_life_profile import (
     build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
@@ -71,12 +68,13 @@ from app.content.monk_open_hand_2014_profile import build_kael_stillwater_2014_p
 from app.content.monk_open_hand_2014_runtime import build_kael_stillwater_2014
 from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield_2014_profile
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
+from app.content.ranger_hunter_2014_profile import build_rowan_ashtrail_2014_profile
+from app.content.ranger_hunter_2014_runtime import build_rowan_ashtrail_2014
 from app.content.rogue_thief_2014_profile import build_mara_quickstep_2014_profile
 from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 from app.domain.rulesets import RulesetId
-
 ProfileBuilder = Callable[[], CharacterBuildProfile]
 ProfileLevelBuilder = Callable[[int], CharacterBuildProfile]
 TemplateLevelBuilder = Callable[[int], CombatantTemplate]
@@ -158,6 +156,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="druid", ruleset="2014", template_builder=build_thalen_greenbough_2014,
         profile_level_builder=build_thalen_greenbough_2014_profile, max_level=20,
+    ),
+    CertifiedHeroProgression(
+        class_id="ranger", ruleset="2014", template_builder=build_rowan_ashtrail_2014,
+        profile_level_builder=build_rowan_ashtrail_2014_profile, max_level=20,
     ),
     CertifiedHeroProgression(
         class_id="rogue", ruleset="2024", template_builder=build_mara_quickstep_level,

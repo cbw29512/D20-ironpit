@@ -442,6 +442,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["first_round_extra_turn_initiative_offset"] = features.first_round_extra_turn_initiative_offset
     if features.suppress_attack_advantage_while_not_incapacitated:
         row["suppress_attack_advantage_while_not_incapacitated"] = True
+    if features.ignore_unseen_target_attack_disadvantage:
+        row["ignore_unseen_target_attack_disadvantage"] = True
     if features.miss_to_hit_override_resource_id:
         row["miss_to_hit_override_resource_id"] = features.miss_to_hit_override_resource_id
     if features.miss_to_hit_override_source_name:
@@ -458,6 +460,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.once_per_turn_weapon_hit_damage_rider:
         row["once_per_turn_weapon_hit_damage_rider"] = features.once_per_turn_weapon_hit_damage_rider.model_dump()
+    if features.once_per_turn_weapon_hit_damage_riders:
+        row["once_per_turn_weapon_hit_damage_riders"] = [
+            item.model_dump() for item in features.once_per_turn_weapon_hit_damage_riders
+        ]
     if features.outgoing_healing_dice_maximizer:
         row["outgoing_healing_dice_maximizer"] = features.outgoing_healing_dice_maximizer.model_dump()
     if features.athletics_advantage:
@@ -586,6 +592,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "source": item.source,
                 }
                 for item in template.concentration_repeat_save_actions
+            ]
+        if template.area_weapon_attack_actions:
+            row["area_weapon_attack_actions"] = [
+                {
+                    "id": item.id, "name": item.name, "attackId": item.attack_id,
+                    "range": item.range_ft, "area": item.area.model_dump(mode="json"),
+                    "actionCost": item.action_cost, "source": item.source,
+                }
+                for item in template.area_weapon_attack_actions
             ]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [

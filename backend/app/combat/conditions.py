@@ -34,7 +34,8 @@ def attack_roll_condition_sources(
     advantage = 0
     disadvantage = attack_disadvantage_sources(attacker)
     disadvantage += attacks_against_disadvantage_sources(defender, attacker.template)
-    if has_condition(attacker, BLINDED_EFFECT_ID):
+    ignores_unseen = attacker.template.progression_features.ignore_unseen_target_attack_disadvantage
+    if has_condition(attacker, BLINDED_EFFECT_ID) and not ignores_unseen:
         disadvantage += 1
     if has_condition(attacker, INVISIBLE_EFFECT_ID):
         advantage += 1
@@ -52,7 +53,7 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1
-    if has_condition(defender, INVISIBLE_EFFECT_ID):
+    if has_condition(defender, INVISIBLE_EFFECT_ID) and not ignores_unseen:
         disadvantage += 1
     if RESTRAINED_EFFECT_ID in defender.active_effect_ids:
         advantage += 1

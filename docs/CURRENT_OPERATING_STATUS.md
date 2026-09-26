@@ -36,11 +36,11 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **Finish remaining 2014 canonical pregens before any new 2024 class expansion.**
 
-Next class: **2014 Druid, one persistent 1–20 progression.**
+Active class: **2014 Ranger (Rowan Ashtrail / Hunter), one persistent 1–20 progression.**
 
 2014 Life Cleric 1–20 merged in PR #388. Older Cleric PRs #361, #364, and #366 are superseded and closed.
 
-After 2014 Druid 1–20: Ranger, Sorcerer, Warlock, Wizard (2014), then 240/240 2014 re-audit.
+2014 Druid 1–20 merged in PR #391. After Ranger: Sorcerer, Warlock, Wizard (2014), then 240/240 2014 re-audit.
 
 Do **not** open or merge 2024 Cleric 13+, 2024 Fighter 19+, or 2024 Barbarian 8+ until that 2014 gate.
 

@@ -345,6 +345,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "initiative_advantage": progression.initiative_advantage, "athletics_advantage": progression.athletics_advantage,
         "first_round_extra_turn_initiative_offset": progression.first_round_extra_turn_initiative_offset,
         "suppress_attack_advantage_while_not_incapacitated": progression.suppress_attack_advantage_while_not_incapacitated,
+        "ignore_unseen_target_attack_disadvantage": progression.ignore_unseen_target_attack_disadvantage,
         "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
         "failed_save_reroll_grants": [item.model_dump() for item in progression.failed_save_reroll_grants],
@@ -417,6 +418,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["outgoing_healing_dice_maximizer"] = progression.outgoing_healing_dice_maximizer.model_dump()
     if progression.once_per_turn_weapon_hit_damage_rider:
         row["once_per_turn_weapon_hit_damage_rider"] = progression.once_per_turn_weapon_hit_damage_rider.model_dump()
+    if progression.once_per_turn_weapon_hit_damage_riders:
+        row["once_per_turn_weapon_hit_damage_riders"] = [
+            item.model_dump() for item in progression.once_per_turn_weapon_hit_damage_riders
+        ]
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
     if progression.resource_backed_d20_bonus_dice:
@@ -456,6 +461,15 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "source": item.source,
             }
             for item in template.replacement_form_actions
+        ]
+    if template.area_weapon_attack_actions:
+        row["area_weapon_attack_actions"] = [
+            {
+                "id": item.id, "name": item.name, "attackId": item.attack_id,
+                "range": item.range_ft, "area": item.area.model_dump(mode="json"),
+                "actionCost": item.action_cost, "source": item.source,
+            }
+            for item in template.area_weapon_attack_actions
         ]
     if template.attack_action:
         row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name,

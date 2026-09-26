@@ -20,6 +20,7 @@ def test_python_normal_post_move_main_action_policy_order_is_stable() -> None:
         "spell_events, sequence = resolve_best_spell_offense(",
         "presence = resolve_intimidating_presence(",
         "deferred = resolve_deferred_save_effect(",
+        "area_weapon = choose_area_weapon_attack(",
         "action_events, sequence = resolve_attack_action(",
         "area_result = resolve_area_save_turn(",
         "chosen_save = save_choice(",
@@ -37,6 +38,7 @@ def test_browser_normal_post_move_profile_matches_python_policy_order() -> None:
         "CATEGORIES.SPELL_OFFENSE",
         "CATEGORIES.INTIMIDATING_PRESENCE_2014",
         "CATEGORIES.DEFERRED_EFFECT",
+        "CATEGORIES.AREA_WEAPON_ATTACK",
         "CATEGORIES.ATTACK_ACTION",
         "CATEGORIES.AREA_SAVE",
         "CATEGORIES.SAVE_ACTION",
@@ -47,6 +49,8 @@ def test_browser_normal_post_move_profile_matches_python_policy_order() -> None:
 
 def test_python_action_surge_policy_is_attack_only() -> None:
     source = PYTHON_ACTION_SURGE.read_text(encoding="utf-8")
+    assert "choose_area_weapon_attack(" in source
+    assert "resolve_area_weapon_attack(" in source
     assert "resolve_attack_action(" in source
     assert "choose_standard_attack(" in source
     assert "resolve_standard_attack_action(" in source
@@ -59,6 +63,7 @@ def test_browser_action_surge_profile_matches_python_attack_only_policy() -> Non
     start = source.index("actionSurgeAttack: Object.freeze([")
     end = source.index("]),", start)
     profile = source[start:end]
+    assert "CATEGORIES.AREA_WEAPON_ATTACK" in profile
     assert "CATEGORIES.ATTACK_ACTION" in profile
     assert "CATEGORIES.STANDARD_ATTACK" in profile
     for forbidden in [

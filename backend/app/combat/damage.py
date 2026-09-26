@@ -10,13 +10,13 @@ from app.combat.dice import DiceProvider
 from app.combat.divine_smite_2014 import divine_smite_bonus_damage
 from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.modifier_stack import bonus_damage_modifiers
-from app.combat.once_per_turn_hit_damage import once_per_turn_weapon_hit_bonus_damage
+from app.combat.once_per_turn_hit_damage import once_per_turn_weapon_hit_bonus_damages
 from app.combat.savage_attacker import roll_weapon_component
 from app.combat.sneak_attack import sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
-BonusDamageSpec = tuple[str, int, int, DamageType]
+BonusDamageSpec = tuple[str, int, int, DamageType] | tuple[str, int, int, int, DamageType]
 
 
 def roll_damage_component(
@@ -56,9 +56,13 @@ def _append_bonus_component(
 ) -> None:
     if spec is None:
         return
-    source, dice_count, dice_size, damage_type = spec
+    if len(spec) == 4:
+        source, dice_count, dice_size, damage_type = spec
+        modifier = 0
+    else:
+        source, dice_count, dice_size, modifier, damage_type = spec
     components.append(roll_damage_component(
-        dice, source, dice_count, dice_size, 0, damage_type, critical,
+        dice, source, dice_count, dice_size, modifier, damage_type, critical,
     ))
 
 
@@ -123,11 +127,10 @@ def resolve_weapon_damage(
             critical=critical,
         )
         _append_bonus_component(components, dice, divine_smite_bonus_damage(attacker, target, attack), critical=critical)
-        _append_bonus_component(
-            components, dice,
-            once_per_turn_weapon_hit_bonus_damage(attacker, attack, turn_key),
-            critical=critical,
-        )
+        for rider_damage in once_per_turn_weapon_hit_bonus_damages(attacker, attack, turn_key, target):
+            _append_bonus_component(
+                components, dice, rider_damage, critical=critical,
+            )
         for modifier in bonus_damage_modifiers(attacker, target_event_id):
             components.append(roll_damage_component(
                 dice,

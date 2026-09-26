@@ -69,6 +69,7 @@ class ProgressionCombatFeatures(BaseModel):
     slot_healing_other_self_rider: SlotHealingSelfRider | None = None
     outgoing_healing_dice_maximizer: OutgoingHealingDiceMaximizer | None = None
     once_per_turn_weapon_hit_damage_rider: OncePerTurnWeaponHitDamageRider | None = None
+    once_per_turn_weapon_hit_damage_riders: list[OncePerTurnWeaponHitDamageRider] = Field(default_factory=list)
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
@@ -83,6 +84,7 @@ class ProgressionCombatFeatures(BaseModel):
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
     suppress_attack_advantage_while_not_incapacitated: bool = False
+    ignore_unseen_target_attack_disadvantage: bool = False
     miss_to_hit_override_resource_id: str | None = None
     miss_to_hit_override_source_name: str | None = None
     athletics_advantage: bool = False
