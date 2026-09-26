@@ -56,8 +56,8 @@ def _level_one() -> CharacterBuildProfile:
 
 def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Rowan profile currently covers levels 1 through 17.")
+        if level not in range(1, 19):
+            raise ValueError("2014 Rowan profile currently covers levels 1 through 18.")
         profile = _level_one()
         if level == 1:
             return profile
@@ -220,6 +220,14 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
         data.update(
             feature_audits=build_ranger_hunter_2014_feature_audits(17),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 17"],
+        )
+        profile = CharacterBuildProfile(**data)
+        if level == 17:
+            return profile
+        data = advance_profile_data(profile, 18)
+        data.update(
+            feature_audits=build_ranger_hunter_2014_feature_audits(18),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 18"],
         )
         return CharacterBuildProfile(**data)
     except Exception:
