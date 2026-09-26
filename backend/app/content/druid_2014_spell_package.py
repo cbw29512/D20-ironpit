@@ -41,6 +41,10 @@ _PREPARED = (
         "faerie-fire", "Faerie Fire", "control",
         "save-modifier", "area-effect", "concentration", min_level=2,
     ),
+    _spell(
+        "lesser-restoration", "Lesser Restoration", "support",
+        "condition-removal", level=2, min_level=3,
+    ),
 )
 
 
