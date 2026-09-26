@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 def build_thalen_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level != 1:
-            raise ValueError("2014 Thalen combat fingerprint is currently certified only at level 1.")
+        if level not in range(1, 3):
+            raise ValueError("2014 Thalen combat fingerprint currently covers levels 1 and 2.")
         abilities = AbilityScores(
             strength=8,
             dexterity=15,
@@ -21,13 +21,13 @@ def build_thalen_2014_combat_profile(level: int) -> PregenCombatProfile:
             charisma=10,
         )
         return PregenCombatProfile(
-            template_id="thalen-greenbough-2014-l1",
+            template_id=f"thalen-greenbough-2014-l{level}",
             archetype="Druid",
-            level=1,
+            level=level,
             abilities=abilities,
             save_proficiencies=("intelligence", "wisdom"),
             armor_class=15,
-            max_hp=10,
+            max_hp=10 if level == 1 else 17,
             speed_ft=35,
             skill_bonuses=(
                 ("insight", 5),
@@ -39,7 +39,11 @@ def build_thalen_2014_combat_profile(level: int) -> PregenCombatProfile:
                 AttackExpectation("scimitar", "dexterity", 1, 6, "slashing"),
             ),
             weapon_masteries=(),
-            resources=(("spell-slot-1", 2),),
+            resources=(
+                (("spell-slot-1", 2),)
+                if level == 1
+                else (("spell-slot-1", 3), ("wild-shape", 2))
+            ),
         )
     except Exception:
         logger.exception("Failed to compile Thalen's 2014 combat fingerprint at level %s.", level)
@@ -47,4 +51,4 @@ def build_thalen_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 
 def build_thalen_2014_combat_profiles() -> list[PregenCombatProfile]:
-    return [build_thalen_2014_combat_profile(1)]
+    return [build_thalen_2014_combat_profile(level) for level in range(1, 3)]
