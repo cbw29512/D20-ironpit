@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from app.combat.dice import FixedDiceProvider
+from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.state import build_combatant_state
 from app.content.sorcerer_2014_spell_package import build_sorcerer_2014_spell_package
 from app.content.sorcerer_draconic_2014_profile import build_nyra_emberveil_2014_profile
+from app.content.monsters import build_commoner
 from app.content.sorcerer_draconic_2014_runtime import build_nyra_emberveil_2014
-from app.domain.encounters import EncounterCombatant
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 
 def _nyra() -> EncounterCombatant:
@@ -64,3 +67,34 @@ def test_level_six_spell_package_has_seven_known_spells() -> None:
     assert len(package.cantrips) == 5
     assert len(package.spells) == 7
     assert package.spells[-1].id == "clairvoyance"
+
+
+def test_level_six_spell_attack_resolution_triggers_resistance_without_extra_action() -> None:
+    nyra = _nyra()
+    enemy_template = build_commoner().model_copy(update={"ruleset": "2014", "max_hp": 20})
+    enemy = EncounterCombatant(
+        combatant_id="enemy",
+        side="monsters",
+        position_ft=30,
+        state=build_combatant_state(enemy_template),
+    )
+    setup = EncounterSetup(
+        heroes=[nyra],
+        monsters=[enemy],
+        hero_total_levels=6,
+        monster_total_cr="0",
+        ruleset="2014",
+    )
+    fire_bolt = next(item for item in nyra.state.template.spell_attack_actions if item.id == "fire-bolt")
+
+    resolve_spell_attack(
+        1, 1, nyra, enemy, fire_bolt, setup, "1:nyra", FixedDiceProvider([15, 5, 5]),
+    )
+
+    points = next(item for item in nyra.state.resources if item.id == "sorcery-points")
+    assert points.current_uses == 5
+    assert nyra.state.action_available is False
+    assert any(
+        effect.source_effect_id == "elemental-affinity-fire-resistance"
+        for effect in nyra.state.timed_effects
+    )
