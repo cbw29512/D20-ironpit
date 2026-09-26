@@ -49,6 +49,8 @@
           expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
           ownedDamageResistances: defensesAttached ? [] : [...(action.damageResistances || [])],
           ownedDebuffCounters: defensesAttached ? [] : [...(action.debuffCounters || [])],
+          endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
+          endsIfSourceDead: Boolean(action.endsIfSourceDead),
           useDefaultPoisonRecovery: false,
         });
         if (condition) { applied.push(condition); defensesAttached = true; }
@@ -57,6 +59,7 @@
         (action.damageResistances || []).length
         || (action.debuffCounters || []).length
         || (action.savingThrowAdvantageGrants || []).length
+        || action.friendlySaveAdvantageAura
         || action.startTurnEmanationDamage
       )) {
         T().apply(member.state, action.id, member.combatant_id, {
@@ -68,6 +71,8 @@
           expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
           ownedDamageResistances: [...(action.damageResistances || [])],
           ownedDebuffCounters: [...(action.debuffCounters || [])],
+          endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
+          endsIfSourceDead: Boolean(action.endsIfSourceDead),
           useDefaultPoisonRecovery: false,
         });
       }
