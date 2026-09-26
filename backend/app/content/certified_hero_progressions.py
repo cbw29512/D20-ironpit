@@ -37,6 +37,8 @@ from app.content.rogue_mid_progression_profile import (
 )
 from app.content.barbarian_berserker_2014_profile import build_rokhan_stonefury_2014_profile
 from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
+from app.content.bard_lore_2014_profile import build_lyra_silverstring_2014_profile
+from app.content.bard_lore_2014_runtime import build_lyra_silverstring_2014
 from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level6_profile, build_rokhan_stonefury_level7_profile
 from app.content.barbarian_progression import build_rokhan_stonefury_level
 from app.content.barbarian_progression_profile import (
@@ -131,6 +133,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="barbarian", ruleset="2014", template_builder=build_rokhan_stonefury_2014,
         profile_level_builder=build_rokhan_stonefury_2014_profile, max_level=20,
+    ),
+    CertifiedHeroProgression(
+        class_id="bard", ruleset="2014", template_builder=build_lyra_silverstring_2014,
+        profile_level_builder=build_lyra_silverstring_2014_profile, max_level=2,
     ),
     CertifiedHeroProgression(
         class_id="cleric", ruleset="2024", template_builder=build_seraphine_dawnshield_level,
