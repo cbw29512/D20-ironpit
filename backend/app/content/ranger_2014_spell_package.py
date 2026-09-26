@@ -39,6 +39,10 @@ _SPELLS = (
         id="freedom-of-movement", name="Freedom of Movement", spell_level=4, min_character_level=13,
         role="buff", required_capabilities=["debuff-counter"],
     ),
+    CanonicalSpellChoice(
+        id="locate-creature", name="Locate Creature", spell_level=4, min_character_level=15,
+        role="utility", required_capabilities=["arena-out-of-scope"],
+    ),
 )
 
 
