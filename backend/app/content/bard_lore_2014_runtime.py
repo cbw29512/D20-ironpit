@@ -10,11 +10,12 @@ from app.content.bard_2014_inspiration import build_bardic_inspiration_2014
 from app.content.bard_2014_initiative import build_bard_2014_initiative_refills
 from app.content.bard_lore_2014_profile import build_lyra_silverstring_2014_profile
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
-from app.content.cleric_2014_level1_spells import cure_wounds_2014, healing_word_2014
+from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, healing_word_2014
 from app.content.paladin_devotion_2014_spells import dispel_magic_2014
-from app.content.shared_spells_2014 import lesser_restoration_2014
+from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
+from app.content.shared_spells_2014 import lesser_restoration_2014, spiritual_weapon_2014
 from app.content.weapon_catalog import build_weapon
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +65,7 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
         charisma_modifier = scores.modifier("charisma")
+        spell_attack = pb + charisma_modifier
         armor = get_armor("leather")
         armor_class = compile_worn_armor_class(
             armor.base_ac,
@@ -92,6 +94,13 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             initiative_bonus=scores.modifier("dexterity") + jack_bonus,
             weapon_attack=_attack(level, scores),
             healing_actions=healing,
+            persistent_spell_attack_actions=(
+                [spiritual_weapon_2014(spell_attack, charisma_modifier)] if level >= 6 else []
+            ),
+            defensive_spell_actions=[
+                *([bless_2014()] if level >= 6 else []),
+                *([freedom_of_movement_2014()] if level >= 7 else []),
+            ],
             condition_removal_actions=(
                 [lesser_restoration_2014()] if level >= 4 else []
             ),
