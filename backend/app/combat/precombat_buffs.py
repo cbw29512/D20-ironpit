@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
+from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.precombat_spells import (
     choose_defensive_spell,
     select_defensive_targets,
@@ -136,6 +137,7 @@ def resolve_opening_buff(
             choice.timed_action,
             spend_action_cost=False,
         )
+        sync_friendly_save_auras(setup)
         return event.model_copy(update={
             "description": (
                 f"Precombat preparation: {member.state.template.name} uses "
