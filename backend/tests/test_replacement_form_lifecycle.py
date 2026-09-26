@@ -6,6 +6,7 @@ from app.content.druid_2014_wild_shape_forms import canonical_wild_shape_templat
 from app.content.druid_land_2014_runtime import build_thalen_greenbough_2014
 from app.content.replacement_form_compiler import compile_replacement_form_template
 from app.domain.combatants import ResourceDefinition
+from app.domain.modifiers import ConcentrationState
 
 
 def _wolf_form(template):
@@ -18,7 +19,7 @@ def test_replacement_form_spends_action_and_resource_but_preserves_concentration
         "resources": [ResourceDefinition(id="wild-shape", name="Wild Shape", max_uses=2)],
     })
     state = build_combatant_state(template)
-    state.concentration = {"source_id": "druid", "effect_id": "faerie-fire", "started_round": 0}
+    state.concentration = ConcentrationState(source_id="druid", effect_id="faerie-fire", started_round=0)
 
     result = enter_replacement_form(
         state,
