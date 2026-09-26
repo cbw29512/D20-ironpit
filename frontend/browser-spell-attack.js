@@ -14,6 +14,15 @@
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
   const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
 
+  function spendRangeModifier(state, option) {
+    if (!option) return null;
+    const cost = option.resourceCost || 1;
+    const current = state.resources?.[option.resourceId] || 0;
+    if (current < cost) throw new Error(`Insufficient ${option.resourceId} for ${option.name}.`);
+    state.resources[option.resourceId] = current - cost;
+    return state.resources[option.resourceId];
+  }
+
   function slotResource(caster, spell, turnKey) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
     const id = `spell-slot-${spell.level}`;
@@ -33,7 +42,7 @@
     if (ward && !ward.succeeded) {
       if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
       E().spend(caster.state, spell.actionCost);
-      const rangeRemaining = window.IRON_PIT_BROWSER_SPELL_POLICY.spendRangeModifier(caster.state, rangeModifier);
+      const rangeRemaining = spendRangeModifier(caster.state, rangeModifier);
       CE()?.applyTimedResistance(caster, spell, round);
       const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
       event.resource_remaining = resourceId ? caster.state.resources[resourceId] : rangeRemaining;
@@ -56,7 +65,7 @@
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
-    const rangeRemaining = window.IRON_PIT_BROWSER_SPELL_POLICY.spendRangeModifier(caster.state, rangeModifier);
+    const rangeRemaining = spendRangeModifier(caster.state, rangeModifier);
     CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
