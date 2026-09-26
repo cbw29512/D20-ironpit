@@ -5,6 +5,7 @@ from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
+from app.combat.condition_rules import can_see
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.timed_conditions import apply_timed_condition
@@ -36,7 +37,10 @@ def resolve_save_action(
     spell_effect: bool = False,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
-    if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
+    if not legal_save_action(action, target, distance_ft):
+        raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
+    if action.requires_target_sight and not can_see(actor.state, target.state):
+        raise ValueError(f"{action.name} requires the actor to see the target.")
     if check_resource and not action_resource_available(actor.state, action):
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
