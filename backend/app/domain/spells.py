@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, ConditionName
 from app.domain.save_damage import DamageTypeName, SaveDamageComponent
+from app.domain.save_effects import FailedSaveTimedEffect
 
 from app.domain.spell_modifiers import SpellModifierEffect, SpellModifierKind
 
@@ -93,6 +94,7 @@ class SpellSaveAction(BaseModel):
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
     effect_tags: list[str] = Field(default_factory=list)
+    failed_save_timed_effect: FailedSaveTimedEffect | None = None
     concentration: bool = False
     animation: str = "spell-save"
 
