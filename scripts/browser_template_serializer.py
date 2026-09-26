@@ -292,6 +292,7 @@ def defense_row(action: Any) -> dict[str, Any]:
         "temporaryHp": action.temporary_hp,
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
         "damageResistances": list(action.damage_resistances),
+        "conditionIds": list(action.condition_ids),
         "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
         "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
     }
