@@ -35,6 +35,7 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
             damage_type=spell.damage_type, success_damage=spell.success_damage,
             damage_components=list(spell.damage_components),
             magical_effect=True, effect_tags=list(spell.effect_tags),
+            requires_target_hearing=spell.requires_target_hearing,
             failed_save_timed_effect=spell.failed_save_timed_effect,
             animation=spell.animation,
         )
