@@ -28,8 +28,8 @@ def _spell(
 _CANTRIPS = (
     _spell("produce-flame", "Produce Flame", "damage", "spell-attack", "cantrip-scaling", level=0),
     _spell("poison-spray", "Poison Spray", "damage", "save-damage", "cantrip-scaling", level=0),
-    _spell("guidance", "Guidance", "buff", "arena-out-of-scope", level=0, min_level=4),
-    _spell("druidcraft", "Druidcraft", "utility", "arena-out-of-scope", level=0, min_level=10),
+    _spell("druidcraft", "Druidcraft", "utility", "arena-out-of-scope", level=0, min_level=4),
+    _spell("guidance", "Guidance", "buff", "arena-out-of-scope", level=0, min_level=10),
 )
 
 _PREPARED = (
@@ -44,6 +44,14 @@ _PREPARED = (
     _spell(
         "lesser-restoration", "Lesser Restoration", "support",
         "condition-removal", level=2, min_level=3,
+    ),
+    _spell(
+        "darkvision", "Darkvision", "utility",
+        "arena-out-of-scope", level=2, min_level=4,
+    ),
+    _spell(
+        "locate-animals-or-plants", "Locate Animals or Plants", "utility",
+        "arena-out-of-scope", level=2, min_level=4,
     ),
 )
 
