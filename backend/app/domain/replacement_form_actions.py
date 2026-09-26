@@ -16,4 +16,5 @@ class ReplacementFormAction(BaseModel):
     resource_cost: int = Field(default=1, ge=1)
     voluntary_revert_action: Literal["action", "bonus_action"] = "bonus_action"
     retain_spellcasting: bool = False
+    setup_spell_id: str | None = None
     source: str
