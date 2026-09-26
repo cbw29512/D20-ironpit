@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 def build_nyra_2014_combat_profile(level: int) -> PregenCombatProfile:
     try:
-        if level not in (1, 2):
-            raise ValueError("2014 Nyra combat fingerprint currently covers levels 1 through 2.")
+        if level not in (1, 2, 3):
+            raise ValueError("2014 Nyra combat fingerprint currently covers levels 1 through 3.")
         profile = build_nyra_emberveil_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -55,7 +55,7 @@ def build_nyra_2014_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_nyra_2014_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_nyra_2014_combat_profile(level) for level in range(1, 3)]
+        return [build_nyra_2014_combat_profile(level) for level in range(1, 4)]
     except Exception:
         logger.exception("Failed to compile Nyra's 2014 combat fingerprints.")
         raise
