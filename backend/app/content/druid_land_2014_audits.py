@@ -38,13 +38,23 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
             FeatureAudit(
                 feature_id="wild-shape", feature_name="Wild Shape",
                 source_reference="D&D Basic Rules 2014: Druid 2",
-                category="class", combat_relevant=True, automated=False,
-                notes="Blocked pending universal replacement-form lifecycle support.",
+                category="class", combat_relevant=True, automated=True,
+                notes=(
+                    "Uses the universal replacement-form action/lifecycle with certified 2014 beast data, "
+                    "separate form HP, automatic reversion, excess-damage carryover, and concentration persistence."
+                ),
             ),
             FeatureAudit(
                 feature_id="circle-land", feature_name="Circle of the Land",
                 source_reference="D&D Basic Rules 2014: Circle of the Land",
-                category="subclass", combat_relevant=True, automated=False,
+                category="subclass", combat_relevant=False, automated=True,
+                notes="Subclass identity is a sparse overlay; its level-2 combat-neutral choices do not replace base Druid features.",
+            ),
+            FeatureAudit(
+                feature_id="bonus-cantrip", feature_name="Bonus Cantrip",
+                source_reference="D&D Basic Rules 2014: Circle of the Land 2",
+                category="subclass", combat_relevant=False, automated=True,
+                notes="Canonical Land build selects Druidcraft as the arena-neutral bonus cantrip.",
             ),
             FeatureAudit(
                 feature_id="natural-recovery", feature_name="Natural Recovery",
