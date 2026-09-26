@@ -27,3 +27,18 @@ Circle of the Moon is not part of Thalen's current 2014 Land Druid progression. 
 - Elemental Wild Shape benchmark: one of the printed Air/Earth/Fire/Water Elemental forms, using the subclass feature's two-use Wild Shape cost.
 
 These are future capability targets only and do not alter Land Druid certification.
+
+
+## Iron Pit Druid combat sequence
+
+The deterministic Land Druid combat plan is:
+
+1. **Opening free buff before initiative** — use one legal available combat buff under the global Iron Pit opening-buff rule. Prefer a non-concentration buff when available so the concentration slot remains free.
+2. **Establish concentration** — on the first normal turn, cast the highest-priority legal concentration spell for the current build when that improves the fight.
+3. **Wild Shape** — on the next legal Action, enter the canonical form for the current level.
+4. **Maintain concentration while shaped** — replacement form does not end concentration by itself. Incoming damage in beast form still triggers normal concentration checks.
+5. **Fight in form** — use the canonical beast's shared attacks/control/movement until reversion or until a higher-priority legal action is required.
+
+If the chosen concentration spell itself is used as the single free opening buff, the Druid may Wild Shape with the first normal-turn Action.
+
+Circle of the Land uses the printed Action cost for Wild Shape. Future Circle of the Moon support may use its subclass-specific bonus-action transformation rule, but that must not leak into Land Druid behavior.
