@@ -122,6 +122,22 @@ This is the default workflow for canonical pregens going forward.
 8. **Certify in global edition sequence.** First finish all 12 2014 classes through level 20, run the complete 2014 pregen/universal-engine re-audit, and reach the 240/240 certification gate. Only then begin the 2024 migration pass across the 12 classes, reusing compatible universal mechanics and adding only true 2024 differences before regenerating artifacts and running Python/browser parity plus full CI.
 9. **Never rebuild working mechanics from scratch merely because the edition changed.** Reconcile and reuse first; rewrite only when semantics actually differ or the old implementation violates current engine contracts.
 
+### Canonical combat resolution refactor
+
+All current and future 2014 work follows the repository-wide `checks -> modifiers -> result -> state update -> audit event` model defined in `docs/COMBAT_RESOLUTION_PIPELINE.md`.
+
+For each combat feature:
+
+1. identify the shared check it modifies;
+2. encode source-specific facts as declarative data;
+3. let the shared resolver produce the result;
+4. preserve the printed source name only as presentation/audit metadata;
+5. reject class-, subclass-, spell-, item-, monster-, or feature-name dispatch when semantic state can express the rule;
+6. when a touched shared subsystem still contains source-specific branches, migrate mechanically equivalent behavior into the universal check/modifier pipeline as part of that tranche;
+7. keep Python/browser parity and exact-head generated-artifact parity mandatory.
+
+The active Druid lane is the first explicit enforcement example: Nature's Ward must bind poison, disease, Charmed, and Frightened protections into existing damage/debuff/condition checks rather than adding a Druid-specific resolver.
+
 ### Practical global workflow
 
 The canonical pregen program is executed in this order:
