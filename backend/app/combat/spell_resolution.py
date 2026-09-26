@@ -87,6 +87,7 @@ def resolve_spell(
                 round_number,
                 affected_states,
                 expires_round=round_number + duration_rounds,
+                slot_level=choice.slot_level if choice.slot_level > 0 else None,
             )
 
         placement = choice.placement
