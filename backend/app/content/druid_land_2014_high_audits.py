@@ -90,4 +90,19 @@ def build_druid_land_2014_high_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 12:
+        rows.append(
+            FeatureAudit(
+                feature_id="ability-score-improvement-12",
+                feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Druid 12",
+                category="class",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Canonical progression raises Constitution from 14 to 16; shared character math "
+                    "recomputes maximum HP with the new modifier."
+                ),
+            )
+        )
     return rows
