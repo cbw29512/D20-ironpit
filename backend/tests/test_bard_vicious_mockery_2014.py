@@ -48,6 +48,7 @@ def test_failed_vicious_mockery_save_disadvantages_and_consumes_next_attack() ->
     lyra = _member(build_lyra_silverstring_2014(1), "lyra", "heroes", 0)
     enemy_template = build_commoner().model_copy(update={
         "ruleset": "2014",
+        "max_hp": 10,
         "saving_throw_bonuses": {
             "strength": 0,
             "dexterity": 0,
