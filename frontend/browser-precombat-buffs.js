@@ -60,6 +60,7 @@
       const action = choice.value;
       member.state.opening_buff_id = action.id;
       const event = T().resolve(sequence, 0, member, action, { spendActionCost: false });
+      window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS?.sync(setup);
       return {
         ...event,
         description: `Precombat preparation: ${member.state.template.name} uses ${action.name} as the free opening buff.`,
