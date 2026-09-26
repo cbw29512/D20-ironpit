@@ -26,6 +26,7 @@ from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_modifiers import build_spell_modifier
+from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.zero_hp import apply_damage
@@ -33,6 +34,7 @@ from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll
 from app.domain.modifiers import ModifierKind
+from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
 from app.domain.spells import SpellAttackAction
 
 logger = logging.getLogger(__name__)
@@ -59,6 +61,7 @@ def resolve_spell_attack(
     sequence: int, round_number: int, caster: EncounterCombatant, target: EncounterCombatant,
     spell: SpellAttackAction, setup: EncounterSetup, turn_key: str, dice,
     *, distance_override_ft: int | None = None,
+    range_modifier: ResourceBackedSpellRangeModifier | None = None,
 ) -> BattleEvent:
     try:
         if spell.action_cost == "reaction" or not is_available(caster.state, spell.action_cost):
@@ -66,7 +69,8 @@ def resolve_spell_attack(
         if target.side == caster.side or target.state.is_dead or not target.state.is_alive:
             raise ValueError(f"{spell.name} requires a living enemy target.")
         distance = combatant_distance(caster, target) if distance_override_ft is None else distance_override_ft
-        if distance > spell.range_ft:
+        allowed_range = spell.range_ft * (range_modifier.range_multiplier if range_modifier is not None else 1)
+        if distance > allowed_range:
             raise ValueError(f"{spell.name} target is out of range.")
         resource = _slot_resource(caster, spell, turn_key)
         if spell.level > 0 and resource is None:
@@ -76,9 +80,12 @@ def resolve_spell_attack(
             if resource is not None:
                 mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
             spend(caster.state, spell.action_cost)
+            range_remaining = spend_spell_range_modifier(caster.state, range_modifier)
             apply_spell_cast_timed_resistance(caster, spell, round_number)
             event = blocked_targeting_event(sequence, round_number, caster, target, spell.name, ward)
-            event.resource_remaining = resource.current_uses if resource is not None else None
+            event.resource_remaining = resource.current_uses if resource is not None else range_remaining
+            if range_modifier is not None:
+                event.description += f" {caster.state.template.name} uses {range_modifier.name}."
             return event
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
             caster.state, target.state, distance, target.combatant_id,
@@ -109,6 +116,7 @@ def resolve_spell_attack(
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
         spend(caster.state, spell.action_cost)
+        range_remaining = spend_spell_range_modifier(caster.state, range_modifier)
         apply_spell_cast_timed_resistance(caster, spell, round_number)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
@@ -131,6 +139,8 @@ def resolve_spell_attack(
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
+        if range_modifier is not None:
+            description += f" {caster.state.template.name} uses {range_modifier.name}."
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
         if reaction_penalty is not None:
@@ -147,7 +157,8 @@ def resolve_spell_attack(
             hp_before=hp_before, hp_after=target.state.current_hp, temporary_hp_before=temporary_hp_before, temporary_hp_after=target.state.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
-            is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=spell.id, resource_remaining=remaining,
+            is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=spell.id,
+            resource_remaining=remaining if resource is not None else range_remaining,
             concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
             animation=spell.animation, description=description + consume_survival_save_log(target.state) + consume_zero_hp_replacement_log(target.state),
         )
