@@ -79,4 +79,58 @@ def build_sorcerer_draconic_2014_high_level_audits(level: int) -> list[FeatureAu
                 "saves and retroactive hit points."
             ),
         ))
+    if level >= 17:
+        rows += [
+            FeatureAudit(
+                feature_id="extended-spell",
+                feature_name="Metamagic: Extended Spell",
+                source_reference="D&D Basic Rules 2014: Sorcerer 3, Metamagic",
+                category="class", combat_relevant=True, automated=False,
+                notes=(
+                    "Selected as Nyra's fourth Metamagic option. Certification remains gated on a shared "
+                    "resource-backed spell-duration multiplier with Python/browser parity."
+                ),
+            ),
+            FeatureAudit(
+                feature_id="water-breathing",
+                feature_name="Water Breathing",
+                source_reference="D&D Basic Rules 2014: Water Breathing",
+                category="class", combat_relevant=False, automated=True,
+                notes="Legal additional Sorcerer spell known; underwater breathing is arena-neutral.",
+            ),
+        ]
+    if level >= 18:
+        rows.append(FeatureAudit(
+            feature_id="draconic-presence",
+            feature_name="Draconic Presence",
+            source_reference="D&D Basic Rules 2014: Draconic Bloodline 18",
+            category="subclass", combat_relevant=True, automated=False,
+            notes=(
+                "Certification remains gated on a universal source-owned 60-foot hostile start-turn aura "
+                "that spends 5 Sorcery Points, requires concentration, applies a Wisdom save, and owns the "
+                "resulting Charmed/Frightened condition plus success immunity timing."
+            ),
+        ))
+    if level >= 19:
+        rows.append(FeatureAudit(
+            feature_id="ability-score-improvement-19",
+            feature_name="Ability Score Improvement",
+            source_reference="D&D Basic Rules 2014: Sorcerer 19",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "+2 Dexterity raises Nyra from 13 to 15; shared derived-stat math updates AC, initiative, "
+                "Dexterity skills, attacks, and saving throws where applicable."
+            ),
+        ))
+    if level >= 20:
+        rows.append(FeatureAudit(
+            feature_id="sorcerous-restoration",
+            feature_name="Sorcerous Restoration",
+            source_reference="D&D Basic Rules 2014: Sorcerer 20",
+            category="class", combat_relevant=False, automated=True,
+            notes=(
+                "RAW recovery occurs when finishing a short rest. Iron Pit has no in-fight short-rest phase "
+                "and resets combatants between matches, so no combat resolver is required."
+            ),
+        ))
     return rows
