@@ -3,11 +3,11 @@
 
   const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
+  const SC = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const P = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
+  const CONC = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
 
@@ -49,7 +49,7 @@
       if (choice.slotLevel > 0) {
         const resourceId = `spell-slot-${choice.slotLevel}`;
         if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
-        C().markSlotSpellCast(caster.state, turnKey);
+        SC().markSlotSpellCast(caster.state, turnKey);
         caster.state.resources[resourceId] -= 1;
         remaining = caster.state.resources[resourceId];
       }
@@ -58,10 +58,10 @@
 
       const allStates = [...setup.heroes, ...setup.monsters].map((member) => member.state);
       if (spell.concentration) {
-        if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
+        if (!CONC()) throw new Error("Browser Concentration runtime is not loaded.");
         const durationRounds = (spell.durationMinutes || 0) * 10;
         if (durationRounds <= 0) throw new Error("Concentration save spell requires a positive duration.");
-        C().start(caster.state, caster.combatant_id, spell.id, round, allStates, round + durationRounds);
+        CONC().start(caster.state, caster.combatant_id, spell.id, round, allStates, round + durationRounds);
       }
 
       const placement = choice.placement;
