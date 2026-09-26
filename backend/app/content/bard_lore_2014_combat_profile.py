@@ -30,7 +30,7 @@ def build_lyra_2014_combat_profile(level: int) -> PregenCombatProfile:
             level=level,
             abilities=scores,
             save_proficiencies=("dexterity", "charisma"),
-            armor_class=12 + dexterity,
+            armor_class=11 + dexterity,
             max_hp=fixed_hit_points(level, 8, scores.modifier("constitution")),
             speed_ft=30,
             skill_bonuses=(
