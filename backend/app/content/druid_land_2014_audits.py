@@ -78,4 +78,25 @@ def build_druid_land_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 4:
+        rows += [
+            FeatureAudit(
+                feature_id="ability-score-improvement-4",
+                feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Druid 4",
+                category="class",
+                combat_relevant=True,
+                automated=True,
+                notes="Canonical progression raises Wisdom by 2 and recomputes spell attack/save and Wisdom skills.",
+            ),
+            FeatureAudit(
+                feature_id="wild-shape-improvement-4",
+                feature_name="Wild Shape Improvement",
+                source_reference="D&D Basic Rules 2014: Druid 4",
+                category="class",
+                combat_relevant=True,
+                automated=True,
+                notes="Canonical form advances to the certified CR 1/2 Crocodile and permits swimming forms.",
+            ),
+        ]
     return rows
