@@ -37,6 +37,21 @@ def _audits(level: int) -> list[FeatureAudit]:
             notes="Travel and exploration benefits are outside an in-progress Iron Pit fight.",
         ),
     ]
+    if level >= 2:
+        rows += [
+            FeatureAudit(
+                feature_id="fighting-style", feature_name="Fighting Style (Archery)",
+                source_reference="D&D Basic Rules 2014: Ranger 2",
+                category="class", combat_relevant=True, automated=True,
+                notes="Reuses the universal Archery ranged-weapon attack-bonus compiler.",
+            ),
+            FeatureAudit(
+                feature_id="spellcasting", feature_name="Spellcasting",
+                source_reference="D&D Basic Rules 2014: Ranger 2",
+                category="class", combat_relevant=True, automated=True,
+                notes="Known-spell count, slots, healing, and buffs use shared 2014 spell primitives.",
+            ),
+        ]
     return rows
 
 
@@ -72,9 +87,19 @@ def _level_one() -> CharacterBuildProfile:
 
 def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level != 1:
-            raise ValueError("2014 Rowan profile currently covers level 1.")
-        return _level_one()
+        if level not in range(1, 3):
+            raise ValueError("2014 Rowan profile currently covers levels 1 through 2.")
+        profile = _level_one()
+        if level == 1:
+            return profile
+        data = advance_profile_data(profile, 2)
+        data.update(
+            fighting_style="Archery",
+            fighting_styles=["Archery"],
+            feature_audits=_audits(2),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 2"],
+        )
+        return CharacterBuildProfile(**data)
     except Exception:
         logger.exception("Failed to compile 2014 Rowan Ashtrail profile at level %s.", level)
         raise
