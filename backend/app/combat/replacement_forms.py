@@ -8,6 +8,7 @@ from app.combat.resources import spend_resource
 from app.domain.combatants import CombatantTemplate
 from app.domain.models import CombatantState
 from app.domain.replacement_forms import ReplacementFormState
+from app.domain.replacement_form_actions import ReplacementFormAction
 
 logger = logging.getLogger(__name__)
 
@@ -114,3 +115,32 @@ def apply_replacement_form_damage(
     except Exception as exc:
         logger.exception("Failed to resolve replacement-form damage for %s.", state.template.name)
         raise RuntimeError("Replacement-form damage could not be resolved.") from exc
+
+
+def resolve_replacement_form_action(
+    state: CombatantState,
+    action: ReplacementFormAction,
+    active_form_template: CombatantTemplate,
+) -> ReplacementFormResult:
+    """Resolve one declared replacement-form action through the shared lifecycle."""
+    try:
+        if active_form_template.id != f"{state.template.id}--form-{action.form_template_id}":
+            raise ValueError(
+                f"Compiled replacement form {active_form_template.id} does not match "
+                f"declared form {action.form_template_id} for {state.template.id}."
+            )
+        return enter_replacement_form(
+            state,
+            source_id=action.id,
+            source_name=action.name,
+            form_template=active_form_template,
+            action_cost=action.action_cost,
+            resource_id=action.resource_id,
+            resource_cost=action.resource_cost,
+            voluntary_revert_action=action.voluntary_revert_action,
+        )
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to resolve replacement-form action %s.", action.id)
+        raise RuntimeError("Replacement-form action could not be resolved.") from exc
