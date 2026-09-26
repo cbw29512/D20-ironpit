@@ -89,4 +89,22 @@ def build_bard_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 notes="Canonical bonus-known selections are Bless and Spiritual Weapon.",
             ),
         ]
+    if level >= 10:
+        rows += [
+            FeatureAudit(
+                feature_id="expertise-2", feature_name="Expertise",
+                source_reference="D&D Basic Rules 2014: Bard 10",
+                category="class", combat_relevant=True, automated=True,
+                notes=(
+                    "Second Expertise choices are Acrobatics and Perception. "
+                    "Acrobatics affects certified grapple-escape checks."
+                ),
+            ),
+            FeatureAudit(
+                feature_id="magical-secrets", feature_name="Magical Secrets",
+                source_reference="D&D Basic Rules 2014: Bard 10",
+                category="class", combat_relevant=True, automated=True,
+                notes="Canonical selections are Flame Strike and Death Ward.",
+            ),
+        ]
     return rows
