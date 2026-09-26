@@ -67,7 +67,10 @@ def test_arena_fingerprints_stay_2024_while_all_edition_registry_adds_2014() -> 
     assert completed_ids_2014.issubset(ids_2014)
     assert ids_2014.isdisjoint(arena_profiles)
     assert ids_2014.issubset(all_profiles)
-    assert set(all_profiles) == set(arena_profiles) | ids_2014
+    staged_lyra_ids = {
+        f"lyra-silverstring-2014-l{level}" for level in range(11, 21)
+    }
+    assert set(all_profiles) == set(arena_profiles) | ids_2014 | staged_lyra_ids
 
 
 def test_2014_fighter_gets_source_derived_unarmed_opportunity_profile() -> None:
