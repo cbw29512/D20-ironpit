@@ -15,7 +15,7 @@ Persistent canonical 2014 Thalen Greenbough, Circle of the Land, levels 1–20.
 | Bonus Cantrip | 2 | ENGINE_EXISTS_BINDING_MISSING | Mending is the deterministic arena-neutral bonus cantrip choice. |
 | Natural Recovery | 2 | ARENA_NEUTRAL | Rest-time slot recovery does not alter an in-progress Iron Pit fight; all resources reset between matches. |
 | Forest Circle Spells — 2nd | 3 | ENGINE_EXISTS_COMPOSITION | Barkskin uses the universal minimum-AC modifier; Spider Climb is arena-neutral on the standard flat Pit. |
-| Forest Circle Spells — 3rd | 5 | ENGINE_TRULY_MISSING + ARENA_NEUTRAL | Call Lightning needs the universal concentration repeat-save Action plus an explicit vertical storm-cloud-space arena decision. Plant Growth has no default normal plants to affect. |
+| Forest Circle Spells — 3rd | 5 | ENGINE_EXISTS_BINDING_MISSING + ARENA_NEUTRAL | The universal concentration repeat-save Action now exists in Python/browser. Call Lightning source binding waits on an explicit vertical storm-cloud-space arena decision. Plant Growth has no default normal plants to affect. |
 | Forest Circle Spells — 4th | 7 | ENGINE_EXISTS_COMPOSITION + ARENA_NEUTRAL | Freedom of Movement reuses shared movement/debuff-counter primitives; Divination is arena-neutral. |
 | Forest Circle Spells — 5th | 9 | ENGINE_EXISTS_BINDING_MISSING or ARENA_NEUTRAL | Re-audit Commune with Nature and Tree Stride against the standard Pit before binding. |
 | Land's Stride | 6 | ENGINE_EXISTS_COMPOSITION | Reuse movement/debuff-counter primitives for nonmagical difficult terrain/plants where battlefield semantics apply. |
@@ -48,9 +48,6 @@ Implemented shared state/lifecycle:
 
 Levels 1–4 are the current registered 2014 Land Druid certification boundary on this branch.
 
-Level 5 is prepared but intentionally remains outside certification until both of these are true:
-
-1. the standard Iron Pit contract explicitly establishes whether Call Lightning has the required vertical storm-cloud space; and
-2. the generic concentration repeat-save Action is implemented with Python/browser parity and permanent tests.
+Level 5 is prepared but intentionally remains outside certification until the standard Iron Pit contract explicitly establishes whether Call Lightning has the required vertical storm-cloud space. The generic concentration repeat-save Action is already implemented with Python/browser parity and permanent tests; once arena legality is explicit, Call Lightning can bind to that universal capability and receive source-specific certification tests.
 
 Plant Growth does not independently block level 5 on the default battlefield because the Pit contract supplies no normal plants by default. If a future supported effect creates qualifying plants, Plant Growth must be re-audited for that encounter state.
