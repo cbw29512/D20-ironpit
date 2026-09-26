@@ -126,4 +126,49 @@ const ordinarySave = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
 assert.equal(ordinarySave.roll.mode, "normal");
 assert.deepEqual(ordinarySave.roll.rolls, [11]);
 
+const landTemplate = {
+  id: "land-druid-test",
+  name: "Land Druid Test",
+  saving_throw_bonuses: { dexterity: 0 },
+  saving_throw_advantage_grants: [{
+    source_id: "lands-stride",
+    source_name: "Land's Stride",
+    abilities: ["dexterity"],
+    requires_magical_effect: true,
+    required_effect_tags: ["plant-impediment"],
+  }],
+};
+const landState = {
+  template: landTemplate,
+  active_effect_ids: [],
+  active_modifiers: window.IRON_PIT_BROWSER_OPENING_MODIFIERS.build(landTemplate),
+};
+window.IRON_PIT_DICE = queuedDice([4, 16]);
+const magicalPlants = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+  landState, "dexterity", 99,
+  { magicalEffect: true, effectTags: ["plant-impediment"] },
+);
+assert.equal(magicalPlants.roll.mode, "advantage");
+assert.deepEqual(magicalPlants.roll.rolls, [4, 16]);
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS.saveAdvantageSourceNames(
+    landState, "dexterity",
+    { magicalEffect: true, effectTags: ["plant-impediment"] },
+  ),
+  ["Land's Stride"],
+);
+
+const nonmagicalPlantsState = {
+  template: landTemplate,
+  active_effect_ids: [],
+  active_modifiers: window.IRON_PIT_BROWSER_OPENING_MODIFIERS.build(landTemplate),
+};
+window.IRON_PIT_DICE = queuedDice([9]);
+const nonmagicalPlants = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+  nonmagicalPlantsState, "dexterity", 99,
+  { magicalEffect: false, effectTags: ["plant-impediment"] },
+);
+assert.equal(nonmagicalPlants.roll.mode, "normal");
+assert.deepEqual(nonmagicalPlants.roll.rolls, [9]);
+
 console.log("Browser contextual saving-throw Advantage regressions passed.");
