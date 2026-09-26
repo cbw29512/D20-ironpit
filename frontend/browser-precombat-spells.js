@@ -13,7 +13,8 @@
     if (member.state.concentration?.effect_id === spell.id) return true;
     const side = member.side === "heroes" ? setup.heroes : setup.monsters;
     return side.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
-      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id));
+      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id)
+      || target.state.timed_effects?.some((effect) => effect.source_effect_id === spell.id));
   }
 
   function typedRelevant(member, setup, spell) {
@@ -93,7 +94,8 @@
     if (member.state.opening_buff_id) throw new Error(`${member.state.template.name} already committed its one opening buff this battle.`);
     if (spell.concentration && member.state.concentration) throw new Error(`${member.state.template.name} is already concentrating and will not replace the active buff automatically.`);
     if (targets.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
-      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id))) {
+      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id)
+      || target.state.timed_effects?.some((effect) => effect.source_effect_id === spell.id))) {
       throw new Error(`${spell.name} is already active on a selected target.`);
     }
     const resourceId = `spell-slot-${slotLevel}`;
@@ -118,6 +120,7 @@
     if (spell.maxHpIncrease) details.push(`+${spell.maxHpIncrease} Hit Point maximum`);
     if (spell.currentHpIncrease) details.push(`+${spell.currentHpIncrease} current Hit Points`);
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
+    details.push(...(spell.conditionIds || []));
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     if (spell.concentration) details.push("Concentration");
     const single = targets.length === 1 ? targets[0] : null;
