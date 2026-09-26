@@ -3,13 +3,12 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.area_targeting import legal_area_placements
-from app.combat.condition_rules import can_see
-from app.combat.encounter_targeting import combatant_distance
-from app.combat.offense_value import save_spell_expected_damage
-from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
-from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
+from app.combat.spell_policy_targeting import (
+    area_spell_choice,
+    legacy_radius_spell_choice,
+    single_target_spell_choice,
+)
 from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -52,37 +51,6 @@ def spell_at_slot(action: SpellSaveAction, slot_level: int) -> SpellSaveAction:
         raise RuntimeError("Spell higher-slot scaling could not be evaluated.") from exc
 
 
-def legal_single_spell_targets(
-    caster: EncounterCombatant,
-    setup: EncounterSetup,
-    action: SpellSaveAction,
-    *,
-    range_ft: int | None = None,
-) -> list[EncounterCombatant]:
-    """Return legal hostile targets for one single-target save spell."""
-    try:
-        enemies = setup.monsters if caster.side == "heroes" else setup.heroes
-        return [
-            target
-            for target in enemies
-            if target.state.is_alive
-            and not target.state.is_dead
-            and target.state.current_hp > 0
-            and combatant_distance(caster, target) <= (action.range_ft if range_ft is None else range_ft)
-            and (
-                not action.requires_target_hearing
-                or "deafened" not in target.state.active_effect_ids
-            )
-            and (
-                not action.requires_target_sight
-                or can_see(caster.state, target.state)
-            )
-        ]
-    except Exception as exc:
-        logger.exception("Failed to determine legal targets for spell %s.", action.id)
-        raise RuntimeError("Spell targets could not be evaluated.") from exc
-
-
 def choose_spell(
     caster: EncounterCombatant,
     setup: EncounterSetup,
@@ -111,117 +79,30 @@ def choose_spell(
             ):
                 scaled = spell_at_slot(action, slot_level)
                 if action.area is not None:
-                    base_range = action.range_ft
-                    effective_range = (
-                        effective_spell_range_ft(caster.state, base_range)
-                        if action.area.origin == "point"
-                        else base_range
+                    choice = area_spell_choice(
+                        caster, setup, action, slot_level, scaled, members,
                     )
-                    base_placements = legal_area_placements(caster, setup, action.area, base_range)
-                    placements = [
-                        item
-                        for item in legal_area_placements(caster, setup, action.area, effective_range)
-                        if not item.friendly_ids
-                    ]
-                    if not placements:
-                        continue
-                    placement = max(
-                        placements,
-                        key=lambda item: (
-                            len(item.enemy_ids),
-                            -len(item.friendly_ids),
-                        ),
-                    )
-                    score = sum(
-                        save_spell_expected_damage(members[target_id], scaled)
-                        for target_id in placement.enemy_ids
-                    )
-                    range_modifier = None
-                    if placement not in base_placements:
-                        range_modifier = choose_spell_range_modifier(
-                            caster.state,
-                            base_range_ft=base_range,
-                            required_range_ft=effective_range,
-                        )
-                    choice = SpellChoice(
-                        action,
-                        slot_level,
-                        tuple(placement.enemy_ids),
-                        placement,
-                        score,
-                        range_modifier,
-                    )
-                    candidates.append((score, -action.level, -index, choice))
-                    continue
-
-                if action.area_radius_ft is not None:
-                    base_range = action.range_ft
-                    effective_range = effective_spell_range_ft(caster.state, base_range)
-                    placement = best_area_placement(
+                elif action.area_radius_ft is not None:
+                    choice = legacy_radius_spell_choice(
                         caster,
                         setup,
-                        action.area_radius_ft,
-                        effective_range,
+                        action,
+                        slot_level,
+                        scaled,
+                        members,
                         protected_ally_ids,
                     )
-                    if placement is None:
-                        continue
-                    target_ids = (*placement.enemy_ids, *placement.friendly_ids)
-                    score = sum(
-                        save_spell_expected_damage(members[target_id], scaled)
-                        for target_id in placement.enemy_ids
+                else:
+                    choice = single_target_spell_choice(
+                        caster, setup, action, slot_level, scaled,
                     )
-                    score -= sum(
-                        save_spell_expected_damage(members[target_id], scaled)
-                        for target_id in placement.friendly_ids
-                    )
-                    required_range = abs(caster.position_ft - placement.center_ft)
-                    range_modifier = choose_spell_range_modifier(
-                        caster.state,
-                        base_range_ft=base_range,
-                        required_range_ft=required_range,
-                    )
-                    choice = SpellChoice(
-                        action,
-                        slot_level,
-                        target_ids,
-                        placement,
-                        score,
-                        range_modifier,
-                    )
-                    candidates.append((score, -action.level, -index, choice))
-                    continue
-
-                effective_range = effective_spell_range_ft(caster.state, action.range_ft)
-                legal = legal_single_spell_targets(caster, setup, action, range_ft=effective_range)
-                if not legal:
-                    continue
-                target = max(
-                    legal,
-                    key=lambda item: (
-                        save_spell_expected_damage(item, scaled),
-                        -item.state.current_hp,
-                        item.combatant_id,
-                    ),
-                )
-                score = save_spell_expected_damage(target, scaled)
-                range_modifier = choose_spell_range_modifier(
-                    caster.state,
-                    base_range_ft=action.range_ft,
-                    required_range_ft=combatant_distance(caster, target),
-                )
-                candidates.append((
-                    score,
-                    -action.level,
-                    -index,
-                    SpellChoice(
-                        action,
-                        slot_level,
-                        (target.combatant_id,),
-                        expected_damage=score,
-                        range_modifier=range_modifier,
-                    ),
-                ))
+                if choice is not None:
+                    candidates.append((
+                        choice.expected_damage,
+                        -action.level,
+                        -index,
+                        choice,
+                    ))
         return max(candidates, key=lambda item: item[:3])[3] if candidates else None
     except Exception:
         logger.exception(
