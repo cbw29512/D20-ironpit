@@ -5,7 +5,7 @@ import logging
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.monster_equipment import build_light_crossbow
 from app.content.sorcerer_2014_font_of_magic import font_of_magic_2014_actions
-from app.content.sorcerer_2014_metamagic import distant_spell_2014, heightened_spell_2014
+from app.content.sorcerer_2014_metamagic import distant_spell_2014, extended_spell_2014, heightened_spell_2014
 from app.content.paladin_devotion_2014_spells import dispel_magic_2014
 from app.content.shared_invisibility_spells_2014 import greater_invisibility_2014
 from app.content.sorcerer_2014_progression import sorcerer_2014_level
@@ -73,6 +73,7 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             resource_conversion_actions=(font_of_magic_2014_actions(level) if level >= 2 else []),
             spell_save_disadvantage_options=([heightened_spell_2014()] if level >= 3 else []),
             spell_range_modifiers=([distant_spell_2014()] if level >= 10 else []),
+            spell_duration_modifiers=([extended_spell_2014()] if level >= 17 else []),
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
