@@ -36,8 +36,8 @@ _KNOWN = (
 
 def build_sorcerer_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in (1, 2, 3):
-            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 3.")
+        if level not in range(1, 5):
+            raise ValueError("2014 Sorcerer spell package currently covers levels 1 through 4.")
         from app.content.sorcerer_2014_progression import sorcerer_2014_level
 
         row = sorcerer_2014_level(level)
