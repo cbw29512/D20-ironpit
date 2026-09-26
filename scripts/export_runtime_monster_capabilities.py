@@ -34,6 +34,8 @@ def _strip_extension_defaults(value):
     for key, item in value.items():
         if key == "replacement_hp" and item == 0:
             continue
+        if key == "minimum_value" and item == 0:
+            continue
         if key == "prevents_instant_death" and item is False:
             continue
         if key in {"effect_tags", "required_effect_tags"} and item == []:
