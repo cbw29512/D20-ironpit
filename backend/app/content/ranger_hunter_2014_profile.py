@@ -87,6 +87,16 @@ def _audits(level: int) -> list[FeatureAudit]:
                 notes="Canonical archer progression raises Dexterity from 17 to 19 and recomputes derived combat values.",
             )
         )
+    if level >= 5:
+        rows.append(
+            FeatureAudit(
+                feature_id="extra-attack",
+                feature_name="Extra Attack",
+                source_reference="D&D Basic Rules 2014: Ranger 5",
+                category="class", combat_relevant=True, automated=True,
+                notes="Uses the universal Attack action with two weapon-attack slots.",
+            )
+        )
     return rows
 
 
@@ -122,8 +132,8 @@ def _level_one() -> CharacterBuildProfile:
 
 def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 5):
-            raise ValueError("2014 Rowan profile currently covers levels 1 through 4.")
+        if level not in range(1, 6):
+            raise ValueError("2014 Rowan profile currently covers levels 1 through 5.")
         profile = _level_one()
         if level == 1:
             return profile
@@ -158,6 +168,14 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
             final_ability_scores=_apply(profile.final_ability_scores, [increase]),
             feature_audits=_audits(4),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 4"],
+        )
+        profile = CharacterBuildProfile(**data)
+        if level == 4:
+            return profile
+        data = advance_profile_data(profile, 5)
+        data.update(
+            feature_audits=_audits(5),
+            source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 5"],
         )
         return CharacterBuildProfile(**data)
     except Exception:
