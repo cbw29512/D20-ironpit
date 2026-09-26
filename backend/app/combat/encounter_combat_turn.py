@@ -21,6 +21,7 @@ from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
 from app.combat.persistent_spell_attacks import resolve_persistent_spell_attack
+from app.combat.replacement_form_policy import resolve_replacement_form_setup
 from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
 from app.combat.spell_offense import resolve_best_spell_offense
@@ -89,6 +90,13 @@ def resolve_combat_turn(
         if persistent_spell_event is not None:
             events.append(persistent_spell_event)
             sequence += 1
+
+        form_events, sequence = resolve_replacement_form_setup(
+            sequence, round_number, attacker, setup, turn_key, dice,
+        )
+        events.extend(form_events)
+        if not is_available(attacker.state, "action"):
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
