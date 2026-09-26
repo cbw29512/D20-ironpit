@@ -12,6 +12,7 @@ from app.content.bard_lore_2014_profile import build_lyra_silverstring_2014_prof
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, healing_word_2014
 from app.content.paladin_devotion_2014_spells import dispel_magic_2014
+from app.content.shared_invisibility_spells_2014 import greater_invisibility_2014
 from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.content.shared_spells_2014 import lesser_restoration_2014, spiritual_weapon_2014
 from app.content.weapon_catalog import build_weapon
@@ -100,6 +101,7 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             defensive_spell_actions=[
                 *([bless_2014()] if level >= 6 else []),
                 *([freedom_of_movement_2014()] if level >= 7 else []),
+                *([greater_invisibility_2014()] if level >= 8 else []),
             ],
             condition_removal_actions=(
                 [lesser_restoration_2014()] if level >= 4 else []
