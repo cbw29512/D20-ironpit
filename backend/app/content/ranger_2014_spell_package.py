@@ -19,6 +19,10 @@ _SPELLS = (
         id="detect-magic", name="Detect Magic", spell_level=1, min_character_level=3,
         role="utility", required_capabilities=["arena-out-of-scope"],
     ),
+    CanonicalSpellChoice(
+        id="lesser-restoration", name="Lesser Restoration", spell_level=2, min_character_level=5,
+        role="healing", required_capabilities=["condition-removal"],
+    ),
 )
 
 
