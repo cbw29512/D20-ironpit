@@ -4,6 +4,7 @@ from collections.abc import Iterable
 
 from app.combat.concentration import start_concentration
 from app.combat.modifier_stack import add_modifier
+from app.combat.timed_conditions import apply_timed_condition
 from app.domain.combatants import DamageType
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import CombatantState
@@ -69,13 +70,28 @@ def apply_spell_modifiers(
         for index, effect in enumerate(spell.modifier_effects)
     ]
     modifiers = [modifier for _, modifier in built]
+    duration_rounds = spell.duration_minutes * 10
+    expires_round = round_number + duration_rounds + (1 if round_number == 0 else 0)
     if spell.concentration:
-        duration_rounds = spell.duration_minutes * 10
-        expires_round = round_number + duration_rounds + (1 if round_number == 0 else 0)
         start_concentration(
             owner, source_id, spell.id, round_number, affected_states,
             expires_round=expires_round,
         )
+    for target_id, target in targets:
+        for condition_id in spell.condition_ids:
+            apply_timed_condition(
+                target,
+                condition_id,
+                source_id,
+                source_effect_id=spell.id,
+                source_template=owner.template,
+                source_is_magical=True,
+                applied_round=round_number,
+                expires_round=expires_round,
+                expiry_timing="source_turn_start",
+                affected_states=list(affected_states or []),
+                use_default_poison_recovery=False,
+            )
     for target, modifier in built:
         add_modifier(target, modifier)
     return modifiers
