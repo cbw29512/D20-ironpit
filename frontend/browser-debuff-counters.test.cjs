@@ -10,6 +10,7 @@ const load = (name) => vm.runInThisContext(
   fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name },
 );
 
+load("browser-opening-modifiers.js");
 load("browser-debuff-counters.js");
 load("browser-condition-immunity.js");
 load("browser-condition-rules.js");
@@ -119,6 +120,35 @@ function addCounter(target, id, counter) {
     mode: "prevent", movement_cost_ft: 0,
   });
   assert.equal(C.difficultTerrainMultiplier(target), 1);
+}
+
+{
+  const template = {
+    id: "land-druid",
+    name: "Land Druid",
+    max_hp: 20,
+    speed_ft: 30,
+    condition_immunities: [],
+    resources: {},
+    traits: [],
+    passive_debuff_counter_grants: [{
+      source_id: "lands-stride",
+      source_name: "Land's Stride",
+      counter: {
+        debuff_id: "difficult-terrain",
+        source_scope: "nonmagical",
+        mode: "prevent",
+        movement_cost_ft: 0,
+      },
+    }],
+  };
+  const target = S.buildState(template);
+  assert.equal(C.difficultTerrainMultiplier(target, { sourceIsMagical: false }), 1);
+  assert.equal(C.difficultTerrainMultiplier(target, { sourceIsMagical: true }), 2);
+  const grant = target.active_modifiers.find((item) => item.source_effect_id === "lands-stride");
+  assert.ok(grant);
+  assert.equal(grant.source_name, "Land's Stride");
+  assert.equal(grant.kind, "debuff-counter");
 }
 
 console.log("Universal browser buff/debuff counters passed.");
