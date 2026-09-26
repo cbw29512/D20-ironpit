@@ -57,6 +57,14 @@ _PREPARED = (
         "dispel-magic", "Dispel Magic", "control",
         "effect-removal", level=3, min_level=5,
     ),
+    _spell(
+        "water-breathing", "Water Breathing", "utility",
+        "arena-out-of-scope", level=3, min_level=6,
+    ),
+    _spell(
+        "water-walk", "Water Walk", "utility",
+        "arena-out-of-scope", level=3, min_level=7,
+    ),
 )
 
 
