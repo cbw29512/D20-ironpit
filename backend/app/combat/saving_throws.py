@@ -35,6 +35,7 @@ def resolve_save_action(
     check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | list[list[int]] | None = None, affected_states: list[CombatantState] | None = None,
     spell_effect: bool = False, save_disadvantage_sources: tuple[str, ...] = (),
+    resource_remaining_override: int | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft):
@@ -44,6 +45,8 @@ def resolve_save_action(
     if check_resource and not action_resource_available(actor.state, action):
         raise ValueError(f"{action.name} resource is unavailable.")
     remaining = spend_action_resource(actor.state, action) if spend_resource else None
+    if resource_remaining_override is not None:
+        remaining = resource_remaining_override
     source_type = str(actor.state.template.creature_type).split(" (")[0].strip().casefold() if actor.state.template.creature_type else None
     effect_tags = {str(tag).strip().casefold() for tag in action.effect_tags if str(tag).strip()}
     if str(action.damage_type or "").casefold() == "poison":
