@@ -18,7 +18,7 @@ def test_replacement_form_spends_action_and_resource_but_preserves_concentration
         "resources": [ResourceDefinition(id="wild-shape", name="Wild Shape", max_uses=2)],
     })
     state = build_combatant_state(template)
-    state.concentration = {"source_effect_id": "faerie-fire", "source_name": "Faerie Fire"}
+    state.concentration = {"source_id": "druid", "effect_id": "faerie-fire", "started_round": 0}
 
     result = enter_replacement_form(
         state,
@@ -35,7 +35,7 @@ def test_replacement_form_spends_action_and_resource_but_preserves_concentration
     assert state.replacement_form.form_hp == state.template.max_hp
     assert state.resources[0].current_uses == 1
     assert state.concentration is not None
-    assert state.concentration.source_effect_id == "faerie-fire"
+    assert state.concentration.effect_id == "faerie-fire"
     assert result.resource_remaining == 1
 
 
