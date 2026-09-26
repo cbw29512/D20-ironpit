@@ -101,7 +101,7 @@ const setup = { heroes: [caster], monsters: [target] };
 const prep = P.prepare(setup, 1);
 assert.equal(prep.events.length, 1);
 assert.equal(prep.events[0].feature_id, "aid");
-assert.equal(caster.state.opening_buff_spell_id, "aid");
+assert.equal(caster.state.opening_buff_id, "aid");
 assert.equal(caster.state.resources["spell-slot-2"], 2);
 assert.equal(caster.state.concentration, null, "Aid is the single opening buff and does not require Concentration.");
 
