@@ -116,6 +116,7 @@ def choose_timed_self_buff_action(
                     )
                 )
                 and not timed_self_buff_active(member, action)
+                and (not action.concentration or member.state.concentration is None)
                 and _friendly_aura_is_relevant(member, action, setup)
                 and _hostile_aura_is_relevant(member, action, setup)
             ):
