@@ -53,13 +53,14 @@
     }
   }
 
-  function resolve(sequence, round, member, action) {
+  function resolve(sequence, round, member, action, options = {}) {
     try {
-      if (!E().available(member.state, action.actionCost)) throw new Error(`${action.name} action cost is unavailable.`);
+      const spendActionCost = options.spendActionCost !== false;
+      if (spendActionCost && !E().available(member.state, action.actionCost)) throw new Error(`${action.name} action cost is unavailable.`);
       if (action.resourceId != null && (member.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
       if (active(member, action)) throw new Error(`${action.name} is already active.`);
 
-      E().spend(member.state, action.actionCost);
+      if (spendActionCost) E().spend(member.state, action.actionCost);
       if (action.resourceId != null) member.state.resources[action.resourceId] -= action.resourceCost || 1;
       const applied = [];
       let defensesAttached = false;
