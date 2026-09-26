@@ -12,7 +12,7 @@ def archery_fighting_style_bonus(
     fighting_styles: FightingStyleSelection,
     weapon_kind: WeaponAttackKind,
 ) -> int:
-    """Return the static 2024 Archery bonus for attacks made with Ranged weapons."""
+    """Return the shared Archery bonus for attacks made with Ranged weapons."""
     try:
         if not isinstance(weapon_kind, WeaponAttackKind):
             raise ValueError("Archery requires a typed weapon attack kind.")
@@ -29,7 +29,7 @@ def compile_weapon_attack_bonus(
     fighting_styles: FightingStyleSelection,
     weapon_kind: WeaponAttackKind,
 ) -> int:
-    """Compile permanent weapon attack bonuses before combat-time roll modifiers."""
+    """Compile permanent weapon attack bonuses before combat-time roll modifiers for either ruleset."""
     try:
         return base_attack_bonus + archery_fighting_style_bonus(fighting_styles, weapon_kind)
     except ValueError:
