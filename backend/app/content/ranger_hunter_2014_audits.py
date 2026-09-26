@@ -208,4 +208,14 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "no longer adds attack Disadvantage. It does not grant actual sight or suppress unrelated Disadvantage."
             ),
         ))
+    if level >= 19:
+        rows.append(FeatureAudit(
+            feature_id="ability-score-improvement-19", feature_name="Ability Score Improvement",
+            source_reference="D&D Basic Rules 2014: Ranger 19",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "Canonical archer progression raises Wisdom 19 to 20 and Constitution 14 to 15. "
+                "The Wisdom increase improves Ranger spellcasting and the level-20 Foe Slayer modifier."
+            ),
+        ))
     return rows
