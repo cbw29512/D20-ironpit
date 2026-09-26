@@ -49,14 +49,16 @@ def once_per_turn_weapon_hit_bonus_damages(
 ) -> list[BonusDamageSpec]:
     """Return every independently qualifying generic once-per-turn weapon-hit rider."""
     try:
-        if turn_key is None:
-            raise ValueError("Once-per-turn hit riders require the actual active-turn key.")
         features = attacker.template.progression_features
         riders = [
             *([features.once_per_turn_weapon_hit_damage_rider]
               if features.once_per_turn_weapon_hit_damage_rider is not None else []),
             *features.once_per_turn_weapon_hit_damage_riders,
         ]
+        if not riders:
+            return []
+        if turn_key is None:
+            raise ValueError("Once-per-turn hit riders require the actual active-turn key.")
         result: list[BonusDamageSpec] = []
         seen_ids: set[str] = set()
         for rider in riders:
