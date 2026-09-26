@@ -22,6 +22,10 @@ def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
                 kind=ModifierKind(grant.kind),
                 condition_id=grant.condition_id,
                 source_creature_types=list(grant.source_creature_types),
+                save_ability=grant.save_ability,
+                save_dc=grant.save_dc,
+                ends_on_owner_attack=grant.ends_on_owner_attack,
+                success_immunity_hours=grant.success_immunity_hours,
             ))
         ward = features.opening_targeting_ward
         if ward is not None:
