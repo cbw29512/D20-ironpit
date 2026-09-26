@@ -4,7 +4,8 @@ import logging
 
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.monster_equipment import build_light_crossbow
-from app.content.sorcerer_2014_font_of_magic import font_of_magic_2014_level2_actions
+from app.content.sorcerer_2014_font_of_magic import font_of_magic_2014_actions
+from app.content.sorcerer_2014_metamagic import heightened_spell_2014
 from app.content.sorcerer_2014_progression import sorcerer_2014_level
 from app.content.sorcerer_draconic_2014_profile import build_nyra_emberveil_2014_profile
 from app.content.sorcerer_draconic_2014_spells import burning_hands_2014, fire_bolt_2014
@@ -17,8 +18,8 @@ _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom",
 
 def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in (1, 2):
-            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 2.")
+        if level not in (1, 2, 3):
+            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 3.")
         profile = build_nyra_emberveil_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -47,7 +48,8 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             weapon_attack=weapon_attack,
             spell_attack_actions=[fire_bolt_2014(pb + cha, level)],
             spell_save_actions=[burning_hands_2014(8 + pb + cha)],
-            resource_conversion_actions=(font_of_magic_2014_level2_actions() if level >= 2 else []),
+            resource_conversion_actions=(font_of_magic_2014_actions(level) if level >= 2 else []),
+            spell_save_disadvantage_options=([heightened_spell_2014()] if level >= 3 else []),
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
