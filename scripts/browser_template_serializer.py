@@ -587,6 +587,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for item in template.concentration_repeat_save_actions
             ]
+        if template.area_weapon_attack_actions:
+            row["area_weapon_attack_actions"] = [
+                {
+                    "id": item.id, "name": item.name, "attackId": item.attack_id,
+                    "range": item.range_ft, "area": item.area.model_dump(mode="json"),
+                    "actionCost": item.action_cost, "source": item.source,
+                }
+                for item in template.area_weapon_attack_actions
+            ]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
