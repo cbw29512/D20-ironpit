@@ -110,4 +110,6 @@ class CombatantDefinition(BaseModel):
             for slot in self.attack_action.slots:
                 if not set(slot.attack_ids) <= attack_ids or not set(slot.save_action_ids) <= save_ids:
                     raise ValueError("Multiattack slot references an undeclared capability id.")
+        if any(action.attack_id not in attack_ids for action in self.area_weapon_attack_actions):
+            raise ValueError("Area weapon attack references an undeclared attack capability id.")
         return self
