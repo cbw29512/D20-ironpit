@@ -10,10 +10,7 @@
       if (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.conditionImmune(state, conditionId, sourceTemplate)) return true;
       if (state.template.mindless_rage && state.active_effect_ids.includes("rage")
           && ["charmed", "frightened"].includes(conditionId)) return true;
-      if (conditionId === "poisoned") {
-        const active = [...(state.active_effect_ids || []), ...(state.active_buff_effect_ids || [])];
-        return active.includes("petrified") || active.includes("protection-from-poison");
-      }
+      if (conditionId === "poisoned") return (state.active_effect_ids || []).includes("petrified");
       return false;
     } catch (error) {
       console.error("Condition immunity lookup failed.", error);
