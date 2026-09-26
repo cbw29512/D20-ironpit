@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 def build_nyra_emberveil_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in (1, 2, 3):
-            raise ValueError("2014 Nyra profile currently covers levels 1 through 3.")
+        if level not in range(1, 5):
+            raise ValueError("2014 Nyra profile currently covers levels 1 through 4.")
         base = AbilityScores(strength=8, dexterity=12, constitution=10, intelligence=13, wisdom=14, charisma=15)
         species = [
             AbilityIncrease(ability="charisma", amount=2),
