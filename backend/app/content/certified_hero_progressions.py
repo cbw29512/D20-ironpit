@@ -70,6 +70,8 @@ from app.content.paladin_devotion_2014_profile import build_aurelia_brightshield
 from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
 from app.content.ranger_hunter_2014_profile import build_rowan_ashtrail_2014_profile
 from app.content.ranger_hunter_2014_runtime import build_rowan_ashtrail_2014
+from app.content.sorcerer_draconic_2014_profile import build_nyra_emberveil_2014_profile
+from app.content.sorcerer_draconic_2014_runtime import build_nyra_emberveil_2014
 from app.content.rogue_thief_2014_profile import build_mara_quickstep_2014_profile
 from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.domain.character_builds import CharacterBuildProfile
@@ -160,6 +162,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="ranger", ruleset="2014", template_builder=build_rowan_ashtrail_2014,
         profile_level_builder=build_rowan_ashtrail_2014_profile, max_level=20,
+    ),
+    CertifiedHeroProgression(
+        class_id="sorcerer", ruleset="2014", template_builder=build_nyra_emberveil_2014,
+        profile_level_builder=build_nyra_emberveil_2014_profile, max_level=1,
     ),
     CertifiedHeroProgression(
         class_id="rogue", ruleset="2024", template_builder=build_mara_quickstep_level,
