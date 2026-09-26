@@ -6,9 +6,13 @@
 
   function check(attacker, target) {
     D().removeOwnerAttackEnding(attacker.state);
-    const gate = D().targetingGate(target.state);
+    const gate = D().targetingGate(target.state, attacker.state.template);
     if (!gate) return null;
+    const immunityKey = `${target.combatant_id}:${gate.id}`;
+    const immunities = attacker.state.targeting_gate_immunity_keys || (attacker.state.targeting_gate_immunity_keys = []);
+    if (immunities.includes(immunityKey)) return null;
     const save = V().resolveSavingThrow(attacker.state, gate.save_ability || "wisdom", gate.save_dc || 1);
+    if (save.succeeded && gate.success_immunity_hours != null) immunities.push(immunityKey);
     return { gate, roll: save.roll, succeeded: save.succeeded };
   }
 
