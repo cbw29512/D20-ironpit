@@ -16,7 +16,7 @@ from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_pro
 from app.content.weapon_catalog import build_weapon
 from app.domain.debuffs import DebuffCounter
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
+from app.domain.progression import PassiveDebuffCounterGrant, ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
 logger = logging.getLogger(__name__)
 _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
@@ -127,10 +127,14 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
                         )
                     ] if level >= 6 else []),
                 ],
-                passive_debuff_counters=(
-                    [DebuffCounter(
-                        debuff_id="difficult-terrain",
-                        source_scope="nonmagical",
+                passive_debuff_counter_grants=(
+                    [PassiveDebuffCounterGrant(
+                        source_id="lands-stride",
+                        source_name="Land's Stride",
+                        counter=DebuffCounter(
+                            debuff_id="difficult-terrain",
+                            source_scope="nonmagical",
+                        ),
                     )] if level >= 6 else []
                 ),
             ),
