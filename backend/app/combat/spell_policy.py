@@ -9,6 +9,7 @@ from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
+from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
 from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -55,6 +56,8 @@ def legal_single_spell_targets(
     caster: EncounterCombatant,
     setup: EncounterSetup,
     action: SpellSaveAction,
+    *,
+    range_ft: int | None = None,
 ) -> list[EncounterCombatant]:
     """Return legal hostile targets for one single-target save spell."""
     try:
@@ -65,7 +68,7 @@ def legal_single_spell_targets(
             if target.state.is_alive
             and not target.state.is_dead
             and target.state.current_hp > 0
-            and combatant_distance(caster, target) <= action.range_ft
+            and combatant_distance(caster, target) <= (action.range_ft if range_ft is None else range_ft)
             and (
                 not action.requires_target_hearing
                 or "deafened" not in target.state.active_effect_ids
@@ -108,9 +111,16 @@ def choose_spell(
             ):
                 scaled = spell_at_slot(action, slot_level)
                 if action.area is not None:
+                    base_range = action.range_ft
+                    effective_range = (
+                        effective_spell_range_ft(caster.state, base_range)
+                        if action.area.origin == "point"
+                        else base_range
+                    )
+                    base_placements = legal_area_placements(caster, setup, action.area, base_range)
                     placements = [
                         item
-                        for item in legal_area_placements(caster, setup, action.area, action.range_ft)
+                        for item in legal_area_placements(caster, setup, action.area, effective_range)
                         if not item.friendly_ids
                     ]
                     if not placements:
@@ -126,22 +136,32 @@ def choose_spell(
                         save_spell_expected_damage(members[target_id], scaled)
                         for target_id in placement.enemy_ids
                     )
+                    range_modifier = None
+                    if placement not in base_placements:
+                        range_modifier = choose_spell_range_modifier(
+                            caster.state,
+                            base_range_ft=base_range,
+                            required_range_ft=effective_range,
+                        )
                     choice = SpellChoice(
                         action,
                         slot_level,
                         tuple(placement.enemy_ids),
                         placement,
                         score,
+                        range_modifier,
                     )
                     candidates.append((score, -action.level, -index, choice))
                     continue
 
                 if action.area_radius_ft is not None:
+                    base_range = action.range_ft
+                    effective_range = effective_spell_range_ft(caster.state, base_range)
                     placement = best_area_placement(
                         caster,
                         setup,
                         action.area_radius_ft,
-                        action.range_ft,
+                        effective_range,
                         protected_ally_ids,
                     )
                     if placement is None:
@@ -155,17 +175,25 @@ def choose_spell(
                         save_spell_expected_damage(members[target_id], scaled)
                         for target_id in placement.friendly_ids
                     )
+                    required_range = abs(caster.position_ft - placement.center_ft)
+                    range_modifier = choose_spell_range_modifier(
+                        caster.state,
+                        base_range_ft=base_range,
+                        required_range_ft=required_range,
+                    )
                     choice = SpellChoice(
                         action,
                         slot_level,
                         target_ids,
                         placement,
                         score,
+                        range_modifier,
                     )
                     candidates.append((score, -action.level, -index, choice))
                     continue
 
-                legal = legal_single_spell_targets(caster, setup, action)
+                effective_range = effective_spell_range_ft(caster.state, action.range_ft)
+                legal = legal_single_spell_targets(caster, setup, action, range_ft=effective_range)
                 if not legal:
                     continue
                 target = max(
@@ -177,6 +205,11 @@ def choose_spell(
                     ),
                 )
                 score = save_spell_expected_damage(target, scaled)
+                range_modifier = choose_spell_range_modifier(
+                    caster.state,
+                    base_range_ft=action.range_ft,
+                    required_range_ft=combatant_distance(caster, target),
+                )
                 candidates.append((
                     score,
                     -action.level,
@@ -186,6 +219,7 @@ def choose_spell(
                         slot_level,
                         (target.combatant_id,),
                         expected_damage=score,
+                        range_modifier=range_modifier,
                     ),
                 ))
         return max(candidates, key=lambda item: item[:3])[3] if candidates else None
