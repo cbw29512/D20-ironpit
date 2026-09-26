@@ -21,8 +21,8 @@ _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom",
 
 def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 13.")
+        if level not in range(1, 17):
+            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 16.")
         profile = build_nyra_emberveil_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -47,7 +47,9 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             level=level, kind="character", ruleset="2014", ability_scores=scores,
             armor_class=13 + dex,
             max_hp=fixed_hit_points(level, 6, scores.modifier("constitution")) + level,
-            speed_ft=30, initiative_bonus=dex,
+            speed_ft=30,
+            movement_modes={"walk_ft": 30, "fly_ft": 30 if level >= 14 else 0},
+            initiative_bonus=dex,
             weapon_attack=weapon_attack,
             spell_attack_actions=[fire_bolt_2014(pb + cha, level, cha if level >= 6 else 0)],
             spell_save_actions=[
