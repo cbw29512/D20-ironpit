@@ -8,6 +8,7 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.cleric_2014_level1_spells import cure_wounds_2014, healing_word_2014
 from app.content.druid_2014_level1_spells import longstrider_2014, poison_spray_2014, produce_flame_2014
 from app.content.druid_2014_progression import druid_2014_level
+from app.content.druid_2014_wild_shape import wild_shape_action_2014
 from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_profile
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
@@ -32,7 +33,7 @@ def _scimitar(level: int, scores) -> WeaponAttack:
 
 def _resources(level: int) -> list[ResourceDefinition]:
     row = druid_2014_level(level)
-    return [
+    resources = [
         ResourceDefinition(
             id=f"spell-slot-{spell_level}",
             name=f"Spell Slot {spell_level}",
@@ -41,12 +42,19 @@ def _resources(level: int) -> list[ResourceDefinition]:
         for spell_level, uses in enumerate(row.spell_slots, start=1)
         if uses
     ]
+    if level >= 2 and not row.wild_shape_unlimited:
+        resources.append(ResourceDefinition(
+            id="wild-shape",
+            name="Wild Shape",
+            max_uses=row.wild_shape_uses,
+        ))
+    return resources
 
 
 def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
     try:
-        if level != 1:
-            raise ValueError("2014 Land Druid runtime is currently certified only at level 1.")
+        if level not in range(1, 3):
+            raise ValueError("2014 Land Druid runtime currently covers levels 1 and 2.")
         profile = build_thalen_greenbough_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -82,6 +90,9 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
                 healing_word_2014(wisdom_modifier, 0),
                 cure_wounds_2014(wisdom_modifier, 0),
             ],
+            replacement_form_actions=(
+                [wild_shape_action_2014(level)] if level >= 2 else []
+            ),
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
