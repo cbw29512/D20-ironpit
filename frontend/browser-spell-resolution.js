@@ -124,6 +124,7 @@
         remaining = caster.state.resources[resourceId];
       }
       E().spend(caster.state, spell.actionCost);
+      const rangeRemaining = P().spendRangeModifier(caster.state, choice.rangeModifier || null);
       window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.removeOwnerAttackEnding(caster.state);
       CE()?.applyTimedResistance(caster, scaledSpell(spell, choice.slotLevel), round);
 
@@ -143,13 +144,23 @@
         ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
         : "";
       const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
-      const events = [{
+      const events = [];
+      if (choice.rangeModifier) {
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "feature",
+          actor_id: caster.combatant_id, actor_name: caster.state.template.name,
+          feature_id: choice.rangeModifier.id, resource_remaining: rangeRemaining,
+          animation: "spell-range",
+          description: `${caster.state.template.name} uses ${choice.rangeModifier.name} to extend ${spell.name}'s range.`,
+        });
+      }
+      events.push({
         sequence: sequence++, round_number: round, event_type: "feature",
         actor_id: caster.combatant_id, actor_name: caster.state.template.name,
         feature_id: spell.id, resource_remaining: remaining,
         animation: spell.animation || "spell-save",
         description: `${caster.state.template.name} casts ${spell.name} using a ${slotText}.${detail}`,
-      }];
+      });
 
       const effect = resolveEffect(sequence, round, caster, setup, choice, turnKey);
       events.push(...effect.events);
