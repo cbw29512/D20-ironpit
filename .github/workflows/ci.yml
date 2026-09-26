@@ -404,6 +404,7 @@ jobs:
           node frontend/browser-spell-resolution.test.cjs
           node frontend/browser-concentration-repeat-saves.test.cjs
           node frontend/browser-spell-policy.test.cjs
+          node frontend/browser-sorcerer-distant-spell.test.cjs
           node frontend/browser-precombat-spells.test.cjs
           node frontend/browser-modifiers-concentration.test.cjs
           node frontend/browser-minimum-armor-class.test.cjs
