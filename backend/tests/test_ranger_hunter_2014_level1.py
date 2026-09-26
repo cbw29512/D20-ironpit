@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.canonical_spell_policy import canonical_spell_package
 from app.content.ranger_2014_progression import ranger_2014_level
 from app.content.ranger_hunter_2014_profile import build_rowan_ashtrail_2014_profile
 from app.content.ranger_hunter_2014_runtime import build_rowan_ashtrail_2014
@@ -31,6 +32,7 @@ def test_2014_ranger_level_one_is_legal_archer_baseline() -> None:
     assert profile.combat_loadout_kind == "dual-wield"
     assert row.spells_known == 0
     assert row.spell_slots == (0, 0, 0, 0, 0)
+    assert canonical_spell_package("ranger", 1, "2014") is None
     grants = hero.progression_features.saving_throw_advantage_grants
     assert len(grants) == 1
     assert grants[0].source_id == "fey-ancestry"
