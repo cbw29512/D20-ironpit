@@ -125,7 +125,7 @@ def resolve_weapon_damage(
         _append_bonus_component(components, dice, divine_smite_bonus_damage(attacker, target, attack), critical=critical)
         _append_bonus_component(
             components, dice,
-            once_per_turn_weapon_hit_bonus_damage(attacker, attack, turn_key),
+            once_per_turn_weapon_hit_bonus_damage(attacker, attack, turn_key, target),
             critical=critical,
         )
         for modifier in bonus_damage_modifiers(attacker, target_event_id):
