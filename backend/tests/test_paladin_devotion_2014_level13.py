@@ -142,7 +142,7 @@ def test_death_ward_is_the_level_13_free_setup_cast_and_spends_only_the_slot() -
 
     assert state.action_available is True
     assert resource.current_uses == 0
-    assert state.opening_buff_spell_id == "death-ward"
+    assert state.opening_buff_id == "death-ward"
     assert "death-ward" in state.active_buff_effect_ids
     assert any(
         item.kind is ModifierKind.ZERO_HP_REPLACEMENT
