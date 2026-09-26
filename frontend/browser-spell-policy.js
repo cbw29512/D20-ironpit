@@ -35,7 +35,8 @@
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     return enemies.filter((target) => target.state.is_alive && !target.state.is_dead
       && target.state.current_hp > 0 && S().distance(caster, target) <= action.range
-      && (!action.requiresTargetHearing || !target.state.active_effect_ids.includes("deafened")));
+      && (!action.requiresTargetHearing || !target.state.active_effect_ids.includes("deafened"))
+      && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state)));
   }
 
   function choose(caster, setup, turnKey, protectedAllyIds = []) {
