@@ -43,7 +43,7 @@ def _typed_defense_relevant(member: EncounterCombatant, setup: EncounterSetup, s
 
 
 def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | None = None):
-    if member.state.opening_buff_spell_id is not None:
+    if member.state.opening_buff_id is not None:
         return None
     indexed = list(enumerate(member.state.template.defensive_spell_actions))
     for _, spell in sorted(indexed, key=lambda item: (-item[1].level, -item[1].priority, item[0])):
