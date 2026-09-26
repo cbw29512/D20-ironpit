@@ -109,6 +109,18 @@ _PREPARED = (
         "true-resurrection", "True Resurrection", "healing",
         "arena-out-of-scope", level=9, min_level=17,
     ),
+    _spell(
+        "detect-poison-and-disease", "Detect Poison and Disease", "utility",
+        "arena-out-of-scope", level=1, min_level=18,
+    ),
+    _spell(
+        "purify-food-and-drink", "Purify Food and Drink", "utility",
+        "arena-out-of-scope", level=1, min_level=19,
+    ),
+    _spell(
+        "speak-with-animals", "Speak with Animals", "utility",
+        "arena-out-of-scope", level=1, min_level=20,
+    ),
 )
 
 
