@@ -157,7 +157,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     ),
     CertifiedHeroProgression(
         class_id="druid", ruleset="2014", template_builder=build_thalen_greenbough_2014,
-        profile_level_builder=build_thalen_greenbough_2014_profile, max_level=8,
+        profile_level_builder=build_thalen_greenbough_2014_profile, max_level=9,
     ),
     CertifiedHeroProgression(
         class_id="rogue", ruleset="2024", template_builder=build_mara_quickstep_level,
