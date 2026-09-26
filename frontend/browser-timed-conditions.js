@@ -32,6 +32,7 @@
       suppress_bonus_action: Boolean(options.suppressBonusAction),
       suppress_reactions: Boolean(options.suppressReactions),
       suppress_movement: Boolean(options.suppressMovement),
+      next_attack_disadvantage: Boolean(options.nextAttackDisadvantage),
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
@@ -47,6 +48,15 @@
   const suppressesBonusAction = (state) => (state.timed_effects || []).some((effect) => effect.suppress_bonus_action);
   const suppressesReactions = (state) => (state.timed_effects || []).some((effect) => effect.suppress_reactions);
   const suppressesMovement = (state) => (state.timed_effects || []).some((effect) => effect.suppress_movement);
+  const nextAttackDisadvantage = (state) => (state.timed_effects || []).filter((effect) => effect.next_attack_disadvantage).length;
+  function consumeNextAttackDisadvantage(state) {
+    let consumed = 0;
+    for (const effect of [...(state.timed_effects || [])]) {
+      if (!effect.next_attack_disadvantage || !state.timed_effects.includes(effect)) continue;
+      if (removeGroup(state, effect).length) consumed += 1;
+    }
+    return consumed;
+  }
   const suppressesVoluntaryTurn = (state) => suppressesAction(state) && suppressesBonusAction(state) && suppressesMovement(state);
 
   function removeEffect(state, effect) {
@@ -117,7 +127,8 @@
   }
 
   window.IRON_PIT_BROWSER_TIMED = {
-    apply, expireSourceStart, ownsDamageResistance, removeEffect, removeGroup, resolveMovementCounters,
-    suppressesAction, suppressesBonusAction, suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
+    apply, consumeNextAttackDisadvantage, expireSourceStart, nextAttackDisadvantage, ownsDamageResistance,
+    removeEffect, removeGroup, resolveMovementCounters, suppressesAction, suppressesBonusAction,
+    suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
   };
 })();
