@@ -24,8 +24,8 @@ _SPELLS = (
 
 def build_ranger_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 21):
-            raise ValueError("2014 Ranger level must be between 1 and 20.")
+        if level not in range(2, 21):
+            raise ValueError("2014 Ranger spellcasting covers levels 2 through 20.")
         from app.content.ranger_2014_progression import ranger_2014_level
 
         row = ranger_2014_level(level)
