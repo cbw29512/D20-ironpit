@@ -85,6 +85,7 @@
         || (action.debuffCounters || []).length
         || (action.savingThrowAdvantageGrants || []).length
         || action.friendlySaveAdvantageAura
+        || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
       )) {
         T().apply(member.state, action.id, member.combatant_id, {
@@ -100,6 +101,21 @@
           endsIfSourceDead: Boolean(action.endsIfSourceDead),
           useDefaultPoisonRecovery: false,
         });
+      }
+
+      if (action.concentration) {
+        const concentration = window.IRON_PIT_BROWSER_CONCENTRATION;
+        if (!concentration) throw new Error("Browser Concentration runtime is not loaded.");
+        const allStates = options.affectedStates || [member.state];
+        concentration.start(
+          member.state,
+          member.combatant_id,
+          action.id,
+          round,
+          allStates,
+          round + action.durationRounds,
+          null,
+        );
       }
 
       for (const grant of action.savingThrowAdvantageGrants || []) {
@@ -124,6 +140,7 @@
         actor_id: member.combatant_id, actor_name: member.state.template.name,
         target_id: member.combatant_id, target_name: member.state.template.name,
         applied_condition_ids: applied, feature_id: action.id,
+        concentration_started_effect_id: action.concentration ? action.id : null,
         resource_remaining: action.resourceId == null ? null : member.state.resources[action.resourceId],
         animation: action.animation || "buff",
         description: `${member.state.template.name} uses ${action.name}.`,
