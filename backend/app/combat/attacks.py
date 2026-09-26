@@ -12,8 +12,10 @@ from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
+from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
 from app.combat.state import terminate_turn
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 logger = logging.getLogger(__name__)
 
 
@@ -26,6 +28,8 @@ def resolve_attack(
     close_enemy_active: bool = True, redirect_target: CombatantState | None = None,
     redirect_target_event_id: str | None = None, affected_states: list[CombatantState] | None = None,
     sneak_attack_ally_available: bool = False, off_turn: bool = False,
+    reaction_setup: EncounterSetup | None = None,
+    reaction_roller: EncounterCombatant | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(attacker, "action"):
@@ -50,6 +54,18 @@ def resolve_attack(
         heroic_reroll = roll_resolution.heroic_reroll
         brutal_strike_disadvantage = roll_resolution.brutal_strike_disadvantage
         d20_bonus_source_name = roll_resolution.d20_bonus_source_name
+        reaction_penalty = None
+        if reaction_setup is not None and reaction_roller is not None:
+            reaction_penalty = apply_reaction_roll_penalty_if_useful(
+                reaction_roller,
+                reaction_setup,
+                "attack",
+                attack_roll,
+                dice,
+                threshold=effective_armor_class(defender),
+            )
+            if reaction_penalty is not None:
+                attack_roll = reaction_penalty.roll
         if spend_action: spend(attacker, "action")
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
@@ -132,6 +148,11 @@ def resolve_attack(
         )
         if d20_bonus_source_name:
             description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
+        if reaction_penalty is not None:
+            description += (
+                f" {reaction_penalty.source_name} uses {reaction_penalty.action_id} "
+                f"to subtract {reaction_penalty.penalty_total} from the attack roll."
+            )
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
             save_damage, on_hit_save, cunning_strike_obscure, cunning_strike, topple,
         )
