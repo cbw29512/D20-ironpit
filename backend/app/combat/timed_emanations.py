@@ -4,8 +4,7 @@ import logging
 
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.timed_conditions import apply_timed_condition
+from app.combat.hostile_condition_auras import resolve_hostile_condition_aura
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll
@@ -56,79 +55,12 @@ def resolve_target_turn_start_emanations(
                 continue
             for action in _active_emanations(source):
                 distance = combatant_distance(source, target)
-                aura = action.hostile_start_turn_condition_aura
-                if aura is not None and aura.trigger == "enemy_turn_start" and distance <= aura.radius_ft:
-                    immunity_id = f"{action.id}:success-immunity:{source.combatant_id}"
-                    immune = any(
-                        effect.effect_id == immunity_id
-                        for effect in target.state.timed_effects
-                    )
-                    if not immune:
-                        roll, succeeded = resolve_saving_throw(
-                            target.state,
-                            aura.save_ability,
-                            aura.save_dc,
-                            dice,
-                            round_number=round_number,
-                        )
-                        applied = []
-                        if succeeded:
-                            if aura.success_immunity_rounds:
-                                apply_timed_condition(
-                                    target.state,
-                                    immunity_id,
-                                    source.combatant_id,
-                                    source_effect_id=f"{action.id}:success-immunity",
-                                    source_template=source.state.template,
-                                    source_is_magical=aura.source_is_magical,
-                                    applied_round=round_number,
-                                    expires_round=round_number + aura.success_immunity_rounds,
-                                    expiry_timing="source_turn_start",
-                                    expires_at_start_of_source_turn=True,
-                                    use_default_poison_recovery=False,
-                                )
-                        else:
-                            condition = apply_timed_condition(
-                                target.state,
-                                aura.condition_id,
-                                source.combatant_id,
-                                source_effect_id=action.id,
-                                source_template=source.state.template,
-                                source_is_magical=aura.source_is_magical,
-                                applied_round=round_number,
-                                expires_round=round_number + action.duration_rounds,
-                                expiry_timing=action.expiry_timing,
-                                expires_at_start_of_source_turn=action.expiry_timing == "source_turn_start",
-                                ends_if_source_incapacitated=action.ends_if_source_incapacitated,
-                                ends_if_source_dead=action.ends_if_source_dead,
-                                affected_states=affected_states,
-                                use_default_poison_recovery=False,
-                            )
-                            if condition is not None:
-                                applied.append(condition)
-                        events.append(BattleEvent(
-                            sequence=sequence,
-                            round_number=round_number,
-                            event_type="feature",
-                            actor_id=source.combatant_id,
-                            actor_name=source.state.template.name,
-                            target_id=target.combatant_id,
-                            target_name=target.state.template.name,
-                            saving_throw_roll=roll,
-                            save_ability=aura.save_ability,
-                            save_dc=aura.save_dc,
-                            save_succeeded=succeeded,
-                            applied_condition_ids=applied,
-                            distance_before_ft=distance,
-                            feature_id=action.id,
-                            animation=action.animation,
-                            description=(
-                                f"{target.state.template.name} starts its turn within {distance} feet of "
-                                f"{source.state.template.name}'s {action.name} and "
-                                f"{'resists' if succeeded else 'fails against'} its aura."
-                            ),
-                        ))
-                        sequence += 1
+                aura_event, sequence = resolve_hostile_condition_aura(
+                    sequence, round_number, source, target, action, distance,
+                    affected_states, dice,
+                )
+                if aura_event is not None:
+                    events.append(aura_event)
 
                 emanation = action.start_turn_emanation_damage
                 if emanation is None or emanation.trigger != "enemy_turn_start":
