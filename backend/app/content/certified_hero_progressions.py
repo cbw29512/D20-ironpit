@@ -47,6 +47,8 @@ from app.content.barbarian_progression_profile import (
 )
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
 from app.content.cleric_life_2014_runtime import build_seraphine_dawnshield_2014
+from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_profile
+from app.content.druid_land_2014_runtime import build_thalen_greenbough_2014
 from app.content.fighter_asi_progression_profile import build_karnok_stoneward_level6_profile, build_karnok_stoneward_level8_profile, build_karnok_stoneward_level12_profile
 from app.content.fighter_champion_2014_profile import build_karnok_stoneward_2014_profile
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
@@ -152,6 +154,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="cleric", ruleset="2014", template_builder=build_seraphine_dawnshield_2014,
         profile_level_builder=build_seraphine_dawnshield_2014_profile, max_level=20,
+    ),
+    CertifiedHeroProgression(
+        class_id="druid", ruleset="2014", template_builder=build_thalen_greenbough_2014,
+        profile_level_builder=build_thalen_greenbough_2014_profile, max_level=1,
     ),
     CertifiedHeroProgression(
         class_id="rogue", ruleset="2024", template_builder=build_mara_quickstep_level,
