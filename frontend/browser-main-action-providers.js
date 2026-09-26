@@ -10,6 +10,7 @@
   const DE = () => window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
+  const AW = () => window.IRON_PIT_BROWSER_AREA_WEAPON_ATTACKS;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const DG = () => window.IRON_PIT_BROWSER_DODGE;
@@ -88,6 +89,16 @@
         if (!event) throw new Error("Deferred-effect candidate became illegal before resolution.");
         return { events: [event], sequence: sequence + 1 };
       },
+    });
+
+    register({
+      id: "area-weapon-attack", category: C().AREA_WEAPON_ATTACK, rulesets: BOTH,
+      discover: ({ member, setup }) => {
+        const selected = AW()?.choose(member, setup) || null;
+        return selected ? { payload: { selected } } : null;
+      },
+      resolve: ({ sequence, round, member, setup }, candidate) =>
+        AW().resolve(sequence, round, member, setup, candidate.payload.selected),
     });
 
     register({
