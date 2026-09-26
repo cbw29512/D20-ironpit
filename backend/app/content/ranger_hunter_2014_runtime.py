@@ -12,6 +12,7 @@ from app.content.druid_2014_level1_spells import longstrider_2014
 from app.content.ranger_2014_progression import ranger_2014_level
 from app.content.ranger_hunter_2014_level3 import colossus_slayer_2014
 from app.content.ranger_hunter_2014_profile import build_rowan_ashtrail_2014_profile
+from app.content.shared_lands_stride_2014 import lands_stride_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
@@ -59,14 +60,18 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 8):
-            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 7.")
+        if level not in range(1, 9):
+            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 8.")
         profile = build_rowan_ashtrail_2014_profile(level)
         scores = profile.final_ability_scores
         dexterity = scores.modifier("dexterity")
         armor = get_armor("leather")
         longbow = _weapon(level, "longbow", dexterity)
         shortsword = _weapon(level, "shortsword", dexterity)
+        lands_stride_save = None
+        lands_stride_counter = None
+        if level >= 8:
+            lands_stride_save, lands_stride_counter = lands_stride_2014()
         return CombatantTemplate(
             id=profile.template_id, name=profile.character_name, archetype="Ranger",
             level=level, kind="character", ruleset="2014", ability_scores=scores,
@@ -108,7 +113,11 @@ def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
                             required_effect_tags=["frightened"],
                         )
                     ] if level >= 7 else []),
+                    *([lands_stride_save] if lands_stride_save is not None else []),
                 ],
+                passive_debuff_counter_grants=(
+                    [lands_stride_counter] if lands_stride_counter is not None else []
+                ),
             ),
             fighting_style="Archery" if level >= 2 else None,
             fighting_styles=["Archery"] if level >= 2 else [],
