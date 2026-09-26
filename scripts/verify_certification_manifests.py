@@ -56,6 +56,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("first-round-extra-turn")
     if features.suppress_attack_advantage_while_not_incapacitated:
         mechanics.add("defender-attack-advantage-suppression")
+    if features.ignore_unseen_target_attack_disadvantage:
+        mechanics.add("unseen-target-attack-disadvantage-suppression")
     if features.miss_to_hit_override_resource_id:
         mechanics.add("miss-to-hit-override")
     if features.miss_to_hit_override_source_name and not features.miss_to_hit_override_resource_id:
@@ -92,6 +94,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.outgoing_healing_dice_maximizer.source_id)
     if features.once_per_turn_weapon_hit_damage_rider:
         mechanics.add(features.once_per_turn_weapon_hit_damage_rider.source_id)
+    if features.once_per_turn_weapon_hit_damage_riders:
+        mechanics.update(rule.source_id for rule in features.once_per_turn_weapon_hit_damage_riders)
     if features.ability_check_minimums:
         mechanics.update(rule.source_id for rule in features.ability_check_minimums)
     if features.saving_throw_proficiency_grants:
