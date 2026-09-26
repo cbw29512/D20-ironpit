@@ -12,6 +12,7 @@ def once_per_turn_weapon_hit_bonus_damage(
     attacker: CombatantState,
     attack: WeaponAttack,
     turn_key: str | None,
+    target: CombatantState | None = None,
 ) -> BonusDamageSpec | None:
     """Return and consume a generic source-owned once-per-turn weapon-hit damage rider."""
     try:
@@ -22,6 +23,11 @@ def once_per_turn_weapon_hit_bonus_damage(
             raise ValueError(
                 f"{rider.source_name} requires the actual active-turn key for once-per-turn tracking."
             )
+        if rider.requires_target_below_max_hp:
+            if target is None:
+                raise ValueError(f"{rider.source_name} requires target state for its hit qualification.")
+            if target.current_hp >= target.template.max_hp:
+                return None
         if attacker.feature_last_turn_keys.get(rider.source_id) == turn_key:
             return None
         attacker.feature_last_turn_keys[rider.source_id] = turn_key
@@ -29,7 +35,7 @@ def once_per_turn_weapon_hit_bonus_damage(
             rider.source_name,
             rider.dice_count,
             rider.dice_size,
-            DamageType(rider.damage_type),
+            DamageType(rider.damage_type) if rider.damage_type is not None else attack.weapon.damage_type,
         )
     except ValueError:
         raise
