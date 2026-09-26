@@ -75,7 +75,6 @@ from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 from app.domain.rulesets import RulesetId
-
 ProfileBuilder = Callable[[], CharacterBuildProfile]
 ProfileLevelBuilder = Callable[[int], CharacterBuildProfile]
 TemplateLevelBuilder = Callable[[int], CombatantTemplate]
