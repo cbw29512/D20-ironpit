@@ -67,4 +67,36 @@ function state() {
   assert.equal(target.current_hp, 14, "excess damage after form HP must carry into original HP");
 }
 
+{
+  const target = state();
+  target.template = {
+    ...target.template,
+    id: "thalen-greenbough-2014-l2", name: "Thalen Greenbough", archetype: "Druid",
+    level: 2, ruleset: "2014", saving_throw_bonuses: { intelligence: 3, wisdom: 5 },
+    skill_bonuses: { perception: 5 }, resources: { "wild-shape": 2 },
+    spell_attack_actions: [{ id: "produce-flame" }], spell_save_actions: [{ id: "poison-spray" }],
+    defensive_spell_actions: [{ id: "longstrider" }], healingActions: [{ id: "healing-word" }], source: "2014 Druid",
+  };
+  window.IRON_PIT_BROWSER_MONSTERS_2014 = {
+    "2014-wolf": {
+      id: "2014-wolf", name: "Wolf", kind: "monster", ruleset: "2014", max_hp: 11,
+      armor_class: 13, speed_ft: 40, size: "medium", saving_throw_bonuses: {},
+      skill_bonuses: { perception: 3 }, resources: {}, attacks: [{ id: "2014-wolf-bite" }],
+      primary_attack_id: "2014-wolf-bite", source: "2014 Wolf",
+    },
+  };
+  const action = {
+    id: "wild-shape", name: "Wild Shape", actionCost: "action", formTemplateId: "2014-wolf",
+    resourceId: "wild-shape", resourceCost: 1, voluntaryRevertAction: "bonus_action", retainSpellcasting: false,
+  };
+  const result = window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.resolveAction(target, action);
+  assert.equal(result.resource_remaining, 1);
+  assert.equal(target.template.id, "thalen-greenbough-2014-l2--form-2014-wolf");
+  assert.equal(target.template.armor_class, 13);
+  assert.equal(target.template.speed_ft, 40);
+  assert.equal(target.template.primary_attack_id, "2014-wolf-bite");
+  assert.deepEqual(target.template.spell_attack_actions, []);
+  assert.equal(target.concentration.effect_id, "faerie-fire");
+}
+
 console.log("Browser replacement form lifecycle parity passed.");
