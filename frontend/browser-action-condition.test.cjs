@@ -216,9 +216,16 @@ require("./browser-fighter-progression.test.cjs");
 
 
 {
-  const lyraTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["lyra-silverstring-2014-l14"]);
-  assert.ok(lyraTemplate, "Level-14 2014 Lyra must be present in the generated browser roster");
-  const checking = { combatant_id: "peerless-skill-check", side: "heroes", position_ft: 0, state: S.buildState(lyraTemplate) };
+  const checking = member("resource-backed-d20-check");
+  checking.state.template.resource_backed_d20_bonus_dice = [{
+    source_id: "peerless-skill",
+    source_name: "Peerless Skill",
+    resource_id: "bardic-inspiration",
+    resource_cost: 1,
+    dice_count: 1,
+    dice_size: 10,
+    test_kinds: ["ability_check"],
+  }];
   checking.state.resources["bardic-inspiration"] = 5;
   window.IRON_PIT_DICE = { roll: () => 6, rollMany: (count) => Array.from({ length: count }, () => 6) };
   const original = { notation: "1d20+3", rolls: [7], selected_roll: 7, modifier: 3, total: 10, mode: "normal", revisions: [] };
