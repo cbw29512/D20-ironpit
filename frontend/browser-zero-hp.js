@@ -104,7 +104,6 @@
       if (!RF()) throw new Error("Replacement-form runtime is not loaded.");
       amount = RF().applyDamage(state, amount).excess;
     }
-    if (!amount) return finish(state, "damaged", incoming, affectedStates);
     if (state.current_hp === 0) {
       if (state.template.kind === "monster" || incoming >= S().effectiveMaxHp(state)) {
         markDead(state); return finish(state, "dead", incoming, affectedStates);
@@ -114,6 +113,7 @@
       if (state.death_save_failures >= 3) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
       markUnconscious(state); return finish(state, "unconscious", incoming, affectedStates);
     }
+    if (!amount) return finish(state, "damaged", incoming, affectedStates);
     const before = state.current_hp;
     state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates);
