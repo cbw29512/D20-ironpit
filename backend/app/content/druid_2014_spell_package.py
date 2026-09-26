@@ -65,6 +65,14 @@ _PREPARED = (
         "water-walk", "Water Walk", "utility",
         "arena-out-of-scope", level=3, min_level=7,
     ),
+    _spell(
+        "control-water", "Control Water", "utility",
+        "arena-out-of-scope", level=4, min_level=8,
+    ),
+    _spell(
+        "locate-creature", "Locate Creature", "utility",
+        "arena-out-of-scope", level=4, min_level=8,
+    ),
 )
 
 
