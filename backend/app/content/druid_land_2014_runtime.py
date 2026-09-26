@@ -58,8 +58,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 8):
-            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 7.")
+        if level not in range(1, 9):
+            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 8.")
         profile = build_thalen_greenbough_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
