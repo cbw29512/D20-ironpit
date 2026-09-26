@@ -15,6 +15,7 @@ from app.domain.persistent_hazards import PersistentHazardAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import DamageReactionAttack, ParryReaction, RedirectAttackReaction
+from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.recharge import RechargeRule
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
@@ -92,6 +93,7 @@ class CombatantTemplate(BaseModel):
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     damage_reaction_attack: DamageReactionAttack | None = None
+    reaction_roll_penalty_actions: list[ReactionRollPenaltyAction] = Field(default_factory=list)
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
