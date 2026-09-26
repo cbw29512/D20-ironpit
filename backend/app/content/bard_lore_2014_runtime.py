@@ -6,12 +6,18 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.bard_2014_countercharm import countercharm_2014
 from app.content.bard_2014_cutting_words import cutting_words_2014
-from app.content.bard_2014_inspiration import build_bardic_inspiration_2014
+from app.content.bard_2014_inspiration import build_bardic_inspiration_2014, build_peerless_skill_2014
 from app.content.bard_2014_vicious_mockery import vicious_mockery_2014
 from app.content.bard_2014_initiative import build_bard_2014_initiative_refills
 from app.content.bard_lore_2014_profile import build_lyra_silverstring_2014_profile
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
-from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, healing_word_2014
+from app.content.cleric_2014_level1_spells import (
+    bless_2014,
+    cure_wounds_2014,
+    guiding_bolt_2014,
+    healing_word_2014,
+    shield_of_faith_2014,
+)
 from app.content.paladin_devotion_2014_spells import dispel_magic_2014
 from app.content.shared_damage_spells_2014 import flame_strike_2014
 from app.content.shared_healing_spells_2014 import mass_cure_wounds_2014
@@ -20,6 +26,7 @@ from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.content.shared_spells_2014 import death_ward_2014, lesser_restoration_2014, spiritual_weapon_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.progression import ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
 
@@ -99,16 +106,25 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             speed_ft=30,
             initiative_bonus=scores.modifier("dexterity") + jack_bonus,
             weapon_attack=_attack(level, scores),
+            progression_features=ProgressionCombatFeatures(
+                resource_backed_d20_bonus_dice=(
+                    [build_peerless_skill_2014(level)] if level >= 14 else []
+                ),
+            ),
             healing_actions=healing,
             persistent_spell_attack_actions=(
                 [spiritual_weapon_2014(spell_attack, charisma_modifier)] if level >= 6 else []
             ),
             defensive_spell_actions=[
                 *([bless_2014()] if level >= 6 else []),
+                *([shield_of_faith_2014()] if level >= 14 else []),
                 *([freedom_of_movement_2014()] if level >= 7 else []),
                 *([greater_invisibility_2014()] if level >= 8 else []),
                 *([death_ward_2014()] if level >= 10 else []),
             ],
+            spell_attack_actions=(
+                [guiding_bolt_2014(spell_attack)] if level >= 14 else []
+            ),
             spell_save_actions=[
                 vicious_mockery_2014(level, charisma_modifier),
                 *([flame_strike_2014(8 + pb + charisma_modifier)] if level >= 10 else []),
