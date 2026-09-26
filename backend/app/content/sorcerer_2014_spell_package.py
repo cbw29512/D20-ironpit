@@ -31,7 +31,11 @@ _KNOWN = (
     _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope", level=1),
     _spell("knock", "Knock", "utility", "arena-out-of-scope", level=2, min_level=3),
     _spell("detect-thoughts", "Detect Thoughts", "utility", "arena-out-of-scope", level=2, min_level=4),
-    _spell("fireball", "Fireball", "damage", "save-damage", "area", level=3, min_level=5),\n    _spell("clairvoyance", "Clairvoyance", "utility", "arena-out-of-scope", level=3, min_level=6),\n    _spell("greater-invisibility", "Greater Invisibility", "buff", "condition", "concentration", level=4, min_level=7),\n    _spell("dispel-magic", "Dispel Magic", "control", "effect-removal", level=3, min_level=8),\n    _spell("creation", "Creation", "utility", "arena-out-of-scope", level=5, min_level=9),
+    _spell("fireball", "Fireball", "damage", "save-damage", "area", level=3, min_level=5),
+    _spell("clairvoyance", "Clairvoyance", "utility", "arena-out-of-scope", level=3, min_level=6),
+    _spell("greater-invisibility", "Greater Invisibility", "buff", "condition", "concentration", level=4, min_level=7),
+    _spell("dispel-magic", "Dispel Magic", "control", "effect-removal", level=3, min_level=8),
+    _spell("creation", "Creation", "utility", "arena-out-of-scope", level=5, min_level=9),
 )
 
 
