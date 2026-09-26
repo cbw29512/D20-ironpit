@@ -52,6 +52,24 @@ def _audits(level: int) -> list[FeatureAudit]:
                 notes="Known-spell count, slots, healing, and buffs use shared 2014 spell primitives.",
             ),
         ]
+    if level >= 3:
+        rows += [
+            FeatureAudit(
+                feature_id="colossus-slayer", feature_name="Colossus Slayer",
+                source_reference="D&D Basic Rules 2014: Hunter 3",
+                category="subclass", combat_relevant=True, automated=True,
+                notes=(
+                    "Uses the shared once-per-turn weapon-hit damage rider with a target-below-max-HP "
+                    "qualification and weapon damage-type inheritance."
+                ),
+            ),
+            FeatureAudit(
+                feature_id="primeval-awareness", feature_name="Primeval Awareness",
+                source_reference="D&D Basic Rules 2014: Ranger 3",
+                category="class", combat_relevant=False, automated=True,
+                notes="Presence sensing reveals neither location nor number and does not alter standard arena combat.",
+            ),
+        ]
     return rows
 
 
@@ -87,8 +105,8 @@ def _level_one() -> CharacterBuildProfile:
 
 def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
     try:
-        if level not in range(1, 3):
-            raise ValueError("2014 Rowan profile currently covers levels 1 through 2.")
+        if level not in range(1, 4):
+            raise ValueError("2014 Rowan profile currently covers levels 1 through 3.")
         profile = _level_one()
         if level == 1:
             return profile
@@ -98,6 +116,20 @@ def build_rowan_ashtrail_2014_profile(level: int) -> CharacterBuildProfile:
             fighting_styles=["Archery"],
             feature_audits=_audits(2),
             source_references=[*profile.source_references, "D&D Basic Rules 2014: Ranger 2"],
+        )
+        profile = CharacterBuildProfile(**data)
+        if level == 2:
+            return profile
+        data = advance_profile_data(profile, 3)
+        data.update(
+            subclass_id="hunter",
+            subclass_name="Hunter",
+            feature_audits=_audits(3),
+            source_references=[
+                *profile.source_references,
+                "D&D Basic Rules 2014: Ranger 3",
+                "D&D Basic Rules 2014: Hunter 3",
+            ],
         )
         return CharacterBuildProfile(**data)
     except Exception:
