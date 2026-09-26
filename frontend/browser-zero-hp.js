@@ -7,7 +7,6 @@
   const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT;
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
-  const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const DODGE = "dodge";
   const PRONE = "prone";
