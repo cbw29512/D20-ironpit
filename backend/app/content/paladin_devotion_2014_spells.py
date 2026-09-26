@@ -8,6 +8,7 @@ from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.content.shared_spells_2014 import death_ward_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
+from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014 as shared_dispel_magic_2014
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 _PROTECTED_TYPES = ["aberration", "celestial", "elemental", "fey", "fiend", "undead"]
@@ -77,12 +78,7 @@ def beacon_of_hope_2014() -> DefensiveSpellAction:
 
 
 def dispel_magic_2014() -> EffectRemovalAction:
-    return EffectRemovalAction(
-        id="dispel-magic", name="Dispel Magic", level=3, action_cost="action",
-        range_ft=120, casting_ability="charisma", target_mode="enemy",
-        auto_remove_max_level=3, resource_id="spell-slot-3", resource_cost=1,
-        expends_spell_slot=True, animation="dispel-magic",
-    )
+    return shared_dispel_magic_2014("charisma")
 
 
 def build_paladin_healing_actions_2014(level: int, charisma_modifier: int) -> list[HealingAction]:
