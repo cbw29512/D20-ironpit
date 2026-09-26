@@ -62,8 +62,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 15):
-            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 14.")
+        if level not in range(1, 16):
+            raise ValueError("2014 Hunter Ranger runtime currently covers levels 1 through 15.")
         profile = build_rowan_ashtrail_2014_profile(level)
         scores = profile.final_ability_scores
         dexterity = scores.modifier("dexterity")
@@ -107,6 +107,7 @@ def build_rowan_ashtrail_2014(level: int) -> CombatantTemplate:
             weapon_masteries=[],
             progression_features=ProgressionCombatFeatures(
                 once_per_turn_weapon_hit_damage_rider=colossus_slayer_2014() if level >= 3 else None,
+                evasion=level >= 15,
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
                         source_id="fey-ancestry",
