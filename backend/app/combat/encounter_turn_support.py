@@ -11,6 +11,7 @@ from app.combat.d20_bonus_dice import resolve_d20_bonus_die_grant
 from app.combat.d20_bonus_die_support import choose_d20_bonus_die_action
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
+from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.healing_support import resolve_healing_support
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
@@ -93,6 +94,7 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         if self_buff is not None:
             events.append(resolve_timed_self_buff(sequence, round_number, member, self_buff))
             sequence += 1
+            sync_friendly_save_auras(setup)
         return events, sequence
     except Exception:
         logger.exception("Failed support-action stage for %s.", member.combatant_id)
