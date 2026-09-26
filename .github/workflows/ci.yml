@@ -153,6 +153,7 @@ jobs:
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
           grep -q 'browser-timed-self-buffs.js' index.html
+          grep -q 'browser-precombat-buffs.js' index.html
           grep -q 'browser-timed-emanations.js' index.html
           grep -q 'browser-initiative-resource-refill.js' index.html
           grep -q 'browser-barbarian2.js' index.html
@@ -247,6 +248,7 @@ jobs:
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
+          grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
           grep -q 'browser-initiative-resource-refill.js' frontend/index.html
           grep -q 'browser-d20-bonus-dice.js' frontend/index.html
