@@ -4,7 +4,7 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level not in range(1, 5):
+    if level not in range(1, 6):
         raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 4.")
     rows = [
         FeatureAudit(
@@ -78,6 +78,17 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
             notes=(
                 "+2 Charisma raises Nyra from 17 to 19, increasing spell attack, spell save DC, "
                 "Charisma saves, and Charisma-based skill bonuses through shared derived-stat math."
+            ),
+        ))
+    if level >= 5:
+        rows.append(FeatureAudit(
+            feature_id="fireball",
+            feature_name="Fireball",
+            source_reference="D&D Basic Rules 2014: Fireball",
+            category="spell", combat_relevant=True, automated=True,
+            notes=(
+                "Uses the universal point-origin radius area, Dexterity saving throw, fire damage, "
+                "half-on-success, and per-slot-level upcast scaling."
             ),
         ))
     return rows
