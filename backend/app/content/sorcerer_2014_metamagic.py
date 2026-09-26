@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier, ResourceBackedSpellSaveDisadvantage
+from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier, ResourceBackedSpellRangeModifier, ResourceBackedSpellSaveDisadvantage
 
 logger = logging.getLogger(__name__)
 
@@ -39,4 +39,23 @@ def distant_spell_2014() -> ResourceBackedSpellRangeModifier:
         )
     except Exception:
         logger.exception("Failed to build 2014 Distant Spell.")
+        raise
+
+
+def extended_spell_2014() -> ResourceBackedSpellDurationModifier:
+    """Bind Extended Spell to the universal resource-backed spell-duration primitive."""
+    try:
+        return ResourceBackedSpellDurationModifier(
+            id="extended-spell",
+            name="Extended Spell",
+            resource_id="sorcery-points",
+            resource_cost=1,
+            duration_multiplier=2,
+            maximum_duration_minutes=1440,
+            minimum_base_duration_minutes=1,
+            priority=100,
+            source="D&D Basic Rules 2014: Sorcerer 3, Metamagic",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Extended Spell.")
         raise
