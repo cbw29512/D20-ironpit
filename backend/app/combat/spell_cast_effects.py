@@ -14,9 +14,9 @@ def _damage_types(spell: SpellAttackAction | SpellSaveAction) -> set[str]:
     try:
         result: set[str] = set()
         if spell.damage_type is not None:
-            result.add(str(spell.damage_type))
+            result.add(getattr(spell.damage_type, "value", str(spell.damage_type)))
         for component in getattr(spell, "damage_components", []):
-            result.add(str(component.damage_type))
+            result.add(getattr(component.damage_type, "value", str(component.damage_type)))
         return result
     except Exception as exc:
         logger.exception("Failed to inspect spell damage types for %s.", spell.id)
