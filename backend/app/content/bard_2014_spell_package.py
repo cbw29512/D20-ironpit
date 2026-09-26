@@ -77,12 +77,14 @@ _KNOWN = (
     _spell("find-the-path", "Find the Path", "utility", "arena-out-of-scope", level=6, min_level=11),
     _spell("project-image", "Project Image", "utility", "arena-out-of-scope", level=7, min_level=13),
     _spell(
-        "harm", "Harm", "damage", "save-damage", "magical-secrets",
-        level=6, min_level=14,
+        "guiding-bolt", "Guiding Bolt", "damage",
+        "spell-attack", "next-attack-advantage", "magical-secrets",
+        level=1, min_level=14,
     ),
     _spell(
-        "fire-storm", "Fire Storm", "damage", "save-damage", "area-effect",
-        "magical-secrets", level=7, min_level=14,
+        "shield-of-faith", "Shield of Faith", "buff",
+        "modifier-stack", "concentration", "bonus-action", "magical-secrets",
+        level=1, min_level=14,
     ),
     _spell("unseen-servant", "Unseen Servant", "utility", "arena-out-of-scope", level=1, min_level=15),
     _spell("illusory-script", "Illusory Script", "utility", "arena-out-of-scope", level=1, min_level=17),
