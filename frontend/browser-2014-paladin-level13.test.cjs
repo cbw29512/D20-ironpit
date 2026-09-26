@@ -90,7 +90,7 @@ function member() {
     active_modifiers: [],
     temporary_damage_resistances: [],
     pending_zero_hp_replacement_logs: [],
-    opening_buff_spell_id: null,
+    opening_buff_id: null,
     concentration: null,
     resources: { "spell-slot-4": 1 },
   };
@@ -109,7 +109,7 @@ function member() {
 
   assert.equal(aurelia.state.action_available, true);
   assert.equal(aurelia.state.resources["spell-slot-4"], 0);
-  assert.equal(aurelia.state.opening_buff_spell_id, "death-ward");
+  assert.equal(aurelia.state.opening_buff_id, "death-ward");
   assert.equal(aurelia.state.active_modifiers[0].kind, "zero-hp-replacement");
   assert.equal(event.feature_id, "death-ward");
 
