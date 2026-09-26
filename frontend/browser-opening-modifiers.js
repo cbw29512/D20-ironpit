@@ -13,6 +13,10 @@
           kind: grant.kind,
           condition_id: grant.condition_id || null,
           source_creature_types: [...(grant.source_creature_types || [])],
+          save_ability: grant.save_ability || null,
+          save_dc: grant.save_dc ?? null,
+          ends_on_owner_attack: Boolean(grant.ends_on_owner_attack),
+          success_immunity_hours: grant.success_immunity_hours ?? null,
         });
       }
       for (const [index, grant] of (template?.passive_debuff_counter_grants || []).entries()) {
