@@ -5,8 +5,8 @@ import logging
 from app.combat.dice import FixedDiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.saving_throws import resolve_save_action
-from app.combat.spell_policy import SpellChoice
-from app.combat.spell_resolution import _save_action
+from app.combat.spell_choice import SpellChoice
+from app.combat.spell_save_effect_resolution import compile_spell_save_action
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
@@ -130,7 +130,7 @@ def test_spell_save_conversion_marks_the_effect_magical() -> None:
             save_ability="wisdom",
             dc=12,
         )
-        action = _save_action(SpellChoice(spell, 0, ("target",)))
+        action = compile_spell_save_action(SpellChoice(spell, 0, ("target",)))
         assert action.magical_effect is True
     except Exception:
         logger.exception("Spell saving-throw magical-context regression failed.")
