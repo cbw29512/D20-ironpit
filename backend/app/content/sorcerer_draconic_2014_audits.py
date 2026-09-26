@@ -69,4 +69,15 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
                 ),
             ),
         ]
+    if level >= 4:
+        rows.append(FeatureAudit(
+            feature_id="ability-score-improvement",
+            feature_name="Ability Score Improvement",
+            source_reference="D&D Basic Rules 2014: Sorcerer 4",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "+2 Charisma raises Nyra from 17 to 19, increasing spell attack, spell save DC, "
+                "Charisma saves, and Charisma-based skill bonuses through shared derived-stat math."
+            ),
+        ))
     return rows
