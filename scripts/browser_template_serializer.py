@@ -371,6 +371,25 @@ def _save_advantage_grant(grant: Any) -> dict[str, Any]:
     return row
 
 
+
+def _passive_modifier_grant(grant: Any) -> dict[str, Any]:
+    row: dict[str, Any] = {
+        "source_id": grant.source_id,
+        "source_name": grant.source_name,
+        "kind": grant.kind,
+        "condition_id": grant.condition_id,
+        "source_creature_types": list(grant.source_creature_types),
+    }
+    if grant.save_ability is not None:
+        row["save_ability"] = grant.save_ability
+    if grant.save_dc is not None:
+        row["save_dc"] = grant.save_dc
+    if grant.ends_on_owner_attack:
+        row["ends_on_owner_attack"] = True
+    if grant.success_immunity_hours is not None:
+        row["success_immunity_hours"] = grant.success_immunity_hours
+    return row
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -491,7 +510,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
             "condition_immunities": list(template.condition_immunities),
-            "passive_modifier_grants": [item.model_dump(mode="json") for item in template.passive_modifier_grants],
+            "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
             "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
