@@ -136,4 +136,59 @@ def build_druid_land_2014_high_feature_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 18:
+        rows += [
+            FeatureAudit(
+                feature_id="timeless-body",
+                feature_name="Timeless Body",
+                source_reference="D&D Basic Rules 2014: Druid 18",
+                category="class",
+                combat_relevant=False,
+                automated=True,
+                notes="Aging rate has no effect on an Iron Pit combat result.",
+            ),
+            FeatureAudit(
+                feature_id="beast-spells",
+                feature_name="Beast Spells",
+                source_reference="D&D Basic Rules 2014: Druid 18",
+                category="class",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Reuses the universal replacement-form spell legality filter. While Wild Shaped, "
+                    "only Druid spell actions that do not require material components are retained."
+                ),
+            ),
+        ]
+    if level >= 19:
+        rows.append(
+            FeatureAudit(
+                feature_id="ability-score-improvement-19",
+                feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Druid 19",
+                category="class",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Canonical progression raises Dexterity from 15 to 17; shared character math "
+                    "recomputes AC and initiative."
+                ),
+            )
+        )
+    if level >= 20:
+        rows.append(
+            FeatureAudit(
+                feature_id="archdruid",
+                feature_name="Archdruid",
+                source_reference="D&D Basic Rules 2014: Druid 20",
+                category="class",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Wild Shape uses the universal unlimited-resource path. The replacement-form spell "
+                    "allowlist expands to spells whose otherwise-blocking noncost material components "
+                    "are ignored by Archdruid; no Druid-specific spell resolver is added."
+                ),
+            )
+        )
     return rows
