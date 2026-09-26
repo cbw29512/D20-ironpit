@@ -4,8 +4,8 @@ from app.domain.character_builds import FeatureAudit
 
 
 def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit]:
-    if level not in range(1, 7):
-        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 6.")
+    if level not in range(1, 8):
+        raise ValueError("2014 Draconic Sorcerer audits currently cover levels 1 through 7.")
     rows = [
         FeatureAudit(
             feature_id="half-elf", feature_name="Half-Elf",
@@ -101,6 +101,17 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
                 "Fire ancestry adds Charisma modifier to one fire-spell damage roll through the normal "
                 "spell damage bonus field. A qualifying cast may spend 1 Sorcery Point through the universal "
                 "spell-cast timed-resistance trigger to gain fire resistance for 1 hour."
+            ),
+        ))
+    if level >= 7:
+        rows.append(FeatureAudit(
+            feature_id="greater-invisibility",
+            feature_name="Greater Invisibility",
+            source_reference="D&D Basic Rules 2014: Greater Invisibility",
+            category="spell", combat_relevant=True, automated=True,
+            notes=(
+                "Reuses the shared 2014 defensive-spell path, Invisible condition, concentration lifecycle, "
+                "and Iron Pit opening-buff policy."
             ),
         ))
     return rows
