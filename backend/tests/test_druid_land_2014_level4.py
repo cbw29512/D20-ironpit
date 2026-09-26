@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.content.druid_2014_spell_package import build_druid_2014_spell_package
 from app.content.druid_2014_wild_shape_forms import canonical_wild_shape_template_2014
 from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_profile
+from app.content.replacement_form_compiler import compile_replacement_form_template
 from app.content.druid_land_2014_runtime import build_thalen_greenbough_2014
 
 
@@ -29,6 +30,22 @@ def test_level_four_crocodile_form_is_certified_cr_half() -> None:
     assert crocodile.id == "2014-crocodile"
     assert crocodile.challenge_rating == "1/2"
     assert crocodile.ruleset == "2014"
+
+
+def test_level_four_active_crocodile_uses_certified_physical_form_data() -> None:
+    thalen = build_thalen_greenbough_2014(4)
+    crocodile = canonical_wild_shape_template_2014(4)
+    active = compile_replacement_form_template(thalen, crocodile)
+
+    assert active.armor_class == crocodile.armor_class
+    assert active.movement_modes == crocodile.movement_modes
+    assert active.weapon_attack == crocodile.weapon_attack
+    assert active.ability_scores.strength == crocodile.ability_scores.strength
+    assert active.ability_scores.dexterity == crocodile.ability_scores.dexterity
+    assert active.ability_scores.constitution == crocodile.ability_scores.constitution
+    assert active.ability_scores.intelligence == thalen.ability_scores.intelligence
+    assert active.ability_scores.wisdom == thalen.ability_scores.wisdom
+    assert active.ability_scores.charisma == thalen.ability_scores.charisma
 
 
 def test_level_four_base_spell_package_has_three_cantrips_and_eight_prepared_spells() -> None:
