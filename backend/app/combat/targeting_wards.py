@@ -27,8 +27,11 @@ def check_targeting_ward(
 ) -> TargetingWardCheck | None:
     """End attack-breaking wards on the attacker, then test any ward protecting the target."""
     remove_owner_attack_ending_modifiers(attacker.state)
-    gate = targeting_save_gate(target.state)
+    gate = targeting_save_gate(target.state, attacker.state.template)
     if gate is None:
+        return None
+    immunity_key = f"{target.combatant_id}:{gate.id}"
+    if immunity_key in attacker.state.targeting_gate_immunity_keys:
         return None
     roll, succeeded = resolve_saving_throw(
         attacker.state,
@@ -36,6 +39,8 @@ def check_targeting_ward(
         gate.save_dc or 1,
         dice,
     )
+    if succeeded and gate.success_immunity_hours is not None:
+        attacker.state.targeting_gate_immunity_keys.append(immunity_key)
     return TargetingWardCheck(gate, roll, succeeded)
 
 
