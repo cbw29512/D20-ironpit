@@ -16,6 +16,7 @@ from app.content.cleric_2014_level1_spells import (
     cure_wounds_2014,
     guiding_bolt_2014,
     healing_word_2014,
+    inflict_wounds_2014,
     shield_of_faith_2014,
 )
 from app.content.paladin_devotion_2014_spells import dispel_magic_2014
@@ -23,7 +24,7 @@ from app.content.shared_damage_spells_2014 import flame_strike_2014
 from app.content.shared_healing_spells_2014 import mass_cure_wounds_2014
 from app.content.shared_invisibility_spells_2014 import greater_invisibility_2014
 from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
-from app.content.shared_spells_2014 import death_ward_2014, lesser_restoration_2014, spiritual_weapon_2014
+from app.content.shared_spells_2014 import aid_2014, death_ward_2014, lesser_restoration_2014, spiritual_weapon_2014
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
@@ -118,13 +119,15 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             defensive_spell_actions=[
                 *([bless_2014()] if level >= 6 else []),
                 *([shield_of_faith_2014()] if level >= 14 else []),
+                *([aid_2014()] if level >= 18 else []),
                 *([freedom_of_movement_2014()] if level >= 7 else []),
                 *([greater_invisibility_2014()] if level >= 8 else []),
                 *([death_ward_2014()] if level >= 10 else []),
             ],
-            spell_attack_actions=(
-                [guiding_bolt_2014(spell_attack)] if level >= 14 else []
-            ),
+            spell_attack_actions=[
+                *([guiding_bolt_2014(spell_attack)] if level >= 14 else []),
+                *([inflict_wounds_2014(spell_attack)] if level >= 18 else []),
+            ],
             spell_save_actions=[
                 vicious_mockery_2014(level, charisma_modifier),
                 *([flame_strike_2014(8 + pb + charisma_modifier)] if level >= 10 else []),
