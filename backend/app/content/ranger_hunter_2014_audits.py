@@ -148,4 +148,11 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "find opposing creatures within 10 feet, then resolve one normal longbow attack per target."
             ),
         ))
+    if level >= 12:
+        rows.append(FeatureAudit(
+            feature_id="ability-score-improvement-12", feature_name="Ability Score Improvement",
+            source_reference="D&D Basic Rules 2014: Ranger 12",
+            category="class", combat_relevant=True, automated=True,
+            notes="Canonical archer progression raises Wisdom from 15 to 17; shared math recomputes Wisdom-derived values.",
+        ))
     return rows
