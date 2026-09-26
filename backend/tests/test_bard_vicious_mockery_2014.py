@@ -58,7 +58,7 @@ def test_failed_vicious_mockery_save_disadvantages_and_consumes_next_attack() ->
             "charisma": 0,
         },
     })
-    enemy = _member(enemy_template, "enemy", "monsters", 30)
+    enemy = _member(enemy_template, "enemy", "monsters", 5)
     setup = EncounterSetup(
         heroes=[lyra],
         monsters=[enemy],
@@ -99,7 +99,7 @@ def test_failed_vicious_mockery_save_disadvantages_and_consumes_next_attack() ->
         enemy,
         lyra,
         enemy.state.template.weapon_attack,
-        30,
+        5,
         FixedDiceProvider([18, 2]),
         setup,
         spend_action=True,
