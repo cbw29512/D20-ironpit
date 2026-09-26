@@ -61,8 +61,8 @@ _KNOWN = (
         "condition", "concentration", level=4, min_level=8,
     ),
     _spell(
-        "greater-restoration", "Greater Restoration", "healing",
-        "condition-removal", level=5, min_level=9,
+        "mass-cure-wounds", "Mass Cure Wounds", "healing",
+        "multi-target-healing", level=5, min_level=9,
     ),
     _spell(
         "flame-strike", "Flame Strike", "damage",
@@ -70,8 +70,9 @@ _KNOWN = (
         "magical-secrets", level=5, min_level=10,
     ),
     _spell(
-        "mass-cure-wounds", "Mass Cure Wounds", "healing",
-        "multi-target-healing", "magical-secrets", level=5, min_level=10,
+        "death-ward", "Death Ward", "buff",
+        "zero-hp-replacement", "instant-death-prevention",
+        "magical-secrets", level=4, min_level=10,
     ),
     _spell("heal", "Heal", "healing", "healing", level=6, min_level=11),
     _spell("regenerate", "Regenerate", "healing", "healing", level=7, min_level=13),
@@ -86,9 +87,8 @@ _KNOWN = (
     _spell("unseen-servant", "Unseen Servant", "utility", "arena-out-of-scope", level=1, min_level=15),
     _spell("illusory-script", "Illusory Script", "utility", "arena-out-of-scope", level=1, min_level=17),
     _spell(
-        "death-ward", "Death Ward", "buff",
-        "zero-hp-replacement", "instant-death-prevention",
-        "magical-secrets", level=4, min_level=18,
+        "aid", "Aid", "buff",
+        "max-hp-increase", "magical-secrets", level=2, min_level=18,
     ),
     _spell(
         "spirit-guardians", "Spirit Guardians", "damage",
