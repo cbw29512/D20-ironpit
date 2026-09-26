@@ -567,6 +567,17 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
             row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+        if template.spell_cast_timed_resistances:
+            row["spellCastTimedResistances"] = [
+                {
+                    "id": item.id, "name": item.name,
+                    "qualifyingDamageType": item.qualifying_damage_type.value,
+                    "resistanceDamageType": item.resistance_damage_type.value,
+                    "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                    "durationRounds": item.duration_rounds, "priority": item.priority,
+                }
+                for item in template.spell_cast_timed_resistances
+            ]
         if template.defensive_spell_actions:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions:
