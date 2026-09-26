@@ -101,6 +101,7 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("lay-on-hands", "Lay on Hands", lambda level: 5 * level),
         ("channel-divinity", "Channel Divinity", _paladin_2014_channel_uses),
     ),
+    "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke_of_luck_uses),),
 }
 _2014_UNLIMITED_CLASS_RESOURCES: dict[str, Callable[[int], tuple[str, ...]]] = {
