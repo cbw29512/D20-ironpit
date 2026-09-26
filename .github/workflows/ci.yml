@@ -396,6 +396,7 @@ jobs:
           node frontend/browser-spell-policy.test.cjs
           node frontend/browser-precombat-spells.test.cjs
           node frontend/browser-modifiers-concentration.test.cjs
+          node frontend/browser-minimum-armor-class.test.cjs
           node frontend/browser-next-attack-advantage.test.cjs
           node frontend/browser-attack-advantage.test.cjs
           node frontend/browser-guiding-bolt.test.cjs
