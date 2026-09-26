@@ -105,6 +105,14 @@ assert.throws(
   "deferred-effect owners must fail closed when the runtime is missing",
 );
 actor.state.template.deferred_save_effect = null;
+actor.state.template.area_weapon_attack_actions = [{ id: "volley" }];
+delete window.IRON_PIT_BROWSER_AREA_WEAPON_ATTACKS;
+assert.throws(
+  () => selector.discoverCandidates("normalPostMove", ctx),
+  /Area weapon attack runtime is not loaded/,
+  "area-weapon action owners must fail closed when the runtime is missing",
+);
+actor.state.template.area_weapon_attack_actions = [];
 actor.state.template.attack_action = null;
 delete window.IRON_PIT_BROWSER_MULTIATTACK;
 assert.deepEqual(
