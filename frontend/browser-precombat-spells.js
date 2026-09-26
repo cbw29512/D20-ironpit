@@ -81,6 +81,7 @@
 
   function modifierDetail(effect) {
     if (effect.kind === "armor-class") return `${effect.flatBonus >= 0 ? "+" : ""}${effect.flatBonus || 0} AC`;
+    if (effect.kind === "armor-class-minimum") return `minimum AC ${effect.minimumValue || 0}`;
     if (effect.kind === "speed") return `${effect.flatBonus >= 0 ? "+" : ""}${effect.flatBonus || 0} Speed`;
     if (effect.diceCount) return `${effect.diceCount}d${effect.diceSize} ${effect.kind}`;
     return effect.kind;

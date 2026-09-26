@@ -19,6 +19,7 @@
       source_is_magical: true,
       kind: effect.kind,
       flat_bonus: effect.flatBonus || 0,
+      minimum_value: effect.minimumValue || 0,
       dice_count: effect.diceCount || 0,
       dice_size: effect.diceSize || 0,
       damage_type: effect.damageType || null,

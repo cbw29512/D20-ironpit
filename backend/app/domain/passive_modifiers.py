@@ -3,11 +3,13 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
+from app.domain.character_builds import AbilityName
+
 from pydantic import BaseModel, Field, model_validator
 
 logger = logging.getLogger(__name__)
 
-PassiveModifierKind = Literal["attacks-against-disadvantage", "condition-immunity"]
+PassiveModifierKind = Literal["attacks-against-disadvantage", "condition-immunity", "targeting-save-gate"]
 
 
 class PassiveModifierGrant(BaseModel):
@@ -18,6 +20,10 @@ class PassiveModifierGrant(BaseModel):
     kind: PassiveModifierKind
     condition_id: str | None = Field(default=None, min_length=1)
     source_creature_types: list[str] = Field(default_factory=list)
+    save_ability: AbilityName | None = None
+    save_dc: int | None = Field(default=None, ge=1, le=40)
+    ends_on_owner_attack: bool = False
+    success_immunity_hours: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def validate_grant(self) -> "PassiveModifierGrant":
@@ -30,6 +36,12 @@ class PassiveModifierGrant(BaseModel):
                 raise ValueError("Passive condition immunity requires a condition id.")
             if self.kind != "condition-immunity" and self.condition_id is not None:
                 raise ValueError(f"{self.kind} does not accept a condition id.")
+            gate_fields = (self.save_ability, self.save_dc, self.success_immunity_hours)
+            if self.kind == "targeting-save-gate":
+                if self.save_ability is None or self.save_dc is None:
+                    raise ValueError("Passive targeting gates require a save ability and DC.")
+            elif any(item is not None for item in gate_fields) or self.ends_on_owner_attack:
+                raise ValueError(f"{self.kind} does not accept targeting-gate fields.")
             normalized = [item.casefold() for item in self.source_creature_types]
             if len(set(normalized)) != len(normalized):
                 raise ValueError("Passive modifier source creature types must be unique.")

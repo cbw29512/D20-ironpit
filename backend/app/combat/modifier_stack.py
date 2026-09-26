@@ -63,9 +63,14 @@ def expire_target_turn_modifiers(state: CombatantState) -> int:
 
 
 def effective_armor_class(state: CombatantState) -> int:
-    return max(0, state.template.armor_class + sum(
+    adjusted = state.template.armor_class + sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS
-    ))
+    )
+    minimum = max(
+        (item.minimum_value for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS_MINIMUM),
+        default=0,
+    )
+    return max(0, adjusted, minimum)
 
 
 def attack_roll_flat_bonus(state: CombatantState, weapon_id: str) -> int:

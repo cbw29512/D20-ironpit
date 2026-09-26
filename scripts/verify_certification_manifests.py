@@ -97,6 +97,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.update(rule.source_id for rule in features.saving_throw_proficiency_grants)
     if features.saving_throw_advantage_grants:
         mechanics.update(rule.source_id for rule in features.saving_throw_advantage_grants)
+    if features.passive_debuff_counter_grants:
+        mechanics.update(rule.source_id for rule in features.passive_debuff_counter_grants)
     if features.opening_targeting_ward:
         mechanics.add(features.opening_targeting_ward.source_id)
     if features.first_round_extra_turn_grants:

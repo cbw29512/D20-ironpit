@@ -13,6 +13,20 @@
           kind: grant.kind,
           condition_id: grant.condition_id || null,
           source_creature_types: [...(grant.source_creature_types || [])],
+          save_ability: grant.save_ability || null,
+          save_dc: grant.save_dc ?? null,
+          ends_on_owner_attack: Boolean(grant.ends_on_owner_attack),
+          success_immunity_hours: grant.success_immunity_hours ?? null,
+        });
+      }
+      for (const [index, grant] of (template?.passive_debuff_counter_grants || []).entries()) {
+        modifiers.push({
+          id: `${template.id}:${grant.source_id}:passive-debuff-counter:${index}`,
+          source_id: template.id,
+          source_effect_id: grant.source_id,
+          source_name: grant.source_name,
+          kind: "debuff-counter",
+          debuff_counter: { ...grant.counter },
         });
       }
       const ward = template?.opening_targeting_ward;

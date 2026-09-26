@@ -6,6 +6,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT;
+  const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const DODGE = "dodge";
   const PRONE = "prone";
@@ -99,6 +100,10 @@
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;
+    if (amount && state.replacement_form) {
+      if (!RF()) throw new Error("Replacement-form runtime is not loaded.");
+      amount = RF().applyDamage(state, amount).excess;
+    }
     if (state.current_hp === 0) {
       if (state.template.kind === "monster" || incoming >= S().effectiveMaxHp(state)) {
         markDead(state); return finish(state, "dead", incoming, affectedStates);

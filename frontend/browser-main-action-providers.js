@@ -15,6 +15,8 @@
   const DG = () => window.IRON_PIT_BROWSER_DODGE;
   const ST = () => window.IRON_PIT_BROWSER_STATE;
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
+  const SP = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
+  const SR = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
 
   const BOTH = Object.freeze(["2014", "2024"]);
   function saveChoice(member, setup) {

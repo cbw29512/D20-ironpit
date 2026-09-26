@@ -11,6 +11,7 @@ from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
 from app.domain.persistent_spell_attacks import PersistentSpellAttackState
+from app.domain.replacement_forms import ReplacementFormState
 
 TimedTurnBehavior = Literal["normal", "forced_retreat"]
 
@@ -114,8 +115,10 @@ class CombatantState(BaseModel):
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
     persistent_spell_attacks: list[PersistentSpellAttackState] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
+    targeting_gate_immunity_keys: list[str] = Field(default_factory=list)
     active_d20_bonus_dice: list[ActiveD20BonusDieGrant] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
+    replacement_form: ReplacementFormState | None = None
     survival_save_uses: dict[str, int] = Field(default_factory=dict)
     pending_survival_save_logs: list[str] = Field(default_factory=list)
     pending_zero_hp_replacement_logs: list[str] = Field(default_factory=list)

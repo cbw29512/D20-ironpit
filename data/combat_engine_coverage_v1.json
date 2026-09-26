@@ -85,6 +85,7 @@
       "status": "supported",
       "python": [
         "backend/app/combat/spell_resolution.py",
+        "backend/app/combat/spell_save_effect_resolution.py",
         "backend/app/combat/saving_throws.py"
       ],
       "browser": [
@@ -94,6 +95,22 @@
       "tests": [
         "backend/tests/test_spell_shared_damage.py",
         "frontend/browser-spell-resolution.test.cjs"
+      ]
+    },
+    {
+      "id": "concentration-repeat-save-action",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/concentration_repeat_saves.py",
+        "backend/app/combat/spell_save_effect_resolution.py"
+      ],
+      "browser": [
+        "frontend/browser-concentration-repeat-saves.js",
+        "frontend/browser-spell-resolution.js"
+      ],
+      "tests": [
+        "backend/tests/test_concentration_repeat_saves.py",
+        "frontend/browser-concentration-repeat-saves.test.cjs"
       ]
     },
     {

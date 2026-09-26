@@ -50,6 +50,45 @@ Stale stacked PRs whose work already landed on `main` (2014 Paladin 20, 2014 Rog
 
 Universal-engine PRs that are still current against `main` may stay open only if they are required by the 2014 Cleric lane (healing, conditions, save tags, upcasting).
 
+
+## Universal combat refactor plan
+
+Architecture target: **checks -> modifiers -> result -> state mutation -> audit**.
+
+This is now the default refactor direction for the engine. Named abilities remain source/audit metadata; combat resolution depends on universal typed facts.
+
+Current migration sequence:
+
+1. **Conditions / buffs / debuffs**
+   - remove class/feature-name immunity branches where an existing condition-immunity or debuff-counter primitive can express the rule;
+   - preserve source qualifiers such as creature type, magical/nonmagical origin, effect tags, duration, and resource cost;
+   - Nature's Ward is the immediate Druid proving case: poison/disease immunity plus Fey/Elemental-scoped Charmed/Frightened immunity.
+2. **Attacks / saves / checks**
+   - keep legality, roll-mode modifiers, bonuses, DC/AC comparison, and final result separate;
+   - source abilities provide data, not alternate attack/save engines.
+3. **Damage / healing**
+   - route all components through typed defense/reduction/replacement checks before HP mutation.
+4. **Movement**
+   - route movement through legality, movement-mode, terrain/debuff/counter, path, and final-position checks.
+5. **Resources / action economy / recharge**
+   - resolve availability first, then spend only after the action is accepted at the appropriate resolution point.
+6. **Hooks / reactions / interrupts**
+   - keep timing generic; named sources register declarative behavior into canonical windows.
+
+Refactor discipline:
+
+- preserve behavior while migrating;
+- Python reference and browser implementation move together;
+- add/regenerate permanent parity tests for every migrated path;
+- do not create a new primitive when existing checks/modifiers can compose the rule;
+- do not stall the active 2014 Druid lane for unrelated cosmetic rewrites;
+- when a named special case is discovered during active work, migrate it if the shared replacement is small and safe; otherwise record it here and continue the canonical lane.
+
+Immediate examples:
+
+- **Nature's Ward (Druid 10):** completed as the proving case for typed checks -> universal modifiers/counters -> result; no Druid-named resolver.
+- **Mindless Rage:** known named branch in the condition-immunity path. Do not mechanically collapse it yet; preserve the 2014 vs 2024 difference for already-active Charm/Frighten while migrating it to shared condition/debuff semantics in a dedicated tranche.
+
 ## CI / spend
 
 September 2026 included Actions usage was exhausted by Iron Pit volume (~$197 gross on this repo).

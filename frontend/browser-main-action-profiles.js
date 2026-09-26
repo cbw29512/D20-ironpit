@@ -2,6 +2,7 @@
   "use strict";
 
   const CATEGORIES = Object.freeze({
+    REPLACEMENT_FORM_SETUP: "replacement-form-setup",
     SPELL_OFFENSE: "spell-offense",
     INTIMIDATING_PRESENCE_2014: "intimidating-presence-2014",
     DEFERRED_EFFECT: "deferred-effect",
@@ -13,8 +14,9 @@
   });
 
   const PROFILES = Object.freeze({
-    normalPreMove: Object.freeze([CATEGORIES.SPELL_OFFENSE]),
+    normalPreMove: Object.freeze([CATEGORIES.REPLACEMENT_FORM_SETUP, CATEGORIES.SPELL_OFFENSE]),
     normalPostMove: Object.freeze([
+      CATEGORIES.REPLACEMENT_FORM_SETUP,
       CATEGORIES.SPELL_OFFENSE,
       CATEGORIES.INTIMIDATING_PRESENCE_2014,
       CATEGORIES.DEFERRED_EFFECT,

@@ -3,7 +3,7 @@
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set([
-    "armor-class", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
+    "armor-class", "armor-class-minimum", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed", "debuff-counter",
     "zero-hp-replacement",
@@ -16,6 +16,9 @@
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
     const count = item.dice_count || 0, sides = item.dice_size || 0;
     if (DIE_KINDS.has(item.kind) ? count < 1 || sides < 2 : count || sides) throw new Error(`Invalid dice for ${item.kind}.`);
+    if (item.kind === "armor-class-minimum") {
+      if (!(item.minimum_value > 0) || (item.flat_bonus || 0)) throw new Error("Minimum AC requires a positive minimum and no flat bonus.");
+    } else if (item.minimum_value) throw new Error(`${item.kind} does not accept a minimum value.`);
     if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
     if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
     if (item.kind === "attack-roll-flat" && (!(item.flat_bonus || 0) || !item.weapon_id)) throw new Error("Flat attack modifiers require a bonus and weapon id.");
@@ -106,7 +109,7 @@
     .filter((item) => item.kind === "attack-roll-flat" && item.weapon_id === weaponId)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
-  const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
+  const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"), ...(state.active_modifiers || []).filter((item) => item.kind === "armor-class-minimum").map((item) => item.minimum_value || 0));
   const effectiveSpeed = (state) => {
     const speedDelta = (state.active_modifiers || []).filter((item) => item.kind === "speed")
       .reduce((sum, item) => sum + (

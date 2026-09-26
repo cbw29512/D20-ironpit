@@ -61,6 +61,47 @@ Before adding new mechanic code, the implementation audit must classify the feat
 
 `ENGINE_TRULY_MISSING` requires evidence that the existing primitive inventory cannot represent the outcome correctly. After adding any new universal primitive, re-audit all classes and monsters for additional content that can now bind to it.
 
+
+### 1.2 Universal combat resolution pipeline
+
+All outcome-changing combat must follow the same conceptual pipeline:
+
+`source/action data -> legality checks -> context checks -> active modifiers -> roll/save/attack -> result -> state mutation -> audit event`
+
+This is a mandatory architecture rule, not only an implementation preference.
+
+1. **Source/action data** declares what is being attempted: source identity, action cost, target, range, tags, damage, condition, save/attack facts, resource cost, duration, and other printed parameters.
+2. **Legality checks** answer whether the attempt can occur at all: action economy, resource availability, target validity, range/geometry, required state, concentration, recharge, and ruleset restrictions.
+3. **Context checks** inspect only universal facts needed by the mechanic: attacker/defender state, creature type, damage type, magical/nonmagical source, condition identity, movement mode, effect tags, and similar typed context.
+4. **Active modifiers** alter the pending mechanic through universal semantics: Advantage/Disadvantage, flat modifiers, resistance/immunity/vulnerability, buff/debuff counters, condition immunity, targeting gates, damage reductions, replacement effects, and other reusable modifiers.
+5. **Resolution** performs the canonical attack/check/save/damage/healing/movement/resource operation.
+6. **Result** is an explicit mechanical outcome such as legal/illegal, hit/miss, save success/failure, damage amount, condition accepted/rejected, movement allowed/blocked, resource spent/rejected, or effect replaced.
+7. **State mutation** applies only the accepted result to fresh combat state.
+8. **Audit event** records the source name plus the checks/modifiers that materially changed the result.
+
+Named abilities must feed this pipeline as data/composition. They must not bypass it with source-name conditionals when universal facts can express the same rule.
+
+Examples:
+
+- Nature's Ward: incoming `charmed`/ `frightened` -> check source creature type -> matching Fey/Elemental immunity modifier -> reject debuff.
+- Poison immunity: incoming poison damage or `poisoned` debuff -> matching immunity check -> reject the relevant result.
+- Freedom of Movement: incoming movement debuff -> matching debuff counter -> prevent it or automatically pay the declared movement cost to remove it at the first legal opportunity.
+- Resistance: incoming typed damage -> damage-defense check -> modified damage result -> HP application.
+- Attack roll: legal attack -> roll-mode modifiers -> d20 resolution -> hit/miss result -> damage/rider pipeline.
+
+**Refactor rule:** when existing code contains a class-, subclass-, spell-, monster-, or feature-name branch, first ask whether it is only selecting one of these universal checks/modifiers/results. If yes, migrate the branch into declarative source data plus the existing shared resolver. Preserve behavior and Python/browser parity during migration.
+
+**Migration priority:**
+
+1. conditions, immunities, buffs, and debuff counters;
+2. attack/check/save modifiers;
+3. damage/healing defenses and replacement effects;
+4. movement/position legality and counters;
+5. resources, recharge, and action-economy legality;
+6. timing hooks/reactions and other interrupts.
+
+Do not rewrite already-correct universal code merely for stylistic consistency. Refactor only named/special-case logic that duplicates universal semantics or prevents shared reuse.
+
 ## 2. Ruleset isolation
 
 The current certified public ruleset is D&D 2024 / SRD 5.2.1.

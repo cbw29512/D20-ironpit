@@ -3,6 +3,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.character_builds import AbilityName
+from app.domain.debuffs import DebuffCounter
 
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
@@ -20,6 +21,14 @@ from app.domain.progression_primitives import (
     SavingThrowProficiencyGrant,
     SlotHealingSelfRider,
 )
+
+class PassiveDebuffCounterGrant(BaseModel):
+    """Passive source-owned binding to the universal debuff-counter primitive."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    counter: DebuffCounter
+
 
 class SavingThrowAdvantageGrant(BaseModel):
     """Passive source-tagged Advantage on matching saving throws."""
@@ -63,6 +72,7 @@ class ProgressionCombatFeatures(BaseModel):
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
+    passive_debuff_counter_grants: list[PassiveDebuffCounterGrant] = Field(default_factory=list)
     opening_targeting_ward: OpeningTargetingWard | None = None
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)

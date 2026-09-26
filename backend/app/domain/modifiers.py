@@ -10,6 +10,7 @@ from app.domain.debuffs import DebuffCounter
 
 class ModifierKind(StrEnum):
     ARMOR_CLASS = "armor-class"
+    ARMOR_CLASS_MINIMUM = "armor-class-minimum"
     ATTACK_ROLL_FLAT = "attack-roll-flat"
     ATTACK_ROLL_BONUS_DIE = "attack-roll-bonus-die"
     SAVING_THROW_FLAT = "saving-throw-flat"
@@ -38,6 +39,7 @@ class CombatModifier(BaseModel):
     source_is_magical: bool = False
     kind: ModifierKind
     flat_bonus: int = 0
+    minimum_value: int = Field(default=0, ge=0, le=100)
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
     damage_type: DamageType | None = None
@@ -50,6 +52,7 @@ class CombatModifier(BaseModel):
     source_creature_types: list[str] = Field(default_factory=list)
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
+    success_immunity_hours: int | None = Field(default=None, ge=1)
     requires_magical_effect: bool = False
     requires_spell_effect: bool = False
     required_effect_tags: list[str] = Field(default_factory=list)
@@ -71,6 +74,11 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} requires certified dice.")
         if not die_kind and (self.dice_count or self.dice_size):
             raise ValueError(f"{self.kind.value} does not accept dice.")
+        if self.kind is ModifierKind.ARMOR_CLASS_MINIMUM:
+            if self.minimum_value < 1 or self.flat_bonus:
+                raise ValueError("Minimum AC modifiers require a positive minimum and no flat bonus.")
+        elif self.minimum_value:
+            raise ValueError(f"{self.kind.value} does not accept a minimum value.")
         if self.kind is ModifierKind.BONUS_DAMAGE and self.damage_type is None:
             raise ValueError("Bonus damage requires a damage type.")
         if self.kind is not ModifierKind.BONUS_DAMAGE and self.damage_type is not None:
@@ -103,7 +111,7 @@ class CombatModifier(BaseModel):
             raise ValueError("Typed attack Disadvantage requires source creature types.")
         if self.source_creature_types and self.kind not in {
             ModifierKind.ATTACKS_AGAINST_DISADVANTAGE, ModifierKind.CONDITION_IMMUNITY,
-            ModifierKind.SAVING_THROW_ADVANTAGE,
+            ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE,
         }:
             raise ValueError(f"{self.kind.value} does not accept source creature types.")
         if self.kind in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and not self.save_ability:
@@ -112,6 +120,8 @@ class CombatModifier(BaseModel):
             raise ValueError("Targeting save gates require a DC.")
         if self.kind is not ModifierKind.TARGETING_SAVE_GATE and self.save_dc is not None:
             raise ValueError(f"{self.kind.value} does not accept a save DC.")
+        if self.kind is not ModifierKind.TARGETING_SAVE_GATE and self.success_immunity_hours is not None:
+            raise ValueError(f"{self.kind.value} does not accept targeting-gate success immunity.")
         if self.kind not in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and self.save_ability:
             raise ValueError(f"{self.kind.value} does not accept a save ability.")
         if self.requires_magical_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
@@ -142,3 +152,4 @@ class ConcentrationState(BaseModel):
     effect_id: str
     started_round: int = Field(ge=0)
     expires_round: int | None = Field(default=None, ge=1)
+    slot_level: int | None = Field(default=None, ge=1, le=9)

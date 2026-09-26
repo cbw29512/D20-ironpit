@@ -95,6 +95,10 @@ def _spell(action: Any) -> dict[str, Any]:
         "concentration": action.concentration, "animation": action.animation,
     }
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
+    if action.failed_save_modifier_effects:
+        row["failedSaveModifierEffects"] = [_modifier_effect(effect) for effect in action.failed_save_modifier_effects]
+    if action.area is not None: row["area"] = action.area.model_dump(mode="json")
+    if action.duration_minutes is not None: row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
     if action.damage_components:
         row["damageComponents"] = [
@@ -108,6 +112,7 @@ def _spell(action: Any) -> dict[str, Any]:
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
            "diceSize": effect.dice_size, "damageType": effect.damage_type}
+    if effect.minimum_value: row["minimumValue"] = effect.minimum_value
     if effect.condition_id: row["conditionId"] = effect.condition_id
     if effect.debuff_counter is not None: row["debuffCounter"] = effect.debuff_counter.model_dump(mode="json")
     if effect.replacement_hp: row["replacementHp"] = effect.replacement_hp
@@ -229,6 +234,25 @@ def _save_advantage_grant(grant: Any) -> dict[str, Any]:
     return row
 
 
+
+def _passive_modifier_grant(grant: Any) -> dict[str, Any]:
+    row: dict[str, Any] = {
+        "source_id": grant.source_id,
+        "source_name": grant.source_name,
+        "kind": grant.kind,
+        "condition_id": grant.condition_id,
+        "source_creature_types": list(grant.source_creature_types),
+    }
+    if grant.save_ability is not None:
+        row["save_ability"] = grant.save_ability
+    if grant.save_dc is not None:
+        row["save_dc"] = grant.save_dc
+    if grant.ends_on_owner_attack:
+        row["ends_on_owner_attack"] = True
+    if grant.success_immunity_hours is not None:
+        row["success_immunity_hours"] = grant.success_immunity_hours
+    return row
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -308,8 +332,11 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
         "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
+        "damage_resistances": [item.value for item in template.damage_resistances],
+        "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
+        "damage_immunities": [item.value for item in template.damage_immunities],
         "condition_immunities": list(template.condition_immunities),
-        "passive_modifier_grants": [item.model_dump(mode="json") for item in template.passive_modifier_grants],
+        "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
@@ -342,6 +369,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         ],
         "saving_throw_advantage_grants": [
             _save_advantage_grant(item) for item in progression.saving_throw_advantage_grants
+        ],
+        "passive_debuff_counter_grants": [
+            item.model_dump(mode="json") for item in progression.passive_debuff_counter_grants
         ],
         "first_round_extra_turn_grants": [
             item.model_dump() for item in progression.first_round_extra_turn_grants
@@ -410,6 +440,23 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
     if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
     if template.effect_removal_actions: row["effect_removal_actions"] = [_effect_removal(item) for item in template.effect_removal_actions]
+    if template.replacement_form_actions:
+        row["replacement_form_actions"] = [
+            {
+                "id": item.id,
+                "name": item.name,
+                "actionCost": item.action_cost,
+                "formTemplateId": item.form_template_id,
+                "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost,
+                "voluntaryRevertAction": item.voluntary_revert_action,
+                "retainSpellcasting": item.retain_spellcasting,
+                **({"retainedSpellActionIds": list(item.retained_spell_action_ids)} if item.retained_spell_action_ids else {}),
+                "setupSpellId": item.setup_spell_id,
+                "source": item.source,
+            }
+            for item in template.replacement_form_actions
+        ]
     if template.attack_action:
         row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name,
                                 "isAttackAction": template.attack_action.is_attack_action,

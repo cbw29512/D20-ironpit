@@ -5,7 +5,9 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
 from app.combat.timed_conditions import ARENA_POISON_RECOVERY_DC, apply_timed_condition
+from app.domain.debuffs import DebuffCounter
 from app.domain.models import EncounterSelection, RollMode
+from app.domain.modifiers import CombatModifier, ModifierKind
 
 
 def _setup(monster_ids=None):
@@ -67,10 +69,17 @@ def test_poison_does_not_stack_across_sources() -> None:
     assert len([effect for effect in hero.state.timed_effects if effect.effect_id == "poisoned"]) == 1
 
 
-def test_protection_from_poison_blocks_arena_poison() -> None:
+def test_generic_debuff_counter_blocks_arena_poison() -> None:
     setup = _setup()
     hero, centipede = setup.heroes[0], setup.monsters[0]
-    hero.state.active_buff_effect_ids.append("protection-from-poison")
+    hero.state.active_modifiers.append(CombatModifier(
+        id="test:poison-protection",
+        source_id=hero.combatant_id,
+        source_effect_id="test-poison-protection",
+        source_name="Test Poison Protection",
+        kind=ModifierKind.DEBUFF_COUNTER,
+        debuff_counter=DebuffCounter(debuff_id="poisoned"),
+    ))
     assert apply_timed_condition(hero.state, "poisoned", centipede.combatant_id) is None
     assert "poisoned" not in hero.state.active_effect_ids
 

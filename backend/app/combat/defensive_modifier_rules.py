@@ -123,8 +123,15 @@ def condition_immunity_modifier_applies(
     )
 
 
-def targeting_save_gate(state: CombatantState) -> CombatModifier | None:
-    gates = [item for item in state.active_modifiers if item.kind is ModifierKind.TARGETING_SAVE_GATE]
+def targeting_save_gate(
+    state: CombatantState,
+    source: CombatantTemplate | None = None,
+) -> CombatModifier | None:
+    gates = [
+        item for item in state.active_modifiers
+        if item.kind is ModifierKind.TARGETING_SAVE_GATE
+        and _source_type_matches(item, source)
+    ]
     return max(gates, key=lambda item: (item.save_dc or 0, item.id), default=None)
 
 

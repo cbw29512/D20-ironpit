@@ -39,6 +39,5 @@ def condition_is_immune(
     ):
         return True
     if condition_id == "poisoned":
-        active = {*state.active_effect_ids, *state.active_buff_effect_ids}
-        return "petrified" in active or "protection-from-poison" in active
+        return "petrified" in state.active_effect_ids
     return False

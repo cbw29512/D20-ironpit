@@ -228,6 +228,14 @@ def _spell(action: Any) -> dict[str, Any]:
             "expiryTiming": action.failed_save_timed_effect.expiry_timing,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
+    if action.failed_save_modifier_effects:
+        row["failedSaveModifierEffects"] = [
+            _modifier_effect(effect) for effect in action.failed_save_modifier_effects
+        ]
+    if action.area is not None:
+        row["area"] = action.area.model_dump(mode="json")
+    if action.duration_minutes is not None:
+        row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None:
         row["areaRadius"] = action.area_radius_ft
     if action.damage_components:
@@ -244,6 +252,8 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         "kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
         "diceSize": effect.dice_size, "damageType": effect.damage_type,
     }
+    if effect.minimum_value:
+        row["minimumValue"] = effect.minimum_value
     if effect.debuff_counter is not None:
         row["debuffCounter"] = effect.debuff_counter.model_dump(mode="json")
     if effect.replacement_hp:
@@ -361,6 +371,25 @@ def _save_advantage_grant(grant: Any) -> dict[str, Any]:
     return row
 
 
+
+def _passive_modifier_grant(grant: Any) -> dict[str, Any]:
+    row: dict[str, Any] = {
+        "source_id": grant.source_id,
+        "source_name": grant.source_name,
+        "kind": grant.kind,
+        "condition_id": grant.condition_id,
+        "source_creature_types": list(grant.source_creature_types),
+    }
+    if grant.save_ability is not None:
+        row["save_ability"] = grant.save_ability
+    if grant.save_dc is not None:
+        row["save_dc"] = grant.save_dc
+    if grant.ends_on_owner_attack:
+        row["ends_on_owner_attack"] = True
+    if grant.success_immunity_hours is not None:
+        row["success_immunity_hours"] = grant.success_immunity_hours
+    return row
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -441,6 +470,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["saving_throw_advantage_grants"] = [
             _save_advantage_grant(item) for item in features.saving_throw_advantage_grants
         ]
+    if features.passive_debuff_counter_grants:
+        row["passive_debuff_counter_grants"] = [
+            item.model_dump(mode="json") for item in features.passive_debuff_counter_grants
+        ]
     if features.bloodied_start_turn_heal_amount:
         row["bloodied_start_turn_heal_amount"] = features.bloodied_start_turn_heal_amount
     if features.death_save_advantage:
@@ -477,7 +510,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
             "condition_immunities": list(template.condition_immunities),
-            "passive_modifier_grants": [item.model_dump(mode="json") for item in template.passive_modifier_grants],
+            "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
             "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
@@ -524,6 +557,36 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.timed_self_buff_actions:
             row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
+        if template.replacement_form_actions:
+            row["replacement_form_actions"] = [
+                {
+                    "id": item.id,
+                    "name": item.name,
+                    "actionCost": item.action_cost,
+                    "formTemplateId": item.form_template_id,
+                    "resourceId": item.resource_id,
+                    "resourceCost": item.resource_cost,
+                    "voluntaryRevertAction": item.voluntary_revert_action,
+                    "retainSpellcasting": item.retain_spellcasting,
+                **({"retainedSpellActionIds": list(item.retained_spell_action_ids)} if item.retained_spell_action_ids else {}),
+                    "setupSpellId": item.setup_spell_id,
+                    "source": item.source,
+                }
+                for item in template.replacement_form_actions
+            ]
+        if template.concentration_repeat_save_actions:
+            row["concentration_repeat_save_actions"] = [
+                {
+                    "id": item.id,
+                    "name": item.name,
+                    "sourceSpellId": item.source_spell_id,
+                    "actionCost": item.action_cost,
+                    "priority": item.priority,
+                    "animation": item.animation,
+                    "source": item.source,
+                }
+                for item in template.concentration_repeat_save_actions
+            ]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}

@@ -22,6 +22,10 @@ def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
                 kind=ModifierKind(grant.kind),
                 condition_id=grant.condition_id,
                 source_creature_types=list(grant.source_creature_types),
+                save_ability=grant.save_ability,
+                save_dc=grant.save_dc,
+                ends_on_owner_attack=grant.ends_on_owner_attack,
+                success_immunity_hours=grant.success_immunity_hours,
             ))
         ward = features.opening_targeting_ward
         if ward is not None:
@@ -33,6 +37,15 @@ def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
                 save_ability=ward.save_ability,
                 save_dc=ward.save_dc,
                 ends_on_owner_attack=ward.ends_on_owner_attack,
+            ))
+        for index, grant in enumerate(features.passive_debuff_counter_grants):
+            modifiers.append(CombatModifier(
+                id=f"{template.id}:{grant.source_id}:passive-debuff-counter:{index}",
+                source_id=template.id,
+                source_effect_id=grant.source_id,
+                source_name=grant.source_name,
+                kind=ModifierKind.DEBUFF_COUNTER,
+                debuff_counter=grant.counter,
             ))
         for grant in features.saving_throw_advantage_grants:
             for ability in grant.abilities:

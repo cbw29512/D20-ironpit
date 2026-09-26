@@ -8,7 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, DamageTypeName
 from app.domain.debuffs import DebuffCounter
 
 SpellModifierKind = Literal[
-    "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die", "saving-throw-advantage",
+    "armor-class", "armor-class-minimum", "attack-roll-bonus-die", "saving-throw-bonus-die", "saving-throw-advantage",
     "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
     "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "speed", "debuff-counter",
     "zero-hp-replacement",
@@ -20,6 +20,7 @@ class SpellModifierEffect(BaseModel):
 
     kind: SpellModifierKind
     flat_bonus: int = 0
+    minimum_value: int = Field(default=0, ge=0, le=100)
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
     damage_type: DamageTypeName | None = None
@@ -41,6 +42,11 @@ class SpellModifierEffect(BaseModel):
             raise ValueError(f"{self.kind} requires certified dice.")
         if not die_kind and (self.dice_count or self.dice_size):
             raise ValueError(f"{self.kind} does not accept dice.")
+        if self.kind == "armor-class-minimum":
+            if self.minimum_value < 1 or self.flat_bonus:
+                raise ValueError("Minimum AC effects require a positive minimum and no flat bonus.")
+        elif self.minimum_value:
+            raise ValueError(f"{self.kind} does not accept a minimum value.")
         if self.kind == "bonus-damage" and self.damage_type is None:
             raise ValueError("Bonus damage requires a damage type.")
         if self.kind != "bonus-damage" and self.damage_type is not None:

@@ -13,6 +13,8 @@ from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 def _modifier_detail(effect: SpellModifierEffect) -> str:
     if effect.kind == "armor-class":
         return f"{effect.flat_bonus:+d} AC"
+    if effect.kind == "armor-class-minimum":
+        return f"minimum AC {effect.minimum_value}"
     if effect.kind == "speed":
         return f"{effect.flat_bonus:+d} Speed"
     if effect.dice_count:
