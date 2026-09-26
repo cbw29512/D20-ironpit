@@ -7,6 +7,7 @@ from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy_targeting import (
     area_spell_choice,
     legacy_radius_spell_choice,
+    legal_single_spell_targets,
     single_target_spell_choice,
 )
 from app.combat.spellcasting import legal_slot_levels
