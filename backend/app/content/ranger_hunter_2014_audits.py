@@ -198,4 +198,14 @@ def build_ranger_hunter_2014_feature_audits(level: int) -> list[FeatureAudit]:
                 "The canonical known spell is Commune with Nature, retained as arena-out-of-scope utility."
             ),
         ))
+    if level >= 18:
+        rows.append(FeatureAudit(
+            feature_id="feral-senses", feature_name="Feral Senses",
+            source_reference="D&D Basic Rules 2014: Ranger 18",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "Reuses a universal visibility-derived attack-modifier suppression: inability to see the target "
+                "no longer adds attack Disadvantage. It does not grant actual sight or suppress unrelated Disadvantage."
+            ),
+        ))
     return rows
