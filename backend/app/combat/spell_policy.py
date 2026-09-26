@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.condition_rules import can_see
+from app.combat.area_targeting import legal_area_placements\nfrom app.combat.condition_rules import can_see
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import best_area_placement
@@ -106,6 +106,35 @@ def choose_spell(
                 higher_slot_scaling=action.upcast_dice_per_level > 0,
             ):
                 scaled = spell_at_slot(action, slot_level)
+                if action.area is not None:
+                    placements = [
+                        item
+                        for item in legal_area_placements(caster, setup, action.area, action.range_ft)
+                        if not item.friendly_ids
+                    ]
+                    if not placements:
+                        continue
+                    placement = max(
+                        placements,
+                        key=lambda item: (
+                            len(item.enemy_ids),
+                            -len(item.friendly_ids),
+                        ),
+                    )
+                    score = sum(
+                        save_spell_expected_damage(members[target_id], scaled)
+                        for target_id in placement.enemy_ids
+                    )
+                    choice = SpellChoice(
+                        action,
+                        slot_level,
+                        tuple(placement.enemy_ids),
+                        placement,
+                        score,
+                    )
+                    candidates.append((score, -action.level, -index, choice))
+                    continue
+
                 if action.area_radius_ft is not None:
                     placement = best_area_placement(
                         caster,
