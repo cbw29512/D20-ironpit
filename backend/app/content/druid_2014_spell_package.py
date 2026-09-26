@@ -53,6 +53,10 @@ _PREPARED = (
         "locate-animals-or-plants", "Locate Animals or Plants", "utility",
         "arena-out-of-scope", level=2, min_level=4,
     ),
+    _spell(
+        "dispel-magic", "Dispel Magic", "control",
+        "effect-removal", level=3, min_level=5,
+    ),
 )
 
 
