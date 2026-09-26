@@ -129,4 +129,11 @@ def build_bard_2014_feature_audits(level: int) -> list[FeatureAudit]:
             category="class", combat_relevant=True, automated=True,
             notes="Canonical selections are Aid and Inflict Wounds; both reuse shared universal spell primitives.",
         ))
+    if level >= 20:
+        rows.append(FeatureAudit(
+            feature_id="superior-inspiration", feature_name="Superior Inspiration",
+            source_reference="D&D Basic Rules 2014: Bard 20",
+            category="class", combat_relevant=True, automated=True,
+            notes="Reuses the universal initiative resource-refill primitive when Bardic Inspiration is empty.",
+        ))
     return rows
