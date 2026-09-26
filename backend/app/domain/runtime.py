@@ -34,7 +34,7 @@ class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
     source_effect_id: str | None = None
-    applied_round: int | None = Field(default=None, ge=1)
+    applied_round: int | None = Field(default=None, ge=0)
     expires_round: int | None = Field(default=None, ge=1)
     expires_at_start_of_source_turn: bool = True
     expiry_timing: ConditionTiming | None = None
