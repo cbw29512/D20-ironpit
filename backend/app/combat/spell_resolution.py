@@ -3,9 +3,12 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.concentration import start_concentration
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.spell_policy import SpellChoice, spell_at_slot
+from app.combat.modifier_stack import add_modifier
+from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
@@ -30,7 +33,7 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
         target_range = spell.range_ft + (spell.area_radius_ft or 0)
         return SavingThrowAction(
             id=spell.id, name=spell.name, save_ability=spell.save_ability, dc=spell.dc,
-            range_ft=target_range, damage_dice_count=spell.damage_dice_count,
+            range_ft=target_range, area=spell.area, damage_dice_count=spell.damage_dice_count,
             damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
             damage_type=spell.damage_type, success_damage=spell.success_damage,
             damage_components=list(spell.damage_components),
@@ -73,6 +76,19 @@ def resolve_spell(
         spend(caster.state, spell.action_cost)
         remove_owner_attack_ending_modifiers(caster.state)
 
+        members = [*setup.heroes, *setup.monsters]
+        affected_states = [member.state for member in members]
+        if spell.concentration:
+            duration_rounds = (spell.duration_minutes or 0) * 10
+            start_concentration(
+                caster.state,
+                caster.combatant_id,
+                spell.id,
+                round_number,
+                affected_states,
+                expires_round=round_number + duration_rounds,
+            )
+
         placement = choice.placement
         detail = ""
         if placement is not None:
@@ -89,14 +105,16 @@ def resolve_spell(
         )]
         sequence += 1
 
-        members = [*setup.heroes, *setup.monsters]
         by_id = {member.combatant_id: member for member in members}
-        affected_states = [member.state for member in members]
         save_action = _save_action(choice)
         shared_damage_rolls: list[int] | list[list[int]] | None = None
         for target_id in choice.target_ids:
             target = by_id[target_id]
-            ward = check_targeting_ward(caster, target, dice) if scaled_spell.area_radius_ft is None else None
+            ward = (
+                check_targeting_ward(caster, target, dice)
+                if scaled_spell.area_radius_ft is None and scaled_spell.area is None
+                else None
+            )
             if ward is not None and not ward.succeeded:
                 events.append(blocked_targeting_event(
                     sequence, round_number, caster, target, spell.name, ward,
@@ -105,7 +123,7 @@ def resolve_spell(
                 continue
             chain, sequence = resolve_save_event_chain(
                 sequence, round_number, caster, target, save_action,
-                abs(caster.position_ft - target.position_ft), dice, setup,
+                0 if placement is not None else abs(caster.position_ft - target.position_ft), dice, setup,
                 turn_key=turn_key, spend_action=False,
                 shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
                 spell_effect=True,
@@ -113,6 +131,21 @@ def resolve_spell(
             event = chain[0]
             if ward is not None:
                 event.description += f" {caster.state.template.name} succeeds against {ward.gate.source_effect_id}."
+            if event.save_succeeded is False and scaled_spell.failed_save_modifier_effects:
+                for index, effect in enumerate(scaled_spell.failed_save_modifier_effects):
+                    add_modifier(
+                        target.state,
+                        build_spell_modifier(
+                            caster.combatant_id,
+                            target.combatant_id,
+                            scaled_spell.id,
+                            effect,
+                            index,
+                            scaled_spell.name,
+                            concentration_required=scaled_spell.concentration,
+                            round_number=round_number,
+                        ),
+                    )
             events.extend(chain)
             if shared_damage_rolls is None and event.damage_components:
                 shared_damage_rolls = [list(component.rolls) for component in event.damage_components]
