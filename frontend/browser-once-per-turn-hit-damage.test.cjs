@@ -62,4 +62,30 @@ result = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(attacker, attack, true, "nor
 assert.deepEqual(result.components.map((part) => part.source), ["Warhammer", "Test Rider"]);
 assert.deepEqual(result.components[1].rolls, [6, 7]);
 
+attacker.feature_last_turn_keys = {};
+attacker.template.once_per_turn_weapon_hit_damage_rider = {
+  source_id: "qualified-rider",
+  source_name: "Qualified Rider",
+  dice_count: 1,
+  dice_size: 8,
+  damage_type: null,
+  requires_target_below_max_hp: true,
+};
+const target = { template: { max_hp: 20 }, current_hp: 20 };
+
+window.IRON_PIT_DICE.rolls = [4];
+result = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(
+  attacker, attack, false, "normal", "3:attacker", null, target,
+);
+assert.deepEqual(result.components.map((part) => part.source), ["Warhammer"]);
+assert.equal(attacker.feature_last_turn_keys["qualified-rider"], undefined);
+
+target.current_hp = 19;
+window.IRON_PIT_DICE.rolls = [4, 6];
+result = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(
+  attacker, attack, false, "normal", "3:attacker", null, target,
+);
+assert.deepEqual(result.components.map((part) => part.source), ["Warhammer", "Qualified Rider"]);
+assert.equal(result.components[1].damage_type, "bludgeoning");
+
 console.log("Browser once-per-turn weapon-hit damage rider regressions passed.");
