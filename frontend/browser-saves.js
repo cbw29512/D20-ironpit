@@ -58,6 +58,7 @@
     const saveContext = {
       magicalEffect: Boolean(action.magicalEffect), spellEffect: Boolean(options.spellEffect),
       sourceCreatureType: actor.state.template.creature_type || null, effectTags, roundNumber: round,
+      disadvantageSources: [...(options.saveDisadvantageSources || [])],
     };
     const advantageSources = DF().saveAdvantageSourceNames?.(
       target.state, action.saveAbility, saveContext,
@@ -126,6 +127,7 @@
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
     if (advantageSources.length) description += ` ${advantageSources.join(" and ")} grants Advantage on the save.`;
+    if (saveContext.disadvantageSources.length) description += ` ${saveContext.disadvantageSources.join(" and ")} imposes Disadvantage on the save.`;
     const d20OverrideName = DO().sourceNameForRoll(target.state, save.roll);
     if (d20OverrideName) description += ` ${d20OverrideName} turns the failed saving throw roll into a 20.`;
     if (target.state.template.evasion && action.saveAbility === "dexterity" && action.successDamage === "half") description += " Evasion reduces the damage.";
