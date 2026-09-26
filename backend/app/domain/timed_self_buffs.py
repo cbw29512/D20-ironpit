@@ -22,6 +22,18 @@ class TimedEmanationDamage(BaseModel):
     damage_type: DamageType
 
 
+class TimedHostileConditionAura(BaseModel):
+    """Hostile live aura that makes a save at the declared turn-start window."""
+
+    trigger: Literal["enemy_turn_start"] = "enemy_turn_start"
+    radius_ft: int = Field(ge=1, le=120)
+    save_ability: str
+    save_dc: int = Field(ge=1, le=40)
+    condition_id: ConditionName
+    success_immunity_rounds: int = Field(default=0, ge=0)
+    source_is_magical: bool = True
+
+
 class TimedFriendlySaveAura(BaseModel):
     """Live friendly aura that grants save Advantage for matching effect tags."""
 
@@ -52,7 +64,9 @@ class TimedSelfBuffAction(BaseModel):
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
+    hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
+    concentration: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
     expiry_timing: ConditionTiming = "source_turn_start"
@@ -92,6 +106,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.debuff_counters
                 or self.saving_throw_advantage_grants
                 or self.friendly_save_advantage_aura is not None
+                or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")
