@@ -22,6 +22,7 @@ _CANTRIPS = (
     _spell("light", "Light", "utility", "arena-out-of-scope"),
     _spell("mage-hand", "Mage Hand", "utility", "arena-out-of-scope"),
     _spell("prestidigitation", "Prestidigitation", "utility", "arena-out-of-scope"),
+    _spell("message", "Message", "utility", "arena-out-of-scope"),
 )
 
 _KNOWN = (
@@ -29,6 +30,7 @@ _KNOWN = (
     _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope", level=1),
     _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope", level=1),
     _spell("knock", "Knock", "utility", "arena-out-of-scope", level=2, min_level=3),
+    _spell("detect-thoughts", "Detect Thoughts", "utility", "arena-out-of-scope", level=2, min_level=4),
 )
 
 
