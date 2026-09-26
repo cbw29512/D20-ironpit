@@ -5,7 +5,7 @@ import logging
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.monster_equipment import build_light_crossbow
 from app.content.sorcerer_2014_font_of_magic import font_of_magic_2014_actions
-from app.content.sorcerer_2014_metamagic import heightened_spell_2014
+from app.content.sorcerer_2014_metamagic import distant_spell_2014, heightened_spell_2014
 from app.content.paladin_devotion_2014_spells import dispel_magic_2014
 from app.content.shared_invisibility_spells_2014 import greater_invisibility_2014
 from app.content.sorcerer_2014_progression import sorcerer_2014_level
@@ -21,8 +21,8 @@ _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom",
 
 def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 9.")
+        if level not in range(1, 14):
+            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 13.")
         profile = build_nyra_emberveil_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -70,6 +70,7 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             effect_removal_actions=([dispel_magic_2014()] if level >= 8 else []),
             resource_conversion_actions=(font_of_magic_2014_actions(level) if level >= 2 else []),
             spell_save_disadvantage_options=([heightened_spell_2014()] if level >= 3 else []),
+            spell_range_modifiers=([distant_spell_2014()] if level >= 10 else []),
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
