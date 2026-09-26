@@ -6,7 +6,7 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.monster_equipment import build_light_crossbow
 from app.content.sorcerer_2014_font_of_magic import font_of_magic_2014_actions
 from app.content.sorcerer_2014_metamagic import heightened_spell_2014
-from app.content.shared_invisibility_spells_2014 import greater_invisibility_2014\nfrom app.content.sorcerer_2014_progression import sorcerer_2014_level
+from app.content.paladin_devotion_2014_spells import dispel_magic_2014\nfrom app.content.shared_invisibility_spells_2014 import greater_invisibility_2014\nfrom app.content.sorcerer_2014_progression import sorcerer_2014_level
 from app.content.sorcerer_draconic_2014_profile import build_nyra_emberveil_2014_profile
 from app.content.sorcerer_draconic_2014_spells import burning_hands_2014, fire_bolt_2014, fireball_2014
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack\nfrom app.domain.spell_cast_effects import SpellCastTimedResistance
@@ -18,8 +18,8 @@ _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom",
 
 def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 8):
-            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 7.")
+        if level not in range(1, 9):
+            raise ValueError("2014 Draconic Sorcerer runtime currently covers levels 1 through 8.")
         profile = build_nyra_emberveil_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -48,7 +48,7 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             weapon_attack=weapon_attack,
             spell_attack_actions=[fire_bolt_2014(pb + cha, level, cha if level >= 6 else 0)],
             spell_save_actions=[\n                burning_hands_2014(8 + pb + cha, cha if level >= 6 else 0),\n                *([fireball_2014(8 + pb + cha, cha if level >= 6 else 0)] if level >= 5 else []),\n            ],\n            spell_cast_timed_resistances=([\n                SpellCastTimedResistance(\n                    id="elemental-affinity-fire-resistance",\n                    name="Elemental Affinity: Fire Resistance",\n                    qualifying_damage_type=DamageType.FIRE,\n                    resistance_damage_type=DamageType.FIRE,\n                    resource_id="sorcery-points",\n                    resource_cost=1,\n                    duration_rounds=600,\n                    priority=100,\n                )\n            ] if level >= 6 else []),
-            defensive_spell_actions=([greater_invisibility_2014()] if level >= 7 else []),\n            resource_conversion_actions=(font_of_magic_2014_actions(level) if level >= 2 else []),
+            defensive_spell_actions=([greater_invisibility_2014()] if level >= 7 else []),\n            effect_removal_actions=([dispel_magic_2014()] if level >= 8 else []),\n            resource_conversion_actions=(font_of_magic_2014_actions(level) if level >= 2 else []),
             spell_save_disadvantage_options=([heightened_spell_2014()] if level >= 3 else []),
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
