@@ -73,5 +73,41 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_SPELL_POLICY = { choose, scaledSpell, slotLevel, slotLevels };
+  function chooseById(caster, setup, turnKey, spellId, protectedAllyIds = []) {
+    try {
+      const action = (caster.state.template.spell_save_actions || []).find((item) => item.id === spellId);
+      if (!action || action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) return null;
+      const levels = slotLevels(caster, action, turnKey);
+      if (!levels.length) return null;
+      const castLevel = levels.at(-1);
+      if (action.area) {
+        const placements = window.IRON_PIT_BROWSER_AREA_TARGETING
+          .legalPlacements(caster, setup, action.area, action.range)
+          .filter((placement) => !(placement.friendlyIds || []).length);
+        if (!placements.length) return null;
+        placements.sort((a, b) =>
+          b.enemyIds.length - a.enemyIds.length || a.friendlyIds.length - b.friendlyIds.length);
+        const placement = placements[0];
+        return { action, slotLevel: castLevel, targetIds: [...placement.enemyIds], placement,
+          expectedDamage: placement.enemyIds.length };
+      }
+      if (action.areaRadius) {
+        const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
+        if (!placement) return null;
+        return { action, slotLevel: castLevel,
+          targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement,
+          expectedDamage: placement.enemyIds.length };
+      }
+      const legal = legalSingleTargets(caster, setup, action);
+      if (!legal.length) return null;
+      legal.sort((a, b) => a.state.current_hp - b.state.current_hp
+        || a.combatant_id.localeCompare(b.combatant_id));
+      return { action, slotLevel: castLevel, targetIds: [legal[0].combatant_id], placement: null, expectedDamage: 0 };
+    } catch (error) {
+      console.error("Browser named save-spell selection failed", { caster: caster?.combatant_id, spellId, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_SPELL_POLICY = { choose, chooseById, scaledSpell, slotLevel, slotLevels };
 })();
