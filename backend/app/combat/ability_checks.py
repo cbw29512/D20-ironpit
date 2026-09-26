@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful
+from app.combat.d20_bonus_dice import (
+    apply_d20_bonus_die_if_useful,
+    apply_resource_backed_d20_bonus_if_useful,
+)
 from app.combat.dice import DiceProvider
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.domain.character_builds import AbilityName
@@ -79,6 +82,12 @@ def resolve_ability_check_outcome(
                 raise ValueError("Active d20 bonus die requires ability-check dice and round context.")
             revised, _ = apply_d20_bonus_die_if_useful(
                 state, "ability_check", revised, dc, dice, round_number,
+            )
+        if state.template.progression_features.resource_backed_d20_bonus_dice:
+            if dice is None:
+                raise ValueError("Resource-backed ability-check bonus die requires dice context.")
+            revised, _ = apply_resource_backed_d20_bonus_if_useful(
+                state, "ability_check", revised, dc, dice,
             )
         revised, _, _ = apply_failed_d20_test_override(
             state, revised, failed=revised.total < dc, test_kind="ability_check",
