@@ -5,6 +5,7 @@
   const AH = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const PA = () => window.IRON_PIT_BROWSER_PALADIN_AURAS_2014;
+  const FA = () => window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS;
   const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
@@ -74,7 +75,7 @@
   function resolveTurn(sequence, round, member, setup) {
     try {
       enablePitRangePolicy();
-      const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); PA()?.sync(setup);
+      const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); PA()?.sync(setup); FA()?.sync(setup);
       const countered = S().beginTurn(member.state) || [];
       for (const item of countered) {
         events.push({
@@ -108,9 +109,9 @@
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const targets = F().targetOrder(member, setup); if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
       const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
-      if (charged?.handled) { events.push(...charged.events); PA()?.sync(setup); return finalize(events, charged.sequence, round, member, setup, turnKey); }
+      if (charged?.handled) { events.push(...charged.events); PA()?.sync(setup); FA()?.sync(setup); return finalize(events, charged.sequence, round, member, setup, turnKey); }
       const movement = OM()?.move(sequence, round, member, setup, turnKey);
-      if (movement) { events.push(...movement.events); sequence = movement.sequence; PA()?.sync(setup); }
+      if (movement) { events.push(...movement.events); sequence = movement.sequence; PA()?.sync(setup); FA()?.sync(setup); }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const postMove = resolveMainActionOpportunity("normalPostMove", sequence, round, member, setup, turnKey);
       events.push(...postMove.events); sequence = postMove.sequence;
