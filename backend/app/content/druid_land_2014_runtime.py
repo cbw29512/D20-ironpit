@@ -13,10 +13,14 @@ from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
 from app.content.druid_2014_progression import druid_2014_level
 from app.content.druid_2014_wild_shape import wild_shape_action_2014
+from app.content.druid_land_2014_level10 import (
+    natures_ward_condition_immunities_2014,
+    natures_ward_debuff_counters_2014,
+)
 from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_profile
 from app.content.weapon_catalog import build_weapon
 from app.domain.debuffs import DebuffCounter
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import PassiveDebuffCounterGrant, ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
 logger = logging.getLogger(__name__)
@@ -58,8 +62,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 9.")
+        if level not in range(1, 11):
+            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 10.")
         profile = build_thalen_greenbough_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -111,6 +115,10 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
             replacement_form_actions=(
                 [wild_shape_action_2014(level)] if level >= 2 else []
             ),
+            passive_modifier_grants=(
+                natures_ward_condition_immunities_2014() if level >= 10 else []
+            ),
+            damage_immunities=[DamageType.POISON] if level >= 10 else [],
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
@@ -129,16 +137,19 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
                         )
                     ] if level >= 6 else []),
                 ],
-                passive_debuff_counter_grants=(
-                    [PassiveDebuffCounterGrant(
-                        source_id="lands-stride",
-                        source_name="Land's Stride",
-                        counter=DebuffCounter(
-                            debuff_id="difficult-terrain",
-                            source_scope="nonmagical",
-                        ),
-                    )] if level >= 6 else []
-                ),
+                passive_debuff_counter_grants=[
+                    *([
+                        PassiveDebuffCounterGrant(
+                            source_id="lands-stride",
+                            source_name="Land's Stride",
+                            counter=DebuffCounter(
+                                debuff_id="difficult-terrain",
+                                source_scope="nonmagical",
+                            ),
+                        )
+                    ] if level >= 6 else []),
+                    *(natures_ward_debuff_counters_2014() if level >= 10 else []),
+                ],
             ),
             saving_throw_bonuses=saving_throw_bonuses(
                 scores,
