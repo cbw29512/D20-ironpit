@@ -85,6 +85,11 @@ assert.ok(choice);
 assert.equal(choice.action.id, "volley");
 assert.deepEqual(choice.placement.targetIds, ["target-1", "target-2", "target-3"]);
 
+member.state.action_available = false;
+assert.equal(runtime.choose(member, setup), null);
+assert.ok(runtime.choose(member, setup, false), "Action Surge legality may be proved before restoring the Action");
+member.state.action_available = true;
+
 const resolved = runtime.resolve(1, 1, member, setup, choice);
 assert.equal(actionSpendCount, 1);
 assert.equal(member.state.action_available, false);
