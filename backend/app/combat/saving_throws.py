@@ -7,6 +7,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
+from app.combat.timed_conditions import apply_timed_condition
 from app.combat.failed_d20_test_override import source_name_for_roll
 from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
 from app.combat.resources import action_resource_available, spend_action_resource
@@ -69,6 +70,26 @@ def resolve_save_action(
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
+    if (
+        not succeeded
+        and target.state.is_alive
+        and not target.state.is_dead
+        and action.failed_save_timed_effect is not None
+    ):
+        rider = action.failed_save_timed_effect
+        apply_timed_condition(
+            target.state,
+            rider.effect_id,
+            actor.combatant_id,
+            source_effect_id=action.id,
+            source_template=actor.state.template,
+            source_is_magical=action.magical_effect,
+            applied_round=round_number,
+            expiry_timing=rider.expiry_timing,
+            next_attack_disadvantage=rider.next_attack_disadvantage,
+            affected_states=affected_states,
+            use_default_poison_recovery=False,
+        )
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
         applied_conditions = apply_grapple(
             target.state,
