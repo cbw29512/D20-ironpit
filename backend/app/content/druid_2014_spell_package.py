@@ -42,7 +42,7 @@ _PREPARED = (
         "save-modifier", "area-effect", "concentration", min_level=2,
     ),
     _spell(
-        "lesser-restoration", "Lesser Restoration", "support",
+        "lesser-restoration", "Lesser Restoration", "healing",
         "condition-removal", level=2, min_level=3,
     ),
     _spell(
