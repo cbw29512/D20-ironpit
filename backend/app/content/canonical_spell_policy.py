@@ -34,6 +34,6 @@ def canonical_spell_package(
                 raise ValueError("2014 Paladin spell preparation requires the Charisma modifier.")
             return build_paladin_2014_spell_package(level, casting_modifier)
         if class_id == "ranger":
-            return build_ranger_2014_spell_package(level)
+            return None if level < 2 else build_ranger_2014_spell_package(level)
         return None
     return build_class_spell_package(class_id, level)  # type: ignore[arg-type]
