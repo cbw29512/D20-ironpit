@@ -5,7 +5,8 @@ import logging
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.modifier_stack import add_modifier
 from app.combat.spell_modifiers import build_spell_modifier
-from app.combat.spell_policy import SpellChoice, spell_at_slot
+from app.combat.spell_choice import SpellChoice
+from app.combat.spell_policy import spell_at_slot
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
