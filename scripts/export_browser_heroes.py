@@ -441,6 +441,17 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             }
             for item in template.spell_range_modifiers
         ]
+    if template.spell_duration_modifiers:
+        row["spellDurationModifiers"] = [
+            {
+                "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost, "durationMultiplier": item.duration_multiplier,
+                "maximumDurationMinutes": item.maximum_duration_minutes,
+                "minimumBaseDurationMinutes": item.minimum_base_duration_minutes,
+                "priority": item.priority, "source": item.source,
+            }
+            for item in template.spell_duration_modifiers
+        ]
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.turning_failure_damage:
