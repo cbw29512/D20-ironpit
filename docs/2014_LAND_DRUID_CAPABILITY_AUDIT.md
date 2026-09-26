@@ -46,7 +46,7 @@ Implemented shared state/lifecycle:
 
 ## Current certification boundary
 
-Levels 1–6 are the current registered 2014 Land Druid certification boundary on this branch.
+Levels 1–7 are the current registered 2014 Land Druid certification boundary on this branch.
 
 Level 5 is certified without inventing Call Lightning geometry. The permanent Pit contract defines one authoritative x/y grid and restricts flight to horizontal movement, so the spell's required vertical storm-cloud placement is not a legal standard-Pit action. Its generic concentration repeat-save capability remains available for future content whose geometry is legal.
 
