@@ -84,6 +84,11 @@ Refactor discipline:
 - do not stall the active 2014 Druid lane for unrelated cosmetic rewrites;
 - when a named special case is discovered during active work, migrate it if the shared replacement is small and safe; otherwise record it here and continue the canonical lane.
 
+Immediate examples:
+
+- **Nature's Ward (Druid 10):** completed as the proving case for typed checks -> universal modifiers/counters -> result; no Druid-named resolver.
+- **Mindless Rage:** known named branch in the condition-immunity path. Do not mechanically collapse it yet; preserve the 2014 vs 2024 difference for already-active Charm/Frighten while migrating it to shared condition/debuff semantics in a dedicated tranche.
+
 ## CI / spend
 
 September 2026 included Actions usage was exhausted by Iron Pit volume (~$197 gross on this repo).
