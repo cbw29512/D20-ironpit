@@ -6,12 +6,9 @@ from dataclasses import dataclass
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.audited_cleric_life_high_profile import (
-    build_seraphine_dawnshield_level7_profile,
-    build_seraphine_dawnshield_level8_profile,
-    build_seraphine_dawnshield_level9_profile,
-    build_seraphine_dawnshield_level10_profile,
-    build_seraphine_dawnshield_level11_profile,
-    build_seraphine_dawnshield_level12_profile,
+    build_seraphine_dawnshield_level7_profile, build_seraphine_dawnshield_level8_profile,
+    build_seraphine_dawnshield_level9_profile, build_seraphine_dawnshield_level10_profile,
+    build_seraphine_dawnshield_level11_profile, build_seraphine_dawnshield_level12_profile,
 )
 from app.content.audited_cleric_life_profile import (
     build_seraphine_dawnshield_level3_profile, build_seraphine_dawnshield_level4_profile,
