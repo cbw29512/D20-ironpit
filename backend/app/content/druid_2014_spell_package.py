@@ -73,6 +73,10 @@ _PREPARED = (
         "locate-creature", "Locate Creature", "utility",
         "arena-out-of-scope", level=4, min_level=8,
     ),
+    _spell(
+        "reincarnate", "Reincarnate", "utility",
+        "arena-out-of-scope", level=5, min_level=9,
+    ),
 )
 
 
