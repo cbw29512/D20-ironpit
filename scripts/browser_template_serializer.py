@@ -568,6 +568,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "resourceCost": item.resource_cost,
                     "voluntaryRevertAction": item.voluntary_revert_action,
                     "retainSpellcasting": item.retain_spellcasting,
+                **({"retainedSpellActionIds": list(item.retained_spell_action_ids)} if item.retained_spell_action_ids else {}),
                     "setupSpellId": item.setup_spell_id,
                     "source": item.source,
                 }
