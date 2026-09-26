@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.dice import FixedDiceProvider
 from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
+from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.state import build_combatant_state
 from app.content.monsters import build_commoner
 from app.domain.combatants import ResourceDefinition
@@ -112,3 +113,26 @@ def test_damage_penalty_reduces_damage_but_not_below_zero() -> None:
     assert result is not None
     assert result.roll.total == 0
     assert reactor.state.reaction_available is False
+
+
+def test_weapon_attack_integration_uses_reaction_penalty_before_hit_resolution() -> None:
+    setup, roller, reactor = _setup()
+    target = setup.heroes[1]
+    target.state.template.armor_class = 13
+    event = resolve_encounter_attack(
+        1,
+        1,
+        roller,
+        target,
+        roller.state.template.weapon_attack,
+        5,
+        FixedDiceProvider([12, 3]),
+        setup,
+        spend_action=False,
+    )
+    assert event.attack_roll is not None
+    assert event.attack_roll.revisions[-1].kind == "roll_penalty"
+    assert event.attack_roll.total < event.target_ac
+    assert event.hit is False
+    assert reactor.state.reaction_available is False
+    assert reactor.state.resources[0].current_uses == 1
