@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellModifierEffect, SpellSaveAction
+from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
 
@@ -50,4 +51,30 @@ def longstrider_2014() -> DefensiveSpellAction:
         )
     except Exception:
         logger.exception("Failed to build 2014 Longstrider.")
+        raise
+
+
+def faerie_fire_2014(save_dc: int) -> SpellSaveAction:
+    try:
+        return SpellSaveAction(
+            id="faerie-fire",
+            name="Faerie Fire",
+            level=1,
+            action_cost="action",
+            range_ft=60,
+            area=AreaTargeting(shape="cube", origin="point", length_ft=20),
+            save_ability="dexterity",
+            dc=save_dc,
+            damage_dice_count=0,
+            damage_type=None,
+            success_damage="none",
+            failed_save_modifier_effects=[
+                SpellModifierEffect(kind="attacks-against-advantage"),
+            ],
+            concentration=True,
+            duration_minutes=1,
+            animation="faerie-fire",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Faerie Fire.")
         raise
