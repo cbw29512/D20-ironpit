@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_surge import action_surge_available, use_action_surge
 from app.combat.ally_context import pack_tactics_active
+from app.combat.area_weapon_attacks import choose_area_weapon_attack, resolve_area_weapon_attack
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import DiceProvider
 from app.combat.pit_policy import choose_standard_attack, target_order
@@ -22,16 +23,23 @@ def resolve_action_surge_attack(
     if attacker.state.turn_terminated or not action_surge_available(attacker.state, turn_key):
         return [], sequence
 
+    area_weapon = choose_area_weapon_attack(attacker, setup, require_action=False)
     choice = None
-    if attacker.state.template.attack_action is None:
+    if area_weapon is None and attacker.state.template.attack_action is None:
         choice = choose_standard_attack(attacker, setup)
         if choice is None:
             return [], sequence
-    elif not target_order(attacker, setup):
+    elif area_weapon is None and not target_order(attacker, setup):
         return [], sequence
 
     events = [use_action_surge(sequence, round_number, attacker.combatant_id, attacker.state, turn_key)]
     sequence += 1
+    if area_weapon is not None:
+        more, sequence = resolve_area_weapon_attack(
+            sequence, round_number, attacker, setup, dice, area_weapon,
+        )
+        events.extend(more)
+        return events, sequence
     if attacker.state.template.attack_action is not None:
         more, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
         events.extend(more)
