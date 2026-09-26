@@ -44,7 +44,6 @@ def resolve_best_spell_offense(
                 repeat,
                 turn_key,
                 dice,
-                range_modifier=attack.range_modifier,
             )
 
         if attack is None and save is None:
@@ -69,6 +68,7 @@ def resolve_best_spell_offense(
                 setup,
                 turn_key,
                 dice,
+                range_modifier=attack.range_modifier,
             )
             return damage_event_chain(
                 sequence + 1,
