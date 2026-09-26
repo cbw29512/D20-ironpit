@@ -9,6 +9,7 @@ from app.content.cleric_2014_level1_spells import cure_wounds_2014, healing_word
 from app.content.druid_2014_level1_spells import faerie_fire_2014, longstrider_2014, poison_spray_2014, produce_flame_2014
 from app.content.druid_2014_level2_spells import barkskin_2014
 from app.content.shared_spells_2014 import lesser_restoration_2014
+from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
 from app.content.druid_2014_progression import druid_2014_level
 from app.content.druid_2014_wild_shape import wild_shape_action_2014
 from app.content.druid_land_2014_profile import build_thalen_greenbough_2014_profile
@@ -55,8 +56,8 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
     try:
-        if level not in range(1, 5):
-            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 4.")
+        if level not in range(1, 6):
+            raise ValueError("2014 Land Druid runtime currently covers levels 1 through 5.")
         profile = build_thalen_greenbough_2014_profile(level)
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
@@ -96,6 +97,9 @@ def build_thalen_greenbough_2014(level: int) -> CombatantTemplate:
             ],
             condition_removal_actions=(
                 [lesser_restoration_2014()] if level >= 3 else []
+            ),
+            effect_removal_actions=(
+                [dispel_magic_2014("wisdom")] if level >= 5 else []
             ),
             healing_actions=[
                 healing_word_2014(wisdom_modifier, 0),
