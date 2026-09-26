@@ -39,34 +39,59 @@
       && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state)));
   }
 
+  function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = []) {
+    try {
+      if (!action || action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) return null;
+      const scaled = scaledSpell(action, castLevel);
+      const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+      if (action.area) {
+        const placements = window.IRON_PIT_BROWSER_AREA_TARGETING
+          .legalPlacements(caster, setup, action.area, action.range)
+          .filter((placement) => !(placement.friendlyIds || []).length);
+        if (!placements.length) return null;
+        placements.sort((a, b) =>
+          b.enemyIds.length - a.enemyIds.length || a.friendlyIds.length - b.friendlyIds.length);
+        const placement = placements[0];
+        const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
+        return { action, slotLevel: castLevel, targetIds: [...placement.enemyIds], placement, expectedDamage: score };
+      }
+      if (action.areaRadius) {
+        const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
+        if (!placement) return null;
+        const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0)
+          - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
+        return { action, slotLevel: castLevel,
+          targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement, expectedDamage: score };
+      }
+      const legal = legalSingleTargets(caster, setup, action);
+      if (!legal.length) return null;
+      legal.sort((a, b) => O().saveSpell(b, scaled) - O().saveSpell(a, scaled)
+        || a.state.current_hp - b.state.current_hp || a.combatant_id.localeCompare(b.combatant_id));
+      const target = legal[0];
+      return { action, slotLevel: castLevel, targetIds: [target.combatant_id],
+        placement: null, expectedDamage: O().saveSpell(target, scaled) };
+    } catch (error) {
+      console.error("Browser fixed-slot save-spell selection failed", { caster: caster?.combatant_id, spell: action?.id, error });
+      throw error;
+    }
+  }
+
   function choose(caster, setup, turnKey, protectedAllyIds = []) {
     try {
-      const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+      const candidates = [];
       for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
         if (action.actionCost === "reaction" || action.concentration || !E().available(caster.state, action.actionCost)) continue;
         for (const castLevel of slotLevels(caster, action, turnKey)) {
-          const scaled = scaledSpell(action, castLevel);
-          if (action.areaRadius) {
-            const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
-            if (!placement) continue;
-            const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0)
-              - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
-            candidates.push({ action, index, score, slotLevel: castLevel,
-              targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement });
-            continue;
-          }
-          for (const target of legalSingleTargets(caster, setup, action)) {
-            candidates.push({ action, index, score: O().saveSpell(target, scaled), slotLevel: castLevel,
-              targetIds: [target.combatant_id], placement: null, hp: target.state.current_hp });
-          }
+          const selected = chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds);
+          if (selected) candidates.push({ ...selected, index, score: selected.expectedDamage });
         }
       }
       candidates.sort((a, b) => b.score - a.score || a.action.level - b.action.level
-        || (a.hp ?? Number.MAX_SAFE_INTEGER) - (b.hp ?? Number.MAX_SAFE_INTEGER) || a.index - b.index);
+        || a.index - b.index);
       if (!candidates.length) return null;
       const best = candidates[0];
       return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds,
-        placement: best.placement, expectedDamage: best.score };
+        placement: best.placement, expectedDamage: best.expectedDamage };
     } catch (error) {
       console.error("Browser save-spell selection failed", { caster: caster?.combatant_id, error });
       throw error;
@@ -76,38 +101,17 @@
   function chooseById(caster, setup, turnKey, spellId, protectedAllyIds = []) {
     try {
       const action = (caster.state.template.spell_save_actions || []).find((item) => item.id === spellId);
-      if (!action || action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) return null;
+      if (!action) return null;
       const levels = slotLevels(caster, action, turnKey);
       if (!levels.length) return null;
-      const castLevel = levels.at(-1);
-      if (action.area) {
-        const placements = window.IRON_PIT_BROWSER_AREA_TARGETING
-          .legalPlacements(caster, setup, action.area, action.range)
-          .filter((placement) => !(placement.friendlyIds || []).length);
-        if (!placements.length) return null;
-        placements.sort((a, b) =>
-          b.enemyIds.length - a.enemyIds.length || a.friendlyIds.length - b.friendlyIds.length);
-        const placement = placements[0];
-        return { action, slotLevel: castLevel, targetIds: [...placement.enemyIds], placement,
-          expectedDamage: placement.enemyIds.length };
-      }
-      if (action.areaRadius) {
-        const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
-        if (!placement) return null;
-        return { action, slotLevel: castLevel,
-          targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement,
-          expectedDamage: placement.enemyIds.length };
-      }
-      const legal = legalSingleTargets(caster, setup, action);
-      if (!legal.length) return null;
-      legal.sort((a, b) => a.state.current_hp - b.state.current_hp
-        || a.combatant_id.localeCompare(b.combatant_id));
-      return { action, slotLevel: castLevel, targetIds: [legal[0].combatant_id], placement: null, expectedDamage: 0 };
+      return chooseActionAtSlot(caster, setup, action, levels.at(-1), protectedAllyIds);
     } catch (error) {
       console.error("Browser named save-spell selection failed", { caster: caster?.combatant_id, spellId, error });
       throw error;
     }
   }
 
-  window.IRON_PIT_BROWSER_SPELL_POLICY = { choose, chooseById, scaledSpell, slotLevel, slotLevels };
+  window.IRON_PIT_BROWSER_SPELL_POLICY = {
+    choose, chooseActionAtSlot, chooseById, scaledSpell, slotLevel, slotLevels,
+  };
 })();
