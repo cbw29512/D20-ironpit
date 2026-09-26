@@ -136,7 +136,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     ),
     CertifiedHeroProgression(
         class_id="bard", ruleset="2014", template_builder=build_lyra_silverstring_2014,
-        profile_level_builder=build_lyra_silverstring_2014_profile, max_level=13,
+        profile_level_builder=build_lyra_silverstring_2014_profile, max_level=14,
     ),
     CertifiedHeroProgression(
         class_id="cleric", ruleset="2024", template_builder=build_seraphine_dawnshield_level,
