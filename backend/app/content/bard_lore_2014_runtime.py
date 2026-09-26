@@ -60,7 +60,7 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
         scores = profile.final_ability_scores
         pb = proficiency_bonus(level)
         charisma_modifier = scores.modifier("charisma")
-        armor = get_armor("studded-leather")
+        armor = get_armor("leather")
         armor_class = compile_worn_armor_class(
             armor.base_ac,
             armor.category,
@@ -70,9 +70,10 @@ def build_lyra_silverstring_2014(level: int) -> CombatantTemplate:
             shield_trained=False,
         )
         jack_bonus = pb // 2 if level >= 2 else 0
-        healing = [healing_word_2014(charisma_modifier, 0)]
-        if level >= 2:
-            healing.append(cure_wounds_2014(charisma_modifier, 0))
+        healing = [
+            healing_word_2014(charisma_modifier, 0),
+            cure_wounds_2014(charisma_modifier, 0),
+        ]
         return CombatantTemplate(
             id=profile.template_id,
             name=profile.character_name,
