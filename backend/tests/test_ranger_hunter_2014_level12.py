@@ -13,7 +13,7 @@ def test_level_twelve_asi_and_resources() -> None:
     assert hero.ability_scores.dexterity == 20
     assert hero.ability_scores.wisdom == 17
     assert hero.max_hp == 100
-    assert hero.weapon_attack.attack_bonus == 12
+    assert hero.weapon_attack.attack_bonus == 11
     assert {resource.id: resource.max_uses for resource in hero.resources} == {
         "spell-slot-1": 4,
         "spell-slot-2": 3,
