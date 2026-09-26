@@ -78,6 +78,25 @@ def _friendly_aura_is_relevant(
         raise RuntimeError("Timed self-buff relevance could not be evaluated.") from exc
 
 
+def _hostile_aura_is_relevant(
+    member: EncounterCombatant,
+    action: TimedSelfBuffAction,
+    setup: EncounterSetup | None,
+) -> bool:
+    aura = action.hostile_start_turn_condition_aura
+    if aura is None:
+        return True
+    if setup is None:
+        return False
+    enemies = setup.monsters if member.side == "heroes" else setup.heroes
+    return any(
+        target.state.is_alive
+        and not target.state.is_dead
+        and combatant_distance(member, target) <= aura.radius_ft
+        for target in enemies
+    )
+
+
 def choose_timed_self_buff_action(
     member: EncounterCombatant,
     setup: EncounterSetup | None = None,
@@ -98,6 +117,7 @@ def choose_timed_self_buff_action(
                 )
                 and not timed_self_buff_active(member, action)
                 and _friendly_aura_is_relevant(member, action, setup)
+                and _hostile_aura_is_relevant(member, action, setup)
             ):
                 choices.append(action)
         return max(choices, key=lambda item: item.priority, default=None)
