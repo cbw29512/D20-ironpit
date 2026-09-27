@@ -2,6 +2,7 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_DAMAGE_TRIGGERED_REACTIONS;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function appliedDamageTotal(event) {
     try {
@@ -31,29 +32,81 @@
       .find((member) => member.combatant_id === id) || null;
   }
 
+  function resolveSourceZeroHpTrigger(sequence, round, source, triggeringEvent, setup) {
+    const rule = source?.state?.template?.source_reduces_hostile_to_zero_hp_temporary_hp;
+    if (!rule) return { events: [], sequence };
+    if (triggeringEvent.actor_id !== source.combatant_id) {
+      throw new Error("Zero-HP trigger source must match the triggering event actor.");
+    }
+    const target = memberById(setup, triggeringEvent.target_id);
+    if (!target || target.combatant_id === source.combatant_id || target.side === source.side) {
+      return { events: [], sequence };
+    }
+    if (!Number.isFinite(triggeringEvent.hp_before) || !Number.isFinite(triggeringEvent.hp_after)) {
+      return { events: [], sequence };
+    }
+    if (triggeringEvent.hp_before <= 0 || triggeringEvent.hp_after !== 0) {
+      return { events: [], sequence };
+    }
+    const scores = source.state.template.ability_scores;
+    const level = source.state.template.level;
+    if (!scores || !Number.isInteger(level)) {
+      throw new Error("Zero-HP Temporary HP trigger requires certified ability scores and level.");
+    }
+    const score = scores[rule.ability];
+    if (!Number.isFinite(score)) throw new Error("Zero-HP Temporary HP trigger ability score is unavailable.");
+    const abilityModifier = Math.floor((score - 10) / 2);
+    const amount = Math.max(rule.minimum ?? 1, (rule.flat_bonus || 0) + (rule.per_level || 0) * level + abilityModifier);
+    const before = source.state.temporary_hp || 0;
+    const stateRuntime = S();
+    if (!stateRuntime?.grantTemporaryHp) throw new Error("Browser Temporary HP runtime is not loaded.");
+    const after = stateRuntime.grantTemporaryHp(source.state, amount);
+    return {
+      events: [{
+        sequence,
+        round_number: round,
+        event_type: "feature",
+        actor_id: source.combatant_id,
+        actor_name: source.state.template.name,
+        target_id: source.combatant_id,
+        target_name: source.state.template.name,
+        hp_before: source.state.current_hp,
+        hp_after: source.state.current_hp,
+        temporary_hp_before: before,
+        temporary_hp_after: after,
+        feature_id: rule.source_id,
+        animation: "feature",
+        description: `${source.state.template.name} gains ${amount} Temporary HP from ${rule.source_name} after reducing a hostile creature to 0 HP.`,
+      }],
+      sequence: sequence + 1,
+    };
+  }
+
   function resolve(sequence, round, source, triggeringEvent, setup, turnKey = null) {
     try {
-      const appliedDamage = appliedDamageTotal(triggeringEvent);
-      if (appliedDamage <= 0) return { events: [], sequence };
       if (triggeringEvent.actor_id !== source.combatant_id) {
         throw new Error("Damage reaction source must match the triggering event actor.");
       }
+      const sourceTrigger = resolveSourceZeroHpTrigger(sequence, round, source, triggeringEvent, setup);
+      sequence = sourceTrigger.sequence;
+      const appliedDamage = appliedDamageTotal(triggeringEvent);
+      if (appliedDamage <= 0) return sourceTrigger;
       const reactor = memberById(setup, triggeringEvent.target_id);
       if (!reactor || reactor.combatant_id === source.combatant_id) {
-        return { events: [], sequence };
+        return sourceTrigger;
       }
       const runtime = R();
       if (!runtime) {
         if (reactor.state.template.damage_reaction_attack) {
           throw new Error("Damage reaction runtime is not loaded for a declared reaction.");
         }
-        return { events: [], sequence };
+        return sourceTrigger;
       }
       const reaction = runtime.resolve(
         sequence, round, reactor, source, setup, appliedDamage, turnKey,
       );
-      if (!reaction) return { events: [], sequence };
-      const events = [reaction];
+      if (!reaction) return sourceTrigger;
+      const events = [...sourceTrigger.events, reaction];
       const nested = resolve(sequence + 1, round, reactor, reaction, setup, turnKey);
       events.push(...nested.events);
       return { events, sequence: nested.sequence };
@@ -71,6 +124,6 @@
   }
 
   window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH = {
-    appliedDamageTotal, chain, memberById, resolve,
+    appliedDamageTotal, chain, memberById, resolve, resolveSourceZeroHpTrigger,
   };
 })();
