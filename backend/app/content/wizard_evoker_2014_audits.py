@@ -91,7 +91,7 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
             feature_id="overchannel", feature_name="Overchannel",
             source_reference="D&D Basic Rules 2014: School of Evocation 14",
             category="subclass", combat_relevant=True, automated=False,
-            blocker_reason="ENGINE_TRULY_MISSING: reusable 1st-5th-level spell damage maximizer plus escalating self-damage lifecycle.",
+            notes="ENGINE_TRULY_MISSING: reusable 1st-5th-level spell damage maximizer plus escalating self-damage lifecycle.",
         ))
     if level >= 16:
         rows.append(FeatureAudit(
@@ -105,7 +105,7 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
             feature_id="spell-mastery", feature_name="Spell Mastery",
             source_reference="D&D Basic Rules 2014: Wizard 18",
             category="class", combat_relevant=True, automated=False,
-            blocker_reason="ENGINE_TRULY_MISSING: reusable per-spell no-slot casting permission for selected 1st/2nd-level spells.",
+            notes="ENGINE_TRULY_MISSING: reusable per-spell no-slot casting permission for selected 1st/2nd-level spells.",
         ))
     if level >= 19:
         rows.append(FeatureAudit(
@@ -119,6 +119,6 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
             feature_id="signature-spells", feature_name="Signature Spells",
             source_reference="D&D Basic Rules 2014: Wizard 20",
             category="class", combat_relevant=True, automated=False,
-            blocker_reason="ENGINE_TRULY_MISSING: reusable per-spell free-cast resource that refreshes on short rest.",
+            notes="ENGINE_TRULY_MISSING: reusable per-spell free-cast resource that refreshes on short rest.",
         ))
     return rows
