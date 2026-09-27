@@ -29,6 +29,7 @@ from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
+from app.combat.targeted_concentration_damage import resolve_targeted_concentration_damage
 from app.combat.timed_effect_control import suppresses_voluntary_turn
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
@@ -84,6 +85,13 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
+
+        targeted_damage_event = resolve_targeted_concentration_damage(
+            sequence, round_number, attacker, setup, turn_key,
+        )
+        if targeted_damage_event is not None:
+            events.append(targeted_damage_event)
+            sequence += 1
 
         persistent_spell_event = resolve_persistent_spell_attack(
             sequence, round_number, attacker, setup, turn_key, dice,
