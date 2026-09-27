@@ -14,7 +14,7 @@ from app.content.warlock_2014_spells import (
     scorching_ray_2014,
 )
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
-from app.domain.actions import HpThresholdConditionAction
+from app.domain.actions import HpThresholdConditionAction, HpThresholdInstantDeathAction
 from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
@@ -27,8 +27,8 @@ from app.domain.progression_primitives import (
 
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 17):
-        raise ValueError("2014 Varek runtime currently certifies levels 1 through 16.")
+    if level not in range(1, 18):
+        raise ValueError("2014 Varek runtime currently certifies levels 1 through 17.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
@@ -123,6 +123,19 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
             *([circle_of_death_2014(8 + pb + cha)] if level >= 11 else []),
             *([finger_of_death_2014(8 + pb + cha)] if level >= 13 else []),
         ],
+        hp_threshold_instant_death_actions=(
+            [HpThresholdInstantDeathAction(
+                id="power-word-kill",
+                name="Power Word Kill",
+                action_cost="action",
+                range_ft=60,
+                max_current_hp=100,
+                resource_id="mystic-arcanum-9",
+                resource_cost=1,
+                magical_effect=True,
+                animation="instant-death",
+            )] if level >= 17 else []
+        ),
         hp_threshold_condition_actions=(
             [HpThresholdConditionAction(
                 id="power-word-stun",
@@ -176,6 +189,11 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                 name="Mystic Arcanum (8th Level)",
                 max_uses=1,
             )] if level >= 15 else []),
+            *([ResourceDefinition(
+                id="mystic-arcanum-9",
+                name="Mystic Arcanum (9th Level)",
+                max_uses=1,
+            )] if level >= 17 else []),
         ],
         effect_removal_actions=([dispel_magic_2014("charisma")] if level >= 6 else []),
         visual=VisualLoadout(armor="leather-armor", main_hand="arcane-focus", body_style="humanoid"),
