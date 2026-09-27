@@ -23,27 +23,35 @@
     return state.resources[option.resourceId];
   }
 
-  function slotResource(caster, spell, turnKey) {
+  function slotResource(caster, spell, turnKey, castSlotLevel = null) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
-    const id = `spell-slot-${spell.level}`;
+    const level = castSlotLevel ?? spell.level;
+    if (!Number.isInteger(level) || level < spell.level || level > 9) {
+      throw new Error(`Illegal slot level ${level} for ${spell.name}.`);
+    }
+    const id = `spell-slot-${level}`;
     return (caster.state.resources?.[id] || 0) > 0 ? id : null;
   }
 
   function resolve(sequence, round, caster, target, spell, setup, turnKey, options = {}) {
-    if (spell.actionCost === "reaction" || !E().available(caster.state, spell.actionCost)) throw new Error(`${spell.name} cannot be cast in this action window.`);
+    const spendCastCosts = options.spendCastCosts !== false;
+    if (spell.actionCost === "reaction" || (spendCastCosts && !E().available(caster.state, spell.actionCost))) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
     const rangeModifier = options.rangeModifier || null;
     const allowedRange = spell.range * (rangeModifier?.rangeMultiplier || 1);
     if (distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
-    const resourceId = slotResource(caster, spell, turnKey);
-    if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
+    const castSlotLevel = options.castSlotLevel ?? null;
+    const resourceId = spendCastCosts ? slotResource(caster, spell, turnKey, castSlotLevel) : null;
+    if (spendCastCosts && spell.level > 0 && !resourceId) {
+      throw new Error(`No level ${castSlotLevel ?? spell.level} spell slot remains for ${spell.name}.`);
+    }
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) {
       if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
-      E().spend(caster.state, spell.actionCost);
-      const rangeRemaining = spendRangeModifier(caster.state, rangeModifier);
-      CE()?.applyTimedResistance(caster, spell, round);
+      if (spendCastCosts) E().spend(caster.state, spell.actionCost);
+      const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
+      if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
       const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
       event.resource_remaining = resourceId ? caster.state.resources[resourceId] : rangeRemaining;
       if (rangeModifier) event.description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
@@ -65,9 +73,9 @@
     T()?.consumeNextAttackDisadvantage(caster.state);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
-    E().spend(caster.state, spell.actionCost);
-    const rangeRemaining = spendRangeModifier(caster.state, rangeModifier);
-    CE()?.applyTimedResistance(caster, spell, round);
+    if (spendCastCosts) E().spend(caster.state, spell.actionCost);
+    const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
+    if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
