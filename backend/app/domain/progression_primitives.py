@@ -101,3 +101,14 @@ class DeferredSaveEffect(BaseModel):
     success_damage_dice_size: int = Field(default=10, ge=2, le=100)
     success_damage_type: str | None = None
     max_active_targets: int = Field(default=1, ge=1, le=20)
+
+
+class SourceReducesHostileToZeroHpTemporaryHp(BaseModel):
+    """Grant source-owned Temporary HP after this source reduces a hostile creature to 0 HP."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    ability: AbilityName
+    flat_bonus: int = 0
+    per_level: int = Field(default=0, ge=0)
+    minimum: int = Field(default=1, ge=0)
