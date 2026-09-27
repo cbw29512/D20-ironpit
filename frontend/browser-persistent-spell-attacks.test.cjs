@@ -28,6 +28,7 @@ window.IRON_PIT_BROWSER_ROLLS = {
   }),
 };
 window.IRON_PIT_BROWSER_MODIFIERS = {
+  bonusDamage: () => [],
   nextAttackAgainstAdvantage: () => 0,
   effectiveArmorClass: (state) => state.template.armor_class,
   applyD20Bonus: (_state, _kind, roll) => roll,
