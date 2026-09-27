@@ -60,11 +60,19 @@ _LEVEL_SIX_UTILITY = _spell(
     "dispel-magic", "Dispel Magic", "control", "effect-removal", level=3, min_level=6,
 )
 
+_LEVEL_SEVEN_UTILITY = _spell(
+    "hallucinatory-terrain", "Hallucinatory Terrain", "utility", level=4, min_level=7,
+)
+
+_LEVEL_EIGHT_UTILITY = _spell(
+    "dimension-door", "Dimension Door", "utility", level=4, min_level=8,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 7):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 6.")
+        if level not in range(1, 9):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 8.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
@@ -76,6 +84,8 @@ def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
                 *([_LEVEL_FOUR_UTILITY] if level >= 4 else []),
                 *([_LEVEL_FIVE_DAMAGE] if level >= 5 else []),
                 *([_LEVEL_SIX_UTILITY] if level >= 6 else []),
+                *([_LEVEL_SEVEN_UTILITY] if level >= 7 else []),
+                *([_LEVEL_EIGHT_UTILITY] if level >= 8 else []),
             ],
         )
     except Exception:
