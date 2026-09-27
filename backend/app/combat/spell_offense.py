@@ -10,7 +10,7 @@ from app.combat.concentration_repeat_saves import (
 )
 from app.combat.damage_reaction_events import damage_event_chain
 from app.combat.spell_attack_policy import choose_spell_attack
-from app.combat.spell_attack_resolution import resolve_spell_attack
+from app.combat.spell_attack_sequence import resolve_spell_attack_sequence
 from app.combat.spell_policy import choose_spell
 from app.combat.spell_resolution import resolve_spell
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -88,7 +88,7 @@ def resolve_best_spell_offense(
         )
         if use_attack:
             assert attack is not None
-            event = resolve_spell_attack(
+            return resolve_spell_attack_sequence(
                 sequence,
                 round_number,
                 caster,
@@ -97,16 +97,8 @@ def resolve_best_spell_offense(
                 setup,
                 turn_key,
                 dice,
+                slot_level=attack.slot_level,
                 range_modifier=attack.range_modifier,
-            )
-            return damage_event_chain(
-                sequence + 1,
-                round_number,
-                caster,
-                event,
-                setup,
-                dice,
-                turn_key=turn_key,
             )
         assert save is not None
         return resolve_spell(sequence, round_number, caster, setup, save, turn_key, dice)
