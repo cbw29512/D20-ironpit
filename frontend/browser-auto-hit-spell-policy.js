@@ -23,6 +23,7 @@
           candidates.push({
             action, target, slotLevel, projectileCount, index,
             expectedDamage: O().autoHitSpell(target, action, projectileCount),
+            damageMaximizer: C().safeDamageMaximizer(caster.state, action.id, slotLevel),
           });
         }
       }
