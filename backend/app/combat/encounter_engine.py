@@ -8,6 +8,7 @@ from app.combat.death_saves import resolve_death_save
 from app.combat.dice import DiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_events import build_encounter_result, build_finish_event, build_initiative_events
+from app.combat.exile import resolve_source_exile_returns
 from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
@@ -53,6 +54,10 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         sequence, round_number, member, "target_turn_end", dice,
     )
     events.extend(lifecycle)
+    exile_events, sequence = resolve_source_exile_returns(
+        sequence, round_number, member, setup, dice,
+    )
+    events.extend(exile_events)
     source_events, sequence = resolve_source_condition_timing(
         sequence, round_number, member, setup, "source_turn_end",
     )
