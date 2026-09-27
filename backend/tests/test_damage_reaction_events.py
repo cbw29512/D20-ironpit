@@ -8,6 +8,7 @@ from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.character_builds import AbilityScores
 from app.domain.reactions import DamageReactionAttack
 from app.domain.progression_primitives import SourceReducesHostileToZeroHpTemporaryHp
 
@@ -170,7 +171,10 @@ def test_applied_damage_total_treats_zero_loss_snapshots_as_authoritative() -> N
 def test_source_zero_hp_trigger_grants_temporary_hp_without_class_dispatch() -> None:
     hero, monster, setup = _setup()
     hero.state.template.level = 3
-    hero.state.template.ability_scores.charisma = 16
+    hero.state.template.ability_scores = AbilityScores(
+        strength=10, dexterity=10, constitution=10,
+        intelligence=10, wisdom=10, charisma=16,
+    )
     hero.state.template.progression_features.source_reduces_hostile_to_zero_hp_temporary_hp = (
         SourceReducesHostileToZeroHpTemporaryHp(
             source_id="test-zero-hp-boon", source_name="Test Zero HP Boon",
@@ -195,7 +199,10 @@ def test_source_zero_hp_trigger_grants_temporary_hp_without_class_dispatch() -> 
 def test_source_zero_hp_trigger_requires_fresh_hostile_transition() -> None:
     hero, monster, setup = _setup()
     hero.state.template.level = 3
-    hero.state.template.ability_scores.charisma = 16
+    hero.state.template.ability_scores = AbilityScores(
+        strength=10, dexterity=10, constitution=10,
+        intelligence=10, wisdom=10, charisma=16,
+    )
     hero.state.template.progression_features.source_reduces_hostile_to_zero_hp_temporary_hp = (
         SourceReducesHostileToZeroHpTemporaryHp(
             source_id="test-zero-hp-boon", source_name="Test Zero HP Boon",
