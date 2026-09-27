@@ -6,6 +6,7 @@ from app.domain.character_builds import AbilityName
 from app.domain.debuffs import DebuffCounter
 from app.domain.area_spell_protection import AreaSpellAllyProtectionGrant
 from app.domain.alternate_spell_casts import AlternateSpellCastGrant
+from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
@@ -92,6 +93,7 @@ class ProgressionCombatFeatures(BaseModel):
     deferred_save_effect: DeferredSaveEffect | None = None
     area_spell_ally_protection: AreaSpellAllyProtectionGrant | None = None
     alternate_spell_cast_grants: list[AlternateSpellCastGrant] = Field(default_factory=list)
+    spell_damage_maximizer: SpellDamageMaximizerGrant | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
