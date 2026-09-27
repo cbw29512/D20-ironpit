@@ -411,6 +411,17 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "initiative_bonus": template.initiative_bonus, "saving_throw_bonuses": template.saving_throw_bonuses,
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
+        "hp_threshold_condition_actions": [
+            {
+                "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                "conditionId": item.condition_id, "repeatSaveAbility": item.repeat_save_ability,
+                "repeatSaveDc": item.repeat_save_dc, "repeatSaveTiming": item.repeat_save_timing,
+                "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                "magicalEffect": item.magical_effect, "animation": item.animation,
+            }
+            for item in template.hp_threshold_condition_actions
+        ],
         "healingActions": [_healing(item) for item in template.healing_actions],
         "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
         "damage_resistances": [item.value for item in template.damage_resistances],
