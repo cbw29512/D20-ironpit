@@ -315,3 +315,28 @@ def test_dark_ones_own_luck_can_rescue_a_failed_saving_throw() -> None:
     assert succeeded is True
     assert "Dark One's Own Luck" in roll.notation
     assert next(item for item in varek.resources if item.id == "dark-ones-own-luck").current_uses == 0
+
+
+
+def test_varek_levels_seven_and_eight_scale_existing_blaster_package() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    l7 = build_varek_ashenmark_2014(7)
+    l8 = build_varek_ashenmark_2014(8)
+    p8 = build_varek_ashenmark_2014_profile(8)
+
+    assert {item.id: item.max_uses for item in l7.resources if item.id.startswith("spell-slot-")} == {"spell-slot-4": 2}
+    rays = next(item for item in l7.spell_attack_actions if item.id == "scorching-ray")
+    assert rays.attack_count_at_slot(4) == 5
+
+    assert p8.final_ability_scores.charisma == 20
+    assert [(item.ability, item.amount) for item in p8.advancement_increases] == [
+        ("charisma", 2), ("charisma", 2),
+    ]
+    blast = next(item for item in l8.spell_attack_actions if item.id == "eldritch-blast")
+    assert blast.attack_bonus == 8
+    assert blast.damage_bonus == 5
+    assert blast.attack_count == 2
+
+    assert len(build_warlock_2014_spell_package(7).spells) == 8
+    assert len(build_warlock_2014_spell_package(8).spells) == 9
