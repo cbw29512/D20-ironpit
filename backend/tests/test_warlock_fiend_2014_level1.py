@@ -1,5 +1,6 @@
 from app.combat.dice import FixedDiceProvider
 from app.combat.spell_attack_resolution import resolve_spell_attack
+from app.combat.spell_attack_sequence import resolve_spell_attack_sequence
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.targeted_concentration_damage import resolve_targeted_concentration_damage
 from app.content.monsters import build_commoner
@@ -170,9 +171,54 @@ def test_varek_level_three_tome_and_pact_magic() -> None:
     assert audits["pact-of-the-tome"].automated is True
     assert audits["pact-of-the-tome"].combat_relevant is False
     assert {item.id: item.max_uses for item in varek.resources} == {"spell-slot-2": 2}
+    assert [item.id for item in varek.spell_attack_actions] == ["eldritch-blast", "scorching-ray"]
     assert [item.id for item in varek.spell_save_actions] == ["poison-spray", "burning-hands", "shatter"]
 
     package = build_warlock_2014_spell_package(3)
     assert [item.id for item in package.spells] == [
-        "hex", "burning-hands", "comprehend-languages", "shatter",
+        "hex", "burning-hands", "scorching-ray", "shatter",
     ]
+
+
+
+def test_scorching_ray_sequence_spends_one_pact_slot_and_hexes_each_hit() -> None:
+    varek = _member(build_varek_ashenmark_2014(3), "varek", "heroes", 0)
+    enemy = _member(_commoner_2014(), "enemy", "monsters", 30)
+    enemy.state.template.max_hp = 100
+    enemy.state.current_hp = 100
+    setup = EncounterSetup(
+        heroes=[varek], monsters=[enemy], hero_total_levels=3, monster_total_cr="0", ruleset="2014",
+    )
+
+    begin_turn(varek.state)
+    assert resolve_targeted_concentration_damage(1, 1, varek, setup, "1:varek") is not None
+    assert next(item.current_uses for item in varek.state.resources if item.id == "spell-slot-2") == 1
+
+    begin_turn(varek.state)
+    ray = next(item for item in varek.state.template.spell_attack_actions if item.id == "scorching-ray")
+    events, sequence = resolve_spell_attack_sequence(
+        2, 2, varek, enemy, ray, setup, "2:varek",
+        FixedDiceProvider([
+            15, 4, 5, 3,
+            16, 6, 2, 4,
+            17, 5, 5, 2,
+        ]),
+        slot_level=2,
+    )
+
+    ray_events = [event for event in events if event.feature_id == "scorching-ray"]
+    assert len(ray_events) == 3
+    assert sequence == 5
+    assert varek.state.action_available is False
+    assert next(item.current_uses for item in varek.state.resources if item.id == "spell-slot-2") == 0
+    assert all([part.source for part in event.damage_components] == ["Scorching Ray", "Hex"] for event in ray_events)
+    assert all([part.damage_type.value for part in event.damage_components] == ["fire", "necrotic"] for event in ray_events)
+
+
+def test_eldritch_blast_beam_scaling_uses_independent_attacks() -> None:
+    from app.content.warlock_2014_spells import eldritch_blast_2014
+
+    assert eldritch_blast_2014(7, 4, damage_bonus=4).attack_count == 1
+    assert eldritch_blast_2014(7, 5, damage_bonus=4).attack_count == 2
+    assert eldritch_blast_2014(9, 11, damage_bonus=5).attack_count == 3
+    assert eldritch_blast_2014(11, 17, damage_bonus=5).attack_count == 4
