@@ -62,6 +62,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
             "reach": weapon.reach_ft, "animation": weapon.animation,
         }
+        if attack.damage_source_qualifiers:
+            row["damageSourceQualifiers"] = [_value(item) for item in attack.damage_source_qualifiers]
         if attack.attack_ability is not None:
             row["attackAbility"] = attack.attack_ability
         if weapon.normal_range_ft is not None:
@@ -504,6 +506,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
             features.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
         )
+    if features.selectable_damage_resistance:
+        row["selectable_damage_resistance"] = features.selectable_damage_resistance.model_dump(mode="json")
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.once_per_turn_weapon_hit_damage_rider:
@@ -563,6 +567,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
+            "conditional_damage_defenses": [
+                {
+                    "id": item.id, "kind": _value(item.kind),
+                    "damageTypes": [_value(kind) for kind in item.damage_types],
+                    "requiredSourceQualifiers": [_value(kind) for kind in item.required_source_qualifiers],
+                    "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
+                }
+                for item in template.conditional_damage_defenses
+            ],
             "condition_immunities": list(template.condition_immunities),
             "wearing_metal_armor": template.wearing_metal_armor,
             "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
