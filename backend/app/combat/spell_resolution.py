@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.concentration import start_concentration
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
@@ -44,7 +45,11 @@ def resolve_spell(
             raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
 
         remaining = None
-        if choice.slot_level > 0:
+        if choice.alternate_cast is not None:
+            if choice.alternate_cast.cast_level != choice.slot_level:
+                raise ValueError("Alternate spell cast level does not match the selected cast level.")
+            remaining = spend_alternate_cast(caster.state, choice.alternate_cast)
+        elif choice.slot_level > 0:
             resource = _resource(caster.state, choice.slot_level)
             if resource is None or resource.current_uses < 1:
                 raise ValueError(f"No level {choice.slot_level} spell slot remains.")
@@ -79,7 +84,11 @@ def resolve_spell(
                 f"{len(placement.friendly_ids)} unprotected allies, and "
                 f"{protected_count} protected allies."
             )
-        slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
+        slot_text = (
+            choice.alternate_cast.source_name
+            if choice.alternate_cast is not None
+            else ("cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot")
+        )
         events: list[BattleEvent] = []
         if choice.range_modifier is not None:
             events.append(BattleEvent(
