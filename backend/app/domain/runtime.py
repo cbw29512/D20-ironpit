@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.debuffs import DebuffCounter
+from app.domain.damage_sources import ConditionalDamageDefense
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
@@ -127,6 +128,7 @@ class CombatantState(BaseModel):
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
+    active_conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
 
