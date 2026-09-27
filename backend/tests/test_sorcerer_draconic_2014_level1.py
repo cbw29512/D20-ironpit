@@ -16,8 +16,10 @@ def test_level_one_draconic_resilience_and_spellcasting() -> None:
     assert hero.saving_throw_bonuses["constitution"] == 2
     assert hero.saving_throw_bonuses["charisma"] == 5
     assert {resource.id: resource.max_uses for resource in hero.resources} == {"spell-slot-1": 2}
-    assert [spell.id for spell in package.cantrips] == ["fire-bolt", "light", "mage-hand", "prestidigitation"]
-    assert [spell.id for spell in package.spells] == ["burning-hands", "detect-magic"]
+    assert [spell.id for spell in package.cantrips] == [
+        "fire-bolt", "ray-of-frost", "poison-spray", "shocking-grasp",
+    ]
+    assert [spell.id for spell in package.spells] == ["burning-hands", "magic-missile"]
 
 
 def test_level_one_spell_bindings_use_universal_attack_and_save_actions() -> None:
@@ -28,6 +30,14 @@ def test_level_one_spell_bindings_use_universal_attack_and_save_actions() -> Non
     assert fire_bolt.range_ft == 120
     assert fire_bolt.damage_dice_count == 1
     assert fire_bolt.damage_dice_size == 10
+
+    magic_missile = next(action for action in hero.auto_hit_spell_actions if action.id == "magic-missile")
+    assert magic_missile.range_ft == 120
+    assert magic_missile.projectile_count == 3
+    assert magic_missile.projectiles_per_slot_above == 1
+    assert magic_missile.damage_dice_size == 4
+    assert magic_missile.damage_bonus == 1
+    assert magic_missile.damage_type == "force"
 
     burning_hands = next(action for action in hero.spell_save_actions if action.id == "burning-hands")
     assert burning_hands.dc == 13
