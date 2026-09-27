@@ -78,6 +78,16 @@
     return Math.max(0, (probabilities.hit - probabilities.critical) * normal + probabilities.critical * critical);
   }
 
+  function autoHitSpell(target, action, projectileCount) {
+    const factor = damageFactor(target.state, action.damageType);
+    const perProjectile = meanDamage(
+      action.damageDiceCount || 1,
+      action.damageDiceSize || 4,
+      action.damageBonus || 0,
+    );
+    return Math.max(0, projectileCount * perProjectile * factor);
+  }
+
   function saveSuccess(target, action) {
     if ((action.saveAbility === "strength" || action.saveAbility === "dexterity") && Q().autoFailStrDex(target.state)) return 0;
     const bonus = target.state.template.saving_throw_bonuses?.[action.saveAbility];
@@ -105,5 +115,5 @@
     return Math.max(0, (1 - success) * full + success * onSuccess);
   }
 
-  window.IRON_PIT_BROWSER_OFFENSE_VALUE = { attackProbabilities, saveSpell, spellAttack };
+  window.IRON_PIT_BROWSER_OFFENSE_VALUE = { attackProbabilities, autoHitSpell, saveSpell, spellAttack };
 })();
