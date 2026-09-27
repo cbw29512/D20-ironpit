@@ -75,6 +75,7 @@ def best_area_placement(
     radius_ft: int,
     spell_range_ft: int,
     protected_ally_ids: set[str] | None = None,
+    protected_ally_limit: int | None = None,
 ) -> AreaPlacement | None:
     """Maximize enemies with a legal ally-safe point placement; otherwise decline the AoE."""
     slot_count = area_slot_count(radius_ft)
@@ -94,10 +95,17 @@ def best_area_placement(
             if not enemy_ids:
                 continue
             exposed, spared = [], []
+            protectable = []
             for index, member in enumerate(friends):
                 if not _living(member) or not _inside(member, index, start, slot_count, center_ft, radius_ft):
                     continue
-                (spared if member.combatant_id in protected else exposed).append(member.combatant_id)
+                if member.combatant_id in protected:
+                    protectable.append(member.combatant_id)
+                else:
+                    exposed.append(member.combatant_id)
+            limit = len(protectable) if protected_ally_limit is None else protected_ally_limit
+            spared.extend(protectable[:limit])
+            exposed.extend(protectable[limit:])
             placement = AreaPlacement(start, slot_count, center_ft, enemy_ids, tuple(exposed), tuple(spared))
             if placement.worthwhile:
                 candidates.append(placement)
