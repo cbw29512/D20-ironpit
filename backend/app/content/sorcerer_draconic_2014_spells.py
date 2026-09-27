@@ -64,7 +64,7 @@ def ray_of_frost_2014(attack_bonus: int, character_level: int) -> SpellAttackAct
             attack_kind="ranged", range_ft=60, attack_bonus=attack_bonus,
             damage_dice_count=dice_count, damage_dice_size=8, damage_type="cold",
             on_hit_modifier_effects=[
-                SpellModifierEffect(kind="speed", flat_bonus=-10, expires_after_source_turns=1),
+                SpellModifierEffect(kind="speed", flat_bonus=-10, expires_at_start_of_source_turn=True),
             ],
             animation="spell-attack", source="D&D Basic Rules 2014: Ray of Frost",
         )
