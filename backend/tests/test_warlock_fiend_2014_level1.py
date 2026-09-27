@@ -6,6 +6,7 @@ from app.combat.state import begin_turn, build_combatant_state
 from app.combat.targeted_concentration_damage import resolve_targeted_concentration_damage
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.battlefield import GridPosition
 
 from app.content.warlock_2014_progression import warlock_2014_level
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
@@ -64,9 +65,11 @@ def test_varek_level_one_hex_is_bound_to_the_shared_damage_primitive() -> None:
 
 
 def _member(template, combatant_id: str, side: str, position: int) -> EncounterCombatant:
+    state = build_combatant_state(template)
+    state.position = GridPosition(x=position // 5, y=0)
     return EncounterCombatant(
         combatant_id=combatant_id, side=side, position_ft=position,
-        state=build_combatant_state(template),
+        state=state,
     )
 
 
@@ -540,7 +543,7 @@ def test_varek_level_fourteen_hurl_through_hell_exiles_then_damages_on_return() 
     from app.combat.exile import removed_from_battlefield, resolve_source_exile_returns
 
     varek = _member(build_varek_ashenmark_2014(14), "varek", "heroes", 0)
-    enemy = _member(_commoner_2014(), "enemy", "monsters", 5)
+    enemy = _member(_commoner_2014(), "enemy", "monsters", 30)
     enemy.state.template.max_hp = 200
     enemy.state.current_hp = 200
     setup = EncounterSetup(
@@ -549,7 +552,7 @@ def test_varek_level_fourteen_hurl_through_hell_exiles_then_damages_on_return() 
     begin_turn(varek.state)
     attack = varek.state.template.weapon_attack
     event = resolve_attack(
-        1, 1, varek.state, enemy.state, attack, 5,
+        1, 1, varek.state, enemy.state, attack, 30,
         FixedDiceProvider([15, 4]),
         actor_event_id="varek", target_event_id="enemy",
         affected_states=[varek.state, enemy.state],
