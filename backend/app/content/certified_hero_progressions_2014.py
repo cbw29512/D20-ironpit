@@ -21,6 +21,8 @@ from app.content.rogue_thief_2014_profile import build_mara_quickstep_2014_profi
 from app.content.rogue_thief_2014_runtime import build_mara_quickstep_2014
 from app.content.sorcerer_draconic_2014_profile import build_nyra_emberveil_2014_profile
 from app.content.sorcerer_draconic_2014_runtime import build_nyra_emberveil_2014
+from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
+from app.content.warlock_fiend_2014_runtime import build_varek_ashenmark_2014
 
 CERTIFIED_HERO_PROGRESSIONS_2014: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
@@ -62,5 +64,9 @@ CERTIFIED_HERO_PROGRESSIONS_2014: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="sorcerer", ruleset="2014", template_builder=build_nyra_emberveil_2014,
         profile_level_builder=build_nyra_emberveil_2014_profile, max_level=20,
+    ),
+    CertifiedHeroProgression(
+        class_id="warlock", ruleset="2014", template_builder=build_varek_ashenmark_2014,
+        profile_level_builder=build_varek_ashenmark_2014_profile, max_level=20,
     ),
 )
