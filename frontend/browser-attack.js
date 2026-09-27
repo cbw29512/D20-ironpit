@@ -162,8 +162,7 @@
           saveDc: cunningStrikeTrip.saveDc, saveSucceeded: cunningStrikeTrip.saveSucceeded,
         }
       : null;
-    const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(actualTarget.state) || "";
-    let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
+    const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(actualTarget.state) || ""; let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
     if (d20Override.featureId) description += ` ${d20Override.sourceName || d20Override.featureId} turns the failed attack roll into a 20.`;
     else if (override.featureId) description += ` ${override.sourceName || override.featureId} turns the miss into a hit.`;
     else if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
