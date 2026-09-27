@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 12):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 11.")
+    if level not in range(1, 13):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 12.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -18,9 +18,13 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
         AbilityIncrease(ability="wisdom", amount=1),
         AbilityIncrease(ability="charisma", amount=1),
     ]
-    advancement = ([AbilityIncrease(ability="charisma", amount=2)] if level >= 4 else []) + ([AbilityIncrease(ability="charisma", amount=2)] if level >= 8 else [])
+    advancement = (
+        ([AbilityIncrease(ability="charisma", amount=2)] if level >= 4 else [])
+        + ([AbilityIncrease(ability="charisma", amount=2)] if level >= 8 else [])
+        + ([AbilityIncrease(ability="constitution", amount=2)] if level >= 12 else [])
+    )
     final = AbilityScores(
-        strength=9, dexterity=15, constitution=14,
+        strength=9, dexterity=15, constitution=16 if level >= 12 else 14,
         intelligence=11, wisdom=13, charisma=20 if level >= 8 else 18 if level >= 4 else 16,
     )
     audits = [
@@ -179,6 +183,21 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 source_reference="D&D Basic Rules 2014: Warlock 11",
                 category="class", combat_relevant=True, automated=True,
                 notes="Circle of Death uses a separate one-use resource and the universal resource-backed area-save primitive.",
+            ),
+        ])
+    if level >= 12:
+        audits.extend([
+            FeatureAudit(
+                feature_id="ability-score-improvement-l12", feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Warlock 12",
+                category="class", combat_relevant=True, automated=True,
+                notes="With Charisma already 20, Constitution 14→16 raises HP and concentration durability to preserve Hex damage uptime.",
+            ),
+            FeatureAudit(
+                feature_id="eyes-of-the-rune-keeper", feature_name="Eyes of the Rune Keeper",
+                source_reference="D&D Basic Rules 2014: Eldritch Invocations",
+                category="class", combat_relevant=False, automated=True,
+                notes="Sixth invocation is arena-neutral rather than adding a low-value bespoke combat mechanic.",
             ),
         ])
     return CharacterBuildProfile(
