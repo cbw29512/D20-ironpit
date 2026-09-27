@@ -35,9 +35,9 @@ def test_level_three_resources_spells_and_metamagic_are_explicit() -> None:
     }
     assert [item.id for item in package.spells] == [
         "burning-hands",
-        "detect-magic",
-        "comprehend-languages",
-        "knock",
+        "magic-missile",
+        "false-life",
+        "scorching-ray",
     ]
     assert [item.id for item in hero.spell_save_disadvantage_options] == ["heightened-spell"]
 
