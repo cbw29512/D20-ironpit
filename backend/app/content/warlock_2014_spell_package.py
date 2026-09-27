@@ -52,11 +52,15 @@ _LEVEL_FOUR_UTILITY = _spell(
     "comprehend-languages", "Comprehend Languages", "utility", level=1, min_level=4,
 )
 
+_LEVEL_FIVE_DAMAGE = _spell(
+    "fireball", "Fireball", "damage", "save-damage", "area", level=3, min_level=5,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 5):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 4.")
+        if level not in range(1, 6):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 5.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
@@ -66,6 +70,7 @@ def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
                 *([_LEVEL_TWO_ADDITION] if level == 2 else []),
                 *(_LEVEL_THREE_DAMAGE if level >= 3 else []),
                 *([_LEVEL_FOUR_UTILITY] if level >= 4 else []),
+                *([_LEVEL_FIVE_DAMAGE] if level >= 5 else []),
             ],
         )
     except Exception:
