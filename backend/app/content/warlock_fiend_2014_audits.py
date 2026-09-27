@@ -6,6 +6,19 @@ from app.domain.character_builds import FeatureAudit
 def build_varek_fiend_2014_audits(level: int) -> list[FeatureAudit]:
     audits = [
         FeatureAudit(
+            feature_id="human", feature_name="Human",
+            source_reference="D&D Basic Rules 2014: Human",
+            category="species", combat_relevant=True, automated=True,
+            notes="The 2014 Human +1 increase to every ability score is represented directly in the certified build profile.",
+        ),
+        FeatureAudit(
+            feature_id="light-crossbow", feature_name="Light Crossbow",
+            source_reference="D&D Basic Rules 2014: Equipment",
+            category="equipment", combat_relevant=True, automated=True,
+            runtime_attack_weapon_id="light-crossbow",
+            notes="The starting light crossbow uses the shared ranged weapon attack resolver and remains the certified mundane fallback.",
+        ),
+        FeatureAudit(
             feature_id="pact-magic", feature_name="Pact Magic",
             source_reference="D&D Basic Rules 2014: Warlock 1",
             category="class", combat_relevant=True, automated=True,
