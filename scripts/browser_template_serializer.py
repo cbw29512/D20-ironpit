@@ -213,6 +213,7 @@ def _spell(action: Any) -> dict[str, Any]:
         "range": action.range_ft, "saveAbility": action.save_ability, "dc": action.dc,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+           "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
         "concentration": action.concentration, "animation": action.animation,
     }
