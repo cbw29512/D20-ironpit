@@ -1,10 +1,7 @@
 from __future__ import annotations
-
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
-
 import logging
-
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
@@ -37,11 +34,7 @@ from app.domain.events import BattleEvent
 from app.domain.modifiers import ModifierKind
 from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
 from app.domain.spells import SpellAttackAction
-
 logger = logging.getLogger(__name__)
-
-
-
 def resolve_spell_attack(
     sequence: int, round_number: int, caster: EncounterCombatant, target: EncounterCombatant,
     spell: SpellAttackAction, setup: EncounterSetup, turn_key: str, dice,
