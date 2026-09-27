@@ -79,6 +79,32 @@
     return countered;
   }
 
+  function effectiveMovementModes(state) {
+    try {
+      const base = state.template.movement_modes || {
+        walk_ft: state.template.speed_ft || 0,
+        fly_ft: 0, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false,
+      };
+      const result = { ...base };
+      for (const effect of state.timed_effects || []) {
+        for (const grant of effect.owned_movement_mode_grants || []) {
+          const speed = grant.matchCurrentSpeed
+            ? M().effectiveSpeed(state)
+            : grant.fixedSpeedFt;
+          if (!Number.isInteger(speed) || speed < 0) {
+            throw new Error(`Movement grant ${grant.mode} has no resolved speed.`);
+          }
+          const field = `${grant.mode}_ft`;
+          result[field] = Math.max(result[field] || 0, speed);
+        }
+      }
+      return result;
+    } catch (error) {
+      console.error("Failed browser effective movement mode resolution.", { error });
+      throw error;
+    }
+  }
+
   function distance(a, b) {
     try {
       const aGrid = a.state.position, bGrid = b.state.position;
@@ -155,7 +181,7 @@
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
-    active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
+    active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, effectiveMovementModes, grantTemporaryHp, hasActiveAlly,
     hasAdjacentActiveAlly, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost,
     targetPriority, terminateTurn,
   };
