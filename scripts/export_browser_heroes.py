@@ -76,6 +76,11 @@ def _save(action: Any) -> dict[str, Any]:
         "grappleEscapeDc": action.grapple_escape_dc, "restrainsWhileGrappled": action.restrains_while_grappled,
         "magicalEffect": action.magical_effect, "animation": action.animation,
     }
+    if action.area is not None:
+        row["area"] = action.area.model_dump(mode="json")
+    if action.resource_id:
+        row["resourceId"] = action.resource_id
+        row["resourceCost"] = action.resource_cost
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
     if action.damage_components:
