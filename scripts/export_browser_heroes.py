@@ -138,6 +138,21 @@ def _spell_attack(action: Any) -> dict[str, Any]:
     return row
 
 
+def _auto_hit_spell(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "projectileCount": action.projectile_count,
+        "projectilesPerSlotAbove": action.projectiles_per_slot_above,
+        "damageDiceCount": action.damage_dice_count,
+        "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "animation": action.animation,
+    }
+    if action.source: row["source"] = action.source
+    return row
+
+
 def _persistent_spell_attack(action: Any) -> dict[str, Any]:
     try:
         return {
@@ -337,7 +352,8 @@ def _resource_conversion(action: Any) -> dict[str, Any]:
 
 def _spell_package(class_id: str, level: int, template: CombatantTemplate):
     if not (
-        template.spell_save_actions or template.spell_attack_actions or template.persistent_spell_attack_actions
+        template.spell_save_actions or template.spell_attack_actions or template.auto_hit_spell_actions
+        or template.persistent_spell_attack_actions
         or template.persistent_hazard_actions or template.defensive_spell_actions or template.healing_actions
     ):
         return None
@@ -504,6 +520,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+    if template.auto_hit_spell_actions: row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
     if template.persistent_spell_attack_actions:
         row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
