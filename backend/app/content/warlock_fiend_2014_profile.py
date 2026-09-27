@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 7):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 6.")
+    if level not in range(1, 9):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 8.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -18,10 +18,10 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
         AbilityIncrease(ability="wisdom", amount=1),
         AbilityIncrease(ability="charisma", amount=1),
     ]
-    advancement = [AbilityIncrease(ability="charisma", amount=2)] if level >= 4 else []
+    advancement = ([AbilityIncrease(ability="charisma", amount=2)] if level >= 4 else []) + ([AbilityIncrease(ability="charisma", amount=2)] if level >= 8 else [])
     final = AbilityScores(
         strength=9, dexterity=15, constitution=14,
-        intelligence=11, wisdom=13, charisma=18 if level >= 4 else 16,
+        intelligence=11, wisdom=13, charisma=20 if level >= 8 else 18 if level >= 4 else 16,
     )
     audits = [
         FeatureAudit(
@@ -121,6 +121,24 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 notes="Selected when no new simple damage spell improves on the level-5 blaster package; reuses the universal effect-removal action.",
             ),
         ])
+    if level >= 7:
+        audits.append(
+            FeatureAudit(
+                feature_id="book-of-ancient-secrets", feature_name="Book of Ancient Secrets",
+                source_reference="D&D Basic Rules 2014: Eldritch Invocations",
+                category="class", combat_relevant=False, automated=True,
+                notes="Fourth invocation reinforces Pact of the Tome utility without adding a weaker arena action than the blaster package.",
+            )
+        )
+    if level >= 8:
+        audits.append(
+            FeatureAudit(
+                feature_id="ability-score-improvement-l8", feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Warlock 8",
+                category="class", combat_relevant=True, automated=True,
+                notes="Damage-first progression raises Charisma 18→20 for maximum spell attack, save DC, and Agonizing Blast damage.",
+            )
+        )
     return CharacterBuildProfile(
         id=f"build-varek-ashenmark-2014-l{level}",
         template_id=f"varek-ashenmark-2014-l{level}",
