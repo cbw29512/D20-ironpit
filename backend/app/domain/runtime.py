@@ -33,6 +33,12 @@ class DeferredEffectState(BaseModel):
     armed_round: int = Field(ge=1)
 
 
+class DelayedResourceRefillState(BaseModel):
+    source_id: str
+    started_round: int = Field(ge=1)
+    completes_round: int = Field(ge=1)
+
+
 class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
@@ -122,6 +128,7 @@ class CombatantState(BaseModel):
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
+    delayed_resource_refills: list[DelayedResourceRefillState] = Field(default_factory=list)
     persistent_spell_attacks: list[PersistentSpellAttackState] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     targeting_gate_immunity_keys: list[str] = Field(default_factory=list)
