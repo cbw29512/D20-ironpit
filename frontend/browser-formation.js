@@ -15,6 +15,7 @@
   }
   function hasRangedSpellOffense(template) {
     if ((template?.spell_attack_actions || []).some((action) => action.attackKind === "ranged" && (action.range || 0) > 5)) return true;
+    if ((template?.auto_hit_spell_actions || []).some((action) => (action.range || 0) > 5)) return true;
     return (template?.spell_save_actions || []).some((action) => (action.range || 0) > 5);
   }
   function hasTrueRangeOffense(template) { return hasRangedWeaponOffense(template) || hasRangedSpellOffense(template); }
