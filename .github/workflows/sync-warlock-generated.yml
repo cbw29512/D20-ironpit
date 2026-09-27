@@ -1,0 +1,43 @@
+name: Sync Warlock Generated Artifacts
+
+on:
+  push:
+    branches:
+      - feat/2014-warlock-batched
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/2014-warlock-batched
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Regenerate canonical artifacts
+        run: |
+          python scripts/export_browser_heroes.py
+          python scripts/export_browser_monsters.py
+          python scripts/export_browser_monsters_2014.py
+          python scripts/verify_certification_manifests.py --write
+          python scripts/prepare_static_site.py
+      - name: Commit generated artifacts if changed
+        run: |
+          git add frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json data/hero_certification_manifest.json data/monster_certification_manifest.json
+          if git diff --cached --quiet; then
+            echo "Generated artifacts already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Sync generated Warlock artifacts"
+          git push origin HEAD:feat/2014-warlock-batched
