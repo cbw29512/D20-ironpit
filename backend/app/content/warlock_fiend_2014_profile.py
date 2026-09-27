@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 13):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 12.")
+    if level not in range(1, 14):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 13.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -200,6 +200,18 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 notes="Sixth invocation is arena-neutral rather than adding a low-value bespoke combat mechanic.",
             ),
         ])
+    if level >= 13:
+        audits.append(
+            FeatureAudit(
+                feature_id="mystic-arcanum-7", feature_name="Mystic Arcanum (7th Level)",
+                source_reference="D&D Basic Rules 2014: Warlock 13; Finger of Death",
+                category="class", combat_relevant=True, automated=True,
+                notes=(
+                    "Finger of Death reuses the universal resource-backed save-damage action. "
+                    "Its post-kill zombie creation is arena-inert under the summon contract."
+                ),
+            )
+        )
     return CharacterBuildProfile(
         id=f"build-varek-ashenmark-2014-l{level}",
         template_id=f"varek-ashenmark-2014-l{level}",
