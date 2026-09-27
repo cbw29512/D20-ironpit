@@ -39,8 +39,9 @@ _LEVEL_TWO_ADDITION = _spell(
     "comprehend-languages", "Comprehend Languages", "utility", level=1, min_level=2,
 )
 
-_LEVEL_THREE_ADDITION = _spell(
-    "shatter", "Shatter", "damage", "save-damage", "area", level=2, min_level=3,
+_LEVEL_THREE_DAMAGE = (
+    _spell("scorching-ray", "Scorching Ray", "damage", "spell-attack", "multi-attack", level=2, min_level=3),
+    _spell("shatter", "Shatter", "damage", "save-damage", "area", level=2, min_level=3),
 )
 
 
@@ -54,8 +55,8 @@ def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
             cantrips=list(_LEVEL_ONE_CANTRIPS),
             spells=[
                 *_LEVEL_ONE_KNOWN,
-                *([_LEVEL_TWO_ADDITION] if level >= 2 else []),
-                *([_LEVEL_THREE_ADDITION] if level >= 3 else []),
+                *([_LEVEL_TWO_ADDITION] if level == 2 else []),
+                *(_LEVEL_THREE_DAMAGE if level >= 3 else []),
             ],
         )
     except Exception:
