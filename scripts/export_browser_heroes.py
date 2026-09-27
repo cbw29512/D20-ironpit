@@ -132,7 +132,22 @@ def _spell_attack(action: Any) -> dict[str, Any]:
            "attackKind": action.attack_kind, "range": action.range_ft, "attackBonus": action.attack_bonus,
            "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
            "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+           "advantageIfTargetWearingMetalArmor": action.advantage_if_target_wearing_metal_armor,
            "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
+           "onHitTimedEffects": [
+               {
+                   "effectId": effect.effect_id,
+                   "durationRounds": effect.duration_rounds,
+                   "expiryTiming": effect.expiry_timing,
+                   "suppressAction": effect.suppress_action,
+                   "suppressBonusAction": effect.suppress_bonus_action,
+                   "suppressReactions": effect.suppress_reactions,
+                   "suppressMovement": effect.suppress_movement,
+                   "nextAttackDisadvantage": effect.next_attack_disadvantage,
+                   "sourceIsMagical": effect.source_is_magical,
+               }
+               for effect in action.on_hit_timed_effects
+           ],
            "animation": action.animation}
     if action.source: row["source"] = action.source
     return row
@@ -382,10 +397,12 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
         "damage_immunities": [item.value for item in template.damage_immunities],
         "condition_immunities": list(template.condition_immunities),
+            "wearing_metal_armor": template.wearing_metal_armor,
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
+        "wearing_metal_armor": template.wearing_metal_armor,
         "fighting_style": template.fighting_style, "fighting_styles": list(template.fighting_styles),
         "weapon_masteries": list(template.weapon_masteries), "critical_hit_minimum": progression.critical_hit_minimum,
         "initiative_advantage": progression.initiative_advantage, "athletics_advantage": progression.athletics_advantage,
