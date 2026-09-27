@@ -68,4 +68,16 @@ def build_varek_fiend_2014_high_audits(level: int) -> list[FeatureAudit]:
                 notes="Constitution 18→20 maximizes HP and concentration durability while Charisma remains capped at 20.",
             )
         )
+    if level >= 20:
+        audits.append(
+            FeatureAudit(
+                feature_id="eldritch-master", feature_name="Eldritch Master",
+                source_reference="D&D Basic Rules 2014: Warlock 20",
+                category="class", combat_relevant=True, automated=True,
+                notes=(
+                    "Uses the universal delayed resource-refill lifecycle: once Pact Magic is depleted, "
+                    "a 10-round source-owned timer restores all Pact slots and consumes the once-per-long-rest use."
+                ),
+            )
+        )
     return audits
