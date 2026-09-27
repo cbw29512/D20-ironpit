@@ -20,4 +20,13 @@ def build_varek_fiend_2014_high_audits(level: int) -> list[FeatureAudit]:
                 notes="Seventh invocation remains arena-neutral utility rather than displacing the optimized blaster package.",
             ),
         ])
+    if level >= 16:
+        audits.append(
+            FeatureAudit(
+                feature_id="ability-score-improvement-l16", feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Warlock 16",
+                category="class", combat_relevant=True, automated=True,
+                notes="Constitution 16→18 improves HP and concentration durability while Charisma is already capped at 20.",
+            )
+        )
     return audits
