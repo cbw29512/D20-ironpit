@@ -50,7 +50,8 @@
       return event;
     }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
-    const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
+    const armorAdvantage = spell.advantageIfTargetWearingMetalArmor && target.state.template.wearing_metal_armor ? 1 : 0;
+    const advantage = conditions.advantage + armorAdvantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
     const mode = R().modeFromSources(
       advantage,
