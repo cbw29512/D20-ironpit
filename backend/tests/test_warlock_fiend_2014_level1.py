@@ -423,3 +423,51 @@ def test_varek_level_ten_has_four_cantrips_and_fiendish_resilience_audit() -> No
     }
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["fiendish-resilience"].automated is True
+
+
+def test_varek_level_eleven_circle_of_death_uses_arcanum_not_pact_slot() -> None:
+    from app.combat.area_save_actions import choose_area_save, resolve_area_save
+
+    varek = _member(build_varek_ashenmark_2014(11), "varek", "heroes", 0)
+    enemy = _member(_commoner_2014(), "enemy", "monsters", 30)
+    setup = EncounterSetup(
+        heroes=[varek], monsters=[enemy], hero_total_levels=11, monster_total_cr="0", ruleset="2014",
+    )
+    begin_turn(varek.state)
+
+    selected = choose_area_save(varek, setup)
+    assert selected is not None
+    action, placement = selected
+    assert action.id == "circle-of-death"
+    assert action.damage_dice_count == 8
+    assert action.damage_dice_size == 6
+    assert action.damage_type == "necrotic"
+    assert action.area is not None and action.area.radius_ft == 60
+
+    events, _ = resolve_area_save(
+        1, 1, varek, setup, action, placement,
+        FixedDiceProvider([3, 3, 3, 3, 3, 3, 3, 3, 10]),
+    )
+
+    assert events
+    assert next(item.current_uses for item in varek.state.resources if item.id == "mystic-arcanum-6") == 0
+    assert next(item.current_uses for item in varek.state.resources if item.id == "spell-slot-5") == 3
+
+
+def test_varek_level_eleven_progression_has_three_beams_and_separate_arcanum() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    varek = build_varek_ashenmark_2014(11)
+    profile = build_varek_ashenmark_2014_profile(11)
+    package = build_warlock_2014_spell_package(11)
+
+    blast = next(item for item in varek.spell_attack_actions if item.id == "eldritch-blast")
+    assert blast.attack_count == 3
+    resources = {item.id: item.max_uses for item in varek.resources}
+    assert resources["spell-slot-5"] == 3
+    assert resources["mystic-arcanum-6"] == 1
+    assert len(package.spells) == warlock_2014_level(11).spells_known == 11
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["eldritch-blast-third-beam"].automated is True
+    assert audits["mystic-arcanum-6"].automated is True
