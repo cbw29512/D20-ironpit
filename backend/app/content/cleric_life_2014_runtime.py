@@ -124,6 +124,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
             combat_traits=[CombatTrait.LIFE_DOMAIN],
             resources=build_cleric_resources_2014(level),
             progression_features=build_cleric_progression_2014(level),
+            wearing_metal_armor=True,
             visual=VisualLoadout(
                 armor="scale-mail",
                 main_hand="warhammer",
