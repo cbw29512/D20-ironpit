@@ -10,7 +10,10 @@
   function slotAvailable(member, spell, turnKey) {
     if (spell.level === 0) return true;
     if (!C().slotSpellAvailable(member.state, turnKey)) return false;
-    return (member.state.resources?.[`spell-slot-${spell.level}`] || 0) > 0;
+    for (let level = spell.level; level <= 9; level += 1) {
+      if ((member.state.resources?.[`spell-slot-${level}`] || 0) > 0) return true;
+    }
+    return false;
   }
 
   function choose(member, setup, turnKey) {
