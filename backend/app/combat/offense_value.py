@@ -78,7 +78,9 @@ def spell_attack_expected_damage(
         spell.advantage_if_target_wearing_metal_armor
         and target.state.template.wearing_metal_armor
     )
-    disadvantage += int(close_ranged_threat_exists(caster, setup))
+    disadvantage += int(
+        spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
+    )
     mode = resolve_roll_mode(advantage, disadvantage)
     hit, critical = _attack_probabilities(caster.state, spell.attack_bonus, effective_armor_class(target.state), mode)
     if close_hit_is_automatic_critical(target.state) and distance <= 5:
