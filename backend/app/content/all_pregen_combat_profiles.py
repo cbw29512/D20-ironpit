@@ -10,6 +10,7 @@ from app.content.paladin_devotion_2014_combat_profile import build_aurelia_2014_
 from app.content.pregen_combat_profiles import PregenCombatProfile, build_pregen_combat_profiles
 from app.content.ranger_hunter_2014_combat_profile import build_rowan_2014_combat_profiles
 from app.content.sorcerer_draconic_2014_combat_profile import build_nyra_2014_combat_profiles
+from app.content.warlock_fiend_2014_combat_profile import build_varek_2014_combat_profiles
 from app.content.rogue_thief_2014_combat_profile import build_mara_2014_combat_profiles
 
 
@@ -24,6 +25,7 @@ def build_all_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         *build_thalen_2014_combat_profiles(),
         *build_rowan_2014_combat_profiles(),
         *build_nyra_2014_combat_profiles(),
+        *build_varek_2014_combat_profiles(),
         *build_mara_2014_combat_profiles(),
         *build_kael_2014_combat_profiles(),
         *build_aurelia_2014_combat_profiles(),
