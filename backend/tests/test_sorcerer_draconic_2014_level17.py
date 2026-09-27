@@ -30,7 +30,7 @@ def test_extended_spell_doubles_greater_invisibility_and_spends_one_point() -> N
     nyra = _member("nyra", build_nyra_emberveil_2014(17), "heroes", 0)
     target = _member("target", build_nyra_emberveil_2014(1), "heroes", 5)
     enemy = _member("enemy", build_nyra_emberveil_2014(1), "monsters", 30)
-    setup = EncounterSetup(heroes=[nyra, target], monsters=[enemy])
+    setup = EncounterSetup(heroes=[nyra, target], monsters=[enemy], hero_total_levels=18, monster_total_cr="0", ruleset="2014")
 
     choice = choose_defensive_spell(nyra, setup)
     assert choice is not None
