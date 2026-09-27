@@ -29,6 +29,7 @@ from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
+from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -92,6 +93,10 @@ def resolve_spell_attack(
         )
         advantage = condition_advantage + attacks_against_advantage_sources(target.state)
         advantage += attacks_against_reckless_advantage(target.state)
+        advantage += int(
+            spell.advantage_if_target_wearing_metal_armor
+            and target.state.template.wearing_metal_armor
+        )
         advantage += next_attack_against_advantage_sources(caster.state, target.combatant_id)
         close_threat = spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
         mode = resolve_roll_mode(
@@ -124,7 +129,7 @@ def resolve_spell_attack(
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
-        damage_roll = None; damage_components = []
+        damage_roll = None; damage_components = []; applied_conditions: list[str] = []
         if hit:
             damage_roll, rolled = _damage(spell, critical, dice)
             applied_total, damage_components = apply_damage_defenses(target.state, rolled); damage_roll.total = applied_total
@@ -136,6 +141,27 @@ def resolve_spell_attack(
                     add_modifier(target.state, build_spell_modifier(
                         caster.combatant_id, target.combatant_id, spell.id, effect, index, spell.name, round_number=round_number,
                     ))
+                for effect in spell.on_hit_timed_effects:
+                    applied = apply_timed_condition(
+                        target.state,
+                        effect.effect_id,
+                        caster.combatant_id,
+                        source_effect_id=spell.id,
+                        source_template=caster.state.template,
+                        source_is_magical=effect.source_is_magical,
+                        suppress_action=effect.suppress_action,
+                        suppress_bonus_action=effect.suppress_bonus_action,
+                        suppress_reactions=effect.suppress_reactions,
+                        suppress_movement=effect.suppress_movement,
+                        next_attack_disadvantage=effect.next_attack_disadvantage,
+                        applied_round=round_number,
+                        expires_round=round_number + effect.duration_rounds,
+                        expiry_timing=effect.expiry_timing,
+                        affected_states=affected_states,
+                        use_default_poison_recovery=False,
+                    )
+                    if applied is not None:
+                        applied_conditions.append(applied)
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
@@ -153,7 +179,8 @@ def resolve_spell_attack(
         event = BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=caster.combatant_id, actor_name=caster.state.template.name,
             target_id=target.combatant_id, target_name=target.state.template.name, attack_name=spell.name, target_ac=target_ac,
-            attack_roll=attack_roll, damage_roll=damage_roll, damage_components=damage_components, hit=hit, critical=critical,
+            attack_roll=attack_roll, damage_roll=damage_roll, damage_components=damage_components,
+            applied_condition_ids=applied_conditions, hit=hit, critical=critical,
             hp_before=hp_before, hp_after=target.state.current_hp, temporary_hp_before=temporary_hp_before, temporary_hp_after=target.state.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
