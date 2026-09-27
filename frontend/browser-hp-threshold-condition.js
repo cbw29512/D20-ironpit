@@ -54,5 +54,26 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_HP_THRESHOLD_CONDITION = { choose, legal, resolve };
+  function installProvider() {
+    const selection = window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
+    if (!selection) throw new Error("HP-threshold provider requires main-action selection.");
+    const category = selection.CATEGORIES.HP_THRESHOLD_CONDITION;
+    selection.registerProvider({
+      id: "hp-threshold-condition", category, rulesets: ["2014", "2024"],
+      discover: ({ member, setup }) => {
+        const selected = choose(member, setup);
+        return selected ? { payload: { targetId: selected.target.combatant_id, actionId: selected.action.id } } : null;
+      },
+      resolve: ({ sequence, round, member, setup }, candidate) => {
+        const target = [...setup.heroes, ...setup.monsters]
+          .find((item) => item.combatant_id === candidate.payload.targetId) || null;
+        const action = (member.state.template.hp_threshold_condition_actions || [])
+          .find((item) => item.id === candidate.payload.actionId) || null;
+        if (!target || !action) throw new Error("HP-threshold condition candidate became unavailable.");
+        return { events: [resolve(sequence, round, member, target, action, setup)], sequence: sequence + 1 };
+      },
+    });
+  }
+
+  window.IRON_PIT_BROWSER_HP_THRESHOLD_CONDITION = { choose, installProvider, legal, resolve };
 })();
