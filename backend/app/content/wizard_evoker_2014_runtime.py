@@ -14,6 +14,7 @@ from app.content.sorcerer_draconic_2014_spells import (
     burning_hands_2014,
     cone_of_cold_2014,
     fire_bolt_2014,
+    fireball_2014,
     poison_spray_2014,
     ray_of_frost_2014,
     shatter_2014,
@@ -140,10 +141,7 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
                 poison,
                 burning_hands_2014(save_dc, bonus),
                 *([shatter] if level >= 3 else []),
-                *([__import__(
-                    "app.content.sorcerer_draconic_2014_spells",
-                    fromlist=["fireball_2014"],
-                ).fireball_2014(save_dc, bonus)] if level >= 5 else []),
+                *([fireball_2014(save_dc, bonus)] if level >= 5 else []),
                 *([cone] if level >= 9 else []),
             ],
             saving_throw_actions=[
