@@ -8,6 +8,7 @@ from app.domain.actions import AttackActionDefinition, ConditionName, ConditionR
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.character_builds import AbilityScores
+from app.domain.damage_sources import ConditionalDamageDefense
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.d20_bonus_dice import D20BonusDieAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
