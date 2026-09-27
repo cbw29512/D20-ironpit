@@ -40,7 +40,8 @@
       active.unlimited_resources = clone(original.unlimited_resources || []);
       active.source = `${original.source}; replacement form: ${form.source}`;
       if (!retainSpellcasting) {
-        active.spell_save_actions = []; active.spell_attack_actions = []; active.persistent_spell_attack_actions = [];
+        active.spell_save_actions = []; active.spell_attack_actions = []; active.auto_hit_spell_actions = [];
+        active.persistent_spell_attack_actions = [];
         active.defensive_spell_actions = []; active.healingActions = []; active.condition_removal_actions = []; active.effect_removal_actions = [];
       }
       return active;
