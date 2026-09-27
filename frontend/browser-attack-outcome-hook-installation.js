@@ -12,6 +12,9 @@
     if (window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.installAbilityHooks) {
       installers.push(["Deferred save effect", window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT.installAbilityHooks]);
     }
+    if (window.IRON_PIT_BROWSER_EXILE?.installAbilityHooks) {
+      installers.push(["Exile", window.IRON_PIT_BROWSER_EXILE.installAbilityHooks]);
+    }
     for (const [name, installer] of installers) {
       if (typeof installer !== "function") throw new Error(`${name} attack-outcome hook installer is not loaded.`);
       installer();
