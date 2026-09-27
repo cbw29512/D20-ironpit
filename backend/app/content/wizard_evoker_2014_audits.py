@@ -90,8 +90,12 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
         rows.append(FeatureAudit(
             feature_id="overchannel", feature_name="Overchannel",
             source_reference="D&D Basic Rules 2014: School of Evocation 14",
-            category="subclass", combat_relevant=True, automated=False,
-            notes="ENGINE_TRULY_MISSING: reusable 1st-5th-level spell damage maximizer plus escalating self-damage lifecycle.",
+            category="subclass", combat_relevant=True, automated=True,
+            notes=(
+                "Binds to the universal spell-damage maximizer: declared 1st-5th-level damaging spells "
+                "use maximum damage dice; fresh per-fight usage state makes the first use safe, then "
+                "resolves escalating d12 necrotic self-damage after later casts without defense reduction."
+            ),
         ))
     if level >= 16:
         rows.append(FeatureAudit(
