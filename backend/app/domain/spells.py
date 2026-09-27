@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, ConditionName
+from app.domain.hit_effects import OnHitTimedEffect
 from app.domain.save_damage import DamageTypeName, SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.targeting import AreaTargeting
@@ -65,7 +66,9 @@ class SpellAttackAction(BaseModel):
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    advantage_if_target_wearing_metal_armor: bool = False
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
+    on_hit_timed_effects: list[OnHitTimedEffect] = Field(default_factory=list)
     animation: str = "spell-attack"
     source: str | None = None
 
