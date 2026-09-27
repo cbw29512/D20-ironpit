@@ -462,10 +462,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "aura_radius_2014_ft": progression.aura_radius_2014_ft,
         "aura_of_devotion_2014": progression.aura_of_devotion_2014,
         "aura_of_courage_2014": progression.aura_of_courage_2014,
-        "source_reduces_hostile_to_zero_hp_temporary_hp": (
-            progression.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
-            if progression.source_reduces_hostile_to_zero_hp_temporary_hp is not None else None
-        ),
         "survivor_heal_amount": progression.survivor_heal_amount,
         "bloodied_start_turn_heal_amount": progression.bloodied_start_turn_heal_amount,
         "death_save_advantage": progression.death_save_advantage,
@@ -475,6 +471,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()}, "source": template.source,
     }
+    if progression.source_reduces_hostile_to_zero_hp_temporary_hp is not None:
+        row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
+            progression.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
+        )
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
