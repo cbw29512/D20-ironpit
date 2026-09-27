@@ -11,6 +11,7 @@ from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import spell_at_slot
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
+from app.combat.spell_damage_maximizers import resolve_maximizer_after_cast
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -129,6 +130,17 @@ def resolve_spell(
             dice,
         )
         events.extend(effect_events)
+        if choice.damage_maximizer is not None:
+            follow_up, sequence = resolve_maximizer_after_cast(
+                sequence,
+                round_number,
+                caster,
+                setup,
+                choice.damage_maximizer,
+                choice.slot_level,
+                dice,
+            )
+            events.extend(follow_up)
         return events, sequence
     except ValueError:
         raise
