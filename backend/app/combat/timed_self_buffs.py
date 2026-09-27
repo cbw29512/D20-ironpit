@@ -44,6 +44,12 @@ def resolve_timed_self_buff(
             resource.current_uses -= action.resource_cost
         applied: list[str] = []
         defenses_attached = False
+        expires_round = (
+            round_number + action.duration_rounds
+            if action.duration_rounds is not None else None
+        )
+        expiry_timing = action.expiry_timing if action.duration_rounds is not None else None
+        expires_at_source_start = expiry_timing == "source_turn_start"
         for condition_id in action.condition_ids:
             condition = apply_timed_condition(
                 member.state,
@@ -52,9 +58,9 @@ def resolve_timed_self_buff(
                 source_effect_id=action.id,
                 source_template=member.state.template,
                 applied_round=round_number,
-                expires_round=round_number + action.duration_rounds,
-                expiry_timing=action.expiry_timing,
-                expires_at_start_of_source_turn=action.expiry_timing == "source_turn_start",
+                expires_round=expires_round,
+                expiry_timing=expiry_timing,
+                expires_at_start_of_source_turn=expires_at_source_start,
                 owned_damage_resistances=action.damage_resistances if not defenses_attached else [],
                 owned_debuff_counters=action.debuff_counters if not defenses_attached else [],
                 ends_if_source_incapacitated=action.ends_if_source_incapacitated,
@@ -68,6 +74,7 @@ def resolve_timed_self_buff(
             action.damage_resistances
             or action.debuff_counters
             or action.saving_throw_advantage_grants
+            or action.movement_mode_grants
             or action.friendly_save_advantage_aura is not None
             or action.hostile_start_turn_condition_aura is not None
             or action.start_turn_emanation_damage is not None
@@ -79,11 +86,12 @@ def resolve_timed_self_buff(
                 source_effect_id=action.id,
                 source_template=member.state.template,
                 applied_round=round_number,
-                expires_round=round_number + action.duration_rounds,
-                expiry_timing=action.expiry_timing,
-                expires_at_start_of_source_turn=action.expiry_timing == "source_turn_start",
+                expires_round=expires_round,
+                expiry_timing=expiry_timing,
+                expires_at_start_of_source_turn=expires_at_source_start,
                 owned_damage_resistances=action.damage_resistances,
                 owned_debuff_counters=action.debuff_counters,
+                owned_movement_mode_grants=action.movement_mode_grants,
                 ends_if_source_incapacitated=action.ends_if_source_incapacitated,
                 ends_if_source_dead=action.ends_if_source_dead,
                 use_default_poison_recovery=False,
@@ -96,7 +104,7 @@ def resolve_timed_self_buff(
                 action.id,
                 round_number,
                 affected_states,
-                expires_round=round_number + action.duration_rounds,
+                expires_round=expires_round,
             )
 
         for grant in action.saving_throw_advantage_grants:
