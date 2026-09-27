@@ -29,4 +29,25 @@ def build_varek_fiend_2014_high_audits(level: int) -> list[FeatureAudit]:
                 notes="Constitution 16→18 improves HP and concentration durability while Charisma is already capped at 20.",
             )
         )
+    if level >= 17:
+        audits.extend([
+            FeatureAudit(
+                feature_id="eldritch-blast-fourth-beam", feature_name="Eldritch Blast — Four Beams",
+                source_reference="D&D Basic Rules 2014: Eldritch Blast",
+                category="class", combat_relevant=True, automated=True,
+                notes="The universal multi-spell-attack sequence resolves four independent Eldritch Blast beams.",
+            ),
+            FeatureAudit(
+                feature_id="pact-magic-fourth-slot", feature_name="Pact Magic — Four Slots",
+                source_reference="D&D Basic Rules 2014: Warlock 17",
+                category="class", combat_relevant=True, automated=True,
+                notes="The edition-correct Pact Magic progression supplies four 5th-level slots.",
+            ),
+            FeatureAudit(
+                feature_id="mystic-arcanum-9", feature_name="Mystic Arcanum (9th Level)",
+                source_reference="D&D Basic Rules 2014: Warlock 17; Power Word Kill",
+                category="class", combat_relevant=True, automated=True,
+                notes="Power Word Kill uses the universal 100-HP threshold instant-death action and honors instant-death prevention such as Death Ward.",
+            ),
+        ])
     return audits
