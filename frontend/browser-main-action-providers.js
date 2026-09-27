@@ -12,6 +12,7 @@
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const AW = () => window.IRON_PIT_BROWSER_AREA_WEAPON_ATTACKS;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const HK = () => window.IRON_PIT_BROWSER_HP_THRESHOLD_INSTANT_DEATH;
   const HT = () => window.IRON_PIT_BROWSER_HP_THRESHOLD_CONDITION;
   const U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const DG = () => window.IRON_PIT_BROWSER_DODGE;
@@ -157,6 +158,7 @@
       },
     });
 
+    HK()?.installProvider();
     HT()?.installProvider();
 
     register({
