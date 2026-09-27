@@ -34,6 +34,7 @@ class SpellModifierEffect(BaseModel):
     consume_on_attack_against: bool = False
     ends_on_owner_attack: bool = False
     expires_after_source_turns: int | None = Field(default=None, ge=1, le=20)
+    expires_at_start_of_source_turn: bool = False
 
     @model_validator(mode="after")
     def validate_payload(self) -> "SpellModifierEffect":
@@ -79,4 +80,6 @@ class SpellModifierEffect(BaseModel):
             raise ValueError("Only attack-advantage spell modifiers can be consumed by the next attack.")
         if self.ends_on_owner_attack and self.kind != "targeting-save-gate":
             raise ValueError("Only targeting save gates can end when their owner attacks.")
+        if self.expires_at_start_of_source_turn and self.expires_after_source_turns is not None:
+            raise ValueError("Spell modifier cannot use both source-start and source-turn-count expiry.")
         return self
