@@ -33,14 +33,25 @@ def test_level_two_font_of_magic_is_data_bound_to_universal_conversions() -> Non
     assert actions["convert-spell-slot-1"].target_allows_overflow is False
 
 
+def test_level_two_false_life_uses_shared_temporary_hp_spell_path() -> None:
+    hero = build_nyra_emberveil_2014(2)
+    spell = next(item for item in hero.defensive_spell_actions if item.id == "false-life")
+
+    assert spell.level == 1
+    assert spell.target_policy == "self"
+    assert spell.duration_minutes == 60
+    assert spell.temporary_hp == 7
+    assert spell.temporary_hp_per_slot_above == 5
+
+
 def test_level_two_spell_package_has_three_legal_known_spells() -> None:
     package = build_sorcerer_2014_spell_package(2)
 
     assert len(package.cantrips) == 4
     assert [item.id for item in package.spells] == [
         "burning-hands",
-        "detect-magic",
-        "comprehend-languages",
+        "magic-missile",
+        "false-life",
     ]
 
 
