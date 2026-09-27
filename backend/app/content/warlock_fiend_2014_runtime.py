@@ -14,6 +14,7 @@ from app.content.warlock_2014_spells import (
     scorching_ray_2014,
 )
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
+from app.domain.actions import HpThresholdConditionAction
 from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
@@ -26,8 +27,8 @@ from app.domain.progression_primitives import (
 
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 15):
-        raise ValueError("2014 Varek runtime currently certifies levels 1 through 14.")
+    if level not in range(1, 16):
+        raise ValueError("2014 Varek runtime currently certifies levels 1 through 15.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
@@ -122,6 +123,23 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
             *([circle_of_death_2014(8 + pb + cha)] if level >= 11 else []),
             *([finger_of_death_2014(8 + pb + cha)] if level >= 13 else []),
         ],
+        hp_threshold_condition_actions=(
+            [HpThresholdConditionAction(
+                id="power-word-stun",
+                name="Power Word Stun",
+                action_cost="action",
+                range_ft=60,
+                max_current_hp=150,
+                condition_id="stunned",
+                repeat_save_ability="constitution",
+                repeat_save_dc=8 + pb + cha,
+                repeat_save_timing="target_turn_end",
+                resource_id="mystic-arcanum-8",
+                resource_cost=1,
+                magical_effect=True,
+                animation="spell-condition",
+            )] if level >= 15 else []
+        ),
         saving_throw_bonuses=saving_throw_bonuses(scores, level, ("wisdom", "charisma")),
         skill_bonuses={
             "arcana": scores.modifier("intelligence") + pb,
@@ -153,6 +171,11 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                 name="Hurl Through Hell",
                 max_uses=1,
             )] if level >= 14 else []),
+            *([ResourceDefinition(
+                id="mystic-arcanum-8",
+                name="Mystic Arcanum (8th Level)",
+                max_uses=1,
+            )] if level >= 15 else []),
         ],
         effect_removal_actions=([dispel_magic_2014("charisma")] if level >= 6 else []),
         visual=VisualLoadout(armor="leather-armor", main_hand="arcane-focus", body_style="humanoid"),
