@@ -76,11 +76,19 @@ _LEVEL_TEN_CANTRIP = _spell(
     "prestidigitation", "Prestidigitation", "utility", min_level=10,
 )
 
+_LEVEL_ELEVEN_KNOWN = _spell(
+    "dream", "Dream", "utility", "arena-out-of-scope", level=5, min_level=11,
+)
+
+_LEVEL_ELEVEN_ARCANUM = _spell(
+    "circle-of-death", "Circle of Death", "damage", "save-damage", "area", level=6, min_level=11,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 11):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 10.")
+        if level not in range(1, 12):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 11.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
@@ -99,6 +107,7 @@ def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
                 *([_LEVEL_SEVEN_UTILITY] if level >= 7 else []),
                 *([_LEVEL_EIGHT_UTILITY] if level >= 8 else []),
                 *([_LEVEL_NINE_DAMAGE] if level >= 9 else []),
+                *([_LEVEL_ELEVEN_KNOWN] if level >= 11 else []),
             ],
         )
     except Exception:
