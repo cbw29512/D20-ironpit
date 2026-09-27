@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.monster_equipment import build_light_crossbow
+from app.content.sorcerer_draconic_2014_spells import burning_hands_2014, poison_spray_2014
 from app.content.warlock_2014_spells import eldritch_blast_2014, hex_2014
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
@@ -40,6 +41,10 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
             attack_ability_modifier=dex,
         ),
         spell_attack_actions=[eldritch_blast_2014(pb + cha, level)],
+        spell_save_actions=[
+            poison_spray_2014(8 + pb + cha, level),
+            burning_hands_2014(8 + pb + cha),
+        ],
         targeted_concentration_damage_actions=[hex_2014()],
         progression_features=ProgressionCombatFeatures(
             source_reduces_hostile_to_zero_hp_temporary_hp=SourceReducesHostileToZeroHpTemporaryHp(
