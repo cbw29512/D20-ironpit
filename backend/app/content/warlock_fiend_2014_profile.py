@@ -50,8 +50,8 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
         FeatureAudit(
             feature_id="hex", feature_name="Hex",
             source_reference="D&D Basic Rules 2014: Hex",
-            category="class", combat_relevant=True, automated=False,
-            notes="Selected for the damage-first canonical build. Awaiting the reusable targeted concentration bonus-damage primitive shared with Hunter's Mark.",
+            category="class", combat_relevant=True, automated=True,
+            notes="Selected for the damage-first canonical build. Uses the reusable targeted concentration bonus-damage primitive shared with Hunter's Mark.",
         ),
     ]
     return CharacterBuildProfile(
