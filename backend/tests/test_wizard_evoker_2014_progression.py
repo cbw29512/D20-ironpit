@@ -106,9 +106,33 @@ def test_high_level_wizard_spells_consume_normal_wizard_slots() -> None:
     assert kill.resource_id == "spell-slot-9"
 
 
-def test_level_twenty_has_raw_full_caster_resources_without_fake_resources() -> None:
+def test_spell_mastery_uses_real_spell_levels_without_slot_resources() -> None:
+    hero = build_elian_starweaver_2014(18)
+    grants = {item.spell_id: item for item in hero.progression_features.alternate_spell_cast_grants}
+
+    assert grants["burning-hands"].cast_level == 1
+    assert grants["burning-hands"].resource_id is None
+    assert grants["shatter"].cast_level == 2
+    assert grants["shatter"].resource_id is None
+
+
+def test_signature_spells_have_independent_free_cast_resources() -> None:
+    hero = build_elian_starweaver_2014(20)
+    grants = {item.spell_id: item for item in hero.progression_features.alternate_spell_cast_grants}
     resources = _resource_map(20)
-    assert resources == {
+
+    assert grants["fireball"].cast_level == 3
+    assert grants["fireball"].resource_id == "signature-spell-fireball"
+    assert grants["lightning-bolt"].cast_level == 3
+    assert grants["lightning-bolt"].resource_id == "signature-spell-lightning-bolt"
+    assert resources["signature-spell-fireball"] == 1
+    assert resources["signature-spell-lightning-bolt"] == 1
+    assert next(item for item in hero.spell_save_actions if item.id == "lightning-bolt").level == 3
+
+
+def test_level_twenty_keeps_raw_full_caster_spell_slots() -> None:
+    resources = _resource_map(20)
+    assert {key: value for key, value in resources.items() if key.startswith("spell-slot-")} == {
         "spell-slot-1": 4,
         "spell-slot-2": 3,
         "spell-slot-3": 3,
