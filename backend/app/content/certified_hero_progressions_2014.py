@@ -59,4 +59,8 @@ CERTIFIED_HERO_PROGRESSIONS_2014: tuple[CertifiedHeroProgression, ...] = (
         class_id="paladin", ruleset="2014", template_builder=build_aurelia_brightshield_2014,
         profile_level_builder=build_aurelia_brightshield_2014_profile, max_level=20,
     ),
+    CertifiedHeroProgression(
+        class_id="sorcerer", ruleset="2014", template_builder=build_nyra_emberveil_2014,
+        profile_level_builder=build_nyra_emberveil_2014_profile, max_level=3,
+    ),
 )
