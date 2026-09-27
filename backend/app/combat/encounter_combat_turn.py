@@ -36,9 +36,7 @@ from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-
 logger = logging.getLogger(__name__)
-
 
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
