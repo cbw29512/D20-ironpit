@@ -39,6 +39,7 @@
       source_is_magical: Boolean(options.sourceIsMagical),
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
       owned_debuff_counters: [...(options.ownedDebuffCounters || [])],
+      owned_movement_mode_grants: [...(options.ownedMovementModeGrants || [])],
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
