@@ -70,6 +70,25 @@
     return levels.length ? levels.at(-1) : null;
   }
 
+  function alternateCasts(caster, action) {
+    return (caster.state.template.alternate_spell_cast_grants || [])
+      .filter((grant) => grant.spell_id === action.id)
+      .filter((grant) => {
+        if (!grant.resource_id) return true;
+        return (caster.state.resources?.[grant.resource_id] || 0) >= (grant.resource_cost || 1);
+      })
+      .sort((a, b) => (b.priority || 0) - (a.priority || 0)
+        || a.cast_level - b.cast_level || a.source_id.localeCompare(b.source_id));
+  }
+
+  function castOptions(caster, action, turnKey) {
+    const normal = slotLevels(caster, action, turnKey)
+      .map((castLevel) => ({ castLevel, alternateCast: null }));
+    const alternate = alternateCasts(caster, action)
+      .map((grant) => ({ castLevel: grant.cast_level, alternateCast: grant }));
+    return [...normal, ...alternate];
+  }
+
   function areaSpellProtection(caster, setup, action, castLevel, explicitProtectedIds = []) {
     const grant = caster.state.template.area_spell_ally_protection || null;
     const explicit = new Set(explicitProtectedIds);
@@ -110,7 +129,7 @@
       && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state)));
   }
 
-  function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = []) {
+  function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = [], alternateCast = null) {
     try {
       if (!action || action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) return null;
       const scaled = scaledSpell(action, castLevel);
@@ -132,7 +151,7 @@
         const rangeModifier = normalKeys.has(placementKey(placement))
           ? null : availableRangeModifier(caster.state, baseRange, castRange);
         return { action, slotLevel: castLevel, targetIds: [...placement.enemyIds], placement,
-          expectedDamage: score, rangeModifier };
+          expectedDamage: score, rangeModifier, alternateCast };
       }
       if (action.areaRadius) {
         const protection = areaSpellProtection(caster, setup, action, castLevel, protectedAllyIds);
@@ -143,7 +162,8 @@
         const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0)
           - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
         return { action, slotLevel: castLevel,
-          targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement, expectedDamage: score };
+          targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement, expectedDamage: score,
+          alternateCast };
       }
       const castRange = effectiveRange(caster.state, action.range);
       const legal = legalSingleTargets(caster, setup, action, castRange);
@@ -153,7 +173,8 @@
       const target = legal[0];
       return { action, slotLevel: castLevel, targetIds: [target.combatant_id],
         placement: null, expectedDamage: O().saveSpell(target, scaled), hp: target.state.current_hp,
-        rangeModifier: availableRangeModifier(caster.state, action.range, S().distance(caster, target)) };
+        rangeModifier: availableRangeModifier(caster.state, action.range, S().distance(caster, target)),
+        alternateCast };
     } catch (error) {
       console.error("Browser fixed-slot save-spell selection failed", { caster: caster?.combatant_id, spell: action?.id, error });
       throw error;
@@ -165,7 +186,7 @@
       const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
       for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
         if (action.actionCost === "reaction" || action.concentration || !E().available(caster.state, action.actionCost)) continue;
-        for (const castLevel of slotLevels(caster, action, turnKey)) {
+        for (const { castLevel, alternateCast } of castOptions(caster, action, turnKey)) {
           const scaled = scaledSpell(action, castLevel);
           if (action.area) {
             const baseRange = action.range;
@@ -184,7 +205,7 @@
             const rangeModifier = normalKeys.has(placementKey(placement))
               ? null : availableRangeModifier(caster.state, baseRange, castRange);
             candidates.push({ action, index, score, slotLevel: castLevel,
-              targetIds: [...placement.enemyIds], placement, rangeModifier });
+              targetIds: [...placement.enemyIds], placement, rangeModifier, alternateCast });
             continue;
           }
           if (action.areaRadius) {
@@ -196,23 +217,27 @@
             const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0)
               - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
             candidates.push({ action, index, score, slotLevel: castLevel,
-              targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement });
+              targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement, alternateCast });
             continue;
           }
           const castRange = effectiveRange(caster.state, action.range);
           for (const target of legalSingleTargets(caster, setup, action, castRange)) {
             candidates.push({ action, index, score: O().saveSpell(target, scaled), slotLevel: castLevel,
               targetIds: [target.combatant_id], placement: null, hp: target.state.current_hp,
-              rangeModifier: availableRangeModifier(caster.state, action.range, S().distance(caster, target)) });
+              rangeModifier: availableRangeModifier(caster.state, action.range, S().distance(caster, target)),
+              alternateCast });
           }
         }
       }
-      candidates.sort((a, b) => b.score - a.score || a.action.level - b.action.level
+      candidates.sort((a, b) => b.score - a.score
+        || Number(Boolean(b.alternateCast)) - Number(Boolean(a.alternateCast))
+        || a.action.level - b.action.level
         || (a.hp ?? Number.MAX_SAFE_INTEGER) - (b.hp ?? Number.MAX_SAFE_INTEGER) || a.index - b.index);
       if (!candidates.length) return null;
       const best = candidates[0];
       return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds,
-        placement: best.placement, expectedDamage: best.score, rangeModifier: best.rangeModifier || null };
+        placement: best.placement, expectedDamage: best.score, rangeModifier: best.rangeModifier || null,
+        alternateCast: best.alternateCast || null };
     } catch (error) {
       console.error("Browser save-spell selection failed", { caster: caster?.combatant_id, error });
       throw error;
@@ -223,9 +248,14 @@
     try {
       const action = (caster.state.template.spell_save_actions || []).find((item) => item.id === spellId);
       if (!action) return null;
-      const levels = slotLevels(caster, action, turnKey);
-      if (!levels.length) return null;
-      return chooseActionAtSlot(caster, setup, action, levels.at(-1), protectedAllyIds);
+      const options = castOptions(caster, action, turnKey);
+      if (!options.length) return null;
+      const selected = options.sort((a, b) =>
+        Number(Boolean(b.alternateCast)) - Number(Boolean(a.alternateCast))
+        || b.castLevel - a.castLevel)[0];
+      return chooseActionAtSlot(
+        caster, setup, action, selected.castLevel, protectedAllyIds, selected.alternateCast,
+      );
     } catch (error) {
       console.error("Browser named save-spell selection failed", { caster: caster?.combatant_id, spellId, error });
       throw error;
@@ -234,7 +264,7 @@
 
   window.IRON_PIT_BROWSER_SPELL_POLICY = {
     choose, chooseActionAtSlot, chooseById, scaledSpell, slotLevel, slotLevels,
-    areaSpellProtection, protectedUniversalPlacements,
+    alternateCasts, castOptions, areaSpellProtection, protectedUniversalPlacements,
     availableRangeModifier, effectiveRange, spendRangeModifier,
   };
 })();
