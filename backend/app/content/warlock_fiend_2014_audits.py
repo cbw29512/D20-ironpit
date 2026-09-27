@@ -3,7 +3,6 @@ from __future__ import annotations
 from app.content.warlock_fiend_2014_high_audits import build_varek_fiend_2014_high_audits
 from app.domain.character_builds import FeatureAudit
 
-
 def build_varek_fiend_2014_audits(level: int) -> list[FeatureAudit]:
     audits = [
         FeatureAudit(
