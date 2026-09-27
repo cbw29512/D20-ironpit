@@ -65,6 +65,13 @@
         if (action.actionCost === "reaction" || !E().available(member.state, action.actionCost)) continue;
         if (spellLevelAvailable(member, action.level, turnKey)) ranges.push({ family: "spell", range: action.range || 0 });
       }
+      for (const action of member.state.template.auto_hit_spell_actions || []) {
+        if (action.actionCost === "reaction" || !E().available(member.state, action.actionCost)) continue;
+        if (!C().legalSlotLevels(member.state, turnKey, action.level, {
+          higherSlotScaling: (action.projectilesPerSlotAbove || 0) > 0,
+        }).length) continue;
+        ranges.push({ family: "spell", range: action.range || 0 });
+      }
       for (const action of member.state.template.spell_save_actions || []) {
         if (action.actionCost === "reaction" || action.concentration || !E().available(member.state, action.actionCost)) continue;
         if (!SP().slotLevels(member, action, turnKey).length) continue;
