@@ -19,11 +19,11 @@ def build_sorcerer_draconic_2014_high_level_audits(level: int) -> list[FeatureAu
                 ),
             ),
             FeatureAudit(
-                feature_id="teleportation-circle",
-                feature_name="Teleportation Circle",
-                source_reference="D&D Basic Rules 2014: Teleportation Circle",
+                feature_id="creation",
+                feature_name="Creation",
+                source_reference="D&D Basic Rules 2014: Creation",
                 category="class", combat_relevant=False, automated=True,
-                notes="Legal Sorcerer choice; one-minute casting time and travel purpose are arena-neutral.",
+                notes="Legal fifth-level Sorcerer choice recorded as arena-neutral for Iron Pit combat.",
             ),
         ]
     if level >= 11:
