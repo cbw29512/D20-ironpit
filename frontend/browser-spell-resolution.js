@@ -116,7 +116,19 @@
       if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
 
       let remaining = null;
-      if (choice.slotLevel > 0) {
+      if (choice.alternateCast) {
+        const grant = choice.alternateCast;
+        if (grant.cast_level !== choice.slotLevel) {
+          throw new Error("Alternate spell cast level does not match the selected cast level.");
+        }
+        if (grant.resource_id) {
+          const current = caster.state.resources?.[grant.resource_id] || 0;
+          const cost = grant.resource_cost || 1;
+          if (current < cost) throw new Error(`Insufficient ${grant.resource_id} for ${grant.source_name}.`);
+          caster.state.resources[grant.resource_id] = current - cost;
+          remaining = caster.state.resources[grant.resource_id];
+        }
+      } else if (choice.slotLevel > 0) {
         const resourceId = `spell-slot-${choice.slotLevel}`;
         if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
         SC().markSlotSpellCast(caster.state, turnKey);
@@ -153,7 +165,9 @@
       const detail = placement
         ? ` Area covers ${placement.enemyIds.length} enemies, ${placement.friendlyIds.length} unprotected allies, and ${(placement.protectedFriendlyIds || []).length} protected allies.`
         : "";
-      const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
+      const slotText = choice.alternateCast
+        ? choice.alternateCast.source_name
+        : (choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`);
       const events = [];
       if (choice.rangeModifier) {
         events.push({
