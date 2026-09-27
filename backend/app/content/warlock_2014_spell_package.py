@@ -108,11 +108,15 @@ _LEVEL_SEVENTEEN_ARCANUM = _spell(
     "power-word-kill", "Power Word Kill", "damage", "hp-threshold-instant-death", level=9, min_level=17,
 )
 
+_LEVEL_NINETEEN_KNOWN = _spell(
+    "remove-curse", "Remove Curse", "utility", "arena-out-of-scope", level=3, min_level=19,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 18):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 17.")
+        if level not in range(1, 20):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 19.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
@@ -135,6 +139,7 @@ def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
                 *([_LEVEL_THIRTEEN_KNOWN] if level >= 13 else []),
                 *([_LEVEL_FIFTEEN_KNOWN] if level >= 15 else []),
                 *([_LEVEL_SEVENTEEN_KNOWN] if level >= 17 else []),
+                *([_LEVEL_NINETEEN_KNOWN] if level >= 19 else []),
             ],
         )
     except Exception:
