@@ -52,6 +52,12 @@ def apply_timed_condition(
     owned_damage_resistances: list[DamageType] | None = None,
     owned_debuff_counters: list[DebuffCounter] | None = None,
     owned_movement_mode_grants: list[MovementModeGrant] | None = None,
+    removed_from_battlefield: bool = False,
+    return_damage_dice_count: int = 0,
+    return_damage_dice_size: int = 0,
+    return_damage_bonus: int = 0,
+    return_damage_type: DamageType | None = None,
+    return_damage_excluded_creature_types: list[str] | None = None,
     use_default_poison_recovery: bool = True,
 ) -> str | None:
     """Apply one source-owned timed condition and its optional passive defenses.
@@ -110,6 +116,12 @@ def apply_timed_condition(
             owned_damage_resistances=owned_damage_resistances or [],
             owned_debuff_counters=owned_debuff_counters or [],
             owned_movement_mode_grants=owned_movement_mode_grants or [],
+            removed_from_battlefield=removed_from_battlefield,
+            return_damage_dice_count=return_damage_dice_count,
+            return_damage_dice_size=return_damage_dice_size,
+            return_damage_bonus=return_damage_bonus,
+            return_damage_type=return_damage_type,
+            return_damage_excluded_creature_types=return_damage_excluded_creature_types or [],
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
