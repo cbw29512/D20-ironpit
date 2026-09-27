@@ -576,6 +576,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for item in template.hp_threshold_condition_actions
             ],
+            "hp_threshold_instant_death_actions": [
+                {
+                    "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                    "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                    "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                    "magicalEffect": item.magical_effect, "animation": item.animation,
+                }
+                for item in template.hp_threshold_instant_death_actions
+            ],
             "traits": sorted(traits), "resources": {item.id: item.max_uses for item in template.resources},
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
