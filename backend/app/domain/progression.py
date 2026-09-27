@@ -18,6 +18,7 @@ from app.domain.progression_primitives import (
     FirstRoundExtraTurnGrant,
     OpeningTargetingWard,
     ResourceBackedD20BonusDie,
+    ResourceBackedOnHitExile,
     SavingThrowProficiencyGrant,
     SelectableDamageResistance,
     SourceReducesHostileToZeroHpTemporaryHp,
@@ -83,6 +84,7 @@ class ProgressionCombatFeatures(BaseModel):
     resource_backed_d20_bonus_dice: list[ResourceBackedD20BonusDie] = Field(default_factory=list)
     source_reduces_hostile_to_zero_hp_temporary_hp: SourceReducesHostileToZeroHpTemporaryHp | None = None
     selectable_damage_resistance: SelectableDamageResistance | None = None
+    resource_backed_on_hit_exile: ResourceBackedOnHitExile | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
