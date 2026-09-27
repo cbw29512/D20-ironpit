@@ -786,6 +786,70 @@
         "backend/tests/test_monk_open_hand_2014_level17.py",
         "frontend/browser-deferred-save-effect.test.cjs"
       ]
+    },
+    {
+      "id": "hp-threshold-condition",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/hp_threshold_condition.py",
+        "backend/app/combat/condition_lifecycle.py"
+      ],
+      "browser": [
+        "frontend/browser-hp-threshold-condition.js",
+        "frontend/browser-timed-conditions.js"
+      ],
+      "tests": [
+        "backend/tests/test_warlock_fiend_2014_level1.py",
+        "frontend/browser-power-word-stun-2014.test.cjs"
+      ]
+    },
+    {
+      "id": "hp-threshold-instant-death",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/hp_threshold_instant_death.py",
+        "backend/app/combat/zero_hp_replacement.py"
+      ],
+      "browser": [
+        "frontend/browser-hp-threshold-instant-death.js",
+        "frontend/browser-zero-hp-replacement.js"
+      ],
+      "tests": [
+        "backend/tests/test_warlock_fiend_2014_level1.py",
+        "frontend/browser-power-word-kill-2014.test.cjs"
+      ]
+    },
+    {
+      "id": "battlefield-exile",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/exile.py",
+        "backend/app/combat/encounter_targeting.py"
+      ],
+      "browser": [
+        "frontend/browser-exile.js",
+        "frontend/browser-formation.js"
+      ],
+      "tests": [
+        "backend/tests/test_warlock_fiend_2014_level1.py",
+        "frontend/browser-exile-2014.test.cjs"
+      ]
+    },
+    {
+      "id": "delayed-resource-refill",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/delayed_resource_refill.py",
+        "backend/app/domain/runtime.py"
+      ],
+      "browser": [
+        "frontend/browser-delayed-resource-refill.js",
+        "frontend/browser-engine.js"
+      ],
+      "tests": [
+        "backend/tests/test_warlock_fiend_2014_endgame.py",
+        "frontend/browser-eldritch-master-2014.test.cjs"
+      ]
     }
   ]
 }

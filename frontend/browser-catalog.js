@@ -23,6 +23,7 @@
     monk: { id: "way-open-hand", name: "Way of the Open Hand", unlockLevel: 3 },
     paladin: { id: "oath-devotion", name: "Oath of Devotion", unlockLevel: 3 },
     sorcerer: { id: "draconic-bloodline", name: "Draconic Bloodline", unlockLevel: 1 },
+    warlock: { id: "fiend-patron", name: "Fiend Patron", unlockLevel: 1 },
   };
 
   function readyHeroIndex(ruleset = "2024") {

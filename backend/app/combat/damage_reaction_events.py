@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.damage_reaction_dispatch import resolve_damage_reaction_attack
+from app.combat.source_zero_hp_triggers import resolve_source_zero_hp_triggers
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -67,15 +68,18 @@ def resolve_damage_event_reactions(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve immediate legal reactions after one completed creature-damage event."""
     try:
-        applied_damage = applied_damage_total(triggering_event)
-        if applied_damage <= 0:
-            return [], sequence
         if triggering_event.actor_id != source.combatant_id:
             raise ValueError("Damage reaction source must match the triggering event actor.")
+        source_events, sequence = resolve_source_zero_hp_triggers(
+            sequence, round_number, source, triggering_event, setup,
+        )
+        applied_damage = applied_damage_total(triggering_event)
+        if applied_damage <= 0:
+            return source_events, sequence
 
         reactor = _member_by_id(setup, triggering_event.target_id)
         if reactor is None or reactor.combatant_id == source.combatant_id:
-            return [], sequence
+            return source_events, sequence
 
         reaction = resolve_damage_reaction_attack(
             sequence,
@@ -88,9 +92,9 @@ def resolve_damage_event_reactions(
             turn_key=turn_key,
         )
         if reaction is None:
-            return [], sequence
+            return source_events, sequence
 
-        events = [reaction]
+        events = [*source_events, reaction]
         nested, next_sequence = resolve_damage_event_reactions(
             sequence + 1,
             round_number,

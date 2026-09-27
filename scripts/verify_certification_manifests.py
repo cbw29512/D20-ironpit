@@ -34,10 +34,13 @@ def _mechanics(template: Any) -> list[str]:
         *(f"resource:{item.id}" for item in template.resources),
         *(f"trait:{item.value}" for item in template.combat_traits),
         *(f"saving-throw-action:{item.id}" for item in template.saving_throw_actions),
+        *(f"hp-threshold-condition:{item.id}" for item in template.hp_threshold_condition_actions),
+        *(f"hp-threshold-instant-death:{item.id}" for item in template.hp_threshold_instant_death_actions),
         *(f"spell-save-action:{item.id}" for item in template.spell_save_actions),
         *(f"spell-attack-action:{item.id}" for item in template.spell_attack_actions),
         *(f"auto-hit-spell-action:{item.id}" for item in template.auto_hit_spell_actions),
         *(f"persistent-spell-attack:{item.id}" for item in template.persistent_spell_attack_actions),
+        *(f"targeted-concentration-damage:{item.id}" for item in template.targeted_concentration_damage_actions),
         *(f"defensive-spell-action:{item.id}" for item in template.defensive_spell_actions),
         *(f"healing-action:{item.id}" for item in template.healing_actions),
         *(f"condition-removal-action:{item.id}" for item in template.condition_removal_actions),
@@ -70,6 +73,14 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.update(rule.source_id for rule in features.failed_d20_test_override_grants)
     if features.resource_backed_d20_bonus_dice:
         mechanics.update(rule.source_id for rule in features.resource_backed_d20_bonus_dice)
+    if features.source_reduces_hostile_to_zero_hp_temporary_hp:
+        mechanics.add(features.source_reduces_hostile_to_zero_hp_temporary_hp.source_id)
+    if features.selectable_damage_resistance:
+        mechanics.add(features.selectable_damage_resistance.source_id)
+    if features.resource_backed_on_hit_exile:
+        mechanics.add(features.resource_backed_on_hit_exile.source_id)
+    if features.delayed_resource_refill:
+        mechanics.add(features.delayed_resource_refill.source_id)
     if features.deferred_save_effect:
         mechanics.add(features.deferred_save_effect.source_id)
     if features.athletics_advantage:

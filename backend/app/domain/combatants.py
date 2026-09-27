@@ -4,10 +4,11 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
+from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HpThresholdConditionAction, HpThresholdInstantDeathAction, SavingThrowAction
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.character_builds import AbilityScores
+from app.domain.damage_sources import ConditionalDamageDefense
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.d20_bonus_dice import D20BonusDieAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
@@ -28,6 +29,7 @@ from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier,
 from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import (
@@ -78,6 +80,8 @@ class CombatantTemplate(BaseModel):
     attack_action: AttackActionDefinition | None = None
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    hp_threshold_condition_actions: list[HpThresholdConditionAction] = Field(default_factory=list)
+    hp_threshold_instant_death_actions: list[HpThresholdInstantDeathAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
     auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list)
@@ -94,6 +98,7 @@ class CombatantTemplate(BaseModel):
     spell_range_modifiers: list[ResourceBackedSpellRangeModifier] = Field(default_factory=list)
     spell_duration_modifiers: list[ResourceBackedSpellDurationModifier] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
+    targeted_concentration_damage_actions: list[TargetedConcentrationDamageAction] = Field(default_factory=list)
     replacement_form_actions: list[ReplacementFormAction] = Field(default_factory=list)
     concentration_repeat_save_actions: list[ConcentrationRepeatSaveAction] = Field(default_factory=list)
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
@@ -116,6 +121,7 @@ class CombatantTemplate(BaseModel):
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
+    conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
     wearing_heavy_armor: bool = False
     wearing_metal_armor: bool = False

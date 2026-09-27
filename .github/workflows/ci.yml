@@ -43,6 +43,10 @@ jobs:
           name: canonical-heroes-${{ github.sha }}
           path: frontend/browser-heroes.js
           retention-days: 1
+      - name: Generate browser monster artifacts required by manifest verification
+        run: |
+          python scripts/export_browser_monsters.py
+          python scripts/export_browser_monsters_2014.py
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
       - name: Upload certification manifest candidates
@@ -135,9 +139,13 @@ jobs:
           grep -q 'browser-condition-rules.js' index.html
           grep -q 'browser-action-economy.js' index.html
           grep -q 'browser-ability-hooks.js' index.html
+          grep -q 'browser-exile.js' index.html
+          grep -q 'browser-delayed-resource-refill.js' index.html
           grep -q 'browser-recharge.js' index.html
           grep -q 'browser-main-action-profiles.js' index.html
           grep -q 'browser-main-action-selection.js' index.html
+          grep -q 'browser-hp-threshold-instant-death.js' index.html
+          grep -q 'browser-hp-threshold-condition.js' index.html
           grep -q 'browser-main-action-providers.js' index.html
           grep -q 'browser-attack-outcome.js' index.html
           grep -q 'browser-attack-outcome-hook-installation.js' index.html
@@ -153,6 +161,7 @@ jobs:
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
           grep -q 'browser-timed-self-buffs.js' index.html
+          grep -q 'browser-selectable-damage-resistance.js' index.html
           grep -q 'browser-precombat-buffs.js' index.html
           grep -q 'browser-timed-emanations.js' index.html
           grep -q 'browser-initiative-resource-refill.js' index.html
@@ -168,6 +177,7 @@ jobs:
           grep -q 'browser-source-bound-effects.js' index.html
           grep -q 'browser-ongoing-spell-control.js' index.html
           grep -q 'browser-modifiers.js' index.html
+          grep -q 'browser-damage-defense-rules.js' index.html
           grep -q 'browser-concentration.js' index.html
           grep -q 'browser-spell-effects.js' index.html
           grep -q 'browser-spell-modifiers.js' index.html
@@ -230,9 +240,13 @@ jobs:
           grep -q 'browser-condition-rules.js' frontend/index.html
           grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-ability-hooks.js' frontend/index.html
+          grep -q 'browser-exile.js' frontend/index.html
+          grep -q 'browser-delayed-resource-refill.js' frontend/index.html
           grep -q 'browser-recharge.js' frontend/index.html
           grep -q 'browser-main-action-profiles.js' frontend/index.html
           grep -q 'browser-main-action-selection.js' frontend/index.html
+          grep -q 'browser-hp-threshold-instant-death.js' frontend/index.html
+          grep -q 'browser-hp-threshold-condition.js' frontend/index.html
           grep -q 'browser-main-action-providers.js' frontend/index.html
           grep -q 'browser-attack-outcome.js' frontend/index.html
           grep -q 'browser-attack-outcome-hook-installation.js' frontend/index.html
@@ -249,6 +263,7 @@ jobs:
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
+          grep -q 'browser-selectable-damage-resistance.js' frontend/index.html
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
           grep -q 'browser-initiative-resource-refill.js' frontend/index.html
@@ -268,6 +283,7 @@ jobs:
           grep -q 'browser-source-bound-effects.js' frontend/index.html
           grep -q 'browser-ongoing-spell-control.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
+          grep -q 'browser-damage-defense-rules.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-concentration.js' frontend/index.html
           grep -q 'browser-spell-effects.js' frontend/index.html
@@ -400,6 +416,11 @@ jobs:
           node frontend/browser-parry-effective-ac.test.cjs
           node frontend/browser-reaction-movement.test.cjs
           node frontend/browser-damage-triggered-reactions.test.cjs
+          node frontend/browser-fiendish-resilience-2014.test.cjs
+          node frontend/browser-exile-2014.test.cjs
+          node frontend/browser-eldritch-master-2014.test.cjs
+          node frontend/browser-power-word-stun-2014.test.cjs
+          node frontend/browser-power-word-kill-2014.test.cjs
           node frontend/browser-spell-area.test.cjs
           node frontend/browser-spell-cast-effects.test.cjs
           node frontend/browser-spell-resolution.test.cjs

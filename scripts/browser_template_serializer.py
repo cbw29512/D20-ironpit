@@ -62,6 +62,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
             "reach": weapon.reach_ft, "animation": weapon.animation,
         }
+        if attack.damage_source_qualifiers:
+            row["damageSourceQualifiers"] = [_value(item) for item in attack.damage_source_qualifiers]
         if attack.attack_ability is not None:
             row["attackAbility"] = attack.attack_ability
         if weapon.normal_range_ft is not None:
@@ -291,6 +293,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
         "range": action.range_ft, "attackBonus": action.attack_bonus,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
         "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
         "animation": action.animation,
     }
@@ -351,6 +354,18 @@ def defense_row(action: Any) -> dict[str, Any]:
     if action.source:
         row["source"] = action.source
     return row
+
+
+def targeted_concentration_damage_row(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "diceCount": action.dice_count, "diceSize": action.dice_size,
+        "damageType": action.damage_type,
+        "durationRoundsBySlot": dict(action.duration_rounds_by_slot),
+        "retargetAfterTargetZero": action.retarget_after_target_zero,
+        "priority": action.priority, "animation": action.animation, "source": action.source,
+    }
 
 
 def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
@@ -481,8 +496,22 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["failed_d20_test_override_grants"] = [
             item.model_dump() for item in features.failed_d20_test_override_grants
         ]
+    if features.resource_backed_d20_bonus_dice:
+        row["resource_backed_d20_bonus_dice"] = [
+            item.model_dump() for item in features.resource_backed_d20_bonus_dice
+        ]
     if features.deferred_save_effect:
         row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
+    if features.source_reduces_hostile_to_zero_hp_temporary_hp:
+        row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
+            features.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
+        )
+    if features.selectable_damage_resistance:
+        row["selectable_damage_resistance"] = features.selectable_damage_resistance.model_dump(mode="json")
+    if features.resource_backed_on_hit_exile:
+        row["resource_backed_on_hit_exile"] = features.resource_backed_on_hit_exile.model_dump(mode="json")
+    if features.delayed_resource_refill:
+        row["delayed_resource_refill"] = features.delayed_resource_refill.model_dump(mode="json")
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.once_per_turn_weapon_hit_damage_rider:
@@ -538,10 +567,39 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
+            "hp_threshold_condition_actions": [
+                {
+                    "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                    "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                    "conditionId": item.condition_id, "repeatSaveAbility": item.repeat_save_ability,
+                    "repeatSaveDc": item.repeat_save_dc, "repeatSaveTiming": item.repeat_save_timing,
+                    "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                    "magicalEffect": item.magical_effect, "animation": item.animation,
+                }
+                for item in template.hp_threshold_condition_actions
+            ],
+            "hp_threshold_instant_death_actions": [
+                {
+                    "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                    "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                    "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                    "magicalEffect": item.magical_effect, "animation": item.animation,
+                }
+                for item in template.hp_threshold_instant_death_actions
+            ],
             "traits": sorted(traits), "resources": {item.id: item.max_uses for item in template.resources},
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
+            "conditional_damage_defenses": [
+                {
+                    "id": item.id, "kind": _value(item.kind),
+                    "damageTypes": [_value(kind) for kind in item.damage_types],
+                    "requiredSourceQualifiers": [_value(kind) for kind in item.required_source_qualifiers],
+                    "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
+                }
+                for item in template.conditional_damage_defenses
+            ],
             "condition_immunities": list(template.condition_immunities),
             "wearing_metal_armor": template.wearing_metal_armor,
             "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
@@ -605,6 +663,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
             row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+        if template.targeted_concentration_damage_actions:
+            row["targeted_concentration_damage_actions"] = [
+                targeted_concentration_damage_row(item) for item in template.targeted_concentration_damage_actions
+            ]
         if template.auto_hit_spell_actions:
             row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
         if template.spell_cast_timed_resistances:

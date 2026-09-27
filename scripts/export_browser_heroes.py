@@ -46,6 +46,7 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
         "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
         "reach": weapon.reach_ft, "animation": weapon.animation,
     }
+    if attack.damage_source_qualifiers: row["damageSourceQualifiers"] = [_value(item) for item in attack.damage_source_qualifiers]
     if weapon.mastery_property is not None: row["masteryProperty"] = weapon.mastery_property
     if weapon.light: row["light"] = True
     if attack.damage_die_minimum is not None: row["damageDieMinimum"] = attack.damage_die_minimum
@@ -70,10 +71,16 @@ def _save(action: Any) -> dict[str, Any]:
         "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
         "range": action.range_ft, "targetMaxSize": _value(action.target_max_size) if action.target_max_size else None,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
-        "damageBonus": action.damage_bonus, "damageType": action.damage_type, "successDamage": action.success_damage,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "successDamage": action.success_damage,
         "grappleEscapeDc": action.grapple_escape_dc, "restrainsWhileGrappled": action.restrains_while_grappled,
         "magicalEffect": action.magical_effect, "animation": action.animation,
     }
+    if action.area is not None:
+        row["area"] = action.area.model_dump(mode="json")
+    if action.resource_id:
+        row["resourceId"] = action.resource_id
+        row["resourceCost"] = action.resource_cost
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
     if action.damage_components:
@@ -132,6 +139,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
            "attackKind": action.attack_kind, "range": action.range_ft, "attackBonus": action.attack_bonus,
            "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
            "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+           "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
            "advantageIfTargetWearingMetalArmor": action.advantage_if_target_wearing_metal_armor,
            "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
            "onHitTimedEffects": [
@@ -227,6 +235,18 @@ def _healing(action: Any) -> dict[str, Any]:
     except Exception:
         logger.exception("Failed to serialize healing action %s.", action.id)
         raise
+
+
+def _targeted_concentration_damage(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "diceCount": action.dice_count, "diceSize": action.dice_size,
+        "damageType": action.damage_type,
+        "durationRoundsBySlot": dict(action.duration_rounds_by_slot),
+        "retargetAfterTargetZero": action.retarget_after_target_zero,
+        "priority": action.priority, "animation": action.animation, "source": action.source,
+    }
 
 
 def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
@@ -391,6 +411,26 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "initiative_bonus": template.initiative_bonus, "saving_throw_bonuses": template.saving_throw_bonuses,
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
+        "hp_threshold_condition_actions": [
+            {
+                "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                "conditionId": item.condition_id, "repeatSaveAbility": item.repeat_save_ability,
+                "repeatSaveDc": item.repeat_save_dc, "repeatSaveTiming": item.repeat_save_timing,
+                "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                "magicalEffect": item.magical_effect, "animation": item.animation,
+            }
+            for item in template.hp_threshold_condition_actions
+        ],
+        "hp_threshold_instant_death_actions": [
+            {
+                "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                "magicalEffect": item.magical_effect, "animation": item.animation,
+            }
+            for item in template.hp_threshold_instant_death_actions
+        ],
         "healingActions": [_healing(item) for item in template.healing_actions],
         "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
         "damage_resistances": [item.value for item in template.damage_resistances],
@@ -457,8 +497,32 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "critical_move_fraction": progression.critical_move_fraction, "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
-                   "figure_form": template.visual.body_style, "role": template.archetype.lower()}, "source": template.source,
+                   "figure_form": template.visual.body_style, "role": template.archetype.lower()},
+        "selectable_damage_resistance": (
+            template.progression_features.selectable_damage_resistance.model_dump(mode="json")
+            if template.progression_features.selectable_damage_resistance else None
+        ),
+        "resource_backed_on_hit_exile": (
+            template.progression_features.resource_backed_on_hit_exile.model_dump(mode="json")
+            if template.progression_features.resource_backed_on_hit_exile else None
+        ),
+        "conditional_damage_defenses": [
+            {
+                "id": item.id, "kind": _value(item.kind),
+                "damageTypes": [_value(kind) for kind in item.damage_types],
+                "requiredSourceQualifiers": [_value(kind) for kind in item.required_source_qualifiers],
+                "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
+            }
+            for item in template.conditional_damage_defenses
+        ],
+        "source": template.source,
     }
+    if progression.source_reduces_hostile_to_zero_hp_temporary_hp is not None:
+        row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
+            progression.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
+        )
+    if progression.delayed_resource_refill is not None:
+        row["delayed_resource_refill"] = progression.delayed_resource_refill.model_dump(mode="json")
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
@@ -537,6 +601,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+    if template.targeted_concentration_damage_actions:
+        row["targeted_concentration_damage_actions"] = [
+            _targeted_concentration_damage(item) for item in template.targeted_concentration_damage_actions
+        ]
     if template.auto_hit_spell_actions: row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
     if template.persistent_spell_attack_actions:
         row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]

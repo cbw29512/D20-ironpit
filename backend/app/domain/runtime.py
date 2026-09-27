@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.debuffs import DebuffCounter
+from app.domain.damage_sources import ConditionalDamageDefense
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
@@ -30,6 +31,12 @@ class DeferredEffectState(BaseModel):
     source_id: str
     target_id: str
     armed_round: int = Field(ge=1)
+
+
+class DelayedResourceRefillState(BaseModel):
+    source_id: str
+    started_round: int = Field(ge=1)
+    completes_round: int = Field(ge=1)
 
 
 class TimedEffect(BaseModel):
@@ -63,6 +70,12 @@ class TimedEffect(BaseModel):
     # clear, including source qualifiers and conditional movement costs.
     owned_debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     owned_movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
+    removed_from_battlefield: bool = False
+    return_damage_dice_count: int = Field(default=0, ge=0)
+    return_damage_dice_size: int = Field(default=0, ge=0)
+    return_damage_bonus: int = 0
+    return_damage_type: DamageType | None = None
+    return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
@@ -115,6 +128,7 @@ class CombatantState(BaseModel):
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
+    delayed_resource_refills: list[DelayedResourceRefillState] = Field(default_factory=list)
     persistent_spell_attacks: list[PersistentSpellAttackState] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     targeting_gate_immunity_keys: list[str] = Field(default_factory=list)
@@ -127,6 +141,7 @@ class CombatantState(BaseModel):
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
+    active_conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
 

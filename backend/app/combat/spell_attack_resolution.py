@@ -1,10 +1,7 @@
 from __future__ import annotations
-
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
-
 import logging
-
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
@@ -28,7 +25,7 @@ from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spellcasting import mark_slot_spell_cast
-from app.combat.spell_attack_helpers import roll_spell_attack_damage, slot_resource
+from app.combat.spell_attack_helpers import cast_slot_resource, roll_spell_attack_damage
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
@@ -37,19 +34,19 @@ from app.domain.events import BattleEvent
 from app.domain.modifiers import ModifierKind
 from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
 from app.domain.spells import SpellAttackAction
-
 logger = logging.getLogger(__name__)
-
-
-
 def resolve_spell_attack(
     sequence: int, round_number: int, caster: EncounterCombatant, target: EncounterCombatant,
     spell: SpellAttackAction, setup: EncounterSetup, turn_key: str, dice,
     *, distance_override_ft: int | None = None,
     range_modifier: ResourceBackedSpellRangeModifier | None = None,
+    cast_slot_level: int | None = None,
+    spend_cast_costs: bool = True,
 ) -> BattleEvent:
     try:
-        if spell.action_cost == "reaction" or not is_available(caster.state, spell.action_cost):
+        if spell.action_cost == "reaction":
+            raise ValueError(f"{spell.name} cannot be cast in this action window.")
+        if spend_cast_costs and not is_available(caster.state, spell.action_cost):
             raise ValueError(f"{spell.name} cannot be cast in this action window.")
         if target.side == caster.side or target.state.is_dead or not target.state.is_alive:
             raise ValueError(f"{spell.name} requires a living enemy target.")
@@ -57,16 +54,25 @@ def resolve_spell_attack(
         allowed_range = spell.range_ft * (range_modifier.range_multiplier if range_modifier is not None else 1)
         if distance > allowed_range:
             raise ValueError(f"{spell.name} target is out of range.")
-        resource = slot_resource(caster, spell, turn_key)
-        if spell.level > 0 and resource is None:
-            raise ValueError(f"No level {spell.level} spell slot remains for {spell.name}.")
+        resource = (
+            cast_slot_resource(caster, spell, turn_key, cast_slot_level)
+            if spend_cast_costs and spell.level > 0 else None
+        )
+        if spend_cast_costs and spell.level > 0 and resource is None:
+            requested = cast_slot_level if cast_slot_level is not None else spell.level
+            raise ValueError(f"No level {requested} spell slot remains for {spell.name}.")
         ward = check_targeting_ward(caster, target, dice)
         if ward is not None and not ward.succeeded:
             if resource is not None:
                 mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
-            spend(caster.state, spell.action_cost)
-            range_remaining = spend_spell_range_modifier(caster.state, range_modifier)
-            apply_spell_cast_timed_resistance(caster, spell, round_number)
+            if spend_cast_costs:
+                spend(caster.state, spell.action_cost)
+            range_remaining = (
+                spend_spell_range_modifier(caster.state, range_modifier)
+                if spend_cast_costs else None
+            )
+            if spend_cast_costs:
+                apply_spell_cast_timed_resistance(caster, spell, round_number)
             event = blocked_targeting_event(sequence, round_number, caster, target, spell.name, ward)
             event.resource_remaining = resource.current_uses if resource is not None else range_remaining
             if range_modifier is not None:
@@ -104,9 +110,14 @@ def resolve_spell_attack(
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
-        spend(caster.state, spell.action_cost)
-        range_remaining = spend_spell_range_modifier(caster.state, range_modifier)
-        apply_spell_cast_timed_resistance(caster, spell, round_number)
+        if spend_cast_costs:
+            spend(caster.state, spell.action_cost)
+        range_remaining = (
+            spend_spell_range_modifier(caster.state, range_modifier)
+            if spend_cast_costs else None
+        )
+        if spend_cast_costs:
+            apply_spell_cast_timed_resistance(caster, spell, round_number)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
@@ -115,7 +126,9 @@ def resolve_spell_attack(
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
         damage_roll = None; damage_components = []; applied_conditions: list[str] = []
         if hit:
-            damage_roll, rolled = roll_spell_attack_damage(spell, critical, dice)
+            damage_roll, rolled = roll_spell_attack_damage(
+                spell, critical, dice, attacker=caster.state, target_event_id=target.combatant_id,
+            )
             applied_total, damage_components = apply_damage_defenses(target.state, rolled); damage_roll.total = applied_total
             affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
             apply_damage(target.state, applied_total, critical=critical,

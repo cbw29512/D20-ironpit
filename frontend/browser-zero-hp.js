@@ -73,6 +73,14 @@
     return outcome;
   }
 
+  function applyInstantDeath(state, affectedStates = []) {
+    if (state.is_dead || !state.is_alive) return "unchanged";
+    if (Z()?.consumeInstantDeath(state)) return "zero_hp_replacement";
+    markDead(state);
+    if (state.concentration && C()) C().endIfIncapacitated(state, affectedStates);
+    return "dead";
+  }
+
   function reduceToZero(state, affectedStates = []) {
     try {
       if (state.is_dead || state.current_hp === 0) return "unchanged";
@@ -131,5 +139,5 @@
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, reduceToZero, stabilizeAtZero };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyInstantDeath, reduceToZero, stabilizeAtZero };
 })();

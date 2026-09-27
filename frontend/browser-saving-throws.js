@@ -64,6 +64,11 @@
       const bonus = baseBonus + (modifiers.savingThrowFlat?.(state) || 0);
       const baseRoll = R().d20(bonus, saveMode(state, ability, context));
       let roll = modifiers.applyD20Bonus?.(state, "saving-throw-bonus-die", baseRoll) || baseRoll; if ((state.active_d20_bonus_dice || []).length) { if (!Number.isInteger(context.roundNumber)) throw new Error("Active d20 bonus die requires saving-throw round context."); roll = DB().applyIfUseful(state, "saving_throw", roll, dc, context.roundNumber).roll; }
+      const resourceBacked = state.template.resource_backed_d20_bonus_dice || [];
+      if (resourceBacked.some((grant) => (grant.test_kinds || []).includes("saving_throw"))) {
+        if (!DB()) throw new Error("Resource-backed d20 bonus runtime is not loaded for saving throws.");
+        roll = DB().applyResourceBackedIfUseful(state, "saving_throw", roll, dc).roll;
+      }
       DF().consumeSavingThrowModifiers?.(state);
       if (roll.total < dc) {
         const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);

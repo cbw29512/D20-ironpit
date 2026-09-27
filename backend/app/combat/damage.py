@@ -9,7 +9,7 @@ from app.combat.conditional_damage import active_replacement_damage, conditional
 from app.combat.dice import DiceProvider
 from app.combat.divine_smite_2014 import divine_smite_bonus_damage
 from app.combat.frenzy import frenzy_bonus_damage
-from app.combat.modifier_stack import bonus_damage_modifiers
+from app.combat.modifier_stack import attack_damage_source_qualifiers, bonus_damage_modifiers
 from app.combat.once_per_turn_hit_damage import once_per_turn_weapon_hit_bonus_damages
 from app.combat.savage_attacker import roll_weapon_component
 from app.combat.sneak_attack import sneak_attack_bonus_damage
@@ -142,6 +142,11 @@ def resolve_weapon_damage(
                 critical,
             ))
         _append_bonus_component(components, dice, bonus_damage, critical=critical)
+        qualifiers = sorted(attack_damage_source_qualifiers(attacker, attack), key=lambda item: item.value)
+        components = [
+            component.model_copy(update={"source_qualifiers": qualifiers})
+            for component in components
+        ]
         return aggregate_damage_components(components), components
     except Exception as exc:
         logger.exception("Weapon damage resolution failed for %s.", attacker.template.name)

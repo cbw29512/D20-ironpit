@@ -16,6 +16,7 @@ from app.combat.encounter_turn_support import finish_turn, resolve_area_save_tur
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
+from app.combat.hp_threshold_turn import resolve_hp_threshold_turn
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
@@ -29,14 +30,13 @@ from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.tactical_shift import resolve_tactical_shift
+from app.combat.targeted_concentration_damage import resolve_targeted_concentration_damage
 from app.combat.timed_effect_control import suppresses_voluntary_turn
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-
 logger = logging.getLogger(__name__)
-
 
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
@@ -64,9 +64,7 @@ def resolve_combat_turn(
         events.extend(support_events)
         if is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        activation_events, sequence = resolve_feature_activation_phase(
-            sequence, round_number, attacker, setup, dice, turn_key,
-        )
+        activation_events, sequence = resolve_feature_activation_phase(sequence, round_number, attacker, setup, dice, turn_key)
         events.extend(activation_events)
         if should_use_second_wind(attacker.state):
             events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id))
@@ -84,6 +82,13 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
+
+        targeted_damage_event = resolve_targeted_concentration_damage(
+            sequence, round_number, attacker, setup, turn_key,
+        )
+        if targeted_damage_event is not None:
+            events.append(targeted_damage_event)
+            sequence += 1
 
         persistent_spell_event = resolve_persistent_spell_attack(
             sequence, round_number, attacker, setup, turn_key, dice,
@@ -117,9 +122,7 @@ def resolve_combat_turn(
         if charged or attacker.state.is_dead or attacker.state.is_unconscious:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-        movement_events, sequence = move_to_enable_offense(
-            sequence, round_number, attacker, setup, turn_key, dice,
-        )
+        movement_events, sequence = move_to_enable_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(movement_events)
         sync_paladin_auras_2014(setup)
         sync_friendly_save_auras(setup)
@@ -133,6 +136,11 @@ def resolve_combat_turn(
         presence = resolve_intimidating_presence(sequence, round_number, attacker, target, dice)
         if presence is not None:
             events.append(presence); sequence += 1
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        threshold_event, sequence = resolve_hp_threshold_turn(sequence, round_number, attacker, setup)
+        if threshold_event is not None:
+            events.append(threshold_event)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         deferred = resolve_deferred_save_effect(sequence, round_number, attacker, setup, dice)
@@ -177,8 +185,7 @@ def resolve_combat_turn(
             feature = opening_feature_id(round_number, attacker, setup) or ("pack-tactics" if pack else None)
             more, sequence = resolve_standard_attack_action(
                 sequence, round_number, attacker, attack_target, attack, distance, dice, setup, turn_key,
-                advantage_sources=1 if pack else 0, feature_id=feature,
-            )
+                advantage_sources=1 if pack else 0, feature_id=feature)
             events.extend(more)
         elif is_available(attacker.state, "action"):
             events.append(resolve_dodge_action(sequence, round_number, attacker))

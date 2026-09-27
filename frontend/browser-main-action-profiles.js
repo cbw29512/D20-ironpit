@@ -10,6 +10,8 @@
     ATTACK_ACTION: "attack-action",
     AREA_SAVE: "area-save",
     SAVE_ACTION: "save-action",
+    HP_THRESHOLD_INSTANT_DEATH: "hp-threshold-instant-death",
+    HP_THRESHOLD_CONDITION: "hp-threshold-condition",
     STANDARD_ATTACK: "standard-attack",
     DODGE: "dodge",
   });
@@ -25,6 +27,8 @@
       CATEGORIES.ATTACK_ACTION,
       CATEGORIES.AREA_SAVE,
       CATEGORIES.SAVE_ACTION,
+      CATEGORIES.HP_THRESHOLD_INSTANT_DEATH,
+      CATEGORIES.HP_THRESHOLD_CONDITION,
       CATEGORIES.STANDARD_ATTACK,
       CATEGORIES.DODGE,
     ]),

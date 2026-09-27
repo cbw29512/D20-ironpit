@@ -23,27 +23,35 @@
     return state.resources[option.resourceId];
   }
 
-  function slotResource(caster, spell, turnKey) {
+  function slotResource(caster, spell, turnKey, castSlotLevel = null) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
-    const id = `spell-slot-${spell.level}`;
+    const level = castSlotLevel ?? spell.level;
+    if (!Number.isInteger(level) || level < spell.level || level > 9) {
+      throw new Error(`Illegal slot level ${level} for ${spell.name}.`);
+    }
+    const id = `spell-slot-${level}`;
     return (caster.state.resources?.[id] || 0) > 0 ? id : null;
   }
 
   function resolve(sequence, round, caster, target, spell, setup, turnKey, options = {}) {
-    if (spell.actionCost === "reaction" || !E().available(caster.state, spell.actionCost)) throw new Error(`${spell.name} cannot be cast in this action window.`);
+    const spendCastCosts = options.spendCastCosts !== false;
+    if (spell.actionCost === "reaction" || (spendCastCosts && !E().available(caster.state, spell.actionCost))) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
     const rangeModifier = options.rangeModifier || null;
     const allowedRange = spell.range * (rangeModifier?.rangeMultiplier || 1);
     if (distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
-    const resourceId = slotResource(caster, spell, turnKey);
-    if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
+    const castSlotLevel = options.castSlotLevel ?? null;
+    const resourceId = spendCastCosts ? slotResource(caster, spell, turnKey, castSlotLevel) : null;
+    if (spendCastCosts && spell.level > 0 && !resourceId) {
+      throw new Error(`No level ${castSlotLevel ?? spell.level} spell slot remains for ${spell.name}.`);
+    }
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) {
       if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
-      E().spend(caster.state, spell.actionCost);
-      const rangeRemaining = spendRangeModifier(caster.state, rangeModifier);
-      CE()?.applyTimedResistance(caster, spell, round);
+      if (spendCastCosts) E().spend(caster.state, spell.actionCost);
+      const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
+      if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
       const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
       event.resource_remaining = resourceId ? caster.state.resources[resourceId] : rangeRemaining;
       if (rangeModifier) event.description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
@@ -65,9 +73,9 @@
     T()?.consumeNextAttackDisadvantage(caster.state);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
-    E().spend(caster.state, spell.actionCost);
-    const rangeRemaining = spendRangeModifier(caster.state, rangeModifier);
-    CE()?.applyTimedResistance(caster, spell, round);
+    if (spendCastCosts) E().spend(caster.state, spell.actionCost);
+    const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
+    if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
@@ -76,14 +84,45 @@
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], appliedConditions = [];
     if (hit) {
-      const count = spell.damageDiceCount * (critical ? 2 : 1), rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
+      const count = spell.damageDiceCount * (critical ? 2 : 1);
+      const rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
-      const applied = spell.damageType ? A().adjustedDamage(target.state, raw, spell.damageType) : 0;
-      damageRoll = { notation: `${count}d${spell.damageDiceSize}+${spell.damageBonus || 0}`, rolls, modifier: spell.damageBonus || 0, total: applied };
-      if (spell.damageType) damageComponents = [{ source: spell.name, notation: damageRoll.notation, rolls: [...rolls], modifier: spell.damageBonus || 0,
-        damage_type: spell.damageType, total: raw, applied_total: applied }];
+      const rolledComponents = spell.damageType ? [{
+        source: spell.name,
+        notation: `${count}d${spell.damageDiceSize}+${spell.damageBonus || 0}`,
+        rolls: [...rolls],
+        modifier: spell.damageBonus || 0,
+        damage_type: spell.damageType,
+        total: raw,
+      }] : [];
+      for (const modifier of M().bonusDamage(caster.state, target.combatant_id)) {
+        const riderCount = modifier.dice_count * (critical ? 2 : 1);
+        const riderRolls = window.IRON_PIT_DICE.rollMany(riderCount, modifier.dice_size);
+        rolledComponents.push({
+          source: modifier.source_name || modifier.source_effect_id,
+          notation: `${riderCount}d${modifier.dice_size}+0`,
+          rolls: riderRolls,
+          modifier: 0,
+          damage_type: modifier.damage_type,
+          total: riderRolls.reduce((sum, value) => sum + value, 0),
+        });
+      }
+      damageComponents = rolledComponents.map((part) => ({
+        ...part,
+        applied_total: A().adjustedDamage(target.state, part.total, part.damage_type),
+      }));
+      const applied = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
+      damageRoll = damageComponents.length ? {
+        notation: damageComponents.map((part) => part.notation).join(" + "),
+        rolls: damageComponents.flatMap((part) => part.rolls),
+        modifier: damageComponents.reduce((sum, part) => sum + (part.modifier || 0), 0),
+        total: applied,
+      } : null;
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
-      A().applyDamage(target.state, applied, critical, spell.damageType && applied > 0 ? [spell.damageType] : [], states);
+      const appliedTypes = [...new Set(
+        damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
+      )];
+      A().applyDamage(target.state, applied, critical, appliedTypes, states);
       if (target.state.is_alive && !target.state.is_dead) {
         (spell.onHitModifierEffects || []).forEach((effect, index) => {
           M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));

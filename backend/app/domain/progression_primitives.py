@@ -5,6 +5,8 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.character_builds import AbilityName
+from app.domain.damage_sources import DamageSourceQualifier
+from app.domain.weapons_base import DamageType
 
 
 class AbilityCheckMinimum(BaseModel):
@@ -101,3 +103,51 @@ class DeferredSaveEffect(BaseModel):
     success_damage_dice_size: int = Field(default=10, ge=2, le=100)
     success_damage_type: str | None = None
     max_active_targets: int = Field(default=1, ge=1, le=20)
+
+
+class SourceReducesHostileToZeroHpTemporaryHp(BaseModel):
+    """Grant source-owned Temporary HP after this source reduces a hostile creature to 0 HP."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    ability: AbilityName
+    flat_bonus: int = 0
+    per_level: int = Field(default=0, ge=0)
+    minimum: int = Field(default=1, ge=0)
+
+
+class SelectableDamageResistance(BaseModel):
+    """Choose one legal damage type at a preparation boundary and resist matching damage."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    allowed_damage_types: list[DamageType] = Field(min_length=1)
+    forbidden_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
+    priority: int = 0
+
+
+class ResourceBackedOnHitExile(BaseModel):
+    """On a qualifying hit, spend a finite resource to remove the target until a source-relative return point."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    resource_id: str = Field(min_length=1)
+    resource_cost: int = Field(default=1, ge=1)
+    expiry_timing: str = "source_turn_end"
+    duration_rounds: int = Field(default=1, ge=1)
+    return_damage_dice_count: int = Field(default=0, ge=0)
+    return_damage_dice_size: int = Field(default=0, ge=0)
+    return_damage_bonus: int = 0
+    return_damage_type: DamageType | None = None
+    return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
+
+
+class DelayedResourceRefill(BaseModel):
+    """Automatically arm a source-owned timer when declared resources are below maximum."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    resource_ids: list[str] = Field(min_length=1)
+    use_resource_id: str = Field(min_length=1)
+    use_resource_cost: int = Field(default=1, ge=1)
+    delay_rounds: int = Field(ge=1)

@@ -3,6 +3,7 @@
 
   const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
   const T = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS;
+  const R = () => window.IRON_PIT_BROWSER_SELECTABLE_DAMAGE_RESISTANCE;
 
   function timedChoice(member) {
     try {
@@ -37,6 +38,13 @@
         level: 0,
         value: timed,
       });
+      const resistance = member.state.template.selectable_damage_resistance;
+      if (resistance) candidates.push({
+        kind: "damage-resistance",
+        priority: resistance.priority || 0,
+        level: 0,
+        value: resistance,
+      });
       candidates.sort((a, b) =>
         b.priority - a.priority || b.level - a.level || (a.kind === "spell" ? -1 : 1));
       return candidates[0] || null;
@@ -56,6 +64,11 @@
         const targets = P().selectTargets(member, setup, spell, slotLevel);
         const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
         return P().resolve(sequence, member, targets, spell, slotLevel, states);
+      }
+      if (choice.kind === "damage-resistance") {
+        const event = R()?.resolve(sequence, member, setup) || null;
+        if (!event) throw new Error("Opening damage resistance choice could not resolve.");
+        return event;
       }
       const action = choice.value;
       member.state.opening_buff_id = action.id;

@@ -12,6 +12,8 @@
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const AW = () => window.IRON_PIT_BROWSER_AREA_WEAPON_ATTACKS;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const HK = () => window.IRON_PIT_BROWSER_HP_THRESHOLD_INSTANT_DEATH;
+  const HT = () => window.IRON_PIT_BROWSER_HP_THRESHOLD_CONDITION;
   const U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const DG = () => window.IRON_PIT_BROWSER_DODGE;
   const ST = () => window.IRON_PIT_BROWSER_STATE;
@@ -155,6 +157,9 @@
         return DR() ? DR().chain(next, round, member, event, setup) : { events: [event], sequence: next };
       },
     });
+
+    HK()?.installProvider();
+    HT()?.installProvider();
 
     register({
       id: "standard-attack", category: C().STANDARD_ATTACK, rulesets: BOTH,

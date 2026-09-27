@@ -24,6 +24,10 @@ window.IRON_PIT_BROWSER_CONDITION_RULES = {
 };
 window.IRON_PIT_BROWSER_STATE = {
   distance: (left, right) => Math.abs(left.position_ft - right.position_ft),
+  grantTemporaryHp: (state, amount) => {
+    state.temporary_hp = Math.max(state.temporary_hp || 0, amount);
+    return state.temporary_hp;
+  },
 };
 
 let lastAttackExtra = null;
@@ -71,6 +75,7 @@ function member(id, side, position, reaction = false) {
     position_ft: position,
     state: {
       current_hp: 20,
+      temporary_hp: 0,
       is_alive: true,
       is_dead: false,
       is_unconscious: false,
@@ -226,3 +231,27 @@ function damageEvent(source, target, applied = 2) {
 }
 
 console.log("Browser universal post-damage reaction parity passed.");
+
+
+{
+  const source = member("browser-zero-hp-source", "heroes", 0, false);
+  const target = member("browser-zero-hp-target", "monsters", 5, false);
+  source.state.template.level = 3;
+  source.state.template.ability_scores = { charisma: 16 };
+  source.state.template.source_reduces_hostile_to_zero_hp_temporary_hp = {
+    source_id: "test-zero-hp-boon", source_name: "Test Zero HP Boon",
+    ability: "charisma", flat_bonus: 0, per_level: 1, minimum: 1,
+  };
+  target.state.current_hp = 0;
+  const setup = { heroes: [source], monsters: [target] };
+  const event = damageEvent(source, target, 1);
+  event.hp_before = 1;
+  event.hp_after = 0;
+  const result = window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH.resolve(
+    2, 1, source, event, setup,
+  );
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].feature_id, "test-zero-hp-boon");
+  assert.equal(source.state.temporary_hp, 6);
+  assert.equal(result.sequence, 3);
+}

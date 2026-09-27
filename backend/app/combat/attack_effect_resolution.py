@@ -11,6 +11,7 @@ from app.combat.damage import BonusDamageSpec
 from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
+from app.combat.exile import apply_on_hit_exile
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.sap import apply_weapon_sap
 from app.combat.studied_attacks import apply_studied_attack_miss
@@ -38,6 +39,7 @@ class AttackEffectResolution:
     vex_applied: bool = False
     studied_applied: bool = False
     deferred_effect_armed: Any = None
+    exile_applied: Any = None
 
 
 def resolve_attack_effects(
@@ -121,6 +123,12 @@ def resolve_attack_effects(
         )
         result.deferred_effect_armed = arm_deferred_save_effect(
             attacker, defender, actual_event_id, attack, round_number,
+        )
+        result.exile_applied = apply_on_hit_exile(
+            attacker, defender, attack,
+            attacker_id=attacker_event_id,
+            round_number=round_number,
+            affected_states=affected_states,
         )
         end_rage_if_incapacitated(defender)
         return result

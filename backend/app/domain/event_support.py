@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.combatants import DamageType
+from app.domain.damage_sources import DamageSourceQualifier
 
 
 class RollMode(StrEnum):
@@ -77,4 +78,5 @@ class DamageRollComponent(BaseModel):
     damage_type: DamageType
     total: int
     applied_total: int | None = Field(default=None, ge=0)
+    source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
     revisions: list[RollRevision] = Field(default_factory=list)

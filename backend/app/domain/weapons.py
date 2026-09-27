@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, HitControlEffect
 from app.domain.charge import AttackChargeProfile, ChargeDamage
+from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 from app.domain.weapons_base import DamageType, WeaponAttackKind
@@ -99,3 +100,4 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     forbid_target_grappled_by_self: bool = False
+    damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)

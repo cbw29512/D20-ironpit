@@ -10,7 +10,7 @@ from app.combat.defensive_modifier_rules import (
     saving_throw_advantage_sources,
     saving_throw_disadvantage_sources as modifier_save_disadvantage_sources,
 )
-from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful
+from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful, apply_resource_backed_d20_bonus_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
@@ -103,6 +103,10 @@ def resolve_saving_throw(
                 raise ValueError("Active d20 bonus die requires saving-throw round context.")
             roll, _ = apply_d20_bonus_die_if_useful(
                 state, "saving_throw", roll, dc, dice, round_number,
+            )
+        if state.template.progression_features.resource_backed_d20_bonus_dice:
+            roll, _ = apply_resource_backed_d20_bonus_if_useful(
+                state, "saving_throw", roll, dc, dice,
             )
         if roll.total < dc:
             from app.combat.indomitable import use_indomitable
