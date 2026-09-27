@@ -4,6 +4,7 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.monster_equipment import build_light_crossbow
 from app.content.sorcerer_draconic_2014_spells import burning_hands_2014, fireball_2014, poison_spray_2014, shatter_2014
 from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
+from app.content.shared_damage_spells_2014 import flame_strike_2014
 from app.content.warlock_2014_progression import warlock_2014_level
 from app.content.warlock_2014_spells import eldritch_blast_2014, hex_2014, scorching_ray_2014
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
@@ -13,8 +14,8 @@ from app.domain.progression_primitives import ResourceBackedD20BonusDie, SourceR
 
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 9):
-        raise ValueError("2014 Varek runtime currently certifies levels 1 through 8.")
+    if level not in range(1, 10):
+        raise ValueError("2014 Varek runtime currently certifies levels 1 through 9.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
@@ -56,6 +57,7 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
             burning_hands_2014(8 + pb + cha),
             *([shatter_2014(8 + pb + cha)] if level >= 3 else []),
             *([fireball_2014(8 + pb + cha)] if level >= 5 else []),
+            *([flame_strike_2014(8 + pb + cha)] if level >= 9 else []),
         ],
         targeted_concentration_damage_actions=[hex_2014()],
         progression_features=ProgressionCombatFeatures(
