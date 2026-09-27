@@ -353,6 +353,18 @@ def defense_row(action: Any) -> dict[str, Any]:
     return row
 
 
+def targeted_concentration_damage_row(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "diceCount": action.dice_count, "diceSize": action.dice_size,
+        "damageType": action.damage_type,
+        "durationRoundsBySlot": dict(action.duration_rounds_by_slot),
+        "retargetAfterTargetZero": action.retarget_after_target_zero,
+        "priority": action.priority, "animation": action.animation, "source": action.source,
+    }
+
+
 def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
     try:
         return {
@@ -483,6 +495,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         ]
     if features.deferred_save_effect:
         row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
+    if features.source_reduces_hostile_to_zero_hp_temporary_hp:
+        row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
+            features.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
+        )
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.once_per_turn_weapon_hit_damage_rider:
@@ -605,6 +621,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
             row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+        if template.targeted_concentration_damage_actions:
+            row["targeted_concentration_damage_actions"] = [
+                targeted_concentration_damage_row(item) for item in template.targeted_concentration_damage_actions
+            ]
         if template.auto_hit_spell_actions:
             row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
         if template.spell_cast_timed_resistances:
