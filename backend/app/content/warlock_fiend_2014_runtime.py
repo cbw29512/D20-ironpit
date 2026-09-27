@@ -13,8 +13,8 @@ from app.domain.progression_primitives import ResourceBackedD20BonusDie, SourceR
 
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 7):
-        raise ValueError("2014 Varek runtime currently certifies levels 1 through 6.")
+    if level not in range(1, 9):
+        raise ValueError("2014 Varek runtime currently certifies levels 1 through 8.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
