@@ -70,6 +70,38 @@
     return levels.length ? levels.at(-1) : null;
   }
 
+  function areaSpellProtection(caster, setup, action, castLevel, explicitProtectedIds = []) {
+    const grant = caster.state.template.area_spell_ally_protection || null;
+    const explicit = new Set(explicitProtectedIds);
+    if (!grant || !(grant.eligible_spell_ids || []).includes(action.id)) {
+      return { ids: explicit, limit: explicit.size ? null : 0 };
+    }
+    const allies = caster.side === "heroes" ? setup.heroes : setup.monsters;
+    const visible = allies
+      .filter((ally) => ally.combatant_id !== caster.combatant_id
+        && ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0
+        && (!grant.requires_source_sight
+          || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, ally.state)))
+      .map((ally) => ally.combatant_id);
+    const ids = new Set([...explicit, ...visible]);
+    const limit = (grant.base_protected_allies || 0)
+      + (grant.protected_allies_per_slot_level || 0) * castLevel;
+    return { ids, limit };
+  }
+
+  function protectedUniversalPlacements(caster, setup, action, castLevel, range, explicitProtectedIds = []) {
+    const protection = areaSpellProtection(caster, setup, action, castLevel, explicitProtectedIds);
+    return window.IRON_PIT_BROWSER_AREA_TARGETING.legalPlacements(caster, setup, action.area, range)
+      .flatMap((placement) => {
+        const friendly = [...(placement.friendlyIds || [])];
+        if (!friendly.length) return [placement];
+        const allEligible = friendly.every((id) => protection.ids.has(id));
+        const withinLimit = protection.limit == null || friendly.length <= protection.limit;
+        if (!allEligible || !withinLimit) return [];
+        return [{ ...placement, friendlyIds: [], protectedFriendlyIds: friendly }];
+      });
+  }
+
   function legalSingleTargets(caster, setup, action, range = action.range) {
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     return enemies.filter((target) => target.state.is_alive && !target.state.is_dead
@@ -86,11 +118,12 @@
       if (action.area) {
         const baseRange = action.range;
         const castRange = action.area.origin === "point" ? effectiveRange(caster.state, baseRange) : baseRange;
-        const normalKeys = new Set(window.IRON_PIT_BROWSER_AREA_TARGETING
-          .legalPlacements(caster, setup, action.area, baseRange).map(placementKey));
-        const placements = window.IRON_PIT_BROWSER_AREA_TARGETING
-          .legalPlacements(caster, setup, action.area, castRange)
-          .filter((placement) => !(placement.friendlyIds || []).length);
+        const normalKeys = new Set(protectedUniversalPlacements(
+          caster, setup, action, castLevel, baseRange, protectedAllyIds,
+        ).map(placementKey));
+        const placements = protectedUniversalPlacements(
+          caster, setup, action, castLevel, castRange, protectedAllyIds,
+        );
         if (!placements.length) return null;
         placements.sort((a, b) =>
           b.enemyIds.length - a.enemyIds.length || a.friendlyIds.length - b.friendlyIds.length);
@@ -102,7 +135,10 @@
           expectedDamage: score, rangeModifier };
       }
       if (action.areaRadius) {
-        const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
+        const protection = areaSpellProtection(caster, setup, action, castLevel, protectedAllyIds);
+        const placement = A().bestPlacement(
+          caster, setup, action.areaRadius, action.range, [...protection.ids], protection.limit,
+        );
         if (!placement) return null;
         const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0)
           - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
@@ -134,11 +170,12 @@
           if (action.area) {
             const baseRange = action.range;
             const castRange = action.area.origin === "point" ? effectiveRange(caster.state, baseRange) : baseRange;
-            const normalKeys = new Set(window.IRON_PIT_BROWSER_AREA_TARGETING
-              .legalPlacements(caster, setup, action.area, baseRange).map(placementKey));
-            const placements = window.IRON_PIT_BROWSER_AREA_TARGETING
-              .legalPlacements(caster, setup, action.area, castRange)
-              .filter((placement) => !(placement.friendlyIds || []).length);
+            const normalKeys = new Set(protectedUniversalPlacements(
+              caster, setup, action, castLevel, baseRange, protectedAllyIds,
+            ).map(placementKey));
+            const placements = protectedUniversalPlacements(
+              caster, setup, action, castLevel, castRange, protectedAllyIds,
+            );
             if (!placements.length) continue;
             placements.sort((a, b) =>
               b.enemyIds.length - a.enemyIds.length || a.friendlyIds.length - b.friendlyIds.length);
@@ -151,7 +188,10 @@
             continue;
           }
           if (action.areaRadius) {
-            const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range, protectedAllyIds);
+            const protection = areaSpellProtection(caster, setup, action, castLevel, protectedAllyIds);
+            const placement = A().bestPlacement(
+              caster, setup, action.areaRadius, action.range, [...protection.ids], protection.limit,
+            );
             if (!placement) continue;
             const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0)
               - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
@@ -194,6 +234,7 @@
 
   window.IRON_PIT_BROWSER_SPELL_POLICY = {
     choose, chooseActionAtSlot, chooseById, scaledSpell, slotLevel, slotLevels,
+    areaSpellProtection, protectedUniversalPlacements,
     availableRangeModifier, effectiveRange, spendRangeModifier,
   };
 })();
