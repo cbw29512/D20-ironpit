@@ -25,11 +25,8 @@
 
   function slotResource(caster, spell, turnKey) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
-    for (let level = spell.level; level <= 9; level += 1) {
-      const id = `spell-slot-${level}`;
-      if ((caster.state.resources?.[id] || 0) > 0) return id;
-    }
-    return null;
+    const id = `spell-slot-${spell.level}`;
+    return (caster.state.resources?.[id] || 0) > 0 ? id : null;
   }
 
   function resolve(sequence, round, caster, target, spell, setup, turnKey, options = {}) {
