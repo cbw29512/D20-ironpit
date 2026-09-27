@@ -73,7 +73,7 @@
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [];
+    let damageRoll = null, damageComponents = [], appliedConditions = [];
     if (hit) {
       const count = spell.damageDiceCount * (critical ? 2 : 1), rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
@@ -95,7 +95,8 @@
     const event = {
       sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, attack_name: spell.name, target_ac: targetAc,
-      attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [], hit, critical,
+      attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents,
+      applied_condition_ids: appliedConditions, hit, critical,
       hp_before: hpBefore, hp_after: target.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
