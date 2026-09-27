@@ -64,6 +64,12 @@ class TimedEffect(BaseModel):
     # clear, including source qualifiers and conditional movement costs.
     owned_debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     owned_movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
+    removed_from_battlefield: bool = False
+    return_damage_dice_count: int = Field(default=0, ge=0)
+    return_damage_dice_size: int = Field(default=0, ge=0)
+    return_damage_bonus: int = 0
+    return_damage_type: DamageType | None = None
+    return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
