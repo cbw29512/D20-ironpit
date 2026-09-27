@@ -68,6 +68,7 @@ varek.state.resources["mystic-arcanum-8"] = 1;
 
 const target = member("Target", "monsters", 151);
 const setup = { heroes: [varek], monsters: [target] };
+window.IRON_PIT_BROWSER_STATE = { distance: (a, b) => Math.abs(a.position_ft - b.position_ft) };
 const P = window.IRON_PIT_BROWSER_HP_THRESHOLD_CONDITION;
 
 assert.equal(P.choose(varek, setup), null);
