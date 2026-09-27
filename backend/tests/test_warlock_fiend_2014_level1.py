@@ -6,7 +6,7 @@ from app.combat.state import begin_turn, build_combatant_state
 from app.combat.targeted_concentration_damage import resolve_targeted_concentration_damage
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.grid import GridPosition
+from app.domain.grid import BattleMapDefinition, GridPosition
 
 from app.content.warlock_2014_progression import warlock_2014_level
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
@@ -435,6 +435,7 @@ def test_varek_level_eleven_circle_of_death_uses_arcanum_not_pact_slot() -> None
     enemy = _member(_commoner_2014(), "enemy", "monsters", 30)
     setup = EncounterSetup(
         heroes=[varek], monsters=[enemy], hero_total_levels=11, monster_total_cr="0", ruleset="2014",
+        map_definition=BattleMapDefinition(id="circle-of-death-test", width_squares=24, height_squares=16),
     )
     begin_turn(varek.state)
 
