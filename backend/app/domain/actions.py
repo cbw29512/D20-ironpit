@@ -132,6 +132,24 @@ class SavingThrowAction(BaseModel):
     animation: str = "save-effect"
 
 
+class HpThresholdConditionAction(BaseModel):
+    """Action that applies a timed condition without an initial save when current HP is low enough."""
+
+    id: str
+    name: str
+    action_cost: ActionCost = "action"
+    range_ft: int = Field(ge=0)
+    max_current_hp: int = Field(ge=1)
+    condition_id: ConditionName
+    repeat_save_ability: AbilityName
+    repeat_save_dc: int = Field(ge=1, le=40)
+    repeat_save_timing: ConditionTiming = "target_turn_end"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
+    magical_effect: bool = True
+    animation: str = "condition"
+
+
 class AttackActionSlot(BaseModel):
     """One ordered weapon/save step inside an Attack action or Multiattack."""
 
