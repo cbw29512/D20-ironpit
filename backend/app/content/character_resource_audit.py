@@ -20,6 +20,7 @@ from app.content.level_resources import (
 from app.content.pregen_combat_profiles import PregenCombatProfile
 from app.content.ranger_2014_resource_audit import ranger_2014_spell_slot_resources
 from app.content.spell_slot_progression import FULL_CASTER_CLASSES, spell_slot_resources
+from app.content.warlock_2014_resource_audit import warlock_2014_resources
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
@@ -108,6 +109,7 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke_of_luck_uses),),
     "sorcerer": (("sorcery-points", "Sorcery Points", _sorcerer_2014_sorcery_points),),
+    "warlock": (),
 }
 _2014_UNLIMITED_CLASS_RESOURCES: dict[str, Callable[[int], tuple[str, ...]]] = {
     "barbarian": lambda level: ("rage",) if level >= 20 else (),
@@ -140,6 +142,8 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
     if profile.ruleset == "2014" and profile.class_id == "ranger":
         resolved.update(ranger_2014_spell_slot_resources(profile.level))
+    if profile.ruleset == "2014" and profile.class_id == "warlock":
+        resolved.update(warlock_2014_resources(profile.level))
     if profile.ruleset == "2014" and profile.class_id == "paladin":
         resolved.update(_paladin_2014_spell_slots(profile.level))
         if profile.level >= 14:
