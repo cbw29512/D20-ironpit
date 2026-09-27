@@ -16,8 +16,7 @@ from app.combat.encounter_turn_support import finish_turn, resolve_area_save_tur
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
-from app.combat.hp_threshold_condition import choose_hp_threshold_condition, resolve_hp_threshold_condition
-from app.combat.hp_threshold_instant_death import choose_hp_threshold_instant_death, resolve_hp_threshold_instant_death
+from app.combat.hp_threshold_turn import resolve_hp_threshold_turn
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.offensive_movement_policy import move_to_enable_offense
@@ -145,22 +144,11 @@ def resolve_combat_turn(
             events.append(presence); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-        instant_choice = choose_hp_threshold_instant_death(attacker, setup)
-        if instant_choice is not None:
-            instant_target, instant_action = instant_choice
-            events.append(resolve_hp_threshold_instant_death(
-                sequence, round_number, attacker, instant_target, instant_action, setup,
-            ))
-            sequence += 1
-            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
-        threshold_choice = choose_hp_threshold_condition(attacker, setup)
-        if threshold_choice is not None:
-            threshold_target, threshold_action = threshold_choice
-            events.append(resolve_hp_threshold_condition(
-                sequence, round_number, attacker, threshold_target, threshold_action, setup,
-            ))
-            sequence += 1
+        threshold_event, sequence = resolve_hp_threshold_turn(
+            sequence, round_number, attacker, setup,
+        )
+        if threshold_event is not None:
+            events.append(threshold_event)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         deferred = resolve_deferred_save_effect(sequence, round_number, attacker, setup, dice)
