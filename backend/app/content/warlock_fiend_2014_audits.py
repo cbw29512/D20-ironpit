@@ -189,4 +189,17 @@ def build_varek_fiend_2014_audits(level: int) -> list[FeatureAudit]:
                 ),
             )
         )
+    if level >= 14:
+        audits.append(
+            FeatureAudit(
+                feature_id="hurl-through-hell", feature_name="Hurl Through Hell",
+                source_reference="D&D Basic Rules 2014: The Fiend 14",
+                category="subclass", combat_relevant=True, automated=True,
+                notes=(
+                    "A qualifying hit spends its once-per-rest resource, applies the universal Banished/exile state, "
+                    "removes the target from battlefield targeting until the end of the source's next turn, then deals "
+                    "10d10 psychic damage on return unless the target is a fiend."
+                ),
+            )
+        )
     return audits
