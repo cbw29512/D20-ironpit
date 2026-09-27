@@ -4652,7 +4652,8 @@
             "dice_size": 0,
             "source_creature_types": [],
             "consume_on_attack_against": false,
-            "ends_on_owner_attack": false
+            "ends_on_owner_attack": false,
+            "expires_at_start_of_source_turn": false
           }
         ],
         "concentration": false,
