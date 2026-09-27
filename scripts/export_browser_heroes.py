@@ -229,6 +229,18 @@ def _healing(action: Any) -> dict[str, Any]:
         raise
 
 
+def _targeted_concentration_damage(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "diceCount": action.dice_count, "diceSize": action.dice_size,
+        "damageType": action.damage_type,
+        "durationRoundsBySlot": dict(action.duration_rounds_by_slot),
+        "retargetAfterTargetZero": action.retarget_after_target_zero,
+        "priority": action.priority, "animation": action.animation, "source": action.source,
+    }
+
+
 def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
     try:
         return {
@@ -541,6 +553,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+    if template.targeted_concentration_damage_actions:
+        row["targeted_concentration_damage_actions"] = [
+            _targeted_concentration_damage(item) for item in template.targeted_concentration_damage_actions
+        ]
     if template.auto_hit_spell_actions: row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
     if template.persistent_spell_attack_actions:
         row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]
