@@ -12,6 +12,7 @@
   const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const AW = () => window.IRON_PIT_BROWSER_AREA_WEAPON_ATTACKS;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const HT = () => window.IRON_PIT_BROWSER_HP_THRESHOLD_CONDITION;
   const U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const DG = () => window.IRON_PIT_BROWSER_DODGE;
   const ST = () => window.IRON_PIT_BROWSER_STATE;
@@ -153,6 +154,27 @@
         const event = V().resolveAction(sequence, round, member, target, action, candidate.payload.distance, { setup });
         const next = sequence + 1;
         return DR() ? DR().chain(next, round, member, event, setup) : { events: [event], sequence: next };
+      },
+    });
+
+    register({
+      id: "hp-threshold-condition", category: C().HP_THRESHOLD_CONDITION, rulesets: BOTH,
+      discover: ({ member, setup }) => {
+        const runtime = HT();
+        if (!runtime) {
+          if (member.state.template.hp_threshold_condition_actions?.length) throw new Error("HP-threshold condition runtime is not loaded.");
+          return null;
+        }
+        const selected = runtime.choose(member, setup);
+        return selected ? { payload: { targetId: selected.target.combatant_id, actionId: selected.action.id } } : null;
+      },
+      resolve: ({ sequence, round, member, setup }, candidate) => {
+        const runtime = HT();
+        const target = memberById(setup, candidate.payload.targetId);
+        const action = (member.state.template.hp_threshold_condition_actions || [])
+          .find((item) => item.id === candidate.payload.actionId);
+        if (!runtime || !target || !action) throw new Error("HP-threshold condition candidate became unavailable.");
+        return { events: [runtime.resolve(sequence, round, member, target, action, setup)], sequence: sequence + 1 };
       },
     });
 
