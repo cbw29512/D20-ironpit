@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveAction
+from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellModifierEffect, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
@@ -129,4 +129,25 @@ def cone_of_cold_2014(save_dc: int) -> SpellSaveAction:
         )
     except Exception:
         logger.exception("Failed to build 2014 Cone of Cold.")
+        raise
+
+
+def false_life_2014() -> DefensiveSpellAction:
+    try:
+        return DefensiveSpellAction(
+            id="false-life",
+            name="False Life",
+            level=1,
+            action_cost="action",
+            range_ft=0,
+            duration_minutes=60,
+            target_policy="self",
+            temporary_hp=7,
+            temporary_hp_per_slot_above=5,
+            priority=70,
+            animation="false-life",
+            source="D&D Basic Rules 2014: False Life",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 False Life.")
         raise
