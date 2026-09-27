@@ -28,7 +28,7 @@ from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spellcasting import mark_slot_spell_cast
-from app.combat.spell_attack_helpers import roll_spell_attack_damage, slot_resource
+from app.combat.spell_attack_helpers import cast_slot_resource, roll_spell_attack_damage
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
@@ -61,23 +61,13 @@ def resolve_spell_attack(
         allowed_range = spell.range_ft * (range_modifier.range_multiplier if range_modifier is not None else 1)
         if distance > allowed_range:
             raise ValueError(f"{spell.name} target is out of range.")
-        resource = None
-        if spend_cast_costs and spell.level > 0:
-            if cast_slot_level is None:
-                resource = slot_resource(caster, spell, turn_key)
-            else:
-                if cast_slot_level < spell.level or cast_slot_level > 9:
-                    raise ValueError(f"Illegal slot level {cast_slot_level} for {spell.name}.")
-                resource = next(
-                    (
-                        item for item in caster.state.resources
-                        if item.id == f"spell-slot-{cast_slot_level}" and item.current_uses > 0
-                    ),
-                    None,
-                )
-            if resource is None:
-                requested = cast_slot_level if cast_slot_level is not None else spell.level
-                raise ValueError(f"No level {requested} spell slot remains for {spell.name}.")
+        resource = (
+            cast_slot_resource(caster, spell, turn_key, cast_slot_level)
+            if spend_cast_costs and spell.level > 0 else None
+        )
+        if spend_cast_costs and spell.level > 0 and resource is None:
+            requested = cast_slot_level if cast_slot_level is not None else spell.level
+            raise ValueError(f"No level {requested} spell slot remains for {spell.name}.")
         ward = check_targeting_ward(caster, target, dice)
         if ward is not None and not ward.succeeded:
             if resource is not None:
