@@ -676,3 +676,22 @@ def test_varek_level_fifteen_progression_adds_eighth_level_arcanum() -> None:
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["mystic-arcanum-8"].automated is True
     assert audits["visions-of-distant-realms"].combat_relevant is False
+
+
+def test_varek_level_sixteen_raises_constitution_again() -> None:
+    l15 = build_varek_ashenmark_2014(15)
+    l16 = build_varek_ashenmark_2014(16)
+    profile = build_varek_ashenmark_2014_profile(16)
+
+    assert profile.final_ability_scores.constitution == 18
+    assert profile.final_ability_scores.charisma == 20
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [
+        ("charisma", 2), ("charisma", 2), ("constitution", 2), ("constitution", 2),
+    ]
+    assert l16.max_hp > l15.max_hp
+    assert l16.saving_throw_bonuses["constitution"] == 4
+    assert warlock_2014_level(16).spells_known == 13
+    assert warlock_2014_level(16).invocations_known == 7
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["ability-score-improvement-l16"].automated is True
