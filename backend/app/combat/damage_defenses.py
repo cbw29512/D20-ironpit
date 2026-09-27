@@ -28,7 +28,10 @@ def _matching_conditional_defenses(
     source_qualifiers: set[DamageSourceQualifier],
 ) -> set[DamageDefenseKind]:
     matched: set[DamageDefenseKind] = set()
-    for rule in target.template.conditional_damage_defenses:
+    for rule in [
+        *target.template.conditional_damage_defenses,
+        *target.active_conditional_damage_defenses,
+    ]:
         if damage_type not in rule.damage_types:
             continue
         required = set(rule.required_source_qualifiers)
