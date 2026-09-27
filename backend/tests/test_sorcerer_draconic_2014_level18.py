@@ -22,7 +22,7 @@ def _member(combatant_id: str, level: int, side: str, position_ft: int) -> Encou
 def _setup() -> tuple[EncounterSetup, EncounterCombatant, EncounterCombatant]:
     source = _member("nyra-18", 18, "heroes", 0)
     target = _member("enemy", 1, "monsters", 30)
-    return EncounterSetup(heroes=[source], monsters=[target]), source, target
+    return EncounterSetup(heroes=[source], monsters=[target], hero_total_levels=18, monster_total_cr="0", ruleset="2014"), source, target
 
 
 def test_level_eighteen_draconic_presence_is_resource_backed_concentration_aura() -> None:
