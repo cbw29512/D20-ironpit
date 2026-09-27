@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.combatants import DamageType
 from app.domain.debuffs import DebuffCounter
+from app.domain.damage_sources import DamageSourceQualifier
 
 
 class ModifierKind(StrEnum):
@@ -29,6 +30,7 @@ class ModifierKind(StrEnum):
     DEBUFF_COUNTER = "debuff-counter"
     ZERO_HP_REPLACEMENT = "zero-hp-replacement"
     OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
+    DAMAGE_SOURCE_QUALIFIER = "damage-source-qualifier"
 
 
 class CombatModifier(BaseModel):
@@ -45,6 +47,7 @@ class CombatModifier(BaseModel):
     damage_type: DamageType | None = None
     target_id: str | None = None
     weapon_id: str | None = None
+    source_qualifier: DamageSourceQualifier | None = None
     condition_id: str | None = None
     debuff_counter: DebuffCounter | None = None
     replacement_hp: int = Field(default=0, ge=0)
@@ -91,8 +94,12 @@ class CombatModifier(BaseModel):
             raise ValueError("Attack roll-mode modifiers do not accept a flat bonus.")
         if self.kind is ModifierKind.ATTACK_ROLL_FLAT and (self.flat_bonus == 0 or self.weapon_id is None):
             raise ValueError("Flat attack modifiers require a nonzero bonus and weapon id.")
-        if self.kind is not ModifierKind.ATTACK_ROLL_FLAT and self.weapon_id is not None:
+        if self.kind not in {ModifierKind.ATTACK_ROLL_FLAT, ModifierKind.DAMAGE_SOURCE_QUALIFIER} and self.weapon_id is not None:
             raise ValueError(f"{self.kind.value} does not accept a weapon id.")
+        if self.kind is ModifierKind.DAMAGE_SOURCE_QUALIFIER and (self.weapon_id is None or self.source_qualifier is None):
+            raise ValueError("Damage source qualifier modifiers require a weapon id and qualifier.")
+        if self.kind is not ModifierKind.DAMAGE_SOURCE_QUALIFIER and self.source_qualifier is not None:
+            raise ValueError(f"{self.kind.value} does not accept a source qualifier.")
         if self.kind is ModifierKind.SAVING_THROW_FLAT and self.flat_bonus == 0:
             raise ValueError("Flat saving-throw modifiers require a nonzero bonus.")
         if self.kind is ModifierKind.CONDITION_IMMUNITY and self.condition_id is None:
