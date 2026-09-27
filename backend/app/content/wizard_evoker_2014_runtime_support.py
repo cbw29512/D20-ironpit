@@ -21,6 +21,7 @@ from app.domain.area_spell_protection import AreaSpellAllyProtectionGrant
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.models import ResourceDefinition, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 from app.domain.spells import SpellAttackAction, SpellSaveAction
 
 logger = logging.getLogger(__name__)
@@ -105,6 +106,25 @@ def build_wizard_evoker_features(level: int) -> ProgressionCombatFeatures:
                 if level >= 2 else None
             ),
             alternate_spell_cast_grants=alternate,
+            spell_damage_maximizer=(
+                SpellDamageMaximizerGrant(
+                    source_id="overchannel",
+                    source_name="Overchannel",
+                    eligible_spell_ids=[
+                        "magic-missile", "burning-hands", "shatter",
+                        "fireball", "lightning-bolt", "cone-of-cold",
+                    ],
+                    minimum_spell_level=1,
+                    maximum_spell_level=5,
+                    safe_uses=1,
+                    self_damage_dice_size=12,
+                    initial_self_damage_dice_per_spell_level=2,
+                    self_damage_increment_per_spell_level=1,
+                    self_damage_type="necrotic",
+                    ignores_resistance_and_immunity=True,
+                )
+                if level >= 14 else None
+            ),
         )
     except Exception:
         logger.exception("Failed to build Elian's 2014 progression features at level %s.", level)
