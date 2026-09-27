@@ -461,6 +461,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "alternate_spell_cast_grants": [
             item.model_dump() for item in progression.alternate_spell_cast_grants
         ],
+        "spell_damage_maximizer": (
+            progression.spell_damage_maximizer.model_dump()
+            if progression.spell_damage_maximizer else None
+        ),
         "opening_targeting_ward": progression.opening_targeting_ward.model_dump() if progression.opening_targeting_ward else None,
         "danger_sense": progression.danger_sense, "reckless_attack": progression.reckless_attack,
         "frenzy": progression.frenzy, "frenzy_bonus_attack_2014": progression.frenzy_bonus_attack_2014,
