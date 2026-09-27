@@ -17,6 +17,7 @@
       vexApplied: false,
       studiedApplied: false,
       deferredEffectArmed: null,
+      exileApplied: null,
       appliedConditions: [],
     };
   }
