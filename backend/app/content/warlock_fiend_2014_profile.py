@@ -5,8 +5,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 20):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 19.")
+    if level not in range(1, 21):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 20.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
