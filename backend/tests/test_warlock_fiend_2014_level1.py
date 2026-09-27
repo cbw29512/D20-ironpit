@@ -617,3 +617,62 @@ def test_varek_level_fourteen_progression_binds_hurl_through_hell() -> None:
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["hurl-through-hell"].automated is True
+
+
+def test_varek_level_fifteen_power_word_stun_uses_hp_threshold_and_repeat_save() -> None:
+    from app.combat.condition_lifecycle import resolve_target_condition_timing
+    from app.combat.hp_threshold_condition import (
+        choose_hp_threshold_condition,
+        resolve_hp_threshold_condition,
+    )
+
+    varek = _member(build_varek_ashenmark_2014(15), "varek", "heroes", 0)
+    enemy = _member(_commoner_2014(), "enemy", "monsters", 30)
+    enemy.state.template.max_hp = 200
+    enemy.state.current_hp = 151
+    setup = EncounterSetup(
+        heroes=[varek], monsters=[enemy], hero_total_levels=15, monster_total_cr="0", ruleset="2014",
+    )
+    begin_turn(varek.state)
+
+    assert choose_hp_threshold_condition(varek, setup) is None
+    enemy.state.current_hp = 150
+    choice = choose_hp_threshold_condition(varek, setup)
+    assert choice is not None
+    target, action = choice
+    assert target is enemy
+    assert action.id == "power-word-stun"
+    assert action.max_current_hp == 150
+    assert action.repeat_save_ability == "constitution"
+    assert action.repeat_save_dc == 18
+    assert action.repeat_save_timing == "target_turn_end"
+
+    event = resolve_hp_threshold_condition(1, 1, varek, enemy, action, setup)
+    assert event.feature_id == "power-word-stun"
+    assert event.resource_remaining == 0
+    assert "stunned" in enemy.state.active_effect_ids
+    assert varek.state.action_available is False
+
+    lifecycle, _ = resolve_target_condition_timing(
+        2, 1, enemy, "target_turn_end", FixedDiceProvider([20]),
+    )
+    assert lifecycle and lifecycle[0].save_succeeded is True
+    assert "stunned" not in enemy.state.active_effect_ids
+
+
+def test_varek_level_fifteen_progression_adds_eighth_level_arcanum() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    varek = build_varek_ashenmark_2014(15)
+    profile = build_varek_ashenmark_2014_profile(15)
+    package = build_warlock_2014_spell_package(15)
+
+    assert len(package.spells) == warlock_2014_level(15).spells_known == 13
+    assert package.spells[-1].id == "contact-other-plane"
+    assert warlock_2014_level(15).mystic_arcanum_levels == (6, 7, 8)
+    resources = {item.id: item.max_uses for item in varek.resources}
+    assert resources["mystic-arcanum-8"] == 1
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["mystic-arcanum-8"].automated is True
+    assert audits["visions-of-distant-realms"].combat_relevant is False
