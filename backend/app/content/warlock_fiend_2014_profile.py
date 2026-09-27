@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 11):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 10.")
+    if level not in range(1, 12):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 11.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -166,6 +166,21 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 ),
             )
         )
+    if level >= 11:
+        audits.extend([
+            FeatureAudit(
+                feature_id="eldritch-blast-third-beam", feature_name="Eldritch Blast — Three Beams",
+                source_reference="D&D Basic Rules 2014: Eldritch Blast",
+                category="class", combat_relevant=True, automated=True,
+                notes="The universal multi-spell-attack sequence resolves three independent Eldritch Blast beams.",
+            ),
+            FeatureAudit(
+                feature_id="mystic-arcanum-6", feature_name="Mystic Arcanum (6th Level)",
+                source_reference="D&D Basic Rules 2014: Warlock 11",
+                category="class", combat_relevant=True, automated=True,
+                notes="Circle of Death uses a separate one-use resource and the universal resource-backed area-save primitive.",
+            ),
+        ])
     return CharacterBuildProfile(
         id=f"build-varek-ashenmark-2014-l{level}",
         template_id=f"varek-ashenmark-2014-l{level}",
