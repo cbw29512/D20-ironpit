@@ -30,8 +30,8 @@ _KNOWN = (
     _spell("burning-hands", "Burning Hands", "damage", "save-damage", "area", level=1),
     _spell("magic-missile", "Magic Missile", "damage", "auto-hit-projectiles", level=1),
     _spell("false-life", "False Life", "buff", "temporary-hp", level=1, min_level=2),
-    _spell("scorching-ray", "Scorching Ray", "damage", "multi-projectile-spell-attack", level=2, min_level=3),
-    _spell("shatter", "Shatter", "damage", "save-damage", "area", level=2, min_level=4),
+    _spell("shatter", "Shatter", "damage", "save-damage", "area", level=2, min_level=3),
+    _spell("scorching-ray", "Scorching Ray", "damage", "multi-projectile-spell-attack", level=2, min_level=4),
     _spell("fireball", "Fireball", "damage", "save-damage", "area", level=3, min_level=5),
     _spell("lightning-bolt", "Lightning Bolt", "damage", "save-damage", "area", level=3, min_level=6),
     _spell(
