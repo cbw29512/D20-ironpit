@@ -35,6 +35,7 @@ def _mechanics(template: Any) -> list[str]:
         *(f"trait:{item.value}" for item in template.combat_traits),
         *(f"saving-throw-action:{item.id}" for item in template.saving_throw_actions),
         *(f"hp-threshold-condition:{item.id}" for item in template.hp_threshold_condition_actions),
+        *(f"hp-threshold-instant-death:{item.id}" for item in template.hp_threshold_instant_death_actions),
         *(f"spell-save-action:{item.id}" for item in template.spell_save_actions),
         *(f"spell-attack-action:{item.id}" for item in template.spell_attack_actions),
         *(f"auto-hit-spell-action:{item.id}" for item in template.auto_hit_spell_actions),
