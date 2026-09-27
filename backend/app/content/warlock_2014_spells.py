@@ -5,15 +5,12 @@ from app.domain.targeted_concentration_damage import TargetedConcentrationDamage
 
 
 def eldritch_blast_2014(attack_bonus: int, level: int, damage_bonus: int = 0, range_ft: int = 120) -> SpellAttackAction:
-    """Build one 2014 Eldritch Blast beam from the universal spell-attack primitive.
-
-    Levels 1-4 have one beam. Higher-level multi-beam resolution is intentionally
-    certified separately rather than pretending one attack roll represents every beam.
-    """
-    if level not in range(1, 5):
-        raise ValueError("Single-beam 2014 Eldritch Blast builder currently certifies levels 1 through 4.")
+    """Build 2014 Eldritch Blast using independent universal spell attacks."""
+    if level not in range(1, 21):
+        raise ValueError("2014 Eldritch Blast character level must be between 1 and 20.")
     if range_ft < 1:
         raise ValueError("Eldritch Blast range must be positive.")
+    attack_count = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
     return SpellAttackAction(
         id="eldritch-blast",
         name="Eldritch Blast",
@@ -26,8 +23,29 @@ def eldritch_blast_2014(attack_bonus: int, level: int, damage_bonus: int = 0, ra
         damage_dice_size=10,
         damage_bonus=damage_bonus,
         damage_type="force",
+        attack_count=attack_count,
         animation="spell-attack",
         source="D&D Basic Rules 2014: Eldritch Blast",
+    )
+
+
+def scorching_ray_2014(attack_bonus: int) -> SpellAttackAction:
+    """Three independent rays, plus one ray for each slot level above 2."""
+    return SpellAttackAction(
+        id="scorching-ray",
+        name="Scorching Ray",
+        level=2,
+        action_cost="action",
+        attack_kind="ranged",
+        range_ft=120,
+        attack_bonus=attack_bonus,
+        damage_dice_count=2,
+        damage_dice_size=6,
+        damage_type="fire",
+        attack_count=3,
+        attacks_per_slot_above=1,
+        animation="spell-attack",
+        source="D&D Basic Rules 2014: Scorching Ray",
     )
 
 
