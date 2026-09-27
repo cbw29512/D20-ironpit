@@ -131,3 +131,29 @@ def test_hex_retargets_after_zero_without_spending_another_slot() -> None:
     assert next(item.current_uses for item in varek.state.resources if item.id == "spell-slot-1") == 0
     rider = next(item for item in varek.state.active_modifiers if item.source_effect_id == "hex")
     assert rider.target_id == "second"
+
+
+def test_varek_level_two_prioritizes_simple_blaster_invocations() -> None:
+    profile = build_varek_ashenmark_2014_profile(2)
+    varek = build_varek_ashenmark_2014(2)
+
+    assert profile.level == 2
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["agonizing-blast"].automated is True
+    assert audits["eldritch-spear"].automated is True
+
+    resources = {item.id: item.max_uses for item in varek.resources}
+    assert resources == {"spell-slot-1": 2}
+
+    blast = next(item for item in varek.spell_attack_actions if item.id == "eldritch-blast")
+    assert blast.attack_bonus == 5
+    assert blast.damage_bonus == 3
+    assert blast.range_ft == 300
+
+
+def test_varek_level_two_spell_package_avoids_forcing_new_damage_subsystems() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    package = build_warlock_2014_spell_package(2)
+    assert [item.id for item in package.cantrips] == ["eldritch-blast", "poison-spray"]
+    assert [item.id for item in package.spells] == ["hex", "burning-hands", "comprehend-languages"]
