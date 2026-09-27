@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.domain.auto_hit_spells import AutoHitSpellAction
+from app.domain.hit_effects import OnHitTimedEffect
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellModifierEffect, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
@@ -173,4 +174,36 @@ def magic_missile_2014() -> AutoHitSpellAction:
         )
     except Exception:
         logger.exception("Failed to build 2014 Magic Missile.")
+        raise
+
+
+def shocking_grasp_2014(attack_bonus: int, character_level: int) -> SpellAttackAction:
+    try:
+        dice_count = 1 + int(character_level >= 5) + int(character_level >= 11) + int(character_level >= 17)
+        return SpellAttackAction(
+            id="shocking-grasp",
+            name="Shocking Grasp",
+            level=0,
+            action_cost="action",
+            attack_kind="melee",
+            range_ft=5,
+            attack_bonus=attack_bonus,
+            damage_dice_count=dice_count,
+            damage_dice_size=8,
+            damage_type="lightning",
+            advantage_if_target_wearing_metal_armor=True,
+            on_hit_timed_effects=[
+                OnHitTimedEffect(
+                    effect_id="reaction-suppressed",
+                    duration_rounds=1,
+                    expiry_timing="source_turn_start",
+                    suppress_reactions=True,
+                    source_is_magical=True,
+                )
+            ],
+            animation="shocking-grasp",
+            source="D&D Basic Rules 2014: Shocking Grasp",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Shocking Grasp.")
         raise
