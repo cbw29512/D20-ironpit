@@ -84,9 +84,28 @@
         damage_type: spell.damageType, total: raw, applied_total: applied }];
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
       A().applyDamage(target.state, applied, critical, spell.damageType && applied > 0 ? [spell.damageType] : [], states);
-      if (target.state.is_alive && !target.state.is_dead) (spell.onHitModifierEffects || []).forEach((effect, index) => {
-        M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
-      });
+      if (target.state.is_alive && !target.state.is_dead) {
+        (spell.onHitModifierEffects || []).forEach((effect, index) => {
+          M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
+        });
+        (spell.onHitTimedEffects || []).forEach((effect) => {
+          const appliedId = T().apply(target.state, effect.effectId, caster.combatant_id, {
+            sourceEffectId: spell.id,
+            sourceTemplate: caster.state.template,
+            sourceIsMagical: Boolean(effect.sourceIsMagical),
+            appliedRound: round,
+            expiresRound: round + effect.durationRounds,
+            expiryTiming: effect.expiryTiming,
+            suppressAction: Boolean(effect.suppressAction),
+            suppressBonusAction: Boolean(effect.suppressBonusAction),
+            suppressReactions: Boolean(effect.suppressReactions),
+            suppressMovement: Boolean(effect.suppressMovement),
+            nextAttackDisadvantage: Boolean(effect.nextAttackDisadvantage),
+            useDefaultPoisonRecovery: false,
+          });
+          if (appliedId) appliedConditions.push(appliedId);
+        });
+      }
     }
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
