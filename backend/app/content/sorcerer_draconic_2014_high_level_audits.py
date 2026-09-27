@@ -57,8 +57,8 @@ def build_sorcerer_draconic_2014_high_level_audits(level: int) -> list[FeatureAu
             source_reference="D&D Basic Rules 2014: Draconic Bloodline 14",
             category="subclass", combat_relevant=True, automated=True,
             notes=(
-                "Permanent 30-foot flying speed binds directly to the universal movement fingerprint; "
-                "no source-name-specific movement resolver is used."
+                "Bonus Action manifestation binds to the universal persistent movement-mode grant. "
+                "While active, Fly speed equals current Speed; fresh combat state resets the grant."
             ),
         ))
     if level >= 15:
