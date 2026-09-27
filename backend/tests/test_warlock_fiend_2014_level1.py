@@ -340,3 +340,25 @@ def test_varek_levels_seven_and_eight_scale_existing_blaster_package() -> None:
 
     assert len(build_warlock_2014_spell_package(7).spells) == 8
     assert len(build_warlock_2014_spell_package(8).spells) == 9
+
+
+def test_varek_level_nine_uses_fifth_level_pact_magic_and_flame_strike() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    varek = build_varek_ashenmark_2014(9)
+    profile = build_varek_ashenmark_2014_profile(9)
+    package = build_warlock_2014_spell_package(9)
+
+    assert {item.id: item.max_uses for item in varek.resources if item.id.startswith("spell-slot-")} == {
+        "spell-slot-5": 2,
+    }
+    assert profile.final_ability_scores.charisma == 20
+    assert package.spells[-1].id == "flame-strike"
+    assert len(package.spells) == warlock_2014_level(9).spells_known == 10
+
+    flame_strike = next(item for item in varek.spell_save_actions if item.id == "flame-strike")
+    assert flame_strike.level == 5
+    assert len(flame_strike.damage_components) == 2
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["flame-strike"].automated is True
+    assert audits["whispers-of-the-grave"].combat_relevant is False
