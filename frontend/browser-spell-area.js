@@ -30,7 +30,7 @@
     return points;
   }
 
-  function bestPlacement(caster, setup, radius, spellRange, protectedAllyIds = []) {
+  function bestPlacement(caster, setup, radius, spellRange, protectedAllyIds = [], protectedAllyLimit = null) {
     const slotCount = areaSlotCount(radius);
     const [enemies, friends] = sides(caster, setup);
     const protectedIds = new Set(protectedAllyIds);
@@ -46,11 +46,14 @@
           .map(({ member }) => member.combatant_id);
         if (!enemyIds.length) continue;
 
-        const friendlyIds = [], protectedFriendlyIds = [];
+        const friendlyIds = [], protectedFriendlyIds = [], protectableIds = [];
         friends.forEach((member, slot) => {
           if (!living(member) || !inside(member, slot, start, slotCount, center, radius)) return;
-          (protectedIds.has(member.combatant_id) ? protectedFriendlyIds : friendlyIds).push(member.combatant_id);
+          (protectedIds.has(member.combatant_id) ? protectableIds : friendlyIds).push(member.combatant_id);
         });
+        const limit = protectedAllyLimit == null ? protectableIds.length : protectedAllyLimit;
+        protectedFriendlyIds.push(...protectableIds.slice(0, limit));
+        friendlyIds.push(...protectableIds.slice(limit));
         if (friendlyIds.length) continue;
         candidates.push({ startSlot: start, slotCount, centerFt: center, enemyIds, friendlyIds, protectedFriendlyIds });
       }
