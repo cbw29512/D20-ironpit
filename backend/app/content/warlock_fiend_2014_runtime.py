@@ -25,7 +25,6 @@ from app.domain.progression_primitives import (
     SourceReducesHostileToZeroHpTemporaryHp,
 )
 
-
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
     if level not in range(1, 18):
         raise ValueError("2014 Varek runtime currently certifies levels 1 through 17.")
