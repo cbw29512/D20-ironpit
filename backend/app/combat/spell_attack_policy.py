@@ -6,7 +6,7 @@ from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import spell_attack_expected_damage
 from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spell_attack_helpers import slot_resource
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
 from app.domain.spells import SpellAttackAction
@@ -21,14 +21,7 @@ class SpellAttackChoice:
 
 
 def _slot_available(caster: EncounterCombatant, action: SpellAttackAction, turn_key: str) -> bool:
-    if action.level == 0:
-        return True
-    if not slot_spell_available(caster.state, turn_key):
-        return False
-    return any(
-        item.id == f"spell-slot-{action.level}" and item.current_uses > 0
-        for item in caster.state.resources
-    )
+    return action.level == 0 or slot_resource(caster, action, turn_key) is not None
 
 
 def choose_spell_attack(
