@@ -13,12 +13,13 @@ def _spell(
     role: str,
     *capabilities: str,
     level: int = 0,
+    min_level: int = 1,
 ) -> CanonicalSpellChoice:
     return CanonicalSpellChoice(
         id=spell_id,
         name=name,
         spell_level=level,
-        min_character_level=1,
+        min_character_level=min_level,
         role=role,
         required_capabilities=list(capabilities),
     )
@@ -34,16 +35,20 @@ _LEVEL_ONE_KNOWN = (
     _spell("burning-hands", "Burning Hands", "damage", "save-damage", "area", level=1),
 )
 
+_LEVEL_TWO_ADDITION = _spell(
+    "comprehend-languages", "Comprehend Languages", "utility", level=1, min_level=2,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level != 1:
-            raise ValueError("2014 Warlock canonical spell package currently certifies level 1 only.")
+        if level not in range(1, 3):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 2.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
             cantrips=list(_LEVEL_ONE_CANTRIPS),
-            spells=list(_LEVEL_ONE_KNOWN),
+            spells=[*_LEVEL_ONE_KNOWN, *([_LEVEL_TWO_ADDITION] if level >= 2 else [])],
         )
     except Exception:
         logger.exception("Failed to build 2014 Warlock spell package at level %s.", level)
