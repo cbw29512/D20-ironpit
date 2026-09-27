@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.combat.precombat_spells import choose_defensive_spell, prepare_defenses
 from app.content.sorcerer_draconic_2014_runtime import build_nyra_emberveil_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.runtime import build_combatant_state
+from app.combat.state import build_combatant_state
 
 
 def _member(combatant_id: str, template, side: str, position_ft: int) -> EncounterCombatant:
