@@ -22,8 +22,8 @@ _CANTRIPS = (
     _spell("ray-of-frost", "Ray of Frost", "damage", "spell-attack", "speed-debuff"),
     _spell("poison-spray", "Poison Spray", "damage", "save-damage"),
     _spell("shocking-grasp", "Shocking Grasp", "damage", "spell-attack", "reaction-suppression"),
-    _spell("acid-splash", "Acid Splash", "damage", "save-damage", "selected-targets"),
-    _spell("chill-touch", "Chill Touch", "damage", "spell-attack", "healing-block", min_level=10),
+    _spell("light", "Light", "utility", "arena-out-of-scope"),
+    _spell("prestidigitation", "Prestidigitation", "utility", "arena-out-of-scope", min_level=10),
 )
 
 _KNOWN = (
@@ -31,28 +31,21 @@ _KNOWN = (
     _spell("magic-missile", "Magic Missile", "damage", "auto-hit-projectiles", level=1),
     _spell("false-life", "False Life", "buff", "temporary-hp", level=1, min_level=2),
     _spell("shatter", "Shatter", "damage", "save-damage", "area", level=2, min_level=3),
-    _spell("scorching-ray", "Scorching Ray", "damage", "multi-projectile-spell-attack", level=2, min_level=4),
+    _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope", level=1, min_level=4),
     _spell("fireball", "Fireball", "damage", "save-damage", "area", level=3, min_level=5),
     _spell("lightning-bolt", "Lightning Bolt", "damage", "save-damage", "area", level=3, min_level=6),
     _spell(
         "greater-invisibility", "Greater Invisibility", "buff",
         "condition", "concentration", level=4, min_level=7,
     ),
-    _spell("wall-of-fire", "Wall of Fire", "damage", "save-damage", "persistent-hazard", level=4, min_level=8),
+    _spell("dispel-magic", "Dispel Magic", "utility", "effect-removal", level=3, min_level=8),
     _spell("cone-of-cold", "Cone of Cold", "damage", "save-damage", "area", level=5, min_level=9),
-    _spell("hold-monster", "Hold Monster", "control", "condition", "repeat-save", "concentration", level=5, min_level=10),
-    _spell("chain-lightning", "Chain Lightning", "damage", "selected-target-save-damage", level=6, min_level=11),
-    _spell(
-        "delayed-blast-fireball", "Delayed Blast Fireball", "damage",
-        "persistent-hazard", "save-damage", "concentration", level=7, min_level=13,
-    ),
-    _spell(
-        "incendiary-cloud", "Incendiary Cloud", "damage",
-        "persistent-hazard", "save-damage", "concentration", level=8, min_level=15,
-    ),
-    _spell("meteor-swarm", "Meteor Swarm", "damage", "multi-area", "save-damage", level=9, min_level=17),
+    _spell("creation", "Creation", "utility", "arena-out-of-scope", level=5, min_level=10),
+    _spell("move-earth", "Move Earth", "utility", "arena-out-of-scope", level=6, min_level=11),
+    _spell("teleport", "Teleport", "utility", "arena-out-of-scope", level=7, min_level=13),
+    _spell("tongues", "Tongues", "utility", "arena-out-of-scope", level=3, min_level=15),
+    _spell("water-breathing", "Water Breathing", "utility", "arena-out-of-scope", level=3, min_level=17),
 )
-
 
 def build_sorcerer_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
