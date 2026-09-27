@@ -4,7 +4,7 @@ from app.domain.spells import SpellAttackAction
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
 
 
-def eldritch_blast_2014(attack_bonus: int, level: int, damage_bonus: int = 0) -> SpellAttackAction:
+def eldritch_blast_2014(attack_bonus: int, level: int, damage_bonus: int = 0, range_ft: int = 120) -> SpellAttackAction:
     """Build one 2014 Eldritch Blast beam from the universal spell-attack primitive.
 
     Levels 1-4 have one beam. Higher-level multi-beam resolution is intentionally
@@ -12,13 +12,15 @@ def eldritch_blast_2014(attack_bonus: int, level: int, damage_bonus: int = 0) ->
     """
     if level not in range(1, 5):
         raise ValueError("Single-beam 2014 Eldritch Blast builder currently certifies levels 1 through 4.")
+    if range_ft < 1:
+        raise ValueError("Eldritch Blast range must be positive.")
     return SpellAttackAction(
         id="eldritch-blast",
         name="Eldritch Blast",
         level=0,
         action_cost="action",
         attack_kind="ranged",
-        range_ft=120,
+        range_ft=range_ft,
         attack_bonus=attack_bonus,
         damage_dice_count=1,
         damage_dice_size=10,
