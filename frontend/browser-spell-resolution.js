@@ -151,7 +151,7 @@
 
       const placement = choice.placement;
       const detail = placement
-        ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
+        ? ` Area covers ${placement.enemyIds.length} enemies, ${placement.friendlyIds.length} unprotected allies, and ${(placement.protectedFriendlyIds || []).length} protected allies.`
         : "";
       const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
       const events = [];
