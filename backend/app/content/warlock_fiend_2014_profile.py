@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 9):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 8.")
+    if level not in range(1, 10):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 9.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -139,6 +139,21 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 notes="Damage-first progression raises Charisma 18→20 for maximum spell attack, save DC, and Agonizing Blast damage.",
             )
         )
+    if level >= 9:
+        audits.extend([
+            FeatureAudit(
+                feature_id="flame-strike", feature_name="Flame Strike",
+                source_reference="D&D Basic Rules 2014: The Fiend Expanded Spell List",
+                category="subclass", combat_relevant=True, automated=True,
+                notes="Damage-first level-9 choice reuses the universal multi-component area save-damage primitive.",
+            ),
+            FeatureAudit(
+                feature_id="whispers-of-the-grave", feature_name="Whispers of the Grave",
+                source_reference="D&D Basic Rules 2014: Eldritch Invocations",
+                category="class", combat_relevant=False, automated=True,
+                notes="Fifth invocation is arena-neutral utility; Varek keeps his combat actions focused on higher-DPR blaster options.",
+            ),
+        ])
     return CharacterBuildProfile(
         id=f"build-varek-ashenmark-2014-l{level}",
         template_id=f"varek-ashenmark-2014-l{level}",
