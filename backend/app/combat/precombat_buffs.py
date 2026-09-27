@@ -6,6 +6,7 @@ from typing import Literal
 
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
 from app.combat.friendly_save_auras import sync_friendly_save_auras
+from app.combat.selectable_damage_resistance import resolve_selectable_damage_resistance
 from app.combat.precombat_spells import (
     choose_defensive_spell,
     select_defensive_targets,
@@ -25,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class OpeningBuffChoice:
-    kind: Literal["spell", "timed-self-buff"]
+    kind: Literal["spell", "timed-self-buff", "damage-resistance"]
     priority: int
     spell: DefensiveSpellAction | None = None
     slot_level: int | None = None
@@ -69,6 +70,13 @@ def choose_opening_buff(
                 spell=spell,
                 slot_level=slot_level,
                 resource=resource,
+            ))
+
+        resistance = member.state.template.progression_features.selectable_damage_resistance
+        if resistance is not None:
+            candidates.append(OpeningBuffChoice(
+                kind="damage-resistance",
+                priority=resistance.priority,
             ))
 
         timed = _timed_choice(member)
@@ -126,6 +134,12 @@ def resolve_opening_buff(
                 choice.resource,
                 affected_states,
             )
+
+        if choice.kind == "damage-resistance":
+            event = resolve_selectable_damage_resistance(sequence, member, setup)
+            if event is None:
+                raise ValueError("Opening damage resistance choice could not resolve.")
+            return event
 
         if choice.timed_action is None:
             raise ValueError("Opening timed self-buff choice is incomplete.")
