@@ -30,6 +30,8 @@ def _primary_weapon_is_ranged(template: CombatantTemplate) -> bool:
 def _has_ranged_spell_offense(template: CombatantTemplate) -> bool:
     if any(action.attack_kind == "ranged" and action.range_ft > 5 for action in template.spell_attack_actions):
         return True
+    if any(action.range_ft > 5 for action in template.auto_hit_spell_actions):
+        return True
     return any(action.range_ft > 5 for action in template.spell_save_actions)
 
 
