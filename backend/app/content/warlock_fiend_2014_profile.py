@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 6):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 5.")
+    if level not in range(1, 7):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 6.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -104,6 +104,21 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 source_reference="D&D Basic Rules 2014: Eldritch Invocations",
                 category="class", combat_relevant=False, automated=True,
                 notes="Third invocation is retained as arena-neutral utility so the blaster build does not add low-value bespoke combat mechanics.",
+            ),
+        ])
+    if level >= 6:
+        audits.extend([
+            FeatureAudit(
+                feature_id="dark-ones-own-luck", feature_name="Dark One's Own Luck",
+                source_reference="D&D Basic Rules 2014: The Fiend 6",
+                category="subclass", combat_relevant=True, automated=True,
+                notes="Reuses the resource-backed d20 bonus-die primitive for one d10 on a failed ability check or saving throw when the roll can be rescued.",
+            ),
+            FeatureAudit(
+                feature_id="dispel-magic", feature_name="Dispel Magic",
+                source_reference="D&D Basic Rules 2014: Warlock Spell List",
+                category="class", combat_relevant=True, automated=True,
+                notes="Selected when no new simple damage spell improves on the level-5 blaster package; reuses the universal effect-removal action.",
             ),
         ])
     return CharacterBuildProfile(
