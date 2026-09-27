@@ -70,7 +70,8 @@ def _save(action: Any) -> dict[str, Any]:
         "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
         "range": action.range_ft, "targetMaxSize": _value(action.target_max_size) if action.target_max_size else None,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
-        "damageBonus": action.damage_bonus, "damageType": action.damage_type, "successDamage": action.success_damage,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+           "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above, "successDamage": action.success_damage,
         "grappleEscapeDc": action.grapple_escape_dc, "restrainsWhileGrappled": action.restrains_while_grappled,
         "magicalEffect": action.magical_effect, "animation": action.animation,
     }
