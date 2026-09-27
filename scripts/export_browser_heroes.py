@@ -506,10 +506,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             template.progression_features.resource_backed_on_hit_exile.model_dump(mode="json")
             if template.progression_features.resource_backed_on_hit_exile else None
         ),
-        "delayed_resource_refill": (
-            template.progression_features.delayed_resource_refill.model_dump(mode="json")
-            if template.progression_features.delayed_resource_refill else None
-        ),
         "conditional_damage_defenses": [
             {
                 "id": item.id, "kind": _value(item.kind),
@@ -525,6 +521,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
             progression.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
         )
+    if progression.delayed_resource_refill is not None:
+        row["delayed_resource_refill"] = progression.delayed_resource_refill.model_dump(mode="json")
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
