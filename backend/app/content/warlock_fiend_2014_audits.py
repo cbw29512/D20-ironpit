@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.warlock_fiend_2014_high_audits import build_varek_fiend_2014_high_audits
 from app.domain.character_builds import FeatureAudit
 
 
@@ -195,19 +196,5 @@ def build_varek_fiend_2014_audits(level: int) -> list[FeatureAudit]:
                 notes="A qualifying hit spends its once-per-rest resource, applies universal Banished/exile, removes the target from battlefield targeting until the end of the source's next turn, then deals 10d10 psychic damage on return unless the target is a fiend.",
             )
         )
-    if level >= 15:
-        audits.extend([
-            FeatureAudit(
-                feature_id="mystic-arcanum-8", feature_name="Mystic Arcanum (8th Level)",
-                source_reference="D&D Basic Rules 2014: Warlock 15; Power Word Stun",
-                category="class", combat_relevant=True, automated=True,
-                notes="Power Word Stun uses the universal HP-threshold condition action: 150 HP or fewer, no initial save, Stunned, Constitution repeat save at each target turn end.",
-            ),
-            FeatureAudit(
-                feature_id="visions-of-distant-realms", feature_name="Visions of Distant Realms",
-                source_reference="D&D Basic Rules 2014: Eldritch Invocations",
-                category="class", combat_relevant=False, automated=True,
-                notes="Seventh invocation remains arena-neutral utility rather than displacing the optimized blaster package.",
-            ),
-        ])
+    audits.extend(build_varek_fiend_2014_high_audits(level))
     return audits
