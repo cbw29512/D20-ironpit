@@ -237,7 +237,8 @@
       const best = candidates[0];
       return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds,
         placement: best.placement, expectedDamage: best.score, rangeModifier: best.rangeModifier || null,
-        alternateCast: best.alternateCast || null };
+        alternateCast: best.alternateCast || null,
+        damageMaximizer: C().safeDamageMaximizer(caster.state, best.action.id, best.slotLevel) };
     } catch (error) {
       console.error("Browser save-spell selection failed", { caster: caster?.combatant_id, error });
       throw error;
