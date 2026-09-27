@@ -153,6 +153,7 @@ jobs:
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
           grep -q 'browser-timed-self-buffs.js' index.html
+          grep -q 'browser-selectable-damage-resistance.js' index.html
           grep -q 'browser-precombat-buffs.js' index.html
           grep -q 'browser-timed-emanations.js' index.html
           grep -q 'browser-initiative-resource-refill.js' index.html
@@ -168,6 +169,7 @@ jobs:
           grep -q 'browser-source-bound-effects.js' index.html
           grep -q 'browser-ongoing-spell-control.js' index.html
           grep -q 'browser-modifiers.js' index.html
+          grep -q 'browser-damage-defense-rules.js' index.html
           grep -q 'browser-concentration.js' index.html
           grep -q 'browser-spell-effects.js' index.html
           grep -q 'browser-spell-modifiers.js' index.html
@@ -249,6 +251,7 @@ jobs:
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
+          grep -q 'browser-selectable-damage-resistance.js' frontend/index.html
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
           grep -q 'browser-initiative-resource-refill.js' frontend/index.html
@@ -268,6 +271,7 @@ jobs:
           grep -q 'browser-source-bound-effects.js' frontend/index.html
           grep -q 'browser-ongoing-spell-control.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
+          grep -q 'browser-damage-defense-rules.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-concentration.js' frontend/index.html
           grep -q 'browser-spell-effects.js' frontend/index.html
@@ -400,6 +404,7 @@ jobs:
           node frontend/browser-parry-effective-ac.test.cjs
           node frontend/browser-reaction-movement.test.cjs
           node frontend/browser-damage-triggered-reactions.test.cjs
+          node frontend/browser-fiendish-resilience-2014.test.cjs
           node frontend/browser-spell-area.test.cjs
           node frontend/browser-spell-cast-effects.test.cjs
           node frontend/browser-spell-resolution.test.cjs
