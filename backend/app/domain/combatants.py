@@ -118,6 +118,7 @@ class CombatantTemplate(BaseModel):
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
+    conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
     wearing_heavy_armor: bool = False
     wearing_metal_armor: bool = False
