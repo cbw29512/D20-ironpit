@@ -40,6 +40,12 @@
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
       owned_debuff_counters: [...(options.ownedDebuffCounters || [])],
       owned_movement_mode_grants: [...(options.ownedMovementModeGrants || [])],
+      removed_from_battlefield: Boolean(options.removedFromBattlefield),
+      return_damage_dice_count: options.returnDamageDiceCount || 0,
+      return_damage_dice_size: options.returnDamageDiceSize || 0,
+      return_damage_bonus: options.returnDamageBonus || 0,
+      return_damage_type: options.returnDamageType || null,
+      return_damage_excluded_creature_types: [...(options.returnDamageExcludedCreatureTypes || [])],
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
