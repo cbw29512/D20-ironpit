@@ -92,6 +92,7 @@
           expiresAtStartOfSourceTurn: expiresAtSourceStart,
           ownedDamageResistances: defensesAttached ? [] : [...(action.damageResistances || [])],
           ownedDebuffCounters: defensesAttached ? [] : [...(action.debuffCounters || [])],
+          ownedMovementModeGrants: defensesAttached ? [] : [...(action.movementModeGrants || [])],
           endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
           endsIfSourceDead: Boolean(action.endsIfSourceDead),
           useDefaultPoisonRecovery: false,
