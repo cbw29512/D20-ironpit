@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 3):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 2.")
+    if level not in range(1, 4):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 3.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -69,6 +69,18 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 notes="Extends Eldritch Blast range to 300 feet without a new resolver.",
             ),
         ])
+    if level >= 3:
+        audits.append(
+            FeatureAudit(
+                feature_id="pact-of-the-tome", feature_name="Pact of the Tome",
+                source_reference="D&D Basic Rules 2014: Pact Boon — Pact of the Tome",
+                category="class", combat_relevant=False, automated=True,
+                notes=(
+                    "Canonical blaster boon. Its three bonus cantrips are retained as progression metadata; "
+                    "Eldritch Blast remains the stronger certified arena attack, so Tome does not require a new resolver."
+                ),
+            )
+        )
     return CharacterBuildProfile(
         id=f"build-varek-ashenmark-2014-l{level}",
         template_id=f"varek-ashenmark-2014-l{level}",
