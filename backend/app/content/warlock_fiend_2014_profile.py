@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 10):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 9.")
+    if level not in range(1, 11):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 10.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -154,6 +154,18 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 notes="Fifth invocation is arena-neutral utility; Varek keeps his combat actions focused on higher-DPR blaster options.",
             ),
         ])
+    if level >= 10:
+        audits.append(
+            FeatureAudit(
+                feature_id="fiendish-resilience", feature_name="Fiendish Resilience",
+                source_reference="D&D Basic Rules 2014: The Fiend 10",
+                category="subclass", combat_relevant=True, automated=True,
+                notes=(
+                    "Uses the generic precombat best-resistance selector and fight-scoped conditional damage defense; "
+                    "magical and silvered weapon damage bypass the selected resistance per 2014 RAW."
+                ),
+            )
+        )
     return CharacterBuildProfile(
         id=f"build-varek-ashenmark-2014-l{level}",
         template_id=f"varek-ashenmark-2014-l{level}",
