@@ -71,7 +71,7 @@ class TimedSelfBuffAction(BaseModel):
     concentration: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
-    expiry_timing: ConditionTiming = "source_turn_start"
+    expiry_timing: ConditionTiming | None = "source_turn_start"
     priority: int = 0
     animation: str = "buff"
 
