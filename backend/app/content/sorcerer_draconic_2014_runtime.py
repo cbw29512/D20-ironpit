@@ -74,7 +74,7 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             spell_save_actions=[
                 burning_hands_2014(8 + pb + cha, cha if level >= 6 else 0),
                 poison_spray_2014(8 + pb + cha, level),
-                *([shatter_2014(8 + pb + cha)] if level >= 4 else []),
+                *([shatter_2014(8 + pb + cha)] if level >= 3 else []),
                 *([fireball_2014(8 + pb + cha, cha if level >= 6 else 0)] if level >= 5 else []),
                 *([lightning_bolt_2014(8 + pb + cha)] if level >= 6 else []),
                 *([cone_of_cold_2014(8 + pb + cha)] if level >= 9 else []),
