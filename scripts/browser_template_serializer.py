@@ -494,6 +494,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["failed_d20_test_override_grants"] = [
             item.model_dump() for item in features.failed_d20_test_override_grants
         ]
+    if features.resource_backed_d20_bonus_dice:
+        row["resource_backed_d20_bonus_dice"] = [
+            item.model_dump() for item in features.resource_backed_d20_bonus_dice
+        ]
     if features.deferred_save_effect:
         row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
     if features.source_reduces_hostile_to_zero_hp_temporary_hp:
