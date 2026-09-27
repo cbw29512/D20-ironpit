@@ -362,3 +362,64 @@ def test_varek_level_nine_uses_fifth_level_pact_magic_and_flame_strike() -> None
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["flame-strike"].automated is True
     assert audits["whispers-of-the-grave"].combat_relevant is False
+
+
+def test_varek_level_ten_selects_best_fiendish_resilience_and_respects_weapon_bypass() -> None:
+    from app.combat.damage_defenses import adjusted_damage_amount
+    from app.combat.selectable_damage_resistance import resolve_selectable_damage_resistance
+    from app.domain.damage_sources import DamageSourceQualifier
+    from app.domain.weapons_base import DamageType
+
+    varek = _member(build_varek_ashenmark_2014(10), "varek", "heroes", 0)
+    enemy = _member(_commoner_2014(), "enemy", "monsters", 5)
+    setup = EncounterSetup(
+        heroes=[varek], monsters=[enemy], hero_total_levels=10, monster_total_cr="0", ruleset="2014",
+    )
+
+    event = resolve_selectable_damage_resistance(1, varek, setup)
+    assert event is not None
+    assert event.feature_id == "fiendish-resilience"
+    assert "bludgeoning resistance" in event.description
+    assert varek.state.opening_buff_id == "fiendish-resilience"
+
+    defense = varek.state.active_conditional_damage_defenses[0]
+    assert defense.damage_types == [DamageType.BLUDGEONING]
+    assert set(defense.forbidden_source_qualifiers) == {
+        DamageSourceQualifier.MAGICAL,
+        DamageSourceQualifier.SILVERED,
+    }
+
+    ordinary_weapon = {
+        DamageSourceQualifier.ATTACK,
+        DamageSourceQualifier.WEAPON,
+        DamageSourceQualifier.MELEE,
+    }
+    magical_weapon = {*ordinary_weapon, DamageSourceQualifier.MAGICAL}
+    silvered_weapon = {*ordinary_weapon, DamageSourceQualifier.SILVERED}
+
+    assert adjusted_damage_amount(
+        10, DamageType.BLUDGEONING, varek.state, source_qualifiers=ordinary_weapon,
+    ) == 5
+    assert adjusted_damage_amount(
+        10, DamageType.BLUDGEONING, varek.state, source_qualifiers=magical_weapon,
+    ) == 10
+    assert adjusted_damage_amount(
+        10, DamageType.BLUDGEONING, varek.state, source_qualifiers=silvered_weapon,
+    ) == 10
+
+
+def test_varek_level_ten_has_four_cantrips_and_fiendish_resilience_audit() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    profile = build_varek_ashenmark_2014_profile(10)
+    package = build_warlock_2014_spell_package(10)
+    varek = build_varek_ashenmark_2014(10)
+
+    assert len(package.cantrips) == warlock_2014_level(10).cantrips_known == 4
+    assert package.cantrips[-1].id == "prestidigitation"
+    assert len(package.spells) == warlock_2014_level(10).spells_known == 10
+    assert {item.id: item.max_uses for item in varek.resources if item.id.startswith("spell-slot-")} == {
+        "spell-slot-5": 2,
+    }
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["fiendish-resilience"].automated is True
