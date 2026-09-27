@@ -109,14 +109,14 @@ _LEVEL_SEVENTEEN_ARCANUM = _spell(
 )
 
 _LEVEL_NINETEEN_KNOWN = _spell(
-    "remove-curse", "Remove Curse", "utility", "arena-out-of-scope", level=3, min_level=19,
+    "illusory-script", "Illusory Script", "utility", "arena-out-of-scope", level=1, min_level=19,
 )
 
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 20):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 19.")
+        if level not in range(1, 21):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 20.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
