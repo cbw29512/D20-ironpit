@@ -183,10 +183,7 @@ def build_varek_fiend_2014_audits(level: int) -> list[FeatureAudit]:
                 feature_id="mystic-arcanum-7", feature_name="Mystic Arcanum (7th Level)",
                 source_reference="D&D Basic Rules 2014: Warlock 13; Finger of Death",
                 category="class", combat_relevant=True, automated=True,
-                notes=(
-                    "Finger of Death reuses the universal resource-backed save-damage action. "
-                    "Its post-kill zombie creation is arena-inert under the summon contract."
-                ),
+                notes="Finger of Death reuses the universal resource-backed save-damage action; its post-kill zombie creation is arena-inert under the summon contract.",
             )
         )
     if level >= 14:
@@ -195,11 +192,7 @@ def build_varek_fiend_2014_audits(level: int) -> list[FeatureAudit]:
                 feature_id="hurl-through-hell", feature_name="Hurl Through Hell",
                 source_reference="D&D Basic Rules 2014: The Fiend 14",
                 category="subclass", combat_relevant=True, automated=True,
-                notes=(
-                    "A qualifying hit spends its once-per-rest resource, applies the universal Banished/exile state, "
-                    "removes the target from battlefield targeting until the end of the source's next turn, then deals "
-                    "10d10 psychic damage on return unless the target is a fiend."
-                ),
+                notes="A qualifying hit spends its once-per-rest resource, applies universal Banished/exile, removes the target from battlefield targeting until the end of the source's next turn, then deals 10d10 psychic damage on return unless the target is a fiend.",
             )
         )
     return audits
