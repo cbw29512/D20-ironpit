@@ -33,6 +33,7 @@
       if (retainSpellcasting) {
         active.spell_save_actions = keep(owner.spell_save_actions);
         active.spell_attack_actions = keep(owner.spell_attack_actions);
+        active.auto_hit_spell_actions = keep(owner.auto_hit_spell_actions);
         active.persistent_spell_attack_actions = keep(owner.persistent_spell_attack_actions);
         active.defensive_spell_actions = keep(owner.defensive_spell_actions);
         active.healingActions = keep(owner.healingActions);
