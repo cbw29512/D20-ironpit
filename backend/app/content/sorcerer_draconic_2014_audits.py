@@ -135,7 +135,7 @@ def build_sorcerer_draconic_2014_feature_audits(level: int) -> list[FeatureAudit
                 notes="Reuses the existing universal effect-removal action and spell-slot resource path.",
             ),
         ]
-    if level >= 9:
+    if level >= 10:
         rows.append(FeatureAudit(
             feature_id="creation",
             feature_name="Creation",
