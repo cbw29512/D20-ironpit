@@ -10,7 +10,16 @@ from app.content.paladin_devotion_2014_spells import dispel_magic_2014
 from app.content.shared_invisibility_spells_2014 import greater_invisibility_2014
 from app.content.sorcerer_2014_progression import sorcerer_2014_level
 from app.content.sorcerer_draconic_2014_profile import build_nyra_emberveil_2014_profile
-from app.content.sorcerer_draconic_2014_spells import burning_hands_2014, fire_bolt_2014, fireball_2014
+from app.content.sorcerer_draconic_2014_spells import (
+    burning_hands_2014,
+    cone_of_cold_2014,
+    fire_bolt_2014,
+    fireball_2014,
+    lightning_bolt_2014,
+    poison_spray_2014,
+    ray_of_frost_2014,
+    shatter_2014,
+)
 from app.content.sorcerer_draconic_2014_level14 import dragon_wings_2014
 from app.content.sorcerer_draconic_2014_level18 import draconic_presence_fear_2014
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
@@ -53,10 +62,17 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             movement_modes={"walk_ft": 30, "fly_ft": 0},
             initiative_bonus=dex,
             weapon_attack=weapon_attack,
-            spell_attack_actions=[fire_bolt_2014(pb + cha, level, cha if level >= 6 else 0)],
+            spell_attack_actions=[
+                fire_bolt_2014(pb + cha, level, cha if level >= 6 else 0),
+                ray_of_frost_2014(pb + cha, level),
+            ],
             spell_save_actions=[
                 burning_hands_2014(8 + pb + cha, cha if level >= 6 else 0),
+                poison_spray_2014(8 + pb + cha, level),
+                *([shatter_2014(8 + pb + cha)] if level >= 4 else []),
                 *([fireball_2014(8 + pb + cha, cha if level >= 6 else 0)] if level >= 5 else []),
+                *([lightning_bolt_2014(8 + pb + cha)] if level >= 6 else []),
+                *([cone_of_cold_2014(8 + pb + cha)] if level >= 9 else []),
             ],
             spell_cast_timed_resistances=([
                 SpellCastTimedResistance(
