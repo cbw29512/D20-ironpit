@@ -72,15 +72,23 @@ _LEVEL_NINE_DAMAGE = _spell(
     "flame-strike", "Flame Strike", "damage", "save-damage", "area", level=5, min_level=9,
 )
 
+_LEVEL_TEN_CANTRIP = _spell(
+    "prestidigitation", "Prestidigitation", "utility", min_level=10,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 10):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 9.")
+        if level not in range(1, 11):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 10.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
-            cantrips=[*_LEVEL_ONE_CANTRIPS, *([_LEVEL_FOUR_CANTRIP] if level >= 4 else [])],
+            cantrips=[
+                *_LEVEL_ONE_CANTRIPS,
+                *([_LEVEL_FOUR_CANTRIP] if level >= 4 else []),
+                *([_LEVEL_TEN_CANTRIP] if level >= 10 else []),
+            ],
             spells=[
                 *_LEVEL_ONE_KNOWN,
                 *([_LEVEL_TWO_ADDITION] if level == 2 else []),
