@@ -111,6 +111,23 @@ assert.equal(openingBard.state.action_available, true);
 assert.equal(openingBard.state.timed_effects[0].expires_round, 1);
 assert.match(openingPrep.events[0].description, /free opening buff/);
 
+const wings = {
+  id: "dragon-wings", name: "Dragon Wings", actionCost: "bonus_action",
+  resourceId: null, resourceCost: 1, durationRounds: null,
+  conditionIds: [], damageResistances: [], movementModeGrants: [{
+    mode: "fly", fixedSpeedFt: null, matchCurrentSpeed: true,
+  }],
+  expiryTiming: null, priority: 80, animation: "dragon-wings",
+};
+const winged = { combatant_id: "winged", side: "heroes", state: state("Winged") };
+winged.state.template.timed_self_buff_actions = [wings];
+const wingEvent = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.resolve(50, 1, winged, wings);
+assert.equal(wingEvent.feature_id, "dragon-wings");
+assert.equal(winged.state.bonus_action_available, false);
+assert.equal(winged.state.timed_effects[0].expires_round, null);
+assert.equal(winged.state.timed_effects[0].expiry_timing, null);
+assert.deepEqual(winged.state.timed_effects[0].owned_movement_mode_grants, wings.movementModeGrants);
+
 const lowKi = { combatant_id: "low", side: "heroes", state: state("Low Ki") };
 lowKi.state.template.timed_self_buff_actions = [action];
 lowKi.state.resources.ki = 3;
