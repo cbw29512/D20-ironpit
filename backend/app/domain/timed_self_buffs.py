@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
 from app.domain.progression import SavingThrowAdvantageGrant
+from app.domain.movement import MovementModeGrant
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
@@ -58,11 +59,12 @@ class TimedSelfBuffAction(BaseModel):
     action_cost: ActionCost = "action"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
-    duration_rounds: int = Field(ge=1, le=600)
+    duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
+    movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
     hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
@@ -105,6 +107,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.damage_resistances
                 or self.debuff_counters
                 or self.saving_throw_advantage_grants
+                or self.movement_mode_grants
                 or self.friendly_save_advantage_aura is not None
                 or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
