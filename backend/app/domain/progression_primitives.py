@@ -140,3 +140,14 @@ class ResourceBackedOnHitExile(BaseModel):
     return_damage_bonus: int = 0
     return_damage_type: DamageType | None = None
     return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
+
+
+class DelayedResourceRefill(BaseModel):
+    """Automatically arm a source-owned timer when declared resources are below maximum."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    resource_ids: list[str] = Field(min_length=1)
+    use_resource_id: str = Field(min_length=1)
+    use_resource_cost: int = Field(default=1, ge=1)
+    delay_rounds: int = Field(ge=1)
