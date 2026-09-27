@@ -66,9 +66,7 @@ def resolve_combat_turn(
         events.extend(support_events)
         if is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        activation_events, sequence = resolve_feature_activation_phase(
-            sequence, round_number, attacker, setup, dice, turn_key,
-        )
+        activation_events, sequence = resolve_feature_activation_phase(sequence, round_number, attacker, setup, dice, turn_key)
         events.extend(activation_events)
         if should_use_second_wind(attacker.state):
             events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id))
@@ -126,9 +124,7 @@ def resolve_combat_turn(
         if charged or attacker.state.is_dead or attacker.state.is_unconscious:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-        movement_events, sequence = move_to_enable_offense(
-            sequence, round_number, attacker, setup, turn_key, dice,
-        )
+        movement_events, sequence = move_to_enable_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(movement_events)
         sync_paladin_auras_2014(setup)
         sync_friendly_save_auras(setup)
@@ -144,9 +140,7 @@ def resolve_combat_turn(
             events.append(presence); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-        threshold_event, sequence = resolve_hp_threshold_turn(
-            sequence, round_number, attacker, setup,
-        )
+        threshold_event, sequence = resolve_hp_threshold_turn(sequence, round_number, attacker, setup)
         if threshold_event is not None:
             events.append(threshold_event)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
@@ -193,8 +187,7 @@ def resolve_combat_turn(
             feature = opening_feature_id(round_number, attacker, setup) or ("pack-tactics" if pack else None)
             more, sequence = resolve_standard_attack_action(
                 sequence, round_number, attacker, attack_target, attack, distance, dice, setup, turn_key,
-                advantage_sources=1 if pack else 0, feature_id=feature,
-            )
+                advantage_sources=1 if pack else 0, feature_id=feature)
             events.extend(more)
         elif is_available(attacker.state, "action"):
             events.append(resolve_dodge_action(sequence, round_number, attacker))
