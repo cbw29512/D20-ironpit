@@ -19,14 +19,15 @@ from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition,
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.progression_primitives import (
     ResourceBackedD20BonusDie,
+    ResourceBackedOnHitExile,
     SelectableDamageResistance,
     SourceReducesHostileToZeroHpTemporaryHp,
 )
 
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 14):
-        raise ValueError("2014 Varek runtime currently certifies levels 1 through 13.")
+    if level not in range(1, 15):
+        raise ValueError("2014 Varek runtime currently certifies levels 1 through 14.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
@@ -91,6 +92,20 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                     priority=90,
                 ) if level >= 10 else None
             ),
+            resource_backed_on_hit_exile=(
+                ResourceBackedOnHitExile(
+                    source_id="hurl-through-hell",
+                    source_name="Hurl Through Hell",
+                    resource_id="hurl-through-hell",
+                    resource_cost=1,
+                    expiry_timing="source_turn_end",
+                    duration_rounds=1,
+                    return_damage_dice_count=10,
+                    return_damage_dice_size=10,
+                    return_damage_type=DamageType.PSYCHIC,
+                    return_damage_excluded_creature_types=["fiend"],
+                ) if level >= 14 else None
+            ),
             resource_backed_d20_bonus_dice=(
                 [ResourceBackedD20BonusDie(
                     source_id="dark-ones-own-luck",
@@ -133,6 +148,11 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                 name="Mystic Arcanum (7th Level)",
                 max_uses=1,
             )] if level >= 13 else []),
+            *([ResourceDefinition(
+                id="hurl-through-hell",
+                name="Hurl Through Hell",
+                max_uses=1,
+            )] if level >= 14 else []),
         ],
         effect_removal_actions=([dispel_magic_2014("charisma")] if level >= 6 else []),
         visual=VisualLoadout(armor="leather-armor", main_hand="arcane-focus", body_style="humanoid"),
