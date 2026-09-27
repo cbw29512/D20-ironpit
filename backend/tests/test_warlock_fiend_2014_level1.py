@@ -157,3 +157,22 @@ def test_varek_level_two_spell_package_avoids_forcing_new_damage_subsystems() ->
     package = build_warlock_2014_spell_package(2)
     assert [item.id for item in package.cantrips] == ["eldritch-blast", "poison-spray"]
     assert [item.id for item in package.spells] == ["hex", "burning-hands", "comprehend-languages"]
+
+
+def test_varek_level_three_tome_and_pact_magic() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    profile = build_varek_ashenmark_2014_profile(3)
+    varek = build_varek_ashenmark_2014(3)
+    audits = {item.feature_id: item for item in profile.feature_audits}
+
+    assert profile.level == 3
+    assert audits["pact-of-the-tome"].automated is True
+    assert audits["pact-of-the-tome"].combat_relevant is False
+    assert {item.id: item.max_uses for item in varek.resources} == {"spell-slot-2": 2}
+    assert [item.id for item in varek.spell_save_actions] == ["poison-spray", "burning-hands", "shatter"]
+
+    package = build_warlock_2014_spell_package(3)
+    assert [item.id for item in package.spells] == [
+        "hex", "burning-hands", "comprehend-languages", "shatter",
+    ]
