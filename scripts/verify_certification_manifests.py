@@ -73,6 +73,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.update(rule.source_id for rule in features.resource_backed_d20_bonus_dice)
     if features.source_reduces_hostile_to_zero_hp_temporary_hp:
         mechanics.add(features.source_reduces_hostile_to_zero_hp_temporary_hp.source_id)
+    if features.selectable_damage_resistance:
+        mechanics.add(features.selectable_damage_resistance.source_id)
     if features.deferred_save_effect:
         mechanics.add(features.deferred_save_effect.source_id)
     if features.athletics_advantage:
