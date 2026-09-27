@@ -37,8 +37,10 @@ def test_level_three_resources_spells_and_metamagic_are_explicit() -> None:
         "burning-hands",
         "magic-missile",
         "false-life",
-        "scorching-ray",
+        "shatter",
     ]
+    assert {item.id for item in hero.spell_save_actions} >= {"burning-hands", "poison-spray", "shatter"}
+    assert {item.id for item in hero.auto_hit_spell_actions} == {"magic-missile"}
     assert [item.id for item in hero.spell_save_disadvantage_options] == ["heightened-spell"]
 
     audits = {item.feature_id: item for item in profile.feature_audits}
