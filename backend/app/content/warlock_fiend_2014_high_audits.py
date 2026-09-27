@@ -50,4 +50,22 @@ def build_varek_fiend_2014_high_audits(level: int) -> list[FeatureAudit]:
                 notes="Power Word Kill uses the universal 100-HP threshold instant-death action and honors instant-death prevention such as Death Ward.",
             ),
         ])
+    if level >= 18:
+        audits.append(
+            FeatureAudit(
+                feature_id="beguiling-influence", feature_name="Beguiling Influence",
+                source_reference="D&D Basic Rules 2014: Eldritch Invocations",
+                category="class", combat_relevant=False, automated=True,
+                notes="Eighth invocation adds Deception and Persuasion proficiency; it is represented in profile/runtime skills and is arena-neutral.",
+            )
+        )
+    if level >= 19:
+        audits.append(
+            FeatureAudit(
+                feature_id="ability-score-improvement-l19", feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Warlock 19",
+                category="class", combat_relevant=True, automated=True,
+                notes="Constitution 18→20 maximizes HP and concentration durability while Charisma remains capped at 20.",
+            )
+        )
     return audits
