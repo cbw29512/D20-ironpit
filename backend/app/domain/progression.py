@@ -19,6 +19,7 @@ from app.domain.progression_primitives import (
     OpeningTargetingWard,
     ResourceBackedD20BonusDie,
     SavingThrowProficiencyGrant,
+    SourceReducesHostileToZeroHpTemporaryHp,
     SlotHealingSelfRider,
 )
 
@@ -79,6 +80,7 @@ class ProgressionCombatFeatures(BaseModel):
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
     resource_backed_d20_bonus_dice: list[ResourceBackedD20BonusDie] = Field(default_factory=list)
+    source_reduces_hostile_to_zero_hp_temporary_hp: SourceReducesHostileToZeroHpTemporaryHp | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
