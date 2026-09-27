@@ -76,14 +76,45 @@
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], appliedConditions = [];
     if (hit) {
-      const count = spell.damageDiceCount * (critical ? 2 : 1), rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
+      const count = spell.damageDiceCount * (critical ? 2 : 1);
+      const rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
-      const applied = spell.damageType ? A().adjustedDamage(target.state, raw, spell.damageType) : 0;
-      damageRoll = { notation: `${count}d${spell.damageDiceSize}+${spell.damageBonus || 0}`, rolls, modifier: spell.damageBonus || 0, total: applied };
-      if (spell.damageType) damageComponents = [{ source: spell.name, notation: damageRoll.notation, rolls: [...rolls], modifier: spell.damageBonus || 0,
-        damage_type: spell.damageType, total: raw, applied_total: applied }];
+      const rolledComponents = spell.damageType ? [{
+        source: spell.name,
+        notation: `${count}d${spell.damageDiceSize}+${spell.damageBonus || 0}`,
+        rolls: [...rolls],
+        modifier: spell.damageBonus || 0,
+        damage_type: spell.damageType,
+        total: raw,
+      }] : [];
+      for (const modifier of M().bonusDamage(caster.state, target.combatant_id)) {
+        const riderCount = modifier.dice_count * (critical ? 2 : 1);
+        const riderRolls = window.IRON_PIT_DICE.rollMany(riderCount, modifier.dice_size);
+        rolledComponents.push({
+          source: modifier.source_name || modifier.source_effect_id,
+          notation: `${riderCount}d${modifier.dice_size}+0`,
+          rolls: riderRolls,
+          modifier: 0,
+          damage_type: modifier.damage_type,
+          total: riderRolls.reduce((sum, value) => sum + value, 0),
+        });
+      }
+      damageComponents = rolledComponents.map((part) => ({
+        ...part,
+        applied_total: A().adjustedDamage(target.state, part.total, part.damage_type),
+      }));
+      const applied = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
+      damageRoll = damageComponents.length ? {
+        notation: damageComponents.map((part) => part.notation).join(" + "),
+        rolls: damageComponents.flatMap((part) => part.rolls),
+        modifier: damageComponents.reduce((sum, part) => sum + (part.modifier || 0), 0),
+        total: applied,
+      } : null;
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
-      A().applyDamage(target.state, applied, critical, spell.damageType && applied > 0 ? [spell.damageType] : [], states);
+      const appliedTypes = [...new Set(
+        damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
+      )];
+      A().applyDamage(target.state, applied, critical, appliedTypes, states);
       if (target.state.is_alive && !target.state.is_dead) {
         (spell.onHitModifierEffects || []).forEach((effect, index) => {
           M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
