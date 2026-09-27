@@ -95,8 +95,8 @@ _LEVEL_THIRTEEN_ARCANUM = _spell(
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 14):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 13.")
+        if level not in range(1, 15):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 14.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
