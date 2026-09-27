@@ -43,6 +43,10 @@ jobs:
           name: canonical-heroes-${{ github.sha }}
           path: frontend/browser-heroes.js
           retention-days: 1
+      - name: Generate browser monster artifacts required by manifest verification
+        run: |
+          python scripts/export_browser_monsters.py
+          python scripts/export_browser_monsters_2014.py
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
       - name: Upload certification manifest candidates
