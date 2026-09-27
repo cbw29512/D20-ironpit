@@ -695,3 +695,87 @@ def test_varek_level_sixteen_raises_constitution_again() -> None:
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["ability-score-improvement-l16"].automated is True
+
+
+def test_varek_level_seventeen_power_word_kill_prefers_kill_threshold_and_honors_death_ward() -> None:
+    from app.combat.hp_threshold_condition import choose_hp_threshold_condition
+    from app.combat.hp_threshold_instant_death import (
+        choose_hp_threshold_instant_death,
+        resolve_hp_threshold_instant_death,
+    )
+    from app.combat.modifier_stack import add_modifier
+    from app.domain.modifiers import CombatModifier, ModifierKind
+
+    varek = _member(build_varek_ashenmark_2014(17), "varek", "heroes", 0)
+    enemy = _member(_commoner_2014(), "enemy", "monsters", 30)
+    enemy.state.template.max_hp = 200
+    enemy.state.current_hp = 101
+    setup = EncounterSetup(
+        heroes=[varek], monsters=[enemy], hero_total_levels=17, monster_total_cr="0", ruleset="2014",
+    )
+    begin_turn(varek.state)
+
+    assert choose_hp_threshold_instant_death(varek, setup) is None
+    assert choose_hp_threshold_condition(varek, setup) is not None
+
+    enemy.state.current_hp = 100
+    instant = choose_hp_threshold_instant_death(varek, setup)
+    assert instant is not None
+    target, action = instant
+    assert action.id == "power-word-kill"
+    event = resolve_hp_threshold_instant_death(1, 1, varek, target, action, setup)
+    assert event.resource_remaining == 0
+    assert enemy.state.is_dead is True
+    assert enemy.state.current_hp == 0
+
+    varek = _member(build_varek_ashenmark_2014(17), "varek-ward", "heroes", 0)
+    warded = _member(_commoner_2014(), "warded", "monsters", 30)
+    warded.state.template.max_hp = 200
+    warded.state.current_hp = 100
+    warded.state.active_buff_effect_ids.append("death-ward")
+    add_modifier(warded.state, CombatModifier(
+        id="cleric:death-ward:warded:0",
+        source_id="cleric",
+        source_effect_id="death-ward",
+        source_name="Death Ward",
+        source_is_magical=True,
+        kind=ModifierKind.ZERO_HP_REPLACEMENT,
+        replacement_hp=1,
+        prevents_instant_death=True,
+    ))
+    warded_setup = EncounterSetup(
+        heroes=[varek], monsters=[warded], hero_total_levels=17, monster_total_cr="0", ruleset="2014",
+    )
+    begin_turn(varek.state)
+    target, action = choose_hp_threshold_instant_death(varek, warded_setup)
+    ward_event = resolve_hp_threshold_instant_death(1, 1, varek, target, action, warded_setup)
+    assert ward_event.resource_remaining == 0
+    assert warded.state.is_dead is False
+    assert warded.state.current_hp == 100
+    assert not any(item.source_effect_id == "death-ward" for item in warded.state.active_modifiers)
+    assert "negates the instant-death effect" in ward_event.description
+
+
+def test_varek_level_seventeen_has_four_beams_four_pact_slots_and_ninth_arcanum() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    varek = build_varek_ashenmark_2014(17)
+    profile = build_varek_ashenmark_2014_profile(17)
+    package = build_warlock_2014_spell_package(17)
+
+    blast = next(item for item in varek.spell_attack_actions if item.id == "eldritch-blast")
+    assert blast.attack_count == 4
+    resources = {item.id: item.max_uses for item in varek.resources}
+    assert resources["spell-slot-5"] == 4
+    assert resources["mystic-arcanum-6"] == 1
+    assert resources["mystic-arcanum-7"] == 1
+    assert resources["mystic-arcanum-8"] == 1
+    assert resources["mystic-arcanum-9"] == 1
+    assert warlock_2014_level(17).mystic_arcanum_levels == (6, 7, 8, 9)
+    assert len(package.spells) == warlock_2014_level(17).spells_known == 14
+    assert package.spells[-1].id == "tongues"
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["eldritch-blast-fourth-beam"].automated is True
+    assert audits["pact-magic-fourth-slot"].automated is True
+    assert audits["mystic-arcanum-9"].automated is True
