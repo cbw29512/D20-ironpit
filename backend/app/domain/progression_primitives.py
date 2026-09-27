@@ -124,3 +124,19 @@ class SelectableDamageResistance(BaseModel):
     allowed_damage_types: list[DamageType] = Field(min_length=1)
     forbidden_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
     priority: int = 0
+
+
+class ResourceBackedOnHitExile(BaseModel):
+    """On a qualifying hit, spend a finite resource to remove the target until a source-relative return point."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    resource_id: str = Field(min_length=1)
+    resource_cost: int = Field(default=1, ge=1)
+    expiry_timing: str = "source_turn_end"
+    duration_rounds: int = Field(default=1, ge=1)
+    return_damage_dice_count: int = Field(default=0, ge=0)
+    return_damage_dice_size: int = Field(default=0, ge=0)
+    return_damage_bonus: int = 0
+    return_damage_type: DamageType | None = None
+    return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
