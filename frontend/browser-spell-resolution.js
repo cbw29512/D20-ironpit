@@ -49,6 +49,12 @@
       const action = saveAction(choice);
       const events = [];
       let sharedDamageRolls = null;
+      if (choice.damageMaximizer) {
+        sharedDamageRolls = spell.damageComponents?.length
+          ? spell.damageComponents.map((component) =>
+            C().maximizedRolls(component.diceCount || 0, component.diceSize || 6))
+          : C().maximizedRolls(spell.damageDiceCount || 0, spell.damageDiceSize || 6);
+      }
       let saveDisadvantage = H()?.choose(caster.state) || null;
 
       for (const targetId of choice.targetIds) {
@@ -188,7 +194,15 @@
 
       const effect = resolveEffect(sequence, round, caster, setup, choice, turnKey);
       events.push(...effect.events);
-      return { events, sequence: effect.sequence };
+      sequence = effect.sequence;
+      if (choice.damageMaximizer) {
+        const followUp = C().resolveDamageMaximizerAfterCast(
+          sequence, round, caster, setup, choice.damageMaximizer, choice.slotLevel,
+        );
+        events.push(...followUp.events);
+        sequence = followUp.sequence;
+      }
+      return { events, sequence };
     } catch (error) {
       console.error("Browser save-spell resolution failed", { caster: caster?.combatant_id, error });
       throw error;
