@@ -75,7 +75,7 @@ def test_magic_missile_resolves_without_attack_or_save_and_spends_slot() -> None
 
 def test_magic_missile_upcasts_by_adding_one_projectile_per_slot_level() -> None:
     setup, caster, _ = _setup(3)
-    caster.state.resources_by_id["spell-slot-1"].current_uses = 0
+    next(item for item in caster.state.resources if item.id == "spell-slot-1").current_uses = 0
 
     choice = choose_auto_hit_spell(caster, setup, "1:nyra")
 
