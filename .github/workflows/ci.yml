@@ -143,6 +143,7 @@ jobs:
           grep -q 'browser-recharge.js' index.html
           grep -q 'browser-main-action-profiles.js' index.html
           grep -q 'browser-main-action-selection.js' index.html
+          grep -q 'browser-hp-threshold-instant-death.js' index.html
           grep -q 'browser-hp-threshold-condition.js' index.html
           grep -q 'browser-main-action-providers.js' index.html
           grep -q 'browser-attack-outcome.js' index.html
@@ -242,6 +243,7 @@ jobs:
           grep -q 'browser-recharge.js' frontend/index.html
           grep -q 'browser-main-action-profiles.js' frontend/index.html
           grep -q 'browser-main-action-selection.js' frontend/index.html
+          grep -q 'browser-hp-threshold-instant-death.js' frontend/index.html
           grep -q 'browser-hp-threshold-condition.js' frontend/index.html
           grep -q 'browser-main-action-providers.js' frontend/index.html
           grep -q 'browser-attack-outcome.js' frontend/index.html
@@ -415,6 +417,7 @@ jobs:
           node frontend/browser-fiendish-resilience-2014.test.cjs
           node frontend/browser-exile-2014.test.cjs
           node frontend/browser-power-word-stun-2014.test.cjs
+          node frontend/browser-power-word-kill-2014.test.cjs
           node frontend/browser-spell-area.test.cjs
           node frontend/browser-spell-cast-effects.test.cjs
           node frontend/browser-spell-resolution.test.cjs
