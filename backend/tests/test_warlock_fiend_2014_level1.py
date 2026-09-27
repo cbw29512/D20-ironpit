@@ -247,3 +247,28 @@ def test_varek_level_four_raises_charisma_for_blaster_damage() -> None:
     assert [item.id for item in package.spells] == [
         "hex", "burning-hands", "scorching-ray", "shatter", "comprehend-languages",
     ]
+
+
+
+def test_varek_level_five_unlocks_core_blaster_power_spike() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    profile = build_varek_ashenmark_2014_profile(5)
+    varek = build_varek_ashenmark_2014(5)
+    audits = {item.feature_id: item for item in profile.feature_audits}
+
+    assert audits["eldritch-blast-second-beam"].automated is True
+    assert audits["mask-of-many-faces"].combat_relevant is False
+    assert {item.id: item.max_uses for item in varek.resources} == {"spell-slot-3": 2}
+
+    blast = next(item for item in varek.spell_attack_actions if item.id == "eldritch-blast")
+    rays = next(item for item in varek.spell_attack_actions if item.id == "scorching-ray")
+    assert blast.attack_count == 2
+    assert blast.attack_bonus == 7
+    assert blast.damage_bonus == 4
+    assert rays.attack_count_at_slot(3) == 4
+    assert "fireball" in [item.id for item in varek.spell_save_actions]
+
+    package = build_warlock_2014_spell_package(5)
+    assert len(package.spells) == 6
+    assert package.spells[-1].id == "fireball"
