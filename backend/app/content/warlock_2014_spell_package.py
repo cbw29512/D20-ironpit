@@ -30,6 +30,10 @@ _LEVEL_ONE_CANTRIPS = (
     _spell("poison-spray", "Poison Spray", "damage", "save-damage"),
 )
 
+_LEVEL_FOUR_CANTRIP = _spell(
+    "mage-hand", "Mage Hand", "utility", min_level=4,
+)
+
 _LEVEL_ONE_KNOWN = (
     _spell("hex", "Hex", "damage", "targeted-concentration-damage", "concentration", level=1),
     _spell("burning-hands", "Burning Hands", "damage", "save-damage", "area", level=1),
@@ -44,19 +48,24 @@ _LEVEL_THREE_DAMAGE = (
     _spell("shatter", "Shatter", "damage", "save-damage", "area", level=2, min_level=3),
 )
 
+_LEVEL_FOUR_UTILITY = _spell(
+    "comprehend-languages", "Comprehend Languages", "utility", level=1, min_level=4,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 4):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 3.")
+        if level not in range(1, 5):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 4.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
-            cantrips=list(_LEVEL_ONE_CANTRIPS),
+            cantrips=[*_LEVEL_ONE_CANTRIPS, *([_LEVEL_FOUR_CANTRIP] if level >= 4 else [])],
             spells=[
                 *_LEVEL_ONE_KNOWN,
                 *([_LEVEL_TWO_ADDITION] if level == 2 else []),
                 *(_LEVEL_THREE_DAMAGE if level >= 3 else []),
+                *([_LEVEL_FOUR_UTILITY] if level >= 4 else []),
             ],
         )
     except Exception:
