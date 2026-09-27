@@ -494,3 +494,41 @@ def test_varek_level_twelve_raises_constitution_for_hex_uptime() -> None:
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["ability-score-improvement-l12"].automated is True
     assert audits["eyes-of-the-rune-keeper"].combat_relevant is False
+
+
+def test_varek_level_thirteen_finger_of_death_uses_separate_arcanum() -> None:
+    from app.combat.saving_throws import resolve_save_action
+
+    varek = _member(build_varek_ashenmark_2014(13), "varek", "heroes", 0)
+    enemy = _member(_commoner_2014(), "enemy", "monsters", 30)
+    begin_turn(varek.state)
+
+    action = next(item for item in varek.state.template.saving_throw_actions if item.id == "finger-of-death")
+    event = resolve_save_action(
+        1, 1, varek, enemy, action, 30,
+        FixedDiceProvider([1, 4, 4, 4, 4, 4, 4, 4]),
+    )
+
+    assert event.save_succeeded is False
+    assert event.damage_roll is not None and event.damage_roll.total == 58
+    assert next(item.current_uses for item in varek.state.resources if item.id == "mystic-arcanum-7") == 0
+    assert next(item.current_uses for item in varek.state.resources if item.id == "mystic-arcanum-6") == 1
+    assert next(item.current_uses for item in varek.state.resources if item.id == "spell-slot-5") == 3
+
+
+def test_varek_level_thirteen_progression_adds_seventh_level_arcanum() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    varek = build_varek_ashenmark_2014(13)
+    profile = build_varek_ashenmark_2014_profile(13)
+    package = build_warlock_2014_spell_package(13)
+
+    assert len(package.spells) == warlock_2014_level(13).spells_known == 12
+    assert package.spells[-1].id == "scrying"
+    resources = {item.id: item.max_uses for item in varek.resources}
+    assert resources["mystic-arcanum-6"] == 1
+    assert resources["mystic-arcanum-7"] == 1
+    assert warlock_2014_level(13).mystic_arcanum_levels == (6, 7)
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["mystic-arcanum-7"].automated is True
