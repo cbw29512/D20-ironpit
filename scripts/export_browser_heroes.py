@@ -46,6 +46,7 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
         "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
         "reach": weapon.reach_ft, "animation": weapon.animation,
     }
+    if attack.damage_source_qualifiers: row["damageSourceQualifiers"] = [_value(item) for item in attack.damage_source_qualifiers]
     if weapon.mastery_property is not None: row["masteryProperty"] = weapon.mastery_property
     if weapon.light: row["light"] = True
     if attack.damage_die_minimum is not None: row["damageDieMinimum"] = attack.damage_die_minimum
@@ -471,7 +472,21 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "critical_move_fraction": progression.critical_move_fraction, "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
-                   "figure_form": template.visual.body_style, "role": template.archetype.lower()}, "source": template.source,
+                   "figure_form": template.visual.body_style, "role": template.archetype.lower()},
+        "selectable_damage_resistance": (
+            template.progression_features.selectable_damage_resistance.model_dump(mode="json")
+            if template.progression_features.selectable_damage_resistance else None
+        ),
+        "conditional_damage_defenses": [
+            {
+                "id": item.id, "kind": _value(item.kind),
+                "damageTypes": [_value(kind) for kind in item.damage_types],
+                "requiredSourceQualifiers": [_value(kind) for kind in item.required_source_qualifiers],
+                "forbiddenSourceQualifiers": [_value(kind) for kind in item.forbidden_source_qualifiers],
+            }
+            for item in template.conditional_damage_defenses
+        ],
+        "source": template.source,
     }
     if progression.source_reduces_hostile_to_zero_hp_temporary_hp is not None:
         row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
