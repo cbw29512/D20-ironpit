@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
+from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.character_builds import AbilityScores
 from app.domain.effect_removal import EffectRemovalAction
@@ -79,6 +80,7 @@ class CombatantTemplate(BaseModel):
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
+    auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list)
     spell_cast_timed_resistances: list[SpellCastTimedResistance] = Field(default_factory=list)
     persistent_spell_attack_actions: list[PersistentSpellAttackAction] = Field(default_factory=list)
     persistent_hazard_actions: list[PersistentHazardAction] = Field(default_factory=list)
