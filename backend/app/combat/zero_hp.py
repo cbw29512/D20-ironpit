@@ -11,7 +11,7 @@ from app.combat.orc import use_relentless_endurance
 from app.combat.replacement_forms import apply_replacement_form_damage
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
-from app.combat.zero_hp_replacement import consume_zero_hp_replacement
+from app.combat.zero_hp_replacement import consume_instant_death_prevention, consume_zero_hp_replacement
 from app.domain.models import CombatantState, DamageType
 from app.domain.traits import CombatTrait
 
@@ -100,6 +100,27 @@ def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> 
     if state.death_save_failures >= 3:
         return _mark_dead(state)
     return _mark_unconscious(state)
+
+
+def apply_instant_death(
+    state: CombatantState,
+    *,
+    affected_states: list[CombatantState] | None = None,
+) -> ZeroHpOutcome:
+    """Apply a non-damage instant-death effect, honoring source-owned prevention."""
+    try:
+        if state.is_dead or not state.is_alive:
+            return "unchanged"
+        if consume_instant_death_prevention(state):
+            return "zero_hp_replacement"
+        outcome = _mark_dead(state)
+        if state.concentration is not None:
+            from app.combat.concentration import end_concentration_if_incapacitated
+            end_concentration_if_incapacitated(state, affected_states)
+        return outcome
+    except Exception as exc:
+        logger.exception("Instant-death resolution failed for %s.", state.template.name)
+        raise RuntimeError("Instant-death effect could not be resolved.") from exc
 
 
 def reduce_to_zero_hit_points(
