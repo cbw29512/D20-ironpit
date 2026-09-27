@@ -74,6 +74,10 @@ def spell_attack_expected_damage(
     distance = combatant_distance(caster, target)
     advantage, disadvantage = attack_roll_condition_sources(caster.state, target.state, distance, target.combatant_id)
     advantage += attacks_against_advantage_sources(target.state)
+    advantage += int(
+        spell.advantage_if_target_wearing_metal_armor
+        and target.state.template.wearing_metal_armor
+    )
     disadvantage += int(close_ranged_threat_exists(caster, setup))
     mode = resolve_roll_mode(advantage, disadvantage)
     hit, critical = _attack_probabilities(caster.state, spell.attack_bonus, effective_armor_class(target.state), mode)
