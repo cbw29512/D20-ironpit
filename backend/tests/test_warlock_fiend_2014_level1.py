@@ -471,3 +471,26 @@ def test_varek_level_eleven_progression_has_three_beams_and_separate_arcanum() -
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["eldritch-blast-third-beam"].automated is True
     assert audits["mystic-arcanum-6"].automated is True
+
+
+def test_varek_level_twelve_raises_constitution_for_hex_uptime() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    l11 = build_varek_ashenmark_2014(11)
+    l12 = build_varek_ashenmark_2014(12)
+    profile = build_varek_ashenmark_2014_profile(12)
+    package = build_warlock_2014_spell_package(12)
+
+    assert profile.final_ability_scores.constitution == 16
+    assert profile.final_ability_scores.charisma == 20
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [
+        ("charisma", 2), ("charisma", 2), ("constitution", 2),
+    ]
+    assert l12.max_hp > l11.max_hp
+    assert l12.saving_throw_bonuses["constitution"] == 3
+    assert len(package.spells) == warlock_2014_level(12).spells_known == 11
+    assert warlock_2014_level(12).invocations_known == 6
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["ability-score-improvement-l12"].automated is True
+    assert audits["eyes-of-the-rune-keeper"].combat_relevant is False
