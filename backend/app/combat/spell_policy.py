@@ -6,6 +6,7 @@ from dataclasses import replace
 from app.combat.action_economy import is_available
 from app.combat.alternate_spell_casts import available_alternate_casts
 from app.combat.spell_choice import SpellChoice
+from app.combat.spell_damage_maximizers import safe_maximizer_for_spell
 from app.combat.spell_policy_targeting import (
     area_spell_choice,
     legacy_radius_spell_choice,
@@ -116,7 +117,13 @@ def choose_spell(
                         -index,
                         choice,
                     ))
-        return max(candidates, key=lambda item: item[:4])[4] if candidates else None
+        if not candidates:
+            return None
+        choice = max(candidates, key=lambda item: item[:4])[4]
+        maximizer = safe_maximizer_for_spell(
+            caster, choice.action.id, choice.slot_level,
+        )
+        return replace(choice, damage_maximizer=maximizer)
     except Exception:
         logger.exception(
             "Failed to choose save-based spell for %s.",
