@@ -9,6 +9,7 @@ from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.reactions import DamageReactionAttack
+from app.domain.progression_primitives import SourceReducesHostileToZeroHpTemporaryHp
 
 
 def _member(combatant_id: str, side: str, position: int, template) -> EncounterCombatant:
@@ -164,3 +165,49 @@ def test_applied_damage_total_treats_zero_loss_snapshots_as_authoritative() -> N
     })
 
     assert applied_damage_total(event) == 0
+
+
+def test_source_zero_hp_trigger_grants_temporary_hp_without_class_dispatch() -> None:
+    hero, monster, setup = _setup()
+    hero.state.template.level = 3
+    hero.state.template.ability_scores.charisma = 16
+    hero.state.template.progression_features.source_reduces_hostile_to_zero_hp_temporary_hp = (
+        SourceReducesHostileToZeroHpTemporaryHp(
+            source_id="test-zero-hp-boon", source_name="Test Zero HP Boon",
+            ability="charisma", per_level=1, minimum=1,
+        )
+    )
+    monster.state.current_hp = 1
+    event = _triggering_attack(hero, monster, setup)
+    assert event.hp_before == 1
+    assert event.hp_after == 0
+
+    followups, sequence = resolve_damage_event_reactions(
+        2, 1, hero, event, setup, FixedDiceProvider([19, 5]),
+    )
+
+    assert followups[0].event_type == "feature"
+    assert followups[0].feature_id == "test-zero-hp-boon"
+    assert hero.state.temporary_hp == 6
+    assert sequence == 3
+
+
+def test_source_zero_hp_trigger_requires_fresh_hostile_transition() -> None:
+    hero, monster, setup = _setup()
+    hero.state.template.level = 3
+    hero.state.template.ability_scores.charisma = 16
+    hero.state.template.progression_features.source_reduces_hostile_to_zero_hp_temporary_hp = (
+        SourceReducesHostileToZeroHpTemporaryHp(
+            source_id="test-zero-hp-boon", source_name="Test Zero HP Boon",
+            ability="charisma", per_level=1,
+        )
+    )
+    event = _triggering_attack(hero, monster, setup).model_copy(update={"hp_before": 0, "hp_after": 0})
+
+    followups, sequence = resolve_damage_event_reactions(
+        2, 1, hero, event, setup, FixedDiceProvider([19, 5]),
+    )
+
+    assert all(item.feature_id != "test-zero-hp-boon" for item in followups)
+    assert hero.state.temporary_hp == 0
+    assert sequence == 2
