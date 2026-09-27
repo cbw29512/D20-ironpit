@@ -63,6 +63,7 @@ def resolve_timed_self_buff(
                 expires_at_start_of_source_turn=expires_at_source_start,
                 owned_damage_resistances=action.damage_resistances if not defenses_attached else [],
                 owned_debuff_counters=action.debuff_counters if not defenses_attached else [],
+                owned_movement_mode_grants=action.movement_mode_grants if not defenses_attached else [],
                 ends_if_source_incapacitated=action.ends_if_source_incapacitated,
                 ends_if_source_dead=action.ends_if_source_dead,
                 use_default_poison_recovery=False,
