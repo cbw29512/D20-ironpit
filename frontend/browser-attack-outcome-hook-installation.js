@@ -15,6 +15,9 @@
     if (window.IRON_PIT_BROWSER_EXILE?.installAbilityHooks) {
       installers.push(["Exile", window.IRON_PIT_BROWSER_EXILE.installAbilityHooks]);
     }
+    if (window.IRON_PIT_BROWSER_DELAYED_RESOURCE_REFILL?.installAbilityHooks) {
+      installers.push(["Delayed resource refill", window.IRON_PIT_BROWSER_DELAYED_RESOURCE_REFILL.installAbilityHooks]);
+    }
     for (const [name, installer] of installers) {
       if (typeof installer !== "function") throw new Error(`${name} attack-outcome hook installer is not loaded.`);
       installer();
