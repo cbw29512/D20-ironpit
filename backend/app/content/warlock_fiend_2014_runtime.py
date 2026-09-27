@@ -19,8 +19,8 @@ from app.domain.progression_primitives import (
 
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 12):
-        raise ValueError("2014 Varek runtime currently certifies levels 1 through 11.")
+    if level not in range(1, 13):
+        raise ValueError("2014 Varek runtime currently certifies levels 1 through 12.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
