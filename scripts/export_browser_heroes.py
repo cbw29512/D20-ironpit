@@ -482,6 +482,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             template.progression_features.selectable_damage_resistance.model_dump(mode="json")
             if template.progression_features.selectable_damage_resistance else None
         ),
+        "resource_backed_on_hit_exile": (
+            template.progression_features.resource_backed_on_hit_exile.model_dump(mode="json")
+            if template.progression_features.resource_backed_on_hit_exile else None
+        ),
         "conditional_damage_defenses": [
             {
                 "id": item.id, "kind": _value(item.kind),
