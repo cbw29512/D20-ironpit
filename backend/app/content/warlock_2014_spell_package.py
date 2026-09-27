@@ -68,11 +68,15 @@ _LEVEL_EIGHT_UTILITY = _spell(
     "dimension-door", "Dimension Door", "utility", level=4, min_level=8,
 )
 
+_LEVEL_NINE_DAMAGE = _spell(
+    "flame-strike", "Flame Strike", "damage", "save-damage", "area", level=5, min_level=9,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 9):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 8.")
+        if level not in range(1, 10):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 9.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
@@ -86,6 +90,7 @@ def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
                 *([_LEVEL_SIX_UTILITY] if level >= 6 else []),
                 *([_LEVEL_SEVEN_UTILITY] if level >= 7 else []),
                 *([_LEVEL_EIGHT_UTILITY] if level >= 8 else []),
+                *([_LEVEL_NINE_DAMAGE] if level >= 9 else []),
             ],
         )
     except Exception:
