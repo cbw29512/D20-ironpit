@@ -508,6 +508,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         )
     if features.selectable_damage_resistance:
         row["selectable_damage_resistance"] = features.selectable_damage_resistance.model_dump(mode="json")
+    if features.resource_backed_on_hit_exile:
+        row["resource_backed_on_hit_exile"] = features.resource_backed_on_hit_exile.model_dump(mode="json")
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.once_per_turn_weapon_hit_damage_rider:
