@@ -9,7 +9,7 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 logger = logging.getLogger(__name__)
 
 
-def __removed_from_battlefield(state) -> bool:
+def _removed_from_battlefield(state) -> bool:
     return any(effect.removed_from_battlefield for effect in state.timed_effects)
 
 
