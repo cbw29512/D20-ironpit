@@ -78,14 +78,18 @@
       if (action.resourceId != null) member.state.resources[action.resourceId] -= action.resourceCost || 1;
       const applied = [];
       let defensesAttached = false;
+      const hasDuration = Number.isInteger(action.durationRounds);
+      const expiresRound = hasDuration ? round + action.durationRounds : null;
+      const expiryTiming = hasDuration ? (action.expiryTiming || "source_turn_start") : null;
+      const expiresAtSourceStart = expiryTiming === "source_turn_start";
       (action.conditionIds || []).forEach((conditionId) => {
         const condition = T().apply(member.state, conditionId, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
           appliedRound: round,
-          expiresRound: round + action.durationRounds,
-          expiryTiming: action.expiryTiming || "source_turn_start",
-          expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
+          expiresRound,
+          expiryTiming,
+          expiresAtStartOfSourceTurn: expiresAtSourceStart,
           ownedDamageResistances: defensesAttached ? [] : [...(action.damageResistances || [])],
           ownedDebuffCounters: defensesAttached ? [] : [...(action.debuffCounters || [])],
           endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
@@ -98,6 +102,7 @@
         (action.damageResistances || []).length
         || (action.debuffCounters || []).length
         || (action.savingThrowAdvantageGrants || []).length
+        || (action.movementModeGrants || []).length
         || action.friendlySaveAdvantageAura
         || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
@@ -106,11 +111,12 @@
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
           appliedRound: round,
-          expiresRound: round + action.durationRounds,
-          expiryTiming: action.expiryTiming || "source_turn_start",
-          expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
+          expiresRound,
+          expiryTiming,
+          expiresAtStartOfSourceTurn: expiresAtSourceStart,
           ownedDamageResistances: [...(action.damageResistances || [])],
           ownedDebuffCounters: [...(action.debuffCounters || [])],
+          ownedMovementModeGrants: [...(action.movementModeGrants || [])],
           endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
           endsIfSourceDead: Boolean(action.endsIfSourceDead),
           useDefaultPoisonRecovery: false,
@@ -127,7 +133,7 @@
           action.id,
           round,
           allStates,
-          round + action.durationRounds,
+          expiresRound,
           null,
         );
       }
