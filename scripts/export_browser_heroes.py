@@ -264,6 +264,15 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
     }
     if action.debuff_counters:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
+    if action.movement_mode_grants:
+        row["movementModeGrants"] = [
+            {
+                "mode": item.mode,
+                "fixedSpeedFt": item.fixed_speed_ft,
+                "matchCurrentSpeed": item.match_current_speed,
+            }
+            for item in action.movement_mode_grants
+        ]
     if action.saving_throw_advantage_grants:
         row["savingThrowAdvantageGrants"] = [
             _save_advantage_grant(item) for item in action.saving_throw_advantage_grants
