@@ -422,6 +422,15 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             }
             for item in template.hp_threshold_condition_actions
         ],
+        "hp_threshold_instant_death_actions": [
+            {
+                "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                "magicalEffect": item.magical_effect, "animation": item.animation,
+            }
+            for item in template.hp_threshold_instant_death_actions
+        ],
         "healingActions": [_healing(item) for item in template.healing_actions],
         "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
         "damage_resistances": [item.value for item in template.damage_resistances],
