@@ -115,7 +115,9 @@ def resolve_spell_attack(
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
         damage_roll = None; damage_components = []; applied_conditions: list[str] = []
         if hit:
-            damage_roll, rolled = roll_spell_attack_damage(spell, critical, dice)
+            damage_roll, rolled = roll_spell_attack_damage(
+                spell, critical, dice, attacker=caster.state, target_event_id=target.combatant_id,
+            )
             applied_total, damage_components = apply_damage_defenses(target.state, rolled); damage_roll.total = applied_total
             affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
             apply_damage(target.state, applied_total, critical=critical,
