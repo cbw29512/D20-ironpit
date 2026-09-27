@@ -32,7 +32,8 @@
       active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
-      temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
+      temporary_damage_resistances: [], active_conditional_damage_defenses: [],
+      rage_expires_round: null, rage_max_round: null,
     };
   }
 
