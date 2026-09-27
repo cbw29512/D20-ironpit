@@ -152,11 +152,8 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
             )] if level >= 15 else []
         ),
         saving_throw_bonuses=saving_throw_bonuses(scores, level, ("wisdom", "charisma")),
-        skill_bonuses={
-            "arcana": scores.modifier("intelligence") + pb,
-            "history": scores.modifier("intelligence") + pb,
-            **({"deception": cha + pb, "persuasion": cha + pb} if level >= 18 else {}),
-        },
+        skill_bonuses={"arcana": scores.modifier("intelligence") + pb, "history": scores.modifier("intelligence") + pb,
+                       **({"deception": cha + pb, "persuasion": cha + pb} if level >= 18 else {})},
         resources=[
             ResourceDefinition(
                 id=f"spell-slot-{row.pact_slot_level}",
