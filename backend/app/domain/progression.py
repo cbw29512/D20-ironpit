@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.character_builds import AbilityName
 from app.domain.debuffs import DebuffCounter
+from app.domain.area_spell_protection import AreaSpellAllyProtectionGrant
 
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
@@ -88,6 +89,7 @@ class ProgressionCombatFeatures(BaseModel):
     resource_backed_on_hit_exile: ResourceBackedOnHitExile | None = None
     delayed_resource_refill: DelayedResourceRefill | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
+    area_spell_ally_protection: AreaSpellAllyProtectionGrant | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
