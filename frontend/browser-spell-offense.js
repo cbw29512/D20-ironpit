@@ -9,6 +9,7 @@
   const SP = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const SR = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
   const CR = () => window.IRON_PIT_BROWSER_CONCENTRATION_REPEAT_SAVES;
+  const ST = () => window.IRON_PIT_BROWSER_STATE;
 
   function choose(member, setup, turnKey) {
     const sourceTemplate = member.state.replacement_form?.original_template || member.state.template;
@@ -47,13 +48,41 @@
       return DR().chain(sequence, round, member, event, setup, turnKey);
     }
     if (selected.kind === "attack") {
-      const event = AR().resolve(
-        sequence, round, member, selected.choice.target, selected.choice.action, setup, turnKey,
-        { rangeModifier: selected.choice.rangeModifier || null },
-      );
-      sequence += 1;
-      if (!DR()) return { events: [event], sequence };
-      return DR().chain(sequence, round, member, event, setup, turnKey);
+      const choice = selected.choice;
+      const spell = choice.action;
+      const slotLevel = choice.slotLevel ?? 0;
+      const attackCount = AP().attackCountAtSlot(spell, slotLevel);
+      const events = [];
+      let preferred = choice.target;
+      for (let index = 0; index < attackCount; index += 1) {
+        const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
+        const allowedRange = spell.range * (choice.rangeModifier?.rangeMultiplier || 1);
+        const ordered = [preferred, ...enemies.filter((target) => target !== preferred)].filter(Boolean);
+        const target = ordered.find((candidate) =>
+          candidate.side !== member.side
+          && candidate.state.is_alive && !candidate.state.is_dead && candidate.state.current_hp > 0
+          && ST().distance(member, candidate) <= allowedRange);
+        if (!target) break;
+        const event = AR().resolve(
+          sequence, round, member, target, spell, setup, turnKey,
+          {
+            rangeModifier: choice.rangeModifier || null,
+            castSlotLevel: spell.level > 0 ? slotLevel : null,
+            spendCastCosts: index === 0,
+          },
+        );
+        sequence += 1;
+        if (DR()) {
+          const chain = DR().chain(sequence, round, member, event, setup, turnKey);
+          events.push(...chain.events);
+          sequence = chain.sequence;
+        } else {
+          events.push(event);
+        }
+        preferred = target.state.current_hp > 0 && !target.state.is_dead ? target : null;
+      }
+      if (!events.length) throw new Error(`${spell.name} has no legal target for its spell attacks.`);
+      return { events, sequence };
     }
     if (selected.kind === "save") return SR().resolve(sequence, round, member, setup, selected.choice, turnKey);
     if (selected.kind === "repeat") {
