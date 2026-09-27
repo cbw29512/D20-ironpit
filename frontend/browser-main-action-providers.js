@@ -157,26 +157,7 @@
       },
     });
 
-    register({
-      id: "hp-threshold-condition", category: C().HP_THRESHOLD_CONDITION, rulesets: BOTH,
-      discover: ({ member, setup }) => {
-        const runtime = HT();
-        if (!runtime) {
-          if (member.state.template.hp_threshold_condition_actions?.length) throw new Error("HP-threshold condition runtime is not loaded.");
-          return null;
-        }
-        const selected = runtime.choose(member, setup);
-        return selected ? { payload: { targetId: selected.target.combatant_id, actionId: selected.action.id } } : null;
-      },
-      resolve: ({ sequence, round, member, setup }, candidate) => {
-        const runtime = HT();
-        const target = memberById(setup, candidate.payload.targetId);
-        const action = (member.state.template.hp_threshold_condition_actions || [])
-          .find((item) => item.id === candidate.payload.actionId);
-        if (!runtime || !target || !action) throw new Error("HP-threshold condition candidate became unavailable.");
-        return { events: [runtime.resolve(sequence, round, member, target, action, setup)], sequence: sequence + 1 };
-      },
-    });
+    HT()?.installProvider();
 
     register({
       id: "standard-attack", category: C().STANDARD_ATTACK, rulesets: BOTH,
