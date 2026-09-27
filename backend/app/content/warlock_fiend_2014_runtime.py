@@ -26,7 +26,7 @@ from app.domain.progression_primitives import (
 )
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 18): raise ValueError("2014 Varek runtime currently certifies levels 1 through 17.")
+    if level not in range(1, 20): raise ValueError("2014 Varek runtime currently certifies levels 1 through 19.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
@@ -155,6 +155,7 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
         skill_bonuses={
             "arcana": scores.modifier("intelligence") + pb,
             "history": scores.modifier("intelligence") + pb,
+            **({"deception": cha + pb, "persuasion": cha + pb} if level >= 18 else {}),
         },
         resources=[
             ResourceDefinition(
