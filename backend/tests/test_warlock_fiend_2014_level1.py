@@ -1,6 +1,7 @@
 from app.combat.dice import FixedDiceProvider
 from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.combat.spell_attack_sequence import resolve_spell_attack_sequence
+from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.targeted_concentration_damage import resolve_targeted_concentration_damage
 from app.content.monsters import build_commoner
@@ -272,3 +273,45 @@ def test_varek_level_five_unlocks_core_blaster_power_spike() -> None:
     package = build_warlock_2014_spell_package(5)
     assert len(package.spells) == 6
     assert package.spells[-1].id == "fireball"
+
+
+
+def test_varek_level_six_reuses_d20_bonus_and_dispel() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    profile = build_varek_ashenmark_2014_profile(6)
+    varek = build_varek_ashenmark_2014(6)
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["dark-ones-own-luck"].automated is True
+    assert audits["dispel-magic"].automated is True
+
+    resources = {item.id: item.max_uses for item in varek.resources}
+    assert resources == {"spell-slot-3": 2, "dark-ones-own-luck": 1}
+    assert [item.id for item in varek.effect_removal_actions] == ["dispel-magic"]
+
+    rule = varek.progression_features.resource_backed_d20_bonus_dice[0]
+    assert rule.source_id == "dark-ones-own-luck"
+    assert rule.dice_size == 10
+    assert rule.test_kinds == ["saving_throw", "ability_check"]
+
+    package = build_warlock_2014_spell_package(6)
+    assert package.spells[-1].id == "dispel-magic"
+
+
+def test_dark_ones_own_luck_can_rescue_a_failed_saving_throw() -> None:
+    varek = build_combatant_state(build_varek_ashenmark_2014(6))
+    before = next(item for item in varek.resources if item.id == "dark-ones-own-luck")
+    assert before.current_uses == 1
+
+    roll, succeeded = resolve_saving_throw(
+        varek,
+        "wisdom",
+        15,
+        FixedDiceProvider([5, 10]),
+        round_number=1,
+    )
+
+    assert roll is not None
+    assert succeeded is True
+    assert "Dark One's Own Luck" in roll.notation
+    assert next(item for item in varek.resources if item.id == "dark-ones-own-luck").current_uses == 0
