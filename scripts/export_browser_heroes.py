@@ -506,6 +506,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             template.progression_features.resource_backed_on_hit_exile.model_dump(mode="json")
             if template.progression_features.resource_backed_on_hit_exile else None
         ),
+        "delayed_resource_refill": (
+            template.progression_features.delayed_resource_refill.model_dump(mode="json")
+            if template.progression_features.delayed_resource_refill else None
+        ),
         "conditional_damage_defenses": [
             {
                 "id": item.id, "kind": _value(item.kind),
