@@ -43,10 +43,8 @@
   }
   const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && state.current_hp * 2 <= state.template.max_hp ? 1 : 0;
   function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = []) {
-    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
-    if (rules) return rules.adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers);
-    if (target.template.damage_immunities?.includes(type)) return 0;
-    let value = amount;
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES; if (rules) return rules.adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers);
+    if (target.template.damage_immunities?.includes(type)) return 0; let value = amount;
     if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || T()?.ownsDamageResistance?.(target, type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
