@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from app.domain.actions import SavingThrowAction
 from app.domain.spells import SpellAttackAction
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
+from app.domain.targeting import AreaTargeting
 
 
 def eldritch_blast_2014(attack_bonus: int, level: int, damage_bonus: int = 0, range_ft: int = 120) -> SpellAttackAction:
@@ -64,4 +66,25 @@ def hex_2014() -> TargetedConcentrationDamageAction:
         priority=10,
         animation="targeted-concentration",
         source="D&D Basic Rules 2014: Hex",
+    )
+
+
+
+def circle_of_death_2014(save_dc: int) -> SavingThrowAction:
+    """Build 2014 Circle of Death as a resource-backed universal area save."""
+    return SavingThrowAction(
+        id="circle-of-death",
+        name="Circle of Death",
+        save_ability="constitution",
+        dc=save_dc,
+        range_ft=150,
+        area=AreaTargeting(shape="radius", origin="point", radius_ft=60),
+        damage_dice_count=8,
+        damage_dice_size=6,
+        damage_type="necrotic",
+        success_damage="half",
+        resource_id="mystic-arcanum-6",
+        resource_cost=1,
+        magical_effect=True,
+        animation="spell-save",
     )
