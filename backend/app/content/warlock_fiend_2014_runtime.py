@@ -20,6 +20,7 @@ from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition,
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.progression_primitives import (
     ResourceBackedD20BonusDie,
+    DelayedResourceRefill,
     ResourceBackedOnHitExile,
     SelectableDamageResistance,
     SourceReducesHostileToZeroHpTemporaryHp,
@@ -104,6 +105,16 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                     return_damage_type=DamageType.PSYCHIC,
                     return_damage_excluded_creature_types=["fiend"],
                 ) if level >= 14 else None
+            ),
+            delayed_resource_refill=(
+                DelayedResourceRefill(
+                    source_id="eldritch-master",
+                    source_name="Eldritch Master",
+                    resource_ids=[f"spell-slot-{row.pact_slot_level}"],
+                    use_resource_id="eldritch-master",
+                    use_resource_cost=1,
+                    delay_rounds=10,
+                ) if level >= 20 else None
             ),
             resource_backed_d20_bonus_dice=(
                 [ResourceBackedD20BonusDie(
@@ -190,6 +201,11 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                 name="Mystic Arcanum (9th Level)",
                 max_uses=1,
             )] if level >= 17 else []),
+            *([ResourceDefinition(
+                id="eldritch-master",
+                name="Eldritch Master",
+                max_uses=1,
+            )] if level >= 20 else []),
         ],
         effect_removal_actions=([dispel_magic_2014("charisma")] if level >= 6 else []),
         visual=VisualLoadout(armor="leather-armor", main_hand="arcane-focus", body_style="humanoid"),
