@@ -39,16 +39,24 @@ _LEVEL_TWO_ADDITION = _spell(
     "comprehend-languages", "Comprehend Languages", "utility", level=1, min_level=2,
 )
 
+_LEVEL_THREE_ADDITION = _spell(
+    "shatter", "Shatter", "damage", "save-damage", "area", level=2, min_level=3,
+)
+
 
 def build_warlock_2014_spell_package(level: int) -> ClassSpellPackage:
     try:
-        if level not in range(1, 3):
-            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 2.")
+        if level not in range(1, 4):
+            raise ValueError("2014 Warlock canonical spell package currently certifies levels 1 through 3.")
         return ClassSpellPackage(
             class_id="warlock",
             casting_ability="charisma",
             cantrips=list(_LEVEL_ONE_CANTRIPS),
-            spells=[*_LEVEL_ONE_KNOWN, *([_LEVEL_TWO_ADDITION] if level >= 2 else [])],
+            spells=[
+                *_LEVEL_ONE_KNOWN,
+                *([_LEVEL_TWO_ADDITION] if level >= 2 else []),
+                *([_LEVEL_THREE_ADDITION] if level >= 3 else []),
+            ],
         )
     except Exception:
         logger.exception("Failed to build 2014 Warlock spell package at level %s.", level)
