@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 5):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 4.")
+    if level not in range(1, 6):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 5.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -91,6 +91,21 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 notes="Damage-first progression raises Charisma 16→18, improving spell attacks, save DC, and Agonizing Blast damage.",
             )
         )
+    if level >= 5:
+        audits.extend([
+            FeatureAudit(
+                feature_id="eldritch-blast-second-beam", feature_name="Eldritch Blast — Two Beams",
+                source_reference="D&D Basic Rules 2014: Eldritch Blast",
+                category="class", combat_relevant=True, automated=True,
+                notes="Uses the universal multi-spell-attack sequence; each beam gets its own attack roll, crit, defenses, and damage riders.",
+            ),
+            FeatureAudit(
+                feature_id="mask-of-many-faces", feature_name="Mask of Many Faces",
+                source_reference="D&D Basic Rules 2014: Eldritch Invocations",
+                category="class", combat_relevant=False, automated=True,
+                notes="Third invocation is retained as arena-neutral utility so the blaster build does not add low-value bespoke combat mechanics.",
+            ),
+        ])
     return CharacterBuildProfile(
         id=f"build-varek-ashenmark-2014-l{level}",
         template_id=f"varek-ashenmark-2014-l{level}",
