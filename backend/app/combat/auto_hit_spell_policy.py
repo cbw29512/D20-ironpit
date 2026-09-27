@@ -7,8 +7,10 @@ from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import auto_hit_spell_expected_damage
 from app.combat.spellcasting import legal_slot_levels
+from app.combat.spell_damage_maximizers import safe_maximizer_for_spell
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +22,7 @@ class AutoHitSpellChoice:
     slot_level: int
     projectile_count: int
     expected_damage: float
+    damage_maximizer: SpellDamageMaximizerGrant | None = None
 
 
 def choose_auto_hit_spell(
@@ -56,6 +59,9 @@ def choose_auto_hit_spell(
                     choice = AutoHitSpellChoice(
                         action=action, target=target, slot_level=slot_level,
                         projectile_count=projectile_count, expected_damage=score,
+                        damage_maximizer=safe_maximizer_for_spell(
+                            caster, action.id, slot_level,
+                        ),
                     )
                     candidates.append((
                         score, -action.level, -index, target.combatant_id, choice,
