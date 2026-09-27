@@ -79,6 +79,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.selectable_damage_resistance.source_id)
     if features.resource_backed_on_hit_exile:
         mechanics.add(features.resource_backed_on_hit_exile.source_id)
+    if features.delayed_resource_refill:
+        mechanics.add(features.delayed_resource_refill.source_id)
     if features.deferred_save_effect:
         mechanics.add(features.deferred_save_effect.source_id)
     if features.athletics_advantage:
