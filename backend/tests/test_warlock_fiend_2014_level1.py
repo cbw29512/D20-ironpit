@@ -532,3 +532,88 @@ def test_varek_level_thirteen_progression_adds_seventh_level_arcanum() -> None:
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["mystic-arcanum-7"].automated is True
+
+
+def test_varek_level_fourteen_hurl_through_hell_exiles_then_damages_on_return() -> None:
+    from app.combat.attacks import resolve_attack
+    from app.combat.encounter_targeting import living_opponents
+    from app.combat.exile import removed_from_battlefield, resolve_source_exile_returns
+
+    varek = _member(build_varek_ashenmark_2014(14), "varek", "heroes", 0)
+    enemy = _member(_commoner_2014(), "enemy", "monsters", 5)
+    enemy.state.template.max_hp = 200
+    enemy.state.current_hp = 200
+    setup = EncounterSetup(
+        heroes=[varek], monsters=[enemy], hero_total_levels=14, monster_total_cr="0", ruleset="2014",
+    )
+    begin_turn(varek.state)
+    attack = varek.state.template.weapon_attack
+    event = resolve_attack(
+        1, 1, varek.state, enemy.state, attack, 5,
+        FixedDiceProvider([15, 4]),
+        actor_event_id="varek", target_event_id="enemy",
+        affected_states=[varek.state, enemy.state],
+    )
+
+    assert event.hit is True
+    assert event.resource_remaining == 0
+    assert removed_from_battlefield(enemy.state) is True
+    assert "banished" in enemy.state.active_effect_ids
+    assert living_opponents(varek, setup) == []
+
+    hp_before_return = enemy.state.current_hp
+    events, _ = resolve_source_exile_returns(
+        2, 2, varek, setup,
+        FixedDiceProvider([5, 5, 5, 5, 5, 5, 5, 5, 5, 5]),
+    )
+
+    assert removed_from_battlefield(enemy.state) is False
+    assert "banished" not in enemy.state.active_effect_ids
+    assert len(events) == 1
+    assert events[0].feature_id == "hurl-through-hell"
+    assert events[0].damage_roll is not None and events[0].damage_roll.total == 50
+    assert enemy.state.current_hp == hp_before_return - 50
+
+
+def test_varek_level_fourteen_hurl_through_hell_fiend_returns_without_psychic_damage() -> None:
+    from app.combat.exile import apply_on_hit_exile, resolve_source_exile_returns
+
+    varek = _member(build_varek_ashenmark_2014(14), "varek", "heroes", 0)
+    enemy_template = _commoner_2014().model_copy(update={"creature_type": "fiend", "max_hp": 200})
+    enemy = _member(enemy_template, "enemy", "monsters", 5)
+    enemy.state.current_hp = 200
+    setup = EncounterSetup(
+        heroes=[varek], monsters=[enemy], hero_total_levels=14, monster_total_cr="0", ruleset="2014",
+    )
+
+    applied = apply_on_hit_exile(
+        varek.state, enemy.state, varek.state.template.weapon_attack,
+        attacker_id="varek", round_number=1,
+        affected_states=[varek.state, enemy.state],
+    )
+    assert applied == ("banished", 0)
+
+    events, _ = resolve_source_exile_returns(
+        1, 2, varek, setup, FixedDiceProvider([10] * 10),
+    )
+    assert len(events) == 1
+    assert events[0].damage_roll is None
+    assert enemy.state.current_hp == 200
+    assert "suppressed by creature type" in events[0].description
+
+
+def test_varek_level_fourteen_progression_binds_hurl_through_hell() -> None:
+    varek = build_varek_ashenmark_2014(14)
+    profile = build_varek_ashenmark_2014_profile(14)
+    rule = varek.progression_features.resource_backed_on_hit_exile
+
+    assert rule is not None
+    assert rule.source_id == "hurl-through-hell"
+    assert rule.return_damage_dice_count == 10
+    assert rule.return_damage_dice_size == 10
+    assert rule.return_damage_type.value == "psychic"
+    assert rule.return_damage_excluded_creature_types == ["fiend"]
+    assert {item.id: item.max_uses for item in varek.resources}["hurl-through-hell"] == 1
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["hurl-through-hell"].automated is True
