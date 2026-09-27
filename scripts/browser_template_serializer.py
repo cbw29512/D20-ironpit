@@ -269,6 +269,22 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
     return row
 
 
+def _auto_hit_spell(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "projectileCount": action.projectile_count,
+        "projectilesPerSlotAbove": action.projectiles_per_slot_above,
+        "damageDiceCount": action.damage_dice_count,
+        "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "animation": action.animation,
+    }
+    if action.source:
+        row["source"] = action.source
+    return row
+
+
 def _spell_attack(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
@@ -588,6 +604,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
             row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+        if template.auto_hit_spell_actions:
+            row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
         if template.spell_cast_timed_resistances:
             row["spellCastTimedResistances"] = [
                 {
