@@ -27,10 +27,9 @@ def _setup() -> tuple[EncounterSetup, EncounterCombatant, EncounterCombatant]:
 
 def test_level_eighteen_draconic_presence_is_resource_backed_concentration_aura() -> None:
     hero = build_nyra_emberveil_2014(18)
-    assert len(hero.timed_self_buff_actions) == 1
-    action = hero.timed_self_buff_actions[0]
-
-    assert action.id == "draconic-presence-fear"
+    actions = {item.id: item for item in hero.timed_self_buff_actions}
+    assert set(actions) == {"dragon-wings", "draconic-presence-fear"}
+    action = actions["draconic-presence-fear"]
     assert action.resource_id == "sorcery-points"
     assert action.resource_cost == 5
     assert action.duration_rounds == 10
@@ -47,7 +46,10 @@ def test_level_eighteen_draconic_presence_is_resource_backed_concentration_aura(
 def test_draconic_presence_failure_applies_frightened_until_concentration_ends() -> None:
     setup, source, target = _setup()
     begin_turn(source.state)
-    action = source.state.template.timed_self_buff_actions[0]
+    action = next(
+        item for item in source.state.template.timed_self_buff_actions
+        if item.id == "draconic-presence-fear"
+    )
     before = next(item.current_uses for item in source.state.resources if item.id == "sorcery-points")
 
     event = resolve_timed_self_buff(
@@ -73,7 +75,10 @@ def test_draconic_presence_failure_applies_frightened_until_concentration_ends()
 def test_draconic_presence_success_grants_source_specific_24_hour_immunity() -> None:
     setup, source, target = _setup()
     begin_turn(source.state)
-    action = source.state.template.timed_self_buff_actions[0]
+    action = next(
+        item for item in source.state.template.timed_self_buff_actions
+        if item.id == "draconic-presence-fear"
+    )
     resolve_timed_self_buff(
         1, 1, source, action,
         affected_states=[source.state, target.state],

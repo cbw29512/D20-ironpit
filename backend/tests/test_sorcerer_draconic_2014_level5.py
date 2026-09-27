@@ -56,10 +56,10 @@ def test_level_five_spell_package_is_six_known_spells() -> None:
     assert len(package.cantrips) == 5
     assert [item.id for item in package.spells] == [
         "burning-hands",
+        "magic-missile",
+        "false-life",
+        "shatter",
         "detect-magic",
-        "comprehend-languages",
-        "knock",
-        "detect-thoughts",
         "fireball",
     ]
 

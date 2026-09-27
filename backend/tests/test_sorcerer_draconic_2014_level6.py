@@ -64,9 +64,22 @@ def test_level_six_elemental_affinity_resistance_is_cast_triggered_and_resource_
 def test_level_six_spell_package_has_seven_known_spells() -> None:
     package = build_sorcerer_2014_spell_package(6)
 
-    assert len(package.cantrips) == 5
-    assert len(package.spells) == 7
-    assert package.spells[-1].id == "clairvoyance"
+    assert [item.id for item in package.cantrips] == [
+        "fire-bolt",
+        "ray-of-frost",
+        "poison-spray",
+        "shocking-grasp",
+        "light",
+    ]
+    assert [item.id for item in package.spells] == [
+        "burning-hands",
+        "magic-missile",
+        "false-life",
+        "shatter",
+        "detect-magic",
+        "fireball",
+        "lightning-bolt",
+    ]
 
 
 def test_level_six_spell_attack_resolution_triggers_resistance_without_extra_action() -> None:

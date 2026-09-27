@@ -33,17 +33,17 @@ def test_level_four_resources_and_spell_package_match_progression() -> None:
     }
     assert [item.id for item in package.cantrips] == [
         "fire-bolt",
+        "ray-of-frost",
+        "poison-spray",
+        "shocking-grasp",
         "light",
-        "mage-hand",
-        "prestidigitation",
-        "message",
     ]
     assert [item.id for item in package.spells] == [
         "burning-hands",
+        "magic-missile",
+        "false-life",
+        "shatter",
         "detect-magic",
-        "comprehend-languages",
-        "knock",
-        "detect-thoughts",
     ]
 
 

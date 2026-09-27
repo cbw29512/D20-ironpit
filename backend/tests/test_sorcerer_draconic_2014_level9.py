@@ -18,8 +18,18 @@ def test_level_nine_adds_fifth_level_slot_and_tenth_known_spell() -> None:
         "spell-slot-5": 1,
         "sorcery-points": 9,
     }
-    assert len(package.spells) == 10
-    assert package.spells[-1].id == "creation"
+    assert [item.id for item in package.spells] == [
+        "burning-hands",
+        "magic-missile",
+        "false-life",
+        "shatter",
+        "detect-magic",
+        "fireball",
+        "lightning-bolt",
+        "greater-invisibility",
+        "dispel-magic",
+        "cone-of-cold",
+    ]
 
     fire_bolt = next(item for item in hero.spell_attack_actions if item.id == "fire-bolt")
     fireball = next(item for item in hero.spell_save_actions if item.id == "fireball")
