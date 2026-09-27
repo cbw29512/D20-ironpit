@@ -6,7 +6,7 @@
     "armor-class", "armor-class-minimum", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed", "debuff-counter",
-    "zero-hp-replacement",
+    "zero-hp-replacement", "damage-source-qualifier",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
@@ -22,7 +22,9 @@
     if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
     if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
     if (item.kind === "attack-roll-flat" && (!(item.flat_bonus || 0) || !item.weapon_id)) throw new Error("Flat attack modifiers require a bonus and weapon id.");
-    if (item.kind !== "attack-roll-flat" && item.weapon_id) throw new Error(`${item.kind} does not accept a weapon id.`);
+    if (!new Set(["attack-roll-flat", "damage-source-qualifier"]).has(item.kind) && item.weapon_id) throw new Error(item.kind + " does not accept a weapon id.");
+    if (item.kind === "damage-source-qualifier" && (!item.weapon_id || !item.source_qualifier)) throw new Error("Damage source qualifier modifiers require a weapon id and qualifier.");
+    if (item.kind !== "damage-source-qualifier" && item.source_qualifier) throw new Error(item.kind + " does not accept a source qualifier.");
     if (item.kind === "saving-throw-flat" && !(item.flat_bonus || 0)) throw new Error("Flat saving-throw modifiers require a nonzero bonus.");
     if (item.kind === "condition-immunity" && !item.condition_id) throw new Error("Condition-immunity modifiers require a condition id.");
     if (item.kind !== "condition-immunity" && item.condition_id) throw new Error(`${item.kind} does not accept a condition id.`);
@@ -109,6 +111,15 @@
     .filter((item) => item.kind === "attack-roll-flat" && item.weapon_id === weaponId)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
+  function damageSourceQualifiers(state, attack) {
+    const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
+    for (const item of state.active_modifiers || []) {
+      if (item.kind === "damage-source-qualifier"
+          && item.weapon_id === (attack.weaponId || attack.id)
+          && item.source_qualifier) qualifiers.add(item.source_qualifier);
+    }
+    return qualifiers;
+  }
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"), ...(state.active_modifiers || []).filter((item) => item.kind === "armor-class-minimum").map((item) => item.minimum_value || 0));
   const effectiveSpeed = (state) => {
     const speedDelta = (state.active_modifiers || []).filter((item) => item.kind === "speed")
@@ -159,7 +170,7 @@
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
-    consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
+    damageSourceQualifiers, consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     expireTargetTurn, nextAttackAgainstAdvantage, removeSource, savingThrowFlat, validate,
   };
 })();
