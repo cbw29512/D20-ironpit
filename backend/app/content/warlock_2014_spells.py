@@ -88,3 +88,24 @@ def circle_of_death_2014(save_dc: int) -> SavingThrowAction:
         magical_effect=True,
         animation="spell-save",
     )
+
+
+
+def finger_of_death_2014(save_dc: int) -> SavingThrowAction:
+    """Build 2014 Finger of Death; the zombie rider is arena-inert by contract."""
+    return SavingThrowAction(
+        id="finger-of-death",
+        name="Finger of Death",
+        save_ability="constitution",
+        dc=save_dc,
+        range_ft=60,
+        damage_dice_count=7,
+        damage_dice_size=8,
+        damage_bonus=30,
+        damage_type="necrotic",
+        success_damage="half",
+        resource_id="mystic-arcanum-7",
+        resource_cost=1,
+        magical_effect=True,
+        animation="spell-save",
+    )
