@@ -80,6 +80,14 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
                 continue
             if _spell_level_available(attacker, action.level, turn_key):
                 ranges.append(("spell", action.range_ft))
+        for action in attacker.state.template.auto_hit_spell_actions:
+            if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
+                continue
+            if legal_slot_levels(
+                attacker.state, turn_key, action.level,
+                higher_slot_scaling=action.projectiles_per_slot_above > 0,
+            ):
+                ranges.append(("spell", action.range_ft))
         for action in attacker.state.template.spell_save_actions:
             if action.action_cost == "reaction" or action.concentration or not is_available(attacker.state, action.action_cost):
                 continue
