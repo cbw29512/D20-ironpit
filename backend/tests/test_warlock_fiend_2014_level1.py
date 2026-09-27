@@ -222,3 +222,28 @@ def test_eldritch_blast_beam_scaling_uses_independent_attacks() -> None:
     assert eldritch_blast_2014(7, 5, damage_bonus=4).attack_count == 2
     assert eldritch_blast_2014(9, 11, damage_bonus=5).attack_count == 3
     assert eldritch_blast_2014(11, 17, damage_bonus=5).attack_count == 4
+
+
+
+def test_varek_level_four_raises_charisma_for_blaster_damage() -> None:
+    from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+
+    profile = build_varek_ashenmark_2014_profile(4)
+    varek = build_varek_ashenmark_2014(4)
+    audits = {item.feature_id: item for item in profile.feature_audits}
+
+    assert profile.final_ability_scores.charisma == 18
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [("charisma", 2)]
+    assert audits["ability-score-improvement-l4"].automated is True
+
+    blast = next(item for item in varek.spell_attack_actions if item.id == "eldritch-blast")
+    assert blast.attack_bonus == 6
+    assert blast.damage_bonus == 4
+    assert blast.range_ft == 300
+    assert {item.id: item.max_uses for item in varek.resources} == {"spell-slot-2": 2}
+
+    package = build_warlock_2014_spell_package(4)
+    assert [item.id for item in package.cantrips] == ["eldritch-blast", "poison-spray", "mage-hand"]
+    assert [item.id for item in package.spells] == [
+        "hex", "burning-hands", "scorching-ray", "shatter", "comprehend-languages",
+    ]
