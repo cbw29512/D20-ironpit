@@ -15,6 +15,7 @@ from app.content.sorcerer_draconic_2014_spells import (
     cone_of_cold_2014,
     fire_bolt_2014,
     fireball_2014,
+    false_life_2014,
     lightning_bolt_2014,
     poison_spray_2014,
     ray_of_frost_2014,
@@ -86,7 +87,10 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
                     priority=100,
                 )
             ] if level >= 6 else []),
-            defensive_spell_actions=([greater_invisibility_2014()] if level >= 7 else []),
+            defensive_spell_actions=[
+                *([false_life_2014()] if level >= 2 else []),
+                *([greater_invisibility_2014()] if level >= 7 else []),
+            ],
             effect_removal_actions=([dispel_magic_2014()] if level >= 8 else []),
             resource_conversion_actions=(font_of_magic_2014_actions(level) if level >= 2 else []),
             spell_save_disadvantage_options=([heightened_spell_2014()] if level >= 3 else []),
