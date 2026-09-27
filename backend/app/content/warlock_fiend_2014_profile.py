@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 4):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 3.")
+    if level not in range(1, 5):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 4.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -18,9 +18,10 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
         AbilityIncrease(ability="wisdom", amount=1),
         AbilityIncrease(ability="charisma", amount=1),
     ]
+    advancement = [AbilityIncrease(ability="charisma", amount=2)] if level >= 4 else []
     final = AbilityScores(
         strength=9, dexterity=15, constitution=14,
-        intelligence=11, wisdom=13, charisma=16,
+        intelligence=11, wisdom=13, charisma=18 if level >= 4 else 16,
     )
     audits = [
         FeatureAudit(
@@ -81,6 +82,15 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
                 ),
             )
         )
+    if level >= 4:
+        audits.append(
+            FeatureAudit(
+                feature_id="ability-score-improvement-l4", feature_name="Ability Score Improvement",
+                source_reference="D&D Basic Rules 2014: Warlock 4",
+                category="class", combat_relevant=True, automated=True,
+                notes="Damage-first progression raises Charisma 16→18, improving spell attacks, save DC, and Agonizing Blast damage.",
+            )
+        )
     return CharacterBuildProfile(
         id=f"build-varek-ashenmark-2014-l{level}",
         template_id=f"varek-ashenmark-2014-l{level}",
@@ -90,7 +100,7 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
         species_id="human", species_name="Human",
         background_id="sage", background_name="Sage",
         base_ability_scores=base, species_increases=increases,
-        advancement_increases=[], final_ability_scores=final,
+        advancement_increases=advancement, final_ability_scores=final,
         class_equipment_option="package",
         class_equipment=[
             "Leather Armor", "Light Crossbow", "20 Bolts", "Component Pouch",
