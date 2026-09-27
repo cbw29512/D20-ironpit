@@ -58,7 +58,7 @@ load("browser-support.js");
 load("browser-steady-aim.js");
 load("browser-frenzy-2014.js");
 load("browser-2014-monk.js");
-load("browser-persistent-spell-attacks.js");
+load("browser-persistent-spell-attacks.js", "browser-targeted-concentration-damage.js");
 load("browser-ability-hook-installation.js");
 
 const H = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
@@ -70,6 +70,7 @@ assert.deepEqual(registrations, [
   ["steady-aim", 25, ["2024"]],
   ["adrenaline-rush", 30, ["2024"]],
   ["resource-conversion", 30, ["2014", "2024"]],
+  ["targeted-concentration-damage", 35, ["2014", "2024"]],
   ["persistent-spell-attack", 40, ["2014"]],
   ["monk-bonus-attack-2014", 100, ["2014"]],
   ["frenzy-bonus-attack-2014", 110, ["2014"]],
