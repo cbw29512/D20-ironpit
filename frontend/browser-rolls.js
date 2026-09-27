@@ -134,7 +134,7 @@
     );
     if (brutalStrike) components.push(bonusComponent(brutalStrike, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
-    const qualifiers = window.IRON_PIT_BROWSER_MODIFIERS?.damageSourceQualifiers(attacker, attack)
+    const qualifiers = window.IRON_PIT_BROWSER_MODIFIERS?.damageSourceQualifiers?.(attacker, attack)
       || new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
     const qualifiedComponents = components.map((item) => ({ ...item, source_qualifiers: [...qualifiers] }));
     const total = qualifiedComponents.reduce((sum, item) => sum + item.total, 0);
