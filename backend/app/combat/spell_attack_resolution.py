@@ -47,9 +47,13 @@ def resolve_spell_attack(
     spell: SpellAttackAction, setup: EncounterSetup, turn_key: str, dice,
     *, distance_override_ft: int | None = None,
     range_modifier: ResourceBackedSpellRangeModifier | None = None,
+    cast_slot_level: int | None = None,
+    spend_cast_costs: bool = True,
 ) -> BattleEvent:
     try:
-        if spell.action_cost == "reaction" or not is_available(caster.state, spell.action_cost):
+        if spell.action_cost == "reaction":
+            raise ValueError(f"{spell.name} cannot be cast in this action window.")
+        if spend_cast_costs and not is_available(caster.state, spell.action_cost):
             raise ValueError(f"{spell.name} cannot be cast in this action window.")
         if target.side == caster.side or target.state.is_dead or not target.state.is_alive:
             raise ValueError(f"{spell.name} requires a living enemy target.")
@@ -57,16 +61,35 @@ def resolve_spell_attack(
         allowed_range = spell.range_ft * (range_modifier.range_multiplier if range_modifier is not None else 1)
         if distance > allowed_range:
             raise ValueError(f"{spell.name} target is out of range.")
-        resource = slot_resource(caster, spell, turn_key)
-        if spell.level > 0 and resource is None:
-            raise ValueError(f"No level {spell.level} spell slot remains for {spell.name}.")
+        resource = None
+        if spend_cast_costs and spell.level > 0:
+            if cast_slot_level is None:
+                resource = slot_resource(caster, spell, turn_key)
+            else:
+                if cast_slot_level < spell.level or cast_slot_level > 9:
+                    raise ValueError(f"Illegal slot level {cast_slot_level} for {spell.name}.")
+                resource = next(
+                    (
+                        item for item in caster.state.resources
+                        if item.id == f"spell-slot-{cast_slot_level}" and item.current_uses > 0
+                    ),
+                    None,
+                )
+            if resource is None:
+                requested = cast_slot_level if cast_slot_level is not None else spell.level
+                raise ValueError(f"No level {requested} spell slot remains for {spell.name}.")
         ward = check_targeting_ward(caster, target, dice)
         if ward is not None and not ward.succeeded:
             if resource is not None:
                 mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
-            spend(caster.state, spell.action_cost)
-            range_remaining = spend_spell_range_modifier(caster.state, range_modifier)
-            apply_spell_cast_timed_resistance(caster, spell, round_number)
+            if spend_cast_costs:
+                spend(caster.state, spell.action_cost)
+            range_remaining = (
+                spend_spell_range_modifier(caster.state, range_modifier)
+                if spend_cast_costs else None
+            )
+            if spend_cast_costs:
+                apply_spell_cast_timed_resistance(caster, spell, round_number)
             event = blocked_targeting_event(sequence, round_number, caster, target, spell.name, ward)
             event.resource_remaining = resource.current_uses if resource is not None else range_remaining
             if range_modifier is not None:
@@ -104,9 +127,14 @@ def resolve_spell_attack(
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
-        spend(caster.state, spell.action_cost)
-        range_remaining = spend_spell_range_modifier(caster.state, range_modifier)
-        apply_spell_cast_timed_resistance(caster, spell, round_number)
+        if spend_cast_costs:
+            spend(caster.state, spell.action_cost)
+        range_remaining = (
+            spend_spell_range_modifier(caster.state, range_modifier)
+            if spend_cast_costs else None
+        )
+        if spend_cast_costs:
+            apply_spell_cast_timed_resistance(caster, spell, round_number)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
