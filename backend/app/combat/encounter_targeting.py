@@ -4,10 +4,13 @@ import logging
 
 from app.combat.condition_rules import is_incapacitated
 from app.combat.grid_geometry import footprint_distance_ft
-from app.combat.exile import removed_from_battlefield
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
+
+
+def __removed_from_battlefield(state) -> bool:
+    return any(effect.removed_from_battlefield for effect in state.timed_effects)
 
 
 def combatant_distance(attacker: EncounterCombatant, target: EncounterCombatant) -> int:
@@ -44,7 +47,7 @@ def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSet
         and not member.state.is_dead
         and member.state.current_hp > 0
         and not is_incapacitated(member.state)
-        and not removed_from_battlefield(member.state)
+        and not _removed_from_battlefield(member.state)
         and combatant_distance(attacker, member) <= 5
         for member in _opponents(attacker, setup)
     )
@@ -53,7 +56,7 @@ def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSet
 def _target_priority(member: EncounterCombatant) -> int | None:
     """Iron Pit policy: active threats first, Incapacitated living enemies second, downed characters last."""
     state = member.state
-    if not state.is_alive or state.is_dead or removed_from_battlefield(state):
+    if not state.is_alive or state.is_dead or _removed_from_battlefield(state):
         return None
     if state.current_hp > 0:
         return 1 if is_incapacitated(state) else 0
