@@ -14,17 +14,9 @@ from app.content.warlock_2014_spells import (
     scorching_ray_2014,
 )
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
+from app.content.warlock_fiend_2014_features import build_warlock_fiend_2014_features
 from app.domain.actions import HpThresholdConditionAction, HpThresholdInstantDeathAction
-from app.domain.damage_sources import DamageSourceQualifier
-from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.progression import ProgressionCombatFeatures
-from app.domain.progression_primitives import (
-    ResourceBackedD20BonusDie,
-    DelayedResourceRefill,
-    ResourceBackedOnHitExile,
-    SelectableDamageResistance,
-    SourceReducesHostileToZeroHpTemporaryHp,
-)
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
     if level not in range(1, 21): raise ValueError("2014 Varek runtime currently certifies levels 1 through 20.")
@@ -72,62 +64,7 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
             *([flame_strike_2014(8 + pb + cha)] if level >= 9 else []),
         ],
         targeted_concentration_damage_actions=[hex_2014()],
-        progression_features=ProgressionCombatFeatures(
-            source_reduces_hostile_to_zero_hp_temporary_hp=SourceReducesHostileToZeroHpTemporaryHp(
-                source_id="dark-ones-blessing",
-                source_name="Dark One's Blessing",
-                ability="charisma",
-                per_level=1,
-                minimum=1,
-            ),
-            selectable_damage_resistance=(
-                SelectableDamageResistance(
-                    source_id="fiendish-resilience",
-                    source_name="Fiendish Resilience",
-                    allowed_damage_types=list(DamageType),
-                    forbidden_source_qualifiers=[
-                        DamageSourceQualifier.MAGICAL,
-                        DamageSourceQualifier.SILVERED,
-                    ],
-                    priority=90,
-                ) if level >= 10 else None
-            ),
-            resource_backed_on_hit_exile=(
-                ResourceBackedOnHitExile(
-                    source_id="hurl-through-hell",
-                    source_name="Hurl Through Hell",
-                    resource_id="hurl-through-hell",
-                    resource_cost=1,
-                    expiry_timing="source_turn_end",
-                    duration_rounds=1,
-                    return_damage_dice_count=10,
-                    return_damage_dice_size=10,
-                    return_damage_type=DamageType.PSYCHIC,
-                    return_damage_excluded_creature_types=["fiend"],
-                ) if level >= 14 else None
-            ),
-            delayed_resource_refill=(
-                DelayedResourceRefill(
-                    source_id="eldritch-master",
-                    source_name="Eldritch Master",
-                    resource_ids=[f"spell-slot-{row.pact_slot_level}"],
-                    use_resource_id="eldritch-master",
-                    use_resource_cost=1,
-                    delay_rounds=10,
-                ) if level >= 20 else None
-            ),
-            resource_backed_d20_bonus_dice=(
-                [ResourceBackedD20BonusDie(
-                    source_id="dark-ones-own-luck",
-                    source_name="Dark One's Own Luck",
-                    resource_id="dark-ones-own-luck",
-                    resource_cost=1,
-                    dice_count=1,
-                    dice_size=10,
-                    test_kinds=["saving_throw", "ability_check"],
-                )] if level >= 6 else []
-            ),
-        ),
+        progression_features=build_warlock_fiend_2014_features(level, row.pact_slot_level),
         saving_throw_actions=[
             *([circle_of_death_2014(8 + pb + cha)] if level >= 11 else []),
             *([finger_of_death_2014(8 + pb + cha)] if level >= 13 else []),
