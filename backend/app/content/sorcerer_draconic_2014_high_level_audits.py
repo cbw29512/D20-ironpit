@@ -18,13 +18,6 @@ def build_sorcerer_draconic_2014_high_level_audits(level: int) -> list[FeatureAu
                     "range is actually required, with Python/browser parity."
                 ),
             ),
-            FeatureAudit(
-                feature_id="creation",
-                feature_name="Creation",
-                source_reference="D&D Basic Rules 2014: Creation",
-                category="class", combat_relevant=False, automated=True,
-                notes="Legal fifth-level Sorcerer choice recorded as arena-neutral for Iron Pit combat.",
-            ),
         ]
     if level >= 11:
         rows.append(FeatureAudit(
