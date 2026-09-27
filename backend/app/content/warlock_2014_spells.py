@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.domain.spells import SpellAttackAction
+from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
 
 
 def eldritch_blast_2014(attack_bonus: int, level: int, damage_bonus: int = 0) -> SpellAttackAction:
@@ -25,4 +26,22 @@ def eldritch_blast_2014(attack_bonus: int, level: int, damage_bonus: int = 0) ->
         damage_type="force",
         animation="spell-attack",
         source="D&D Basic Rules 2014: Eldritch Blast",
+    )
+
+
+def hex_2014() -> TargetedConcentrationDamageAction:
+    return TargetedConcentrationDamageAction(
+        id="hex",
+        name="Hex",
+        level=1,
+        action_cost="bonus_action",
+        range_ft=90,
+        dice_count=1,
+        dice_size=6,
+        damage_type="necrotic",
+        duration_rounds_by_slot={1: 600, 3: 4800, 5: 14400},
+        retarget_after_target_zero=True,
+        priority=10,
+        animation="targeted-concentration",
+        source="D&D Basic Rules 2014: Hex",
     )
