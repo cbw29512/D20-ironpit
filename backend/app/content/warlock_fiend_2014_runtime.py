@@ -6,7 +6,7 @@ from app.content.sorcerer_draconic_2014_spells import burning_hands_2014, fireba
 from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
 from app.content.shared_damage_spells_2014 import flame_strike_2014
 from app.content.warlock_2014_progression import warlock_2014_level
-from app.content.warlock_2014_spells import eldritch_blast_2014, hex_2014, scorching_ray_2014
+from app.content.warlock_2014_spells import circle_of_death_2014, eldritch_blast_2014, hex_2014, scorching_ray_2014
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
 from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
@@ -19,8 +19,8 @@ from app.domain.progression_primitives import (
 
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 11):
-        raise ValueError("2014 Varek runtime currently certifies levels 1 through 10.")
+    if level not in range(1, 12):
+        raise ValueError("2014 Varek runtime currently certifies levels 1 through 11.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
@@ -97,6 +97,7 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                 )] if level >= 6 else []
             ),
         ),
+        saving_throw_actions=([circle_of_death_2014(8 + pb + cha)] if level >= 11 else []),
         saving_throw_bonuses=saving_throw_bonuses(scores, level, ("wisdom", "charisma")),
         skill_bonuses={
             "arcana": scores.modifier("intelligence") + pb,
@@ -113,6 +114,11 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                 name="Dark One's Own Luck",
                 max_uses=1,
             )] if level >= 6 else []),
+            *([ResourceDefinition(
+                id="mystic-arcanum-6",
+                name="Mystic Arcanum (6th Level)",
+                max_uses=1,
+            )] if level >= 11 else []),
         ],
         effect_removal_actions=([dispel_magic_2014("charisma")] if level >= 6 else []),
         visual=VisualLoadout(armor="leather-armor", main_hand="arcane-focus", body_style="humanoid"),
