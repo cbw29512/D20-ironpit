@@ -104,8 +104,11 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
         rows.append(FeatureAudit(
             feature_id="spell-mastery", feature_name="Spell Mastery",
             source_reference="D&D Basic Rules 2014: Wizard 18",
-            category="class", combat_relevant=True, automated=False,
-            notes="ENGINE_TRULY_MISSING: reusable per-spell no-slot casting permission for selected 1st/2nd-level spells.",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "Burning Hands and Shatter bind to reusable alternate spell-cast grants. "
+                "Each retains its printed level and action but does not expend a spell slot."
+            ),
         ))
     if level >= 19:
         rows.append(FeatureAudit(
@@ -118,7 +121,10 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
         rows.append(FeatureAudit(
             feature_id="signature-spells", feature_name="Signature Spells",
             source_reference="D&D Basic Rules 2014: Wizard 20",
-            category="class", combat_relevant=True, automated=False,
-            notes="ENGINE_TRULY_MISSING: reusable per-spell free-cast resource that refreshes on short rest.",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "Fireball and Lightning Bolt each bind to a reusable fixed-level alternate cast "
+                "backed by an independent one-use Signature Spells resource."
+            ),
         ))
     return rows
