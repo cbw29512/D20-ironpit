@@ -4,8 +4,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level != 1:
-        raise ValueError("2014 Varek profile currently certifies level 1 only.")
+    if level not in range(1, 3):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 2.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -54,11 +54,26 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
             notes="Selected for the damage-first canonical build. Uses the reusable targeted concentration bonus-damage primitive shared with Hunter's Mark.",
         ),
     ]
+    if level >= 2:
+        audits.extend([
+            FeatureAudit(
+                feature_id="agonizing-blast", feature_name="Agonizing Blast",
+                source_reference="D&D Basic Rules 2014: Eldritch Invocations",
+                category="class", combat_relevant=True, automated=True,
+                notes="Adds Charisma modifier to each certified Eldritch Blast beam through the spell-attack damage bonus field.",
+            ),
+            FeatureAudit(
+                feature_id="eldritch-spear", feature_name="Eldritch Spear",
+                source_reference="D&D Basic Rules 2014: Eldritch Invocations",
+                category="class", combat_relevant=True, automated=True,
+                notes="Extends Eldritch Blast range to 300 feet without a new resolver.",
+            ),
+        ])
     return CharacterBuildProfile(
-        id="build-varek-ashenmark-2014-l1",
-        template_id="varek-ashenmark-2014-l1",
+        id=f"build-varek-ashenmark-2014-l{level}",
+        template_id=f"varek-ashenmark-2014-l{level}",
         character_name="Varek Ashenmark",
-        class_id="warlock", class_name="Warlock", level=1, ruleset="2014",
+        class_id="warlock", class_name="Warlock", level=level, ruleset="2014",
         subclass_id="fiend-patron", subclass_name="Fiend Patron", build_id="eldritch-blaster",
         species_id="human", species_name="Human",
         background_id="sage", background_name="Sage",
