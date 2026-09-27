@@ -20,6 +20,7 @@ from app.content.sorcerer_draconic_2014_spells import (
     magic_missile_2014,
     poison_spray_2014,
     ray_of_frost_2014,
+    shocking_grasp_2014,
     shatter_2014,
 )
 from app.content.sorcerer_draconic_2014_level14 import dragon_wings_2014
@@ -67,6 +68,7 @@ def build_nyra_emberveil_2014(level: int) -> CombatantTemplate:
             spell_attack_actions=[
                 fire_bolt_2014(pb + cha, level, cha if level >= 6 else 0),
                 ray_of_frost_2014(pb + cha, level),
+                shocking_grasp_2014(pb + cha, level),
             ],
             auto_hit_spell_actions=[magic_missile_2014()],
             spell_save_actions=[
