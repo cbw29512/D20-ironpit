@@ -66,6 +66,8 @@ class SpellAttackAction(BaseModel):
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    attack_count: int = Field(default=1, ge=1, le=20)
+    attacks_per_slot_above: int = Field(default=0, ge=0, le=20)
     advantage_if_target_wearing_metal_armor: bool = False
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     on_hit_timed_effects: list[OnHitTimedEffect] = Field(default_factory=list)
@@ -76,7 +78,18 @@ class SpellAttackAction(BaseModel):
     def validate_attack_spell(self) -> "SpellAttackAction":
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spell attacks require a damage type.")
+        if self.level == 0 and self.attacks_per_slot_above:
+            raise ValueError("Cantrip spell attacks cannot scale attacks by spell-slot level.")
         return self
+
+    def attack_count_at_slot(self, slot_level: int) -> int:
+        if self.level == 0:
+            if slot_level != 0:
+                raise ValueError("Cantrip spell attacks use slot level 0.")
+            return self.attack_count
+        if slot_level < self.level or slot_level > 9:
+            raise ValueError(f"Illegal slot level {slot_level} for {self.name}.")
+        return self.attack_count + (slot_level - self.level) * self.attacks_per_slot_above
 
 
 class SpellSaveAction(BaseModel):
