@@ -19,6 +19,7 @@ from app.domain.progression_primitives import (
     OpeningTargetingWard,
     ResourceBackedD20BonusDie,
     ResourceBackedOnHitExile,
+    DelayedResourceRefill,
     SavingThrowProficiencyGrant,
     SelectableDamageResistance,
     SourceReducesHostileToZeroHpTemporaryHp,
@@ -85,6 +86,7 @@ class ProgressionCombatFeatures(BaseModel):
     source_reduces_hostile_to_zero_hp_temporary_hp: SourceReducesHostileToZeroHpTemporaryHp | None = None
     selectable_damage_resistance: SelectableDamageResistance | None = None
     resource_backed_on_hit_exile: ResourceBackedOnHitExile | None = None
+    delayed_resource_refill: DelayedResourceRefill | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
