@@ -34,6 +34,7 @@
       concentration_required: Boolean(spell.concentration),
       consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
       ends_on_owner_attack: Boolean(effect.endsOnOwnerAttack),
+      expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
       expires_source_turn_end_round: expiry,
     };
   }
