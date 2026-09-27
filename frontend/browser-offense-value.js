@@ -68,8 +68,13 @@
     const distance = S().distance(caster, target);
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const closeThreat = A().rangedCloseThreat(caster, target, distance, setup);
-    const mode = R().modeFromSources(conditions.advantage + M().attacksAgainstAdvantage(target.state),
-      conditions.disadvantage + (closeThreat ? 1 : 0));
+    const metalAdvantage = Boolean(
+      spell.advantageIfTargetWearingMetalArmor && target.state.template.wearing_metal_armor
+    );
+    const mode = R().modeFromSources(
+      conditions.advantage + M().attacksAgainstAdvantage(target.state) + (metalAdvantage ? 1 : 0),
+      conditions.disadvantage + (closeThreat ? 1 : 0),
+    );
     const probabilities = attackProbabilities(caster.state, spell.attackBonus, M().effectiveArmorClass(target.state), mode);
     if (Q().autoCritical(target.state) && distance <= 5) probabilities.critical = probabilities.hit;
     const factor = damageFactor(target.state, spell.damageType);
