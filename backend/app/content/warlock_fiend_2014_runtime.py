@@ -8,14 +8,19 @@ from app.content.shared_damage_spells_2014 import flame_strike_2014
 from app.content.warlock_2014_progression import warlock_2014_level
 from app.content.warlock_2014_spells import eldritch_blast_2014, hex_2014, scorching_ray_2014
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.damage_sources import DamageSourceQualifier
+from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.progression_primitives import ResourceBackedD20BonusDie, SourceReducesHostileToZeroHpTemporaryHp
+from app.domain.progression_primitives import (
+    ResourceBackedD20BonusDie,
+    SelectableDamageResistance,
+    SourceReducesHostileToZeroHpTemporaryHp,
+)
 
 
 def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
-    if level not in range(1, 10):
-        raise ValueError("2014 Varek runtime currently certifies levels 1 through 9.")
+    if level not in range(1, 11):
+        raise ValueError("2014 Varek runtime currently certifies levels 1 through 10.")
     profile = build_varek_ashenmark_2014_profile(level)
     scores = profile.final_ability_scores
     pb = proficiency_bonus(level)
@@ -67,6 +72,18 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                 ability="charisma",
                 per_level=1,
                 minimum=1,
+            ),
+            selectable_damage_resistance=(
+                SelectableDamageResistance(
+                    source_id="fiendish-resilience",
+                    source_name="Fiendish Resilience",
+                    allowed_damage_types=list(DamageType),
+                    forbidden_source_qualifiers=[
+                        DamageSourceQualifier.MAGICAL,
+                        DamageSourceQualifier.SILVERED,
+                    ],
+                    priority=90,
+                ) if level >= 10 else None
             ),
             resource_backed_d20_bonus_dice=(
                 [ResourceBackedD20BonusDie(
