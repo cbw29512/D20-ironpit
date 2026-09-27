@@ -5,8 +5,8 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 
 def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
-    if level not in range(1, 16):
-        raise ValueError("2014 Varek profile currently certifies levels 1 through 15.")
+    if level not in range(1, 17):
+        raise ValueError("2014 Varek profile currently certifies levels 1 through 16.")
     base = AbilityScores(
         strength=8, dexterity=14, constitution=13,
         intelligence=10, wisdom=12, charisma=15,
@@ -23,9 +23,10 @@ def build_varek_ashenmark_2014_profile(level: int) -> CharacterBuildProfile:
         ([AbilityIncrease(ability="charisma", amount=2)] if level >= 4 else [])
         + ([AbilityIncrease(ability="charisma", amount=2)] if level >= 8 else [])
         + ([AbilityIncrease(ability="constitution", amount=2)] if level >= 12 else [])
+        + ([AbilityIncrease(ability="constitution", amount=2)] if level >= 16 else [])
     )
     final = AbilityScores(
-        strength=9, dexterity=15, constitution=16 if level >= 12 else 14,
+        strength=9, dexterity=15, constitution=18 if level >= 16 else 16 if level >= 12 else 14,
         intelligence=11, wisdom=13, charisma=20 if level >= 8 else 18 if level >= 4 else 16,
     )
     audits = build_varek_fiend_2014_audits(level)
