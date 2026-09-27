@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellModifierEffect, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
@@ -150,4 +151,26 @@ def false_life_2014() -> DefensiveSpellAction:
         )
     except Exception:
         logger.exception("Failed to build 2014 False Life.")
+        raise
+
+
+def magic_missile_2014() -> AutoHitSpellAction:
+    try:
+        return AutoHitSpellAction(
+            id="magic-missile",
+            name="Magic Missile",
+            level=1,
+            action_cost="action",
+            range_ft=120,
+            projectile_count=3,
+            projectiles_per_slot_above=1,
+            damage_dice_count=1,
+            damage_dice_size=4,
+            damage_bonus=1,
+            damage_type="force",
+            animation="magic-missile",
+            source="D&D Basic Rules 2014: Magic Missile",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Magic Missile.")
         raise
