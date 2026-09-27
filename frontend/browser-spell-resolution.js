@@ -10,6 +10,8 @@
   const CONC = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
+  const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
+  const H = () => window.IRON_PIT_BROWSER_SPELL_SAVE_DISADVANTAGE;
 
   function scaledSpell(action, slotLevel) {
     const policy = P();
@@ -47,6 +49,7 @@
       const action = saveAction(choice);
       const events = [];
       let sharedDamageRolls = null;
+      let saveDisadvantage = H()?.choose(caster.state) || null;
 
       for (const targetId of choice.targetIds) {
         const target = members.get(targetId);
@@ -59,10 +62,20 @@
             .blocked(sequence++, round, caster, target, spell.name, ward));
           continue;
         }
+        let saveDisadvantageSources = [];
+        let modifierRemaining = null;
+        if (saveDisadvantage) {
+          modifierRemaining = H().spend(caster.state, saveDisadvantage);
+          saveDisadvantageSources = [saveDisadvantage.name];
+          saveDisadvantage = null;
+        }
         const event = V().resolveAction(
           sequence, round, caster, target, action,
           placement ? 0 : S().distance(caster, target),
-          { spendAction: false, sharedDamageRolls, spellEffect: true, setup },
+          {
+            spendAction: false, sharedDamageRolls, spellEffect: true, setup,
+            saveDisadvantageSources, resourceRemaining: modifierRemaining,
+          },
         );
         sequence += 1;
         if (ward) {
@@ -111,7 +124,19 @@
         remaining = caster.state.resources[resourceId];
       }
       E().spend(caster.state, spell.actionCost);
+      const rangeRemaining = choice.rangeModifier
+        ? (P()?.spendRangeModifier
+          ? P().spendRangeModifier(caster.state, choice.rangeModifier)
+          : (() => {
+              const current = caster.state.resources?.[choice.rangeModifier.resourceId] || 0;
+              const cost = choice.rangeModifier.resourceCost || 1;
+              if (current < cost) throw new Error(`Insufficient ${choice.rangeModifier.resourceId} for ${choice.rangeModifier.name}.`);
+              caster.state.resources[choice.rangeModifier.resourceId] = current - cost;
+              return caster.state.resources[choice.rangeModifier.resourceId];
+            })())
+        : null;
       window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.removeOwnerAttackEnding(caster.state);
+      CE()?.applyTimedResistance(caster, scaledSpell(spell, choice.slotLevel), round);
 
       const allStates = [...setup.heroes, ...setup.monsters].map((member) => member.state);
       if (spell.concentration) {
@@ -129,13 +154,23 @@
         ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
         : "";
       const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
-      const events = [{
+      const events = [];
+      if (choice.rangeModifier) {
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "feature",
+          actor_id: caster.combatant_id, actor_name: caster.state.template.name,
+          feature_id: choice.rangeModifier.id, resource_remaining: rangeRemaining,
+          animation: "spell-range",
+          description: `${caster.state.template.name} uses ${choice.rangeModifier.name} to extend ${spell.name}'s range.`,
+        });
+      }
+      events.push({
         sequence: sequence++, round_number: round, event_type: "feature",
         actor_id: caster.combatant_id, actor_name: caster.state.template.name,
         feature_id: spell.id, resource_remaining: remaining,
         animation: spell.animation || "spell-save",
         description: `${caster.state.template.name} casts ${spell.name} using a ${slotText}.${detail}`,
-      }];
+      });
 
       const effect = resolveEffect(sequence, round, caster, setup, choice, turnKey);
       events.push(...effect.events);

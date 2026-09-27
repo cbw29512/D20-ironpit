@@ -5,8 +5,10 @@ from dataclasses import dataclass
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import spell_attack_expected_damage
+from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
 from app.domain.spells import SpellAttackAction
 
 
@@ -15,6 +17,7 @@ class SpellAttackChoice:
     action: SpellAttackAction
     target: EncounterCombatant
     expected_damage: float
+    range_modifier: ResourceBackedSpellRangeModifier | None = None
 
 
 def _slot_available(caster: EncounterCombatant, action: SpellAttackAction, turn_key: str) -> bool:
@@ -34,21 +37,31 @@ def choose_spell_attack(
     turn_key: str,
 ) -> SpellAttackChoice | None:
     enemies = setup.monsters if caster.side == "heroes" else setup.heroes
-    candidates: list[tuple[float, int, int, str, SpellAttackAction, EncounterCombatant]] = []
+    candidates: list[tuple[float, int, int, str, SpellAttackAction, EncounterCombatant, ResourceBackedSpellRangeModifier | None]] = []
     for index, action in enumerate(caster.state.template.spell_attack_actions):
         if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             continue
         if not _slot_available(caster, action, turn_key):
             continue
+        effective_range = effective_spell_range_ft(caster.state, action.range_ft)
         for target in enemies:
+            distance = combatant_distance(caster, target)
             if (
                 not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0
-                or combatant_distance(caster, target) > action.range_ft
+                or distance > effective_range
             ):
                 continue
+            range_modifier = choose_spell_range_modifier(
+                caster.state,
+                base_range_ft=action.range_ft,
+                required_range_ft=distance,
+            )
             score = spell_attack_expected_damage(caster, target, action, setup)
-            candidates.append((score, -action.level, -target.state.current_hp, target.combatant_id, action, target))
+            candidates.append((
+                score, -action.level, -target.state.current_hp, target.combatant_id,
+                action, target, range_modifier,
+            ))
     if not candidates:
         return None
-    score, _, _, _, action, target = max(candidates, key=lambda item: item[:4])
-    return SpellAttackChoice(action, target, score)
+    score, _, _, _, action, target, range_modifier = max(candidates, key=lambda item: item[:4])
+    return SpellAttackChoice(action, target, score, range_modifier)

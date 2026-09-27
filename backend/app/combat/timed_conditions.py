@@ -8,6 +8,7 @@ from app.combat.debuff_counters import movement_counter_cost
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
 from app.domain.models import CombatantState, CombatantTemplate, DebuffCounter, TimedEffect
+from app.domain.movement import MovementModeGrant
 from app.domain.runtime import TimedTurnBehavior
 from app.combat.timed_condition_lifecycle import (
     expire_start_of_turn_conditions,
@@ -50,6 +51,7 @@ def apply_timed_condition(
     ends_if_source_dead: bool = False,
     owned_damage_resistances: list[DamageType] | None = None,
     owned_debuff_counters: list[DebuffCounter] | None = None,
+    owned_movement_mode_grants: list[MovementModeGrant] | None = None,
     use_default_poison_recovery: bool = True,
 ) -> str | None:
     """Apply one source-owned timed condition and its optional passive defenses.
@@ -107,6 +109,7 @@ def apply_timed_condition(
             zero_hp_replacement_hp=zero_hp_replacement_hp,
             owned_damage_resistances=owned_damage_resistances or [],
             owned_debuff_counters=owned_debuff_counters or [],
+            owned_movement_mode_grants=owned_movement_mode_grants or [],
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)

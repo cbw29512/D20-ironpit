@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
+from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.character_builds import AbilityScores
 from app.domain.effect_removal import EffectRemovalAction
@@ -20,8 +21,11 @@ from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.recharge import RechargeRule
 from app.domain.replacement_form_actions import ReplacementFormAction
+from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.size import CreatureSize
+from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier, ResourceBackedSpellRangeModifier, ResourceBackedSpellSaveDisadvantage
+from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
@@ -76,6 +80,8 @@ class CombatantTemplate(BaseModel):
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
+    auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list)
+    spell_cast_timed_resistances: list[SpellCastTimedResistance] = Field(default_factory=list)
     persistent_spell_attack_actions: list[PersistentSpellAttackAction] = Field(default_factory=list)
     persistent_hazard_actions: list[PersistentHazardAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
@@ -83,6 +89,10 @@ class CombatantTemplate(BaseModel):
     d20_bonus_die_actions: list[D20BonusDieAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     initiative_resource_refill_grants: list[InitiativeResourceRefillGrant] = Field(default_factory=list)
+    resource_conversion_actions: list[ResourceConversionAction] = Field(default_factory=list)
+    spell_save_disadvantage_options: list[ResourceBackedSpellSaveDisadvantage] = Field(default_factory=list)
+    spell_range_modifiers: list[ResourceBackedSpellRangeModifier] = Field(default_factory=list)
+    spell_duration_modifiers: list[ResourceBackedSpellDurationModifier] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     replacement_form_actions: list[ReplacementFormAction] = Field(default_factory=list)
     concentration_repeat_save_actions: list[ConcentrationRepeatSaveAction] = Field(default_factory=list)
@@ -108,6 +118,7 @@ class CombatantTemplate(BaseModel):
     damage_immunities: list[DamageType] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
     wearing_heavy_armor: bool = False
+    wearing_metal_armor: bool = False
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)

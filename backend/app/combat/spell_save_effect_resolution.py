@@ -5,6 +5,10 @@ import logging
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.modifier_stack import add_modifier
 from app.combat.spell_modifiers import build_spell_modifier
+from app.combat.spell_save_disadvantage import (
+    choose_spell_save_disadvantage,
+    spend_spell_save_disadvantage,
+)
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import spell_at_slot
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
@@ -64,6 +68,7 @@ def resolve_spell_save_effect(
         action = compile_spell_save_action(choice)
         events: list[BattleEvent] = []
         shared_damage_rolls: list[int] | list[list[int]] | None = None
+        save_disadvantage = choose_spell_save_disadvantage(caster.state)
 
         for target_id in choice.target_ids:
             target = by_id[target_id]
@@ -84,6 +89,13 @@ def resolve_spell_save_effect(
                 sequence += 1
                 continue
 
+            disadvantage_sources: tuple[str, ...] = ()
+            modifier_remaining = None
+            if save_disadvantage is not None:
+                modifier_remaining = spend_spell_save_disadvantage(caster.state, save_disadvantage)
+                disadvantage_sources = (save_disadvantage.name,)
+                save_disadvantage = None
+
             chain, sequence = resolve_save_event_chain(
                 sequence,
                 round_number,
@@ -98,6 +110,8 @@ def resolve_spell_save_effect(
                 shared_damage_rolls=shared_damage_rolls,
                 affected_states=affected_states,
                 spell_effect=True,
+                save_disadvantage_sources=disadvantage_sources,
+                resource_remaining_override=modifier_remaining,
             )
             event = chain[0]
             if ward is not None:

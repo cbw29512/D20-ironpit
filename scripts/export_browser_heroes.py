@@ -123,6 +123,7 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
     if effect.consume_on_attack_against: row["consumeOnAttackAgainst"] = True
     if effect.ends_on_owner_attack: row["endsOnOwnerAttack"] = True
     if effect.expires_after_source_turns is not None: row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
+    if effect.expires_at_start_of_source_turn: row["expiresAtStartOfSourceTurn"] = True
     return row
 
 
@@ -131,8 +132,38 @@ def _spell_attack(action: Any) -> dict[str, Any]:
            "attackKind": action.attack_kind, "range": action.range_ft, "attackBonus": action.attack_bonus,
            "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
            "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+           "advantageIfTargetWearingMetalArmor": action.advantage_if_target_wearing_metal_armor,
            "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
+           "onHitTimedEffects": [
+               {
+                   "effectId": effect.effect_id,
+                   "durationRounds": effect.duration_rounds,
+                   "expiryTiming": effect.expiry_timing,
+                   "suppressAction": effect.suppress_action,
+                   "suppressBonusAction": effect.suppress_bonus_action,
+                   "suppressReactions": effect.suppress_reactions,
+                   "suppressMovement": effect.suppress_movement,
+                   "nextAttackDisadvantage": effect.next_attack_disadvantage,
+                   "sourceIsMagical": effect.source_is_magical,
+               }
+               for effect in action.on_hit_timed_effects
+           ],
            "animation": action.animation}
+    if action.source: row["source"] = action.source
+    return row
+
+
+def _auto_hit_spell(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "projectileCount": action.projectile_count,
+        "projectilesPerSlotAbove": action.projectiles_per_slot_above,
+        "damageDiceCount": action.damage_dice_count,
+        "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "animation": action.animation,
+    }
     if action.source: row["source"] = action.source
     return row
 
@@ -264,6 +295,15 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
     }
     if action.debuff_counters:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
+    if action.movement_mode_grants:
+        row["movementModeGrants"] = [
+            {
+                "mode": item.mode,
+                "fixedSpeedFt": item.fixed_speed_ft,
+                "matchCurrentSpeed": item.match_current_speed,
+            }
+            for item in action.movement_mode_grants
+        ]
     if action.saving_throw_advantage_grants:
         row["savingThrowAdvantageGrants"] = [
             _save_advantage_grant(item) for item in action.saving_throw_advantage_grants
@@ -274,6 +314,10 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["endsIfSourceDead"] = True
     if action.friendly_save_advantage_aura is not None:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
+    if action.hostile_start_turn_condition_aura is not None:
+        row["hostileStartTurnConditionAura"] = action.hostile_start_turn_condition_aura.model_dump(mode="json")
+    if action.concentration:
+        row["concentration"] = True
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     return row
@@ -305,9 +349,26 @@ def _effect_removal(action: Any) -> dict[str, Any]:
     }
 
 
+def _resource_conversion(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id,
+        "name": action.name,
+        "actionCost": action.action_cost,
+        "sourceResourceId": action.source_resource_id,
+        "sourceCost": action.source_cost,
+        "targetResourceId": action.target_resource_id,
+        "targetGain": action.target_gain,
+        "targetAllowsOverflow": action.target_allows_overflow,
+        "automation": action.automation,
+        "priority": action.priority,
+        "source": action.source,
+    }
+
+
 def _spell_package(class_id: str, level: int, template: CombatantTemplate):
     if not (
-        template.spell_save_actions or template.spell_attack_actions or template.persistent_spell_attack_actions
+        template.spell_save_actions or template.spell_attack_actions or template.auto_hit_spell_actions
+        or template.persistent_spell_attack_actions
         or template.persistent_hazard_actions or template.defensive_spell_actions or template.healing_actions
     ):
         return None
@@ -336,10 +397,12 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
         "damage_immunities": [item.value for item in template.damage_immunities],
         "condition_immunities": list(template.condition_immunities),
+            "wearing_metal_armor": template.wearing_metal_armor,
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
+        "wearing_metal_armor": template.wearing_metal_armor,
         "fighting_style": template.fighting_style, "fighting_styles": list(template.fighting_styles),
         "weapon_masteries": list(template.weapon_masteries), "critical_hit_minimum": progression.critical_hit_minimum,
         "initiative_advantage": progression.initiative_advantage, "athletics_advantage": progression.athletics_advantage,
@@ -402,6 +465,40 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["initiative_resource_refill_grants"] = [
             item.model_dump() for item in template.initiative_resource_refill_grants
         ]
+    if template.resource_conversion_actions:
+        row["resource_conversion_actions"] = [
+            _resource_conversion(item) for item in template.resource_conversion_actions
+        ]
+    if template.spell_save_disadvantage_options:
+        row["spellSaveDisadvantageOptions"] = [
+            {
+                "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost, "targetPolicy": item.target_policy,
+                "priority": item.priority, "source": item.source,
+            }
+            for item in template.spell_save_disadvantage_options
+        ]
+    if template.spell_range_modifiers:
+        row["spellRangeModifiers"] = [
+            {
+                "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost, "rangeMultiplier": item.range_multiplier,
+                "minimumBaseRangeFt": item.minimum_base_range_ft,
+                "priority": item.priority, "source": item.source,
+            }
+            for item in template.spell_range_modifiers
+        ]
+    if template.spell_duration_modifiers:
+        row["spellDurationModifiers"] = [
+            {
+                "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost, "durationMultiplier": item.duration_multiplier,
+                "maximumDurationMinutes": item.maximum_duration_minutes,
+                "minimumBaseDurationMinutes": item.minimum_base_duration_minutes,
+                "priority": item.priority, "source": item.source,
+            }
+            for item in template.spell_duration_modifiers
+        ]
     if progression.effect_bound_survival_save:
         row["effect_bound_survival_save"] = progression.effect_bound_survival_save.model_dump()
     if progression.turning_failure_damage:
@@ -440,6 +537,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+    if template.auto_hit_spell_actions: row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
     if template.persistent_spell_attack_actions:
         row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]

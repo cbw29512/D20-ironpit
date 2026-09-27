@@ -88,6 +88,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             skill_bonuses={"athletics": scores.modifier("strength") + proficiency_bonus(level),
                            "acrobatics": scores.modifier("dexterity") + remarkable},
             fighting_style=styles[0], fighting_styles=styles, weapon_masteries=[],
+            wearing_heavy_armor=True, wearing_metal_armor=True,
             visual=VisualLoadout(armor=armor.id, main_hand="greatsword", body_style="humanoid"),
             resources=_resources(level),
             progression_features=ProgressionCombatFeatures(

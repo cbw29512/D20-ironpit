@@ -264,6 +264,24 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         row["consumeOnAttackAgainst"] = True
     if effect.expires_after_source_turns is not None:
         row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
+    if effect.expires_at_start_of_source_turn:
+        row["expiresAtStartOfSourceTurn"] = True
+    return row
+
+
+def _auto_hit_spell(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "projectileCount": action.projectile_count,
+        "projectilesPerSlotAbove": action.projectiles_per_slot_above,
+        "damageDiceCount": action.damage_dice_count,
+        "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "animation": action.animation,
+    }
+    if action.source:
+        row["source"] = action.source
     return row
 
 
@@ -401,6 +419,15 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
     }
     if action.debuff_counters:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
+    if action.movement_mode_grants:
+        row["movementModeGrants"] = [
+            {
+                "mode": item.mode,
+                "fixedSpeedFt": item.fixed_speed_ft,
+                "matchCurrentSpeed": item.match_current_speed,
+            }
+            for item in action.movement_mode_grants
+        ]
     if action.saving_throw_advantage_grants:
         row["savingThrowAdvantageGrants"] = [
             _save_advantage_grant(item) for item in action.saving_throw_advantage_grants
@@ -516,6 +543,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
             "condition_immunities": list(template.condition_immunities),
+            "wearing_metal_armor": template.wearing_metal_armor,
             "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
             "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
@@ -533,6 +561,36 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["initiative_resource_refill_grants"] = [
                 item.model_dump() for item in template.initiative_resource_refill_grants
             ]
+        if template.resource_conversion_actions:
+            row["resource_conversion_actions"] = [
+                {
+                    "id": item.id, "name": item.name, "actionCost": item.action_cost,
+                    "sourceResourceId": item.source_resource_id, "sourceCost": item.source_cost,
+                    "targetResourceId": item.target_resource_id, "targetGain": item.target_gain,
+                    "targetAllowsOverflow": item.target_allows_overflow,
+                    "automation": item.automation, "priority": item.priority, "source": item.source,
+                }
+                for item in template.resource_conversion_actions
+            ]
+        if template.spell_save_disadvantage_options:
+            row["spellSaveDisadvantageOptions"] = [
+                {
+                    "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                    "resourceCost": item.resource_cost, "targetPolicy": item.target_policy,
+                    "priority": item.priority, "source": item.source,
+                }
+                for item in template.spell_save_disadvantage_options
+            ]
+        if template.spell_range_modifiers:
+            row["spellRangeModifiers"] = [
+                {
+                    "id": item.id, "name": item.name, "resourceId": item.resource_id,
+                    "resourceCost": item.resource_cost, "rangeMultiplier": item.range_multiplier,
+                    "minimumBaseRangeFt": item.minimum_base_range_ft,
+                    "priority": item.priority, "source": item.source,
+                }
+                for item in template.spell_range_modifiers
+            ]
         recharge = recharge_rows(template)
         if recharge:
             row["recharge_rules"] = recharge
@@ -547,6 +605,19 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
             row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+        if template.auto_hit_spell_actions:
+            row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
+        if template.spell_cast_timed_resistances:
+            row["spellCastTimedResistances"] = [
+                {
+                    "id": item.id, "name": item.name,
+                    "qualifyingDamageType": item.qualifying_damage_type.value,
+                    "resistanceDamageType": item.resistance_damage_type.value,
+                    "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                    "durationRounds": item.duration_rounds, "priority": item.priority,
+                }
+                for item in template.spell_cast_timed_resistances
+            ]
         if template.defensive_spell_actions:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions:

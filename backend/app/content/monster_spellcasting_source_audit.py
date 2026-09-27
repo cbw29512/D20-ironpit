@@ -118,6 +118,7 @@ def _runtime_spell_ids(template: CombatantTemplate) -> set[str]:
     return {
         *(action.id for action in template.spell_save_actions),
         *(action.id for action in template.spell_attack_actions),
+        *(action.id for action in template.auto_hit_spell_actions),
         *(action.id for action in template.defensive_spell_actions),
     }
 

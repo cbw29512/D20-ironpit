@@ -21,6 +21,22 @@ window.IRON_PIT_DICE = {
 load("browser-ability-hooks.js");
 load("browser-recharge.js");
 
+window.IRON_PIT_BROWSER_STATE = {
+  distance: (a, b) => Math.abs((a.position_ft || 0) - (b.position_ft || 0)),
+};
+window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+load("browser-condition-rules.js");
+load("browser-timed-conditions.js");
+window.IRON_PIT_BROWSER_SAVES = {
+  resolveSavingThrow: (_state, ability, dc) => ({
+    roll: { notation: "1d20+2", rolls: [1], modifier: 2, total: 3, selected_roll: 1 },
+    succeeded: false,
+    ability,
+    dc,
+  }),
+};
+load("browser-timed-emanations.js");
+
 const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
 const registered = hooks.abilitiesFor(hooks.PHASES.TURN_START);
 assert.equal(registered.some((ability) => ability.id === "recharge"), true);
@@ -50,6 +66,53 @@ assert.equal(result.events[0].recharge_succeeded, true);
 assert.equal(result.sequence, 11);
 assert.equal(result.claimed, false);
 assert.equal(member.state.resources.breath, 1);
+
+const auraSource = {
+  combatant_id: "aura-source", side: "heroes", position_ft: 0,
+  state: {
+    timed_effects: [{
+      effect_id: "draconic-presence-fear",
+      source_id: "aura-source",
+      source_effect_id: "draconic-presence-fear",
+    }],
+    template: {
+      name: "Aura Source",
+      timed_self_buff_actions: [{
+        id: "draconic-presence-fear",
+        name: "Draconic Presence: Fear",
+        durationRounds: 10,
+        expiryTiming: "source_turn_start",
+        animation: "draconic-presence",
+        hostileStartTurnConditionAura: {
+          trigger: "enemy_turn_start",
+          radius_ft: 60,
+          save_ability: "wisdom",
+          save_dc: 19,
+          condition_id: "frightened",
+          success_immunity_rounds: 14400,
+          source_is_magical: true,
+        },
+      }],
+    },
+  },
+};
+const auraTarget = {
+  combatant_id: "aura-target", side: "monsters", position_ft: 30,
+  state: {
+    is_alive: true, is_dead: false, active_effect_ids: [], timed_effects: [],
+    template: { name: "Aura Target", saving_throw_bonuses: { wisdom: 2 }, condition_immunities: [] },
+  },
+};
+const auraResult = window.IRON_PIT_BROWSER_TIMED_EMANATIONS.resolveStartOfTurn(
+  result.sequence,
+  2,
+  auraTarget,
+  { heroes: [auraSource], monsters: [auraTarget] },
+);
+assert.equal(auraResult.events.length, 1);
+assert.equal(auraResult.events[0].feature_id, "draconic-presence-fear");
+assert.equal(auraResult.events[0].save_succeeded, false);
+assert.ok(auraTarget.state.active_effect_ids.includes("frightened"));
 
 const turnSource = fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8");
 assert.equal(turnSource.includes("resolveStartOfTurn"), false);

@@ -6,6 +6,7 @@ from app.combat.encounter_targeting import close_ranged_threat_exists, combatant
 from app.combat.modifier_stack import attacks_against_advantage_sources, effective_armor_class
 from app.combat.rolls import resolve_roll_mode
 from app.combat.saving_throw_rolls import saving_throw_mode
+from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import RollMode
@@ -73,7 +74,13 @@ def spell_attack_expected_damage(
     distance = combatant_distance(caster, target)
     advantage, disadvantage = attack_roll_condition_sources(caster.state, target.state, distance, target.combatant_id)
     advantage += attacks_against_advantage_sources(target.state)
-    disadvantage += int(close_ranged_threat_exists(caster, setup))
+    advantage += int(
+        spell.advantage_if_target_wearing_metal_armor
+        and target.state.template.wearing_metal_armor
+    )
+    disadvantage += int(
+        spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
+    )
     mode = resolve_roll_mode(advantage, disadvantage)
     hit, critical = _attack_probabilities(caster.state, spell.attack_bonus, effective_armor_class(target.state), mode)
     if close_hit_is_automatic_critical(target.state) and distance <= 5:
@@ -112,3 +119,17 @@ def save_spell_expected_damage(target: EncounterCombatant, action: SpellSaveActi
     )
     on_success = full * 0.5 if action.success_damage == "half" else 0.0
     return max(0.0, (1 - success) * full + success * on_success)
+
+
+def auto_hit_spell_expected_damage(
+    target: EncounterCombatant,
+    action: AutoHitSpellAction,
+    projectile_count: int,
+) -> float:
+    factor = _damage_factor(target.state, DamageType(action.damage_type))
+    per_projectile = _mean_damage(
+        action.damage_dice_count,
+        action.damage_dice_size,
+        action.damage_bonus,
+    )
+    return max(0.0, projectile_count * per_projectile * factor)

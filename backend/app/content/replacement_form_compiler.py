@@ -69,6 +69,7 @@ def compile_replacement_form_template(
             update.update({
                 "spell_save_actions": keep(original.spell_save_actions),
                 "spell_attack_actions": keep(original.spell_attack_actions),
+                "auto_hit_spell_actions": keep(original.auto_hit_spell_actions),
                 "persistent_spell_attack_actions": keep(original.persistent_spell_attack_actions),
                 "defensive_spell_actions": keep(original.defensive_spell_actions),
                 "healing_actions": keep(original.healing_actions),

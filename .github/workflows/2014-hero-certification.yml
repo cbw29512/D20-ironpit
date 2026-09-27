@@ -72,6 +72,7 @@ jobs:
             backend/tests/test_paladin_devotion_2014_level18.py \
             backend/tests/test_paladin_devotion_2014_level19.py \
             backend/tests/test_multi_component_save_damage.py \
+            backend/tests/test_sorcerer_draconic_2014_level3.py \
             backend/tests/test_certification_progression_manifest.py
       - name: Certify 2014 hero data and browser behavior
         run: |
@@ -85,6 +86,8 @@ jobs:
           node frontend/browser-2014-monk-level19.test.cjs
           node frontend/browser-2014-monk-level20.test.cjs
           node frontend/browser-initiative-resource-refill.test.cjs
+          node frontend/browser-resource-conversion.test.cjs
+          node frontend/browser-spell-save-disadvantage.test.cjs
           node frontend/browser-d20-bonus-dice.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-turn-undead-2014.test.cjs

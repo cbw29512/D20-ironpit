@@ -12,3 +12,4 @@ class SavingThrowContext:
     spell_effect: bool = False
     source_creature_type: str | None = None
     effect_tags: frozenset[str] = frozenset()
+    disadvantage_sources: tuple[str, ...] = ()

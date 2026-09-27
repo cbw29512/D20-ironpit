@@ -10,6 +10,7 @@ from app.domain.debuffs import DebuffCounter
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
+from app.domain.movement import MovementModeGrant
 from app.domain.persistent_spell_attacks import PersistentSpellAttackState
 from app.domain.replacement_forms import ReplacementFormState
 
@@ -61,6 +62,7 @@ class TimedEffect(BaseModel):
     # Buff-owned counters describe which debuffs this effect prevents or can
     # clear, including source qualifiers and conditional movement costs.
     owned_debuff_counters: list[DebuffCounter] = Field(default_factory=list)
+    owned_movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":

@@ -3,11 +3,13 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.condition_rules import can_see
-from app.combat.encounter_targeting import combatant_distance
-from app.combat.offense_value import save_spell_expected_damage
-from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
+from app.combat.spell_policy_targeting import (
+    area_spell_choice,
+    legacy_radius_spell_choice,
+    legal_single_spell_targets,
+    single_target_spell_choice,
+)
 from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -50,35 +52,6 @@ def spell_at_slot(action: SpellSaveAction, slot_level: int) -> SpellSaveAction:
         raise RuntimeError("Spell higher-slot scaling could not be evaluated.") from exc
 
 
-def legal_single_spell_targets(
-    caster: EncounterCombatant,
-    setup: EncounterSetup,
-    action: SpellSaveAction,
-) -> list[EncounterCombatant]:
-    """Return legal hostile targets for one single-target save spell."""
-    try:
-        enemies = setup.monsters if caster.side == "heroes" else setup.heroes
-        return [
-            target
-            for target in enemies
-            if target.state.is_alive
-            and not target.state.is_dead
-            and target.state.current_hp > 0
-            and combatant_distance(caster, target) <= action.range_ft
-            and (
-                not action.requires_target_hearing
-                or "deafened" not in target.state.active_effect_ids
-            )
-            and (
-                not action.requires_target_sight
-                or can_see(caster.state, target.state)
-            )
-        ]
-    except Exception as exc:
-        logger.exception("Failed to determine legal targets for spell %s.", action.id)
-        raise RuntimeError("Spell targets could not be evaluated.") from exc
-
-
 def choose_spell(
     caster: EncounterCombatant,
     setup: EncounterSetup,
@@ -106,58 +79,31 @@ def choose_spell(
                 higher_slot_scaling=action.upcast_dice_per_level > 0,
             ):
                 scaled = spell_at_slot(action, slot_level)
-                if action.area_radius_ft is not None:
-                    placement = best_area_placement(
+                if action.area is not None:
+                    choice = area_spell_choice(
+                        caster, setup, action, slot_level, scaled, members,
+                    )
+                elif action.area_radius_ft is not None:
+                    choice = legacy_radius_spell_choice(
                         caster,
                         setup,
-                        action.area_radius_ft,
-                        action.range_ft,
+                        action,
+                        slot_level,
+                        scaled,
+                        members,
                         protected_ally_ids,
                     )
-                    if placement is None:
-                        continue
-                    target_ids = (*placement.enemy_ids, *placement.friendly_ids)
-                    score = sum(
-                        save_spell_expected_damage(members[target_id], scaled)
-                        for target_id in placement.enemy_ids
+                else:
+                    choice = single_target_spell_choice(
+                        caster, setup, action, slot_level, scaled,
                     )
-                    score -= sum(
-                        save_spell_expected_damage(members[target_id], scaled)
-                        for target_id in placement.friendly_ids
-                    )
-                    choice = SpellChoice(
-                        action,
-                        slot_level,
-                        target_ids,
-                        placement,
-                        score,
-                    )
-                    candidates.append((score, -action.level, -index, choice))
-                    continue
-
-                legal = legal_single_spell_targets(caster, setup, action)
-                if not legal:
-                    continue
-                target = max(
-                    legal,
-                    key=lambda item: (
-                        save_spell_expected_damage(item, scaled),
-                        -item.state.current_hp,
-                        item.combatant_id,
-                    ),
-                )
-                score = save_spell_expected_damage(target, scaled)
-                candidates.append((
-                    score,
-                    -action.level,
-                    -index,
-                    SpellChoice(
-                        action,
-                        slot_level,
-                        (target.combatant_id,),
-                        expected_damage=score,
-                    ),
-                ))
+                if choice is not None:
+                    candidates.append((
+                        choice.expected_damage,
+                        -action.level,
+                        -index,
+                        choice,
+                    ))
         return max(candidates, key=lambda item: item[:3])[3] if candidates else None
     except Exception:
         logger.exception(

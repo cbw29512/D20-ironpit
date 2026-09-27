@@ -118,7 +118,8 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
             saving_throw_bonuses=saves, skill_bonuses=_skill_bonuses(level, scores),
             weapon_masteries=[], fighting_style="Defense" if level >= 2 else None,
             fighting_styles=["Defense"] if level >= 2 else [], condition_immunities=[],
-            wearing_heavy_armor=True, resources=_resources(level),
+            wearing_heavy_armor=True,
+            wearing_metal_armor=True, resources=_resources(level),
             progression_features=ProgressionCombatFeatures(
                 divine_smite_2014=level >= 2,
                 turn_unholy_2014=level >= 3,

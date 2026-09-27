@@ -40,6 +40,32 @@ def spend_resource(state: CombatantState, resource_id: str | None, cost: int = 1
         raise RuntimeError("Resource spending could not be resolved.") from exc
 
 
+def gain_resource(
+    state: CombatantState,
+    resource_id: str,
+    amount: int = 1,
+    *,
+    allow_overflow: bool = False,
+) -> int:
+    try:
+        if amount <= 0:
+            raise ValueError("Resource gain must be positive.")
+        if resource_id in state.template.unlimited_resource_ids:
+            raise ValueError("Unlimited resources cannot receive finite resource gains.")
+        resource = resource_state(state, resource_id)
+        if resource is None:
+            raise ValueError(f"Resource {resource_id!r} is unavailable.")
+        resource.current_uses += amount
+        if not allow_overflow:
+            resource.current_uses = min(resource.current_uses, resource.max_uses)
+        return resource.current_uses
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to gain resource %r for %s.", resource_id, state.template.name)
+        raise RuntimeError("Resource gain could not be resolved.") from exc
+
+
 def action_resource_available(state: CombatantState, action) -> bool:
     return resource_available(state, getattr(action, "resource_id", None), getattr(action, "resource_cost", 1))
 

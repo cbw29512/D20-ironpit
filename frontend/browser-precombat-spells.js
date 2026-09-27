@@ -27,6 +27,15 @@
     return [...enemyTypes].some((value) => protectedTypes.has(value));
   }
 
+  function durationModifier(member, spell) {
+    const options = [...(member.state.template.spellDurationModifiers || [])]
+      .filter((option) =>
+        (spell.durationMinutes || 0) >= (option.minimumBaseDurationMinutes || 1)
+        && (member.state.resources?.[option.resourceId] || 0) >= (option.resourceCost || 1))
+      .sort((a, b) => (b.priority || 0) - (a.priority || 0));
+    return options[0] || null;
+  }
+
   function choose(member, setup = null) {
     if (member.state.opening_buff_id) return null;
     const spells = (member.state.template.defensive_spell_actions || [])
@@ -37,7 +46,7 @@
       if (spell.concentration && member.state.concentration) continue;
       if (setup && (active(member, setup, spell) || !typedRelevant(member, setup, spell))) continue;
       const slotLevel = slotChoice(member, spell);
-      if (slotLevel != null) return { spell, slotLevel };
+      if (slotLevel != null) return { spell, slotLevel, durationModifier: durationModifier(member, spell) };
     }
     return null;
   }
@@ -87,7 +96,7 @@
     return effect.kind;
   }
 
-  function resolve(sequence, member, targets, spell, slotLevel, states = [member.state]) {
+  function resolve(sequence, member, targets, spell, slotLevel, states = [member.state], durationOption = null) {
     if (slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     const directHp = (spell.temporaryHp || 0) || (spell.maxHpIncrease || 0) || (spell.currentHpIncrease || 0);
     if (spell.concentration && (directHp || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
@@ -103,6 +112,19 @@
     if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
     member.state.opening_buff_id = spell.id;
     member.state.resources[resourceId] -= 1;
+    let durationRemaining = null;
+    let effectiveDurationMinutes = spell.durationMinutes || 0;
+    if (durationOption) {
+      const current = member.state.resources?.[durationOption.resourceId] || 0;
+      const cost = durationOption.resourceCost || 1;
+      if (current < cost) throw new Error(`Insufficient ${durationOption.resourceId} for ${durationOption.name}.`);
+      member.state.resources[durationOption.resourceId] = current - cost;
+      durationRemaining = member.state.resources[durationOption.resourceId];
+      effectiveDurationMinutes = Math.min(
+        effectiveDurationMinutes * (durationOption.durationMultiplier || 2),
+        durationOption.maximumDurationMinutes || 1440,
+      );
+    }
     const tempHpDetails = [];
     for (const target of targets) {
       const before = target.state.temporary_hp;
@@ -115,7 +137,8 @@
     }
     if (spell.concentration || spell.modifierEffects?.length) {
       if (!SM()) throw new Error("Browser spell-modifier runtime is not loaded.");
-      SM().apply(member.state, targets.map((target) => ({ targetId: target.combatant_id, state: target.state })), member.combatant_id, spell, 0, states);
+      const resolvedSpell = { ...spell, durationMinutes: effectiveDurationMinutes };
+      SM().apply(member.state, targets.map((target) => ({ targetId: target.combatant_id, state: target.state })), member.combatant_id, resolvedSpell, 0, states);
     }
     const details = [...tempHpDetails];
     if (spell.maxHpIncrease) details.push(`+${spell.maxHpIncrease} Hit Point maximum`);
@@ -123,12 +146,13 @@
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
     details.push(...(spell.conditionIds || []));
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
+    if (durationOption) details.push(`${durationOption.name}: ${effectiveDurationMinutes} minutes`);
     if (spell.concentration) details.push("Concentration");
     const single = targets.length === 1 ? targets[0] : null;
     return { sequence, round_number: 0, event_type: "feature", actor_id: member.combatant_id, actor_name: member.state.template.name,
       target_id: single?.combatant_id || null, target_name: single?.state.template.name || null,
-      feature_id: spell.id, concentration_started_effect_id: spell.concentration ? spell.id : null,
-      resource_remaining: member.state.resources[resourceId], animation: spell.animation || "precombat-defense",
+      feature_id: durationOption?.id || spell.id, concentration_started_effect_id: spell.concentration ? spell.id : null,
+      resource_remaining: durationOption ? durationRemaining : member.state.resources[resourceId], animation: spell.animation || "precombat-defense",
       description: `Precombat preparation: ${member.state.template.name} casts ${spell.name} with a level ${slotLevel} slot on ${targets.map((target) => target.state.template.name).join(", ")} (${details.join("; ")}).` };
   }
 
@@ -137,7 +161,7 @@
     for (const member of members) {
       const choice = choose(member, setup); if (!choice) continue;
       const targets = selectTargets(member, setup, choice.spell, choice.slotLevel);
-      events.push(resolve(sequence++, member, targets, choice.spell, choice.slotLevel, states));
+      events.push(resolve(sequence++, member, targets, choice.spell, choice.slotLevel, states, choice.durationModifier));
     }
     return { events, sequence };
   }

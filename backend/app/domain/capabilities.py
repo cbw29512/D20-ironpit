@@ -75,6 +75,7 @@ class CombatantDefinition(BaseModel):
     damage_immunities: list[DamageType] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
     wearing_heavy_armor: bool = False
+    wearing_metal_armor: bool = False
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     resources: list[ResourceDefinition] = Field(default_factory=list)
     recharge_rules: list[RechargeRule] = Field(default_factory=list)

@@ -38,13 +38,27 @@
     }
   }
 
+  function hostileAuraRelevant(member, action, setup) {
+    const aura = action.hostileStartTurnConditionAura;
+    if (!aura) return true;
+    if (!setup) return false;
+    const stateRuntime = window.IRON_PIT_BROWSER_STATE;
+    if (!stateRuntime?.distance) throw new Error("Timed hostile aura policy requires state distance.");
+    const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
+    return (enemies || []).some((target) =>
+      target.state.is_alive && !target.state.is_dead
+      && stateRuntime.distance(member, target) <= aura.radius_ft);
+  }
+
   function choose(member, setup = null) {
     try {
       const choices = (member.state.template.timed_self_buff_actions || []).filter((action) =>
         E().available(member.state, action.actionCost)
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
         && !active(member, action)
-        && friendlyAuraRelevant(member, action, setup));
+        && (!action.concentration || !member.state.concentration)
+        && friendlyAuraRelevant(member, action, setup)
+        && hostileAuraRelevant(member, action, setup));
       choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));
       return choices[0] || null;
     } catch (error) {
@@ -64,16 +78,21 @@
       if (action.resourceId != null) member.state.resources[action.resourceId] -= action.resourceCost || 1;
       const applied = [];
       let defensesAttached = false;
+      const hasDuration = Number.isInteger(action.durationRounds);
+      const expiresRound = hasDuration ? round + action.durationRounds : null;
+      const expiryTiming = hasDuration ? (action.expiryTiming || "source_turn_start") : null;
+      const expiresAtSourceStart = expiryTiming === "source_turn_start";
       (action.conditionIds || []).forEach((conditionId) => {
         const condition = T().apply(member.state, conditionId, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
           appliedRound: round,
-          expiresRound: round + action.durationRounds,
-          expiryTiming: action.expiryTiming || "source_turn_start",
-          expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
+          expiresRound,
+          expiryTiming,
+          expiresAtStartOfSourceTurn: expiresAtSourceStart,
           ownedDamageResistances: defensesAttached ? [] : [...(action.damageResistances || [])],
           ownedDebuffCounters: defensesAttached ? [] : [...(action.debuffCounters || [])],
+          ownedMovementModeGrants: defensesAttached ? [] : [...(action.movementModeGrants || [])],
           endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
           endsIfSourceDead: Boolean(action.endsIfSourceDead),
           useDefaultPoisonRecovery: false,
@@ -84,22 +103,40 @@
         (action.damageResistances || []).length
         || (action.debuffCounters || []).length
         || (action.savingThrowAdvantageGrants || []).length
+        || (action.movementModeGrants || []).length
         || action.friendlySaveAdvantageAura
+        || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
       )) {
         T().apply(member.state, action.id, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
           appliedRound: round,
-          expiresRound: round + action.durationRounds,
-          expiryTiming: action.expiryTiming || "source_turn_start",
-          expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
+          expiresRound,
+          expiryTiming,
+          expiresAtStartOfSourceTurn: expiresAtSourceStart,
           ownedDamageResistances: [...(action.damageResistances || [])],
           ownedDebuffCounters: [...(action.debuffCounters || [])],
+          ownedMovementModeGrants: [...(action.movementModeGrants || [])],
           endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
           endsIfSourceDead: Boolean(action.endsIfSourceDead),
           useDefaultPoisonRecovery: false,
         });
+      }
+
+      if (action.concentration) {
+        const concentration = window.IRON_PIT_BROWSER_CONCENTRATION;
+        if (!concentration) throw new Error("Browser Concentration runtime is not loaded.");
+        const allStates = options.affectedStates || [member.state];
+        concentration.start(
+          member.state,
+          member.combatant_id,
+          action.id,
+          round,
+          allStates,
+          expiresRound,
+          null,
+        );
       }
 
       for (const grant of action.savingThrowAdvantageGrants || []) {
@@ -124,6 +161,7 @@
         actor_id: member.combatant_id, actor_name: member.state.template.name,
         target_id: member.combatant_id, target_name: member.state.template.name,
         applied_condition_ids: applied, feature_id: action.id,
+        concentration_started_effect_id: action.concentration ? action.id : null,
         resource_remaining: action.resourceId == null ? null : member.state.resources[action.resourceId],
         animation: action.animation || "buff",
         description: `${member.state.template.name} uses ${action.name}.`,

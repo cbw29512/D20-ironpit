@@ -4,6 +4,7 @@ import logging
 
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.hostile_condition_auras import resolve_hostile_condition_aura
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll
@@ -25,9 +26,13 @@ def _active_emanations(source: EncounterCombatant):
             if effect.source_id == source.combatant_id and effect.source_effect_id is not None
         }
         return [
-            (action, action.start_turn_emanation_damage)
+            action
             for action in source.state.template.timed_self_buff_actions
-            if action.id in active_effect_ids and action.start_turn_emanation_damage is not None
+            if action.id in active_effect_ids
+            and (
+                action.start_turn_emanation_damage is not None
+                or action.hostile_start_turn_condition_aura is not None
+            )
         ]
     except Exception as exc:
         logger.exception("Failed to discover timed emanations for %s.", source.combatant_id)
@@ -48,10 +53,18 @@ def resolve_target_turn_start_emanations(
         for source in [*setup.heroes, *setup.monsters]:
             if not _opposing(source, target):
                 continue
-            for action, emanation in _active_emanations(source):
-                if emanation.trigger != "enemy_turn_start":
-                    continue
+            for action in _active_emanations(source):
                 distance = combatant_distance(source, target)
+                aura_event, sequence = resolve_hostile_condition_aura(
+                    sequence, round_number, source, target, action, distance,
+                    affected_states, dice,
+                )
+                if aura_event is not None:
+                    events.append(aura_event)
+
+                emanation = action.start_turn_emanation_damage
+                if emanation is None or emanation.trigger != "enemy_turn_start":
+                    continue
                 if distance > emanation.radius_ft:
                     continue
                 hp_before = target.state.current_hp

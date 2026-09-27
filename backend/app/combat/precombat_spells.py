@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
 from app.combat.friendly_buff_targeting import select_friendly_buff_targets
+from app.combat.spell_duration_modifiers import choose_spell_duration_modifier
 from app.content.monster_creature_types import base_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -83,9 +84,13 @@ def prepare_defenses(
         if choice is None:
             continue
         spell, slot_level, resource = choice
+        duration_modifier = choose_spell_duration_modifier(
+            member.state, base_duration_minutes=spell.duration_minutes,
+        )
         targets = select_defensive_targets(member, setup, spell, slot_level)
         events.append(resolve_defensive_spell(
             sequence, member, targets, spell, slot_level, resource, affected_states,
+            duration_modifier=duration_modifier,
         ))
         sequence += 1
     return events, sequence

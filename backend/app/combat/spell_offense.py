@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.auto_hit_spell_policy import choose_auto_hit_spell
+from app.combat.auto_hit_spell_resolution import resolve_auto_hit_spell
 from app.combat.concentration_repeat_saves import (
     choose_concentration_repeat_save,
     resolve_concentration_repeat_save,
@@ -28,10 +30,12 @@ def resolve_best_spell_offense(
     """Resolve the best legal spell offense; free ongoing spell Actions win equal-damage ties."""
     try:
         repeat = choose_concentration_repeat_save(caster, setup)
+        auto_hit = choose_auto_hit_spell(caster, setup, turn_key)
         attack = choose_spell_attack(caster, setup, turn_key)
         save = choose_spell(caster, setup, turn_key)
 
         normal_expected = max(
+            auto_hit.expected_damage if auto_hit is not None else float("-inf"),
             attack.expected_damage if attack is not None else float("-inf"),
             save.expected_damage if save is not None else float("-inf"),
         )
@@ -46,8 +50,33 @@ def resolve_best_spell_offense(
                 dice,
             )
 
-        if attack is None and save is None:
+        if auto_hit is None and attack is None and save is None:
             return [], sequence
+        if auto_hit is not None and auto_hit.expected_damage >= max(
+            attack.expected_damage if attack is not None else float("-inf"),
+            save.expected_damage if save is not None else float("-inf"),
+        ):
+            event = resolve_auto_hit_spell(
+                sequence,
+                round_number,
+                caster,
+                auto_hit.target,
+                setup,
+                auto_hit.action,
+                auto_hit.slot_level,
+                auto_hit.projectile_count,
+                turn_key,
+                dice,
+            )
+            return damage_event_chain(
+                sequence + 1,
+                round_number,
+                caster,
+                event,
+                setup,
+                dice,
+                turn_key=turn_key,
+            )
         use_attack = save is None or (
             attack is not None and (
                 attack.expected_damage > save.expected_damage
@@ -68,6 +97,7 @@ def resolve_best_spell_offense(
                 setup,
                 turn_key,
                 dice,
+                range_modifier=attack.range_modifier,
             )
             return damage_event_chain(
                 sequence + 1,

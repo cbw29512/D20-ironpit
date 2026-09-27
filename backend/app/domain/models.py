@@ -96,6 +96,8 @@ __all__ = [
     "OnHitDamage",
     "PersistentSpellAttackAction",
     "PersistentSpellAttackState",
+    "ResourceBackedSpellSaveDisadvantage",
+    "ResourceConversionAction",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",

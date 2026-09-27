@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
 from app.domain.progression import SavingThrowAdvantageGrant
+from app.domain.movement import MovementModeGrant
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
@@ -20,6 +21,18 @@ class TimedEmanationDamage(BaseModel):
     radius_ft: int = Field(ge=1, le=120)
     fixed_damage: int = Field(ge=1, le=500)
     damage_type: DamageType
+
+
+class TimedHostileConditionAura(BaseModel):
+    """Hostile live aura that makes a save at the declared turn-start window."""
+
+    trigger: Literal["enemy_turn_start"] = "enemy_turn_start"
+    radius_ft: int = Field(ge=1, le=120)
+    save_ability: str
+    save_dc: int = Field(ge=1, le=40)
+    condition_id: ConditionName
+    success_immunity_rounds: int = Field(default=0, ge=0)
+    source_is_magical: bool = True
 
 
 class TimedFriendlySaveAura(BaseModel):
@@ -46,16 +59,19 @@ class TimedSelfBuffAction(BaseModel):
     action_cost: ActionCost = "action"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
-    duration_rounds: int = Field(ge=1, le=600)
+    duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
+    movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
+    hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
+    concentration: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
-    expiry_timing: ConditionTiming = "source_turn_start"
+    expiry_timing: ConditionTiming | None = "source_turn_start"
     priority: int = 0
     animation: str = "buff"
 
@@ -91,7 +107,9 @@ class TimedSelfBuffAction(BaseModel):
                 or self.damage_resistances
                 or self.debuff_counters
                 or self.saving_throw_advantage_grants
+                or self.movement_mode_grants
                 or self.friendly_save_advantage_aura is not None
+                or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")

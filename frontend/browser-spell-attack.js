@@ -12,6 +12,16 @@
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
+  const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
+
+  function spendRangeModifier(state, option) {
+    if (!option) return null;
+    const cost = option.resourceCost || 1;
+    const current = state.resources?.[option.resourceId] || 0;
+    if (current < cost) throw new Error(`Insufficient ${option.resourceId} for ${option.name}.`);
+    state.resources[option.resourceId] = current - cost;
+    return state.resources[option.resourceId];
+  }
 
   function slotResource(caster, spell, turnKey) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
@@ -23,13 +33,25 @@
     if (spell.actionCost === "reaction" || !E().available(caster.state, spell.actionCost)) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
-    if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
+    const rangeModifier = options.rangeModifier || null;
+    const allowedRange = spell.range * (rangeModifier?.rangeMultiplier || 1);
+    if (distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
-    if (ward && !ward.succeeded) { if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; } E().spend(caster.state, spell.actionCost); const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward); event.resource_remaining = resourceId ? caster.state.resources[resourceId] : null; return event; }
+    if (ward && !ward.succeeded) {
+      if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
+      E().spend(caster.state, spell.actionCost);
+      const rangeRemaining = spendRangeModifier(caster.state, rangeModifier);
+      CE()?.applyTimedResistance(caster, spell, round);
+      const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
+      event.resource_remaining = resourceId ? caster.state.resources[resourceId] : rangeRemaining;
+      if (rangeModifier) event.description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
+      return event;
+    }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
-    const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
+    const armorAdvantage = spell.advantageIfTargetWearingMetalArmor && target.state.template.wearing_metal_armor ? 1 : 0;
+    const advantage = conditions.advantage + armorAdvantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
     const mode = R().modeFromSources(
       advantage,
@@ -44,13 +66,15 @@
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
+    const rangeRemaining = spendRangeModifier(caster.state, rangeModifier);
+    CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [];
+    let damageRoll = null, damageComponents = [], appliedConditions = [];
     if (hit) {
       const count = spell.damageDiceCount * (critical ? 2 : 1), rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
@@ -60,24 +84,45 @@
         damage_type: spell.damageType, total: raw, applied_total: applied }];
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
       A().applyDamage(target.state, applied, critical, spell.damageType && applied > 0 ? [spell.damageType] : [], states);
-      if (target.state.is_alive && !target.state.is_dead) (spell.onHitModifierEffects || []).forEach((effect, index) => {
-        M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
-      });
+      if (target.state.is_alive && !target.state.is_dead) {
+        (spell.onHitModifierEffects || []).forEach((effect, index) => {
+          M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
+        });
+        (spell.onHitTimedEffects || []).forEach((effect) => {
+          const appliedId = T().apply(target.state, effect.effectId, caster.combatant_id, {
+            sourceEffectId: spell.id,
+            sourceTemplate: caster.state.template,
+            sourceIsMagical: Boolean(effect.sourceIsMagical),
+            appliedRound: round,
+            expiresRound: round + effect.durationRounds,
+            expiryTiming: effect.expiryTiming,
+            suppressAction: Boolean(effect.suppressAction),
+            suppressBonusAction: Boolean(effect.suppressBonusAction),
+            suppressReactions: Boolean(effect.suppressReactions),
+            suppressMovement: Boolean(effect.suppressMovement),
+            nextAttackDisadvantage: Boolean(effect.nextAttackDisadvantage),
+            useDefaultPoisonRecovery: false,
+          });
+          if (appliedId) appliedConditions.push(appliedId);
+        });
+      }
     }
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
+    if (rangeModifier) description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
     if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
     const event = {
       sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, attack_name: spell.name, target_ac: targetAc,
-      attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [], hit, critical,
+      attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents,
+      applied_condition_ids: appliedConditions, hit, critical,
       hp_before: hpBefore, hp_after: target.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, weapon_id: null, projectile: null, feature_id: spell.id,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
-      resource_remaining: resourceId ? caster.state.resources[resourceId] : null, animation: spell.animation || "spell-attack",
+      resource_remaining: resourceId ? caster.state.resources[resourceId] : rangeRemaining, animation: spell.animation || "spell-attack",
       description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(target.state) || ""),
     };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);

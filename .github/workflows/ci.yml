@@ -252,6 +252,8 @@ jobs:
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
           grep -q 'browser-initiative-resource-refill.js' frontend/index.html
+          grep -q 'browser-resource-conversion.js' frontend/index.html
+          grep -q 'browser-spell-save-disadvantage.js' frontend/index.html
           grep -q 'browser-d20-bonus-dice.js' frontend/index.html
           grep -q 'browser-barbarian2.js' frontend/index.html
           grep -q 'browser-barbarian3.js' frontend/index.html
@@ -328,6 +330,8 @@ jobs:
           node frontend/browser-2014-monk-level19.test.cjs
           node frontend/browser-2014-monk-level20.test.cjs
           node frontend/browser-initiative-resource-refill.test.cjs
+          node frontend/browser-resource-conversion.test.cjs
+          node frontend/browser-spell-save-disadvantage.test.cjs
           node frontend/browser-d20-bonus-dice.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
@@ -391,14 +395,17 @@ jobs:
           node frontend/browser-condition-lifecycle.test.cjs
           node frontend/browser-condition-removal.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
+          node frontend/browser-movement-mode-grants.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs
           node frontend/browser-reaction-movement.test.cjs
           node frontend/browser-damage-triggered-reactions.test.cjs
           node frontend/browser-spell-area.test.cjs
+          node frontend/browser-spell-cast-effects.test.cjs
           node frontend/browser-spell-resolution.test.cjs
           node frontend/browser-concentration-repeat-saves.test.cjs
           node frontend/browser-spell-policy.test.cjs
+          node frontend/browser-sorcerer-distant-spell.test.cjs
           node frontend/browser-precombat-spells.test.cjs
           node frontend/browser-modifiers-concentration.test.cjs
           node frontend/browser-minimum-armor-class.test.cjs
@@ -406,6 +413,8 @@ jobs:
           node frontend/browser-attack-advantage.test.cjs
           node frontend/browser-guiding-bolt.test.cjs
           node frontend/browser-spell-attack-turn.test.cjs
+          node frontend/browser-auto-hit-spell.test.cjs
+          node frontend/browser-shocking-grasp-2014.test.cjs
           node frontend/browser-shield-of-faith.test.cjs
           node frontend/browser-bless.test.cjs
           node frontend/browser-cleric1.test.cjs

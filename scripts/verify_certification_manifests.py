@@ -36,6 +36,7 @@ def _mechanics(template: Any) -> list[str]:
         *(f"saving-throw-action:{item.id}" for item in template.saving_throw_actions),
         *(f"spell-save-action:{item.id}" for item in template.spell_save_actions),
         *(f"spell-attack-action:{item.id}" for item in template.spell_attack_actions),
+        *(f"auto-hit-spell-action:{item.id}" for item in template.auto_hit_spell_actions),
         *(f"persistent-spell-attack:{item.id}" for item in template.persistent_spell_attack_actions),
         *(f"defensive-spell-action:{item.id}" for item in template.defensive_spell_actions),
         *(f"healing-action:{item.id}" for item in template.healing_actions),
@@ -43,6 +44,7 @@ def _mechanics(template: Any) -> list[str]:
         *(f"effect-removal-action:{item.id}" for item in template.effect_removal_actions),
         *(f"timed-self-buff:{item.id}" for item in template.timed_self_buff_actions),
         *(f"initiative-resource-refill:{item.source_id}" for item in template.initiative_resource_refill_grants),
+        *(f"resource-conversion:{item.id}" for item in template.resource_conversion_actions),
     }
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
