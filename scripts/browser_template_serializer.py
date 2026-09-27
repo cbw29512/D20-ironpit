@@ -264,6 +264,8 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         row["consumeOnAttackAgainst"] = True
     if effect.expires_after_source_turns is not None:
         row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
+    if effect.expires_at_start_of_source_turn:
+        row["expiresAtStartOfSourceTurn"] = True
     return row
 
 
