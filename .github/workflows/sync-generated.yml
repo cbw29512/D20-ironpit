@@ -1,11 +1,9 @@
 name: Sync Generated Certification Artifacts
-# Temporary branch sync; remove before merge.
-# Trigger generator on this branch.
 
 on:
   workflow_dispatch:
   push:
-    branches: [main, feat/universal-save-action-cost-current]
+    branches: [main]
 
 permissions:
   contents: write
