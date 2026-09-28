@@ -43,6 +43,7 @@ def resolve_attack(
             distance_ft,
             dice,
             defender_event_id=defender_event_id,
+            attacker_event_id=attacker_event_id,
             round_number=round_number,
             turn_key=turn_key,
             advantage_sources=advantage_sources,

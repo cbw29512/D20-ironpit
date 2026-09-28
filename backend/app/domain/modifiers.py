@@ -24,6 +24,7 @@ class ModifierKind(StrEnum):
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
     ATTACKS_AGAINST_DISADVANTAGE = "attacks-against-disadvantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
+    NEXT_INCOMING_ATTACK_ROLL_FLAT = "next-incoming-attack-roll-flat"
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
@@ -95,6 +96,8 @@ class CombatModifier(BaseModel):
             raise ValueError("Attack roll-mode modifiers do not accept a flat bonus.")
         if self.kind is ModifierKind.ATTACK_ROLL_FLAT and (self.flat_bonus == 0 or self.weapon_id is None):
             raise ValueError("Flat attack modifiers require a nonzero bonus and weapon id.")
+        if self.kind is ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT and self.flat_bonus == 0:
+            raise ValueError("Next incoming attack-roll flat modifiers require a nonzero bonus.")
         if self.kind not in {ModifierKind.ATTACK_ROLL_FLAT, ModifierKind.DAMAGE_SOURCE_QUALIFIER} and self.weapon_id is not None:
             raise ValueError(f"{self.kind.value} does not accept a weapon id.")
         if self.kind is ModifierKind.DAMAGE_SOURCE_QUALIFIER and (self.weapon_id is None or self.source_qualifier is None):

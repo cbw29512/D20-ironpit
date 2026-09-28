@@ -12,6 +12,10 @@ from app.combat.conditional_attack_advantage import conditional_attack_advantage
 from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.incoming_attack_bonus import (
+    consume_next_incoming_attack_roll_flat_bonus,
+    next_incoming_attack_roll_flat_bonus,
+)
 from app.combat.next_attack_disadvantage import (
     consume_next_attack_disadvantage,
     next_attack_disadvantage_sources,
@@ -52,6 +56,7 @@ def resolve_attack_roll(
     dice: DiceProvider,
     *,
     defender_event_id: str,
+    attacker_event_id: str,
     round_number: int,
     turn_key: str | None,
     advantage_sources: int,
@@ -97,7 +102,9 @@ def resolve_attack_roll(
         )
         base_roll = roll_d20(
             dice,
-            attack.attack_bonus + attack_roll_flat_bonus(attacker, attack.weapon.id),
+            attack.attack_bonus
+            + attack_roll_flat_bonus(attacker, attack.weapon.id)
+            + next_incoming_attack_roll_flat_bonus(defender, attacker_event_id),
             mode,
         )
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(
@@ -112,6 +119,7 @@ def resolve_attack_roll(
                 attacker, "attack", roll, effective_armor_class(defender), dice, round_number,
             )
         consume_next_attack_against_advantage(attacker, defender_event_id)
+        consume_next_incoming_attack_roll_flat_bonus(defender, attacker_event_id)
         consume_next_attack_disadvantage(attacker)
         consume_sap(attacker)
         consume_attacks_against_advantage(defender)
