@@ -67,7 +67,8 @@ def build_seraphine_dawnshield_level14_profile() -> CharacterBuildProfile:
         addition = _pending(
             "improved-blessed-strikes",
             "Improved Blessed Strikes",
-            "Audit the 2024 upgrade against the existing Blessed Strikes damage path before binding.",
+            "Potent Spellcasting upgrade: Sacred Flame damage grants Seraphine 10 Temporary HP via the universal source-damage trigger.",
+            automated=True,
         )
         data.update(
             feature_audits=[*data["feature_audits"], addition.model_dump()],
