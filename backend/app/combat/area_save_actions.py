@@ -48,12 +48,12 @@ def resolve_area_save(
     try:
         if action.area is None:
             raise ValueError(f"{action.name} has no area geometry.")
-        if not is_available(actor.state, "action"):
-            raise ValueError("Action is not available for area save.")
+        if not is_available(actor.state, action.action_cost):
+            raise ValueError(f"{action.action_cost} is not available for {action.name}.")
         legal = legal_area_save_placements(actor, setup, action)
         if placement not in legal:
             raise ValueError(f"{action.name} has a stale or illegal area placement.")
-        spend(actor.state, "action")
+        spend(actor.state, action.action_cost)
         return resolve_save_targets(
             sequence, round_number, actor, setup, action,
             placement.target_ids, dice, skip_range_check=True,
