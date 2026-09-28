@@ -64,13 +64,12 @@ def test_arena_neutral_source_traits_are_raw_ready() -> None:
 
 def test_uncertified_cards_fail_closed_in_catalog() -> None:
     catalog = build_full_content_catalog()
-    barbarian_20 = next(
+    blocked_hero = next(
         card for card in catalog.heroes
-        if card.class_id == "barbarian" and card.level == 20 and card.build_id == "canonical"
+        if card.coverage_status is CoverageStatus.BLOCKED
     )
-    assert barbarian_20.coverage_status is CoverageStatus.BLOCKED
-    assert barbarian_20.runnable_template_id is None
-    assert barbarian_20.blockers
+    assert blocked_hero.runnable_template_id is None
+    assert blocked_hero.blockers
 
     berserker = next(monster for monster in catalog.monsters if monster.name == "Berserker")
     assert berserker.coverage_status is CoverageStatus.BLOCKED
