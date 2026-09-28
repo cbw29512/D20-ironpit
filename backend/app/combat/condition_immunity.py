@@ -28,12 +28,13 @@ def condition_is_immune(
     ):
         return True
     if any(
-        condition_immunity_modifier_applies(item, condition_id, source)
+        condition_immunity_modifier_applies(item, state, condition_id, source)
         for item in state.active_modifiers
     ):
         return True
     if (
-        state.template.progression_features.mindless_rage
+        state.template.ruleset != "2014"
+        and state.template.progression_features.mindless_rage
         and "rage" in state.active_effect_ids
         and condition_id in {"charmed", "frightened"}
     ):
