@@ -1,5 +1,6 @@
 name: Sync Generated Certification Artifacts
 # Temporary branch sync; remove before merge.
+# Generator trigger pulse.
 
 on:
   workflow_dispatch:
