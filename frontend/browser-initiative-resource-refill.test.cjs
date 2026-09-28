@@ -77,4 +77,35 @@ assert.throws(
   /references missing resource missing/,
 );
 
+
+
+{
+  const actor = member(2, 5);
+  actor.state.template.resources.gate = 1;
+  actor.state.resources.gate = 1;
+  actor.state.template.initiative_resource_refill_grants = [{
+    source_id: "full-refresh",
+    source_name: "Full Refresh",
+    resource_id: "focus",
+    when_at_or_below: 4,
+    restore_amount: 1,
+    restore_to_max: true,
+    usage_resource_id: "gate",
+    usage_resource_cost: 1,
+  }];
+  let result = window.IRON_PIT_BROWSER_INITIATIVE_RESOURCE_REFILL.resolve(
+    9, { heroes: [actor], monsters: [target] },
+  );
+  assert.equal(result.sequence, 10);
+  assert.equal(actor.state.resources.focus, 5);
+  assert.equal(actor.state.resources.gate, 0);
+
+  actor.state.resources.focus = 2;
+  result = window.IRON_PIT_BROWSER_INITIATIVE_RESOURCE_REFILL.resolve(
+    10, { heroes: [actor], monsters: [target] },
+  );
+  assert.deepEqual(result.events, []);
+  assert.equal(actor.state.resources.focus, 2);
+}
+
 console.log("Browser initiative resource refill is source-agnostic and fail-closed.");
