@@ -106,6 +106,31 @@ def follow_forceful_blow(
     finally:
         attacker.state.movement_remaining_ft = normal_remaining
 
+
+def apply_sundering_blow_if_triggered(
+    attacker: CombatantState,
+    defender: CombatantState,
+    source_id: str,
+    turn_key: str,
+) -> bool:
+    """Apply the canonical damage-priority Improved Brutal Strike choice after a real Brutal Strike hit."""
+    if (
+        not attacker.template.progression_features.brutal_strike_sundering
+        or attacker.feature_last_turn_keys.get(BRUTAL_STRIKE_FEATURE_ID) != turn_key
+    ):
+        return False
+    add_modifier(defender, CombatModifier(
+        id=f"{source_id}:sundering-blow",
+        source_id=source_id,
+        source_effect_id="sundering-blow",
+        source_name="Sundering Blow",
+        kind=ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT,
+        flat_bonus=5,
+        expires_at_start_of_source_turn=True,
+    ))
+    return True
+
+
 def brutal_strike_attack_sources(
     state: CombatantState,
     attack: WeaponAttack,
