@@ -39,9 +39,22 @@ def refresh_reaction(state: CombatantState) -> None:
 
 
 def refresh_start_of_turn(state: CombatantState) -> None:
-    refresh_reaction(state)
-    apply_survivor_start_turn_heal(state)
-    grant_heroic_warrior_inspiration(state)
+    try:
+        refresh_reaction(state)
+        for resource_id in state.template.progression_features.turn_start_resource_refill_ids:
+            resource = next((item for item in state.resources if item.id == resource_id), None)
+            if resource is None:
+                raise ValueError(
+                    f"Turn-start refill references missing resource {resource_id} on {state.template.name}."
+                )
+            resource.current_uses = resource.max_uses
+        apply_survivor_start_turn_heal(state)
+        grant_heroic_warrior_inspiration(state)
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed start-of-turn refresh for %s.", state.template.name)
+        raise RuntimeError("Start-of-turn refresh could not be resolved.") from exc
 
 
 def terminate_turn(state: CombatantState, reason: str) -> None:
