@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import replace
 
 from app.combat.action_economy import is_available
 from app.combat.spell_choice import SpellChoice
+from app.combat.spell_feature_rules import legal_save_spell_levels, should_auto_maximize_damage
 from app.combat.spell_policy_targeting import (
     area_spell_choice,
     legacy_radius_spell_choice,
     legal_single_spell_targets,
     single_target_spell_choice,
 )
-from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -72,12 +73,7 @@ def choose_spell(
                 or not is_available(caster.state, action.action_cost)
             ):
                 continue
-            for slot_level in legal_slot_levels(
-                caster.state,
-                turn_key,
-                action.level,
-                higher_slot_scaling=action.upcast_dice_per_level > 0,
-            ):
+            for slot_level in legal_save_spell_levels(caster.state, turn_key, action):
                 scaled = spell_at_slot(action, slot_level)
                 if action.area is not None:
                     choice = area_spell_choice(
@@ -98,6 +94,8 @@ def choose_spell(
                         caster, setup, action, slot_level, scaled,
                     )
                 if choice is not None:
+                    if should_auto_maximize_damage(caster.state, action):
+                        choice = replace(choice, maximize_damage=True)
                     candidates.append((
                         choice.expected_damage,
                         -action.level,
