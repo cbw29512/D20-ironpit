@@ -12,6 +12,7 @@
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
   const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
   const H = () => window.IRON_PIT_BROWSER_SPELL_SAVE_DISADVANTAGE;
+  const F = () => window.IRON_PIT_BROWSER_SPELL_FEATURES;
 
   function scaledSpell(action, slotLevel) {
     const policy = P();
@@ -48,7 +49,7 @@
         .map((member) => [member.combatant_id, member]));
       const action = saveAction(choice);
       const events = [];
-      let sharedDamageRolls = null;
+      let sharedDamageRolls = choice.maximizeDamage ? F().maximizedRolls(spell) : null;
       let saveDisadvantage = H()?.choose(caster.state) || null;
 
       for (const targetId of choice.targetIds) {
@@ -115,13 +116,19 @@
       if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
       if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
 
-      let remaining = null;
+      let remaining = null, castGrant = null;
       if (choice.slotLevel > 0) {
-        const resourceId = `spell-slot-${choice.slotLevel}`;
-        if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
-        SC().markSlotSpellCast(caster.state, turnKey);
-        caster.state.resources[resourceId] -= 1;
-        remaining = caster.state.resources[resourceId];
+        const spent = F().spendGrant(caster.state, spell, choice.slotLevel);
+        castGrant = spent.grant;
+        if (castGrant) {
+          remaining = spent.remaining;
+        } else {
+          const resourceId = `spell-slot-${choice.slotLevel}`;
+          if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
+          SC().markSlotSpellCast(caster.state, turnKey);
+          caster.state.resources[resourceId] -= 1;
+          remaining = caster.state.resources[resourceId];
+        }
       }
       E().spend(caster.state, spell.actionCost);
       const rangeRemaining = choice.rangeModifier
@@ -153,7 +160,7 @@
       const detail = placement
         ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
         : "";
-      const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
+      const slotText = castGrant ? `${castGrant.source_name} free cast` : (choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`);
       const events = [];
       if (choice.rangeModifier) {
         events.push({
@@ -174,7 +181,32 @@
 
       const effect = resolveEffect(sequence, round, caster, setup, choice, turnKey);
       events.push(...effect.events);
-      return { events, sequence: effect.sequence };
+      sequence = effect.sequence;
+      if (choice.maximizeDamage) {
+        const cost = F().applyMaximizerCost(caster, spell, setup);
+        if (cost) {
+          events.push({
+            sequence: sequence++, round_number: round, event_type: "feature",
+            actor_id: caster.combatant_id, actor_name: caster.state.template.name,
+            target_id: caster.combatant_id, target_name: caster.state.template.name,
+            feature_id: cost.grant.source_id,
+            damage_roll: { notation: `${cost.count}d${cost.grant.self_damage_die_size || 12}`,
+              rolls: cost.rolls, modifier: 0, total: cost.total },
+            damage_components: [{
+              source: cost.grant.source_name,
+              notation: `${cost.count}d${cost.grant.self_damage_die_size || 12}`,
+              rolls: cost.rolls, modifier: 0,
+              damage_type: cost.grant.self_damage_type || "necrotic",
+              total: cost.total, applied_total: cost.total,
+            }],
+            hp_before: cost.hpBefore, hp_after: cost.hpAfter,
+            temporary_hp_before: cost.tempBefore, temporary_hp_after: cost.tempAfter,
+            animation: "spell-overchannel",
+            description: `${caster.state.template.name} suffers ${cost.total} ${cost.grant.self_damage_type || "necrotic"} damage from repeated use of ${cost.grant.source_name}.`,
+          });
+        }
+      }
+      return { events, sequence };
     } catch (error) {
       console.error("Browser save-spell resolution failed", { caster: caster?.combatant_id, error });
       throw error;
