@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const FEATURE = "brutal-strike";
+  const FEATURE = "brutal-strike", PENDING = "brutal-strike-pending", HIT = "brutal-strike-hit";
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const F = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
@@ -15,17 +15,28 @@
   }
 
   function advantageSuppression(state, attack, turnKey, hasDisadvantage = false) {
-    return Number(eligible(state, attack, turnKey, hasDisadvantage));
+    if (!eligible(state, attack, turnKey, hasDisadvantage)) return 0;
+    state.feature_last_turn_keys[FEATURE] = turnKey; state.feature_last_turn_keys[PENDING] = turnKey;
+    return 1;
   }
 
   function bonusDamage(state, attack, turnKey, hasDisadvantage = false) {
-    if (!eligible(state, attack, turnKey, hasDisadvantage)) return null;
-    state.feature_last_turn_keys[FEATURE] = turnKey;
+    const pending = state.feature_last_turn_keys?.[PENDING] === turnKey;
+    if (!pending && !eligible(state, attack, turnKey, hasDisadvantage)) return null;
+    if (!pending) state.feature_last_turn_keys[FEATURE] = turnKey;
+    delete state.feature_last_turn_keys[PENDING]; state.feature_last_turn_keys[HIT] = turnKey;
     return {
       source: "Brutal Strike", diceCount: state.template.brutal_strike_damage_dice,
       diceSize: 10, damageType: attack.damageType,
     };
   }
+
+  function clearPending(state, turnKey) {
+    if (!turnKey || state.feature_last_turn_keys?.[PENDING] !== turnKey) return false;
+    delete state.feature_last_turn_keys[PENDING]; return true;
+  }
+
+  const hitOnTurn = (state, turnKey) => Boolean(turnKey && state.feature_last_turn_keys?.[HIT] === turnKey);
 
   function hamstring(defender, sourceId) {
     M().add(defender, {
@@ -52,6 +63,6 @@
   }
 
   window.IRON_PIT_BROWSER_BRUTAL_STRIKE = {
-    advantageSuppression, bonusDamage, eligible, forceful, followForceful, hamstring,
+    advantageSuppression, bonusDamage, clearPending, eligible, forceful, followForceful, hamstring, hitOnTurn,
   };
 })();
