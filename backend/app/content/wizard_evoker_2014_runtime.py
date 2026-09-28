@@ -23,20 +23,11 @@ from app.content.warlock_2014_spells import circle_of_death_2014, finger_of_deat
 from app.content.weapon_catalog import build_weapon
 from app.content.wizard_2014_progression import wizard_2014_level
 from app.content.wizard_evoker_2014_profile import build_elian_starweaver_2014_profile
+from app.content.wizard_evoker_2014_features import build_wizard_evoker_2014_features
 from app.domain.actions import HpThresholdConditionAction, HpThresholdInstantDeathAction
-from app.domain.area_spell_protection import AreaSpellAllyProtectionGrant
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.progression import ProgressionCombatFeatures
-from app.domain.spell_features import SpellDamageMaximizerGrant, SpellSpecificCastGrant
 
 logger = logging.getLogger(__name__)
-
-_EVOCATION_AREA_SPELL_IDS = ["burning-hands", "shatter", "fireball", "lightning-bolt", "cone-of-cold"]
-
-
-def _damage_bonus(level: int, intelligence_modifier: int) -> int:
-    return intelligence_modifier if level >= 10 else 0
-
 
 def _weapon(level: int, scores) -> WeaponAttack:
     try:
@@ -54,69 +45,6 @@ def _weapon(level: int, scores) -> WeaponAttack:
         logger.exception("Failed to build Elian's 2014 dagger at level %s.", level)
         raise
 
-
-def _progression_features(level: int) -> ProgressionCombatFeatures:
-    try:
-        cast_grants: list[SpellSpecificCastGrant] = []
-        if level >= 18:
-            cast_grants.extend([
-                SpellSpecificCastGrant(
-                    source_id="spell-mastery-burning-hands",
-                    source_name="Spell Mastery",
-                    spell_id="burning-hands", slot_level=1, unlimited=True,
-                ),
-                SpellSpecificCastGrant(
-                    source_id="spell-mastery-shatter",
-                    source_name="Spell Mastery",
-                    spell_id="shatter", slot_level=2, unlimited=True,
-                ),
-            ])
-        if level >= 20:
-            cast_grants.extend([
-                SpellSpecificCastGrant(
-                    source_id="signature-spell-fireball",
-                    source_name="Signature Spells",
-                    spell_id="fireball", slot_level=3,
-                    resource_id="signature-spell-fireball",
-                ),
-                SpellSpecificCastGrant(
-                    source_id="signature-spell-lightning-bolt",
-                    source_name="Signature Spells",
-                    spell_id="lightning-bolt", slot_level=3,
-                    resource_id="signature-spell-lightning-bolt",
-                ),
-            ])
-        return ProgressionCombatFeatures(
-            area_spell_ally_protection=(
-                AreaSpellAllyProtectionGrant(
-                    source_id="sculpt-spells",
-                    source_name="Sculpt Spells",
-                    eligible_spell_ids=list(_EVOCATION_AREA_SPELL_IDS),
-                    base_protected_allies=1,
-                    protected_allies_per_slot_level=1,
-                    requires_source_sight=True,
-                    auto_success_save=True,
-                    no_damage_on_success=True,
-                )
-                if level >= 2 else None
-            ),
-            spell_specific_cast_grants=cast_grants,
-            spell_damage_maximizer=(
-                SpellDamageMaximizerGrant(
-                    source_id="overchannel", source_name="Overchannel",
-                    minimum_spell_level=1, maximum_spell_level=5,
-                    free_uses=1, self_damage_die_size=12,
-                    repeat_base_dice_per_spell_level=2,
-                    repeat_increment_dice_per_spell_level=1,
-                    self_damage_type="necrotic",
-                    bypasses_resistance_and_immunity=True,
-                )
-                if level >= 14 else None
-            ),
-        )
-    except Exception:
-        logger.exception("Failed to build Elian's 2014 progression features at level %s.", level)
-        raise
 
 
 def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
@@ -222,7 +150,7 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
                 *([greater_invisibility_2014()] if level >= 7 else []),
             ],
             effect_removal_actions=[dispel_magic_2014("intelligence")] if level >= 6 else [],
-            progression_features=_progression_features(level),
+            progression_features=build_wizard_evoker_2014_features(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("intelligence", "wisdom")),
             skill_bonuses={
                 "arcana": intelligence + pb,
