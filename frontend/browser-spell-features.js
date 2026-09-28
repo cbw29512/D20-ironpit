@@ -84,7 +84,8 @@
     try {
       const grant = caster.state.template.spell_damage_maximizer;
       if (!grant) return null;
-      const uses = caster.state.feature_use_counts?.[grant.source_id] || 0;
+      caster.state.feature_use_counts ||= {};
+      const uses = caster.state.feature_use_counts[grant.source_id] || 0;
       caster.state.feature_use_counts[grant.source_id] = uses + 1;
       if (uses < (grant.free_uses || 0)) return null;
 
