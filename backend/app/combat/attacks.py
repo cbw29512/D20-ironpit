@@ -117,6 +117,7 @@ def resolve_attack(
         vex_applied, studied_applied = effects.vex_applied, effects.studied_applied
         deferred_effect_armed = effects.deferred_effect_armed
         exile_applied = effects.exile_applied
+        brutal_strike_effects = effects.brutal_strike_effects
         description = build_attack_description(
             attacker_name=attacker.template.name,
             defender_name=defender.template.name,
@@ -157,6 +158,9 @@ def resolve_attack(
             )
         if exile_applied is not None:
             description += f" {actual_defender.template.name} is Banished until the source-relative return point."
+        if brutal_strike_effects:
+            names = ", ".join(effect.replace("-", " ").title() for effect in brutal_strike_effects)
+            description += f" Brutal Strike applies {names}."
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
             save_damage, on_hit_save, cunning_strike_obscure, cunning_strike, topple,
         )
