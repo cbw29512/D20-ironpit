@@ -30,7 +30,7 @@
   function clearResult(message = "Cards loaded. Press FIGHT when both sides are ready.") {
     el("result-panel").hidden = true; el("pit-round").textContent = "";
     el("battle-log").replaceChildren(Object.assign(document.createElement("li"), { textContent: message }));
-    el("lab-summary").textContent = "Production combat path · secure Web Crypto dice.";
+    el("lab-summary").textContent = "2014 Beta combat path · secure Web Crypto dice.";
   }
 
   function invalidateRun() {
