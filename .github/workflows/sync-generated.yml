@@ -1,4 +1,5 @@
 name: Sync Generated Certification Artifacts
+# Temporary feature-branch trigger is removed before merge.
 
 on:
   workflow_dispatch:
