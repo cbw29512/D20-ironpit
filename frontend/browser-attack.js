@@ -109,13 +109,17 @@
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
     const outcome = O().create();
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome;
-    let cunningStrikeTrip = null, cunningStrikeObscure = null;
+    let cunningStrikeTrip = null, cunningStrikeObscure = null, brutalStrikeEffects = [];
     const applied = outcome.appliedConditions;
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
           targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
+      brutalStrikeEffects = BS()?.applyEffects?.(
+        attacker.state, actualTarget.state, attacker.combatant_id,
+        extra.turnKey || `${round}:${attacker.combatant_id}`,
+      ) || [];
       cunningStrikeTrip = damage.cunningStrikeTrip || null;
       cunningStrikeObscure = damage.cunningStrikeObscure || null;
       if (cunningStrikeTrip?.applied && !applied.includes("prone")) applied.push("prone");
@@ -181,6 +185,7 @@
     if (vexApplied) description += ` Vex primes the next attack against ${actualTarget.state.template.name}.`;
     if (deferredEffectArmed) description += ` ${deferredEffectArmed.sourceName} is armed on ${actualTarget.state.template.name}; ${deferredEffectArmed.resourceRemaining} uses remain.`;
     if (exileApplied) description += ` ${actualTarget.state.template.name} is Banished by ${exileApplied.sourceName} until the source-relative return point.`;
+    if (brutalStrikeEffects.length) description += ` Brutal Strike applies ${brutalStrikeEffects.map((id) => id.replaceAll("-", " ")).join(", ")}.`;
     if (attackSave) description += ` ${attackSave.saveAbility} save DC ${attackSave.saveDc}: ${actualTarget.state.template.name} ${attackSave.saveSucceeded ? "succeeds" : "fails"}.`; if (topple.saveDc !== null) description += ` Topple save DC ${topple.saveDc}: ${actualTarget.state.template.name} ${topple.saveSucceeded ? "succeeds" : "fails"}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
