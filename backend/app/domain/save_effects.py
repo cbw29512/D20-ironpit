@@ -18,7 +18,7 @@ class FailedSaveTimedEffect(BaseModel):
     effect_id: str
     expiry_timing: SaveEffectTiming = "target_turn_end"
     duration_rounds: int | None = Field(default=None, ge=1)
-    repeat_save_ability: str | None = None
+    repeat_save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"] | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: SaveEffectTiming | None = None
     next_attack_disadvantage: bool = False
