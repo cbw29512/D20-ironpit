@@ -46,7 +46,7 @@ assert.throws(
   /speedFraction/,
 );
 
-const rageSource = fs.readFileSync(path.join(__dirname, "browser-rage.js"), "utf8");
+const rageSource = fs.readFileSync(path.join(__dirname, "browser-rage-hooks.js"), "utf8");
 const turnSource = fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8");
 assert.match(rageSource, /instinctive_pounce_fraction/);
 assert.match(rageSource, /IRON_PIT_BROWSER_ACTIVATION_MOVEMENT/);
