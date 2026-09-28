@@ -19,7 +19,7 @@
         const castRange = action.area.origin === "point" ? H().effectiveRange(caster.state, baseRange) : baseRange;
         const normalKeys = new Set(H().protectedUniversalPlacements(
           caster, setup, action, castLevel, baseRange, protectedAllyIds,
-        ).map(placementKey));
+        ).map(H().placementKey));
         const placements = H().protectedUniversalPlacements(
           caster, setup, action, castLevel, castRange, protectedAllyIds,
         );
@@ -73,7 +73,7 @@
             const castRange = action.area.origin === "point" ? H().effectiveRange(caster.state, baseRange) : baseRange;
             const normalKeys = new Set(H().protectedUniversalPlacements(
               caster, setup, action, castLevel, baseRange, protectedAllyIds,
-            ).map(placementKey));
+            ).map(H().placementKey));
             const placements = H().protectedUniversalPlacements(
               caster, setup, action, castLevel, castRange, protectedAllyIds,
             );
@@ -144,8 +144,16 @@
   }
 
   window.IRON_PIT_BROWSER_SPELL_POLICY = {
-    choose, chooseActionAtSlot, chooseById, scaledSpell, slotLevel, slotLevels,
-    alternateCasts, castOptions, areaSpellProtection, protectedUniversalPlacements,
-    availableRangeModifier, effectiveRange, spendRangeModifier,
+    choose, chooseActionAtSlot, chooseById,
+    scaledSpell: H().scaledSpell,
+    slotLevel: H().slotLevel,
+    slotLevels: H().slotLevels,
+    alternateCasts: H().alternateCasts,
+    castOptions: H().castOptions,
+    areaSpellProtection: H().areaSpellProtection,
+    protectedUniversalPlacements: H().protectedUniversalPlacements,
+    availableRangeModifier: H().availableRangeModifier,
+    effectiveRange: H().effectiveRange,
+    spendRangeModifier: H().spendRangeModifier,
   };
 })();
