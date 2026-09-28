@@ -343,6 +343,7 @@ jobs:
           node frontend/browser-action-surge-selector.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-persistent-rage-2024.test.cjs
+          node frontend/browser-damaging-action-riders.test.cjs
           node frontend/browser-turn-start-resource-refill.test.cjs
           node frontend/browser-barbarian18.test.cjs
           node frontend/browser-bonus-save-action.test.cjs
