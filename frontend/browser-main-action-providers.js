@@ -131,7 +131,7 @@
       id: "area-save", category: C().AREA_SAVE, rulesets: BOTH,
       discover: ({ member, setup }) => {
         if (!E().available(member.state, "action")) return null;
-        const selected = AS()?.choose(member, setup) || null;
+        const selected = AS()?.choose(member, setup, "action") || null;
         return selected ? { payload: { selected } } : null;
       },
       resolve: ({ sequence, round, member, setup }, candidate) => {
