@@ -9,6 +9,7 @@ from app.domain.area_spell_protection import AreaSpellAllyProtectionGrant
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
+from app.domain.spell_features import SpellDamageMaximizerGrant, SpellSpecificCastGrant
 from app.domain.progression_primitives import (
     AbilityCheckMinimum,
     AbilityScaledDamageRider,
@@ -90,6 +91,8 @@ class ProgressionCombatFeatures(BaseModel):
     delayed_resource_refill: DelayedResourceRefill | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
     area_spell_ally_protection: AreaSpellAllyProtectionGrant | None = None
+    spell_specific_cast_grants: list[SpellSpecificCastGrant] = Field(default_factory=list)
+    spell_damage_maximizer: SpellDamageMaximizerGrant | None = None
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
