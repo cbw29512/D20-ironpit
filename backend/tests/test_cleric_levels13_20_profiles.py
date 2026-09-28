@@ -42,7 +42,7 @@ def test_2024_life_cleric_high_level_blockers_are_explicit() -> None:
     audits = {item.feature_id: item for item in profile.feature_audits}
 
     assert audits["cleric-combat-spells-7"].automated is True
-    assert audits["improved-blessed-strikes"].automated is False
+    assert audits["improved-blessed-strikes"].automated is True
     assert audits["cleric-combat-spells-8"].automated is True
     assert audits["cleric-combat-spells-9"].automated is True
     assert audits["supreme-healing"].automated is True
@@ -67,3 +67,19 @@ def test_level_thirteen_reuses_existing_seventh_level_spell_primitives() -> None
     assert (damage.level, damage.damage_dice_count, damage.damage_dice_size) == (7, 8, 10)
     assert (healing.dice_count, healing.dice_size) == (7, 8)
     assert healing.resource_id == "spell-slot-7"
+
+
+
+def test_level_fourteen_binds_improved_blessed_strikes_to_universal_trigger() -> None:
+    from app.content.audited_cleric import build_seraphine_dawnshield_level
+
+    hero = build_seraphine_dawnshield_level(14)
+    grant = hero.progression_features.source_damage_temporary_hp
+
+    assert hero.max_hp == 73
+    assert hero.ability_scores.wisdom == 20
+    assert grant is not None
+    assert grant.source_id == "improved-blessed-strikes"
+    assert grant.trigger_action_ids == ["sacred-flame"]
+    assert grant.ability == "wisdom"
+    assert grant.ability_multiplier == 2
