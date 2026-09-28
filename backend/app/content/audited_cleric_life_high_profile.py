@@ -20,9 +20,12 @@ __all__ = [
     "build_seraphine_dawnshield_level12_profile",
     "build_seraphine_dawnshield_level13_profile",
     "build_seraphine_dawnshield_level14_profile",
+    "build_seraphine_dawnshield_level15_profile",
 ]
 
 from app.content.audited_cleric_life_levels13_14 import (
     build_seraphine_dawnshield_level13_profile,
     build_seraphine_dawnshield_level14_profile,
 )
+
+from app.content.audited_cleric_life_level15 import build_seraphine_dawnshield_level15_profile
