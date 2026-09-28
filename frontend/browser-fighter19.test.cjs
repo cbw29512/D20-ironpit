@@ -21,6 +21,7 @@ window.IRON_PIT_BROWSER_TIMED = {
 window.IRON_PIT_BROWSER_MODIFIERS = { effectiveSpeed: (state) => state.template.speed_ft || 30 };
 window.IRON_PIT_BROWSER_CONDITION_RULES = { incapacitated: () => false };
 
+load("browser-turn-start-resource-refill.js");
 load("browser-state.js");
 load("browser-miss-to-hit-override.js");
 
