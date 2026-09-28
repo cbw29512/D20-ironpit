@@ -81,11 +81,9 @@
       + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
-    const incomingFlat = M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0;
-    const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + incomingFlat, mode), M().effectiveArmorClass(target.state));
+    const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), M().effectiveArmorClass(target.state));
     let attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll); const d20Bonus = [1, 20].includes(heroic.roll.selected_roll) ? null : DB()?.applyIfUseful(attacker.state, "attack", attackRoll, M().effectiveArmorClass(target.state), round); if (d20Bonus) attackRoll = d20Bonus.roll; const rollPenalty = window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(attacker, extra.setup, "attack", attackRoll, M().effectiveArmorClass(target.state)); if (rollPenalty) attackRoll = rollPenalty.roll;
-    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id);
-    M().consumeNextIncomingAttackRollFlat?.(target.state, attacker.combatant_id);
+    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); M().consumeNextIncomingAttackRollFlat?.(target.state, attacker.combatant_id);
     T()?.consumeNextAttackDisadvantage(attacker.state); SAP().consume(attacker.state);
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
