@@ -34,7 +34,7 @@ _CANTRIPS = (
 )
 
 _PREPARED = (
-    _spell("magic-missile", "Magic Missile", "damage", "auto-hit-spell"),
+    _spell("alarm", "Alarm", "utility", "arena-out-of-scope"),
     _spell("burning-hands", "Burning Hands", "damage", "save-damage", "area-effect"),
     _spell("false-life", "False Life", "buff", "temporary-hp"),
     _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
@@ -43,11 +43,14 @@ _PREPARED = (
     _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope", min_level=4),
     _spell("locate-object", "Locate Object", "utility", "arena-out-of-scope", level=2, min_level=4),
     _spell("fireball", "Fireball", "damage", "save-damage", "area-effect", level=3, min_level=5),
+    _spell("lightning-bolt", "Lightning Bolt", "damage", "save-damage", "area-effect", level=3, min_level=6),
     _spell("dispel-magic", "Dispel Magic", "control", "effect-removal", level=3, min_level=6),
     _spell("greater-invisibility", "Greater Invisibility", "buff", "condition", "concentration", level=4, min_level=7),
+    _spell("tiny-hut", "Leomund\'s Tiny Hut", "utility", "arena-out-of-scope", level=3, min_level=7),
     _spell("arcane-eye", "Arcane Eye", "utility", "arena-out-of-scope", level=4, min_level=8),
     _spell("hallucinatory-terrain", "Hallucinatory Terrain", "utility", "arena-out-of-scope", level=4, min_level=8),
     _spell("cone-of-cold", "Cone of Cold", "damage", "save-damage", "area-effect", level=5, min_level=9),
+    _spell("legend-lore", "Legend Lore", "utility", "arena-out-of-scope", level=5, min_level=9),
     _spell("creation", "Creation", "utility", "arena-out-of-scope", level=5, min_level=10),
     _spell("circle-of-death", "Circle of Death", "damage", "save-damage", "area-effect", level=6, min_level=11),
     _spell("telepathic-bond", "Rary's Telepathic Bond", "utility", "arena-out-of-scope", level=5, min_level=12),
@@ -79,10 +82,13 @@ def build_wizard_2014_spell_package(level: int, intelligence_modifier: int) -> C
         row = wizard_2014_level(level)
         count = prepared_count_2014(level, intelligence_modifier)
         available = [spell for spell in _PREPARED if spell.min_character_level <= level]
-        if count > len(available):
+        signature_ids = {"fireball", "lightning-bolt"} if level >= 20 else set()
+        signature = [spell for spell in available if spell.id in signature_ids]
+        prepared = [spell for spell in available if spell.id not in signature_ids]
+        if count > len(prepared):
             raise ValueError(
                 f"2014 Wizard level {level} needs {count} prepared spells; "
-                f"the canonical package currently defines {len(available)} legal choices."
+                f"the canonical package currently defines {len(prepared)} legal prepared choices."
             )
         cantrips = [spell for spell in _CANTRIPS if spell.min_character_level <= level]
         if len(cantrips) != row.cantrips_known:
@@ -94,7 +100,8 @@ def build_wizard_2014_spell_package(level: int, intelligence_modifier: int) -> C
             class_id="wizard",
             casting_ability="intelligence",
             cantrips=cantrips,
-            spells=available[:count],
+            spells=prepared[:count],
+            always_prepared_spells=signature,
         )
     except Exception:
         logger.exception("Failed to build 2014 Wizard spell package at level %s.", level)
