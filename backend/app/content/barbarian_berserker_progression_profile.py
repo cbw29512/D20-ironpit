@@ -87,3 +87,35 @@ def build_rokhan_stonefury_level8_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Rokhan Stonefury level 8 profile could not be built.") from exc
+
+
+def build_rokhan_stonefury_level9_profile() -> CharacterBuildProfile:
+    """Advance the certified 2024 Berserker from level 8 to level 9 using the shared Brutal Strike engine."""
+    try:
+        previous = build_rokhan_stonefury_level8_profile()
+        data = advance_profile_data(previous, 9)
+        apply_barbarian_level_to_profile_data(data, 9)
+        brutal = FeatureAudit(
+            feature_id="brutal-strike",
+            feature_name="Brutal Strike",
+            source_reference="D&D Beyond Basic Rules 2024: Barbarian Level 9",
+            category="class",
+            combat_relevant=True,
+            automated=True,
+            notes=(
+                "Reuses the universal Brutal Strike mechanic: when Rokhan makes an eligible Reckless "
+                "Strength attack without Disadvantage, Iron Pit can suppress that Reckless Advantage "
+                "for the attack and add 1d10 extra damage on a hit. Hamstring Blow remains arena-neutral "
+                "under the current documented Iron Pit policy."
+            ),
+        )
+        data.update(
+            feature_audits=[*data["feature_audits"], brutal.model_dump()],
+            source_references=[
+                *data["source_references"],
+                "D&D Beyond Basic Rules 2024: Barbarian Level 9 Brutal Strike",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Rokhan Stonefury level 9 profile could not be built.") from exc
