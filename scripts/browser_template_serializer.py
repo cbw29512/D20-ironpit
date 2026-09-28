@@ -550,6 +550,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["death_save_recovery_minimum"] = features.death_save_recovery_minimum
     if features.critical_move_fraction:
         row["critical_move_fraction"] = features.critical_move_fraction
+    if features.rage_persists_without_maintenance:
+        row["rage_persists_without_maintenance"] = True
     if features.cunning_action:
         row["cunning_action"] = True
     if features.sneak_attack_d6:

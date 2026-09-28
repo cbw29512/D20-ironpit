@@ -35,6 +35,9 @@ assert.deepEqual(hero.initiative_resource_refill_grants, [{
   resource_id: "ki",
   when_at_or_below: 0,
   restore_amount: 4,
+  restore_to_max: false,
+  usage_resource_id: null,
+  usage_resource_cost: 1,
 }]);
 
 const member = {

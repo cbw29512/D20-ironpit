@@ -10,4 +10,7 @@ class InitiativeResourceRefillGrant(BaseModel):
     source_name: str = Field(min_length=1)
     resource_id: str = Field(min_length=1)
     when_at_or_below: int = Field(default=0, ge=0)
-    restore_amount: int = Field(ge=1, le=200)
+    restore_amount: int = Field(default=1, ge=1, le=200)
+    restore_to_max: bool = False
+    usage_resource_id: str | None = None
+    usage_resource_cost: int = Field(default=1, ge=1, le=200)

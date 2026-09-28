@@ -91,3 +91,42 @@ def test_initiative_refill_fails_closed_for_missing_resource() -> None:
     member = _member(0, grant_resource_id="missing")
     with pytest.raises(ValueError, match="references missing resource missing"):
         resolve_initiative_resource_refills(1, _setup(member))
+
+def test_initiative_refill_can_restore_to_max_and_consume_usage_gate() -> None:
+    member = _member(2, maximum=5)
+    member.state.template.resources.append(
+        ResourceDefinition(id="refill-gate", name="Refill Gate", max_uses=1)
+    )
+    member.state.resources.append(
+        type(member.state.resources[0])(
+            id="refill-gate",
+            name="Refill Gate",
+            max_uses=1,
+            current_uses=1,
+        )
+    )
+    member.state.template.initiative_resource_refill_grants = [
+        InitiativeResourceRefillGrant(
+            source_id="full-refresh",
+            source_name="Full Refresh",
+            resource_id="focus",
+            when_at_or_below=4,
+            restore_to_max=True,
+            usage_resource_id="refill-gate",
+            usage_resource_cost=1,
+        )
+    ]
+
+    events, sequence = resolve_initiative_resource_refills(1, _setup(member))
+
+    assert sequence == 2
+    assert member.state.resources[0].current_uses == 5
+    gate = next(item for item in member.state.resources if item.id == "refill-gate")
+    assert gate.current_uses == 0
+    assert events[0].feature_id == "full-refresh"
+
+    member.state.resources[0].current_uses = 2
+    events, sequence = resolve_initiative_resource_refills(sequence, _setup(member))
+    assert events == []
+    assert member.state.resources[0].current_uses == 2
+

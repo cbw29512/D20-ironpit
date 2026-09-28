@@ -10,18 +10,19 @@ from app.domain.runtime import ResourceState
 logger = logging.getLogger(__name__)
 
 
-def _resource(
+def _resource_by_id(
     member: EncounterCombatant,
-    grant: InitiativeResourceRefillGrant,
+    resource_id: str,
+    source_name: str,
 ) -> ResourceState:
     try:
         resource = next(
-            (item for item in member.state.resources if item.id == grant.resource_id),
+            (item for item in member.state.resources if item.id == resource_id),
             None,
         )
         if resource is None:
             raise ValueError(
-                f"{grant.source_name} references missing resource {grant.resource_id}."
+                f"{source_name} references missing resource {resource_id}."
             )
         return resource
     except ValueError:
@@ -47,13 +48,25 @@ def resolve_initiative_resource_refills(
         events: list[BattleEvent] = []
         for member in [*setup.heroes, *setup.monsters]:
             for grant in member.state.template.initiative_resource_refill_grants:
-                resource = _resource(member, grant)
+                resource = _resource_by_id(member, grant.resource_id, grant.source_name)
+                usage = (
+                    _resource_by_id(member, grant.usage_resource_id, grant.source_name)
+                    if grant.usage_resource_id is not None else None
+                )
                 if resource.current_uses > grant.when_at_or_below:
                     continue
+                if usage is not None and usage.current_uses < grant.usage_resource_cost:
+                    continue
                 before = resource.current_uses
-                after = min(resource.max_uses, before + grant.restore_amount)
+                after = (
+                    resource.max_uses
+                    if grant.restore_to_max
+                    else min(resource.max_uses, before + grant.restore_amount)
+                )
                 if after <= before:
                     continue
+                if usage is not None:
+                    usage.current_uses -= grant.usage_resource_cost
                 resource.current_uses = after
                 regained = after - before
                 events.append(BattleEvent(
