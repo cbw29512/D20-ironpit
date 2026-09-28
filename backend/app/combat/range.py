@@ -8,6 +8,23 @@ from app.domain.models import RollMode, Weapon, WeaponAttackKind
 logger = logging.getLogger(__name__)
 
 
+def attack_range_disadvantage_sources(
+    weapon: Weapon, distance_ft: int, close_enemy_active: bool = True,
+) -> int:
+    """Return only range/close-enemy Disadvantage sources, validating attack reach."""
+    if distance_ft < 0:
+        raise ValueError("Distance cannot be negative.")
+    if weapon.attack_kind is WeaponAttackKind.MELEE:
+        if distance_ft > weapon.reach_ft:
+            raise ValueError(f"{weapon.name} target is outside melee reach.")
+        return 0
+    if weapon.normal_range_ft is None or weapon.long_range_ft is None:
+        raise ValueError(f"{weapon.name} is missing ranged weapon distances.")
+    if distance_ft > weapon.long_range_ft:
+        raise ValueError(f"{weapon.name} target is beyond long range.")
+    return int(distance_ft > weapon.normal_range_ft) + int(distance_ft <= 5 and close_enemy_active)
+
+
 def resolve_attack_roll_mode(
     weapon: Weapon,
     distance_ft: int,
