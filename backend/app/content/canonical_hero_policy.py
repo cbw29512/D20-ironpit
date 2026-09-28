@@ -13,7 +13,12 @@ from app.content.melee_loadout_policy import choose_melee_loadout
 from app.domain.character_builds import CharacterBuildProfile, FeatureAudit, RulesetId
 from app.domain.class_loadouts import CanonicalCombatPlan, MeleeLoadoutSelection
 
-_2014_STANDARD_ARRAY = [8, 10, 12, 13, 14, 15]
+_2014_LEGACY_STANDARD_ARRAY = [8, 10, 12, 13, 14, 15]
+_2014_CURRENT_STANDARD_ARRAY = [10, 10, 10, 13, 14, 15]
+_2014_LEGACY_ARRAY_CLASSES = frozenset({
+    "barbarian", "bard", "cleric", "druid", "fighter", "monk",
+    "paladin", "ranger", "rogue", "sorcerer", "warlock",
+})
 
 
 def canonical_template_id(class_id: str, level: int, ruleset: RulesetId = "2024") -> str:
@@ -78,10 +83,15 @@ def canonical_melee_loadout(profile: CharacterBuildProfile) -> MeleeLoadoutSelec
 
 def _assert_2014_standard_array(profile: CharacterBuildProfile) -> None:
     values = sorted(profile.base_ability_scores.model_dump().values())
-    if values != _2014_STANDARD_ARRAY:
+    expected = (
+        _2014_LEGACY_STANDARD_ARRAY
+        if profile.class_id in _2014_LEGACY_ARRAY_CLASSES
+        else _2014_CURRENT_STANDARD_ARRAY
+    )
+    if values != expected:
         raise ValueError(
-            f"{profile.class_id} 2014 base abilities must use the standard array: "
-            f"{values} != {_2014_STANDARD_ARRAY}."
+            f"{profile.class_id} 2014 base abilities must use its migration-stage canonical array: "
+            f"{values} != {expected}."
         )
 
 
