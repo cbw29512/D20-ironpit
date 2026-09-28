@@ -13,10 +13,22 @@
               || !Number.isFinite(maxima[grant.resource_id])) {
             throw new Error(`${grant.source_name} references missing resource ${grant.resource_id}.`);
           }
+          if (grant.usage_resource_id) {
+            if (!Object.prototype.hasOwnProperty.call(resources, grant.usage_resource_id)
+                || !Number.isFinite(resources[grant.usage_resource_id])
+                || !Number.isFinite(maxima[grant.usage_resource_id])) {
+              throw new Error(`${grant.source_name} references missing resource ${grant.usage_resource_id}.`);
+            }
+          }
           if (resources[grant.resource_id] > grant.when_at_or_below) continue;
+          const usageCost = grant.usage_resource_cost || 1;
+          if (grant.usage_resource_id && resources[grant.usage_resource_id] < usageCost) continue;
           const before = resources[grant.resource_id];
-          const after = Math.min(maxima[grant.resource_id], before + grant.restore_amount);
+          const after = grant.restore_to_max
+            ? maxima[grant.resource_id]
+            : Math.min(maxima[grant.resource_id], before + grant.restore_amount);
           if (after <= before) continue;
+          if (grant.usage_resource_id) resources[grant.usage_resource_id] -= usageCost;
           resources[grant.resource_id] = after;
           events.push({
             sequence: sequence++, round_number: 0, event_type: "feature",
