@@ -85,7 +85,7 @@ def test_level_twelve_is_incremental_and_updates_charisma_only() -> None:
     assert_character_resources_raw_ready(hero, profile, combat)
 
 
-def test_certified_registry_exposes_cleric_through_level_fourteen() -> None:
+def test_certified_registry_exposes_cleric_through_level_eighteen() -> None:
     registry = build_certified_hero_registry()
     assert registry[("cleric", 11, "canonical")] == (
         "Seraphine Dawnshield", "seraphine-dawnshield-l11",
@@ -96,7 +96,8 @@ def test_certified_registry_exposes_cleric_through_level_fourteen() -> None:
     assert registry[("cleric", 13, "canonical")] == (
         "Seraphine Dawnshield", "seraphine-dawnshield-l13",
     )
-    assert registry[("cleric", 14, "canonical")] == (
-        "Seraphine Dawnshield", "seraphine-dawnshield-l14",
-    )
-    assert ("cleric", 15, "canonical") not in registry
+    for level in range(14, 19):
+        assert registry[("cleric", level, "canonical")] == (
+            "Seraphine Dawnshield", f"seraphine-dawnshield-l{level}",
+        )
+    assert ("cleric", 19, "canonical") not in registry
