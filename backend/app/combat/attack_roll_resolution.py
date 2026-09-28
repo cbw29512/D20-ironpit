@@ -12,6 +12,10 @@ from app.combat.conditional_attack_advantage import conditional_attack_advantage
 from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.incoming_attack_bonus import (
+    consume_next_incoming_attack_roll_flat_bonus,
+    next_incoming_attack_roll_flat_bonus,
+)
 from app.combat.next_attack_disadvantage import (
     consume_next_attack_disadvantage,
     next_attack_disadvantage_sources,
@@ -22,10 +26,8 @@ from app.combat.modifier_stack import (
     attacks_against_advantage_sources,
     consume_attacks_against_advantage,
     consume_next_attack_against_advantage,
-    consume_next_incoming_attack_roll_flat_bonus,
     effective_armor_class,
     next_attack_against_advantage_sources,
-    next_incoming_attack_roll_flat_bonus,
 )
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
