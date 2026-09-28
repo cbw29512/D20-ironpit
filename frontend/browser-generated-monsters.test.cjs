@@ -205,7 +205,7 @@ const normalized = (item) => ({
   armor_class: item.armor_class, max_hp: item.max_hp, speed_ft: item.speed_ft,
   initiative_bonus: item.initiative_bonus, attacks: item.attacks.map(attack),
   primary_attack_id: item.primary_attack_id, attackSlots: slots(item.attack_action),
-  saving_throw_actions: item.saving_throw_actions || [], traits: [...(item.traits || [])].sort(),
+  saving_throw_actions: (item.saving_throw_actions || []).map((action) => ({ ...action, actionCost: action.actionCost || "action" })),\n  traits: [...(item.traits || [])].sort(),
   resources: item.resources || {}, damage_resistances: [...(item.damage_resistances || [])].sort(),
   damage_vulnerabilities: [...(item.damage_vulnerabilities || [])].sort(),
   damage_immunities: [...(item.damage_immunities || [])].sort(),
