@@ -364,6 +364,7 @@ jobs:
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-swarm.test.cjs
           node frontend/browser-rage.test.cjs
+          node frontend/browser-persistent-rage-2024.test.cjs
           node frontend/browser-instinctive-pounce.test.cjs
           node frontend/browser-barbarian3.test.cjs
           node frontend/browser-sneak-attack.test.cjs
