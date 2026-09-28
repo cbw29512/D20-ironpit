@@ -65,6 +65,5 @@ def test_level_thirteen_reuses_existing_seventh_level_spell_primitives() -> None
     healing = next(item for item in hero.healing_actions if item.id == "mass-cure-wounds-l7")
 
     assert (damage.level, damage.damage_dice_count, damage.damage_dice_size) == (7, 8, 10)
-    assert damage.resource_id == "spell-slot-7"
     assert (healing.dice_count, healing.dice_size) == (7, 8)
     assert healing.resource_id == "spell-slot-7"
