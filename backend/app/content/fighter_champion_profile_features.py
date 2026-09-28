@@ -89,6 +89,6 @@ def advancement_audit(level: int, description: str) -> FeatureAudit:
         source_reference="D&D Beyond Basic Rules 2024: Fighter; Feats",
         category="feat",
         combat_relevant=True,
-        automated=level != 19,
+        automated=True,
         notes=description,
     )
