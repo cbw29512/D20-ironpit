@@ -157,6 +157,30 @@ def follow_forceful_blow(
     finally:
         attacker.state.movement_remaining_ft = normal_remaining
 
+def apply_brutal_strike_effect_policy(
+    attacker: CombatantState,
+    defender: CombatantState,
+    source_id: str,
+    turn_key: str,
+) -> tuple[str, ...]:
+    """Apply the canonical deterministic 2024 Brutal Strike effect choice after a qualifying hit."""
+    if (
+        attacker.template.ruleset == "2014"
+        or attacker.template.level < 9
+        or attacker.feature_last_turn_keys.get(BRUTAL_STRIKE_FEATURE_ID) != turn_key
+    ):
+        return ()
+    if attacker.template.level >= 17:
+        apply_staggering_blow(defender, source_id)
+        apply_hamstring_blow(defender, source_id, 0)
+        return ("staggering-blow", "hamstring-blow")
+    if attacker.template.level >= 13:
+        apply_staggering_blow(defender, source_id)
+        return ("staggering-blow",)
+    apply_hamstring_blow(defender, source_id, 0)
+    return ("hamstring-blow",)
+
+
 def brutal_strike_attack_sources(
     state: CombatantState,
     attack: WeaponAttack,
