@@ -77,6 +77,19 @@ def damage_maximizer_available(state: CombatantState, action: SpellSaveAction) -
         raise
 
 
+def should_auto_maximize_damage(state: CombatantState, action: SpellSaveAction) -> bool:
+    try:
+        if not damage_maximizer_available(state, action):
+            return False
+        grant = state.template.progression_features.spell_damage_maximizer
+        if grant is None:
+            return False
+        return state.feature_use_counts.get(grant.source_id, 0) < grant.free_uses
+    except Exception:
+        logger.exception("Failed automatic spell damage maximizer policy for %s.", action.id)
+        raise
+
+
 def maximized_damage_rolls(action: SpellSaveAction) -> list[int] | list[list[int]]:
     try:
         if action.damage_components:
