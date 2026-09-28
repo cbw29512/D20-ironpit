@@ -20,6 +20,7 @@ class PassiveModifierGrant(BaseModel):
     kind: PassiveModifierKind
     condition_id: str | None = Field(default=None, min_length=1)
     source_creature_types: list[str] = Field(default_factory=list)
+    required_active_effect_ids: list[str] = Field(default_factory=list)
     save_ability: AbilityName | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
     ends_on_owner_attack: bool = False
@@ -28,10 +29,16 @@ class PassiveModifierGrant(BaseModel):
     @model_validator(mode="after")
     def validate_grant(self) -> "PassiveModifierGrant":
         try:
-            if not self.source_creature_types:
-                raise ValueError("Passive typed modifiers require at least one source creature type.")
+            if self.kind in {"attacks-against-disadvantage", "targeting-save-gate"} and not self.source_creature_types:
+                raise ValueError("Passive source-filtered modifiers require at least one source creature type.")
+            if self.kind == "condition-immunity" and not self.source_creature_types and not self.required_active_effect_ids:
+                raise ValueError("Passive condition immunity requires a source filter or active-effect requirement.")
             if any(not item.strip() for item in self.source_creature_types):
                 raise ValueError("Passive modifier source creature types cannot be blank.")
+            if any(not item.strip() for item in self.required_active_effect_ids):
+                raise ValueError("Passive modifier active-effect requirements cannot be blank.")
+            if self.required_active_effect_ids and self.kind != "condition-immunity":
+                raise ValueError(f"{self.kind} does not accept active-effect requirements.")
             if self.kind == "condition-immunity" and self.condition_id is None:
                 raise ValueError("Passive condition immunity requires a condition id.")
             if self.kind != "condition-immunity" and self.condition_id is not None:
@@ -45,6 +52,11 @@ class PassiveModifierGrant(BaseModel):
             normalized = [item.casefold() for item in self.source_creature_types]
             if len(set(normalized)) != len(normalized):
                 raise ValueError("Passive modifier source creature types must be unique.")
+            required_effects = [item.casefold() for item in self.required_active_effect_ids]
+            if len(set(required_effects)) != len(required_effects):
+                raise ValueError("Passive modifier active-effect requirements must be unique.")
+            self.source_creature_types = normalized
+            self.required_active_effect_ids = required_effects
             return self
         except Exception:
             logger.exception(
