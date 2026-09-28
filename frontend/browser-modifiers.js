@@ -5,7 +5,7 @@
   const KINDS = new Set([
     "armor-class", "armor-class-minimum", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
-    "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed", "debuff-counter",
+    "attacks-against-disadvantage", "next-attack-against-advantage", "next-incoming-attack-roll-flat", "targeting-save-gate", "speed", "debuff-counter",
     "zero-hp-replacement", "damage-source-qualifier",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
@@ -22,6 +22,7 @@
     if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
     if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
     if (item.kind === "attack-roll-flat" && (!(item.flat_bonus || 0) || !item.weapon_id)) throw new Error("Flat attack modifiers require a bonus and weapon id.");
+    if (item.kind === "next-incoming-attack-roll-flat" && !(item.flat_bonus || 0)) throw new Error("Next incoming attack-roll flat modifiers require a nonzero bonus.");
     if (!new Set(["attack-roll-flat", "damage-source-qualifier"]).has(item.kind) && item.weapon_id) throw new Error(item.kind + " does not accept a weapon id.");
     if (item.kind === "damage-source-qualifier" && (!item.weapon_id || !item.source_qualifier)) throw new Error("Damage source qualifier modifiers require a weapon id and qualifier.");
     if (item.kind !== "damage-source-qualifier" && item.source_qualifier) throw new Error(item.kind + " does not accept a source qualifier.");
@@ -110,6 +111,16 @@
   const attackRollFlat = (state, weaponId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "attack-roll-flat" && item.weapon_id === weaponId)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+  const nextIncomingAttackRollFlat = (state, attackerId) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "next-incoming-attack-roll-flat" && item.source_id !== attackerId)
+    .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+  function consumeNextIncomingAttackRollFlat(state, attackerId) {
+    const before = state.active_modifiers.length;
+    state.active_modifiers = state.active_modifiers.filter((item) => !(
+      item.kind === "next-incoming-attack-roll-flat" && item.source_id !== attackerId
+    ));
+    return before - state.active_modifiers.length;
+  }
   const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
   function damageSourceQualifiers(state, attack) {
     const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
@@ -170,7 +181,7 @@
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
-    damageSourceQualifiers, consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
-    expireTargetTurn, nextAttackAgainstAdvantage, removeSource, savingThrowFlat, validate,
+    damageSourceQualifiers, consumeNextAttackAgainstAdvantage, consumeNextIncomingAttackRollFlat, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
+    expireTargetTurn, nextAttackAgainstAdvantage, nextIncomingAttackRollFlat, removeSource, savingThrowFlat, validate,
   };
 })();
