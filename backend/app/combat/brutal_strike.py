@@ -163,22 +163,30 @@ def apply_brutal_strike_effect_policy(
     source_id: str,
     turn_key: str,
 ) -> tuple[str, ...]:
-    """Apply the canonical deterministic 2024 Brutal Strike effect choice after a qualifying hit."""
+    """Apply a deterministic legal subset of the source-declared Brutal Strike options."""
+    features = attacker.template.progression_features
     if (
         attacker.template.ruleset == "2014"
-        or attacker.template.level < 9
         or attacker.feature_last_turn_keys.get(BRUTAL_STRIKE_FEATURE_ID) != turn_key
+        or features.brutal_strike_max_effects <= 0
     ):
         return ()
-    if attacker.template.level >= 17:
-        apply_staggering_blow(defender, source_id)
-        apply_hamstring_blow(defender, source_id, 0)
-        return ("staggering-blow", "hamstring-blow")
-    if attacker.template.level >= 13:
-        apply_staggering_blow(defender, source_id)
-        return ("staggering-blow",)
-    apply_hamstring_blow(defender, source_id, 0)
-    return ("hamstring-blow",)
+    available = tuple(features.brutal_strike_effect_options)
+    chosen: list[str] = []
+    priority = ("staggering-blow", "hamstring-blow", "sundering-blow", "forceful-blow")
+    for effect in priority:
+        if effect not in available or len(chosen) >= features.brutal_strike_max_effects:
+            continue
+        if effect == "staggering-blow":
+            apply_staggering_blow(defender, source_id)
+        elif effect == "hamstring-blow":
+            apply_hamstring_blow(defender, source_id, 0)
+        elif effect == "sundering-blow":
+            apply_sundering_blow(defender, source_id)
+        else:
+            continue
+        chosen.append(effect)
+    return tuple(chosen)
 
 
 def brutal_strike_attack_sources(
