@@ -73,13 +73,14 @@ def test_level_fourteen_rider_can_choose_an_ally_within_sixty_feet() -> None:
     cleric = _member(hero, "cleric", "heroes", 0)
     ally = _member(build_karnok_stoneward(), "ally", "heroes", 40)
     far_ally = _member(build_karnok_stoneward(), "far-ally", "heroes", 65)
+    enemy = _member(build_karnok_stoneward(), "enemy", "monsters", 100)
     ally.state.current_hp = 1
     far_ally.state.current_hp = 1
     setup = EncounterSetup(
         heroes=[cleric, ally, far_ally],
-        monsters=[],
+        monsters=[enemy],
         hero_total_levels=16,
-        monster_total_cr="0",
+        monster_total_cr="1",
         ruleset="2024",
     )
     damage_event = BattleEvent(
@@ -127,4 +128,5 @@ def test_certified_registry_exposes_cleric_levels_thirteen_and_fourteen() -> Non
     registry = build_certified_hero_registry()
     assert registry[("cleric", 13, "canonical")][1] == "seraphine-dawnshield-l13"
     assert registry[("cleric", 14, "canonical")][1] == "seraphine-dawnshield-l14"
-    assert ("cleric", 15, "canonical") not in registry
+    assert registry[("cleric", 15, "canonical")][1] == "seraphine-dawnshield-l15"
+    assert ("cleric", 16, "canonical") not in registry
