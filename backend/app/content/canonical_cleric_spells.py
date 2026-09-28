@@ -66,4 +66,5 @@ CLERIC_SPELLS = (
         "mass-cure-wounds", "Mass Cure Wounds", 5, "healing", 9,
         "healing", "multi-target-healing", always_prepared_from_level=9,
     ),
+    _spell("fire-storm", "Fire Storm", 7, "damage", 13, "arena-out-of-scope"),
 )
