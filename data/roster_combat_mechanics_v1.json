@@ -3004,7 +3004,7 @@
       "owners": [
         "barbarian/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4941,7 +4941,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 347,
-    "supported": 68
+    "planned": 346,
+    "supported": 69
   }
 }
