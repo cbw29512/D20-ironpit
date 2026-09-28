@@ -17,6 +17,14 @@ class AbilityCheckMinimum(BaseModel):
     minimum_source: Literal["ability_score"] = "ability_score"
 
 
+class SavingThrowMinimum(BaseModel):
+    """Declarative floor for one saving-throw family; resolution remains name-agnostic."""
+
+    source_id: str
+    ability: AbilityName
+    minimum_source: Literal["ability_score"] = "ability_score"
+
+
 class AbilityScaledDamageRider(BaseModel):
     """Damage dice count derived from one ability modifier."""
 

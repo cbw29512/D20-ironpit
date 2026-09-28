@@ -19,6 +19,7 @@ from app.combat.failed_save_reroll import apply_failed_save_reroll
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
 from app.combat.rolls import roll_d20
+from app.combat.saving_throw_minimum import apply_saving_throw_minimum
 from app.combat.saving_throw_traits import sure_footed_advantage
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 from app.domain.modifiers import ModifierKind
@@ -108,6 +109,7 @@ def resolve_saving_throw(
             roll, _ = apply_resource_backed_d20_bonus_if_useful(
                 state, "saving_throw", roll, dc, dice,
             )
+        roll = apply_saving_throw_minimum(state, ability, roll)
         if roll.total < dc:
             from app.combat.indomitable import use_indomitable
 
