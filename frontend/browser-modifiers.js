@@ -5,7 +5,7 @@
   const KINDS = new Set([
     "armor-class", "armor-class-minimum", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
-    "attacks-against-disadvantage", "next-attack-against-advantage", "targeting-save-gate", "speed", "debuff-counter",
+    "attacks-against-disadvantage", "next-attack-against-advantage", "next-attack-against-flat", "targeting-save-gate", "speed", "debuff-counter",
     "zero-hp-replacement", "damage-source-qualifier",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
@@ -22,6 +22,7 @@
     if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
     if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
     if (item.kind === "attack-roll-flat" && (!(item.flat_bonus || 0) || !item.weapon_id)) throw new Error("Flat attack modifiers require a bonus and weapon id.");
+    if (item.kind === "next-attack-against-flat" && !(item.flat_bonus || 0)) throw new Error("Next-attack-against flat modifiers require a nonzero bonus.");
     if (!new Set(["attack-roll-flat", "damage-source-qualifier"]).has(item.kind) && item.weapon_id) throw new Error(item.kind + " does not accept a weapon id.");
     if (item.kind === "damage-source-qualifier" && (!item.weapon_id || !item.source_qualifier)) throw new Error("Damage source qualifier modifiers require a weapon id and qualifier.");
     if (item.kind !== "damage-source-qualifier" && item.source_qualifier) throw new Error(item.kind + " does not accept a source qualifier.");
@@ -38,7 +39,7 @@
     }
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
-    if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
+    if (item.consume_on_attack_against && !new Set(["attacks-against-advantage", "next-attack-against-flat"]).has(item.kind)) throw new Error("Only defender-scoped next-attack modifiers can use consume_on_attack_against.");
     if (item.consume_on_saving_throw && item.kind !== "saving-throw-disadvantage") throw new Error("Only saving-throw Disadvantage can use consume_on_saving_throw.");
     if (item.expires_source_turn_end_round != null && item.expires_source_turn_end_round < 1) throw new Error("Modifier expiry round must be positive.");
     return item;
@@ -135,6 +136,9 @@
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
+  const nextAttackAgainstFlat = (defender, attackerId) => (defender.active_modifiers || [])
+    .filter((item) => item.kind === "next-attack-against-flat" && item.source_id !== attackerId)
+    .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
 
   function consumeAttacksAgainstAdvantage(state) {
     const before = state.active_modifiers.length;
@@ -146,6 +150,13 @@
     const before = state.active_modifiers.length;
     state.active_modifiers = state.active_modifiers.filter((item) => !(item.kind === "next-attack-against-advantage" && item.target_id === targetId));
     return before - state.active_modifiers.length;
+  }
+
+  function consumeNextAttackAgainstFlat(defender, attackerId) {
+    const before = defender.active_modifiers.length;
+    defender.active_modifiers = defender.active_modifiers.filter((item) => !(item.kind === "next-attack-against-flat"
+      && item.source_id !== attackerId && item.consume_on_attack_against));
+    return before - defender.active_modifiers.length;
   }
 
   function applyD20Bonus(state, kind, roll) {
@@ -170,7 +181,7 @@
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
-    damageSourceQualifiers, consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
-    expireTargetTurn, nextAttackAgainstAdvantage, removeSource, savingThrowFlat, validate,
+    damageSourceQualifiers, consumeNextAttackAgainstAdvantage, consumeNextAttackAgainstFlat, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
+    expireTargetTurn, nextAttackAgainstAdvantage, nextAttackAgainstFlat, removeSource, savingThrowFlat, validate,
   };
 })();
