@@ -62,6 +62,23 @@
     return true;
   }
 
+  function applyEffects(attackerState, defenderState, sourceId, turnKey) {
+    if (attackerState?.template?.ruleset === "2014"
+      || (attackerState?.template?.level || 0) < 9
+      || attackerState.feature_last_turn_keys?.[FEATURE] !== turnKey) return [];
+    if (attackerState.template.level >= 17) {
+      staggering(defenderState, sourceId);
+      hamstring(defenderState, sourceId);
+      return ["staggering-blow", "hamstring-blow"];
+    }
+    if (attackerState.template.level >= 13) {
+      staggering(defenderState, sourceId);
+      return ["staggering-blow"];
+    }
+    hamstring(defenderState, sourceId);
+    return ["hamstring-blow"];
+  }
+
   function forceful(attacker, defender, setup) {
     return F().pushStraightAway(defender, attacker, setup, 15);
   }
@@ -79,6 +96,6 @@
   }
 
   window.IRON_PIT_BROWSER_BRUTAL_STRIKE = {
-    advantageSuppression, bonusDamage, eligible, forceful, followForceful, hamstring, staggering, sundering,
+    advantageSuppression, applyEffects, bonusDamage, eligible, forceful, followForceful, hamstring, staggering, sundering,
   };
 })();
