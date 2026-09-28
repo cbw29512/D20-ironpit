@@ -153,6 +153,47 @@ assert.equal(event.saving_throw_roll.total, 10);
 assert.equal(event.damage_components.length, 2);
 assert.equal(event.hp_before - event.hp_after, event.damage_roll.total, "attack event records one combined HP change");
 
+const irresistibleAttack = { ...attack, id: "greataxe", name: "Greataxe", damageType: "slashing", onHitSaveDamage: null };
+const irresistibleAttacker = {
+  ...attackerState,
+  template: {
+    ...attackerState.template,
+    ability_scores: { strength: 21, dexterity: 13, constitution: 20, intelligence: 10, wisdom: 10, charisma: 10 },
+    damage_resistance_bypass_grants: [{
+      source_id: "boon-irresistible-offense", source_name: "Boon of Irresistible Offense",
+      damage_types: ["bludgeoning", "piercing", "slashing"],
+    }],
+    natural_twenty_attack_damage_grants: [{
+      source_id: "boon-irresistible-offense", source_name: "Boon of Irresistible Offense",
+      ability: "strength", damage_type_source: "attack",
+    }],
+  },
+};
+target = state(["slashing"]);
+result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(
+  irresistibleAttacker, target, irresistibleAttack, true, "normal", "19:rokhan", { naturalRoll: 20 },
+);
+assert.equal(result.damageComponents.length, 2);
+assert.equal(result.damageComponents[0].applied_total, 8, "Irresistible Offense bypasses slashing Resistance");
+assert.equal(result.damageComponents[1].source, "Boon of Irresistible Offense");
+assert.equal(result.damageComponents[1].total, 21);
+assert.equal(result.damageComponents[1].applied_total, 21);
+assert.equal(result.damageComponents[1].damage_type, "slashing");
+
+target = state(["slashing"]);
+result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(
+  irresistibleAttacker, target, irresistibleAttack, true, "normal", "19:rokhan-other-crit", { naturalRoll: 19 },
+);
+assert.equal(result.damageComponents.length, 1, "expanded critical ranges must not trigger natural-20 damage");
+assert.equal(result.damageComponents[0].applied_total, 8, "Resistance bypass still applies without the natural-20 rider");
+
+target = state(["slashing"]);
+result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(
+  attackerState, target, irresistibleAttack, true, "normal", "18:rokhan", { naturalRoll: 20 },
+);
+assert.equal(result.damageComponents.length, 1);
+assert.equal(result.damageComponents[0].applied_total, 4, "combatants without a bypass grant still respect Resistance");
+
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
 assert.equal(Object.keys(roster).length, 129);
