@@ -7,6 +7,7 @@ from app.combat.concentration import start_concentration
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_choice import SpellChoice
+from app.combat.spell_feature_rules import apply_damage_maximizer_cost, spend_cast_grant
 from app.combat.spell_policy import spell_at_slot
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
@@ -44,13 +45,18 @@ def resolve_spell(
             raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
 
         remaining = None
+        cast_grant = None
         if choice.slot_level > 0:
-            resource = _resource(caster.state, choice.slot_level)
-            if resource is None or resource.current_uses < 1:
-                raise ValueError(f"No level {choice.slot_level} spell slot remains.")
-            mark_slot_spell_cast(caster.state, turn_key)
-            resource.current_uses -= 1
-            remaining = resource.current_uses
+            cast_grant, grant_remaining = spend_cast_grant(caster.state, spell, choice.slot_level)
+            if cast_grant is not None:
+                remaining = grant_remaining
+            else:
+                resource = _resource(caster.state, choice.slot_level)
+                if resource is None or resource.current_uses < 1:
+                    raise ValueError(f"No level {choice.slot_level} spell slot remains.")
+                mark_slot_spell_cast(caster.state, turn_key)
+                resource.current_uses -= 1
+                remaining = resource.current_uses
 
         spend(caster.state, spell.action_cost)
         range_remaining = spend_spell_range_modifier(caster.state, choice.range_modifier)
@@ -79,7 +85,10 @@ def resolve_spell(
                 f"{len(placement.friendly_ids)} unprotected allies, and "
                 f"{protected_count} protected allies."
             )
-        slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
+        if cast_grant is not None:
+            slot_text = f"{cast_grant.source_name} free cast"
+        else:
+            slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
         events: list[BattleEvent] = []
         if choice.range_modifier is not None:
             events.append(BattleEvent(
@@ -120,6 +129,13 @@ def resolve_spell(
             dice,
         )
         events.extend(effect_events)
+        if choice.maximize_damage:
+            affected_states = [member.state for member in members]
+            cost_event, sequence = apply_damage_maximizer_cost(
+                sequence, round_number, caster, spell, dice, affected_states,
+            )
+            if cost_event is not None:
+                events.append(cost_event)
         return events, sequence
     except ValueError:
         raise
