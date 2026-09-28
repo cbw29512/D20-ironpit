@@ -67,11 +67,11 @@ def test_level18_strength_save_uses_strength_score_as_total_floor() -> None:
 def test_indomitable_might_does_not_floor_other_saves_or_leak_into_2014_saves() -> None:
     level18 = build_rokhan_stonefury_level(18)
     state = build_combatant_state(level18)
-    dex_roll, dex_success = resolve_saving_throw(state, "dexterity", 19, FixedDiceProvider([1]))
-    assert dex_roll is not None
-    assert dex_success is False
-    assert dex_roll.total == 2
-    assert not any(item.source_effect_id == "indomitable-might" for item in dex_roll.revisions)
+    con_roll, con_success = resolve_saving_throw(state, "constitution", 19, FixedDiceProvider([1]))
+    assert con_roll is not None
+    assert con_success is False
+    assert con_roll.total == 12
+    assert not any(item.source_effect_id == "indomitable-might" for item in con_roll.revisions)
 
     legacy = build_rokhan_stonefury_2014(18)
     assert legacy.progression_features.ability_check_minimums
