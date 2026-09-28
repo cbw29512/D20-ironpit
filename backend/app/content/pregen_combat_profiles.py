@@ -108,6 +108,8 @@ def _rokhan_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatPr
     resources = [("rage", row.rage_uses), ("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)]
     if level >= 14:
         resources.append(("intimidating-presence", 1))
+    if level >= 15:
+        resources.append(("persistent-rage-refresh", 1))
     return PregenCombatProfile(
         f"rokhan-stonefury-l{level}", "Barbarian", level, abilities, ("strength", "constitution"),
         row.armor_class, row.max_hp, row.speed_ft,
@@ -183,7 +185,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
 
     profiles = [
         *(_karnok_profile(level) for level in range(1, 19)),
-        *(_rokhan_profile(level) for level in range(1, 15)),
+        *(_rokhan_profile(level) for level in range(1, 16)),
         *(_seraphine_profile(level) for level in range(1, 13)),
         *build_mara_quickstep_combat_profiles(20),
     ]
