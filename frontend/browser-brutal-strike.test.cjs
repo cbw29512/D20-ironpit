@@ -26,7 +26,7 @@ vm.runInThisContext(fs.readFileSync("frontend/browser-brutal-strike.js", "utf8")
 const B = window.IRON_PIT_BROWSER_BRUTAL_STRIKE;
 const attack = { attackAbility: "strength", damageType: "slashing" };
 const state = {
-  template: { ruleset: "2024", brutal_strike_damage_dice: 1, speed_ft: 40 },
+  template: { ruleset: "2024", level: 9, brutal_strike_damage_dice: 1, speed_ft: 40 },
   active_effect_ids: ["reckless-attack"], active_modifiers: [], feature_last_turn_keys: {},
 };
 
@@ -62,3 +62,17 @@ B.sundering(state, "other-barbarian");
 assert.strictEqual(state.active_modifiers.filter((item) => item.source_effect_id === "sundering-blow").length, 1);
 
 console.log("browser brutal strike tests passed");
+
+state.active_modifiers = [];
+state.feature_last_turn_keys = { "brutal-strike": "9:rokhan" };
+assert.deepStrictEqual(B.applyEffects(state, state, "rokhan", "9:rokhan"), ["hamstring-blow"]);
+
+state.active_modifiers = [];
+state.template.level = 13;
+state.feature_last_turn_keys = { "brutal-strike": "13:rokhan" };
+assert.deepStrictEqual(B.applyEffects(state, state, "rokhan", "13:rokhan"), ["staggering-blow"]);
+
+state.active_modifiers = [];
+state.template.level = 17;
+state.feature_last_turn_keys = { "brutal-strike": "17:rokhan" };
+assert.deepStrictEqual(B.applyEffects(state, state, "rokhan", "17:rokhan"), ["staggering-blow", "hamstring-blow"]);
