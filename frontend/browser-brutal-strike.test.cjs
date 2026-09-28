@@ -35,6 +35,12 @@ assert.deepStrictEqual(B.bonusDamage(state, attack, "1:rokhan"), {
 });
 assert.strictEqual(B.bonusDamage(state, attack, "1:rokhan"), null);
 
+const missed = { ...state, feature_last_turn_keys: {} };
+assert.strictEqual(B.advantageSuppression(missed, attack, "miss:rokhan"), 1);
+assert.strictEqual(B.clearPending(missed, "miss:rokhan"), true);
+assert.strictEqual(B.advantageSuppression(missed, attack, "miss:rokhan"), 0);
+assert.strictEqual(B.advantageSuppression(missed, attack, "next:rokhan"), 1);
+
 const disadvantaged = { ...state, feature_last_turn_keys: {} };
 assert.strictEqual(B.advantageSuppression(disadvantaged, attack, "2:rokhan", true), 0);
 assert.strictEqual(B.bonusDamage(disadvantaged, attack, "2:rokhan", true), null);
