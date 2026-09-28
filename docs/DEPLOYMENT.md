@@ -4,14 +4,18 @@
 
 Netlify is reserved for deliberate production deployment and real production bandwidth testing.
 
-- [ ] Production branch is `main`.
+**AUTOPUBLISH LOCKED:** Git-connected Netlify builds are disabled for every deploy context. Pushing or merging code must not consume Netlify build credits or publish Iron Pit.
+
+- [ ] Production branch remains `main`, but branch selection does not authorize deployment.
 - [ ] Deploy Previews are disabled.
 - [ ] Branch deploys are disabled.
+- [ ] Git-connected production builds are disabled by `netlify.toml`.
 - [ ] GitHub Actions handles branch/PR certification.
-- [ ] `netlify.toml` keeps the production-only build guard enabled.
 - [ ] Feature work merges to `main` only after exact-head CI passes.
+- [ ] A production publish occurs only after Chris explicitly says to publish/unlock Iron Pit.
+- [ ] After any approved release, restore the lock unless Chris explicitly changes this policy.
 
-The repository guard skips Netlify builds whenever `CONTEXT` is not `production`.
+The repository guard uses an always-successful Netlify `ignore` command so Git-connected builds are skipped in every context while the lock is active.
 
 ## Production architecture
 
