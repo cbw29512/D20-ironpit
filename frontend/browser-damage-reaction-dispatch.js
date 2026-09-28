@@ -3,6 +3,7 @@
 
   const R = () => window.IRON_PIT_BROWSER_DAMAGE_TRIGGERED_REACTIONS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const T = () => window.IRON_PIT_BROWSER_SOURCE_DAMAGE_TRIGGERS;
 
   function appliedDamageTotal(event) {
     try {
@@ -90,6 +91,10 @@
       const sourceTrigger = resolveSourceZeroHpTrigger(sequence, round, source, triggeringEvent, setup);
       sequence = sourceTrigger.sequence;
       const appliedDamage = appliedDamageTotal(triggeringEvent);
+      const damageTrigger = T()?.resolve(sequence, round, source, triggeringEvent, appliedDamage)
+        || { events: [], sequence };
+      sequence = damageTrigger.sequence;
+      sourceTrigger.events.push(...damageTrigger.events);
       if (appliedDamage <= 0) return sourceTrigger;
       const reactor = memberById(setup, triggeringEvent.target_id);
       if (!reactor || reactor.combatant_id === source.combatant_id) {
