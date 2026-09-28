@@ -48,4 +48,5 @@ def test_level17_preserves_level16_berserker_actions_and_persistent_rage() -> No
     assert level17.progression_features.rage_persists_without_maintenance is True
     assert len(level17.initiative_resource_refill_grants) == 1
     assert level17.initiative_resource_refill_grants[0].resource_id == "rage"
-    assert level17.initiative_resource_refill_grants[0].restore_to == 6
+    assert level17.initiative_resource_refill_grants[0].when_at_or_below == 5
+    assert level17.initiative_resource_refill_grants[0].restore_to_max is True
