@@ -14,8 +14,8 @@ window.IRON_PIT_BROWSER_GRID_GEOMETRY = {
   occupiedCells: (position) => [[position.x, position.y]],
 };
 window.IRON_PIT_ACTION_ECONOMY = {
-  available: (state) => state.action_available,
-  spend: (state) => { state.action_available = false; },
+  available: (state, cost) => Boolean(state[`${cost}_available`]),
+  spend: (state, cost) => { state[`${cost}_available`] = false; },
 };
 const calls = [];
 window.IRON_PIT_BROWSER_SAVES = {
@@ -41,7 +41,7 @@ function member(id, side, x, y) {
     combatant_id: id, side, position_ft: x * 5,
     state: {
       position: { x, y }, is_alive: true, is_dead: false, current_hp: 10,
-      action_available: true, resources: {},
+      action_available: true, bonus_action_available: true, reaction_available: true, resources: {},
       grapple_sources: [], template: { size: "medium", saving_throw_actions: [] },
     },
   };
@@ -80,4 +80,24 @@ assert.deepEqual(calls, [
 ]);
 assert.ok(result.events.every((event) => event.resource_remaining === 0));
 
-console.log("Universal browser area-save resource parity passed.");
+const bonusActor = member("hero:fear", "heroes", 1, 1);
+const bonusTarget = member("monster:target", "monsters", 2, 1);
+const bonusAction = {
+  id: "fear-burst", name: "Fear Burst", actionCost: "bonus_action",
+  saveAbility: "wisdom", dc: 10, range: 0,
+  area: { shape: "emanation", origin: "self", radius_ft: 30 },
+  damageDiceCount: 0,
+};
+bonusActor.state.template.saving_throw_actions = [bonusAction];
+const bonusSetup = {
+  heroes: [bonusActor], monsters: [bonusTarget],
+  map_definition: { width_squares: 10, height_squares: 10 },
+};
+const bonusSelected = A.choose(bonusActor, bonusSetup);
+assert.ok(bonusSelected);
+const bonusResult = A.resolve(10, 1, bonusActor, bonusSetup, bonusSelected);
+assert.equal(bonusResult.events.length, 1);
+assert.equal(bonusActor.state.bonus_action_available, false);
+assert.equal(bonusActor.state.action_available, true);
+
+console.log("Universal browser area-save resource and action-cost parity passed.");
