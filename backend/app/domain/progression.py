@@ -29,6 +29,7 @@ from app.domain.progression_primitives import (
     SavingThrowProficiencyGrant,
     SelectableDamageResistance,
     SourceReducesHostileToZeroHpTemporaryHp,
+    SourceDamageTemporaryHpGrant,
     SlotHealingSelfRider,
 )
 
@@ -93,6 +94,7 @@ class ProgressionCombatFeatures(BaseModel):
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
     resource_backed_d20_bonus_dice: list[ResourceBackedD20BonusDie] = Field(default_factory=list)
     source_reduces_hostile_to_zero_hp_temporary_hp: SourceReducesHostileToZeroHpTemporaryHp | None = None
+    source_damage_temporary_hp: SourceDamageTemporaryHpGrant | None = None
     selectable_damage_resistance: SelectableDamageResistance | None = None
     resource_backed_on_hit_exile: ResourceBackedOnHitExile | None = None
     delayed_resource_refill: DelayedResourceRefill | None = None
