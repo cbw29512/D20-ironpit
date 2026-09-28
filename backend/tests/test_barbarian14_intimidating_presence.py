@@ -188,7 +188,7 @@ def test_depleted_presence_spends_rage_to_restore_only_when_legal_target_exists(
 def test_bonus_action_save_is_not_rediscovered_as_main_action() -> None:
     hero, _, _, setup = _setup()
 
-    assert choose_area_save(hero, setup) is None
+    assert choose_area_save(hero, setup, action_cost="action") is None
     assert save_choice(hero, setup) is None
 
 
