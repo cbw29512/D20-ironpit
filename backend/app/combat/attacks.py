@@ -8,6 +8,7 @@ from app.combat.attack_roll_resolution import resolve_attack_roll
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.attack_event_support import build_attack_description, primary_attack_save_fields
+from app.combat.brutal_strike import clear_brutal_strike_pending
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
@@ -76,6 +77,8 @@ def resolve_attack(
             attacker, actual_defender, attack, attack_roll, effective_armor_class(actual_defender),
         )
         attack_roll, target_ac, hit = d20_outcome.roll, d20_outcome.target_ac, d20_outcome.hit
+        if not hit:
+            clear_brutal_strike_pending(attacker, turn_key)
         natural, parry_used = d20_outcome.natural, d20_outcome.parry_used
         d20_override_feature_id, d20_override_name = d20_outcome.d20_override_feature_id, d20_outcome.d20_override_source_name
         miss_override_feature_id, miss_override_name = d20_outcome.miss_override_feature_id, d20_outcome.miss_override_source_name
