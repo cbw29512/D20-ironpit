@@ -1,4 +1,5 @@
 name: Sync Generated Certification Artifacts
+# Temporary branch sync; remove before merge.
 
 on:
   workflow_dispatch:
