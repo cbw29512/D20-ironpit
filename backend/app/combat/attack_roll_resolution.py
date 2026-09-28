@@ -29,7 +29,7 @@ from app.combat.modifier_stack import (
     effective_armor_class,
     next_attack_against_advantage_sources,
 )
-from app.combat.range import resolve_attack_roll_mode
+from app.combat.range import attack_range_disadvantage_sources, resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
@@ -74,13 +74,14 @@ def resolve_attack_roll(
             + sap_disadvantage(attacker)
             + next_attack_disadvantage_sources(attacker)
         )
+        range_disadvantage = attack_range_disadvantage_sources(attack.weapon, distance_ft, close_enemy_active)
         reckless_advantage = reckless_attack_advantage(attacker, attack)
         reckless_advantage, brutal_disadvantage = brutal_strike_attack_sources(
             attacker,
             attack,
             turn_key,
             reckless_advantage=reckless_advantage,
-            disadvantage_sources=disadvantage_total,
+            disadvantage_sources=disadvantage_total + range_disadvantage,
         )
         attack_advantage = apply_defender_advantage_suppression(
             defender,
