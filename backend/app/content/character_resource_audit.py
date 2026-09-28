@@ -110,6 +110,7 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke_of_luck_uses),),
     "sorcerer": (("sorcery-points", "Sorcery Points", _sorcerer_2014_sorcery_points),),
     "warlock": (),
+    "wizard": (),
 }
 _2014_UNLIMITED_CLASS_RESOURCES: dict[str, Callable[[int], tuple[str, ...]]] = {
     "barbarian": lambda level: ("rage",) if level >= 20 else (),
@@ -138,12 +139,15 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
     if profile.ruleset == "2024" and profile.class_id in FULL_CASTER_CLASSES:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
-    if profile.ruleset == "2014" and profile.class_id in {"bard", "cleric", "druid", "sorcerer"}:
+    if profile.ruleset == "2014" and profile.class_id in {"bard", "cleric", "druid", "sorcerer", "wizard"}:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
     if profile.ruleset == "2014" and profile.class_id == "ranger":
         resolved.update(ranger_2014_spell_slot_resources(profile.level))
     if profile.ruleset == "2014" and profile.class_id == "warlock":
         resolved.update(warlock_2014_resources(profile.level))
+    if profile.ruleset == "2014" and profile.class_id == "wizard" and profile.level >= 20:
+        resolved["signature-spell-fireball"] = 1
+        resolved["signature-spell-lightning-bolt"] = 1
     if profile.ruleset == "2014" and profile.class_id == "paladin":
         resolved.update(_paladin_2014_spell_slots(profile.level))
         if profile.level >= 14:
