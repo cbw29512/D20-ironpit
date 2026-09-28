@@ -6,10 +6,13 @@ from app.domain.runtime import CombatantState
 
 def next_incoming_attack_roll_flat_bonus(defender: CombatantState, attacker_id: str) -> int:
     """Return one-shot flat bonuses to attacks against this defender by other creatures."""
-    return sum(
-        item.flat_bonus for item in defender.active_modifiers
-        if item.kind is ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT
-        and item.source_id != attacker_id
+    return max(
+        (
+            item.flat_bonus for item in defender.active_modifiers
+            if item.kind is ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT
+            and item.source_id != attacker_id
+        ),
+        default=0,
     )
 
 
