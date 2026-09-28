@@ -1,4 +1,5 @@
 from app.combat.barbarian import FRENZY_2014_EFFECT_ID, end_rage, enter_rage
+from app.combat.condition_immunity import condition_is_immune
 from app.combat.brutal_critical import brutal_critical_bonus_damage
 from app.combat.dice import FixedDiceProvider
 from app.combat.exhaustion import (
@@ -10,6 +11,7 @@ from app.combat.exhaustion import (
 )
 from app.combat.intimidating_presence_2014 import can_use_presence, end_invalid_presence, resolve_intimidating_presence
 from app.combat.state import build_combatant_state
+from app.combat.timed_conditions import apply_timed_condition
 from app.content.barbarian_berserker_2014_runtime import build_rokhan_stonefury_2014
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -33,6 +35,36 @@ def test_2014_berserker_levels_one_through_thirteen_are_isolated_from_2024() -> 
         assert hero.weapon_attack.weapon.mastery_property is None
         assert all(attack.weapon.mastery_property is None for attack in hero.alternate_weapon_attacks)
         assert hero.source.startswith("D&D Basic Rules 2014")
+
+
+def test_2014_mindless_rage_uses_generic_effect_gated_condition_immunity() -> None:
+    hero = build_rokhan_stonefury_2014(6)
+    grants = [item for item in hero.passive_modifier_grants if item.source_id == "mindless-rage"]
+    assert {item.condition_id for item in grants} == {"charmed", "frightened"}
+    assert all(item.kind == "condition-immunity" for item in grants)
+    assert all(item.required_active_effect_ids == ["rage"] for item in grants)
+
+    state = build_combatant_state(hero)
+    assert condition_is_immune(state, "charmed") is False
+    assert condition_is_immune(state, "frightened") is False
+    assert apply_timed_condition(state, "charmed", "source-1", source_effect_id="charm-test") == "charmed"
+    assert apply_timed_condition(state, "frightened", "source-2", source_effect_id="fear-test") == "frightened"
+
+    event = enter_rage(1, 1, state, "rokhan")
+    assert event is not None
+    assert event.removed_condition_ids == []
+    assert {"charmed", "frightened", "rage"}.issubset(state.active_effect_ids)
+    assert {effect.effect_id for effect in state.timed_effects} == {"charmed", "frightened"}
+    assert condition_is_immune(state, "charmed") is True
+    assert condition_is_immune(state, "frightened") is True
+    assert apply_timed_condition(state, "charmed", "source-3") is None
+    assert apply_timed_condition(state, "frightened", "source-4") is None
+
+    end_rage(state)
+    assert "rage" not in state.active_effect_ids
+    assert {"charmed", "frightened"}.issubset(state.active_effect_ids)
+    assert condition_is_immune(state, "charmed") is False
+    assert condition_is_immune(state, "frightened") is False
 
 
 def test_2014_exhaustion_uses_six_level_table_not_2024_numeric_penalty() -> None:

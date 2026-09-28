@@ -8,7 +8,8 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-debuff-counters.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-grapple.js",
+  "browser-heroes.js", "browser-debuff-counters.js", "browser-opening-modifiers.js",
+  "browser-defensive-modifier-rules.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
 ]) load(file);
 
@@ -24,6 +25,46 @@ const I = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
 const A = window.IRON_PIT_BROWSER_ATTACK;
 const heroTemplate = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroes", position_ft: position, state: S.buildState(structuredClone(template)) });
+
+{
+  const template = structuredClone(heroTemplate);
+  template.ruleset = "2014";
+  template.passive_modifier_grants = [
+    {
+      source_id: "mindless-rage", source_name: "Mindless Rage",
+      kind: "condition-immunity", condition_id: "charmed",
+      source_creature_types: [], required_active_effect_ids: ["rage"],
+    },
+    {
+      source_id: "mindless-rage", source_name: "Mindless Rage",
+      kind: "condition-immunity", condition_id: "frightened",
+      source_creature_types: [], required_active_effect_ids: ["rage"],
+    },
+  ];
+  const target = member("mindless-rage-target", template);
+  assert.equal(I.immune(target.state, "charmed"), false);
+  assert.equal(I.immune(target.state, "frightened"), false);
+  assert.equal(T.apply(target.state, "charmed", "source-1", { sourceEffectId: "charm-test" }), "charmed");
+  assert.equal(T.apply(target.state, "frightened", "source-2", { sourceEffectId: "fear-test" }), "frightened");
+
+  target.state.active_effect_ids.push("rage");
+  assert.equal(I.immune(target.state, "charmed"), true);
+  assert.equal(I.immune(target.state, "frightened"), true);
+  assert.equal(T.apply(target.state, "charmed", "source-3"), null);
+  assert.equal(T.apply(target.state, "frightened", "source-4"), null);
+  assert.ok(target.state.active_effect_ids.includes("charmed"));
+  assert.ok(target.state.active_effect_ids.includes("frightened"));
+  assert.deepEqual(
+    target.state.timed_effects.map((effect) => effect.effect_id).sort(),
+    ["charmed", "frightened"],
+  );
+
+  target.state.active_effect_ids = target.state.active_effect_ids.filter((id) => id !== "rage");
+  assert.equal(I.immune(target.state, "charmed"), false);
+  assert.equal(I.immune(target.state, "frightened"), false);
+  assert.ok(target.state.active_effect_ids.includes("charmed"));
+  assert.ok(target.state.active_effect_ids.includes("frightened"));
+}
 
 {
   const target = member("hero-1", heroTemplate);

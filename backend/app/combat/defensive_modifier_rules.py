@@ -113,14 +113,24 @@ def healing_is_maximized(state: CombatantState) -> bool:
 
 def condition_immunity_modifier_applies(
     modifier: CombatModifier,
+    state: CombatantState,
     condition_id: str,
     source: CombatantTemplate | None,
 ) -> bool:
-    return (
-        modifier.kind is ModifierKind.CONDITION_IMMUNITY
-        and modifier.condition_id == condition_id
-        and _source_type_matches(modifier, source)
-    )
+    try:
+        return (
+            modifier.kind is ModifierKind.CONDITION_IMMUNITY
+            and modifier.condition_id == condition_id
+            and _source_type_matches(modifier, source)
+            and set(modifier.required_active_effect_ids).issubset(state.active_effect_ids)
+        )
+    except Exception:
+        logger.exception(
+            "Failed to resolve condition-immunity modifier %s for %s.",
+            modifier.id,
+            state.template.name,
+        )
+        raise
 
 
 def targeting_save_gate(

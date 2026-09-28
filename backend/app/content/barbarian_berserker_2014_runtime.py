@@ -8,6 +8,7 @@ from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.progression import AbilityCheckMinimum, EffectBoundSurvivalSave, ProgressionCombatFeatures
 from app.domain.reactions import DamageReactionAttack
 
@@ -84,6 +85,17 @@ def _compile_rokhan_stonefury_2014(level: int) -> CombatantTemplate:
         max_hp=fixed_hit_points(level, 12, constitution), speed_ft=40 if level >= 5 else 30,
         initiative_bonus=dexterity, weapon_attack=greataxe, alternate_weapon_attacks=[handaxe],
         attack_action=action, damage_reaction_attack=_damage_reaction(level),
+        passive_modifier_grants=(
+            [
+                PassiveModifierGrant(
+                    source_id="mindless-rage", source_name="Mindless Rage",
+                    kind="condition-immunity", condition_id=condition_id,
+                    required_active_effect_ids=["rage"],
+                )
+                for condition_id in ("charmed", "frightened")
+            ]
+            if level >= 6 else []
+        ),
         saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "constitution")),
         skill_bonuses={"athletics": scores.modifier("strength") + proficiency_bonus(level),
                        "acrobatics": dexterity},
