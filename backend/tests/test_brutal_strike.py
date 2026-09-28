@@ -1,4 +1,5 @@
-from app.combat.brutal_strike import apply_hamstring_blow, brutal_strike_bonus_damage
+from app.combat.brutal_strike import brutal_strike_bonus_damage
+from app.combat.brutal_strike_effects import apply_hamstring_blow
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import effective_speed
 from app.combat.reckless_attack import RECKLESS_ATTACK_EFFECT_ID
