@@ -81,6 +81,12 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.resource_backed_on_hit_exile.source_id)
     if features.delayed_resource_refill:
         mechanics.add(features.delayed_resource_refill.source_id)
+    if features.area_spell_ally_protection:
+        mechanics.add(features.area_spell_ally_protection.source_id)
+    if features.alternate_spell_cast_grants:
+        mechanics.update(rule.source_id for rule in features.alternate_spell_cast_grants)
+    if features.spell_damage_maximizer:
+        mechanics.add(features.spell_damage_maximizer.source_id)
     if features.deferred_save_effect:
         mechanics.add(features.deferred_save_effect.source_id)
     if features.athletics_advantage:
