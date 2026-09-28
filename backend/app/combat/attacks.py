@@ -112,6 +112,7 @@ def resolve_attack(
             affected_states=affected_states,
             sneak_attack_ally_available=sneak_attack_ally_available,
             brutal_strike_disadvantage=brutal_strike_disadvantage,
+            natural_roll=natural,
         )
         damage_roll, damage_components, damage_outcome = effects.damage_roll, effects.damage_components, effects.damage_outcome
         applied_conditions, save_damage, on_hit_save = effects.applied_conditions, effects.save_damage, effects.on_hit_save
