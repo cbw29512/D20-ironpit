@@ -28,7 +28,10 @@ def build_rokhan_stonefury_level19_profile() -> CharacterBuildProfile:
                 "increased Strength score, using the attack's damage type, through a universal attack rider."
             ),
         )
+        maximums = dict(data.get("ability_score_maximums", {}))
+        maximums["strength"] = 30
         data.update(
+            ability_score_maximums=maximums,
             feature_audits=[*data["feature_audits"], feature.model_dump()],
             source_references=[
                 *data["source_references"],
