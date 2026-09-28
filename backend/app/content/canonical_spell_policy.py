@@ -7,6 +7,7 @@ from app.content.paladin_2014_spell_package import build_paladin_2014_spell_pack
 from app.content.ranger_2014_spell_package import build_ranger_2014_spell_package
 from app.content.sorcerer_2014_spell_package import build_sorcerer_2014_spell_package
 from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+from app.content.wizard_2014_spell_package import build_wizard_2014_spell_package
 from app.domain.character_builds import RulesetId
 from app.domain.class_loadouts import ClassSpellPackage
 
@@ -41,5 +42,9 @@ def canonical_spell_package(
             return build_sorcerer_2014_spell_package(level)
         if class_id == "warlock":
             return build_warlock_2014_spell_package(level)
+        if class_id == "wizard":
+            if casting_modifier is None:
+                raise ValueError("2014 Wizard spell preparation requires the Intelligence modifier.")
+            return build_wizard_2014_spell_package(level, casting_modifier)
         return None
     return build_class_spell_package(class_id, level)  # type: ignore[arg-type]
