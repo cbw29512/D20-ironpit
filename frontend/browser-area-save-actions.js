@@ -16,10 +16,11 @@
       || (state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
   }
 
-  function choose(member, setup) {
+  function choose(member, setup, actionCost = null) {
     try {
       const candidates = [];
       for (const action of member.state.template.saving_throw_actions || []) {
+        if (actionCost && (action.actionCost || "action") !== actionCost) continue;
         if (!action.area || !resourceAvailable(member.state, action)) continue;
         if (action.requiresNoActiveGrapple) {
           const holding = [...setup.heroes, ...setup.monsters].some((target) =>

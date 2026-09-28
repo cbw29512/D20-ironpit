@@ -26,6 +26,7 @@
     if (!E().available(member.state, "action")) return null;
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
+        if ((action.actionCost || "action") !== "action") continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };
       }
@@ -130,7 +131,7 @@
       id: "area-save", category: C().AREA_SAVE, rulesets: BOTH,
       discover: ({ member, setup }) => {
         if (!E().available(member.state, "action")) return null;
-        const selected = AS()?.choose(member, setup) || null;
+        const selected = AS()?.choose(member, setup, "action") || null;
         return selected ? { payload: { selected } } : null;
       },
       resolve: ({ sequence, round, member, setup }, candidate) => {

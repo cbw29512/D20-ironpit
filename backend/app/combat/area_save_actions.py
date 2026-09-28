@@ -17,10 +17,14 @@ logger = logging.getLogger(__name__)
 def choose_area_save(
     actor: EncounterCombatant,
     setup: EncounterSetup,
+    *,
+    action_cost: str | None = None,
 ) -> tuple[SavingThrowAction, AreaPlacement] | None:
     try:
         candidates = []
         for action in actor.state.template.saving_throw_actions:
+            if action_cost is not None and action.action_cost != action_cost:
+                continue
             if action.area is None or not action_resource_available(actor.state, action):
                 continue
             if action.requires_no_active_grapple and source_has_active_grapple(setup, actor.combatant_id):

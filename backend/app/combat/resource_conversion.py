@@ -28,6 +28,28 @@ def conversion_available(state: CombatantState, action: ResourceConversionAction
         raise RuntimeError("Resource conversion availability could not be resolved.") from exc
 
 
+def restoration_conversion(
+    state: CombatantState,
+    target_resource_id: str,
+) -> ResourceConversionAction | None:
+    """Choose an available no-action conversion that restores one depleted action resource."""
+    try:
+        candidates = [
+            action for action in state.template.resource_conversion_actions
+            if action.action_cost == "none"
+            and action.target_resource_id == target_resource_id
+            and conversion_available(state, action)
+        ]
+        return sorted(candidates, key=lambda action: (-action.priority, action.id))[0] if candidates else None
+    except Exception as exc:
+        logger.exception(
+            "Failed to choose restoration conversion for %s on %s.",
+            target_resource_id,
+            state.template.name,
+        )
+        raise RuntimeError("Resource restoration conversion could not be selected.") from exc
+
+
 def resolve_resource_conversion(
     state: CombatantState,
     action: ResourceConversionAction,

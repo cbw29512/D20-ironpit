@@ -2526,7 +2526,7 @@
       "owners": [
         "barbarian/path-berserker"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4941,7 +4941,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 348,
-    "supported": 67
+    "planned": 347,
+    "supported": 68
   }
 }

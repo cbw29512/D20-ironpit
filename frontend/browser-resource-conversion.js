@@ -36,6 +36,21 @@
     return state.resources[action.targetResourceId];
   }
 
+  function restorationAction(state, targetResourceId) {
+    try {
+      const candidates = (state.template.resource_conversion_actions || [])
+        .filter((action) => action.actionCost === "none" && action.targetResourceId === targetResourceId)
+        .filter((action) => available(state, action))
+        .sort((a, b) => (b.priority || 0) - (a.priority || 0) || a.id.localeCompare(b.id));
+      return candidates[0] || null;
+    } catch (error) {
+      console.error("Browser restoration conversion selection failed", {
+        targetResourceId, combatant: state?.template?.name, error,
+      });
+      throw error;
+    }
+  }
+
   function resolve(sequence, round, member, action) {
     try {
       const state = member.state;
@@ -102,6 +117,6 @@
   }
 
   window.IRON_PIT_BROWSER_RESOURCE_CONVERSION = {
-    allSpellSlotsEmpty, automaticAction, available, installAbilityHooks, resolve,
+    allSpellSlotsEmpty, automaticAction, available, installAbilityHooks, restorationAction, resolve,
   };
 })();

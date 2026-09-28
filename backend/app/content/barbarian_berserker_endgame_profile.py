@@ -98,3 +98,30 @@ def build_rokhan_stonefury_level13_profile() -> CharacterBuildProfile:
         source_references=[*data["source_references"], "D&D Beyond Basic Rules 2024: Barbarian Level 13 Improved Brutal Strike"],
     )
     return CharacterBuildProfile.model_validate(data)
+
+def build_rokhan_stonefury_level14_profile() -> CharacterBuildProfile:
+    previous = build_rokhan_stonefury_level13_profile()
+    data = advance_profile_data(previous, 14)
+    apply_barbarian_level_to_profile_data(data, 14)
+    feature = FeatureAudit(
+        feature_id="intimidating-presence",
+        feature_name="Intimidating Presence",
+        source_reference="D&D Beyond Basic Rules 2024: Path of the Berserker Level 14",
+        category="subclass",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Composes the universal Bonus Action save, 30-foot self Emanation, Frightened timed condition, "
+            "end-of-turn repeat save, one-use resource, and no-action resource conversion primitives. "
+            "The source supplies DC 8 + Strength modifier + Proficiency Bonus and a 1-minute duration."
+        ),
+    )
+    data.update(
+        feature_audits=[*data["feature_audits"], feature.model_dump()],
+        source_references=[
+            *data["source_references"],
+            "D&D Beyond Basic Rules 2024: Barbarian Level 14 Berserker Intimidating Presence",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
+

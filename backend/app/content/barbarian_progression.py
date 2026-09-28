@@ -10,6 +10,11 @@ from app.content.hero_combat_feature_registry import (
 )
 from app.domain.models import CombatantTemplate, ResourceDefinition
 from app.domain.reactions import DamageReactionAttack
+from app.content.barbarian_berserker_2024_intimidating_presence import (
+    intimidating_presence_action,
+    intimidating_presence_resource,
+    intimidating_presence_resource_conversions,
+)
 
 
 def _modifier(score: int) -> int:
@@ -22,12 +27,15 @@ def _features(level: int) -> tuple[str, ...]:
 
 def _resources(level: int) -> list[ResourceDefinition]:
     row = BARBARIAN_COMBAT_LEVELS[level]
-    return [
+    resources = [
         ResourceDefinition(id="rage", name="Rage", max_uses=row.rage_uses),
         ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
         ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
     ]
-
+    presence = intimidating_presence_resource(level)
+    if presence is not None:
+        resources.append(presence)
+    return resources
 
 def _apply_row(data: dict[str, object], level: int) -> None:
     row = BARBARIAN_COMBAT_LEVELS[level]
@@ -52,6 +60,15 @@ def _apply_row(data: dict[str, object], level: int) -> None:
             "id": "extra-attack", "name": "Extra Attack", "is_attack_action": True,
             "slots": [{"attack_ids": attack_ids} for _ in range(row.attack_count)],
         }
+    saving_throw_actions = [
+        item for item in data.get("saving_throw_actions", [])
+        if not isinstance(item, dict) or item.get("id") != "intimidating-presence"
+    ]
+    if "intimidating-presence" in features:
+        saving_throw_actions.append(
+            intimidating_presence_action(row.strength, row.proficiency_bonus).model_dump()
+        )
+
     data.update(
         armor_class=row.armor_class,
         max_hp=row.max_hp,
@@ -68,6 +85,10 @@ def _apply_row(data: dict[str, object], level: int) -> None:
         skill_bonuses={"athletics": row.proficiency_bonus + strength_mod, "acrobatics": dexterity_mod},
         progression_features=compile_progression_feature_fields(features, level),
         damage_reaction_attack=(DamageReactionAttack(source_feature="retaliation") if "retaliation" in features else None),
+        saving_throw_actions=saving_throw_actions,
+        resource_conversion_actions=[
+            item.model_dump() for item in intimidating_presence_resource_conversions(features)
+        ],
         resources=[item.model_dump() for item in _resources(level)],
         rage_damage_bonus=row.rage_damage_bonus,
         source=row.source,
