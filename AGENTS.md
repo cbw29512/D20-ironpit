@@ -17,13 +17,14 @@ Before changing combat code, read:
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
-## Current lane (2026-09-25)
+## Current lane (2026-09-27)
 
-- Single active pregen lane: **2014 Lore Bard 1–20**.
-- 2014 Fighter / Barbarian / Rogue / Monk / Paladin / Cleric are already 1–20 on `main`. Do not reopen those progressions.
-- No new 2024 class expansion until 2014 hits 12×20 certified and is re-audited.
+- Canonical 2014 pregens are complete at **240 / 240** registered level snapshots once PR #397 lands.
+- Immediate next lane: **full 2014 READY re-audit plus touched-engine technical-debt cleanup**.
+- Do not begin new 2024 class expansion until the 2014 re-audit is recorded clean.
+- After that gate, resume 2024 by reusing certified 2014 mechanics wherever the underlying behavior is equivalent.
 - One agent on this repository at a time. Coloring-book / Bestiary work stays out of this repo.
-- Heavy GitHub Actions stay gated to `main` / PRs into `main` / `workflow_dispatch`. Do not re-enable `feat/2014-*` artifact sync.
+- Heavy GitHub Actions stay gated to `main` / PRs into `main` / `workflow_dispatch`.
 
 See `docs/CURRENT_OPERATING_STATUS.md`.
 
