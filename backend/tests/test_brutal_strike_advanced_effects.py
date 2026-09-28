@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.combat.brutal_strike import apply_staggering_blow, apply_sundering_blow
+from app.combat.brutal_strike_effects import apply_staggering_blow, apply_sundering_blow
 from app.combat.defensive_modifier_rules import saving_throw_disadvantage_sources
 from app.combat.incoming_attack_bonus import next_incoming_attack_roll_flat_bonus
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
