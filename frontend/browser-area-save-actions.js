@@ -45,15 +45,17 @@
 
   function resolve(sequence, round, member, setup, selected) {
     try {
-      if (!selected || !E().available(member.state, "action")) return null;
+      if (!selected) return null;
       const { action, placement } = selected;
+      const actionCost = action.actionCost || "action";
+      if (!E().available(member.state, actionCost)) return null;
       if (!resourceAvailable(member.state, action)) throw new Error(`${action.name} resource is unavailable.`);
       let remaining = null;
       if (action.resourceId) {
         member.state.resources[action.resourceId] -= action.resourceCost || 1;
         remaining = member.state.resources[action.resourceId];
       }
-      E().spend(member.state, "action");
+      E().spend(member.state, actionCost);
       const shared = action.damageDiceCount ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
       const events = [];
       for (const id of placement.targetIds) {
