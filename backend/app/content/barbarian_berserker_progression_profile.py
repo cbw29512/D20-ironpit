@@ -150,3 +150,34 @@ def build_rokhan_stonefury_level10_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Rokhan Stonefury level 10 profile could not be built.") from exc
+
+
+def build_rokhan_stonefury_level11_profile() -> CharacterBuildProfile:
+    """Advance the certified 2024 Berserker from level 10 to level 11 using shared Relentless Rage semantics."""
+    try:
+        previous = build_rokhan_stonefury_level10_profile()
+        data = advance_profile_data(previous, 11)
+        apply_barbarian_level_to_profile_data(data, 11)
+        relentless = FeatureAudit(
+            feature_id="relentless-rage",
+            feature_name="Relentless Rage",
+            source_reference="D&D Beyond Basic Rules 2024: Barbarian Level 11",
+            category="class",
+            combat_relevant=True,
+            automated=True,
+            notes=(
+                "Reuses the universal effect-bound survival-save primitive: while Rage is active, dropping to "
+                "0 HP triggers a Constitution save starting at DC 10; success leaves Rokhan at twice his Barbarian "
+                "level in HP, and the DC rises by 5 after each success during the fight."
+            ),
+        )
+        data.update(
+            feature_audits=[*data["feature_audits"], relentless.model_dump()],
+            source_references=[
+                *data["source_references"],
+                "D&D Beyond Basic Rules 2024: Barbarian Level 11 Relentless Rage",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Rokhan Stonefury level 11 profile could not be built.") from exc
