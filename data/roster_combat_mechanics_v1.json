@@ -2244,17 +2244,6 @@
     },
     {
       "demand_count": 1,
-      "id": "hamstring-blow",
-      "kinds": [
-        "arena-ignored"
-      ],
-      "owners": [
-        "barbarian/base"
-      ],
-      "status": "arena_out_of_scope"
-    },
-    {
-      "demand_count": 1,
       "id": "healing-light",
       "kinds": [
         "subclass-feature"
@@ -2405,7 +2394,7 @@
       "owners": [
         "barbarian/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4951,8 +4940,8 @@
   },
   "schema_version": 1,
   "summary": {
-    "arena_out_of_scope": 29,
-    "planned": 349,
-    "supported": 66
+    "arena_out_of_scope": 28,
+    "planned": 348,
+    "supported": 67
   }
 }
