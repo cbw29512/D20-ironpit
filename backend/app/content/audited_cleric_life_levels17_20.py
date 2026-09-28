@@ -35,13 +35,13 @@ def build_seraphine_dawnshield_level17_profile() -> CharacterBuildProfile:
             _feature(
                 "cleric-combat-spells-9",
                 "Level 9 Cleric Spells",
-                False,
+                True,
                 "Bind simple legal level-9 combat casting to existing spell primitives before certification.",
             ),
             _feature(
                 "supreme-healing",
                 "Supreme Healing",
-                False,
+                True,
                 "Reuse the universal outgoing-healing-dice maximizer already certified for 2014 Life Cleric.",
             ),
         ]
