@@ -2,10 +2,8 @@ from __future__ import annotations
 
 from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
-from app.combat.modifier_stack import (
-    add_modifier,
-    next_incoming_attack_roll_flat_bonus,
-)
+from app.combat.incoming_attack_bonus import next_incoming_attack_roll_flat_bonus
+from app.combat.modifier_stack import add_modifier
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.domain.modifiers import CombatModifier, ModifierKind
