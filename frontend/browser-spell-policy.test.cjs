@@ -73,7 +73,7 @@ function caster(spells, slots) {
   window.IRON_PIT_DICE = queuedDice([1, 6, 1, 6, 1, 6]);
   const result = X.resolve(1, 1, c, setup, choice, "1:caster");
   assert.equal(result.events.length, 4);
-  assert.match(result.events[0].description, /3 enemies and 0 unprotected allies/);
+  assert.match(result.events[0].description, /3 enemies, 0 unprotected allies, and 0 protected allies/);
   assert.deepEqual(new Set(result.events.slice(1).map((event) => event.target_id)), new Set(["monster-0", "monster-1", "monster-2"]));
   assert.equal(c.state.resources["spell-slot-3"], 0);
   assert.equal(c.state.action_available, false);
