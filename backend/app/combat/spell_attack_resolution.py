@@ -15,7 +15,8 @@ from app.combat.next_attack_disadvantage import (
 from app.combat.modifier_stack import (
     add_modifier, apply_d20_bonus_dice, attacks_against_advantage_sources,
     consume_attacks_against_advantage, consume_next_attack_against_advantage,
-    effective_armor_class, next_attack_against_advantage_sources,
+    consume_next_attack_against_flat, effective_armor_class, next_attack_against_advantage_sources,
+    next_attack_against_flat_bonus,
 )
 from app.combat.reckless_attack import attacks_against_reckless_advantage
 from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
@@ -97,7 +98,7 @@ def resolve_spell_attack(
             + int(close_threat),
         )
         target_ac = effective_armor_class(target.state)
-        base_roll = roll_d20(dice, spell.attack_bonus, mode)
+        base_roll = roll_d20(dice, spell.attack_bonus + next_attack_against_flat_bonus(target.state, caster.combatant_id), mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(caster.state, base_roll, target_ac, dice)
         attack_roll = apply_d20_bonus_dice(caster.state, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
         reaction_penalty = apply_reaction_roll_penalty_if_useful(
@@ -106,6 +107,7 @@ def resolve_spell_attack(
         if reaction_penalty is not None:
             attack_roll = reaction_penalty.roll
         consume_next_attack_against_advantage(caster.state, target.combatant_id)
+        consume_next_attack_against_flat(target.state, caster.combatant_id)
         consume_next_attack_disadvantage(caster.state)
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
         if resource is not None:
