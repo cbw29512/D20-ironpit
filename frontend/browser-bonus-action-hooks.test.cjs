@@ -54,6 +54,7 @@ load("browser-ability-hooks.js");
 load("browser-resources.js");
 load("browser-resource-conversion.js");
 load("browser-rage.js");
+load("browser-rage-hooks.js");
 load("browser-support.js");
 load("browser-steady-aim.js");
 load("browser-frenzy-2014.js");
