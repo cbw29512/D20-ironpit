@@ -95,6 +95,7 @@
         || { events: [], sequence };
       sequence = damageTrigger.sequence;
       sourceTrigger.events.push(...damageTrigger.events);
+      sourceTrigger.sequence = sequence;
       if (appliedDamage <= 0) return sourceTrigger;
       const reactor = memberById(setup, triggeringEvent.target_id);
       if (!reactor || reactor.combatant_id === source.combatant_id) {
