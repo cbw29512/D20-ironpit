@@ -15,7 +15,7 @@
 
   function available(state, action) {
     try {
-      if (!E()?.available(state, action.actionCost)) return false;
+      if (action.actionCost !== "none" && !E()?.available(state, action.actionCost)) return false;
       if (!R()?.available(state, action.sourceResourceId, action.sourceCost)) return false;
       return targetCanGain(state, action);
     } catch (error) {
@@ -40,7 +40,7 @@
     try {
       const state = member.state;
       if (!available(state, action)) return null;
-      E().spend(state, action.actionCost);
+      if (action.actionCost !== "none") E().spend(state, action.actionCost);
       const sourceRemaining = R().spend(state, action.sourceResourceId, action.sourceCost);
       const targetRemaining = gain(state, action);
       return {
