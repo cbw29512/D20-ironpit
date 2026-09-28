@@ -68,7 +68,7 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
 
 def _save(action: Any) -> dict[str, Any]:
     row = {
-        "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
+        "id": action.id, "name": action.name, "actionCost": action.action_cost, "saveAbility": action.save_ability, "dc": action.dc,
         "range": action.range_ft, "targetMaxSize": _value(action.target_max_size) if action.target_max_size else None,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,

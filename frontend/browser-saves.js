@@ -50,7 +50,8 @@
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, checkResource = options.checkResource !== false;
-    if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
+    const actionCost = action.actionCost || "action";
+    if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost} is unavailable for ${action.name}.`);
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     if (action.requiresTargetSight && !Q().canSee(actor.state, target.state)) throw new Error(`${action.name} requires the actor to see the target.`);
@@ -68,7 +69,7 @@
     if (action.resourceId && options.spendResource !== false) {
       actor.state.resources[action.resourceId] -= action.resourceCost || 1; resourceRemaining = actor.state.resources[action.resourceId];
     }
-    if (spendAction) E().spend(actor.state, "action");
+    if (spendAction) E().spend(actor.state, actionCost);
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;

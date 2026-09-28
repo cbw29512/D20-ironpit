@@ -94,6 +94,7 @@ class AttackCapabilityDefinition(BaseModel):
 class SaveCapabilityDefinition(BaseModel):
     id: str
     name: str
+    action_cost: Literal["action", "bonus_action", "reaction"] = "action"
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
