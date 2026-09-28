@@ -230,4 +230,4 @@ Run the complete permanent browser regression command list and production wiring
 - Finish or explicitly park the current tranche before opening an unrelated one.
 - Do not use stale generated counts from memory. Recompute/report from the exact current commit.
 - Do not copy outdated uploaded specs or registry dumps into the repo. If external material conflicts with current repository authority, stop and reconcile the conflict explicitly.
-- Keep Netlify for deliberate production checkpoints; routine verification belongs in repository CI/local-static checks.
+- **Netlify autopublish is locked.** Never trigger a Netlify deploy, re-enable Git-connected builds, weaken the repository build lock, or publish Iron Pit as a side effect of a push/merge. Routine development and verification stay in repository CI/local-static checks. A production publish requires Chris to explicitly say to publish/unlock Iron Pit; completion of a feature, PR, milestone, certification gate, or merge is not publish approval.

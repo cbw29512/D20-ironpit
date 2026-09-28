@@ -312,10 +312,11 @@ jobs:
           grep -q 'IRON_PIT_BROWSER_ENGINE' frontend/browser-execution.js
           grep -q 'IRON_PIT_BROWSER_AUDIT' frontend/browser-execution.js
           grep -q 'https://www.buymeacoffee.com/divclass016' frontend/index.html
-      - name: Validate Netlify production-only credit guard
+      - name: Validate Netlify autopublish lock
         run: |
-          grep -q 'CONTEXT.*production' netlify.toml
+          grep -q 'ignore = "exit 0"' netlify.toml
           grep -q 'pip install -e ./backend' netlify.toml
+          ! grep -q 'CONTEXT.*production' netlify.toml
           grep -q 'prepare_static_site.py' netlify.toml
 
   browser-regressions:
