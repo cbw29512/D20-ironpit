@@ -94,6 +94,13 @@ def _build_seraphine(level: int) -> CombatantTemplate:
                 )
                 if level >= 6 else None
             ),
+            outgoing_healing_dice_maximizer=(
+                OutgoingHealingDiceMaximizer(
+                    source_id="supreme-healing",
+                    source_name="Supreme Healing",
+                )
+                if "supreme-healing" in features else None
+            ),
         ),
         saving_throw_bonuses=seraphine_saving_throw_bonuses(
             row.proficiency_bonus, wisdom_modifier, charisma_modifier,
