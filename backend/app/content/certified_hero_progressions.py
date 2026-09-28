@@ -87,7 +87,9 @@ CERTIFIED_HERO_PROGRESSIONS_2024: tuple[CertifiedHeroProgression, ...] = (
             build_rokhan_stonefury_profile, build_rokhan_stonefury_level2_profile,
             build_rokhan_stonefury_level3_profile, build_rokhan_stonefury_level4_profile,
             build_rokhan_stonefury_level5_profile, build_rokhan_stonefury_level6_profile,
-            build_rokhan_stonefury_level7_profile,
+            build_rokhan_stonefury_level7_profile, build_rokhan_stonefury_level8_profile,
+            build_rokhan_stonefury_level9_profile, build_rokhan_stonefury_level10_profile,
+            build_rokhan_stonefury_level11_profile, build_rokhan_stonefury_level12_profile,
         ),
     ),
     CertifiedHeroProgression(
