@@ -130,6 +130,7 @@ function caster(spells, slots) {
   assert.equal(C.safeDamageMaximizer(c.state, "fireball", 3), null);
 
   c.state.template.damage_immunities = ["necrotic"];
+  c.state.current_hp = 50;
   const hpBeforeSecond = c.state.current_hp;
   window.IRON_PIT_DICE = queuedDice(Array(6).fill(1));
   result = C.resolveDamageMaximizerAfterCast(1, 1, c, setup, grant, 3);
