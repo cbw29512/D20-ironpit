@@ -599,6 +599,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["turning_failure_destroy_max_cr"] = progression.turning_failure_destroy_max_cr
     if progression.slot_healing_other_self_rider:
         row["slot_healing_other_self_rider"] = progression.slot_healing_other_self_rider.model_dump()
+    if progression.damaging_action_temporary_hp_rider:
+        row["damaging_action_temporary_hp_rider"] = progression.damaging_action_temporary_hp_rider.model_dump()
     if template.d20_bonus_die_actions:
         row["d20BonusDieActions"] = [_d20_bonus_die_action(item) for item in template.d20_bonus_die_actions]
     if template.reaction_roll_penalty_actions:
