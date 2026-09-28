@@ -6,7 +6,7 @@
     if (!hooks) throw new Error("Ability hook installation requires browser-ability-hooks.js.");
 
     const installers = [
-      ["Rage", window.IRON_PIT_BROWSER_RAGE?.installAbilityHooks],
+      ["Rage", window.IRON_PIT_BROWSER_RAGE_HOOKS?.install],
       ["Support", window.IRON_PIT_BROWSER_SUPPORT?.installAbilityHooks],
       ["Resource Conversion", window.IRON_PIT_BROWSER_RESOURCE_CONVERSION?.installAbilityHooks],
       ["Steady Aim", window.IRON_PIT_BROWSER_STATIONARY_ATTACK_ADVANTAGE?.installAbilityHooks],
