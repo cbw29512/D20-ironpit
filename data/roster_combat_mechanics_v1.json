@@ -671,7 +671,7 @@
       "owners": [
         "fighter/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4941,7 +4941,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 343,
-    "supported": 72
+    "planned": 342,
+    "supported": 73
   }
 }
