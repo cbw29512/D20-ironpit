@@ -89,6 +89,16 @@ def _save(action: Any) -> dict[str, Any]:
              "damageBonus": item.damage_bonus, "damageType": item.damage_type}
             for item in action.damage_components
         ]
+    if action.failed_save_timed_effect is not None:
+        row["failedSaveTimedEffect"] = {
+            "effectId": action.failed_save_timed_effect.effect_id,
+            "durationRounds": action.failed_save_timed_effect.duration_rounds,
+            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
+            "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
+            "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
+            "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
+            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+        }
     return row
 
 
