@@ -80,6 +80,8 @@ def select_brutal_strike_effects(
     available = tuple(state.template.progression_features.brutal_strike_effect_ids)
     maximum = state.template.progression_features.brutal_strike_max_effects
     if maximum <= 0 or not available:
+        if requested:
+            raise ValueError("Brutal Strike effects are unavailable.")
         return ()
     selected = requested or tuple(item for item in _EFFECT_PRIORITY if item in available)[:maximum]
     if len(selected) > maximum:
