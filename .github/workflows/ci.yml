@@ -267,6 +267,7 @@ jobs:
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
           grep -q 'browser-initiative-resource-refill.js' frontend/index.html
+          grep -q 'browser-turn-start-resource-refill.js' frontend/index.html
           grep -q 'browser-resource-conversion.js' frontend/index.html
           grep -q 'browser-spell-save-disadvantage.js' frontend/index.html
           grep -q 'browser-d20-bonus-dice.js' frontend/index.html
