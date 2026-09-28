@@ -11,7 +11,13 @@ from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
 logger = logging.getLogger(__name__)
 
 
-def _pending(feature_id: str, name: str, notes: str) -> FeatureAudit:
+def _pending(
+    feature_id: str,
+    name: str,
+    notes: str,
+    *,
+    automated: bool = False,
+) -> FeatureAudit:
     try:
         return FeatureAudit(
             feature_id=feature_id,
@@ -19,7 +25,7 @@ def _pending(feature_id: str, name: str, notes: str) -> FeatureAudit:
             source_reference="D&D Beyond Basic Rules 2024: Cleric — high-level progression",
             category="class",
             combat_relevant=True,
-            automated=False,
+            automated=automated,
             notes=notes,
         )
     except Exception:
@@ -36,7 +42,8 @@ def build_seraphine_dawnshield_level13_profile() -> CharacterBuildProfile:
             _pending(
                 "cleric-combat-spells-7",
                 "Level 7 Cleric Spells",
-                "Bind simple legal level-7 combat casting to existing spell primitives before certification.",
+                "Reuses existing Inflict Wounds and Mass Cure Wounds upcast primitives with a level-7 slot.",
+                automated=True,
             ),
         ]
         data.update(
@@ -83,7 +90,8 @@ def build_seraphine_dawnshield_level15_profile() -> CharacterBuildProfile:
         addition = _pending(
             "cleric-combat-spells-8",
             "Level 8 Cleric Spells",
-            "Bind simple legal level-8 combat casting to existing spell primitives before certification.",
+            "Reuses existing Inflict Wounds and Mass Cure Wounds upcast primitives with a level-8 slot.",
+            automated=True,
         )
         data.update(
             feature_audits=[*data["feature_audits"], addition.model_dump()],
