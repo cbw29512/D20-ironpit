@@ -481,6 +481,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "danger_sense": progression.danger_sense, "reckless_attack": progression.reckless_attack,
         "frenzy": progression.frenzy, "frenzy_bonus_attack_2014": progression.frenzy_bonus_attack_2014,
         "persistent_rage_2014": progression.persistent_rage_2014,
+        "rage_persists_without_maintenance": progression.rage_persists_without_maintenance,
         "intimidating_presence_2014_dc": progression.intimidating_presence_2014_dc,
         "brutal_critical_dice": progression.brutal_critical_dice,
         "brutal_strike_damage_dice": progression.brutal_strike_damage_dice,
