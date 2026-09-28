@@ -12,7 +12,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
     "survivor-defy-death", "survivor-heroic-rally",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
-    "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "brutal-strike-2d10", "retaliation",
+    "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "improved-brutal-strike", "brutal-strike-2d10", "retaliation",
     "sneak-attack", "weapon-mastery", "cunning-action", "steady-aim", "cunning-strike", "improved-cunning-strike", "devious-strikes", "slippery-mind", "thiefs-reflexes", "elusive", "stroke-of-luck", "uncanny-dodge", "evasion",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
@@ -39,7 +39,15 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "mindless-rage": {"mindless_rage": True},
     "feral-instinct": {"initiative_advantage": True},
     "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
-    "brutal-strike": {"brutal_strike_damage_dice": 1},
+    "brutal-strike": {
+        "brutal_strike_damage_dice": 1,
+        "brutal_strike_effect_options": ["forceful-blow", "hamstring-blow"],
+        "brutal_strike_max_effects": 1,
+    },
+    "improved-brutal-strike": {
+        "brutal_strike_effect_options": ["forceful-blow", "hamstring-blow", "staggering-blow", "sundering-blow"],
+        "brutal_strike_max_effects": 1,
+    },
     "cunning-action": {"cunning_action": True},
     "steady-aim": {"stationary_bonus_action_next_attack_advantage": True},
     "cunning-strike": {"cunning_strike_trip_die_cost": 1, "cunning_strike_max_effects": 1},
@@ -85,6 +93,8 @@ def compile_progression_feature_fields(features: tuple[str, ...] | list[str], le
             fields["sneak_attack_d6"] = (level + 1) // 2
         if "brutal-strike-2d10" in features:
             fields["brutal_strike_damage_dice"] = 2
+            fields["brutal_strike_effect_options"] = ["forceful-blow", "hamstring-blow", "staggering-blow", "sundering-blow"]
+            fields["brutal_strike_max_effects"] = 2
         if "relentless-rage" in features:
             fields["effect_bound_survival_save"] = {
                 "source_id": "relentless-rage", "required_effect_id": "rage",
