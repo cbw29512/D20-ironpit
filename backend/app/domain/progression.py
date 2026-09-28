@@ -107,6 +107,7 @@ class ProgressionCombatFeatures(BaseModel):
     ignore_unseen_target_attack_disadvantage: bool = False
     miss_to_hit_override_resource_id: str | None = None
     miss_to_hit_override_source_name: str | None = None
+    start_turn_resource_refill_ids: list[str] = Field(default_factory=list)
     athletics_advantage: bool = False
     danger_sense: bool = False
     reckless_attack: bool = False

@@ -463,6 +463,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "ignore_unseen_target_attack_disadvantage": progression.ignore_unseen_target_attack_disadvantage,
         "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
+        "start_turn_resource_refill_ids": list(progression.start_turn_resource_refill_ids),
         "failed_save_reroll_grants": [item.model_dump() for item in progression.failed_save_reroll_grants],
         "failed_d20_test_override_grants": [item.model_dump() for item in progression.failed_d20_test_override_grants],
         "deferred_save_effect": progression.deferred_save_effect.model_dump() if progression.deferred_save_effect else None,

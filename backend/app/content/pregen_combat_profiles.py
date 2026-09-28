@@ -76,6 +76,8 @@ def _karnok_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatPr
     if row.indomitable_uses:
         resources.append(("indomitable", row.indomitable_uses))
     resources.extend((("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)))
+    if level >= 19:
+        resources.append(("boon-combat-prowess", 1))
     features = canonical_combat_features("fighter", level, "champion")
     attacks = (replace(_KARNOK_ATTACKS[0], damage_die_minimum=3), _KARNOK_ATTACKS[1]) if "great-weapon-fighting" in features else _KARNOK_ATTACKS
     return PregenCombatProfile(
@@ -184,7 +186,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profiles
 
     profiles = [
-        *(_karnok_profile(level) for level in range(1, 19)),
+        *(_karnok_profile(level) for level in range(1, 21)),
         *(_rokhan_profile(level) for level in range(1, 21)),
         *(_seraphine_profile(level) for level in range(1, 13)),
         *build_mara_quickstep_combat_profiles(20),

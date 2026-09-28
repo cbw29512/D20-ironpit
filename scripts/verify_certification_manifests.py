@@ -65,8 +65,14 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("unseen-target-attack-disadvantage-suppression")
     if features.miss_to_hit_override_resource_id:
         mechanics.add("miss-to-hit-override")
+        mechanics.add(features.miss_to_hit_override_resource_id)
     if features.miss_to_hit_override_source_name and not features.miss_to_hit_override_resource_id:
         raise ValueError("Miss-to-hit source name requires a configured miss-to-hit resource.")
+    if features.start_turn_resource_refill_ids:
+        mechanics.update(
+            f"start-turn-resource-refill:{resource_id}"
+            for resource_id in features.start_turn_resource_refill_ids
+        )
     if features.failed_save_reroll_grants:
         mechanics.update(rule.source_id for rule in features.failed_save_reroll_grants)
     if features.failed_d20_test_override_grants:

@@ -52,6 +52,12 @@
   function refreshReaction(state) { state.reaction_available = !T().suppressesReactions(state); }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
+    for (const resourceId of state.template.start_turn_resource_refill_ids || []) {
+      if (!Object.prototype.hasOwnProperty.call(state.resources || {}, resourceId)) {
+        throw new Error(`Start-turn refill references missing resource ${resourceId}.`);
+      }
+      state.resources[resourceId] = state.template.resources?.[resourceId] ?? state.resources[resourceId];
+    }
     const survivor = state.template.bloodied_start_turn_heal_amount || state.template.survivor_heal_amount || 0;
     const maximum = effectiveMaxHp(state);
     if (survivor > 0 && state.current_hp > 0 && state.current_hp * 2 <= maximum) state.current_hp = Math.min(maximum, state.current_hp + survivor);

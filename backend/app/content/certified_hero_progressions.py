@@ -37,6 +37,7 @@ from app.content.certified_hero_progressions_2014 import CERTIFIED_HERO_PROGRESS
 from app.content.fighter_asi_progression_profile import build_karnok_stoneward_level6_profile, build_karnok_stoneward_level8_profile, build_karnok_stoneward_level12_profile
 from app.content.fighter_champion_progression_profile import build_karnok_stoneward_level7_profile
 from app.content.fighter_endgame_profile import build_karnok_stoneward_level18_profile
+from app.content.fighter_finish_profile import build_karnok_stoneward_level19_profile, build_karnok_stoneward_level20_profile
 from app.content.fighter_high_level_profile import (
     build_karnok_stoneward_level13_profile, build_karnok_stoneward_level14_profile,
     build_karnok_stoneward_level15_profile, build_karnok_stoneward_level16_profile,
@@ -85,6 +86,7 @@ CERTIFIED_HERO_PROGRESSIONS_2024: tuple[CertifiedHeroProgression, ...] = (
             build_karnok_stoneward_level13_profile, build_karnok_stoneward_level14_profile,
             build_karnok_stoneward_level15_profile, build_karnok_stoneward_level16_profile,
             build_karnok_stoneward_level17_profile, build_karnok_stoneward_level18_profile,
+            build_karnok_stoneward_level19_profile, build_karnok_stoneward_level20_profile,
         ),
     ),
     CertifiedHeroProgression(
