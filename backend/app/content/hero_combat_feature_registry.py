@@ -16,7 +16,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "sneak-attack", "weapon-mastery", "cunning-action", "steady-aim", "cunning-strike", "improved-cunning-strike", "devious-strikes", "slippery-mind", "thiefs-reflexes", "elusive", "stroke-of-luck", "uncanny-dodge", "evasion",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
-    "blessed-strikes", "cleric-combat-spells-5", "divine-intervention", "cleric-combat-spells-6", "cleric-combat-spells-7", "improved-blessed-strikes",
+    "blessed-strikes", "cleric-combat-spells-5", "divine-intervention", "cleric-combat-spells-6", "cleric-combat-spells-7", "improved-blessed-strikes", "cleric-combat-spells-8",
 }
 
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
