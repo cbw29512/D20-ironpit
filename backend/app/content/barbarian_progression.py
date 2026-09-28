@@ -9,6 +9,7 @@ from app.content.hero_combat_feature_registry import (
     unsupported_hero_engine_features,
 )
 from app.domain.models import CombatantTemplate, ResourceDefinition
+from app.domain.reactions import DamageReactionAttack
 
 
 def _modifier(score: int) -> int:
@@ -66,6 +67,7 @@ def _apply_row(data: dict[str, object], level: int) -> None:
         },
         skill_bonuses={"athletics": row.proficiency_bonus + strength_mod, "acrobatics": dexterity_mod},
         progression_features=compile_progression_feature_fields(features, level),
+        damage_reaction_attack=(DamageReactionAttack(source_feature="retaliation") if "retaliation" in features else None),
         resources=[item.model_dump() for item in _resources(level)],
         rage_damage_bonus=row.rage_damage_bonus,
         source=row.source,
