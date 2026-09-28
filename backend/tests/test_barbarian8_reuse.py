@@ -15,7 +15,10 @@ def test_2024_barbarian_level8_reuses_existing_engine_with_strength_asi() -> Non
         assert profile.final_ability_scores.constitution == 16
         assert template.level == 8
         assert template.max_hp == 85
-        assert template.ability_scores.strength == 20
+        assert template.weapon_attack.attack_bonus == 8
+        assert template.weapon_attack.damage_bonus == 5
+        assert template.saving_throw_bonuses["strength"] == 8
+        assert template.skill_bonuses["athletics"] == 8
         assert template.progression_features.frenzy is True
         assert template.progression_features.reckless_attack is True
         assert template.progression_features.danger_sense is True
