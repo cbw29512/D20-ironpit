@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const MAX_SLOTS = 6;
-  const state = { ruleset: "2024", catalog: null, heroSlots: Array(MAX_SLOTS).fill(null), monsterSlots: Array(MAX_SLOTS).fill(null), fighting: false, hasRun: false, turboBatch: null, session: null };
+  const state = { ruleset: "2014", catalog: null, heroSlots: Array(MAX_SLOTS).fill(null), monsterSlots: Array(MAX_SLOTS).fill(null), fighting: false, hasRun: false, turboBatch: null, session: null };
   const el = (id) => document.getElementById(id);
   const view = () => window.IRON_PIT_BATTLEFIELD_VIEW;
   const picker = () => window.IRON_PIT_BATTLEFIELD_PICKER;
@@ -30,7 +30,7 @@
   function clearResult(message = "Cards loaded. Press FIGHT when both sides are ready.") {
     el("result-panel").hidden = true; el("pit-round").textContent = "";
     el("battle-log").replaceChildren(Object.assign(document.createElement("li"), { textContent: message }));
-    el("lab-summary").textContent = "Production combat path · secure Web Crypto dice.";
+    el("lab-summary").textContent = "2014 Beta combat path · secure Web Crypto dice.";
   }
 
   function invalidateRun() {
@@ -85,6 +85,11 @@
 
   async function changeRuleset(nextRuleset) {
     const selector = el("ruleset-select");
+    if (nextRuleset === "2024") {
+      if (selector) selector.value = state.ruleset;
+      el("status").textContent = "D&D 5e 2024 is coming soon. The 2014 Beta is currently available.";
+      return;
+    }
     if (nextRuleset === state.ruleset) return;
     if (state.fighting || (state.session && !state.session.complete)) { if (selector) selector.value = state.ruleset; return; }
     try {
@@ -92,7 +97,7 @@
       state.ruleset = nextRuleset; state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(nextRuleset);
       state.heroSlots.fill(null); state.monsterSlots.fill(null); invalidateRun();
       clearResult(`${nextRuleset} ruleset loaded. Previous matchup cleared to preserve edition isolation.`); rulesetUi().update(state); render();
-      el("status").textContent = nextRuleset === "2014" ? "2014 test lane ready. Choose certified monsters for Team A and Team B, or load the sample." : "2024 production lane ready. Choose cards or load the sample matchup.";
+      el("status").textContent = "2014 Beta ready. Choose certified pregens and monsters, or load the sample matchup.";
     } catch (error) {
       console.error("Ruleset switch failed", error); if (selector) selector.value = state.ruleset;
       el("status").textContent = `Could not load the ${nextRuleset} ruleset.`;
@@ -102,12 +107,13 @@
   async function boot() {
     try {
       await loadRulesetUi();
+      await rulesetUi().ensureBundle(state.ruleset);
       if (window.IRON_PIT_CANONICAL_MONSTERS_READY !== true) throw new Error("Canonical RAW-certified monster bundle did not load.");
       const required = [window.IRON_PIT_BROWSER_ENGINE, window.IRON_PIT_BROWSER_CATALOG, window.IRON_PIT_ENCOUNTER_PICKER, view(), picker(), window.IRON_PIT_EXECUTION, actions(), rulesetUi()];
       if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
       rulesetUi().install(state, changeRuleset); state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(state.ruleset); picker().bind(() => state);
       actions().install({ state, matchup, render, updateControls, clearResult }); rulesetUi().update(state); render();
-      el("status").textContent = "Iron Pit ready. Choose cards or load the sample matchup.";
+      el("status").textContent = "Iron Pit 2014 Beta ready. Choose certified pregens and monsters, or load the sample matchup.";
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }
   }
 

@@ -42,7 +42,7 @@ assert.match(html, /browser-arena-map\.js/); assert.match(html, /browser-grid-ge
 assert.match(html, /browser-grid-movement-support\.js/); assert.match(html, /browser-grid-path-search-support\.js/);
 assert.match(html, /browser-grid-path-search\.js/); assert.match(html, /browser-grid-movement\.js/);
 assert.match(html, /browser-grid-placement\.js/); assert.match(html, /combatant-art\.js/);
-assert.match(html, /Production combat path · secure Web Crypto dice/);
+assert.match(html, /2014 Beta combat path · secure Web Crypto dice/);
 assert.match(html, /browser-offense-value\.js/); assert.match(html, /browser-spell-offense\.js/);
 
 const view = fs.readFileSync(path.join(root, "battlefield-view.js"), "utf8");
@@ -60,7 +60,7 @@ const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 assert.match(view, /MAX_SLOTS = 6/); assert.match(app, /MAX_SLOTS = 6/);
 assert.match(view, /card-concentration/); assert.match(replay, /CONCENTRATING/);
 assert.match(view, /IRON_PIT_COMBATANT_ART/);
-assert.match(app, /Iron Pit ready\. Choose cards or load the sample matchup\./);
+assert.match(app, /Iron Pit 2014 Beta ready\. Choose certified pregens and monsters, or load the sample matchup\./);
 assert.match(app, /IRON_PIT_EXECUTION/); assert.match(app, /IRON_PIT_BATTLE_ACTIONS/);
 assert.match(actions, /startLive/); assert.match(actions, /nextEvent/); assert.match(actions, /watchRest/); assert.match(actions, /replayTurbo/);
 assert.match(execution, /function createSession/); assert.match(execution, /function resolveLive/); assert.match(execution, /function resolveReplay/); assert.match(execution, /async function runTurbo/);
