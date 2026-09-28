@@ -73,13 +73,14 @@ def test_level_fourteen_rider_can_choose_an_ally_within_sixty_feet() -> None:
     cleric = _member(hero, "cleric", "heroes", 0)
     ally = _member(build_karnok_stoneward(), "ally", "heroes", 40)
     far_ally = _member(build_karnok_stoneward(), "far-ally", "heroes", 65)
+    enemy = _member(build_karnok_stoneward(), "enemy", "monsters", 100)
     ally.state.current_hp = 1
     far_ally.state.current_hp = 1
     setup = EncounterSetup(
         heroes=[cleric, ally, far_ally],
-        monsters=[],
+        monsters=[enemy],
         hero_total_levels=16,
-        monster_total_cr="0",
+        monster_total_cr="1",
         ruleset="2024",
     )
     damage_event = BattleEvent(
