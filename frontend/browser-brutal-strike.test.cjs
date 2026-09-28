@@ -6,6 +6,7 @@ global.window = global;
 window.IRON_PIT_BROWSER_BARBARIAN2 = { active: (state) => state.active_effect_ids.includes("reckless-attack") };
 window.IRON_PIT_BROWSER_MODIFIERS = {
   add(state, modifier) { state.active_modifiers.push(modifier); },
+  nextAttackAgainstFlat(state, attackerId) { return state.active_modifiers.filter((item) => item.kind === "next-attack-against-flat" && item.source_id !== attackerId).reduce((sum, item) => sum + (item.flat_bonus || 0), 0); },
   effectiveSpeed(state) {
     return Math.max(0, state.template.speed_ft + state.active_modifiers
       .filter((item) => item.kind === "speed").reduce((sum, item) => sum + item.flat_bonus, 0));
@@ -47,5 +48,17 @@ B.hamstring(state, "rokhan");
 assert.strictEqual(window.IRON_PIT_BROWSER_MODIFIERS.effectiveSpeed(state), 25);
 assert.strictEqual(window.IRON_PIT_BROWSER_MODIFIERS.expireSourceTurnStart([state], "rokhan"), 1);
 assert.strictEqual(window.IRON_PIT_BROWSER_MODIFIERS.effectiveSpeed(state), 40);
+
+B.staggering(state, "rokhan");
+assert.deepStrictEqual(
+  state.active_modifiers.filter((item) => item.source_effect_id === "staggering-blow").map((item) => item.kind).sort(),
+  ["opportunity-attack-suppressed", "saving-throw-disadvantage"],
+);
+
+B.sundering(state, "rokhan");
+assert.strictEqual(window.IRON_PIT_BROWSER_MODIFIERS.nextAttackAgainstFlat(state, "rokhan"), 0);
+assert.strictEqual(window.IRON_PIT_BROWSER_MODIFIERS.nextAttackAgainstFlat(state, "ally"), 5);
+B.sundering(state, "other-barbarian");
+assert.strictEqual(state.active_modifiers.filter((item) => item.source_effect_id === "sundering-blow").length, 1);
 
 console.log("browser brutal strike tests passed");
