@@ -90,7 +90,7 @@
   const EFFECT_PRIORITY = ["hamstring-blow", "staggering-blow", "forceful-blow", "sundering-blow"];
   function selectEffects(state, requested = null) {
     const available = state.template.brutal_strike_effect_ids || [], maximum = state.template.brutal_strike_max_effects || 0;
-    if (!maximum || !available.length) return [];
+    if (!maximum || !available.length) { if (requested?.length) throw new Error("Brutal Strike effects are unavailable."); return []; }
     const selected = requested?.length ? [...requested] : EFFECT_PRIORITY.filter((item) => available.includes(item)).slice(0, maximum);
     if (selected.length > maximum) throw new Error(`Brutal Strike allows at most ${maximum} effect(s).`);
     if (new Set(selected).size !== selected.length) throw new Error("Brutal Strike effects must be different.");
