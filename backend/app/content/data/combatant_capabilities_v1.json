@@ -24,6 +24,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -209,6 +211,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -365,6 +369,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -536,6 +542,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -695,6 +703,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -907,6 +917,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -1062,6 +1074,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -1190,6 +1204,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -1344,6 +1360,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -1474,6 +1492,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -1600,6 +1620,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -1743,6 +1765,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -1869,6 +1893,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -1997,6 +2023,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -2132,6 +2160,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -2267,6 +2297,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -2412,6 +2444,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -2587,6 +2621,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -2717,6 +2753,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -2843,6 +2881,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -2971,6 +3011,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -3097,6 +3139,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -3225,6 +3269,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -3351,6 +3397,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -3482,6 +3530,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -3610,6 +3660,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -3741,6 +3793,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -3901,6 +3955,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -4048,6 +4104,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -4183,6 +4241,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -4338,6 +4398,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -4462,6 +4524,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -4658,6 +4722,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -4932,6 +4998,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -5079,6 +5147,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -5205,6 +5275,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -5329,6 +5401,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -5451,6 +5525,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -5575,6 +5651,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -5699,6 +5777,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -5824,6 +5904,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -5946,6 +6028,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -6070,6 +6154,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -6194,6 +6280,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -6318,6 +6406,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -6442,6 +6532,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -6564,6 +6656,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -6690,6 +6784,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -6818,6 +6914,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -6946,6 +7044,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -7093,6 +7193,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -7219,6 +7321,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -7347,6 +7451,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -7473,6 +7579,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -7606,6 +7714,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -7736,6 +7846,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -7862,6 +7974,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -7990,6 +8104,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -8122,6 +8238,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -8252,6 +8370,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -8378,6 +8498,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -8509,6 +8631,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -8637,6 +8761,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -8765,6 +8891,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -8893,6 +9021,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -9071,6 +9201,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -9216,6 +9348,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -9365,6 +9499,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -9539,6 +9675,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -9696,6 +9834,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -9834,6 +9974,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -9972,6 +10114,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -10128,6 +10272,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -10327,6 +10473,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -10508,6 +10656,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -10664,6 +10814,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -10801,6 +10953,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -10943,6 +11097,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -11135,6 +11291,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -11278,6 +11436,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -11422,6 +11582,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -11568,6 +11730,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -11715,6 +11879,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -11865,6 +12031,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -12026,6 +12194,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -12170,6 +12340,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -12356,6 +12528,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -12532,6 +12706,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -12716,6 +12892,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -12872,6 +13050,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -13009,6 +13189,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -13201,6 +13383,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -13332,6 +13516,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -13471,6 +13657,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -13608,6 +13796,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -13761,6 +13951,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -13900,6 +14092,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -14101,6 +14295,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -14248,6 +14444,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -14435,6 +14633,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -14563,6 +14763,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -14700,6 +14902,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -14881,6 +15085,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -15016,6 +15222,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -15155,6 +15363,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -15290,6 +15500,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -15450,6 +15662,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -15588,6 +15802,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -15769,6 +15985,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -15926,6 +16144,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -16065,6 +16285,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -16215,6 +16437,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -16408,6 +16632,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -16543,6 +16769,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -16694,6 +16922,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -16826,6 +17056,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -16954,6 +17186,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -17085,6 +17319,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -17243,6 +17479,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -17404,6 +17642,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -17608,6 +17848,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -17811,6 +18053,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -18012,6 +18256,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -18216,6 +18462,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -18416,6 +18664,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -18618,6 +18868,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -18827,6 +19079,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -19034,6 +19288,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -19244,6 +19500,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -19450,6 +19708,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -19658,6 +19918,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -19794,6 +20056,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -19950,6 +20214,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -20106,6 +20372,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -20272,6 +20540,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -20452,6 +20722,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -20660,6 +20932,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
@@ -20791,6 +21065,8 @@
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
       "saving_throw_minimums": [],
       "saving_throw_proficiency_grants": [],
       "saving_throw_advantage_grants": [],
