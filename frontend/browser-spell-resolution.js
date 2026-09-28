@@ -49,7 +49,8 @@
         .map((member) => [member.combatant_id, member]));
       const action = saveAction(choice);
       const events = [];
-      let sharedDamageRolls = choice.maximizeDamage ? F().maximizedRolls(spell) : null;
+      let sharedDamageRolls = choice.maximizeDamage ? F()?.maximizedRolls?.(spell) : null;
+      if (choice.maximizeDamage && sharedDamageRolls == null) throw new Error("Spell damage maximization runtime is unavailable.");
       let saveDisadvantage = H()?.choose(caster.state) || null;
 
       for (const targetId of choice.targetIds) {
@@ -118,7 +119,9 @@
 
       let remaining = null, castGrant = null;
       if (choice.slotLevel > 0) {
-        const spent = F().spendGrant(caster.state, spell, choice.slotLevel);
+        const spent = F()?.spendGrant
+          ? F().spendGrant(caster.state, spell, choice.slotLevel)
+          : { grant: null, remaining: null };
         castGrant = spent.grant;
         if (castGrant) {
           remaining = spent.remaining;
@@ -183,6 +186,7 @@
       events.push(...effect.events);
       sequence = effect.sequence;
       if (choice.maximizeDamage) {
+        if (!F()?.applyMaximizerCost) throw new Error("Spell damage maximization runtime is unavailable.");
         const cost = F().applyMaximizerCost(caster, spell, setup);
         if (cost) {
           events.push({
