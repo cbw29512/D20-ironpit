@@ -10,6 +10,31 @@
   const FR = () => window.IRON_PIT_BROWSER_FAILED_SAVE_REROLL || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }) };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
 
+  function applyMinimum(state, ability, roll) {
+    try {
+      const rules = (state.template.saving_throw_minimums || []).filter((rule) => rule.ability === ability);
+      if (!rules.length) return roll;
+      const score = state.template.ability_scores?.[ability];
+      if (!Number.isInteger(score)) {
+        throw new Error(`${state.template.name} has a saving-throw minimum without a certified ${ability} score.`);
+      }
+      if (roll.total >= score) return roll;
+      const rule = [...rules].sort((a, b) => a.source_id.localeCompare(b.source_id))[0];
+      const revision = {
+        source_effect_id: rule.source_id, kind: "total_replacement",
+        original_rolls: [...(roll.rolls || [])], replacement_rolls: [...(roll.rolls || [])],
+        original_modifier: roll.modifier || 0, replacement_modifier: roll.modifier || 0,
+        original_selected: roll.selected_roll ?? null, replacement_selected: roll.selected_roll ?? null,
+        original_total: roll.total, replacement_total: score, accepted: "replacement", replaced_die_index: null,
+      };
+      return { ...roll, notation: `${roll.notation} [${rule.source_id}]`, total: score,
+        revisions: [...(roll.revisions || []), revision] };
+    } catch (error) {
+      console.error("Browser saving-throw minimum failed", { ability, combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
   function sureFootedAdvantage(state, ability, context = {}) {
     try {
       if (!state.template.traits?.includes("sure-footed")) return 0;
@@ -70,6 +95,7 @@
         roll = DB().applyResourceBackedIfUseful(state, "saving_throw", roll, dc).roll;
       }
       DF().consumeSavingThrowModifiers?.(state);
+      roll = applyMinimum(state, ability, roll);
       if (roll.total < dc) {
         const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
         if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
@@ -94,5 +120,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_SAVING_THROWS = { resolveSavingThrow, saveMode };
+  window.IRON_PIT_BROWSER_SAVING_THROWS = { applyMinimum, resolveSavingThrow, saveMode };
 })();
