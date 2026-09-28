@@ -1,4 +1,5 @@
 from app.combat.brutal_strike import (
+    apply_brutal_strike_effect_policy,
     apply_hamstring_blow,
     apply_staggering_blow,
     apply_sundering_blow,
@@ -68,3 +69,22 @@ def test_sundering_blow_reuses_generic_next_attack_flat_bonus_and_does_not_help_
     sundering = [item for item in state.active_modifiers if item.source_effect_id == "sundering-blow"]
     assert len(sundering) == 1
     assert sundering[0].source_id == "other-barbarian"
+
+
+def test_brutal_strike_effect_policy_applies_legal_level_specific_choices():
+    state, attack = _barbarian(9)
+    target, _ = _barbarian(9)
+    assert brutal_strike_bonus_damage(state, attack, "9:rokhan", has_disadvantage=False)
+    assert apply_brutal_strike_effect_policy(state, target, "rokhan", "9:rokhan") == ("hamstring-blow",)
+
+    state13, attack13 = _barbarian(13)
+    target13, _ = _barbarian(9)
+    assert brutal_strike_bonus_damage(state13, attack13, "13:rokhan", has_disadvantage=False)
+    assert apply_brutal_strike_effect_policy(state13, target13, "rokhan", "13:rokhan") == ("staggering-blow",)
+
+    state17, attack17 = _barbarian(17)
+    target17, _ = _barbarian(9)
+    assert brutal_strike_bonus_damage(state17, attack17, "17:rokhan", has_disadvantage=False)
+    assert apply_brutal_strike_effect_policy(state17, target17, "rokhan", "17:rokhan") == (
+        "staggering-blow", "hamstring-blow",
+    )
