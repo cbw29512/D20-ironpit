@@ -37,6 +37,9 @@ def test_bonus_action_area_save_preserves_action() -> None:
     setup = EncounterSetup(
         heroes=[actor],
         monsters=[target],
+        hero_total_levels=1,
+        monster_total_cr="1",
+        ruleset="2024",
         map_definition=BattleMapDefinition(
             id="area-save-action-cost-test",
             width_squares=10,
