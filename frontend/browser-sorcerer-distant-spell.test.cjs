@@ -24,7 +24,7 @@ for (const file of [
   "browser-offense-value.js",
   "browser-spellcasting.js",
   "browser-spell-area.js",
-  "browser-spell-policy.js",
+  "browser-spell-policy-support.js", "browser-spell-policy.js",
   "browser-spell-attack-policy.js",
 ]) load(file);
 
