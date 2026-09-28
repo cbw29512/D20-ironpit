@@ -15,10 +15,12 @@ from app.domain.progression_primitives import (
     AbilityCheckMinimum,
     AbilityScaledDamageRider,
     DeferredSaveEffect,
+    DamageResistanceBypassGrant,
     EffectBoundSurvivalSave,
     FailedD20TestOverrideGrant,
     FailedSaveRerollGrant,
     FirstRoundExtraTurnGrant,
+    NaturalTwentyAttackDamageGrant,
     OpeningTargetingWard,
     ResourceBackedD20BonusDie,
     ResourceBackedOnHitExile,
@@ -79,6 +81,8 @@ class ProgressionCombatFeatures(BaseModel):
     once_per_turn_weapon_hit_damage_rider: OncePerTurnWeaponHitDamageRider | None = None
     once_per_turn_weapon_hit_damage_riders: list[OncePerTurnWeaponHitDamageRider] = Field(default_factory=list)
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
+    damage_resistance_bypass_grants: list[DamageResistanceBypassGrant] = Field(default_factory=list)
+    natural_twenty_attack_damage_grants: list[NaturalTwentyAttackDamageGrant] = Field(default_factory=list)
     saving_throw_minimums: list[SavingThrowMinimum] = Field(default_factory=list)
     saving_throw_proficiency_grants: list[SavingThrowProficiencyGrant] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
