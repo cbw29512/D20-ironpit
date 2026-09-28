@@ -27,6 +27,7 @@ def _resources(level: int) -> list[ResourceDefinition]:
         ("indomitable", "Indomitable", row.indomitable_uses),
         ("adrenaline-rush", "Adrenaline Rush", row.proficiency_bonus),
         ("relentless-endurance", "Relentless Endurance", 1),
+        ("boon-combat-prowess", "Boon of Combat Prowess", 1 if level >= 19 else 0),
     ]
     return [ResourceDefinition(id=resource_id, name=name, max_uses=uses)
             for resource_id, name, uses in rows if uses > 0]
