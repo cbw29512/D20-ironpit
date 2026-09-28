@@ -101,6 +101,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("frenzy-bonus-attack-2014")
     if features.persistent_rage_2014:
         mechanics.add("persistent-rage-2014")
+    if features.rage_persists_without_maintenance:
+        mechanics.add("persistent-rage")
     if features.effect_bound_survival_save:
         mechanics.add(features.effect_bound_survival_save.source_id)
     if features.turning_failure_damage:
