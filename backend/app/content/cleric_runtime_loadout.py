@@ -66,10 +66,13 @@ def build_seraphine_healing(
         actions.append(build_divine_intervention_healing(
             wisdom_modifier, disciple_of_life_bonus(5) if life else 0,
         ))
-    if level >= 11:
-        actions.append(build_mass_cure_wounds(
-            wisdom_modifier, disciple_of_life_bonus(6) if life else 0, 6,
-        ))
+    for slot_level, unlock_level in ((6, 11), (7, 13), (8, 15), (9, 17)):
+        if level >= unlock_level:
+            actions.append(build_mass_cure_wounds(
+                wisdom_modifier,
+                disciple_of_life_bonus(slot_level) if life else 0,
+                slot_level,
+            ))
     return actions
 
 
@@ -86,10 +89,9 @@ def build_seraphine_save_spells(
     )]
     if level >= 4:
         spells.append(build_inflict_wounds(save_dc))
-    if level >= 9:
-        spells.append(build_inflict_wounds(save_dc, 5))
-    if level >= 11:
-        spells.append(build_inflict_wounds(save_dc, 6))
+    for slot_level, unlock_level in ((5, 9), (6, 11), (7, 13), (8, 15), (9, 17)):
+        if level >= unlock_level:
+            spells.append(build_inflict_wounds(save_dc, slot_level))
     return spells
 
 
@@ -104,7 +106,13 @@ def seraphine_source(level: int) -> str:
         (8, "Guardian of Faith, Ability Score Improvement, "),
         (9, "Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, "),
         (10, "Divine Intervention, Contagion, Spare the Dying, "),
-        (11, "Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, "),
+        (11, "Heal and sixth-level combat upcasts, "),
+        (13, "seventh-level combat upcasts, "),
+        (14, "Improved Blessed Strikes, "),
+        (15, "eighth-level combat upcasts, "),
+        (17, "Supreme Healing and ninth-level combat upcasts, "),
+        (19, "Boon of Fate, "),
+        (20, "Greater Divine Intervention, "),
     )
     details = "".join(text for minimum, text in milestones if level >= minimum)
     return (
