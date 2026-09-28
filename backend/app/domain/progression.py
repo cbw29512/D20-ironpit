@@ -11,6 +11,7 @@ from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
+from app.domain.progression_riders import DamagingActionTemporaryHpRider
 from app.domain.progression_primitives import (
     AbilityCheckMinimum,
     AbilityScaledDamageRider,
@@ -80,6 +81,7 @@ class ProgressionCombatFeatures(BaseModel):
     outgoing_healing_dice_maximizer: OutgoingHealingDiceMaximizer | None = None
     once_per_turn_weapon_hit_damage_rider: OncePerTurnWeaponHitDamageRider | None = None
     once_per_turn_weapon_hit_damage_riders: list[OncePerTurnWeaponHitDamageRider] = Field(default_factory=list)
+    damaging_action_temporary_hp_rider: DamagingActionTemporaryHpRider | None = None
     ability_check_minimums: list[AbilityCheckMinimum] = Field(default_factory=list)
     damage_resistance_bypass_grants: list[DamageResistanceBypassGrant] = Field(default_factory=list)
     natural_twenty_attack_damage_grants: list[NaturalTwentyAttackDamageGrant] = Field(default_factory=list)
