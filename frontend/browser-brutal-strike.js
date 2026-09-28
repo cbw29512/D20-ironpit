@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const FEATURE = "brutal-strike", PENDING = "brutal-strike-pending", HIT = "brutal-strike-hit";
+  const FEATURE = "brutal-strike", PENDING = "brutal-strike-pending", HIT = "brutal-strike-hit", EFFECT = "brutal-strike-effect";
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const F = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
@@ -39,6 +39,7 @@
   const hitOnTurn = (state, turnKey) => Boolean(turnKey && state.feature_last_turn_keys?.[HIT] === turnKey);
 
   function hamstring(defender, sourceId) {
+    defender.active_modifiers = (defender.active_modifiers || []).filter((item) => item.source_effect_id !== "hamstring-blow");
     M().add(defender, {
       id: `hamstring-blow:${sourceId}`, source_id: sourceId, source_effect_id: "hamstring-blow",
       kind: "speed", flat_bonus: -15, expires_at_start_of_source_turn: true,
@@ -77,6 +78,7 @@
   }
 
   function sundering(defender, sourceId) {
+    defender.active_modifiers = (defender.active_modifiers || []).filter((item) => item.source_effect_id !== "sundering-blow");
     M().add(defender, {
       id: `sundering-blow:${sourceId}`, source_id: sourceId, source_effect_id: "sundering-blow",
       source_name: "Sundering Blow", kind: "next-incoming-attack-roll-flat", flat_bonus: 5,
@@ -85,7 +87,36 @@
     return true;
   }
 
+  const EFFECT_PRIORITY = ["hamstring-blow", "staggering-blow", "forceful-blow", "sundering-blow"];
+  function selectEffects(state, requested = null) {
+    const available = state.template.brutal_strike_effect_ids || [], maximum = state.template.brutal_strike_max_effects || 0;
+    if (!maximum || !available.length) return [];
+    const selected = requested?.length ? [...requested] : EFFECT_PRIORITY.filter((item) => available.includes(item)).slice(0, maximum);
+    if (selected.length > maximum) throw new Error(`Brutal Strike allows at most ${maximum} effect(s).`);
+    if (new Set(selected).size !== selected.length) throw new Error("Brutal Strike effects must be different.");
+    const invalid = selected.filter((item) => !available.includes(item));
+    if (invalid.length) throw new Error(`Unavailable Brutal Strike effect(s): ${invalid.join(", ")}`);
+    return selected;
+  }
+
+  function applyEffects(attacker, defender, setup, turnKey, requested = null) {
+    const state = attacker.state;
+    if (!hitOnTurn(state, turnKey) || state.feature_last_turn_keys?.[EFFECT] === turnKey) return [];
+    const selected = selectEffects(state, requested);
+    for (const effectId of selected) {
+      if (effectId === "hamstring-blow") hamstring(defender.state, attacker.combatant_id);
+      else if (effectId === "staggering-blow") staggering(defender.state, attacker.combatant_id);
+      else if (effectId === "sundering-blow") sundering(defender.state, attacker.combatant_id);
+      else if (effectId === "forceful-blow") {
+        if (!setup) throw new Error("Forceful Blow requires encounter geometry.");
+        forceful(attacker, defender, setup);
+      } else throw new Error(`Unsupported Brutal Strike effect: ${effectId}`);
+    }
+    if (selected.length) state.feature_last_turn_keys[EFFECT] = turnKey;
+    return selected;
+  }
+
   window.IRON_PIT_BROWSER_BRUTAL_STRIKE = {
-    advantageSuppression, bonusDamage, clearPending, eligible, forceful, followForceful, hamstring, hitOnTurn, staggering, sundering,
+    advantageSuppression, applyEffects, bonusDamage, clearPending, eligible, forceful, followForceful, hamstring, hitOnTurn, selectEffects, staggering, sundering,
   };
 })();
