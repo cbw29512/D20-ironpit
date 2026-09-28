@@ -111,9 +111,9 @@
   const attackRollFlat = (state, weaponId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "attack-roll-flat" && item.weapon_id === weaponId)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
-  const nextIncomingAttackRollFlat = (state, attackerId) => (state.active_modifiers || [])
+  const nextIncomingAttackRollFlat = (state, attackerId) => Math.max(0, ...(state.active_modifiers || [])
     .filter((item) => item.kind === "next-incoming-attack-roll-flat" && item.source_id !== attackerId)
-    .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+    .map((item) => item.flat_bonus || 0));
   function consumeNextIncomingAttackRollFlat(state, attackerId) {
     const before = state.active_modifiers.length;
     state.active_modifiers = state.active_modifiers.filter((item) => !(
