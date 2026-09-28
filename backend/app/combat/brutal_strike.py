@@ -8,7 +8,23 @@ from app.domain.models import CombatantState, DamageType, WeaponAttack
 from app.domain.modifiers import CombatModifier, ModifierKind
 
 BRUTAL_STRIKE_FEATURE_ID = "brutal-strike"
+BRUTAL_STRIKE_PENDING_KEY = "brutal-strike-pending"
+BRUTAL_STRIKE_HIT_KEY = "brutal-strike-hit"
 BonusDamageSpec = tuple[str, int, int, DamageType]
+
+
+def _eligible_for_brutal_strike(
+    state: CombatantState, attack: WeaponAttack, turn_key: str | None, *, has_disadvantage: bool,
+) -> bool:
+    return bool(
+        state.template.ruleset != "2014"
+        and state.template.progression_features.brutal_strike_damage_dice > 0
+        and turn_key is not None
+        and not has_disadvantage
+        and attack.attack_ability == "strength"
+        and reckless_attack_active(state)
+        and state.feature_last_turn_keys.get(BRUTAL_STRIKE_FEATURE_ID) != turn_key
+    )
 
 
 def brutal_strike_bonus_damage(
@@ -18,19 +34,17 @@ def brutal_strike_bonus_damage(
     *,
     has_disadvantage: bool,
 ) -> BonusDamageSpec | None:
-    """Consume 2024 Brutal Strike on one eligible Strength attack during the active turn."""
-    dice_count = state.template.progression_features.brutal_strike_damage_dice
-    if (
-        state.template.ruleset == "2014"
-        or dice_count <= 0
-        or turn_key is None
-        or has_disadvantage
-        or attack.attack_ability != "strength"
-        or not reckless_attack_active(state)
-        or state.feature_last_turn_keys.get(BRUTAL_STRIKE_FEATURE_ID) == turn_key
-    ):
+    """Resolve damage only for the attack roll that actually chose Brutal Strike."""
+    if turn_key is None:
         return None
-    state.feature_last_turn_keys[BRUTAL_STRIKE_FEATURE_ID] = turn_key
+    pending = state.feature_last_turn_keys.get(BRUTAL_STRIKE_PENDING_KEY) == turn_key
+    if not pending:
+        if not _eligible_for_brutal_strike(state, attack, turn_key, has_disadvantage=has_disadvantage):
+            return None
+        state.feature_last_turn_keys[BRUTAL_STRIKE_FEATURE_ID] = turn_key
+    state.feature_last_turn_keys.pop(BRUTAL_STRIKE_PENDING_KEY, None)
+    state.feature_last_turn_keys[BRUTAL_STRIKE_HIT_KEY] = turn_key
+    dice_count = state.template.progression_features.brutal_strike_damage_dice
     return ("Brutal Strike", dice_count, 10, attack.weapon.damage_type)
 
 
@@ -41,19 +55,24 @@ def brutal_strike_advantage_suppression(
     *,
     has_disadvantage: bool,
 ) -> int:
-    """Cancel only the Advantage granted by Reckless Attack for the chosen Brutal Strike roll."""
-    if (
-        state.template.ruleset == "2014"
-        or state.template.progression_features.brutal_strike_damage_dice <= 0
-        or turn_key is None
-        or has_disadvantage
-        or attack.attack_ability != "strength"
-        or not reckless_attack_active(state)
-        or state.feature_last_turn_keys.get(BRUTAL_STRIKE_FEATURE_ID) == turn_key
-    ):
+    """Choose Brutal Strike on this roll and spend the once-per-turn choice before the d20 is rolled."""
+    if not _eligible_for_brutal_strike(state, attack, turn_key, has_disadvantage=has_disadvantage):
         return 0
+    assert turn_key is not None
+    state.feature_last_turn_keys[BRUTAL_STRIKE_FEATURE_ID] = turn_key
+    state.feature_last_turn_keys[BRUTAL_STRIKE_PENDING_KEY] = turn_key
     return 1
 
+
+def clear_brutal_strike_pending(state: CombatantState, turn_key: str | None) -> bool:
+    if turn_key is None or state.feature_last_turn_keys.get(BRUTAL_STRIKE_PENDING_KEY) != turn_key:
+        return False
+    state.feature_last_turn_keys.pop(BRUTAL_STRIKE_PENDING_KEY, None)
+    return True
+
+
+def brutal_strike_hit_on_turn(state: CombatantState, turn_key: str | None) -> bool:
+    return bool(turn_key and state.feature_last_turn_keys.get(BRUTAL_STRIKE_HIT_KEY) == turn_key)
 
 def apply_hamstring_blow(
     defender: CombatantState,
