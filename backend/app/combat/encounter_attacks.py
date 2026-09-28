@@ -4,7 +4,7 @@ from app.combat.action_economy import spend
 from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
-from app.combat.brutal_strike_effects import apply_brutal_strike_effects
+from app.combat.brutal_strike_effects import apply_brutal_strike_effects, select_brutal_strike_effects
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import mark_reckless_use_while_raging
@@ -36,6 +36,8 @@ def resolve_encounter_attack(
     off_turn: bool = False,
     brutal_strike_effect_ids: tuple[str, ...] | None = None,
 ) -> BattleEvent:
+    if brutal_strike_effect_ids is not None:
+        select_brutal_strike_effects(attacker.state, brutal_strike_effect_ids)
     ward = check_targeting_ward(attacker, target, dice)
     if ward is not None and not ward.succeeded:
         if spend_action:
