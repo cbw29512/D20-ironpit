@@ -60,7 +60,7 @@ def test_level_two_sculpt_spells_binds_to_generic_ally_protection() -> None:
     assert grant.base_protected_allies == 1
     assert grant.protected_allies_per_slot_level == 1
     assert set(grant.eligible_spell_ids) == {
-        "burning-hands", "shatter", "fireball", "cone-of-cold",
+        "burning-hands", "shatter", "fireball", "lightning-bolt", "cone-of-cold",
     }
 
 
