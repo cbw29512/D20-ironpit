@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 def _base_scores() -> AbilityScores:
     return AbilityScores(
-        strength=10, dexterity=10, constitution=10,
-        intelligence=15, wisdom=14, charisma=13,
+        strength=8, dexterity=13, constitution=14,
+        intelligence=15, wisdom=12, charisma=10,
     )
 
 
