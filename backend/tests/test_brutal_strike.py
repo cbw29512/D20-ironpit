@@ -1,6 +1,11 @@
-from app.combat.brutal_strike import apply_hamstring_blow, brutal_strike_bonus_damage
+from app.combat.brutal_strike import (
+    apply_hamstring_blow,
+    apply_staggering_blow,
+    apply_sundering_blow,
+    brutal_strike_bonus_damage,
+)
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
-from app.combat.modifier_stack import effective_speed
+from app.combat.modifier_stack import effective_speed, next_attack_against_flat_bonus
 from app.combat.reckless_attack import RECKLESS_ATTACK_EFFECT_ID
 from app.combat.state import build_combatant_state
 from app.domain.progression import ProgressionCombatFeatures
@@ -42,3 +47,24 @@ def test_hamstring_blow_reuses_speed_modifier_and_expires_at_source_turn_start()
     assert effective_speed(state) == max(0, base_speed - 15)
     assert expire_source_turn_start_modifiers([state], "rokhan") == 1
     assert effective_speed(state) == base_speed
+
+
+def test_staggering_blow_reuses_save_disadvantage_and_oa_suppression_modifiers():
+    state, _ = _barbarian(9)
+    assert apply_staggering_blow(state, "rokhan")
+    kinds = {item.kind.value for item in state.active_modifiers if item.source_effect_id == "staggering-blow"}
+    assert kinds == {"saving-throw-disadvantage", "opportunity-attack-suppressed"}
+    save = next(item for item in state.active_modifiers if item.kind.value == "saving-throw-disadvantage")
+    assert save.consume_on_saving_throw is True
+    assert save.expires_at_start_of_source_turn is True
+
+
+def test_sundering_blow_reuses_generic_next_attack_flat_bonus_and_does_not_help_source():
+    state, _ = _barbarian(9)
+    assert apply_sundering_blow(state, "rokhan")
+    assert next_attack_against_flat_bonus(state, "rokhan") == 0
+    assert next_attack_against_flat_bonus(state, "ally") == 5
+    assert apply_sundering_blow(state, "other-barbarian")
+    sundering = [item for item in state.active_modifiers if item.source_effect_id == "sundering-blow"]
+    assert len(sundering) == 1
+    assert sundering[0].source_id == "other-barbarian"
