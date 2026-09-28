@@ -526,6 +526,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["once_per_turn_weapon_hit_damage_riders"] = [
             item.model_dump() for item in features.once_per_turn_weapon_hit_damage_riders
         ]
+    if features.damaging_action_temporary_hp_rider:
+        row["damaging_action_temporary_hp_rider"] = features.damaging_action_temporary_hp_rider.model_dump()
     if features.outgoing_healing_dice_maximizer:
         row["outgoing_healing_dice_maximizer"] = features.outgoing_healing_dice_maximizer.model_dump()
     if features.athletics_advantage:
