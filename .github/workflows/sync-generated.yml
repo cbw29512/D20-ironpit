@@ -1,10 +1,9 @@
 name: Sync Generated Certification Artifacts
-# Temporary branch sync; remove before merge.
 
 on:
   workflow_dispatch:
   push:
-    branches: [main, feat/2024-barbarian-8-9-reuse]
+    branches: [main]
 
 permissions:
   contents: write
