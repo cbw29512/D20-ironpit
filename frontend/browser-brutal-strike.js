@@ -35,6 +35,16 @@
     return true;
   }
 
+  function sundering(attacker, defender, sourceId, turnKey) {
+    if (!attacker?.template?.brutal_strike_sundering || attacker.feature_last_turn_keys?.[FEATURE] !== turnKey) return false;
+    M().add(defender, {
+      id: `${sourceId}:sundering-blow`, source_id: sourceId, source_effect_id: "sundering-blow",
+      source_name: "Sundering Blow", kind: "next-incoming-attack-roll-flat", flat_bonus: 5,
+      expires_at_start_of_source_turn: true,
+    });
+    return true;
+  }
+
   function forceful(attacker, defender, setup) {
     return F().pushStraightAway(defender, attacker, setup, 15);
   }
@@ -52,6 +62,6 @@
   }
 
   window.IRON_PIT_BROWSER_BRUTAL_STRIKE = {
-    advantageSuppression, bonusDamage, eligible, forceful, followForceful, hamstring,
+    advantageSuppression, bonusDamage, eligible, forceful, followForceful, hamstring, sundering,
   };
 })();
