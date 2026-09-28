@@ -92,7 +92,7 @@
       attacker.state, actualTarget.state, attack, attackRoll, M().effectiveArmorClass(actualTarget.state),
     );
     const resolvedAttackRoll = resolved.roll, natural = resolved.natural, targetAc = resolved.targetAc;
-    const parry = resolved.parry, d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit;
+    const parry = resolved.parry, d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit; if (!hit) BS()?.clearPending?.(attacker.state, extra.turnKey);
     const naturalOne = natural === 1;
     const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !d20Override.featureId && !override.featureId;
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
