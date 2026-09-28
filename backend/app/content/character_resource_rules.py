@@ -41,6 +41,15 @@ def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
 
+def _fighter_combat_prowess(level: int) -> int:
+    try:
+        return 1 if level >= 19 else 0
+    except Exception as exc:
+        raise ValueError(
+            f"Failed to resolve 2024 Boon of Combat Prowess uses for level {level}."
+        ) from exc
+
+
 def _sorcery_points(level: int) -> int:
     return level if level >= 2 else 0
 
@@ -84,6 +93,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("second-wind", "Second Wind", fighter_second_wind_uses),
         ("action-surge", "Action Surge", fighter_action_surge_uses),
         ("indomitable", "Indomitable", fighter_indomitable_uses),
+        ("boon-combat-prowess", "Boon of Combat Prowess", _fighter_combat_prowess),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
