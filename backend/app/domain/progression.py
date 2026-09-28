@@ -113,6 +113,7 @@ class ProgressionCombatFeatures(BaseModel):
     mindless_rage: bool = False
     instinctive_pounce_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     brutal_strike_damage_dice: int = Field(default=0, ge=0, le=2)
+    brutal_strike_sundering: bool = False
     great_weapon_fighting: bool = False
     indomitable_reroll: bool = False
     indomitable_bonus: int = Field(default=0, ge=0, le=20)
