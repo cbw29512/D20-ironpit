@@ -37,7 +37,8 @@ def resolve_save_action(
     spell_effect: bool = False, save_disadvantage_sources: tuple[str, ...] = (),
     resource_remaining_override: int | None = None,
 ) -> BattleEvent:
-    if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
+    if spend_action and not is_available(actor.state, action.action_cost):
+        raise ValueError(f"{action.action_cost} is not available for {action.name}.")
     if not legal_save_action(action, target, distance_ft):
         raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     if action.requires_target_sight and not can_see(actor.state, target.state):
@@ -64,7 +65,7 @@ def resolve_save_action(
     save_roll, succeeded = resolve_saving_throw(
         target.state, action.save_ability, action.dc, dice, save_context, round_number=round_number,
     )
-    if spend_action: spend(actor.state, "action")
+    if spend_action: spend(actor.state, action.action_cost)
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
     concentration_before = target.state.concentration.effect_id if target.state.concentration else None
