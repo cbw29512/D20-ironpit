@@ -12,7 +12,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
     "survivor-defy-death", "survivor-heroic-rally",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
-    "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "improved-brutal-strike", "brutal-strike-2d10", "retaliation", "intimidating-presence", "persistent-rage", "indomitable-might",
+    "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "improved-brutal-strike", "brutal-strike-2d10", "retaliation", "intimidating-presence", "persistent-rage", "indomitable-might", "boon-irresistible-offense",
     "sneak-attack", "weapon-mastery", "cunning-action", "steady-aim", "cunning-strike", "improved-cunning-strike", "devious-strikes", "slippery-mind", "thiefs-reflexes", "elusive", "stroke-of-luck", "uncanny-dodge", "evasion",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
@@ -46,6 +46,19 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
         }],
         "saving_throw_minimums": [{
             "source_id": "indomitable-might", "ability": "strength", "minimum_source": "ability_score",
+        }],
+    },
+    "boon-irresistible-offense": {
+        "damage_resistance_bypass_grants": [{
+            "source_id": "boon-irresistible-offense",
+            "source_name": "Boon of Irresistible Offense",
+            "damage_types": ["bludgeoning", "piercing", "slashing"],
+        }],
+        "natural_twenty_attack_damage_grants": [{
+            "source_id": "boon-irresistible-offense",
+            "source_name": "Boon of Irresistible Offense",
+            "ability": "strength",
+            "damage_type_source": "attack",
         }],
     },
     "brutal-strike": {
