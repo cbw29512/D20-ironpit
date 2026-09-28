@@ -4,6 +4,7 @@ from app.combat.action_economy import spend
 from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
+from app.combat.brutal_strike_effects import apply_brutal_strike_effects, select_brutal_strike_effects
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import mark_reckless_use_while_raging
@@ -33,7 +34,10 @@ def resolve_encounter_attack(
     close_enemy_active: bool | None = None,
     allow_reckless: bool = False,
     off_turn: bool = False,
+    brutal_strike_effect_ids: tuple[str, ...] | None = None,
 ) -> BattleEvent:
+    if brutal_strike_effect_ids is not None:
+        select_brutal_strike_effects(attacker.state, brutal_strike_effect_ids)
     ward = check_targeting_ward(attacker, target, dice)
     if ward is not None and not ward.succeeded:
         if spend_action:
@@ -76,4 +80,12 @@ def resolve_encounter_attack(
             event.feature_id = "reckless-attack"
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
+    effect_target = redirect if redirect is not None and event.target_id == redirect.combatant_id else target
+    brutal_effects = apply_brutal_strike_effects(
+        attacker, effect_target, setup, turn_key,
+        round_number=round_number, requested=brutal_strike_effect_ids,
+    )
+    if brutal_effects:
+        names = ", ".join(item.replace("-", " ").title() for item in brutal_effects)
+        event.description += f" Brutal Strike applies {names}."
     return apply_critical_closing_move(attacker, setup, event)

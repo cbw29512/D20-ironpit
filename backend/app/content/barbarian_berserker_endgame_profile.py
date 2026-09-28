@@ -73,3 +73,28 @@ def build_rokhan_stonefury_level12_profile() -> CharacterBuildProfile:
         source_references=[*data["source_references"], "D&D Beyond Basic Rules 2024: Barbarian Level 12 Ability Score Improvement (+2 Constitution)"],
     )
     return CharacterBuildProfile.model_validate(data)
+
+
+def build_rokhan_stonefury_level13_profile() -> CharacterBuildProfile:
+    previous = build_rokhan_stonefury_level12_profile()
+    data = advance_profile_data(previous, 13)
+    apply_barbarian_level_to_profile_data(data, 13)
+    feature = FeatureAudit(
+        feature_id="improved-brutal-strike",
+        feature_name="Improved Brutal Strike",
+        source_reference="D&D Beyond Basic Rules 2024: Barbarian Level 13",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Adds Staggering Blow and Sundering Blow to the shared Brutal Strike effect list. "
+            "Staggering composes next-save Disadvantage plus Opportunity Attack suppression; "
+            "Sundering composes the generic next incoming other-creature attack +5 modifier. "
+            "Level 13 still applies only one Brutal Strike effect per successful use."
+        ),
+    )
+    data.update(
+        feature_audits=[*data["feature_audits"], feature.model_dump()],
+        source_references=[*data["source_references"], "D&D Beyond Basic Rules 2024: Barbarian Level 13 Improved Brutal Strike"],
+    )
+    return CharacterBuildProfile.model_validate(data)
