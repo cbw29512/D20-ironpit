@@ -41,10 +41,30 @@ def test_2024_life_cleric_high_level_blockers_are_explicit() -> None:
     profile = build_seraphine_dawnshield_level20_profile()
     audits = {item.feature_id: item for item in profile.feature_audits}
 
-    assert audits["cleric-combat-spells-7"].automated is False
+    assert audits["cleric-combat-spells-7"].automated is True
     assert audits["improved-blessed-strikes"].automated is False
-    assert audits["cleric-combat-spells-8"].automated is False
-    assert audits["cleric-combat-spells-9"].automated is False
-    assert audits["supreme-healing"].automated is False
+    assert audits["cleric-combat-spells-8"].automated is True
+    assert audits["cleric-combat-spells-9"].automated is True
+    assert audits["supreme-healing"].automated is True
     assert audits["boon-of-fate"].automated is False
     assert audits["greater-divine-intervention"].automated is False
+
+
+
+def test_level_thirteen_reuses_existing_seventh_level_spell_primitives() -> None:
+    from app.content.audited_cleric import build_seraphine_dawnshield_level
+
+    hero = build_seraphine_dawnshield_level(13)
+    resources = {item.id: item.max_uses for item in hero.resources}
+
+    assert hero.max_hp == 68
+    assert resources["spell-slot-7"] == 1
+    assert resources["channel-divinity"] == 3
+
+    damage = next(item for item in hero.spell_save_actions if item.id == "inflict-wounds-l7")
+    healing = next(item for item in hero.healing_actions if item.id == "mass-cure-wounds-l7")
+
+    assert (damage.level, damage.damage_dice_count, damage.damage_dice_size) == (7, 8, 10)
+    assert damage.resource_id == "spell-slot-7"
+    assert (healing.dice_count, healing.dice_size) == (7, 8)
+    assert healing.resource_id == "spell-slot-7"
