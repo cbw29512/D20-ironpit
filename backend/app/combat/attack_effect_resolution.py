@@ -6,6 +6,7 @@ from typing import Any
 
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
 from app.combat.barbarian import end_rage_if_incapacitated
+from app.combat.brutal_strike import apply_brutal_strike_effect_policy
 from app.combat.conditions import apply_hit_conditions
 from app.combat.damage import BonusDamageSpec
 from app.combat.deferred_save_effect import arm_deferred_save_effect
@@ -40,6 +41,7 @@ class AttackEffectResolution:
     studied_applied: bool = False
     deferred_effect_armed: Any = None
     exile_applied: Any = None
+    brutal_strike_effects: tuple[str, ...] = ()
 
 
 def resolve_attack_effects(
@@ -85,6 +87,9 @@ def resolve_attack_effects(
         result.damage_components = hit_damage.damage_components
         result.damage_outcome = hit_damage.damage_outcome
         result.save_damage = hit_damage.save_damage
+        result.brutal_strike_effects = apply_brutal_strike_effect_policy(
+            attacker, defender, attacker_event_id, active_turn_key,
+        )
         result.cunning_strike = hit_damage.cunning_strike_trip
         result.cunning_strike_obscure = hit_damage.cunning_strike_obscure
         if result.cunning_strike.applied:
