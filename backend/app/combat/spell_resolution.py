@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.concentration import start_concentration
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
+from app.combat.damaging_action_riders import resolve_damaging_action_temporary_hp
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import spell_at_slot
@@ -130,6 +131,17 @@ def resolve_spell(
             dice,
         )
         events.extend(effect_events)
+        rider_event = resolve_damaging_action_temporary_hp(
+            sequence,
+            round_number,
+            caster,
+            setup,
+            spell.id,
+            events,
+        )
+        if rider_event is not None:
+            events.append(rider_event)
+            sequence += 1
         if choice.damage_maximizer is not None:
             follow_up, sequence = resolve_maximizer_after_cast(
                 sequence,
