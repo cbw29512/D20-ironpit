@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level8_profile
+from app.content.barbarian_berserker_high_profile import build_rokhan_stonefury_level8_profile
 from app.content.barbarian_progression import build_rokhan_stonefury_level
 from app.content.certified_heroes import build_certified_hero_registry
 
