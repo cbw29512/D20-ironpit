@@ -1,19 +1,15 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
-from app.combat.condition_rules import is_incapacitated
 from app.combat.exhaustion import gain_exhaustion
 from app.combat.resources import resource_available, spend_resource
+from app.combat.rage_policy import rage_ends_for_state, rage_max_rounds, rage_persists_without_maintenance
 from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
 
 RAGE_EFFECT_ID = "rage"
 FRENZY_2014_EFFECT_ID = "frenzy-2014"
 _RAGE_RESISTANCES = (DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING)
 _MINDLESS_RAGE_IMMUNITIES = {"charmed", "frightened"}
-
-
-def _rage_max_rounds(state: CombatantState) -> int:
-    return 10 if state.template.ruleset == "2014" else 100
 
 
 def rage_active(state: CombatantState) -> bool:
@@ -53,9 +49,10 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
     for damage_type in _RAGE_RESISTANCES:
         if damage_type not in state.temporary_damage_resistances:
             state.temporary_damage_resistances.append(damage_type)
-    state.rage_max_round = round_number + _rage_max_rounds(state)
-    persistent_2014 = state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014
-    state.rage_expires_round = state.rage_max_round if persistent_2014 else round_number + 1
+    state.rage_max_round = round_number + rage_max_rounds(state)
+    state.rage_expires_round = (
+        state.rage_max_round if rage_persists_without_maintenance(state) else round_number + 1
+    )
     description = f"{state.template.name} enters Rage."
     if frenzy_2014:
         description += " The Berserker enters a Frenzy."
@@ -70,7 +67,7 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
 
 
 def extend_rage_from_attack(state: CombatantState, round_number: int) -> None:
-    if state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014:
+    if rage_persists_without_maintenance(state):
         return
     if rage_active(state):
         maximum = state.rage_max_round or round_number + 1
@@ -80,7 +77,7 @@ def extend_rage_from_attack(state: CombatantState, round_number: int) -> None:
 def maintain_rage_with_bonus_action(
     sequence: int, round_number: int, state: CombatantState, actor_id: str,
 ) -> BattleEvent | None:
-    if state.template.ruleset == "2014":
+    if state.template.ruleset == "2014" or rage_persists_without_maintenance(state):
         return None
     if not rage_active(state) or state.rage_expires_round is None:
         return None
@@ -137,9 +134,5 @@ def finalize_rage_turn(
 
 
 def end_rage_if_incapacitated(state: CombatantState) -> None:
-    if state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014:
-        if state.is_dead or state.is_unconscious:
-            end_rage(state)
-        return
-    if state.template.wearing_heavy_armor or state.is_dead or is_incapacitated(state):
+    if rage_ends_for_state(state):
         end_rage(state)
