@@ -141,6 +141,18 @@ class SourceReducesHostileToZeroHpTemporaryHp(BaseModel):
     minimum: int = Field(default=1, ge=0)
 
 
+class SourceDamageTemporaryHpGrant(BaseModel):
+    """Grant source-owned Temporary HP after declared source actions deal actual damage."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    trigger_action_ids: list[str] = Field(min_length=1)
+    ability: AbilityName
+    ability_multiplier: int = Field(default=1, ge=1, le=10)
+    flat_bonus: int = 0
+    minimum: int = Field(default=0, ge=0)
+
+
 class SelectableDamageResistance(BaseModel):
     """Choose one legal damage type at a preparation boundary and resist matching damage."""
 
