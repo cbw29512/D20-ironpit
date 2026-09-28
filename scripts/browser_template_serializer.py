@@ -544,6 +544,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         ]
     if features.bloodied_start_turn_heal_amount:
         row["bloodied_start_turn_heal_amount"] = features.bloodied_start_turn_heal_amount
+    if features.rage_persists_without_maintenance:
+        row["rage_persists_without_maintenance"] = True
     if features.death_save_advantage:
         row["death_save_advantage"] = True
     if features.death_save_recovery_minimum != 20:
