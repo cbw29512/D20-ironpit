@@ -90,8 +90,12 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
         rows.append(FeatureAudit(
             feature_id="overchannel", feature_name="Overchannel",
             source_reference="D&D Basic Rules 2014: School of Evocation 14",
-            category="subclass", combat_relevant=True, automated=False,
-            notes="ENGINE_TRULY_MISSING: reusable 1st-5th-level spell damage maximizer plus escalating self-damage lifecycle.",
+            category="subclass", combat_relevant=True, automated=True,
+            notes=(
+                "Uses the universal spell-damage maximizer for Wizard spells of levels 1-5. "
+                "The first use is free; repeated uses apply escalating source-owned necrotic self-damage "
+                "through the normal HP and Concentration lifecycle while bypassing resistance/immunity."
+            ),
         ))
     if level >= 16:
         rows.append(FeatureAudit(
@@ -104,8 +108,11 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
         rows.append(FeatureAudit(
             feature_id="spell-mastery", feature_name="Spell Mastery",
             source_reference="D&D Basic Rules 2014: Wizard 18",
-            category="class", combat_relevant=True, automated=False,
-            notes="ENGINE_TRULY_MISSING: reusable per-spell no-slot casting permission for selected 1st/2nd-level spells.",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "Burning Hands and Shatter bind to the universal spell-specific cast grant at their "
+                "lowest printed levels without expending spell slots."
+            ),
         ))
     if level >= 19:
         rows.append(FeatureAudit(
@@ -118,7 +125,10 @@ def build_wizard_evoker_2014_feature_audits(level: int) -> list[FeatureAudit]:
         rows.append(FeatureAudit(
             feature_id="signature-spells", feature_name="Signature Spells",
             source_reference="D&D Basic Rules 2014: Wizard 20",
-            category="class", combat_relevant=True, automated=False,
-            notes="ENGINE_TRULY_MISSING: reusable per-spell free-cast resource that refreshes on short rest.",
+            category="class", combat_relevant=True, automated=True,
+            notes=(
+                "Fireball and Lightning Bolt are always prepared and each receives one independent "
+                "universal spell-specific free-cast resource; normal 3rd-level slots remain available."
+            ),
         ))
     return rows
