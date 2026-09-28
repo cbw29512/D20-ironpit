@@ -42,7 +42,8 @@ def test_barbarian_features_accumulate_while_noncombat_and_slow_are_ignored() ->
     level_six = set(barbarian_combat_features(6))
     assert {"rage", "danger-sense", "reckless-attack", "frenzy", "extra-attack", "fast-movement", "mindless-rage"} <= level_six
     assert "primal-knowledge" not in level_six
-    assert barbarian_arena_ignored(9) == ("primal-knowledge", "hamstring-blow")
+    assert barbarian_arena_ignored(9) == ("primal-knowledge",)
+    assert "hamstring-blow" not in barbarian_arena_ignored(13)
     level_twenty = set(barbarian_combat_features(20))
     assert "brutal-strike" not in level_twenty
     assert {"brutal-strike-2d10", "retaliation", "relentless-rage", "intimidating-presence",
