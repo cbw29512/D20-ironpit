@@ -91,6 +91,8 @@ def build_rokhan_stonefury_level3_profile() -> CharacterBuildProfile:
     previous = build_rokhan_stonefury_level2_profile()
     data = advance_profile_data(previous, 3)
     data.update(
+        subclass_id="path-berserker",
+        subclass_name="Path of the Berserker",
         feature_audits=[*data["feature_audits"], *(item.model_dump() for item in _level_three_features())],
         source_references=[*data["source_references"], "Basic Rules 2024: Barbarian — Level 3 Path of the Berserker and Frenzy"],
     )
