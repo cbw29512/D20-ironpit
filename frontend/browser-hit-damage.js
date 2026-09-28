@@ -85,6 +85,45 @@
     });
   }
 
+  function resistanceBypassTypes(attacker) {
+    try {
+      return new Set(
+        (attacker.template.damage_resistance_bypass_grants || [])
+          .flatMap((grant) => grant.damage_types || []),
+      );
+    } catch (error) {
+      console.error("Browser outgoing resistance bypass failed", { combatant: attacker?.template?.name, error });
+      throw error;
+    }
+  }
+
+  function naturalTwentyDamageComponents(attacker, attack, naturalRoll, existingComponents) {
+    try {
+      if (naturalRoll !== 20) return [];
+      const grants = attacker.template.natural_twenty_attack_damage_grants || [];
+      if (!grants.length) return [];
+      const scores = attacker.template.ability_scores;
+      if (!scores) throw new Error(`${attacker.template.name} has natural-20 attack damage without certified ability scores.`);
+      const qualifiers = [...(existingComponents[0]?.source_qualifiers || [])];
+      return grants.map((grant) => {
+        const score = scores[grant.ability];
+        if (!Number.isInteger(score)) throw new Error(`Missing certified ${grant.ability} score for natural-20 attack damage.`);
+        return {
+          source: grant.source_name || grant.source_id,
+          damage_type: attack.damageType,
+          notation: String(score),
+          rolls: [],
+          modifier: score,
+          total: score,
+          source_qualifiers: qualifiers,
+        };
+      });
+    } catch (error) {
+      console.error("Browser natural-20 attack damage failed", { combatant: attacker?.template?.name, error });
+      throw error;
+    }
+  }
+
   function aggregate(components) {
     return {
       notation: components.map((part) => part.notation).join(" + "),
@@ -104,6 +143,7 @@
       ...base.components,
       ...modifierDamageComponents(attacker, options.targetId || null, critical),
     ];
+    rolled.push(...naturalTwentyDamageComponents(attacker, attack, options.naturalRoll, rolled));
     const smite = P()?.divineSmiteComponent(attacker, defender, attack, critical) || null;
     if (smite) rolled.push(smite);
     const saveDamage = resolveSaveDamage(defender, attack);
@@ -111,9 +151,12 @@
     if (saveComponentPresent) rolled.push(saveDamage.component);
     const deflect = MK().applyDeflectMissiles(defender, attack, rolled);
     const uncanny = RD().applyUncannyDodge(attacker, defender, deflect.components);
+    const bypassTypes = resistanceBypassTypes(attacker);
     const damageComponents = uncanny.components.map((part) => ({
       ...part,
-      applied_total: A().adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || []),
+      applied_total: A().adjustedDamage(
+        defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
+      ),
     }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
     const damageRoll = { ...aggregate(uncanny.components), total: appliedTotal };
