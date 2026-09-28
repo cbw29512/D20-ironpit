@@ -23,6 +23,7 @@ from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
+from app.domain.progression_riders import DamagingActionTemporaryHpRider
 from app.domain.traits import CombatTrait
 
 def _modifier(score: int) -> int:
@@ -93,6 +94,18 @@ def _build_seraphine(level: int) -> CombatantTemplate:
                     source_id="blessed-healer", flat_bonus=2, per_slot_level=1,
                 )
                 if level >= 6 else None
+            ),
+            damaging_action_temporary_hp_rider=(
+                DamagingActionTemporaryHpRider(
+                    source_id="improved-blessed-strikes",
+                    source_name="Improved Blessed Strikes",
+                    action_ids=["sacred-flame"],
+                    ability="wisdom",
+                    multiplier=2,
+                    range_ft=60,
+                    target_mode="self_or_ally",
+                )
+                if level >= 14 else None
             ),
         ),
         saving_throw_bonuses=seraphine_saving_throw_bonuses(
