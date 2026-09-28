@@ -43,7 +43,8 @@ window.IRON_PIT_DICE = {
 load("browser-save-damage.js");
 load("browser-saving-throws.js");
 load("browser-saves.js");
-load("browser-spell-resolution-effects.js", "browser-spell-resolution.js");
+load("browser-spell-resolution-effects.js");
+load("browser-spell-resolution.js");
 
 const member = (id, side, position) => ({
   combatant_id: id,
