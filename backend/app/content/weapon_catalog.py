@@ -71,6 +71,10 @@ _WEAPONS = {
     "mace": _melee(
         "mace", "Mace", 1, 6, DamageType.BLUDGEONING, "Sap",
     ),
+    "dagger": _melee(
+        "dagger", "Dagger", 1, 4, DamageType.PIERCING, "Nick",
+        finesse=True, light=True,
+    ),
     "scimitar": _melee(
         "scimitar", "Scimitar", 1, 6, DamageType.SLASHING, "Nick",
         finesse=True, light=True,
