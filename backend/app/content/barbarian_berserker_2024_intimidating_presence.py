@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import logging
+
 from app.domain.actions import SavingThrowAction
 from app.domain.combatants import ResourceDefinition
 from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.targeting import AreaTargeting
+
+logger = logging.getLogger(__name__)
 
 
 def intimidating_presence_resource(level: int) -> ResourceDefinition | None:
@@ -17,6 +21,7 @@ def intimidating_presence_resource(level: int) -> ResourceDefinition | None:
             max_uses=1,
         )
     except Exception:
+        logger.exception("Failed to compile 2024 Berserker Intimidating Presence data.")
         raise
 
 
@@ -44,6 +49,7 @@ def intimidating_presence_action(strength: int, proficiency_bonus: int) -> Savin
             animation="condition",
         )
     except Exception:
+        logger.exception("Failed to compile 2024 Berserker Intimidating Presence data.")
         raise
 
 
@@ -67,4 +73,5 @@ def intimidating_presence_resource_conversions(
             )
         ]
     except Exception:
+        logger.exception("Failed to compile 2024 Berserker Intimidating Presence data.")
         raise
