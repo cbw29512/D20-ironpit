@@ -39,6 +39,7 @@ window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = {
 window.IRON_PIT_BROWSER_CONDITION_RULES = {
   canSee: () => true,
   autoFailStrDex: () => false,
+  incapacitated: () => false,
 };
 window.IRON_PIT_DICE = { rollMany: () => [] };
 load("browser-failed-save-timed-effects.js");
