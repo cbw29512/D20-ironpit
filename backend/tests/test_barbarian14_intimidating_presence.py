@@ -164,9 +164,10 @@ def test_depleted_presence_spends_rage_to_restore_only_when_legal_target_exists(
     no_target_rage = _resource(no_target_hero, "rage")
     no_target_presence.current_uses = 0
     no_target_rage.current_uses = 2
-    empty_setup = EncounterSetup(
+    far_target = _member(build_karnok_stoneward(), "monster:far", "monsters", 10)
+    no_target_setup = EncounterSetup(
         heroes=[no_target_hero],
-        monsters=[],
+        monsters=[far_target],
         hero_total_levels=14,
         monster_total_cr="0",
         ruleset="2024",
@@ -176,8 +177,8 @@ def test_depleted_presence_spends_rage_to_restore_only_when_legal_target_exists(
         1,
         1,
         no_target_hero,
-        empty_setup,
-        FixedDiceProvider([]),
+        no_target_setup,
+        FixedDiceProvider([20]),
     )
     assert no_events == []
     assert no_target_rage.current_uses == 2
