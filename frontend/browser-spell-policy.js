@@ -6,6 +6,7 @@
   const O = () => window.IRON_PIT_BROWSER_OFFENSE_VALUE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
+  const F = () => window.IRON_PIT_BROWSER_SPELL_FEATURES;
 
   function availableRangeModifier(state, baseRange, requiredRange) {
     if (requiredRange <= baseRange) return null;
@@ -60,9 +61,8 @@
   }
 
   function slotLevels(caster, action, turnKey) {
-    return C().legalSlotLevels(caster.state, turnKey, action.level, {
-      higherSlotScaling: (action.upcastDicePerLevel || 0) > 0,
-    });
+    if (!F()) throw new Error("Browser spell feature runtime is required for save-spell availability.");
+    return F().legalSaveSpellLevels(caster.state, turnKey, action);
   }
 
   function slotLevel(caster, action, turnKey) {
@@ -132,7 +132,8 @@
         const rangeModifier = normalKeys.has(placementKey(placement))
           ? null : availableRangeModifier(caster.state, baseRange, castRange);
         return { action, slotLevel: castLevel, targetIds: [...placement.enemyIds], placement,
-          expectedDamage: score, rangeModifier };
+          expectedDamage: score, rangeModifier,
+          maximizeDamage: F().shouldAutoMaximize(caster.state, action) };
       }
       if (action.areaRadius) {
         const protection = areaSpellProtection(caster, setup, action, castLevel, protectedAllyIds);
@@ -143,7 +144,8 @@
         const score = placement.enemyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0)
           - placement.friendlyIds.reduce((sum, id) => sum + O().saveSpell(members.get(id), scaled), 0);
         return { action, slotLevel: castLevel,
-          targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement, expectedDamage: score };
+          targetIds: [...placement.enemyIds, ...placement.friendlyIds], placement, expectedDamage: score,
+          maximizeDamage: F().shouldAutoMaximize(caster.state, action) };
       }
       const castRange = effectiveRange(caster.state, action.range);
       const legal = legalSingleTargets(caster, setup, action, castRange);
@@ -153,7 +155,8 @@
       const target = legal[0];
       return { action, slotLevel: castLevel, targetIds: [target.combatant_id],
         placement: null, expectedDamage: O().saveSpell(target, scaled), hp: target.state.current_hp,
-        rangeModifier: availableRangeModifier(caster.state, action.range, S().distance(caster, target)) };
+        rangeModifier: availableRangeModifier(caster.state, action.range, S().distance(caster, target)),
+        maximizeDamage: F().shouldAutoMaximize(caster.state, action) };
     } catch (error) {
       console.error("Browser fixed-slot save-spell selection failed", { caster: caster?.combatant_id, spell: action?.id, error });
       throw error;
@@ -212,7 +215,8 @@
       if (!candidates.length) return null;
       const best = candidates[0];
       return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds,
-        placement: best.placement, expectedDamage: best.score, rangeModifier: best.rangeModifier || null };
+        placement: best.placement, expectedDamage: best.score, rangeModifier: best.rangeModifier || null,
+        maximizeDamage: F().shouldAutoMaximize(caster.state, best.action) };
     } catch (error) {
       console.error("Browser save-spell selection failed", { caster: caster?.combatant_id, error });
       throw error;
