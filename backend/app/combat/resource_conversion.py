@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def conversion_available(state: CombatantState, action: ResourceConversionAction) -> bool:
     try:
-        if not is_available(state, action.action_cost):
+        if action.action_cost != "none" and not is_available(state, action.action_cost):
             return False
         if not resource_available(state, action.source_resource_id, action.source_cost):
             return False
@@ -39,7 +39,8 @@ def resolve_resource_conversion(
     try:
         if not conversion_available(state, action):
             raise ValueError(f"Resource conversion {action.id!r} is unavailable.")
-        spend(state, action.action_cost)
+        if action.action_cost != "none":
+            spend(state, action.action_cost)
         source_remaining = spend_resource(state, action.source_resource_id, action.source_cost)
         target_remaining = gain_resource(
             state,
