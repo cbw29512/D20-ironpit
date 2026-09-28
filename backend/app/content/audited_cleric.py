@@ -21,6 +21,7 @@ from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.offensive_spell_effects import build_guiding_bolt
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.character_builds import AbilityScores
+from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
 from app.domain.progression_primitives import SourceDamageTemporaryHpGrant
