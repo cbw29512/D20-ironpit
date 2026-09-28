@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 66
+    "public_ready": 67
   },
   "heroes": [
     {
@@ -911,24 +911,78 @@
             "id": "path-berserker",
             "name": "Path of the Berserker"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rokhan-stonefury-l17",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Barbarian 17 Improved Brutal Strike"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "brutal-strike",
+            "brutal-strike-multi-effect",
+            "danger-sense",
+            "fast-movement",
+            "forceful-blow",
+            "frenzy",
+            "hamstring-blow",
+            "initiative-advantage",
+            "initiative-resource-refill:persistent-rage",
+            "instinctive-pounce",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "persistent-rage",
+            "reckless-attack",
+            "relentless-rage",
+            "resource-conversion:restore-intimidating-presence",
+            "resource:adrenaline-rush",
+            "resource:intimidating-presence",
+            "resource:persistent-rage-refresh",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "saving-throw-action:intimidating-presence",
+            "staggering-blow",
+            "sundering-blow",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "brutal-strike",
+            "brutal-strike-multi-effect",
+            "danger-sense",
+            "fast-movement",
+            "forceful-blow",
+            "frenzy",
+            "hamstring-blow",
+            "initiative-advantage",
+            "initiative-resource-refill:persistent-rage",
+            "instinctive-pounce",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "persistent-rage",
+            "reckless-attack",
+            "relentless-rage",
+            "resource-conversion:restore-intimidating-presence",
+            "resource:adrenaline-rush",
+            "resource:intimidating-presence",
+            "resource:persistent-rage-refresh",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "saving-throw-action:intimidating-presence",
+            "staggering-blow",
+            "sundering-blow",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 18,
@@ -943,8 +997,7 @@
           "expected_combat_features": [],
           "supported_mechanics": [],
           "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+            "hero-level-not-certified",            "combat-feature-coverage-not-certified"
           ],
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
@@ -1943,8 +1996,7 @@
             "resource:spell-slot-3",
             "resource:spell-slot-4",
             "sear-undead",
-            "spell-attack-action:guiding-bolt",
-            "spell-save-action:inflict-wounds",
+            "spell-attack-action:guiding-bolt",            "spell-save-action:inflict-wounds",
             "spell-save-action:sacred-flame",
             "trait:adrenaline-rush",
             "trait:life-domain",
@@ -2943,8 +2995,7 @@
         },
         {
           "level": 18,
-          "subclass": {
-            "id": "circle-land",
+          "subclass": {            "id": "circle-land",
             "name": "Circle of the Land"
           },
           "runtime_template_id": null,
@@ -3943,8 +3994,7 @@
             "studied-attacks",
             "tactical-master",
             "tactical-shift",
-            "trait:adrenaline-rush",
-            "trait:relentless-endurance",
+            "trait:adrenaline-rush",            "trait:relentless-endurance",
             "trait:savage-attacker"
           ],
           "unsupported_mechanics": [],
@@ -4943,8 +4993,7 @@
           "supported_mechanics": [],
           "unsupported_mechanics": [
             "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ],
+            "combat-feature-coverage-not-certified"          ],
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
           "generated_static_status": "not-generated",
@@ -5943,8 +5992,7 @@
             "cunning-action",
             "cunning-strike",
             "evasion",
-            "resource:adrenaline-rush",
-            "resource:relentless-endurance",
+            "resource:adrenaline-rush",            "resource:relentless-endurance",
             "sneak-attack",
             "steady-aim",
             "trait:adrenaline-rush",
@@ -6943,8 +6991,7 @@
           "source_references": [
             "SRD 5.2.1 / 2024 Free Rules"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
+          "expected_combat_features": [],          "supported_mechanics": [],
           "unsupported_mechanics": [
             "hero-level-not-certified",
             "combat-feature-coverage-not-certified"
@@ -7943,8 +7990,7 @@
           "level": 16,
           "subclass": {
             "id": "evoker",
-            "name": "Evoker"
-          },
+            "name": "Evoker"          },
           "runtime_template_id": null,
           "source_references": [
             "SRD 5.2.1 / 2024 Free Rules"
