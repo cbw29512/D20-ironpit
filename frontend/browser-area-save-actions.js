@@ -20,6 +20,7 @@
     try {
       const candidates = [];
       for (const action of member.state.template.saving_throw_actions || []) {
+        if ((action.actionCost || "action") !== "action") continue;
         if (!action.area || !resourceAvailable(member.state, action)) continue;
         if (action.requiresNoActiveGrapple) {
           const holding = [...setup.heroes, ...setup.monsters].some((target) =>
