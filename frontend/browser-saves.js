@@ -109,7 +109,11 @@
         sourceTemplate: actor.state.template,
         sourceIsMagical: Boolean(action.magicalEffect),
         appliedRound: round,
+        expiresRound: rider.durationRounds != null ? round + rider.durationRounds : null,
         expiryTiming: rider.expiryTiming || "target_turn_end",
+        repeatSaveAbility: rider.repeatSaveAbility || null,
+        repeatSaveDc: rider.repeatSaveDc || null,
+        repeatSaveTiming: rider.repeatSaveTiming || null,
         nextAttackDisadvantage: Boolean(rider.nextAttackDisadvantage),
         useDefaultPoisonRecovery: false,
       });
