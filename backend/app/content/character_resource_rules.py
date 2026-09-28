@@ -53,6 +53,15 @@ def _finite_rage(level: int) -> int:
     return 0 if level >= 20 else barbarian_2014_rage_uses(level)
 
 
+def _berserker_intimidating_presence(level: int) -> int:
+    try:
+        return 1 if level >= 14 else 0
+    except Exception as exc:
+        raise ValueError(
+            f"Failed to resolve 2024 Berserker Intimidating Presence uses for level {level}."
+        ) from exc
+
+
 _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", barbarian_rage_uses),),
     "cleric": (
@@ -92,6 +101,15 @@ _2014_UNLIMITED = {
     "barbarian": lambda level: ("rage",) if level >= 20 else (),
     "druid": lambda level: ("wild-shape",) if level >= 20 else (),
 }
+_2024_SUBCLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
+    "path-berserker": (
+        (
+            "intimidating-presence",
+            "Intimidating Presence",
+            _berserker_intimidating_presence,
+        ),
+    ),
+}
 _2024_SPECIES_RULES = {
     "orc": (
         ("adrenaline-rush", "Adrenaline Rush", orc_adrenaline_rush_uses),
@@ -107,7 +125,16 @@ def class_resource_rules(profile: CharacterBuildProfile) -> dict[str, tuple[Reso
 def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     class_rules = class_resource_rules(profile)
     species_rules = {} if profile.ruleset == "2014" else _2024_SPECIES_RULES
-    rules = [*class_rules.get(profile.class_id, ()), *species_rules.get(profile.species_id, ())]
+    subclass_rules = (
+        _2024_SUBCLASS_RULES.get(profile.subclass_id or "", ())
+        if profile.ruleset == "2024"
+        else ()
+    )
+    rules = [
+        *class_rules.get(profile.class_id, ()),
+        *subclass_rules,
+        *species_rules.get(profile.species_id, ()),
+    ]
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
     if profile.ruleset == "2024" and profile.class_id in FULL_CASTER_CLASSES:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
