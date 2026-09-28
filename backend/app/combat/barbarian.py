@@ -20,6 +20,17 @@ def rage_active(state: CombatantState) -> bool:
     return RAGE_EFFECT_ID in state.active_effect_ids
 
 
+def _rage_persists_without_maintenance(state: CombatantState) -> bool:
+    try:
+        features = state.template.progression_features
+        return (
+            features.rage_persists_without_maintenance
+            or (state.template.ruleset == "2014" and features.persistent_rage_2014)
+        )
+    except Exception:
+        raise
+
+
 def rage_damage_bonus(state: CombatantState, attack: WeaponAttack) -> int:
     return state.template.rage_damage_bonus if rage_active(state) and attack.rage_eligible else 0
 
@@ -54,8 +65,9 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
         if damage_type not in state.temporary_damage_resistances:
             state.temporary_damage_resistances.append(damage_type)
     state.rage_max_round = round_number + _rage_max_rounds(state)
-    persistent_2014 = state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014
-    state.rage_expires_round = state.rage_max_round if persistent_2014 else round_number + 1
+    state.rage_expires_round = (
+        state.rage_max_round if _rage_persists_without_maintenance(state) else round_number + 1
+    )
     description = f"{state.template.name} enters Rage."
     if frenzy_2014:
         description += " The Berserker enters a Frenzy."
@@ -70,7 +82,7 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
 
 
 def extend_rage_from_attack(state: CombatantState, round_number: int) -> None:
-    if state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014:
+    if _rage_persists_without_maintenance(state):
         return
     if rage_active(state):
         maximum = state.rage_max_round or round_number + 1
@@ -80,7 +92,7 @@ def extend_rage_from_attack(state: CombatantState, round_number: int) -> None:
 def maintain_rage_with_bonus_action(
     sequence: int, round_number: int, state: CombatantState, actor_id: str,
 ) -> BattleEvent | None:
-    if state.template.ruleset == "2014":
+    if state.template.ruleset == "2014" or _rage_persists_without_maintenance(state):
         return None
     if not rage_active(state) or state.rage_expires_round is None:
         return None
@@ -137,8 +149,10 @@ def finalize_rage_turn(
 
 
 def end_rage_if_incapacitated(state: CombatantState) -> None:
-    if state.template.ruleset == "2014" and state.template.progression_features.persistent_rage_2014:
-        if state.is_dead or state.is_unconscious:
+    if _rage_persists_without_maintenance(state):
+        if state.is_dead or state.is_unconscious or (
+            state.template.ruleset == "2024" and state.template.wearing_heavy_armor
+        ):
             end_rage(state)
         return
     if state.template.wearing_heavy_armor or state.is_dead or is_incapacitated(state):
