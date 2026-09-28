@@ -612,6 +612,14 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         ]
     if progression.ability_check_minimums:
         row["ability_check_minimums"] = [item.model_dump() for item in progression.ability_check_minimums]
+    if progression.damage_resistance_bypass_grants:
+        row["damage_resistance_bypass_grants"] = [
+            item.model_dump(mode="json") for item in progression.damage_resistance_bypass_grants
+        ]
+    if progression.natural_twenty_attack_damage_grants:
+        row["natural_twenty_attack_damage_grants"] = [
+            item.model_dump(mode="json") for item in progression.natural_twenty_attack_damage_grants
+        ]
     if progression.saving_throw_minimums:
         row["saving_throw_minimums"] = [item.model_dump() for item in progression.saving_throw_minimums]
     if progression.resource_backed_d20_bonus_dice:
