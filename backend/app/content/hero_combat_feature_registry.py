@@ -12,7 +12,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
     "survivor-defy-death", "survivor-heroic-rally",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
-    "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "improved-brutal-strike", "brutal-strike-2d10", "retaliation", "intimidating-presence", "persistent-rage",
+    "relentless-rage", "feral-instinct", "instinctive-pounce", "brutal-strike", "improved-brutal-strike", "brutal-strike-2d10", "retaliation", "intimidating-presence", "persistent-rage", "indomitable-might",
     "sneak-attack", "weapon-mastery", "cunning-action", "steady-aim", "cunning-strike", "improved-cunning-strike", "devious-strikes", "slippery-mind", "thiefs-reflexes", "elusive", "stroke-of-luck", "uncanny-dodge", "evasion",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life", "sear-undead", "cleric-combat-spells-3", "blessed-healer",
@@ -40,6 +40,14 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "feral-instinct": {"initiative_advantage": True},
     "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
     "persistent-rage": {"rage_persists_without_maintenance": True},
+    "indomitable-might": {
+        "ability_check_minimums": [{
+            "source_id": "indomitable-might", "ability": "strength", "minimum_source": "ability_score",
+        }],
+        "saving_throw_minimums": [{
+            "source_id": "indomitable-might", "ability": "strength", "minimum_source": "ability_score",
+        }],
+    },
     "brutal-strike": {
         "brutal_strike_damage_dice": 1,
         "brutal_strike_effect_ids": ["forceful-blow", "hamstring-blow"],
