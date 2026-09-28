@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.cleric_divine_intervention import build_divine_intervention_healing
 from app.content.cleric_life_domain import disciple_of_life_bonus
+from app.content.cleric_level15_sunburst import build_sunburst
 from app.content.healing_spell_effects import (
     build_cure_wounds,
     build_healing_word,
@@ -94,6 +95,8 @@ def build_seraphine_save_spells(
         spells.append(build_inflict_wounds(save_dc, 5))
     if level >= 11:
         spells.append(build_inflict_wounds(save_dc, 6))
+    if level >= 15:
+        spells.append(build_sunburst(save_dc))
     return spells
 
 
@@ -111,6 +114,7 @@ def seraphine_source(level: int) -> str:
         (11, "Heal, sixth-level Inflict Wounds and Mass Cure Wounds upcasts, "),
         (13, "Fire Storm, seventh-level spell slot and Mass Cure Wounds upcast, "),
         (14, "Improved Blessed Strikes, "),
+        (15, "Sunburst, eighth-level spell slot, "),
     )
     details = "".join(text for minimum, text in milestones if level >= minimum)
     return (
