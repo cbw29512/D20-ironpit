@@ -21,6 +21,7 @@ from app.content.barbarian_berserker_endgame_profile import (
     build_rokhan_stonefury_level10_profile, build_rokhan_stonefury_level11_profile, build_rokhan_stonefury_level12_profile,
     build_rokhan_stonefury_level13_profile, build_rokhan_stonefury_level14_profile,
 )
+from app.content.barbarian_level16_profile import build_rokhan_stonefury_level16_profile
 from app.content.barbarian_persistent_rage_profile import build_rokhan_stonefury_level15_profile
 from app.content.barbarian_progression import build_rokhan_stonefury_level
 from app.content.barbarian_progression_profile import (
@@ -92,7 +93,7 @@ CERTIFIED_HERO_PROGRESSIONS_2024: tuple[CertifiedHeroProgression, ...] = (
             build_rokhan_stonefury_level9_profile, build_rokhan_stonefury_level10_profile,
             build_rokhan_stonefury_level11_profile, build_rokhan_stonefury_level12_profile,
             build_rokhan_stonefury_level13_profile, build_rokhan_stonefury_level14_profile,
-            build_rokhan_stonefury_level15_profile,
+            build_rokhan_stonefury_level15_profile, build_rokhan_stonefury_level16_profile,
         ),
     ),
     CertifiedHeroProgression(
