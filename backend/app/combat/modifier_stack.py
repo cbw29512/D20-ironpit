@@ -82,6 +82,7 @@ def attack_roll_flat_bonus(state: CombatantState, weapon_id: str) -> int:
     )
 
 
+
 def saving_throw_flat_bonus(state: CombatantState) -> int:
     return sum(
         item.flat_bonus for item in state.active_modifiers
