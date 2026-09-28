@@ -101,7 +101,8 @@ def test_level13_real_attack_applies_sundering_blow_to_other_creature_only() -> 
 
 def test_level13_rejects_two_effects_until_level17() -> None:
     hero, enemy, setup = _setup()
-    with pytest.raises(RuntimeError, match="Attack resolution failed"):
+    hp_before = enemy.state.current_hp
+    with pytest.raises(ValueError, match="at most 1"):
         resolve_encounter_attack(
             1,
             1,
@@ -116,3 +117,4 @@ def test_level13_rejects_two_effects_until_level17() -> None:
             turn_key=f"1:{hero.combatant_id}",
             brutal_strike_effect_ids=("staggering-blow", "sundering-blow"),
         )
+    assert enemy.state.current_hp == hp_before
