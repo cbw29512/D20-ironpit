@@ -155,6 +155,29 @@ def consume_next_attack_against_advantage(state: CombatantState, target_id: str)
     ]
     return before - len(state.active_modifiers)
 
+def next_attack_against_flat_bonus(defender: CombatantState, attacker_id: str) -> int:
+    """Return flat bonuses granted to the next attack by a creature other than the source."""
+    return sum(
+        item.flat_bonus for item in defender.active_modifiers
+        if item.kind is ModifierKind.NEXT_ATTACK_AGAINST_FLAT
+        and item.source_id != attacker_id
+    )
+
+
+def consume_next_attack_against_flat(defender: CombatantState, attacker_id: str) -> int:
+    """Consume defender-scoped next-attack bonuses only when an eligible other creature attacks."""
+    before = len(defender.active_modifiers)
+    defender.active_modifiers = [
+        item for item in defender.active_modifiers
+        if not (
+            item.kind is ModifierKind.NEXT_ATTACK_AGAINST_FLAT
+            and item.source_id != attacker_id
+            and item.consume_on_attack_against
+        )
+    ]
+    return before - len(defender.active_modifiers)
+
+
 
 def _die_modifiers(state: CombatantState, kind: ModifierKind) -> list[CombatModifier]:
     if kind not in {ModifierKind.ATTACK_ROLL_BONUS_DIE, ModifierKind.SAVING_THROW_BONUS_DIE}:
