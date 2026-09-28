@@ -12,7 +12,7 @@ class ResourceConversionAction(BaseModel):
 
     id: str
     name: str
-    action_cost: Literal["action", "bonus_action"]
+    action_cost: Literal["action", "bonus_action", "none"]
     source_resource_id: str
     source_cost: int = Field(ge=1)
     target_resource_id: str
