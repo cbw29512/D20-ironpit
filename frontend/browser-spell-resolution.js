@@ -12,6 +12,7 @@
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
   const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
   const H = () => window.IRON_PIT_BROWSER_SPELL_SAVE_DISADVANTAGE;
+  const R = () => window.IRON_PIT_BROWSER_DAMAGING_ACTION_RIDERS;
 
   const FX = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION_EFFECTS;
 
@@ -96,6 +97,13 @@
       const effect = FX().resolveEffect(sequence, round, caster, setup, choice, turnKey);
       events.push(...effect.events);
       sequence = effect.sequence;
+      const riderEvent = R()?.resolve?.(
+        sequence, round, caster, setup, spell.id, events,
+      ) || null;
+      if (riderEvent) {
+        events.push(riderEvent);
+        sequence += 1;
+      }
       if (choice.damageMaximizer) {
         const followUp = C().resolveDamageMaximizerAfterCast(
           sequence, round, caster, setup, choice.damageMaximizer, choice.slotLevel,
