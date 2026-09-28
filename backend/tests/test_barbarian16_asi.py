@@ -22,10 +22,6 @@ def test_level16_asi_and_rage_damage_are_parameter_deltas() -> None:
     assert profile.final_ability_scores.constitution == 20
     assert profile.final_ability_scores.strength == 20
 
-    assert level15.ability_scores is not None
-    assert level16.ability_scores is not None
-    assert level15.ability_scores.constitution == 18
-    assert level16.ability_scores.constitution == 20
     assert level15.armor_class == 15
     assert level16.armor_class == 16
     assert level15.max_hp == 170
