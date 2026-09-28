@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from app.content.audited_barbarian import build_rokhan_stonefury
+from app.content.barbarian_2024_persistent_rage import (
+    persistent_rage_initiative_refills,
+    persistent_rage_resource,
+)
 from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS
 from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_progression import advance_template_data
@@ -35,6 +39,9 @@ def _resources(level: int) -> list[ResourceDefinition]:
     presence = intimidating_presence_resource(level)
     if presence is not None:
         resources.append(presence)
+    persistent = persistent_rage_resource(_features(level))
+    if persistent is not None:
+        resources.append(persistent)
     return resources
 
 def _apply_row(data: dict[str, object], level: int) -> None:
@@ -88,6 +95,13 @@ def _apply_row(data: dict[str, object], level: int) -> None:
         saving_throw_actions=saving_throw_actions,
         resource_conversion_actions=[
             item.model_dump() for item in intimidating_presence_resource_conversions(features)
+        ],
+        initiative_resource_refill_grants=[
+            item.model_dump()
+            for item in persistent_rage_initiative_refills(
+                rage_uses=row.rage_uses,
+                features=features,
+            )
         ],
         resources=[item.model_dump() for item in _resources(level)],
         rage_damage_bonus=row.rage_damage_bonus,
