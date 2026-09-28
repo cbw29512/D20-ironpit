@@ -63,20 +63,20 @@
   }
 
   function applyEffects(attackerState, defenderState, sourceId, turnKey) {
+    const maxEffects = attackerState?.template?.brutal_strike_max_effects || 0;
+    const options = attackerState?.template?.brutal_strike_effect_options || [];
     if (attackerState?.template?.ruleset === "2014"
-      || (attackerState?.template?.level || 0) < 9
-      || attackerState.feature_last_turn_keys?.[FEATURE] !== turnKey) return [];
-    if (attackerState.template.level >= 17) {
-      staggering(defenderState, sourceId);
-      hamstring(defenderState, sourceId);
-      return ["staggering-blow", "hamstring-blow"];
+      || attackerState.feature_last_turn_keys?.[FEATURE] !== turnKey || maxEffects <= 0) return [];
+    const chosen = [];
+    for (const effect of ["staggering-blow", "hamstring-blow", "sundering-blow", "forceful-blow"]) {
+      if (!options.includes(effect) || chosen.length >= maxEffects) continue;
+      if (effect === "staggering-blow") staggering(defenderState, sourceId);
+      else if (effect === "hamstring-blow") hamstring(defenderState, sourceId);
+      else if (effect === "sundering-blow") sundering(defenderState, sourceId);
+      else continue;
+      chosen.push(effect);
     }
-    if (attackerState.template.level >= 13) {
-      staggering(defenderState, sourceId);
-      return ["staggering-blow"];
-    }
-    hamstring(defenderState, sourceId);
-    return ["hamstring-blow"];
+    return chosen;
   }
 
   function forceful(attacker, defender, setup) {
