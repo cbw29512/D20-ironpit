@@ -105,15 +105,20 @@
       const rider = action.failedSaveTimedEffect;
       const timed = window.IRON_PIT_BROWSER_TIMED;
       if (!timed) throw new Error("Failed-save timed effect requires browser-timed-conditions.js.");
-      timed.apply(target.state, rider.effectId, actor.combatant_id, {
+      const applied = timed.apply(target.state, rider.effectId, actor.combatant_id, {
         sourceEffectId: action.id,
         sourceTemplate: actor.state.template,
         sourceIsMagical: Boolean(action.magicalEffect),
         appliedRound: round,
+        expiresRound: rider.durationRounds != null ? round + rider.durationRounds : null,
         expiryTiming: rider.expiryTiming || "target_turn_end",
+        repeatSaveAbility: rider.repeatSaveAbility || null,
+        repeatSaveDc: rider.repeatSaveDc ?? null,
+        repeatSaveTiming: rider.repeatSaveTiming || null,
         nextAttackDisadvantage: Boolean(rider.nextAttackDisadvantage),
         useDefaultPoisonRecovery: false,
       });
+      if (applied) appliedConditions.push(applied);
     }
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
       appliedConditions = G().apply(
