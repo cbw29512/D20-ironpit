@@ -8,8 +8,12 @@ from app.content.hero_combat_feature_registry import (
     compile_progression_feature_fields,
     unsupported_hero_engine_features,
 )
+from app.domain.actions import SavingThrowAction
 from app.domain.models import CombatantTemplate, ResourceDefinition
 from app.domain.reactions import DamageReactionAttack
+from app.domain.resource_conversion import ResourceConversionAction
+from app.domain.save_effects import FailedSaveTimedEffect
+from app.domain.targeting import AreaTargeting
 
 
 def _modifier(score: int) -> int:
@@ -22,10 +26,55 @@ def _features(level: int) -> tuple[str, ...]:
 
 def _resources(level: int) -> list[ResourceDefinition]:
     row = BARBARIAN_COMBAT_LEVELS[level]
-    return [
+    resources = [
         ResourceDefinition(id="rage", name="Rage", max_uses=row.rage_uses),
         ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
         ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
+    ]
+    if level >= 14:
+        resources.append(ResourceDefinition(id="intimidating-presence", name="Intimidating Presence", max_uses=1))
+    return resources
+
+
+def _intimidating_presence_action(row) -> SavingThrowAction:
+    dc = 8 + _modifier(row.strength) + row.proficiency_bonus
+    return SavingThrowAction(
+        id="intimidating-presence",
+        name="Intimidating Presence",
+        action_cost="bonus_action",
+        save_ability="wisdom",
+        dc=dc,
+        range_ft=0,
+        area=AreaTargeting(shape="emanation", origin="self", radius_ft=30),
+        resource_id="intimidating-presence",
+        effect_tags=["frightened"],
+        failed_save_timed_effect=FailedSaveTimedEffect(
+            effect_id="frightened",
+            duration_rounds=10,
+            expiry_timing="source_turn_start",
+            repeat_save_ability="wisdom",
+            repeat_save_dc=dc,
+            repeat_save_timing="target_turn_end",
+        ),
+        animation="condition",
+    )
+
+
+def _resource_conversions(features: tuple[str, ...]) -> list[ResourceConversionAction]:
+    if "intimidating-presence" not in features:
+        return []
+    return [
+        ResourceConversionAction(
+            id="restore-intimidating-presence",
+            name="Intimidating Presence",
+            action_cost="none",
+            source_resource_id="rage",
+            source_cost=1,
+            target_resource_id="intimidating-presence",
+            target_gain=1,
+            priority=50,
+            source="D&D Beyond Basic Rules 2024: Berserker Intimidating Presence",
+        )
     ]
 
 
@@ -52,6 +101,13 @@ def _apply_row(data: dict[str, object], level: int) -> None:
             "id": "extra-attack", "name": "Extra Attack", "is_attack_action": True,
             "slots": [{"attack_ids": attack_ids} for _ in range(row.attack_count)],
         }
+    saving_throw_actions = [
+        item for item in data.get("saving_throw_actions", [])
+        if not isinstance(item, dict) or item.get("id") != "intimidating-presence"
+    ]
+    if "intimidating-presence" in features:
+        saving_throw_actions.append(_intimidating_presence_action(row).model_dump())
+
     data.update(
         armor_class=row.armor_class,
         max_hp=row.max_hp,
@@ -68,6 +124,8 @@ def _apply_row(data: dict[str, object], level: int) -> None:
         skill_bonuses={"athletics": row.proficiency_bonus + strength_mod, "acrobatics": dexterity_mod},
         progression_features=compile_progression_feature_fields(features, level),
         damage_reaction_attack=(DamageReactionAttack(source_feature="retaliation") if "retaliation" in features else None),
+        saving_throw_actions=saving_throw_actions,
+        resource_conversion_actions=[item.model_dump() for item in _resource_conversions(features)],
         resources=[item.model_dump() for item in _resources(level)],
         rage_damage_bonus=row.rage_damage_bonus,
         source=row.source,
