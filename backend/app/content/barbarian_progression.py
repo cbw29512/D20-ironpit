@@ -10,6 +10,7 @@ from app.content.hero_combat_feature_registry import (
 )
 from app.domain.models import CombatantTemplate, ResourceDefinition
 from app.domain.reactions import DamageReactionAttack
+from app.content.barbarian_2024_persistent_rage import persistent_rage_initiative_refills
 from app.content.barbarian_berserker_2024_intimidating_presence import (
     intimidating_presence_action,
     intimidating_presence_resource,
@@ -86,6 +87,13 @@ def _apply_row(data: dict[str, object], level: int) -> None:
         progression_features=compile_progression_feature_fields(features, level),
         damage_reaction_attack=(DamageReactionAttack(source_feature="retaliation") if "retaliation" in features else None),
         saving_throw_actions=saving_throw_actions,
+        initiative_resource_refill_grants=[
+            item.model_dump()
+            for item in persistent_rage_initiative_refills(
+                rage_uses=row.rage_uses,
+                features=features,
+            )
+        ],
         resource_conversion_actions=[
             item.model_dump() for item in intimidating_presence_resource_conversions(features)
         ],
