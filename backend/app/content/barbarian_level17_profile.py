@@ -19,7 +19,7 @@ def build_rokhan_stonefury_level17_profile() -> CharacterBuildProfile:
             feature_id="improved-brutal-strike-l17",
             feature_name="Improved Brutal Strike",
             source_reference="D&D Beyond Basic Rules 2024: Barbarian Level 17 Improved Brutal Strike",
-            category="class-feature",
+            category="class",
             combat_relevant=True,
             automated=True,
             notes=(
