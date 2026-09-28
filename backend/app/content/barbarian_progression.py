@@ -12,6 +12,7 @@ from app.content.hero_combat_feature_registry import (
     compile_progression_feature_fields,
     unsupported_hero_engine_features,
 )
+from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition
 from app.domain.reactions import DamageReactionAttack
 from app.content.barbarian_berserker_2024_intimidating_presence import (
@@ -77,6 +78,17 @@ def _apply_row(data: dict[str, object], level: int) -> None:
         )
 
     data.update(
+        ability_scores=(
+            AbilityScores(
+                strength=row.strength,
+                dexterity=row.dexterity,
+                constitution=row.constitution,
+                intelligence=10,
+                wisdom=10,
+                charisma=10,
+            ).model_dump()
+            if level >= 18 else data.get("ability_scores")
+        ),
         armor_class=row.armor_class,
         max_hp=row.max_hp,
         speed_ft=row.speed_ft,
