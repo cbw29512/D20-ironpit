@@ -124,7 +124,7 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
 
 def resolve_area_save_turn(events, sequence, round_number, member, setup, dice, turn_key):
     try:
-        choice = choose_area_save(member, setup)
+        choice = choose_area_save(member, setup, action_cost="action")
         if choice is None:
             return None
         action, placement = choice
