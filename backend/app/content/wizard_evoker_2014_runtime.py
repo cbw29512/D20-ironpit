@@ -29,6 +29,15 @@ from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoado
 
 logger = logging.getLogger(__name__)
 
+
+def _damage_bonus(level: int, intelligence_modifier: int) -> int:
+    try:
+        return intelligence_modifier if level >= 10 else 0
+    except Exception:
+        logger.exception("Failed to resolve Elian's Empowered Evocation bonus at level %s.", level)
+        raise
+
+
 def _weapon(level: int, scores) -> WeaponAttack:
     try:
         weapon = build_weapon("dagger").model_copy(update={"mastery_property": None})
