@@ -35,6 +35,33 @@
     return true;
   }
 
+  function staggering(defender, sourceId) {
+    defender.active_modifiers = (defender.active_modifiers || [])
+      .filter((item) => !(item.source_id === sourceId && item.source_effect_id === "staggering-blow"));
+    M().add(defender, {
+      id: `staggering-blow:${sourceId}:save`, source_id: sourceId, source_effect_id: "staggering-blow",
+      source_name: "Staggering Blow", kind: "saving-throw-disadvantage",
+      consume_on_saving_throw: true, expires_at_start_of_source_turn: true,
+    });
+    M().add(defender, {
+      id: `staggering-blow:${sourceId}:oa`, source_id: sourceId, source_effect_id: "staggering-blow",
+      source_name: "Staggering Blow", kind: "opportunity-attack-suppressed",
+      expires_at_start_of_source_turn: true,
+    });
+    return true;
+  }
+
+  function sundering(defender, sourceId) {
+    defender.active_modifiers = (defender.active_modifiers || [])
+      .filter((item) => item.source_effect_id !== "sundering-blow");
+    M().add(defender, {
+      id: `sundering-blow:${sourceId}`, source_id: sourceId, source_effect_id: "sundering-blow",
+      source_name: "Sundering Blow", kind: "next-attack-against-flat", flat_bonus: 5,
+      consume_on_attack_against: true, expires_at_start_of_source_turn: true,
+    });
+    return true;
+  }
+
   function forceful(attacker, defender, setup) {
     return F().pushStraightAway(defender, attacker, setup, 15);
   }
@@ -52,6 +79,6 @@
   }
 
   window.IRON_PIT_BROWSER_BRUTAL_STRIKE = {
-    advantageSuppression, bonusDamage, eligible, forceful, followForceful, hamstring,
+    advantageSuppression, bonusDamage, eligible, forceful, followForceful, hamstring, staggering, sundering,
   };
 })();
