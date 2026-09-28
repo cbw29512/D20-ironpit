@@ -53,6 +53,15 @@ def _finite_rage(level: int) -> int:
     return 0 if level >= 20 else barbarian_2014_rage_uses(level)
 
 
+def _persistent_rage_refresh(level: int) -> int:
+    try:
+        return 1 if level >= 15 else 0
+    except Exception as exc:
+        raise ValueError(
+            f"Failed to resolve 2024 Persistent Rage refresh uses for level {level}."
+        ) from exc
+
+
 def _berserker_intimidating_presence(level: int) -> int:
     try:
         return 1 if level >= 14 else 0
@@ -63,7 +72,10 @@ def _berserker_intimidating_presence(level: int) -> int:
 
 
 _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
-    "barbarian": (("rage", "Rage", barbarian_rage_uses),),
+    "barbarian": (
+        ("rage", "Rage", barbarian_rage_uses),
+        ("persistent-rage-refresh", "Persistent Rage Refresh", _persistent_rage_refresh),
+    ),
     "cleric": (
         ("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),
         ("divine-intervention", "Divine Intervention", cleric_divine_intervention_uses),
