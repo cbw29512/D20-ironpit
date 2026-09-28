@@ -25,7 +25,7 @@ vm.runInThisContext(fs.readFileSync("frontend/browser-brutal-strike.js", "utf8")
 const B = window.IRON_PIT_BROWSER_BRUTAL_STRIKE;
 const attack = { attackAbility: "strength", damageType: "slashing" };
 const state = {
-  template: { ruleset: "2024", brutal_strike_damage_dice: 1, speed_ft: 40 },
+  template: { ruleset: "2024", brutal_strike_damage_dice: 1, brutal_strike_sundering: false, speed_ft: 40 },
   active_effect_ids: ["reckless-attack"], active_modifiers: [], feature_last_turn_keys: {},
 };
 
@@ -49,3 +49,19 @@ assert.strictEqual(window.IRON_PIT_BROWSER_MODIFIERS.expireSourceTurnStart([stat
 assert.strictEqual(window.IRON_PIT_BROWSER_MODIFIERS.effectiveSpeed(state), 40);
 
 console.log("browser brutal strike tests passed");
+
+
+{
+  const attacker = {
+    template: { ruleset: "2024", brutal_strike_damage_dice: 1, brutal_strike_sundering: true, speed_ft: 40 },
+    active_effect_ids: ["reckless-attack"], active_modifiers: [], feature_last_turn_keys: {},
+  };
+  const defender = { template: { speed_ft: 30 }, active_modifiers: [] };
+  assert.strictEqual(B.sundering(attacker, defender, "rokhan", "4:rokhan"), false);
+  assert.ok(B.bonusDamage(attacker, attack, "4:rokhan"));
+  assert.strictEqual(B.sundering(attacker, defender, "rokhan", "4:rokhan"), true);
+  const modifier = defender.active_modifiers.find((item) => item.source_effect_id === "sundering-blow");
+  assert.strictEqual(modifier.flat_bonus, 5);
+  assert.strictEqual(modifier.source_id, "rokhan");
+  assert.strictEqual(modifier.expires_at_start_of_source_turn, true);
+}
