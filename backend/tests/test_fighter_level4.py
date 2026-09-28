@@ -1,5 +1,3 @@
-import pytest
-
 from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.fighter_progression_profile import build_karnok_stoneward_level4_profile
@@ -55,11 +53,11 @@ def test_fighter_level_four_runtime_matches_candidate_combat_fingerprint() -> No
     assert_pregen_combat_stats(template, combat_profile)
 
 
-def test_fighter_candidate_progression_fails_closed_on_first_missing_engine_feature() -> None:
+def test_fighter_candidate_progression_reaches_endgame_after_combat_prowess_support() -> None:
     assert build_karnok_stoneward_level(13).progression_features.studied_attacks is True
     assert build_karnok_stoneward_level(15).progression_features.critical_hit_minimum == 18
     assert build_karnok_stoneward_level(16).level == 16
     assert build_karnok_stoneward_level(17).level == 17
     assert build_karnok_stoneward_level(18).level == 18
-    with pytest.raises(ValueError, match="level 19 awaits engine support for: boon-combat-prowess"):
-        build_karnok_stoneward_level(19)
+    assert build_karnok_stoneward_level(19).level == 19
+    assert build_karnok_stoneward_level(20).level == 20
