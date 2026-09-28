@@ -106,6 +106,43 @@ def follow_forceful_blow(
     finally:
         attacker.state.movement_remaining_ft = normal_remaining
 
+
+def apply_staggering_blow(defender: CombatantState, source_id: str) -> bool:
+    """Apply 2024 Staggering Blow using existing one-shot save/OA modifiers."""
+    add_modifier(defender, CombatModifier(
+        id=f"staggering-blow:{source_id}:save",
+        source_id=source_id,
+        source_effect_id="staggering-blow",
+        source_name="Staggering Blow",
+        kind=ModifierKind.SAVING_THROW_DISADVANTAGE,
+        consume_on_saving_throw=True,
+        expires_at_start_of_source_turn=True,
+    ))
+    add_modifier(defender, CombatModifier(
+        id=f"staggering-blow:{source_id}:oa",
+        source_id=source_id,
+        source_effect_id="staggering-blow",
+        source_name="Staggering Blow",
+        kind=ModifierKind.OPPORTUNITY_ATTACK_SUPPRESSED,
+        expires_at_start_of_source_turn=True,
+    ))
+    return True
+
+
+def apply_sundering_blow(defender: CombatantState, source_id: str) -> bool:
+    """Apply 2024 Sundering Blow through the generic other-creature next-attack bonus."""
+    add_modifier(defender, CombatModifier(
+        id=f"sundering-blow:{source_id}",
+        source_id=source_id,
+        source_effect_id="sundering-blow",
+        source_name="Sundering Blow",
+        kind=ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT,
+        flat_bonus=5,
+        expires_at_start_of_source_turn=True,
+    ))
+    return True
+
+
 def brutal_strike_attack_sources(
     state: CombatantState,
     attack: WeaponAttack,
