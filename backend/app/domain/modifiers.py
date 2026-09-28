@@ -24,6 +24,7 @@ class ModifierKind(StrEnum):
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
     ATTACKS_AGAINST_DISADVANTAGE = "attacks-against-disadvantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
+    NEXT_ATTACK_AGAINST_FLAT = "next-attack-against-flat"
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
@@ -95,6 +96,8 @@ class CombatModifier(BaseModel):
             raise ValueError("Attack roll-mode modifiers do not accept a flat bonus.")
         if self.kind is ModifierKind.ATTACK_ROLL_FLAT and (self.flat_bonus == 0 or self.weapon_id is None):
             raise ValueError("Flat attack modifiers require a nonzero bonus and weapon id.")
+        if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_FLAT and self.flat_bonus == 0:
+            raise ValueError("Next-attack-against flat modifiers require a nonzero bonus.")
         if self.kind not in {ModifierKind.ATTACK_ROLL_FLAT, ModifierKind.DAMAGE_SOURCE_QUALIFIER} and self.weapon_id is not None:
             raise ValueError(f"{self.kind.value} does not accept a weapon id.")
         if self.kind is ModifierKind.DAMAGE_SOURCE_QUALIFIER and (self.weapon_id is None or self.source_qualifier is None):
@@ -148,8 +151,8 @@ class CombatModifier(BaseModel):
         if any(not item for item in effect_tags) or len(set(effect_tags)) != len(effect_tags):
             raise ValueError("Saving-throw Advantage effect tags must be non-empty and unique.")
         self.required_effect_tags = effect_tags
-        if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
-            raise ValueError("Only attack-advantage defender modifiers can be consumed by the next attack.")
+        if self.consume_on_attack_against and self.kind not in {ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.NEXT_ATTACK_AGAINST_FLAT}:
+            raise ValueError("Only defender-scoped next-attack modifiers can be consumed by the next attack.")
         if self.consume_on_saving_throw and self.kind is not ModifierKind.SAVING_THROW_DISADVANTAGE:
             raise ValueError("Only saving-throw Disadvantage modifiers can be consumed by a saving throw.")
         if self.ends_on_owner_attack and self.kind is not ModifierKind.TARGETING_SAVE_GATE:
