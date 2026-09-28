@@ -25,6 +25,23 @@ class SavingThrowMinimum(BaseModel):
     minimum_source: Literal["ability_score"] = "ability_score"
 
 
+class DamageResistanceBypassGrant(BaseModel):
+    """Source-owned permission for matching outgoing damage to ignore Resistance only."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    damage_types: list[DamageType] = Field(min_length=1)
+
+
+class NaturalTwentyAttackDamageGrant(BaseModel):
+    """Flat extra damage when the attack d20 itself is a natural 20."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    ability: AbilityName
+    damage_type_source: Literal["attack"] = "attack"
+
+
 class AbilityScaledDamageRider(BaseModel):
     """Damage dice count derived from one ability modifier."""
 

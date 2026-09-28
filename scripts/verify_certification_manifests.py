@@ -119,6 +119,10 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.update(rule.source_id for rule in features.once_per_turn_weapon_hit_damage_riders)
     if features.ability_check_minimums:
         mechanics.update(rule.source_id for rule in features.ability_check_minimums)
+    if features.damage_resistance_bypass_grants:
+        mechanics.update(rule.source_id for rule in features.damage_resistance_bypass_grants)
+    if features.natural_twenty_attack_damage_grants:
+        mechanics.update(rule.source_id for rule in features.natural_twenty_attack_damage_grants)
     if features.saving_throw_minimums:
         mechanics.update(rule.source_id for rule in features.saving_throw_minimums)
     if features.saving_throw_proficiency_grants:

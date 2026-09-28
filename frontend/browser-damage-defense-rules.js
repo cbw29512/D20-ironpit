@@ -17,7 +17,7 @@
     return kinds;
   }
 
-  function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = []) {
+  function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
     const conditional = conditionalKinds(target, type, sourceQualifiers);
     if (target.template.damage_immunities?.includes(type) || conditional.has("immunity")) return 0;
     let value = amount;
@@ -28,7 +28,7 @@
       || timed?.ownsDamageResistance?.(target, type)
       || conditional.has("resistance")
       || conditions?.has?.(target, "petrified");
-    if (resisted) value = Math.floor(value / 2);
+    if (resisted && !ignoreResistance) value = Math.floor(value / 2);
     if (allowVulnerability && (
       target.template.damage_vulnerabilities?.includes(type) || conditional.has("vulnerability")
     )) value *= 2;
