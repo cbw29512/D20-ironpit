@@ -112,7 +112,7 @@
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
           targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates });
-      damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
+      damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage; BS()?.sundering?.(attacker.state, actualTarget.state, attacker.combatant_id, extra.turnKey || `${round}:${attacker.combatant_id}`);
       cunningStrikeTrip = damage.cunningStrikeTrip || null;
       cunningStrikeObscure = damage.cunningStrikeObscure || null;
       if (cunningStrikeTrip?.applied && !applied.includes("prone")) applied.push("prone");
