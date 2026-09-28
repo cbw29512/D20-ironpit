@@ -23,6 +23,7 @@ from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
+from app.domain.progression_primitives import SourceDamageTemporaryHpGrant
 from app.domain.traits import CombatTrait
 
 def _modifier(score: int) -> int:
@@ -100,6 +101,16 @@ def _build_seraphine(level: int) -> CombatantTemplate:
                     source_name="Supreme Healing",
                 )
                 if "supreme-healing" in features else None
+            ),
+            source_damage_temporary_hp=(
+                SourceDamageTemporaryHpGrant(
+                    source_id="improved-blessed-strikes",
+                    source_name="Improved Blessed Strikes",
+                    trigger_action_ids=["sacred-flame"],
+                    ability="wisdom",
+                    ability_multiplier=2,
+                )
+                if "improved-blessed-strikes" in features else None
             ),
         ),
         saving_throw_bonuses=seraphine_saving_throw_bonuses(
