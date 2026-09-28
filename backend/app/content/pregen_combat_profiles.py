@@ -184,7 +184,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profiles
 
     profiles = [
-        *(_karnok_profile(level) for level in range(1, 19)),
+        *(_karnok_profile(level) for level in range(1, 21)),
         *(_rokhan_profile(level) for level in range(1, 21)),
         *(_seraphine_profile(level) for level in range(1, 13)),
         *build_mara_quickstep_combat_profiles(20),
