@@ -70,4 +70,16 @@ function attack(attacker, target, values, sequence) {
   assert.equal(M.nextIncomingAttackRollFlat(target.state, ally.combatant_id), 0);
 }
 
+
+{
+  const target = member("target");
+  for (const [sourceId, bonus] of [["source-a", 5], ["source-b", 5], ["source-c", 3]]) {
+    M.add(target.state, {
+      id: `${sourceId}:incoming`, source_id: sourceId, source_effect_id: "incoming-attack-bonus",
+      kind: "next-incoming-attack-roll-flat", flat_bonus: bonus,
+    });
+  }
+  assert.equal(M.nextIncomingAttackRollFlat(target.state, "ally"), 5, "incoming flat bonuses do not stack");
+}
+
 console.log("Browser next incoming attack-roll bonus regressions passed.");
