@@ -60,3 +60,16 @@ def test_next_incoming_attack_bonus_requires_nonzero_flat_bonus() -> None:
     except ValueError:
         return
     raise AssertionError("next incoming attack-roll modifiers must reject a zero bonus")
+
+
+def test_next_incoming_attack_bonus_uses_only_strongest_eligible_modifier() -> None:
+    target = _state()
+    for source_id, bonus in (("source-a", 5), ("source-b", 5), ("source-c", 3)):
+        add_modifier(target, CombatModifier(
+            id=f"{source_id}:incoming",
+            source_id=source_id,
+            source_effect_id="incoming-attack-bonus",
+            kind=ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT,
+            flat_bonus=bonus,
+        ))
+    assert next_incoming_attack_roll_flat_bonus(target, "ally") == 5
