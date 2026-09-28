@@ -997,7 +997,8 @@
           "expected_combat_features": [],
           "supported_mechanics": [],
           "unsupported_mechanics": [
-            "hero-level-not-certified",            "combat-feature-coverage-not-certified"
+            "hero-level-not-certified",
+            "combat-feature-coverage-not-certified"
           ],
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
@@ -1996,7 +1997,8 @@
             "resource:spell-slot-3",
             "resource:spell-slot-4",
             "sear-undead",
-            "spell-attack-action:guiding-bolt",            "spell-save-action:inflict-wounds",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:inflict-wounds",
             "spell-save-action:sacred-flame",
             "trait:adrenaline-rush",
             "trait:life-domain",
@@ -2995,7 +2997,8 @@
         },
         {
           "level": 18,
-          "subclass": {            "id": "circle-land",
+          "subclass": {
+            "id": "circle-land",
             "name": "Circle of the Land"
           },
           "runtime_template_id": null,
@@ -3994,7 +3997,8 @@
             "studied-attacks",
             "tactical-master",
             "tactical-shift",
-            "trait:adrenaline-rush",            "trait:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
             "trait:savage-attacker"
           ],
           "unsupported_mechanics": [],
@@ -4993,7 +4997,8 @@
           "supported_mechanics": [],
           "unsupported_mechanics": [
             "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"          ],
+            "combat-feature-coverage-not-certified"
+          ],
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
           "generated_static_status": "not-generated",
@@ -5992,7 +5997,8 @@
             "cunning-action",
             "cunning-strike",
             "evasion",
-            "resource:adrenaline-rush",            "resource:relentless-endurance",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
             "sneak-attack",
             "steady-aim",
             "trait:adrenaline-rush",
@@ -6991,7 +6997,8 @@
           "source_references": [
             "SRD 5.2.1 / 2024 Free Rules"
           ],
-          "expected_combat_features": [],          "supported_mechanics": [],
+          "expected_combat_features": [],
+          "supported_mechanics": [],
           "unsupported_mechanics": [
             "hero-level-not-certified",
             "combat-feature-coverage-not-certified"
@@ -7990,7 +7997,8 @@
           "level": 16,
           "subclass": {
             "id": "evoker",
-            "name": "Evoker"          },
+            "name": "Evoker"
+          },
           "runtime_template_id": null,
           "source_references": [
             "SRD 5.2.1 / 2024 Free Rules"
