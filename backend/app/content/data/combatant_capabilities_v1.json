@@ -9750,6 +9750,7 @@
       {
         "id": "constrictor-snake-constrict",
         "name": "Constrict",
+        "action_cost": "action",
         "save_ability": "strength",
         "dc": 12,
         "range_ft": 5,
@@ -12092,6 +12093,7 @@
       {
         "id": "giant-constrictor-snake-constrict",
         "name": "Constrict",
+        "action_cost": "action",
         "save_ability": "strength",
         "dc": 14,
         "range_ft": 10,
@@ -17020,6 +17022,7 @@
       {
         "id": "srd-hell-hound-fire-breath",
         "name": "Fire Breath",
+        "action_cost": "action",
         "save_ability": "dexterity",
         "dc": 12,
         "range_ft": 15,
@@ -17219,6 +17222,7 @@
       {
         "id": "srd-black-dragon-wyrmling-acid-breath",
         "name": "Acid Breath",
+        "action_cost": "action",
         "save_ability": "dexterity",
         "dc": 11,
         "range_ft": 15,
@@ -17417,6 +17421,7 @@
       {
         "id": "srd-blue-dragon-wyrmling-lightning-breath",
         "name": "Lightning Breath",
+        "action_cost": "action",
         "save_ability": "dexterity",
         "dc": 12,
         "range_ft": 30,
@@ -17613,6 +17618,7 @@
       {
         "id": "srd-green-dragon-wyrmling-poison-breath",
         "name": "Poison Breath",
+        "action_cost": "action",
         "save_ability": "constitution",
         "dc": 11,
         "range_ft": 15,
@@ -17812,6 +17818,7 @@
       {
         "id": "srd-red-dragon-wyrmling-fire-breath",
         "name": "Fire Breath",
+        "action_cost": "action",
         "save_ability": "dexterity",
         "dc": 13,
         "range_ft": 15,
@@ -18007,6 +18014,7 @@
       {
         "id": "srd-white-dragon-wyrmling-cold-breath",
         "name": "Cold Breath",
+        "action_cost": "action",
         "save_ability": "constitution",
         "dc": 12,
         "range_ft": 15,
@@ -18210,6 +18218,7 @@
       {
         "id": "srd-young-black-dragon-acid-breath",
         "name": "Acid Breath",
+        "action_cost": "action",
         "save_ability": "dexterity",
         "dc": 14,
         "range_ft": 30,
@@ -18414,6 +18423,7 @@
       {
         "id": "srd-young-blue-dragon-lightning-breath",
         "name": "Lightning Breath",
+        "action_cost": "action",
         "save_ability": "dexterity",
         "dc": 16,
         "range_ft": 60,
@@ -18616,6 +18626,7 @@
       {
         "id": "srd-young-green-dragon-poison-breath",
         "name": "Poison Breath",
+        "action_cost": "action",
         "save_ability": "constitution",
         "dc": 14,
         "range_ft": 30,
@@ -18821,6 +18832,7 @@
       {
         "id": "srd-young-red-dragon-fire-breath",
         "name": "Fire Breath",
+        "action_cost": "action",
         "save_ability": "dexterity",
         "dc": 17,
         "range_ft": 30,
@@ -19022,6 +19034,7 @@
       {
         "id": "srd-young-white-dragon-cold-breath",
         "name": "Cold Breath",
+        "action_cost": "action",
         "save_ability": "constitution",
         "dc": 15,
         "range_ft": 30,
