@@ -67,9 +67,11 @@
         + (T()?.nextAttackDisadvantage(caster.state) || 0) + (closeThreat ? 1 : 0),
     );
     const targetAc = M().effectiveArmorClass(target.state);
-    const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus, mode), targetAc);
+    const sunderingBonus = M().nextAttackAgainstFlat(target.state, caster.combatant_id);
+    const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus + sunderingBonus, mode), targetAc);
     let attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll); const rollPenalty = window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(caster, setup, "attack", attackRoll, targetAc); if (rollPenalty) attackRoll = rollPenalty.roll;
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
+    M().consumeNextAttackAgainstFlat(target.state, caster.combatant_id);
     T()?.consumeNextAttackDisadvantage(caster.state);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
