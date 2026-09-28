@@ -16,6 +16,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
     return SavingThrowAction(
         id=definition.id,
         name=definition.name,
+        action_cost=definition.action_cost,
         save_ability=definition.save_ability,
         dc=definition.dc,
         range_ft=definition.range_ft,
