@@ -376,6 +376,7 @@ jobs:
           node frontend/browser-light-weapons.test.cjs
           node frontend/browser-defense-style.test.cjs
           node frontend/browser-fighter-progression.test.cjs
+          node frontend/browser-fighter19.test.cjs
           node frontend/browser-fighter9.test.cjs
           node frontend/browser-heroic-inspiration.test.cjs
           node frontend/browser-champion.test.cjs
