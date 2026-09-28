@@ -66,4 +66,10 @@ CLERIC_SPELLS = (
         "mass-cure-wounds", "Mass Cure Wounds", 5, "healing", 9,
         "healing", "multi-target-healing", always_prepared_from_level=9,
     ),
+    _spell("fire-storm", "Fire Storm", 7, "damage", 13, "arena-out-of-scope"),
+    _spell("regenerate", "Regenerate", 7, "healing", 13, "arena-out-of-scope"),
+    _spell("sunburst", "Sunburst", 8, "damage", 15, "arena-out-of-scope"),
+    _spell("holy-aura", "Holy Aura", 8, "buff", 15, "arena-out-of-scope"),
+    _spell("mass-heal", "Mass Heal", 9, "healing", 17, "arena-out-of-scope"),
+    _spell("true-resurrection", "True Resurrection", 9, "healing", 17, "arena-out-of-scope"),
 )
