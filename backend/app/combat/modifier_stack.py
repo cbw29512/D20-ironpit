@@ -83,37 +83,6 @@ def attack_roll_flat_bonus(state: CombatantState, weapon_id: str) -> int:
 
 
 
-def next_incoming_attack_roll_flat_bonus(
-    defender: CombatantState,
-    attacker_id: str,
-) -> int:
-    """Return one-shot flat bonuses granted to attacks against this defender.
-
-    `source_id` identifies the creature that created the effect. That source
-    is excluded so effects such as Sundering Blow benefit only other creatures.
-    """
-    return sum(
-        item.flat_bonus for item in defender.active_modifiers
-        if item.kind is ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT
-        and item.source_id != attacker_id
-    )
-
-
-def consume_next_incoming_attack_roll_flat_bonus(
-    defender: CombatantState,
-    attacker_id: str,
-) -> int:
-    before = len(defender.active_modifiers)
-    defender.active_modifiers = [
-        item for item in defender.active_modifiers
-        if not (
-            item.kind is ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT
-            and item.source_id != attacker_id
-        )
-    ]
-    return before - len(defender.active_modifiers)
-
-
 def saving_throw_flat_bonus(state: CombatantState) -> int:
     return sum(
         item.flat_bonus for item in state.active_modifiers
