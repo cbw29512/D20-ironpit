@@ -119,3 +119,34 @@ def build_rokhan_stonefury_level9_profile() -> CharacterBuildProfile:
         return CharacterBuildProfile.model_validate(data)
     except Exception as exc:
         raise RuntimeError("Rokhan Stonefury level 9 profile could not be built.") from exc
+
+
+def build_rokhan_stonefury_level10_profile() -> CharacterBuildProfile:
+    """Advance the certified 2024 Berserker from level 9 to level 10 using the shared damage-reaction engine."""
+    try:
+        previous = build_rokhan_stonefury_level9_profile()
+        data = advance_profile_data(previous, 10)
+        apply_barbarian_level_to_profile_data(data, 10)
+        retaliation = FeatureAudit(
+            feature_id="retaliation",
+            feature_name="Retaliation",
+            source_reference="D&D Beyond Basic Rules 2024: Path of the Berserker Level 10",
+            category="subclass",
+            combat_relevant=True,
+            automated=True,
+            notes=(
+                "Reuses the universal damage-triggered reaction attack primitive already certified by the 2014 "
+                "Berserker and shared reaction engine. When a nearby creature damages Rokhan and his Reaction is "
+                "available, the engine resolves one legal melee weapon attack against that source."
+            ),
+        )
+        data.update(
+            feature_audits=[*data["feature_audits"], retaliation.model_dump()],
+            source_references=[
+                *data["source_references"],
+                "D&D Beyond Basic Rules 2024: Path of the Berserker Level 10 Retaliation",
+            ],
+        )
+        return CharacterBuildProfile.model_validate(data)
+    except Exception as exc:
+        raise RuntimeError("Rokhan Stonefury level 10 profile could not be built.") from exc
