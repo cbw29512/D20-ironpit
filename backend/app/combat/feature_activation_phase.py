@@ -4,6 +4,7 @@ import logging
 
 from app.combat.activation_movement import resolve_activation_movement
 from app.combat.barbarian import enter_rage
+from app.combat.bonus_save_actions import resolve_bonus_save_action
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
 from app.combat.stationary_attack_advantage import use_stationary_attack_advantage
 from app.combat.dice import DiceProvider
@@ -32,24 +33,31 @@ def resolve_feature_activation_phase(
             sequence += 1
 
         rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
-        if rage_event is None:
-            return events, sequence
-        events.append(rage_event)
-        sequence += 1
-        fraction = attacker.state.template.progression_features.instinctive_pounce_fraction
-        if fraction <= 0:
-            return events, sequence
-        movement_events, sequence = resolve_activation_movement(
+        if rage_event is not None:
+            events.append(rage_event)
+            sequence += 1
+            fraction = attacker.state.template.progression_features.instinctive_pounce_fraction
+            if fraction > 0:
+                movement_events, sequence = resolve_activation_movement(
+                    sequence,
+                    round_number,
+                    attacker,
+                    setup,
+                    dice,
+                    speed_fraction=fraction,
+                    turn_key=turn_key,
+                )
+                events.extend(movement_events)
+                sync_paladin_auras_2014(setup)
+
+        bonus_save_events, sequence = resolve_bonus_save_action(
             sequence,
             round_number,
             attacker,
             setup,
             dice,
-            speed_fraction=fraction,
-            turn_key=turn_key,
         )
-        events.extend(movement_events)
-        sync_paladin_auras_2014(setup)
+        events.extend(bonus_save_events)
         return events, sequence
     except ValueError:
         raise
