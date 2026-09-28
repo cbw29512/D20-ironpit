@@ -53,6 +53,7 @@ class CombatModifier(BaseModel):
     replacement_hp: int = Field(default=0, ge=0)
     prevents_instant_death: bool = False
     source_creature_types: list[str] = Field(default_factory=list)
+    required_active_effect_ids: list[str] = Field(default_factory=list)
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
     success_immunity_hours: int | None = Field(default=None, ge=1)
@@ -121,6 +122,12 @@ class CombatModifier(BaseModel):
             ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE,
         }:
             raise ValueError(f"{self.kind.value} does not accept source creature types.")
+        if self.required_active_effect_ids and self.kind is not ModifierKind.CONDITION_IMMUNITY:
+            raise ValueError(f"{self.kind.value} does not accept active-effect requirements.")
+        required_effects = [item.strip().casefold() for item in self.required_active_effect_ids]
+        if any(not item for item in required_effects) or len(set(required_effects)) != len(required_effects):
+            raise ValueError("Active-effect requirements must be non-empty and unique.")
+        self.required_active_effect_ids = required_effects
         if self.kind in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and not self.save_ability:
             raise ValueError(f"{self.kind.value} requires a save ability.")
         if self.kind is ModifierKind.TARGETING_SAVE_GATE and self.save_dc is None:
