@@ -7,9 +7,11 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.zero_hp import apply_damage
+from app.combat.spell_damage_maximizers import maximized_auto_hit_rolls
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll
 
 logger = logging.getLogger(__name__)
@@ -26,6 +28,7 @@ def resolve_auto_hit_spell(
     projectile_count: int,
     turn_key: str,
     dice,
+    damage_maximizer: SpellDamageMaximizerGrant | None = None,
 ) -> BattleEvent:
     try:
         if not is_available(caster.state, action.action_cost):
@@ -47,8 +50,18 @@ def resolve_auto_hit_spell(
         rolls: list[int] = []
         raw_total = 0
         components: list[DamageRollComponent] = []
+        maximized = (
+            maximized_auto_hit_rolls(
+                action.damage_dice_count, action.damage_dice_size, projectile_count,
+            )
+            if damage_maximizer is not None else None
+        )
         for projectile in range(projectile_count):
-            projectile_rolls = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
+            projectile_rolls = (
+                maximized[projectile]
+                if maximized is not None
+                else [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
+            )
             subtotal = sum(projectile_rolls) + action.damage_bonus
             rolls.extend(projectile_rolls)
             raw_total += subtotal

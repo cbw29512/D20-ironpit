@@ -22,6 +22,7 @@ class AreaPlacement:
     origin: Point
     direction: Direction | None = None
     friendly_ids: tuple[str, ...] = ()
+    protected_friendly_ids: tuple[str, ...] = ()
 
     @property
     def enemy_ids(self) -> tuple[str, ...]:

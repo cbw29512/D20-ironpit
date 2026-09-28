@@ -19,31 +19,27 @@ def test_public_canonical_registry_remains_2024_only() -> None:
 def test_all_edition_registry_contains_exact_certified_2014_progressions() -> None:
     entries = build_all_certified_hero_entries()
     heroes_2014 = [(key, template) for key, template in entries if template.ruleset == "2014"]
-    fighters = [(key, template) for key, template in heroes_2014 if key[0] == "fighter"]
-    barbarians = [(key, template) for key, template in heroes_2014 if key[0] == "barbarian"]
-    rogues = [(key, template) for key, template in heroes_2014 if key[0] == "rogue"]
-    monks = [(key, template) for key, template in heroes_2014 if key[0] == "monk"]
-    paladins = [(key, template) for key, template in heroes_2014 if key[0] == "paladin"]
-    clerics = [(key, template) for key, template in heroes_2014 if key[0] == "cleric"]
-    bards = [(key, template) for key, template in heroes_2014 if key[0] == "bard"]
+    expected_classes = {
+        "barbarian", "bard", "cleric", "druid", "fighter", "monk",
+        "paladin", "ranger", "rogue", "sorcerer", "warlock", "wizard",
+    }
+    by_class = {
+        class_id: [(key, template) for key, template in heroes_2014 if key[0] == class_id]
+        for class_id in expected_classes
+    }
 
-    assert len(heroes_2014) >= 120
-    assert [key[1] for key, _ in fighters] == list(range(1, 21))
-    assert [key[1] for key, _ in barbarians] == list(range(1, 21))
-    assert [key[1] for key, _ in rogues] == list(range(1, 21))
-    assert [key[1] for key, _ in monks] == list(range(1, 21))
-    assert [key[1] for key, _ in paladins] == list(range(1, 21))
-    assert [key[1] for key, _ in clerics] == list(range(1, 21))
-    if bards:
-        assert [key[1] for key, _ in bards] == list(range(1, len(bards) + 1))
-        assert {template.name for _, template in bards} == {"Lyra Silverstring"}
+    assert len(heroes_2014) == 240
+    assert {key[0] for key, _ in heroes_2014} == expected_classes
+    for class_id, class_entries in by_class.items():
+        assert [key[1] for key, _ in class_entries] == list(range(1, 21)), class_id
     assert {key[2] for key, _ in heroes_2014} == {"canonical-2014"}
-    assert {template.name for _, template in fighters} == {"Karnok Stoneward"}
-    assert {template.name for _, template in barbarians} == {"Rokhan Stonefury"}
-    assert {template.name for _, template in rogues} == {"Mara Quickstep"}
-    assert {template.name for _, template in monks} == {"Kael Stillwater"}
-    assert {template.name for _, template in paladins} == {"Aurelia Brightshield"}
-    assert {template.name for _, template in clerics} == {"Seraphine Dawnshield"}
+    assert {template.name for _, template in by_class["fighter"]} == {"Karnok Stoneward"}
+    assert {template.name for _, template in by_class["barbarian"]} == {"Rokhan Stonefury"}
+    assert {template.name for _, template in by_class["rogue"]} == {"Mara Quickstep"}
+    assert {template.name for _, template in by_class["monk"]} == {"Kael Stillwater"}
+    assert {template.name for _, template in by_class["paladin"]} == {"Aurelia Brightshield"}
+    assert {template.name for _, template in by_class["cleric"]} == {"Seraphine Dawnshield"}
+    assert {template.name for _, template in by_class["wizard"]} == {"Elian Starweaver"}
     assert all(template.weapon_masteries == [] for _, template in heroes_2014)
 
 

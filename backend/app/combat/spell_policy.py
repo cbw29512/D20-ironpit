@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import replace
 
 from app.combat.action_economy import is_available
+from app.combat.alternate_spell_casts import available_alternate_casts
 from app.combat.spell_choice import SpellChoice
+from app.combat.spell_damage_maximizers import safe_maximizer_for_spell
 from app.combat.spell_policy_targeting import (
     area_spell_choice,
     legacy_radius_spell_choice,
@@ -60,7 +63,7 @@ def choose_spell(
 ) -> SpellChoice | None:
     """Choose the highest-value legal non-Concentration save spell."""
     try:
-        candidates: list[tuple[float, int, int, SpellChoice]] = []
+        candidates: list[tuple[float, int, int, int, SpellChoice]] = []
         members = {
             member.combatant_id: member
             for member in [*setup.heroes, *setup.monsters]
@@ -72,12 +75,20 @@ def choose_spell(
                 or not is_available(caster.state, action.action_cost)
             ):
                 continue
-            for slot_level in legal_slot_levels(
-                caster.state,
-                turn_key,
-                action.level,
-                higher_slot_scaling=action.upcast_dice_per_level > 0,
-            ):
+            cast_options = [
+                (slot_level, None)
+                for slot_level in legal_slot_levels(
+                    caster.state,
+                    turn_key,
+                    action.level,
+                    higher_slot_scaling=action.upcast_dice_per_level > 0,
+                )
+            ]
+            cast_options.extend(
+                (grant.cast_level, grant)
+                for grant in available_alternate_casts(caster.state, action.id)
+            )
+            for slot_level, alternate_cast in cast_options:
                 scaled = spell_at_slot(action, slot_level)
                 if action.area is not None:
                     choice = area_spell_choice(
@@ -98,13 +109,21 @@ def choose_spell(
                         caster, setup, action, slot_level, scaled,
                     )
                 if choice is not None:
+                    choice = replace(choice, alternate_cast=alternate_cast)
                     candidates.append((
                         choice.expected_damage,
+                        int(alternate_cast is not None),
                         -action.level,
                         -index,
                         choice,
                     ))
-        return max(candidates, key=lambda item: item[:3])[3] if candidates else None
+        if not candidates:
+            return None
+        choice = max(candidates, key=lambda item: item[:4])[4]
+        maximizer = safe_maximizer_for_spell(
+            caster, choice.action.id, choice.slot_level,
+        )
+        return replace(choice, damage_maximizer=maximizer)
     except Exception:
         logger.exception(
             "Failed to choose save-based spell for %s.",

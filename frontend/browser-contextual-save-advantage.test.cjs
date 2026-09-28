@@ -33,6 +33,7 @@ load("browser-defensive-modifier-rules.js");
 load("browser-rolls.js");
 load("browser-saving-throws.js");
 load("browser-saves.js");
+load("browser-spell-resolution-effects.js");
 load("browser-spell-resolution.js");
 
 const template = {

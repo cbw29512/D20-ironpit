@@ -18,7 +18,9 @@
     const components = [], allRolls = [];
     let total = 0;
     for (let index = 0; index < choice.projectileCount; index += 1) {
-      const rolls = window.IRON_PIT_DICE.rollMany(action.damageDiceCount || 1, action.damageDiceSize || 4);
+      const rolls = choice.damageMaximizer
+        ? C().maximizedRolls(action.damageDiceCount || 1, action.damageDiceSize || 4)
+        : window.IRON_PIT_DICE.rollMany(action.damageDiceCount || 1, action.damageDiceSize || 4);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.damageBonus || 0);
       const applied = A().adjustedDamage(target.state, raw, action.damageType);
       allRolls.push(...rolls);

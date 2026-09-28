@@ -98,7 +98,7 @@ def test_resolving_aoe_spends_one_slot_and_uses_safe_enemy_only_placement() -> N
     assert sequence == 5
     assert len(events) == 4
     assert events[0].feature_id == "fireball"
-    assert "3 enemies and 0 unprotected allies" in events[0].description
+    assert "3 enemies, 0 unprotected allies, and 0 protected allies" in events[0].description
     assert {event.target_id for event in events[1:]} == {"monster-0", "monster-1", "monster-2"}
     slot = next(item for item in caster.state.resources if item.id == "spell-slot-3")
     assert slot.current_uses == 0

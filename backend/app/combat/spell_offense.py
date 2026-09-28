@@ -13,6 +13,7 @@ from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.spell_attack_sequence import resolve_spell_attack_sequence
 from app.combat.spell_policy import choose_spell
 from app.combat.spell_resolution import resolve_spell
+from app.combat.spell_damage_maximizers import resolve_maximizer_after_cast
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -67,8 +68,9 @@ def resolve_best_spell_offense(
                 auto_hit.projectile_count,
                 turn_key,
                 dice,
+                damage_maximizer=auto_hit.damage_maximizer,
             )
-            return damage_event_chain(
+            chain_events, next_sequence = damage_event_chain(
                 sequence + 1,
                 round_number,
                 caster,
@@ -77,6 +79,18 @@ def resolve_best_spell_offense(
                 dice,
                 turn_key=turn_key,
             )
+            if auto_hit.damage_maximizer is not None:
+                follow_up, next_sequence = resolve_maximizer_after_cast(
+                    next_sequence,
+                    round_number,
+                    caster,
+                    setup,
+                    auto_hit.damage_maximizer,
+                    auto_hit.slot_level,
+                    dice,
+                )
+                chain_events.extend(follow_up)
+            return chain_events, next_sequence
         use_attack = save is None or (
             attack is not None and (
                 attack.expected_damage > save.expected_damage

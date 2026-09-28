@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-25 against `main` after PR #390 merged.
+Recorded 2026-09-27 for the final 2014 pregen admission tranche (PR #397).
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -17,11 +17,16 @@ From `backend/app/content/certified_hero_progressions.py`:
 |---|---|---|
 | 2014 | Fighter (Champion) | 1–20 |
 | 2014 | Barbarian (Berserker) | 1–20 |
-| 2014 | Rogue (Thief) | 1–20 |
+| 2014 | Bard (Lore) | 1–20 |
+| 2014 | Cleric (Life) | 1–20 |
+| 2014 | Druid (Land) | 1–20 |
 | 2014 | Monk (Open Hand) | 1–20 |
 | 2014 | Paladin (Devotion) | 1–20 |
-| 2014 | Cleric (Life) | 1–20 |
-| 2014 | Bard (Lore) | 1–20 |
+| 2014 | Ranger (Hunter) | 1–20 |
+| 2014 | Rogue (Thief) | 1–20 |
+| 2014 | Sorcerer (Draconic) | 1–20 |
+| 2014 | Warlock (Fiend) | 1–20 |
+| 2014 | Wizard (Evoker) | 1–20 |
 | 2024 | Fighter | 1–18 |
 | 2024 | Rogue | 1–20 |
 | 2024 | Cleric (Life) | 1–12 |
@@ -34,15 +39,13 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 ## Active lane
 
-**Finish remaining 2014 canonical pregens before any new 2024 class expansion.**
+**2014 canonical pregens are complete at 240 / 240 registered level snapshots.**
 
-Active class: **2014 Ranger (Rowan Ashtrail / Hunter), one persistent 1–20 progression.**
+PR #397 completes the final persistent 2014 Evoker Wizard progression. Its exact-head gates must remain green through merge.
 
-2014 Life Cleric 1–20 merged in PR #388. Older Cleric PRs #361, #364, and #366 are superseded and closed.
+Next lane: **full 2014 READY re-audit and touched-engine technical-debt pass**. Reconcile source legality, edition isolation, generated parity, browser/Python behavior, capability duplication, and certification truth across all twelve 1–20 progressions.
 
-2014 Druid 1–20 merged in PR #391. After Ranger: Sorcerer, Warlock, Wizard (2014), then 240/240 2014 re-audit.
-
-Do **not** open or merge 2024 Cleric 13+, 2024 Fighter 19+, or 2024 Barbarian 8+ until that 2014 gate.
+Do **not** begin new 2024 class expansion until that 2014 re-audit is recorded clean. After the re-audit, resume 2024 by reusing certified 2014 mechanics wherever the underlying behavior is equivalent.
 
 ## Parked / superseded
 

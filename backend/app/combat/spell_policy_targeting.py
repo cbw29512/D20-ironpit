@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import replace
 
+from app.combat.area_spell_ally_protection import eligible_area_spell_allies
 from app.combat.area_targeting import legal_area_placements
 from app.combat.condition_rules import can_see
 from app.combat.encounter_targeting import combatant_distance
@@ -54,10 +56,21 @@ def area_spell_choice(
         else base_range
     )
     base_placements = legal_area_placements(caster, setup, action.area, base_range)
-    placements = [
-        item for item in legal_area_placements(caster, setup, action.area, effective_range)
-        if not item.friendly_ids
-    ]
+    protected_ids, protected_limit = eligible_area_spell_allies(caster, setup, action, slot_level)
+    placements = []
+    for item in legal_area_placements(caster, setup, action.area, effective_range):
+        friendly = tuple(item.friendly_ids)
+        can_protect = (
+            bool(friendly)
+            and len(friendly) <= protected_limit
+            and set(friendly).issubset(protected_ids)
+        )
+        if friendly and not can_protect:
+            continue
+        placements.append(
+            replace(item, friendly_ids=(), protected_friendly_ids=friendly)
+            if can_protect else item
+        )
     if not placements:
         return None
     placement = max(placements, key=lambda item: (len(item.enemy_ids), -len(item.friendly_ids)))
@@ -83,8 +96,15 @@ def legacy_radius_spell_choice(
 ) -> SpellChoice | None:
     base_range = action.range_ft
     effective_range = effective_spell_range_ft(caster.state, base_range)
+    eligible_ids, protected_limit = eligible_area_spell_allies(caster, setup, action, slot_level)
+    explicit_ids = protected_ally_ids or set()
     placement = best_area_placement(
-        caster, setup, action.area_radius_ft, effective_range, protected_ally_ids,
+        caster,
+        setup,
+        action.area_radius_ft,
+        effective_range,
+        eligible_ids | explicit_ids,
+        protected_limit if eligible_ids else None,
     )
     if placement is None:
         return None

@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.concentration import start_concentration
 from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
@@ -10,6 +11,7 @@ from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import spell_at_slot
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
+from app.combat.spell_damage_maximizers import resolve_maximizer_after_cast
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -44,7 +46,11 @@ def resolve_spell(
             raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
 
         remaining = None
-        if choice.slot_level > 0:
+        if choice.alternate_cast is not None:
+            if choice.alternate_cast.cast_level != choice.slot_level:
+                raise ValueError("Alternate spell cast level does not match the selected cast level.")
+            remaining = spend_alternate_cast(caster.state, choice.alternate_cast)
+        elif choice.slot_level > 0:
             resource = _resource(caster.state, choice.slot_level)
             if resource is None or resource.current_uses < 1:
                 raise ValueError(f"No level {choice.slot_level} spell slot remains.")
@@ -73,11 +79,17 @@ def resolve_spell(
         placement = choice.placement
         detail = ""
         if placement is not None:
+            protected_count = len(getattr(placement, "protected_friendly_ids", ()))
             detail = (
-                f" Area covers {len(placement.enemy_ids)} enemies and "
-                f"{len(placement.friendly_ids)} unprotected allies."
+                f" Area covers {len(placement.enemy_ids)} enemies, "
+                f"{len(placement.friendly_ids)} unprotected allies, and "
+                f"{protected_count} protected allies."
             )
-        slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
+        slot_text = (
+            choice.alternate_cast.source_name
+            if choice.alternate_cast is not None
+            else ("cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot")
+        )
         events: list[BattleEvent] = []
         if choice.range_modifier is not None:
             events.append(BattleEvent(
@@ -118,6 +130,17 @@ def resolve_spell(
             dice,
         )
         events.extend(effect_events)
+        if choice.damage_maximizer is not None:
+            follow_up, sequence = resolve_maximizer_after_cast(
+                sequence,
+                round_number,
+                caster,
+                setup,
+                choice.damage_maximizer,
+                choice.slot_level,
+                dice,
+            )
+            events.extend(follow_up)
         return events, sequence
     except ValueError:
         raise

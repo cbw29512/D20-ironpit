@@ -10,6 +10,7 @@ from app.combat.spell_save_disadvantage import (
     spend_spell_save_disadvantage,
 )
 from app.combat.spell_choice import SpellChoice
+from app.combat.spell_damage_maximizers import maximized_save_damage_rolls
 from app.combat.spell_policy import spell_at_slot
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
@@ -67,7 +68,10 @@ def resolve_spell_save_effect(
         placement = choice.placement
         action = compile_spell_save_action(choice)
         events: list[BattleEvent] = []
-        shared_damage_rolls: list[int] | list[list[int]] | None = None
+        shared_damage_rolls: list[int] | list[list[int]] | None = (
+            maximized_save_damage_rolls(scaled_spell)
+            if choice.damage_maximizer is not None else None
+        )
         save_disadvantage = choose_spell_save_disadvantage(caster.state)
 
         for target_id in choice.target_ids:

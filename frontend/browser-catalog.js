@@ -23,7 +23,11 @@
     monk: { id: "way-open-hand", name: "Way of the Open Hand", unlockLevel: 3 },
     paladin: { id: "oath-devotion", name: "Oath of Devotion", unlockLevel: 3 },
     sorcerer: { id: "draconic-bloodline", name: "Draconic Bloodline", unlockLevel: 1 },
+    bard: { id: "college-lore", name: "College of Lore", unlockLevel: 3 },
+    druid: { id: "circle-land", name: "Circle of the Land", unlockLevel: 2 },
+    ranger: { id: "hunter", name: "Hunter", unlockLevel: 3 },
     warlock: { id: "fiend-patron", name: "Fiend Patron", unlockLevel: 1 },
+    wizard: { id: "evoker", name: "School of Evocation", unlockLevel: 2 },
   };
 
   function readyHeroIndex(ruleset = "2024") {
