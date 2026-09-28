@@ -67,4 +67,5 @@ CLERIC_SPELLS = (
         "healing", "multi-target-healing", always_prepared_from_level=9,
     ),
     _spell("fire-storm", "Fire Storm", 7, "damage", 13, "arena-out-of-scope"),
+    _spell("sunburst", "Sunburst", 8, "damage", 15, "save-damage", "area", "blinded", "repeat-save"),
 )
