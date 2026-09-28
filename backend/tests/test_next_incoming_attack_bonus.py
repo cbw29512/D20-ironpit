@@ -40,7 +40,7 @@ def test_next_incoming_attack_bonus_excludes_source_then_consumes_for_other_atta
 
     ally_event = resolve_attack(
         2, 1, ally, target, ally.template.weapon_attack, 5,
-        FixedDiceProvider([8, 4]),
+        FixedDiceProvider([8, 4, 3, 2, 5, 1]),
         actor_event_id="ally", target_event_id="target", spend_action=False,
     )
     assert ally_event.attack_roll is not None
