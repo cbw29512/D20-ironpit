@@ -1,4 +1,4 @@
-from app.combat.brutal_strike import apply_hamstring_blow, brutal_strike_bonus_damage
+from app.combat.brutal_strike import apply_hamstring_blow, apply_sundering_blow_if_triggered, brutal_strike_bonus_damage
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import effective_speed
 from app.combat.reckless_attack import RECKLESS_ATTACK_EFFECT_ID
@@ -42,3 +42,17 @@ def test_hamstring_blow_reuses_speed_modifier_and_expires_at_source_turn_start()
     assert effective_speed(state) == max(0, base_speed - 15)
     assert expire_source_turn_start_modifiers([state], "rokhan") == 1
     assert effective_speed(state) == base_speed
+
+
+def test_improved_brutal_strike_applies_sundering_only_after_brutal_strike_is_used() -> None:
+    state, attack = _barbarian(13)
+    target = build_combatant_state(build_rokhan_stonefury_level(13))
+
+    assert apply_sundering_blow_if_triggered(state, target, "rokhan", "1:rokhan") is False
+    assert brutal_strike_bonus_damage(state, attack, "1:rokhan", has_disadvantage=False) is not None
+    assert apply_sundering_blow_if_triggered(state, target, "rokhan", "1:rokhan") is True
+
+    modifier = next(item for item in target.active_modifiers if item.source_effect_id == "sundering-blow")
+    assert modifier.flat_bonus == 5
+    assert modifier.source_id == "rokhan"
+    assert modifier.expires_at_start_of_source_turn is True
