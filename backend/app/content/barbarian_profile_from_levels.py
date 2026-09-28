@@ -10,7 +10,7 @@ _ADVANCEMENT_INCREASES = {
     12: (("constitution", 2),),
     16: (("constitution", 2),),
     19: (("strength", 1),),
-    20: (("strength", 4), ("constitution", 4)),
+    20: (("strength", 2), ("strength", 2), ("constitution", 2), ("constitution", 2)),
 }
 
 
