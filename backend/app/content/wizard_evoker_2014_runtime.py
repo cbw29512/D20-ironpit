@@ -7,7 +7,6 @@ from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
 from app.content.shared_invisibility_spells_2014 import greater_invisibility_2014
 from app.content.sorcerer_draconic_2014_spell_support import (
     false_life_2014,
-    magic_missile_2014,
     shocking_grasp_2014,
 )
 from app.content.sorcerer_draconic_2014_spells import (
@@ -15,6 +14,7 @@ from app.content.sorcerer_draconic_2014_spells import (
     cone_of_cold_2014,
     fire_bolt_2014,
     fireball_2014,
+    lightning_bolt_2014,
     poison_spray_2014,
     ray_of_frost_2014,
     shatter_2014,
@@ -27,10 +27,11 @@ from app.domain.actions import HpThresholdConditionAction, HpThresholdInstantDea
 from app.domain.area_spell_protection import AreaSpellAllyProtectionGrant
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.spell_features import SpellDamageMaximizerGrant, SpellSpecificCastGrant
 
 logger = logging.getLogger(__name__)
 
-_EVOCATION_AREA_SPELL_IDS = ["burning-hands", "shatter", "fireball", "cone-of-cold"]
+_EVOCATION_AREA_SPELL_IDS = ["burning-hands", "shatter", "fireball", "lightning-bolt", "cone-of-cold"]
 
 
 def _damage_bonus(level: int, intelligence_modifier: int) -> int:
@@ -56,6 +57,35 @@ def _weapon(level: int, scores) -> WeaponAttack:
 
 def _progression_features(level: int) -> ProgressionCombatFeatures:
     try:
+        cast_grants: list[SpellSpecificCastGrant] = []
+        if level >= 18:
+            cast_grants.extend([
+                SpellSpecificCastGrant(
+                    source_id="spell-mastery-burning-hands",
+                    source_name="Spell Mastery",
+                    spell_id="burning-hands", slot_level=1, unlimited=True,
+                ),
+                SpellSpecificCastGrant(
+                    source_id="spell-mastery-shatter",
+                    source_name="Spell Mastery",
+                    spell_id="shatter", slot_level=2, unlimited=True,
+                ),
+            ])
+        if level >= 20:
+            cast_grants.extend([
+                SpellSpecificCastGrant(
+                    source_id="signature-spell-fireball",
+                    source_name="Signature Spells",
+                    spell_id="fireball", slot_level=3,
+                    resource_id="signature-spell-fireball",
+                ),
+                SpellSpecificCastGrant(
+                    source_id="signature-spell-lightning-bolt",
+                    source_name="Signature Spells",
+                    spell_id="lightning-bolt", slot_level=3,
+                    resource_id="signature-spell-lightning-bolt",
+                ),
+            ])
         return ProgressionCombatFeatures(
             area_spell_ally_protection=(
                 AreaSpellAllyProtectionGrant(
@@ -69,6 +99,19 @@ def _progression_features(level: int) -> ProgressionCombatFeatures:
                     no_damage_on_success=True,
                 )
                 if level >= 2 else None
+            ),
+            spell_specific_cast_grants=cast_grants,
+            spell_damage_maximizer=(
+                SpellDamageMaximizerGrant(
+                    source_id="overchannel", source_name="Overchannel",
+                    minimum_spell_level=1, maximum_spell_level=5,
+                    free_uses=1, self_damage_die_size=12,
+                    repeat_base_dice_per_spell_level=2,
+                    repeat_increment_dice_per_spell_level=1,
+                    self_damage_type="necrotic",
+                    bypasses_resistance_and_immunity=True,
+                )
+                if level >= 14 else None
             ),
         )
     except Exception:
@@ -94,20 +137,16 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
         if level >= 6:
             poison = poison.model_copy(update={"success_damage": "half"})
 
-        magic_missile = magic_missile_2014()
-        if level >= 10:
-            magic_missile = magic_missile.model_copy(
-                update={"damage_bonus": magic_missile.damage_bonus + intelligence}
-            )
-
         ray = ray_of_frost_2014(spell_attack, level)
         grasp = shocking_grasp_2014(spell_attack, level)
         shatter = shatter_2014(save_dc)
+        lightning = lightning_bolt_2014(save_dc)
         cone = cone_of_cold_2014(save_dc)
         if level >= 10:
             ray = ray.model_copy(update={"damage_bonus": intelligence})
             grasp = grasp.model_copy(update={"damage_bonus": intelligence})
             shatter = shatter.model_copy(update={"damage_bonus": intelligence})
+            lightning = lightning.model_copy(update={"damage_bonus": intelligence})
             cone = cone.model_copy(update={"damage_bonus": intelligence})
 
         circle = circle_of_death_2014(save_dc).model_copy(
@@ -136,12 +175,12 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
                 ray,
                 *([grasp] if level >= 4 else []),
             ],
-            auto_hit_spell_actions=[magic_missile],
             spell_save_actions=[
                 poison,
                 burning_hands_2014(save_dc, bonus),
                 *([shatter] if level >= 3 else []),
                 *([fireball_2014(save_dc, bonus)] if level >= 5 else []),
+                *([lightning] if level >= 6 else []),
                 *([cone] if level >= 9 else []),
             ],
             saving_throw_actions=[
@@ -192,13 +231,27 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
                 "insight": scores.modifier("wisdom") + pb,
             },
             resources=[
-                ResourceDefinition(
-                    id=f"spell-slot-{spell_level}",
-                    name=f"Spell Slot {spell_level}",
-                    max_uses=uses,
-                )
-                for spell_level, uses in enumerate(row.spell_slots, start=1)
-                if uses
+                *[
+                    ResourceDefinition(
+                        id=f"spell-slot-{spell_level}",
+                        name=f"Spell Slot {spell_level}",
+                        max_uses=uses,
+                    )
+                    for spell_level, uses in enumerate(row.spell_slots, start=1)
+                    if uses
+                ],
+                *([
+                    ResourceDefinition(
+                        id="signature-spell-fireball",
+                        name="Signature Spells: Fireball",
+                        max_uses=1,
+                    ),
+                    ResourceDefinition(
+                        id="signature-spell-lightning-bolt",
+                        name="Signature Spells: Lightning Bolt",
+                        max_uses=1,
+                    ),
+                ] if level >= 20 else []),
             ],
             weapon_masteries=[],
             visual=VisualLoadout(armor="unarmored", main_hand="arcane-focus", body_style="humanoid"),
