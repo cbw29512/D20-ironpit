@@ -1,11 +1,9 @@
 name: Sync Generated Certification Artifacts
-# Temporary branch sync; remove before merge.
-# Generator trigger pulse.
 
 on:
   workflow_dispatch:
   push:
-    branches: [main, feat/2024-barbarian-10-12-engine-main]
+    branches: [main]
 
 permissions:
   contents: write
