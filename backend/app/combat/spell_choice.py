@@ -15,3 +15,4 @@ class SpellChoice:
     placement: AreaPlacement | None = None
     expected_damage: float = 0.0
     range_modifier: ResourceBackedSpellRangeModifier | None = None
+    maximize_damage: bool = False
