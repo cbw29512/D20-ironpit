@@ -19,63 +19,13 @@ from app.combat.failed_save_reroll import apply_failed_save_reroll
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
 from app.combat.rolls import roll_d20
+from app.combat.saving_throw_minimum import apply_saving_throw_minimum
 from app.combat.saving_throw_traits import sure_footed_advantage
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 from app.domain.modifiers import ModifierKind
 from app.domain.saving_throw_context import SavingThrowContext
 
 logger = logging.getLogger(__name__)
-
-
-def apply_saving_throw_minimum(
-    state: CombatantState,
-    ability: str,
-    roll: DiceRoll,
-) -> DiceRoll:
-    """Apply the strongest declared minimum to an already-resolved saving throw."""
-    try:
-        rules = [
-            rule for rule in state.template.progression_features.saving_throw_minimums
-            if rule.ability == ability
-        ]
-        if not rules:
-            return roll
-        scores = state.template.ability_scores
-        if scores is None:
-            raise ValueError(
-                f"{state.template.name} has a saving-throw minimum without certified ability scores."
-            )
-        floor = scores.score(ability)
-        if roll.total >= floor:
-            return roll
-        rule = sorted(rules, key=lambda item: item.source_id)[0]
-        revision = RollRevision(
-            source_effect_id=rule.source_id,
-            kind="total_replacement",
-            original_rolls=list(roll.rolls),
-            replacement_rolls=list(roll.rolls),
-            original_modifier=roll.modifier,
-            replacement_modifier=roll.modifier,
-            original_selected=roll.selected_roll,
-            replacement_selected=roll.selected_roll,
-            original_total=roll.total,
-            replacement_total=floor,
-            accepted="replacement",
-        )
-        return roll.model_copy(update={
-            "notation": f"{roll.notation} [{rule.source_id}]",
-            "total": floor,
-            "revisions": [*roll.revisions, revision],
-        })
-    except ValueError:
-        raise
-    except Exception as exc:
-        logger.exception(
-            "Failed to apply saving-throw minimum for %s (%s).",
-            state.template.name,
-            ability,
-        )
-        raise RuntimeError("Saving-throw minimum could not be applied.") from exc
 
 
 def saving_throw_mode(
