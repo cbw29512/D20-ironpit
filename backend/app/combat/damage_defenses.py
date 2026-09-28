@@ -49,6 +49,7 @@ def adjusted_damage_amount(
     *,
     allow_vulnerability: bool = True,
     source_qualifiers: set[DamageSourceQualifier] | None = None,
+    ignored_resistance_types: set[DamageType] | None = None,
 ) -> int:
     """Apply immunity/resistance/vulnerability to one typed damage component."""
     try:
@@ -65,7 +66,12 @@ def adjusted_damage_amount(
             *target.temporary_damage_resistances,
             *_active_timed_resistances(target),
         }
-        if damage_type in resistances or DamageDefenseKind.RESISTANCE in conditional or has_condition(target, "petrified"):
+        ignores_resistance = damage_type in (ignored_resistance_types or set())
+        if not ignores_resistance and (
+            damage_type in resistances
+            or DamageDefenseKind.RESISTANCE in conditional
+            or has_condition(target, "petrified")
+        ):
             adjusted //= 2
         if allow_vulnerability and (
             damage_type in template.damage_vulnerabilities
@@ -83,6 +89,8 @@ def adjusted_damage_amount(
 def apply_damage_defenses(
     target: CombatantState,
     components: list[DamageRollComponent],
+    *,
+    ignored_resistance_types: set[DamageType] | None = None,
 ) -> tuple[int, list[DamageRollComponent]]:
     """Apply defenses per typed component and return total damage actually taken."""
     try:
@@ -94,6 +102,7 @@ def apply_damage_defenses(
                 component.damage_type,
                 target,
                 source_qualifiers=set(component.source_qualifiers),
+                ignored_resistance_types=ignored_resistance_types,
             )
             adjusted_components.append(component.model_copy(update={"applied_total": applied}))
             applied_total += applied
