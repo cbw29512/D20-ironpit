@@ -89,7 +89,7 @@ def resolve_save_action(
         and action.failed_save_timed_effect is not None
     ):
         rider = action.failed_save_timed_effect
-        apply_timed_condition(
+        applied = apply_timed_condition(
             target.state,
             rider.effect_id,
             actor.combatant_id,
@@ -97,11 +97,17 @@ def resolve_save_action(
             source_template=actor.state.template,
             source_is_magical=action.magical_effect,
             applied_round=round_number,
+            expires_round=(round_number + rider.duration_rounds if rider.duration_rounds is not None else None),
             expiry_timing=rider.expiry_timing,
+            repeat_save_ability=rider.repeat_save_ability,
+            repeat_save_dc=rider.repeat_save_dc,
+            repeat_save_timing=rider.repeat_save_timing,
             next_attack_disadvantage=rider.next_attack_disadvantage,
             affected_states=affected_states,
             use_default_poison_recovery=False,
         )
+        if applied is not None:
+            applied_conditions.append(applied)
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
         applied_conditions = apply_grapple(
             target.state,
