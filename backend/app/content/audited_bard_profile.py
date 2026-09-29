@@ -8,6 +8,7 @@ from app.content.bard_2024_lore_profile_support import (
     bard_level6_magical_discoveries_audit,
     bard_level7_countercharm_audit,
     bard_level8_asi_audit,
+    bard_level9_audits,
     lore_bard_level3_audits,
 )
 from app.content.bard_2024_profile_core import (
@@ -22,10 +23,10 @@ from app.domain.character_builds import CharacterBuildProfile
 logger = logging.getLogger(__name__)
 
 def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Lyra's legal 2024 Lore Bard progression through level 8."""
+    """Compile Lyra's legal 2024 Lore Bard progression through level 9."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
-            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 8.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
+            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 9.")
         hero = HERO_BY_CLASS["bard"]
         base, background_increases, advancement_increases, final = bard_ability_scores(level)
         audits = [
@@ -96,6 +97,8 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
             audits.append(bard_level7_countercharm_audit())
         if level >= 8:
             audits.append(bard_level8_asi_audit())
+        if level >= 9:
+            audits.extend(bard_level9_audits())
         return CharacterBuildProfile(
             id=f"build-lyra-silverstring-l{level}",
             template_id=canonical_template_id("bard", level),
