@@ -698,3 +698,108 @@ def test_2024_lore_bard_level_sixteen_applies_final_wisdom_asi() -> None:
     level_sixteen = canonical_spell_package("bard", 16, "2024", 8)
     assert level_sixteen is not None
     assert len(level_sixteen.spells) == 18
+
+
+def test_2024_lore_bard_level_seventeen_adds_power_word_kill() -> None:
+    from app.combat.hp_threshold_instant_death import (
+        choose_hp_threshold_instant_death,
+        resolve_hp_threshold_instant_death,
+    )
+    from app.content.monsters import build_commoner
+    from app.domain.grid import GridPosition
+
+    profile = build_lyra_silverstring_profile(17)
+    hero = build_lyra_silverstring_level(17)
+
+    assert hero.max_hp == 88
+    assert hero.ability_scores.wisdom == 20
+    assert hero.ability_scores.charisma == 20
+    assert hero.skill_bonuses["perception"] == 17
+    assert hero.skill_bonuses["performance"] == 17
+
+    audit = next(item for item in profile.feature_audits if item.feature_id == "bard-combat-spells-9")
+    assert audit.automated is True
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["spell-slot-9"] == 1
+
+    action = hero.hp_threshold_instant_death_actions[0]
+    assert (
+        action.id,
+        action.range_ft,
+        action.max_current_hp,
+        action.fallback_damage_dice_count,
+        action.fallback_damage_dice_size,
+        action.fallback_damage_type,
+        action.resource_id,
+    ) == ("power-word-kill", 60, 100, 12, 12, "psychic", "spell-slot-9")
+
+    source = EncounterCombatant(
+        combatant_id="lyra-17", side="heroes", position_ft=0,
+        state=build_combatant_state(hero),
+    )
+    target_template = build_commoner().model_copy(update={"max_hp": 200})
+    target = EncounterCombatant(
+        combatant_id="target", side="monsters", position_ft=30,
+        state=build_combatant_state(target_template),
+    )
+    target.state.position = GridPosition(x=6, y=0)
+    source.state.position = GridPosition(x=0, y=0)
+    setup = EncounterSetup(
+        heroes=[source], monsters=[target], hero_total_levels=17, monster_total_cr="0",
+    )
+
+    target.state.current_hp = 150
+    selected = choose_hp_threshold_instant_death(source, setup)
+    assert selected is not None
+    event = resolve_hp_threshold_instant_death(
+        1, 1, source, target, selected[1], setup,
+        dice=FixedDiceProvider([1] * 12),
+    )
+    assert event.damage_roll is not None and event.damage_roll.total == 12
+    assert target.state.current_hp == 138
+    assert target.state.is_dead is False
+
+
+def test_2024_power_word_kill_uses_death_threshold_at_one_hundred_hp() -> None:
+    from app.combat.hp_threshold_instant_death import resolve_hp_threshold_instant_death
+    from app.content.monsters import build_commoner
+
+    hero = build_lyra_silverstring_level(17)
+    source = EncounterCombatant(
+        combatant_id="lyra-17", side="heroes", position_ft=0,
+        state=build_combatant_state(hero),
+    )
+    target_template = build_commoner().model_copy(update={"max_hp": 200})
+    target = EncounterCombatant(
+        combatant_id="target", side="monsters", position_ft=30,
+        state=build_combatant_state(target_template),
+    )
+    target.state.current_hp = 100
+    setup = EncounterSetup(
+        heroes=[source], monsters=[target], hero_total_levels=17, monster_total_cr="0",
+    )
+    action = hero.hp_threshold_instant_death_actions[0]
+
+    event = resolve_hp_threshold_instant_death(
+        1, 1, source, target, action, setup,
+        dice=FixedDiceProvider([12] * 12),
+    )
+
+    assert event.damage_roll is None
+    assert target.state.is_dead is True
+    assert target.state.current_hp == 0
+
+
+def test_2024_bard_level_seventeen_spell_package_adds_power_word_kill() -> None:
+    level_seventeen = canonical_spell_package("bard", 17, "2024", 9)
+
+    assert level_seventeen is not None
+    assert len(level_seventeen.spells) == 19
+    assert level_seventeen.spells[-1].id == "power-word-kill"
+    assert level_seventeen.spells[-1].spell_level == 9
+    assert level_seventeen.spells[-1].required_capabilities == [
+        "hp-threshold-instant-death",
+        "fallback-damage",
+        "magical-secrets",
+    ]

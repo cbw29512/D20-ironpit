@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.hp_threshold_actions import HpThresholdInstantDeathAction
 from app.domain.save_damage import DamageTypeName, SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
@@ -132,19 +133,6 @@ class SavingThrowAction(BaseModel):
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     animation: str = "save-effect"
 
-
-class HpThresholdInstantDeathAction(BaseModel):
-    """Action that kills a living target outright when current HP is low enough."""
-
-    id: str
-    name: str
-    action_cost: ActionCost = "action"
-    range_ft: int = Field(ge=0)
-    max_current_hp: int = Field(ge=1)
-    resource_id: str | None = None
-    resource_cost: int = Field(default=1, ge=1, le=20)
-    magical_effect: bool = True
-    animation: str = "instant-death"
 
 
 class HpThresholdConditionAction(BaseModel):

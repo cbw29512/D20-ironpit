@@ -60,3 +60,19 @@ def bard_level16_asi_audit() -> FeatureAudit:
         automated=True,
         notes="+2 Wisdom is applied to Lyra's persistent progression, producing Wisdom 20.",
     )
+
+
+def bard_level17_spells_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="bard-combat-spells-9",
+        feature_name="Level 9 Bard Spells",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 17; Spells — Power Word Kill",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "2024 Power Word Kill reuses the universal HP-threshold instant-death action "
+            "with a typed fallback-damage payload: a target at 100 HP or fewer dies; "
+            "otherwise it takes 12d12 Psychic damage through normal damage defenses."
+        ),
+    )

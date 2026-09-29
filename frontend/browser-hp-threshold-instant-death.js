@@ -4,11 +4,12 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const D = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
 
   function legal(member, target, action) {
     if (!E().available(member.state, action.actionCost || "action")) return false;
     if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0) return false;
-    if (target.state.current_hp > action.maxCurrentHp) return false;
+    if (target.state.current_hp > action.maxCurrentHp && !(action.fallbackDamageDiceCount || 0)) return false;
     if (F().saveDistance(member, target, action.range || 0) > (action.range || 0)) return false;
     if (action.resourceId && (member.state.resources?.[action.resourceId] || 0) < (action.resourceCost || 1)) return false;
     return true;
@@ -29,19 +30,40 @@
     E().spend(member.state, action.actionCost || "action");
     const hpBefore = target.state.current_hp;
     const states = [...setup.heroes, ...setup.monsters].map((item) => item.state);
-    const outcome = Z().applyInstantDeath(target.state, states);
-    const prevented = outcome === "zero_hp_replacement";
+    const fallback = target.state.current_hp > action.maxCurrentHp;
+    let prevented = false, damageRoll = null, damageComponents = [];
+    if (fallback) {
+      const rolls = window.IRON_PIT_DICE.rollMany(action.fallbackDamageDiceCount, action.fallbackDamageDiceSize);
+      const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.fallbackDamageBonus || 0);
+      const applied = D().adjustedDamage(target.state, raw, action.fallbackDamageType);
+      damageRoll = {
+        notation: `${action.fallbackDamageDiceCount}d${action.fallbackDamageDiceSize}`,
+        rolls, modifier: action.fallbackDamageBonus || 0, total: applied,
+      };
+      damageComponents = [{
+        source: action.name, notation: damageRoll.notation, rolls,
+        modifier: action.fallbackDamageBonus || 0, damage_type: action.fallbackDamageType,
+        total: raw, applied_total: applied,
+      }];
+      if (applied) Z().applyDamage(target.state, applied, false, [action.fallbackDamageType], states);
+    } else {
+      const outcome = Z().applyInstantDeath(target.state, states);
+      prevented = outcome === "zero_hp_replacement";
+    }
     const wardLog = window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(target.state) || "";
     return {
       sequence, round_number: round, event_type: "feature",
       actor_id: member.combatant_id, actor_name: member.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name,
       hp_before: hpBefore, hp_after: target.state.current_hp, is_dead: target.state.is_dead,
+      damage_roll: damageRoll, damage_components: damageComponents,
       feature_id: action.id,
       resource_remaining: action.resourceId ? member.state.resources[action.resourceId] : null,
       animation: action.animation || "instant-death",
       description: member.state.template.name + " uses " + action.name + " on " + target.state.template.name + "; "
-        + (prevented ? target.state.template.name + "'s ward negates the instant-death effect." : target.state.template.name + " dies.")
+        + (fallback
+          ? target.state.template.name + " takes " + damageRoll.total + " " + action.fallbackDamageType + " damage."
+          : (prevented ? target.state.template.name + "'s ward negates the instant-death effect." : target.state.template.name + " dies."))
         + wardLog,
     };
   }

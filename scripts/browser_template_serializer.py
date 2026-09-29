@@ -599,6 +599,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 {
                     "id": item.id, "name": item.name, "actionCost": item.action_cost,
                     "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                    "fallbackDamageDiceCount": item.fallback_damage_dice_count,
+                    "fallbackDamageDiceSize": item.fallback_damage_dice_size,
+                    "fallbackDamageBonus": item.fallback_damage_bonus,
+                    "fallbackDamageType": item.fallback_damage_type,
                     "resourceId": item.resource_id, "resourceCost": item.resource_cost,
                     "magicalEffect": item.magical_effect, "animation": item.animation,
                 }

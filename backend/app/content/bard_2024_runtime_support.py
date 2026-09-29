@@ -9,6 +9,7 @@ from app.content.bard_2024_spells import build_greater_invisibility_2024, build_
 from app.content.cleric_life_domain import DISPEL_MAGIC
 from app.content.offensive_spell_effects import build_disintegrate_2024, build_finger_of_death_2024, build_fireball_2024, build_guiding_bolt, build_sunburst_2024
 from app.content.spell_effects import BLESS
+from app.content.threshold_spell_effects import build_power_word_kill_2024
 from app.domain.combatants import ResourceDefinition
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.progression_primitives import FailedSaveRerollGrant
@@ -59,6 +60,14 @@ def bard_defensive_spells(level: int):
         ]
     except Exception:
         logger.exception("Failed to build 2024 Bard defensive spells at level %s.", level)
+        raise
+
+
+def bard_threshold_death_actions(level: int):
+    try:
+        return [build_power_word_kill_2024()] if level >= 17 else []
+    except Exception:
+        logger.exception("Failed to build 2024 Bard threshold-death actions at level %s.", level)
         raise
 
 
