@@ -34,7 +34,7 @@ def test_bard_base_table_and_lore_overlay_keep_only_arena_relevant_features() ->
     assert {"bardic-inspiration", "font-of-inspiration", "countercharm"} <= level_seven
     assert {"cutting-words", "magical-discoveries"} <= set(subclass_combat_features("college-lore", 7))
     level_twenty = set(bard_combat_features(20))
-    assert {"superior-inspiration", "boon-spell-recall", "words-of-creation"} <= level_twenty
+    assert {"superior-inspiration", "boon-of-fate", "words-of-creation"} <= level_twenty
     assert "peerless-skill" in subclass_combat_features("college-lore", 20)
 
 
