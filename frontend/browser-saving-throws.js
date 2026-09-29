@@ -8,6 +8,7 @@
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { saveDisadvantage: () => 0 };
   const DO = () => window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }), sourceNameForRoll: () => null };
   const FR = () => window.IRON_PIT_BROWSER_FAILED_SAVE_REROLL || { apply: (_state, roll) => ({ roll, featureId: null, sourceName: null }) };
+  const OA = () => window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
 
   function applyMinimum(state, ability, roll) {
@@ -106,6 +107,12 @@
           throw new Error("Failed-save reroll runtime is not loaded for a declared saving-throw capability.");
         }
         roll = FR().apply(state, roll).roll;
+      }
+      if (context.encounterRoller && context.setup) {
+        const adjustment = OA()?.applyIfUseful(
+          context.encounterRoller, context.setup, "saving_throw", roll, dc,
+        );
+        if (adjustment?.featureId) roll = adjustment.roll;
       }
       const d20Grants = state.template.failed_d20_test_override_grants || [];
       if (d20Grants.some((grant) => (grant.test_kinds || []).includes("saving_throw"))

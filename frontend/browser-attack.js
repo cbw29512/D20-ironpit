@@ -89,10 +89,17 @@
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
     const resolved = O().resolveD20(
-      attacker.state, actualTarget.state, attack, attackRoll, M().effectiveArmorClass(actualTarget.state),
+      attacker.state,
+      actualTarget.state,
+      attack,
+      attackRoll,
+      M().effectiveArmorClass(actualTarget.state),
+      attacker,
+      extra.setup,
     );
     const resolvedAttackRoll = resolved.roll, natural = resolved.natural, targetAc = resolved.targetAc;
-    const parry = resolved.parry, d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit; if (!hit) BS()?.clearPending?.(attacker.state, extra.turnKey);
+    const parry = resolved.parry, outcomeAdjustment = resolved.adjustment,
+      d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit; if (!hit) BS()?.clearPending?.(attacker.state, extra.turnKey);
     const naturalOne = natural === 1;
     const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !d20Override.featureId && !override.featureId;
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
@@ -129,7 +136,9 @@
         if (timed) applied.push(timed);
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
-      hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, attack, attacker.state.template, round) || null : null;
+      hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(
+        actualTarget, attack, attacker.state.template, round, extra.setup,
+      ) || null : null;
       if (hitSave?.appliedCondition && !applied.includes(hitSave.appliedCondition)) applied.push(hitSave.appliedCondition);
       Object.assign(outcome, { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage });
       const phase = H().runPhase(H().PHASES.ON_HIT, {
@@ -163,6 +172,7 @@
         }
       : null;
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(actualTarget.state) || ""; let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
+    if (outcomeAdjustment?.featureId) description += ` ${outcomeAdjustment.sourceName || outcomeAdjustment.featureId} adjusts the attack roll by ${outcomeAdjustment.adjustmentTotal}.`;
     if (d20Override.featureId) description += ` ${d20Override.sourceName || d20Override.featureId} turns the failed attack roll into a 20.`;
     else if (override.featureId) description += ` ${override.sourceName || override.featureId} turns the miss into a hit.`;
     else if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
