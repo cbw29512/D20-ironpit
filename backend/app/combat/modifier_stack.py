@@ -125,7 +125,13 @@ def effective_speed(state: CombatantState) -> int:
         )
     )
     base = max(0, state.template.speed_ft + speed_delta)
-    return speed_after_exhaustion(state, base)
+    exhausted = speed_after_exhaustion(state, base)
+    ceilings = [
+        item.maximum_value
+        for item in state.active_modifiers
+        if item.kind is ModifierKind.SPEED_MAXIMUM and item.maximum_value is not None
+    ]
+    return min([exhausted, *ceilings]) if ceilings else exhausted
 
 
 def attacks_against_advantage_sources(state: CombatantState) -> int:
