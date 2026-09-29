@@ -143,8 +143,9 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.range_ft,
             spell.duration_minutes,
             spell.target_count,
+            spell.target_count_per_slot_above,
             spell.concentration,
-        ) == (1, "action", 30, 1, 3, True)
+        ) == (1, "action", 30, 1, 3, 1, True)
         modifiers = {(item.kind, item.dice_count, item.dice_size) for item in spell.modifier_effects}
         assert modifiers == {
             ("attack-roll-bonus-die", 1, 4),
