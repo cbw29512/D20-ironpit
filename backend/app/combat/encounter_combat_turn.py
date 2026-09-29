@@ -139,7 +139,7 @@ def resolve_combat_turn(
             events.append(presence); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-        threshold_event, sequence = resolve_hp_threshold_turn(sequence, round_number, attacker, setup)
+        threshold_event, sequence = resolve_hp_threshold_turn(sequence, round_number, attacker, setup, dice)
         if threshold_event is not None:
             events.append(threshold_event)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
