@@ -39,7 +39,7 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
     try:
         if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}:
             raise ValueError("2024 Lyra combat fingerprint currently covers levels 1 through 13.")
-        proficiency_bonus = 2 if level <= 4 else (3 if level <= 8 else 4)
+        proficiency_bonus = 2 + ((level - 1) // 4)
         acrobatics = 0 + (proficiency_bonus * (2 if level >= 2 else 1))
         abilities = _abilities(level)
         charisma_modifier = abilities.modifier("charisma")
