@@ -6,6 +6,7 @@ import logging
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
@@ -27,6 +28,9 @@ def resolve_on_hit_condition_save(
     attack: WeaponAttack,
     dice: DiceProvider,
     source_template: CombatantTemplate | None = None,
+    *,
+    encounter_defender: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> OnHitConditionSaveResolution:
     try:
         effect = attack.on_hit_condition_save
@@ -45,6 +49,8 @@ def resolve_on_hit_condition_save(
                 condition_id=effect.condition_id,
                 effect_tags=frozenset({"poison"}) if effect.condition_id == "poisoned" else frozenset(),
             ),
+            encounter_roller=encounter_defender,
+            setup=setup,
         )
         applied = None
         if not succeeded and effect.condition_id not in defender.active_effect_ids:
