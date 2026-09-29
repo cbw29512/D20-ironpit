@@ -48,3 +48,15 @@ def bard_level15_spells_audit() -> FeatureAudit:
             "Blinded for up to 1 minute on failure with an end-of-turn repeat save."
         ),
     )
+
+
+def bard_level16_asi_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="ability-score-improvement-16",
+        feature_name="Ability Score Improvement",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 16",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes="+2 Wisdom is applied to Lyra's persistent progression, producing Wisdom 20.",
+    )
