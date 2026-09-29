@@ -2,14 +2,18 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
+from app.content.character_resource_rules_2024 import (
+    CLASS_RULES_2024,
+    SPECIES_RULES_2024,
+    SUBCLASS_RULES_2024,
+)
 from app.content.level_resources import (
-    barbarian_2014_rage_uses, barbarian_rage_uses,
-    cleric_2014_channel_divinity_uses, cleric_2014_divine_intervention_uses,
-    cleric_channel_divinity_uses, cleric_divine_intervention_uses,
-    fighter_2014_action_surge_uses, fighter_2014_indomitable_uses,
-    fighter_2014_second_wind_uses, fighter_action_surge_uses,
-    fighter_indomitable_uses, fighter_second_wind_uses, orc_adrenaline_rush_uses,
+    barbarian_2014_rage_uses,
+    cleric_2014_channel_divinity_uses,
+    cleric_2014_divine_intervention_uses,
+    fighter_2014_action_surge_uses,
+    fighter_2014_indomitable_uses,
+    fighter_2014_second_wind_uses,
 )
 from app.content.ranger_2014_resource_audit import ranger_2014_spell_slot_resources
 from app.content.spell_slot_progression import FULL_CASTER_CLASSES, spell_slot_resources
@@ -17,6 +21,7 @@ from app.content.warlock_2014_resource_audit import warlock_2014_resources
 from app.domain.character_builds import CharacterBuildProfile
 
 ResourceRule = tuple[str, str, Callable[[int], int]]
+
 _PALADIN_2014_SLOTS = {
     1: (), 2: (2,), 3: (3,), 4: (3,), 5: (4, 2), 6: (4, 2), 7: (4, 3),
     8: (4, 3), 9: (4, 3, 2), 10: (4, 3, 2), 11: (4, 3, 3), 12: (4, 3, 3),
@@ -42,15 +47,6 @@ def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
 
-def _fighter_combat_prowess(level: int) -> int:
-    try:
-        return 1 if level >= 19 else 0
-    except Exception as exc:
-        raise ValueError(
-            f"Failed to resolve 2024 Boon of Combat Prowess uses for level {level}."
-        ) from exc
-
-
 def _sorcery_points(level: int) -> int:
     return level if level >= 2 else 0
 
@@ -63,63 +59,6 @@ def _finite_rage(level: int) -> int:
     return 0 if level >= 20 else barbarian_2014_rage_uses(level)
 
 
-def _persistent_rage_refresh(level: int) -> int:
-    try:
-        return 1 if level >= 15 else 0
-    except Exception as exc:
-        raise ValueError(
-            f"Failed to resolve 2024 Persistent Rage refresh uses for level {level}."
-        ) from exc
-
-
-def _cleric_boon_of_fate(level: int) -> int:
-    try:
-        return 1 if level >= 19 else 0
-    except Exception as exc:
-        raise ValueError(f"Failed to resolve 2024 Boon of Fate uses for level {level}.") from exc
-
-
-def _bardic_inspiration_2024(level: int) -> int:
-    try:
-        row = BARD_COMBAT_LEVELS.get(level)
-        if row is None:
-            raise ValueError("2024 Bard resource progression covers levels 1 through 20.")
-        return row.bardic_inspiration_uses
-    except ValueError:
-        raise
-    except Exception as exc:
-        raise ValueError(f"Failed to resolve 2024 Bardic Inspiration uses for level {level}.") from exc
-
-
-def _berserker_intimidating_presence(level: int) -> int:
-    try:
-        return 1 if level >= 14 else 0
-    except Exception as exc:
-        raise ValueError(
-            f"Failed to resolve 2024 Berserker Intimidating Presence uses for level {level}."
-        ) from exc
-
-
-_2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
-    "barbarian": (
-        ("rage", "Rage", barbarian_rage_uses),
-        ("persistent-rage-refresh", "Persistent Rage Refresh", _persistent_rage_refresh),
-    ),
-    "bard": (("bardic-inspiration", "Bardic Inspiration", _bardic_inspiration_2024),),
-    "cleric": (
-        ("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),
-        ("divine-intervention", "Divine Intervention", cleric_divine_intervention_uses),
-        ("boon-of-fate", "Boon of Fate", _cleric_boon_of_fate),
-    ),
-    "fighter": (
-        ("second-wind", "Second Wind", fighter_second_wind_uses),
-        ("action-surge", "Action Surge", fighter_action_surge_uses),
-        ("indomitable", "Indomitable", fighter_indomitable_uses),
-        ("boon-combat-prowess", "Boon of Combat Prowess", _fighter_combat_prowess),
-    ),
-    "ranger": (),
-    "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
-}
 _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", _finite_rage),),
     "bard": (("bardic-inspiration", "Bardic Inspiration", lambda level: 3 if level < 4 else 4 if level < 8 else 5),),
@@ -134,43 +73,32 @@ _2014_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("indomitable", "Indomitable", fighter_2014_indomitable_uses),
     ),
     "monk": (("ki", "Ki", _monk_ki), ("wholeness-of-body", "Wholeness of Body", _monk_wholeness)),
-    "paladin": (("lay-on-hands", "Lay on Hands", lambda level: 5 * level), ("channel-divinity", "Channel Divinity", _paladin_channel)),
+    "paladin": (
+        ("lay-on-hands", "Lay on Hands", lambda level: 5 * level),
+        ("channel-divinity", "Channel Divinity", _paladin_channel),
+    ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
     "sorcerer": (("sorcery-points", "Sorcery Points", _sorcery_points),),
     "warlock": (),
     "wizard": (),
 }
+
 _2014_UNLIMITED = {
     "barbarian": lambda level: ("rage",) if level >= 20 else (),
     "druid": lambda level: ("wild-shape",) if level >= 20 else (),
 }
-_2024_SUBCLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
-    "path-berserker": (
-        (
-            "intimidating-presence",
-            "Intimidating Presence",
-            _berserker_intimidating_presence,
-        ),
-    ),
-}
-_2024_SPECIES_RULES = {
-    "orc": (
-        ("adrenaline-rush", "Adrenaline Rush", orc_adrenaline_rush_uses),
-        ("relentless-endurance", "Relentless Endurance", lambda _level: 1),
-    ),
-}
 
 
 def class_resource_rules(profile: CharacterBuildProfile) -> dict[str, tuple[ResourceRule, ...]]:
-    return _2014_CLASS_RULES if profile.ruleset == "2014" else _2024_CLASS_RULES
+    return _2014_CLASS_RULES if profile.ruleset == "2014" else CLASS_RULES_2024
 
 
 def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     class_rules = class_resource_rules(profile)
-    species_rules = {} if profile.ruleset == "2014" else _2024_SPECIES_RULES
+    species_rules = {} if profile.ruleset == "2014" else SPECIES_RULES_2024
     subclass_rules = (
-        _2024_SUBCLASS_RULES.get(profile.subclass_id or "", ())
+        SUBCLASS_RULES_2024.get(profile.subclass_id or "", ())
         if profile.ruleset == "2024"
         else ()
     )
