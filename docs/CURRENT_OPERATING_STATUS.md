@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-29 while advancing the certified 2024 Lore Bard progression through level 14.
+Recorded 2026-09-29 while advancing the certified 2024 Lore Bard progression through level 15.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -28,12 +28,12 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2014 | Warlock (Fiend) | 1–20 |
 | 2014 | Wizard (Evoker) | 1–20 |
 | 2024 | Barbarian (Berserker) | 1–20 |
-| 2024 | Bard (Lore) | 1–14 |
+| 2024 | Bard (Lore) | 1–15 |
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 
-2024 public-ready hero slots after the Bard 14 tranche: **94 / 240**.
+2024 public-ready hero slots after the Bard 15 tranche: **95 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -43,9 +43,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.** The 2014 Hero Certification and paired-edition guard workflows were green on the exact PR #436 head before merge.
 
-**2024 canonical pregens are now 94 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, and Life Cleric are complete at levels 1–20. Lore Bard is certified through level 14.
+**2024 canonical pregens are now 95 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, and Life Cleric are complete at levels 1–20. Lore Bard is certified through level 15.
 
-Active implementation lane after merge: **2024 Lore Bard level 15 onward**.
+Active implementation lane after merge: **2024 Lore Bard level 16 onward**.
 
 For each Bard tranche:
 - start from the completed 2014 Lore Bard progression and reuse universal mechanics where behavior is equivalent;
