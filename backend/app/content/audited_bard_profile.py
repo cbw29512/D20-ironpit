@@ -7,62 +7,29 @@ from app.content.bard_2024_lore_profile_support import (
     bard_level5_font_audit,
     bard_level6_magical_discoveries_audit,
     bard_level7_countercharm_audit,
+    bard_level8_asi_audit,
     lore_bard_level3_audits,
 )
-from app.content.canonical_combat_build_policy import (
-    canonical_background_increases,
-    canonical_base_ability_scores,
-)
+from app.content.bard_2024_profile_core import bard_ability_scores, bard_feature_audit
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
+from app.domain.character_builds import CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
-def _feature(
-    feature_id: str,
-    feature_name: str,
-    category: str,
-    *,
-    combat_relevant: bool,
-    automated: bool,
-    runtime_attack_weapon_id: str | None = None,
-    notes: str | None = None,
-) -> FeatureAudit:
-    return FeatureAudit(
-        feature_id=feature_id,
-        feature_name=feature_name,
-        source_reference="D&D Beyond Basic Rules 2024: Bard",
-        category=category,
-        combat_relevant=combat_relevant,
-        automated=automated,
-        runtime_attack_weapon_id=runtime_attack_weapon_id,
-        notes=notes,
-    )
-
-def _scores(level: int) -> tuple[AbilityScores, list, list[AbilityIncrease], AbilityScores]:
-    base = canonical_base_ability_scores("bard")
-    allowed = ["intelligence", "wisdom", "charisma"]
-    background = canonical_background_increases("bard", allowed)
-    advancement = [AbilityIncrease(ability="charisma", amount=2)] if level >= 4 else []
-    values = base.model_dump()
-    for increase in [*background, *advancement]:
-        values[increase.ability] += increase.amount
-    return base, background, advancement, AbilityScores(**values)
-
 def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Lyra's legal 2024 Lore Bard progression through level 7."""
+    """Compile Lyra's legal 2024 Lore Bard progression through level 8."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7}:
-            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 7.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
+            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 8.")
         hero = HERO_BY_CLASS["bard"]
-        base, background_increases, advancement_increases, final = _scores(level)
+        base, background_increases, advancement_increases, final = bard_ability_scores(level)
         audits = [
-            _feature("bardic-inspiration", "Bardic Inspiration", "class", combat_relevant=True, automated=True),
-            _feature("spellcasting", "Spellcasting", "class", combat_relevant=True, automated=True),
-            _feature("adrenaline-rush", "Adrenaline Rush", "species", combat_relevant=True, automated=True),
-            _feature("relentless-endurance", "Relentless Endurance", "species", combat_relevant=True, automated=True),
-            _feature(
+            bard_feature_audit("bardic-inspiration", "Bardic Inspiration", "class", combat_relevant=True, automated=True),
+            bard_feature_audit("spellcasting", "Spellcasting", "class", combat_relevant=True, automated=True),
+            bard_feature_audit("adrenaline-rush", "Adrenaline Rush", "species", combat_relevant=True, automated=True),
+            bard_feature_audit("relentless-endurance", "Relentless Endurance", "species", combat_relevant=True, automated=True),
+            bard_feature_audit(
                 "darkvision",
                 "Darkvision",
                 "species",
@@ -70,7 +37,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                 automated=False,
                 notes="Iron Pit's standard arena assumes sufficient visibility.",
             ),
-            _feature(
+            bard_feature_audit(
                 "magic-initiate-cleric",
                 "Magic Initiate (Cleric)",
                 "feat",
@@ -78,7 +45,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                 automated=False,
                 notes="Canonical feat choices are Light, Thaumaturgy, and Detect Magic; none alter arena combat.",
             ),
-            _feature(
+            bard_feature_audit(
                 "dagger",
                 "Dagger",
                 "equipment",
@@ -86,7 +53,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                 automated=True,
                 runtime_attack_weapon_id="dagger",
             ),
-            _feature(
+            bard_feature_audit(
                 "studded-leather",
                 "Studded Leather Armor",
                 "equipment",
@@ -96,7 +63,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
         ]
         if level >= 2:
             audits.extend([
-                _feature(
+                bard_feature_audit(
                     "expertise",
                     "Expertise",
                     "class",
@@ -104,7 +71,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                     automated=True,
                     notes="Acrobatics is the combat-relevant Expertise choice for grapple escape checks.",
                 ),
-                _feature(
+                bard_feature_audit(
                     "jack-of-all-trades",
                     "Jack of All Trades",
                     "class",
@@ -123,6 +90,8 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
             audits.append(bard_level6_magical_discoveries_audit())
         if level >= 7:
             audits.append(bard_level7_countercharm_audit())
+        if level >= 8:
+            audits.append(bard_level8_asi_audit())
         return CharacterBuildProfile(
             id=f"build-lyra-silverstring-l{level}",
             template_id=canonical_template_id("bard", level),
@@ -186,6 +155,10 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                 *(
                     ["D&D Beyond Basic Rules 2024: Bard 7 — Countercharm"]
                     if level >= 7 else []
+                ),
+                *(
+                    ["D&D Beyond Basic Rules 2024: Bard 8 — Ability Score Improvement"]
+                    if level >= 8 else []
                 ),
             ],
         )
