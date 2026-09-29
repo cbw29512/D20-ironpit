@@ -803,3 +803,64 @@ def test_2024_bard_level_seventeen_spell_package_adds_power_word_kill() -> None:
         "fallback-damage",
         "magical-secrets",
     ]
+
+
+def test_2024_lore_bard_level_eighteen_superior_inspiration_restores_to_two() -> None:
+    from app.combat.initiative_resource_refill import resolve_initiative_resource_refills
+
+    profile = build_lyra_silverstring_profile(18)
+    hero = build_lyra_silverstring_level(18)
+
+    assert hero.max_hp == 93
+    audit = next(item for item in profile.feature_audits if item.feature_id == "superior-inspiration")
+    assert audit.automated is True
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["spell-slot-5"] == 3
+    assert resources["spell-slot-9"] == 1
+
+    grant = hero.initiative_resource_refill_grants[0]
+    assert (
+        grant.source_id,
+        grant.resource_id,
+        grant.when_at_or_below,
+        grant.restore_to_minimum,
+    ) == ("superior-inspiration", "bardic-inspiration", 1, 2)
+
+    source = EncounterCombatant(
+        combatant_id="lyra-18", side="heroes", position_ft=0,
+        state=build_combatant_state(hero),
+    )
+    enemy = EncounterCombatant(
+        combatant_id="enemy", side="monsters", position_ft=30,
+        state=build_combatant_state(build_lyra_silverstring_level(1)),
+    )
+    setup = EncounterSetup(
+        heroes=[source], monsters=[enemy], hero_total_levels=18, monster_total_cr="1",
+    )
+    inspiration = next(item for item in source.state.resources if item.id == "bardic-inspiration")
+
+    inspiration.current_uses = 0
+    events, _ = resolve_initiative_resource_refills(1, setup)
+    assert inspiration.current_uses == 2
+    assert events[0].resource_remaining == 2
+
+    inspiration.current_uses = 1
+    events, _ = resolve_initiative_resource_refills(2, setup)
+    assert inspiration.current_uses == 2
+    assert events[0].resource_remaining == 2
+
+    inspiration.current_uses = 2
+    events, _ = resolve_initiative_resource_refills(3, setup)
+    assert inspiration.current_uses == 2
+    assert events == []
+
+
+def test_2024_bard_level_eighteen_spell_package_adds_teleport() -> None:
+    level_eighteen = canonical_spell_package("bard", 18, "2024", 9)
+
+    assert level_eighteen is not None
+    assert len(level_eighteen.spells) == 20
+    assert level_eighteen.spells[-1].id == "teleport"
+    assert level_eighteen.spells[-1].spell_level == 7
+    assert level_eighteen.spells[-1].required_capabilities == ["arena-out-of-scope"]

@@ -6,6 +6,7 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_bard_profile import build_lyra_silverstring_profile
 from app.content.bard_2024_cutting_words import build_cutting_words_2024
+from app.content.bard_2024_initiative import build_bard_2024_initiative_refills
 from app.content.bard_2024_inspiration import build_bardic_inspiration_2024
 from app.content.bard_2024_runtime_support import (
     bard_defensive_spells,
@@ -51,10 +52,10 @@ def _dagger(level: int, dexterity_modifier: int) -> WeaponAttack:
 
 
 def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Lore Bard through level 17."""
+    """Compile the 2024 support/healer Lore Bard through level 18."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 17.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 18.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -119,6 +120,7 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
             },
             combat_traits=[CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE],
             resources=bard_resources(level, charisma_modifier),
+            initiative_resource_refill_grants=build_bard_2024_initiative_refills(level),
             weapon_masteries=[],
             visual=VisualLoadout(
                 armor=armor.id,

@@ -109,6 +109,8 @@ def bard_source_references(level: int) -> list[str]:
             refs.append("D&D Beyond Basic Rules 2024: Bard 16 — Ability Score Improvement")
         if level >= 17:
             refs.append("D&D Beyond Basic Rules 2024: Bard 17 — level 9 spells")
+        if level >= 18:
+            refs.append("D&D Beyond Basic Rules 2024: Bard 18 — Superior Inspiration")
         return refs
     except Exception:
         logger.exception("Failed to compile 2024 Bard source references at level %s.", level)
