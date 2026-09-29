@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_bard import build_lyra_silverstring_level
-from app.content.audited_bard_profile import (
+from app.content.audited_bard_profile_levels import (
     build_lyra_silverstring_level1_profile,
     build_lyra_silverstring_level2_profile,
     build_lyra_silverstring_level3_profile,
