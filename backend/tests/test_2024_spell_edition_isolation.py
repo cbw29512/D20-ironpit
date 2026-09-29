@@ -52,6 +52,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "fireball",
         "disintegrate",
         "finger-of-death",
+        "sunburst",
         "cure-wounds",
         "healing-word",
         "mass-healing-word",
@@ -282,6 +283,31 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "necrotic",
             "half",
         )
+
+    if "sunburst" in spell_saves:
+        spell = spell_saves["sunburst"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+        ) == (8, "action", 150, "radius", "point", 60, "constitution", 12, 6, "radiant", "half")
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            rider.effect_id,
+            rider.duration_rounds,
+            rider.repeat_save_ability,
+            rider.repeat_save_dc,
+            rider.repeat_save_timing,
+        ) == ("blinded", 10, "constitution", spell.dc, "target_turn_end")
 
     if "greater-invisibility" in defenses:
         spell = defenses["greater-invisibility"]
