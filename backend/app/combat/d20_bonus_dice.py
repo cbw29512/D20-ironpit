@@ -26,16 +26,16 @@ def resolve_d20_bonus_die_grant(
         resource = resource_for(source, action)
         if resource is None:
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
-        restoration = None
-        if resource.current_uses < action.resource_cost:
-            restoration = apply_restoration_conversion(source.state, action.resource_id)
-            if restoration is None or resource.current_uses < action.resource_cost:
-                raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if not target_allowed(source, target, action):
             raise ValueError(f"{target.state.template.name} is not a legal target for {action.name}.")
         expire_d20_bonus_dice(target.state, round_number)
         if grant_conflicts(source, target, action, round_number):
             raise ValueError(f"{target.state.template.name} already has an exclusive {action.name} grant.")
+        restoration = None
+        if resource.current_uses < action.resource_cost:
+            restoration = apply_restoration_conversion(source.state, action.resource_id)
+            if restoration is None or resource.current_uses < action.resource_cost:
+                raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
 
         spend(source.state, action.action_cost)
         resource.current_uses -= action.resource_cost
