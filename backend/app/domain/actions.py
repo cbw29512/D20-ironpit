@@ -159,10 +159,21 @@ class HpThresholdConditionAction(BaseModel):
     repeat_save_ability: AbilityName
     repeat_save_dc: int = Field(ge=1, le=40)
     repeat_save_timing: ConditionTiming = "target_turn_end"
+    above_threshold_speed_maximum: int | None = Field(default=None, ge=0)
+    above_threshold_expires_at_start_of_source_turn: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     magical_effect: bool = True
     animation: str = "condition"
+
+    @model_validator(mode="after")
+    def validate_threshold_branches(self) -> "HpThresholdConditionAction":
+        if (
+            self.above_threshold_expires_at_start_of_source_turn
+            and self.above_threshold_speed_maximum is None
+        ):
+            raise ValueError("Above-threshold expiry requires an above-threshold Speed maximum.")
+        return self
 
 
 class AttackActionSlot(BaseModel):
