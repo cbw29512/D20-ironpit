@@ -60,6 +60,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "dispel-magic",
         "divine-intervention-inflict-wounds",
         "divine-intervention-mass-cure-wounds",
+        "greater-divine-intervention-wish-fireball",
     }
     surfaced = {
         *spell_attacks,
@@ -72,6 +73,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             item.id
             for item in template.saving_throw_actions
             if item.id.startswith("divine-intervention-")
+            or item.id.startswith("greater-divine-intervention-")
         ),
     }
     unknown = sorted(surfaced - known_spell_ids)
@@ -300,3 +302,24 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "half",
             "divine-intervention",
         )
+
+
+
+def test_2024_greater_divine_intervention_wish_uses_2024_fireball_fingerprint() -> None:
+    from app.content.audited_cleric import build_seraphine_dawnshield_level
+
+    hero = build_seraphine_dawnshield_level(20)
+    spell = next(
+        item for item in hero.saving_throw_actions
+        if item.id == "greater-divine-intervention-wish-fireball"
+    )
+
+    assert spell.action_cost == "action"
+    assert spell.range_ft == 150
+    assert spell.area is not None
+    assert (spell.area.shape, spell.area.origin, spell.area.radius_ft) == ("radius", "point", 20)
+    assert spell.save_ability == "dexterity"
+    assert (spell.damage_dice_count, spell.damage_dice_size) == (8, 6)
+    assert spell.damage_type == "fire"
+    assert spell.success_damage == "half"
+    assert spell.resource_id == "divine-intervention"
