@@ -24,9 +24,11 @@
           const usageCost = grant.usage_resource_cost || 1;
           if (grant.usage_resource_id && resources[grant.usage_resource_id] < usageCost) continue;
           const before = resources[grant.resource_id];
-          const after = grant.restore_to_max
-            ? maxima[grant.resource_id]
-            : Math.min(maxima[grant.resource_id], before + grant.restore_amount);
+          const after = Number.isFinite(grant.restore_to_minimum)
+            ? Math.min(maxima[grant.resource_id], Math.max(before, grant.restore_to_minimum))
+            : (grant.restore_to_max
+              ? maxima[grant.resource_id]
+              : Math.min(maxima[grant.resource_id], before + grant.restore_amount));
           if (after <= before) continue;
           if (grant.usage_resource_id) resources[grant.usage_resource_id] -= usageCost;
           resources[grant.resource_id] = after;
