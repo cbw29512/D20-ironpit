@@ -5,10 +5,12 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.resources import resource_state
+from app.combat.modifier_stack import add_modifier, effective_speed
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.actions import HpThresholdConditionAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
+from app.domain.modifiers import CombatModifier, ModifierKind
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +25,10 @@ def legal_hp_threshold_condition(
             return False
         if target.state.is_dead or not target.state.is_alive or target.state.current_hp <= 0:
             return False
-        if target.state.current_hp > action.max_current_hp:
+        if (
+            target.state.current_hp > action.max_current_hp
+            and action.above_threshold_speed_maximum is None
+        ):
             return False
         if combatant_distance(actor, target) > action.range_ft:
             return False
@@ -76,6 +81,44 @@ def resolve_hp_threshold_condition(
         else:
             remaining = None
         spend(actor.state, action.action_cost)
+        if target.state.current_hp > action.max_current_hp:
+            maximum = action.above_threshold_speed_maximum
+            if maximum is None:
+                raise ValueError(f"{action.name} has no legal above-threshold effect.")
+            add_modifier(target.state, CombatModifier(
+                id=f"{actor.combatant_id}:{action.id}:above-threshold-speed",
+                source_id=actor.combatant_id,
+                source_effect_id=action.id,
+                source_name=action.name,
+                source_is_magical=action.magical_effect,
+                kind=ModifierKind.SPEED_MAXIMUM,
+                maximum_value=maximum,
+                expires_at_start_of_source_turn=(
+                    action.above_threshold_expires_at_start_of_source_turn
+                ),
+            ))
+            target.state.movement_remaining_ft = min(
+                target.state.movement_remaining_ft,
+                effective_speed(target.state),
+            )
+            return BattleEvent(
+                sequence=sequence,
+                round_number=round_number,
+                event_type="feature",
+                actor_id=actor.combatant_id,
+                actor_name=actor.state.template.name,
+                target_id=target.combatant_id,
+                target_name=target.state.template.name,
+                feature_id=action.id,
+                resource_remaining=remaining,
+                animation=action.animation,
+                description=(
+                    f"{actor.state.template.name} uses {action.name} on "
+                    f"{target.state.template.name}; {target.state.template.name}'s "
+                    f"Speed is limited to {maximum}."
+                ),
+            )
+
         applied = apply_timed_condition(
             target.state,
             action.condition_id,
