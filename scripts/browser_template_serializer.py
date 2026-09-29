@@ -512,6 +512,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
             features.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
         )
+    if features.source_damage_temporary_hp:
+        row["source_damage_temporary_hp"] = features.source_damage_temporary_hp.model_dump(mode="json")
     if features.selectable_damage_resistance:
         row["selectable_damage_resistance"] = features.selectable_damage_resistance.model_dump(mode="json")
     if features.resource_backed_on_hit_exile:

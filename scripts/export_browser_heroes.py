@@ -549,6 +549,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["source_reduces_hostile_to_zero_hp_temporary_hp"] = (
             progression.source_reduces_hostile_to_zero_hp_temporary_hp.model_dump(mode="json")
         )
+    if progression.source_damage_temporary_hp is not None:
+        row["source_damage_temporary_hp"] = progression.source_damage_temporary_hp.model_dump(mode="json")
     if progression.delayed_resource_refill is not None:
         row["delayed_resource_refill"] = progression.delayed_resource_refill.model_dump(mode="json")
     if template.unlimited_resource_ids:

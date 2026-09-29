@@ -10,7 +10,10 @@ from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.character_builds import AbilityScores
 from app.domain.reactions import DamageReactionAttack
-from app.domain.progression_primitives import SourceReducesHostileToZeroHpTemporaryHp
+from app.domain.progression_primitives import (
+    SourceDamageTemporaryHpGrant,
+    SourceReducesHostileToZeroHpTemporaryHp,
+)
 
 
 def _member(combatant_id: str, side: str, position: int, template) -> EncounterCombatant:
@@ -216,5 +219,71 @@ def test_source_zero_hp_trigger_requires_fresh_hostile_transition() -> None:
     )
 
     assert all(item.feature_id != "test-zero-hp-boon" for item in followups)
+    assert hero.state.temporary_hp == 0
+    assert sequence == 2
+
+
+
+def test_source_damage_trigger_grants_ability_scaled_temporary_hp() -> None:
+    hero, monster, setup = _setup()
+    hero.state.template.ability_scores = AbilityScores(
+        strength=10, dexterity=10, constitution=10,
+        intelligence=10, wisdom=20, charisma=10,
+    )
+    hero.state.template.progression_features.source_damage_temporary_hp = SourceDamageTemporaryHpGrant(
+        source_id="test-damage-vitality",
+        source_name="Test Damage Vitality",
+        trigger_action_ids=["sacred-flame"],
+        ability="wisdom",
+        ability_multiplier=2,
+    )
+    event = _triggering_attack(hero, monster, setup).model_copy(
+        update={"feature_id": "sacred-flame"},
+    )
+
+    followups, sequence = resolve_damage_event_reactions(
+        2, 1, hero, event, setup, FixedDiceProvider([19, 5]),
+    )
+
+    assert followups[0].feature_id == "test-damage-vitality"
+    assert hero.state.temporary_hp == 10
+    assert sequence == 3
+
+
+def test_source_damage_trigger_requires_matching_action_and_actual_damage() -> None:
+    hero, monster, setup = _setup()
+    hero.state.template.ability_scores = AbilityScores(
+        strength=10, dexterity=10, constitution=10,
+        intelligence=10, wisdom=20, charisma=10,
+    )
+    hero.state.template.progression_features.source_damage_temporary_hp = SourceDamageTemporaryHpGrant(
+        source_id="test-damage-vitality",
+        source_name="Test Damage Vitality",
+        trigger_action_ids=["sacred-flame"],
+        ability="wisdom",
+        ability_multiplier=2,
+    )
+    event = _triggering_attack(hero, monster, setup).model_copy(
+        update={"feature_id": "guiding-bolt"},
+    )
+    followups, sequence = resolve_damage_event_reactions(
+        2, 1, hero, event, setup, FixedDiceProvider([19, 5]),
+    )
+    assert all(item.feature_id != "test-damage-vitality" for item in followups)
+    assert hero.state.temporary_hp == 0
+    assert sequence == 2
+
+    zero_event = event.model_copy(update={
+        "feature_id": "sacred-flame",
+        "damage_components": [],
+        "hp_before": 10,
+        "hp_after": 10,
+        "temporary_hp_before": 0,
+        "temporary_hp_after": 0,
+    })
+    followups, sequence = resolve_damage_event_reactions(
+        2, 1, hero, zero_event, setup, FixedDiceProvider([19, 5]),
+    )
+    assert all(item.feature_id != "test-damage-vitality" for item in followups)
     assert hero.state.temporary_hp == 0
     assert sequence == 2

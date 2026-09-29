@@ -4,6 +4,7 @@ import logging
 
 from app.combat.damage_reaction_dispatch import resolve_damage_reaction_attack
 from app.combat.source_zero_hp_triggers import resolve_source_zero_hp_triggers
+from app.combat.source_damage_triggers import resolve_source_damage_temporary_hp
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -74,6 +75,10 @@ def resolve_damage_event_reactions(
             sequence, round_number, source, triggering_event, setup,
         )
         applied_damage = applied_damage_total(triggering_event)
+        damage_events, sequence = resolve_source_damage_temporary_hp(
+            sequence, round_number, source, triggering_event, applied_damage,
+        )
+        source_events.extend(damage_events)
         if applied_damage <= 0:
             return source_events, sequence
 

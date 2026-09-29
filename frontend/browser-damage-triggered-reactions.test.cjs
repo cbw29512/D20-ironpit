@@ -57,6 +57,7 @@ window.IRON_PIT_BROWSER_ATTACK = {
 };
 
 load("browser-damage-triggered-reactions.js");
+load("browser-source-damage-triggers.js");
 load("browser-damage-reaction-dispatch.js");
 
 window.IRON_PIT_BROWSER_LIGHT_ATTACK = {
@@ -253,5 +254,30 @@ console.log("Browser universal post-damage reaction parity passed.");
   assert.equal(result.events.length, 1);
   assert.equal(result.events[0].feature_id, "test-zero-hp-boon");
   assert.equal(source.state.temporary_hp, 6);
+  assert.equal(result.sequence, 3);
+}
+
+
+{
+  const source = member("damage-vitality-source", "heroes", 0, false);
+  const target = member("damage-vitality-target", "monsters", 5, false);
+  source.state.template.ability_scores = { wisdom: 20 };
+  source.state.template.source_damage_temporary_hp = {
+    source_id: "improved-blessed-strikes",
+    source_name: "Improved Blessed Strikes",
+    trigger_action_ids: ["sacred-flame"],
+    ability: "wisdom",
+    ability_multiplier: 2,
+    flat_bonus: 0,
+    minimum: 0,
+  };
+  const setup = { heroes: [source], monsters: [target] };
+  const event = damageEvent(source, target, 2);
+  event.feature_id = "sacred-flame";
+  const result = window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH.resolve(
+    2, 1, source, event, setup,
+  );
+  assert.equal(result.events[0].feature_id, "improved-blessed-strikes");
+  assert.equal(source.state.temporary_hp, 10);
   assert.equal(result.sequence, 3);
 }
