@@ -17,6 +17,19 @@ window.IRON_PIT_BROWSER_STATE = {
 };
 const rolls = [6];
 window.IRON_PIT_DICE = { roll: () => rolls.shift() };
+window.IRON_PIT_BROWSER_RESOURCE_CONVERSION = {
+  restorationAction: (state, resourceId) =>
+    resourceId === "bardic-inspiration" && state.resources["spell-slot-1"] > 0
+      ? { id: "font-of-inspiration-slot-1", name: "Font of Inspiration (1st-Level Slot)" }
+      : null,
+  restoreInline: (state, resourceId) => {
+    const action = window.IRON_PIT_BROWSER_RESOURCE_CONVERSION.restorationAction(state, resourceId);
+    if (!action) return null;
+    state.resources["spell-slot-1"] -= 1;
+    state.resources["bardic-inspiration"] += 1;
+    return action;
+  },
+};
 vm.runInThisContext(fs.readFileSync("frontend/browser-d20-bonus-dice.js", "utf8"));
 
 const source = {
@@ -62,3 +75,23 @@ assert.deepEqual(B.expire(target.state, 101), []);
 assert.deepEqual(B.expire(target.state, 102), ["bardic-inspiration"]);
 
 console.log("Browser d20 bonus-die lifecycle regressions passed.");
+
+
+source.state.resources["bardic-inspiration"] = 0;
+source.state.resources["spell-slot-1"] = 1;
+source.state.bonus_action_available = true;
+const enemy = {
+  combatant_id: "enemy", side: "monsters", position_ft: 20,
+  state: {
+    template: { name: "Enemy" }, resources: {}, bonus_action_available: true,
+    action_available: true, is_alive: true, is_dead: false, active_d20_bonus_dice: [],
+  },
+};
+assert.throws(() => B.resolveGrant(3, 3, source, enemy, action));
+assert.equal(source.state.resources["spell-slot-1"], 1);
+assert.equal(source.state.resources["bardic-inspiration"], 0);
+
+const restored = B.resolveGrant(4, 3, source, target, action);
+assert.equal(source.state.resources["spell-slot-1"], 0);
+assert.equal(source.state.resources["bardic-inspiration"], 0);
+assert.match(restored.description, /Font of Inspiration/);
