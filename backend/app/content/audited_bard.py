@@ -5,7 +5,9 @@ import logging
 from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_bard_profile import build_lyra_silverstring_profile
+from app.content.bard_2024_cutting_words import build_cutting_words_2024
 from app.content.bard_2024_inspiration import build_bardic_inspiration_2024
+from app.content.bard_2024_spells import build_shatter_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.character_math import saving_throw_bonuses
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
@@ -35,14 +37,14 @@ def _dagger(level: int, dexterity_modifier: int) -> WeaponAttack:
         raise
 
 
-def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
+def _resources(level: int) -> list[ResourceDefinition]:
     try:
         row = BARD_COMBAT_LEVELS[level]
         resources = [
             ResourceDefinition(
                 id="bardic-inspiration",
                 name="Bardic Inspiration",
-                max_uses=max(1, charisma_modifier),
+                max_uses=row.bardic_inspiration_uses,
             ),
             ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
             ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
@@ -62,16 +64,41 @@ def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
         raise
 
 
-def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Bard foundation through level 2."""
+def _skills(level: int, scores, proficiency_bonus: int) -> dict[str, int]:
     try:
-        if level not in {1, 2}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 2.")
+        athletics = scores.modifier("strength")
+        if level >= 3:
+            athletics += proficiency_bonus
+        elif level >= 2:
+            athletics += proficiency_bonus // 2
+        skills = {
+            "athletics": athletics,
+            "acrobatics": scores.modifier("dexterity") + proficiency_bonus * (2 if level >= 2 else 1),
+            "perception": scores.modifier("wisdom") + proficiency_bonus,
+            "performance": scores.modifier("charisma") + proficiency_bonus * (2 if level >= 2 else 1),
+            "insight": scores.modifier("wisdom") + proficiency_bonus,
+            "religion": scores.modifier("intelligence") + proficiency_bonus,
+        }
+        if level >= 3:
+            skills.update({
+                "deception": scores.modifier("charisma") + proficiency_bonus,
+                "investigation": scores.modifier("intelligence") + proficiency_bonus,
+            })
+        return skills
+    except Exception:
+        logger.exception("Failed to compile Lyra's skill bonuses at Bard level %s.", level)
+        raise
+
+
+def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
+    """Compile the 2024 Lore Bard progression through level 3."""
+    try:
+        if level not in {1, 2, 3}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 3.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
         dexterity_modifier = scores.modifier("dexterity")
-        wisdom_modifier = scores.modifier("wisdom")
         charisma_modifier = scores.modifier("charisma")
         armor = get_armor("studded-leather")
         armor_class = compile_worn_armor_class(
@@ -82,9 +109,7 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
             wielding_shield=False,
             shield_trained=False,
         )
-        proficiency_bonus = row.proficiency_bonus
-        acrobatics_multiplier = 2 if level >= 2 else 1
-
+        save_dc = 8 + row.proficiency_bonus + charisma_modifier
         return CombatantTemplate(
             id=profile.template_id,
             name=HERO_BY_CLASS["bard"].hero_name,
@@ -101,18 +126,15 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 build_healing_word(charisma_modifier),
                 build_cure_wounds(charisma_modifier),
             ],
+            spell_save_actions=([build_shatter_2024(save_dc)] if level >= 3 else []),
             d20_bonus_die_actions=[build_bardic_inspiration_2024(level)],
+            reaction_roll_penalty_actions=(
+                [build_cutting_words_2024(level)] if level >= 3 else []
+            ),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
-            skill_bonuses={
-                "athletics": scores.modifier("strength"),
-                "acrobatics": dexterity_modifier + proficiency_bonus * acrobatics_multiplier,
-                "perception": wisdom_modifier + proficiency_bonus,
-                "performance": charisma_modifier + proficiency_bonus,
-                "insight": wisdom_modifier + proficiency_bonus,
-                "religion": scores.modifier("intelligence") + proficiency_bonus,
-            },
+            skill_bonuses=_skills(level, scores, row.proficiency_bonus),
             combat_traits=[CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE],
-            resources=_resources(level, charisma_modifier),
+            resources=_resources(level),
             weapon_masteries=[],
             visual=VisualLoadout(
                 armor=armor.id,
@@ -121,8 +143,8 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 body_style="humanoid",
             ),
             source=(
-                "D&D Beyond Basic Rules 2024: Bard, Acolyte, Orc, "
-                "Bardic Inspiration, Healing Word, Cure Wounds, Equipment"
+                "D&D Beyond Basic Rules 2024: Bard, College of Lore, Acolyte, Orc, "
+                "Bardic Inspiration, Cutting Words, Healing Word, Cure Wounds, Shatter, Equipment"
             ),
         )
     except Exception:
