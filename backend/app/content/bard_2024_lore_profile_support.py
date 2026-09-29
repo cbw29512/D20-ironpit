@@ -132,3 +132,17 @@ def bard_level9_audits() -> list[FeatureAudit]:
         ),
     ]
 
+def bard_level10_magical_secrets_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="magical-secrets",
+        feature_name="Magical Secrets",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 10 — Magical Secrets",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Magical Secrets widens Lyra's legal prepared-spell selection. "
+            "The canonical new preparation is 2024 Fireball from the Wizard list, "
+            "reusing the existing edition-specific save-damage/area primitive."
+        ),
+    )
