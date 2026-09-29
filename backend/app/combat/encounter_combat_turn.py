@@ -75,13 +75,8 @@ def resolve_combat_turn(
                 sequence += 1
         if should_escape_grapple(attacker.state):
             events.append(resolve_escape_grapple(
-                sequence,
-                round_number,
-                attacker.combatant_id,
-                attacker.state,
-                dice,
-                encounter_actor=attacker,
-                setup=setup,
+                sequence, round_number, attacker.combatant_id, attacker.state, dice,
+                encounter_actor=attacker, setup=setup,
             ))
             sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
