@@ -42,6 +42,7 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
             effect_tags=list(spell.effect_tags),
             requires_target_hearing=spell.requires_target_hearing,
             requires_target_sight=spell.requires_target_sight,
+            save_disadvantage_creature_types=list(spell.save_disadvantage_creature_types),
             failed_save_timed_effect=spell.failed_save_timed_effect,
             animation=spell.animation,
         )
