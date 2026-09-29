@@ -864,3 +864,79 @@ def test_2024_bard_level_eighteen_spell_package_adds_teleport() -> None:
     assert level_eighteen.spells[-1].id == "teleport"
     assert level_eighteen.spells[-1].spell_level == 7
     assert level_eighteen.spells[-1].required_capabilities == ["arena-out-of-scope"]
+
+
+def test_2024_lore_bard_level_nineteen_uses_raw_boon_of_fate() -> None:
+    profile = build_lyra_silverstring_profile(19)
+    hero = build_lyra_silverstring_level(19)
+
+    assert hero.max_hp == 98
+    assert (hero.ability_scores.intelligence, hero.ability_scores.wisdom, hero.ability_scores.charisma) == (14, 20, 20)
+    assert [(item.ability, item.amount) for item in profile.advancement_increases][-1] == ("intelligence", 1)
+
+    audit = next(item for item in profile.feature_audits if item.feature_id == "boon-of-fate")
+    assert audit.automated is True
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["spell-slot-6"] == 2
+    assert resources["boon-of-fate"] == 1
+
+    grants = hero.progression_features.resource_backed_d20_outcome_adjustments
+    assert len(grants) == 1
+    grant = grants[0]
+    assert (
+        grant.source_id,
+        grant.resource_id,
+        grant.dice_count,
+        grant.dice_size,
+        grant.range_ft,
+        grant.test_kinds,
+        grant.can_add,
+        grant.can_subtract,
+    ) == (
+        "boon-of-fate",
+        "boon-of-fate",
+        2,
+        4,
+        60,
+        ["attack", "saving_throw", "ability_check"],
+        True,
+        True,
+    )
+
+    refills = {item.source_id: item for item in hero.initiative_resource_refill_grants}
+    assert set(refills) == {"superior-inspiration", "boon-of-fate"}
+    assert refills["boon-of-fate"].resource_id == "boon-of-fate"
+    assert refills["boon-of-fate"].restore_to_max is True
+
+
+def test_2024_bard_level_nineteen_adds_cone_of_cold_through_magical_secrets() -> None:
+    hero = build_lyra_silverstring_level(19)
+    cone = next(item for item in hero.spell_save_actions if item.id == "cone-of-cold")
+
+    assert cone.dc == 19
+    assert cone.area is not None
+    assert (
+        cone.level,
+        cone.action_cost,
+        cone.range_ft,
+        cone.area.shape,
+        cone.area.origin,
+        cone.area.length_ft,
+        cone.save_ability,
+        cone.damage_dice_count,
+        cone.damage_dice_size,
+        cone.damage_type,
+        cone.success_damage,
+        cone.upcast_dice_per_level,
+    ) == (5, "action", 60, "cone", "self", 60, "constitution", 8, 8, "cold", "half", 1)
+
+    level_nineteen = canonical_spell_package("bard", 19, "2024", 9)
+    assert level_nineteen is not None
+    assert len(level_nineteen.spells) == 21
+    assert level_nineteen.spells[-1].id == "cone-of-cold"
+    assert level_nineteen.spells[-1].required_capabilities == [
+        "save-damage",
+        "area",
+        "magical-secrets",
+    ]
