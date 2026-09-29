@@ -60,3 +60,7 @@ def build_lyra_silverstring_level11_profile() -> CharacterBuildProfile:
 
 def build_lyra_silverstring_level12_profile() -> CharacterBuildProfile:
     return _profile(12)
+
+
+def build_lyra_silverstring_level13_profile() -> CharacterBuildProfile:
+    return _profile(13)
