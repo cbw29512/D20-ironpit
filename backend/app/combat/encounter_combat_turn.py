@@ -141,7 +141,10 @@ def resolve_combat_turn(
 
         threshold_event, sequence = resolve_hp_threshold_turn(sequence, round_number, attacker, setup, dice)
         if threshold_event is not None:
-            events.append(threshold_event)
+            if isinstance(threshold_event, list):
+                events.extend(threshold_event)
+            else:
+                events.append(threshold_event)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         deferred = resolve_deferred_save_effect(sequence, round_number, attacker, setup, dice)
