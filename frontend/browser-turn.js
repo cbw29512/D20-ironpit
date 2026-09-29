@@ -101,7 +101,7 @@
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
       let bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "beforeEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
-      if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
+      if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member, setup)); return finalize(events, sequence, round, member, setup, turnKey); }
       bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "afterEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
       const preMove = resolveMainActionOpportunity("normalPreMove", sequence, round, member, setup, turnKey);
