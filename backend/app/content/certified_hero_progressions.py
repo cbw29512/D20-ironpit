@@ -1,6 +1,11 @@
 from __future__ import annotations
 
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
+from app.content.audited_bard import build_lyra_silverstring_level
+from app.content.audited_bard_profile import (
+    build_lyra_silverstring_level1_profile,
+    build_lyra_silverstring_level2_profile,
+)
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.audited_cleric_life_high_profile import (
     build_seraphine_dawnshield_level7_profile, build_seraphine_dawnshield_level8_profile,
@@ -106,6 +111,13 @@ CERTIFIED_HERO_PROGRESSIONS_2024: tuple[CertifiedHeroProgression, ...] = (
             build_rokhan_stonefury_level15_profile, build_rokhan_stonefury_level16_profile,
             build_rokhan_stonefury_level17_profile, build_rokhan_stonefury_level18_profile,
             build_rokhan_stonefury_level19_profile, build_rokhan_stonefury_level20_profile,
+        ),
+    ),
+    CertifiedHeroProgression(
+        class_id="bard", ruleset="2024", template_builder=build_lyra_silverstring_level,
+        profile_builders=(
+            build_lyra_silverstring_level1_profile,
+            build_lyra_silverstring_level2_profile,
         ),
     ),
     CertifiedHeroProgression(

@@ -16,17 +16,33 @@ def _spell(
     )
 
 
+def _cantrip(spell_id: str, name: str, role: str, *capabilities: str) -> CanonicalSpellChoice:
+    return CanonicalSpellChoice(
+        id=spell_id,
+        name=name,
+        spell_level=0,
+        min_character_level=1,
+        role=role,
+        required_capabilities=list(capabilities),
+    )
+
+
 CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
+    "bard": (
+        _cantrip("dancing-lights", "Dancing Lights", "utility", "arena-out-of-scope"),
+        _cantrip("mage-hand", "Mage Hand", "utility", "arena-out-of-scope"),
+    ),
     "cleric": CLERIC_CANTRIPS,
 }
 
 
 CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "bard": (
-        _spell("charm-person", "Charm Person", "control", "charmed"),
-        _spell("color-spray", "Color Spray", "control", "blinded"),
-        _spell("dissonant-whispers", "Dissonant Whispers", "damage", "save-damage"),
         _spell("healing-word", "Healing Word", "healing", "healing"),
+        _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
+        _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
+        _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope"),
+        _spell("identify", "Identify", "utility", "arena-out-of-scope"),
     ),
     "cleric": CLERIC_SPELLS,
     "druid": (
