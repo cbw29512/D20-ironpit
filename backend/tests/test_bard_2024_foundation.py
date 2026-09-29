@@ -621,3 +621,48 @@ def test_2024_bard_level_thirteen_spell_package_adds_finger_of_death() -> None:
         "save-damage",
         "magical-secrets",
     ]
+
+
+def test_2024_lore_bard_level_fifteen_scales_inspiration_and_adds_sunburst() -> None:
+    profile = build_lyra_silverstring_profile(15)
+    hero = build_lyra_silverstring_level(15)
+
+    assert hero.max_hp == 78
+    audit = next(item for item in profile.feature_audits if item.feature_id == "bard-combat-spells-8")
+    assert audit.automated is True
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["spell-slot-8"] == 1
+
+    inspiration = hero.d20_bonus_die_actions[0]
+    assert (inspiration.dice_count, inspiration.dice_size) == (1, 12)
+    cutting_words = hero.reaction_roll_penalty_actions[0]
+    assert (cutting_words.dice_count, cutting_words.dice_size) == (1, 12)
+    peerless = hero.progression_features.resource_backed_d20_bonus_dice[0]
+    assert peerless.dice_size == 12
+
+    sunburst = next(item for item in hero.spell_save_actions if item.id == "sunburst")
+    assert sunburst.dc == 18
+    assert sunburst.area is not None
+    assert (sunburst.area.shape, sunburst.area.origin, sunburst.area.radius_ft) == ("radius", "point", 60)
+    assert (sunburst.damage_dice_count, sunburst.damage_dice_size, sunburst.damage_type) == (12, 6, "radiant")
+    assert sunburst.success_damage == "half"
+    rider = sunburst.failed_save_timed_effect
+    assert rider is not None
+    assert rider.effect_id == "blinded"
+    assert rider.repeat_save_timing == "target_turn_end"
+
+
+def test_2024_bard_level_fifteen_spell_package_adds_sunburst() -> None:
+    level_fifteen = canonical_spell_package("bard", 15, "2024", 8)
+
+    assert level_fifteen is not None
+    assert len(level_fifteen.spells) == 18
+    assert level_fifteen.spells[-1].id == "sunburst"
+    assert level_fifteen.spells[-1].spell_level == 8
+    assert level_fifteen.spells[-1].required_capabilities == [
+        "save-damage",
+        "area",
+        "condition",
+        "magical-secrets",
+    ]
