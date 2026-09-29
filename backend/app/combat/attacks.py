@@ -104,6 +104,16 @@ def resolve_attack(
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
+        encounter_defender = None
+        if reaction_setup is not None:
+            encounter_defender = next(
+                (
+                    member
+                    for member in [*reaction_setup.heroes, *reaction_setup.monsters]
+                    if member.combatant_id == actual_event_id
+                ),
+                None,
+            )
         effects = resolve_attack_effects(
             attacker,
             actual_defender,
@@ -122,6 +132,8 @@ def resolve_attack(
             sneak_attack_ally_available=sneak_attack_ally_available,
             brutal_strike_disadvantage=brutal_strike_disadvantage,
             natural_roll=natural,
+            encounter_defender=encounter_defender,
+            setup=reaction_setup,
         )
         damage_roll, damage_components, damage_outcome = effects.damage_roll, effects.damage_components, effects.damage_outcome
         applied_conditions, save_damage, on_hit_save = effects.applied_conditions, effects.save_damage, effects.on_hit_save
