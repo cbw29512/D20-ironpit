@@ -85,7 +85,7 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
                 ("perception", wisdom_modifier + proficiency_bonus * (2 if level >= 9 else 1)),
                 ("performance", charisma_modifier + proficiency_bonus * (2 if level >= 9 else 1)),
                 ("insight", wisdom_modifier + proficiency_bonus),
-                ("religion", 1 + proficiency_bonus),
+                ("religion", abilities.modifier("intelligence") + proficiency_bonus),
             ),
             attacks=(_LYRA_DAGGER,),
             weapon_masteries=(),
