@@ -46,8 +46,8 @@ def test_2024_life_cleric_high_level_blockers_are_explicit() -> None:
     assert audits["cleric-combat-spells-8"].automated is True
     assert audits["cleric-combat-spells-9"].automated is True
     assert audits["supreme-healing"].automated is True
-    assert audits["boon-of-fate"].automated is False
-    assert audits["greater-divine-intervention"].automated is False
+    assert audits["boon-of-fate"].automated is True
+    assert audits["greater-divine-intervention"].automated is True
 
 
 
@@ -83,3 +83,55 @@ def test_level_fourteen_binds_improved_blessed_strikes_to_universal_trigger() ->
     assert grant.trigger_action_ids == ["sacred-flame"]
     assert grant.ability == "wisdom"
     assert grant.ability_multiplier == 2
+
+
+
+def test_level_nineteen_binds_boon_of_fate_to_universal_d20_adjustment() -> None:
+    from app.content.audited_cleric import build_seraphine_dawnshield_level
+
+    hero = build_seraphine_dawnshield_level(19)
+    grants = hero.progression_features.resource_backed_d20_outcome_adjustments
+    resources = {item.id: item.max_uses for item in hero.resources}
+
+    assert hero.max_hp == 98
+    assert hero.ability_scores.charisma == 20
+    assert resources["boon-of-fate"] == 1
+    assert len(grants) == 1
+
+    grant = grants[0]
+    assert grant.source_id == "boon-of-fate"
+    assert grant.resource_id == "boon-of-fate"
+    assert (grant.dice_count, grant.dice_size, grant.range_ft) == (2, 4, 60)
+    assert grant.test_kinds == ["attack", "saving_throw", "ability_check"]
+    assert grant.can_add is True
+    assert grant.can_subtract is True
+
+    refills = hero.initiative_resource_refill_grants
+    assert len(refills) == 1
+    assert refills[0].source_id == "boon-of-fate"
+    assert refills[0].resource_id == "boon-of-fate"
+
+
+
+def test_level_twenty_binds_greater_divine_intervention_to_2024_wish_duplicate() -> None:
+    from app.content.audited_cleric import build_seraphine_dawnshield_level
+
+    hero = build_seraphine_dawnshield_level(20)
+    resources = {item.id: item.max_uses for item in hero.resources}
+
+    assert hero.max_hp == 103
+    assert resources["divine-intervention"] == 1
+    assert len(hero.hp_threshold_condition_actions) == 1
+
+    action = hero.hp_threshold_condition_actions[0]
+    assert action.id == "greater-divine-intervention-wish-power-word-stun"
+    assert action.action_cost == "action"
+    assert action.range_ft == 60
+    assert action.max_current_hp == 150
+    assert action.condition_id == "stunned"
+    assert action.repeat_save_ability == "constitution"
+    assert action.repeat_save_dc == 19
+    assert action.repeat_save_timing == "target_turn_end"
+    assert action.resource_id == "divine-intervention"
+    assert action.resource_cost == 1
+    assert action.magical_effect is True
