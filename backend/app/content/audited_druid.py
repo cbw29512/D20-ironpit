@@ -87,6 +87,8 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                 scores, level, ("intelligence", "wisdom"),
             ),
             skill_bonuses={
+                "athletics": scores.modifier("strength"),
+                "acrobatics": scores.modifier("dexterity"),
                 "nature": scores.modifier("intelligence") + pb + wisdom_modifier,
                 "survival": wisdom_modifier + pb,
                 "insight": wisdom_modifier + pb,
