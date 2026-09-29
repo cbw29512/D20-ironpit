@@ -429,6 +429,7 @@ jobs:
           node frontend/browser-power-word-stun-2014.test.cjs
           node frontend/browser-power-word-kill-2014.test.cjs
           node frontend/browser-power-word-kill-2024.test.cjs
+          node frontend/browser-superior-inspiration-2024.test.cjs
           node frontend/browser-spell-area.test.cjs
           node frontend/browser-spell-cast-effects.test.cjs
           node frontend/browser-spell-resolution.test.cjs
