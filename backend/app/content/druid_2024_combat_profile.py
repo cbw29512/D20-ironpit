@@ -30,6 +30,8 @@ def build_thalen_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
                 max_hp=8,
                 speed_ft=35,
                 skill_bonuses=(
+                    ("athletics", 0),
+                    ("acrobatics", 0),
                     ("nature", 6),
                     ("survival", 5),
                     ("insight", 5),
