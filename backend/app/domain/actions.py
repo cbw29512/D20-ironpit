@@ -71,7 +71,16 @@ class HealingAction(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
     excluded_creature_types: list[str] = Field(default_factory=list)
+    removable_conditions: list[ConditionName] = Field(default_factory=list)
+    prone_reaction_stand: bool = False
+    secondary_target_within_ft: int | None = Field(default=None, ge=5)
     animation: str = "healing"
+
+    @model_validator(mode="after")
+    def validate_linked_targets(self) -> "HealingAction":
+        if self.secondary_target_within_ft is not None and self.max_targets < 2:
+            raise ValueError("Linked secondary-target distance requires a multi-target healing action.")
+        return self
 
 
 class ConditionRemovalAction(BaseModel):
