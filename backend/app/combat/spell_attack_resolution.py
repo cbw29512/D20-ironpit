@@ -167,6 +167,8 @@ def resolve_spell_attack(
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
         if reaction_penalty is not None:
+            if reaction_penalty.restoration_name:
+                description += f" {reaction_penalty.source_name} uses {reaction_penalty.restoration_name}."
             description += (
                 f" {reaction_penalty.source_name} uses {reaction_penalty.action_id} "
                 f"to subtract {reaction_penalty.penalty_total} from the attack roll."
