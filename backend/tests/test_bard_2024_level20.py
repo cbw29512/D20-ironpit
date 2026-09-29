@@ -138,7 +138,7 @@ def test_words_of_creation_rejects_second_target_outside_ten_feet() -> None:
 
     try:
         resolve_group_healing(
-            1, 1, source, [first, second], action, FixedDiceProvider([]), "lyra-turn", setup=setup,
+            1, 1, source, [first, second], action, FixedDiceProvider([1]), "lyra-turn", setup=setup,
         )
     except ValueError as exc:
         assert "linked-target distance" in str(exc)
