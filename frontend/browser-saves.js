@@ -60,6 +60,8 @@
       magicalEffect: Boolean(action.magicalEffect), spellEffect: Boolean(options.spellEffect),
       sourceCreatureType: actor.state.template.creature_type || null, effectTags, roundNumber: round,
       disadvantageSources: [...(options.saveDisadvantageSources || [])],
+      roller: target,
+      setup: options.setup || null,
     };
     const advantageSources = DF().saveAdvantageSourceNames?.(
       target.state, action.saveAbility, saveContext,
