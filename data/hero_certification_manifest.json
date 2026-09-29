@@ -997,7 +997,8 @@
           "expected_combat_features": [
             "attack:rokhan-greataxe",
             "attack:rokhan-handaxe-thrown",
-            "brutal-strike",            "brutal-strike-multi-effect",
+            "brutal-strike",
+            "brutal-strike-multi-effect",
             "danger-sense",
             "fast-movement",
             "forceful-blow",
@@ -1996,7 +1997,8 @@
             "trait:life-domain",
             "trait:relentless-endurance"
           ],
-          "unsupported_mechanics": [],          "python_certification_status": "certified",
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
           "browser_certification_status": "certified",
           "generated_static_status": "current",
           "public_ready_status": "ready",
@@ -2995,7 +2997,8 @@
             "healing-action:divine-intervention-mass-cure-wounds",
             "healing-action:healing-word",
             "healing-action:mass-cure-wounds",
-            "healing-action:mass-cure-wounds-l6",            "healing-action:mass-cure-wounds-l7",
+            "healing-action:mass-cure-wounds-l6",
+            "healing-action:mass-cure-wounds-l7",
             "healing-action:mass-cure-wounds-l8",
             "healing-action:mass-cure-wounds-l9",
             "healing-action:mass-healing-word",
@@ -3994,7 +3997,8 @@
             "resource:adrenaline-rush",
             "resource:relentless-endurance",
             "resource:second-wind",
-            "trait:adrenaline-rush",            "trait:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
             "trait:savage-attacker"
           ],
           "unsupported_mechanics": [],
@@ -4993,7 +4997,8 @@
             "resource:boon-combat-prowess",
             "resource:indomitable",
             "resource:relentless-endurance",
-            "resource:second-wind",            "start-turn-resource-refill:boon-combat-prowess",
+            "resource:second-wind",
+            "start-turn-resource-refill:boon-combat-prowess",
             "studied-attacks",
             "tactical-master",
             "tactical-shift",
@@ -5992,7 +5997,8 @@
           "blockers": [
             "hero-level-not-certified",
             "combat-feature-coverage-not-certified"
-          ]        },
+          ]
+        },
         {
           "level": 19,
           "subclass": {
@@ -6991,7 +6997,8 @@
             "id": "thief",
             "name": "Thief"
           },
-          "runtime_template_id": "mara-quickstep-l11",          "source_references": [
+          "runtime_template_id": "mara-quickstep-l11",
+          "source_references": [
             "D&D Beyond Basic Rules 2024: Rogue 11, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
           "expected_combat_features": [
@@ -7990,7 +7997,8 @@
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
           "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",          "blockers": [
+          "public_ready_status": "blocked",
+          "blockers": [
             "hero-level-not-certified",
             "combat-feature-coverage-not-certified"
           ]
@@ -8989,7 +8997,8 @@
           "expected_combat_features": [],
           "supported_mechanics": [],
           "unsupported_mechanics": [
-            "hero-level-not-certified",            "combat-feature-coverage-not-certified"
+            "hero-level-not-certified",
+            "combat-feature-coverage-not-certified"
           ],
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
