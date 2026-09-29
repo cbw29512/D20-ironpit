@@ -54,7 +54,9 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "finger-of-death",
         "sunburst",
         "cone-of-cold",
+        "circle-of-death",
         "power-word-kill",
+        "power-word-heal",
         "cure-wounds",
         "healing-word",
         "mass-healing-word",
@@ -303,6 +305,23 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.upcast_dice_per_level,
         ) == (5, "action", 60, "cone", "self", 60, "constitution", 8, 8, "cold", "half", 1)
 
+    if "circle-of-death" in spell_saves:
+        spell = spell_saves["circle-of-death"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+        ) == (6, "action", 150, "radius", "point", 60, "constitution", 8, 8, "necrotic", "half", 2)
+
     if "sunburst" in spell_saves:
         spell = spell_saves["sunburst"]
         assert (
@@ -340,6 +359,26 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.fallback_damage_type,
             spell.resource_id,
         ) == (60, 100, 12, 12, 0, "psychic", "spell-slot-9")
+        assert spell.max_targets == (2 if level >= 20 and progression.class_id == "bard" else 1)
+        assert spell.secondary_target_within_ft == (
+            10 if level >= 20 and progression.class_id == "bard" else None
+        )
+
+    if "power-word-heal" in healing:
+        spell = healing["power-word-heal"]
+        assert (
+            spell.action_cost,
+            spell.range_ft,
+            spell.target_mode,
+            spell.restore_to_effective_max,
+            spell.resource_id,
+            spell.max_targets,
+            spell.secondary_target_within_ft,
+            spell.prone_reaction_stand,
+        ) == ("action", 60, "any", True, "spell-slot-9", 2, 10, True)
+        assert spell.removable_conditions == [
+            "charmed", "frightened", "paralyzed", "poisoned", "stunned",
+        ]
 
     if "greater-invisibility" in defenses:
         spell = defenses["greater-invisibility"]
