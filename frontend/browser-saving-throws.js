@@ -106,7 +106,7 @@
         if (rerollGrants.length && !window.IRON_PIT_BROWSER_FAILED_SAVE_REROLL) {
           throw new Error("Failed-save reroll runtime is not loaded for a declared saving-throw capability.");
         }
-        roll = FR().apply(state, roll).roll;
+        roll = FR().apply(state, roll, context).roll;
       }
       if (context.encounterRoller && context.setup) {
         const adjustment = OA()?.applyIfUseful(
