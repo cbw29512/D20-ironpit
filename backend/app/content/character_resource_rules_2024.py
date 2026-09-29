@@ -49,6 +49,23 @@ def _fighter_combat_prowess(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Boon of Combat Prowess uses for level {level}.") from exc
 
 
+def _druid_wild_shape(level: int) -> int:
+    try:
+        if not 1 <= level <= 20:
+            raise ValueError("2024 Druid Wild Shape progression covers levels 1 through 20.")
+        if level == 1:
+            return 0
+        if level <= 5:
+            return 2
+        if level <= 16:
+            return 3
+        return 4
+    except ValueError:
+        raise
+    except Exception as exc:
+        raise ValueError(f"Failed to resolve 2024 Druid Wild Shape uses for level {level}.") from exc
+
+
 def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
@@ -79,6 +96,9 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("action-surge", "Action Surge", fighter_action_surge_uses),
         ("indomitable", "Indomitable", fighter_indomitable_uses),
         ("boon-combat-prowess", "Boon of Combat Prowess", _fighter_combat_prowess),
+    ),
+    "druid": (
+        ("wild-shape", "Wild Shape", _druid_wild_shape),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
