@@ -2,6 +2,10 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
+  const A = () => window.IRON_PIT_ACTION_ECONOMY || {
+    available: (state, cost) => cost !== "reaction" || state.reaction_available,
+    spend: (state, cost) => { if (cost === "reaction") state.reaction_available = false; },
+  };
 
   function d20Count(mode) {
     return mode === "normal" ? 1 : 2;
@@ -42,7 +46,7 @@
           }
           const required = (grant.required_effect_tags || []).map((item) => String(item).trim().toLowerCase());
           if (required.length && !required.some((item) => tags.has(item))) continue;
-          if (grant.action_cost === "reaction" && !source.state.reaction_available) continue;
+          if (grant.action_cost && !A().available(source.state, grant.action_cost)) continue;
 
           const resourceId = grant.resource_id || null;
           const cost = grant.resource_cost || 1;
@@ -73,7 +77,7 @@
             accepted: "replacement",
             replaced_die_index: null,
           };
-          if (grant.action_cost === "reaction") source.state.reaction_available = false;
+          if (grant.action_cost) A().spend(source.state, grant.action_cost);
           if (resourceId != null) source.state.resources[resourceId] -= cost;
           return {
             roll: {
