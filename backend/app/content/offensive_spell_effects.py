@@ -130,3 +130,26 @@ def build_disintegrate_2024(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build 2024 Disintegrate.")
         raise
+
+
+def build_finger_of_death_2024(save_dc: int) -> SpellSaveAction:
+    """2024 Finger of Death using the universal save-damage primitive."""
+    try:
+        return SpellSaveAction(
+            id="finger-of-death",
+            name="Finger of Death",
+            level=7,
+            action_cost="action",
+            range_ft=60,
+            save_ability="constitution",
+            dc=save_dc,
+            damage_dice_count=7,
+            damage_dice_size=8,
+            damage_bonus=30,
+            damage_type="necrotic",
+            success_damage="half",
+            animation="spell-save",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Finger of Death.")
+        raise

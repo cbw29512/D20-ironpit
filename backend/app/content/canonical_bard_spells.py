@@ -179,4 +179,13 @@ BARD_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=6,
         min_character_level=11,
     ),
+    _spell(
+        "finger-of-death",
+        "Finger of Death",
+        "damage",
+        "save-damage",
+        "magical-secrets",
+        spell_level=7,
+        min_character_level=13,
+    ),
 )
