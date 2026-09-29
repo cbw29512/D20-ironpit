@@ -1,11 +1,33 @@
 from __future__ import annotations
 
+from app.combat.action_economy import spend
+from app.combat.condition_removal import remove_condition
 from app.combat.healing_policy import healing_dice_maximized
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
+
+
+def apply_healing_riders(
+    target: EncounterCombatant,
+    action: HealingAction,
+) -> list[str]:
+    removed: list[str] = []
+    for condition_id in action.removable_conditions:
+        if condition_id in target.state.active_effect_ids:
+            remove_condition(target, condition_id)
+            removed.append(condition_id)
+    if (
+        action.prone_reaction_stand
+        and "prone" in target.state.active_effect_ids
+        and target.state.reaction_available
+    ):
+        spend(target.state, "reaction")
+        remove_condition(target, "prone")
+        removed.append("prone")
+    return removed
 
 
 def spend_healing_resource(
