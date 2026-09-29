@@ -50,6 +50,13 @@ BARD_CANTRIPS: tuple[CanonicalSpellChoice, ...] = (
         "arena-out-of-scope",
         min_character_level=4,
     ),
+    _cantrip(
+        "prestidigitation",
+        "Prestidigitation",
+        "utility",
+        "arena-out-of-scope",
+        min_character_level=10,
+    ),
 )
 
 
@@ -152,5 +159,15 @@ BARD_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         "arena-out-of-scope",
         spell_level=5,
         min_character_level=9,
+    ),
+    _spell(
+        "fireball",
+        "Fireball",
+        "damage",
+        "save-damage",
+        "area",
+        "magical-secrets",
+        spell_level=3,
+        min_character_level=10,
     ),
 )
