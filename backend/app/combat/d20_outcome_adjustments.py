@@ -8,7 +8,7 @@ from app.combat.dice import DiceProvider
 from app.combat.resources import resource_available, spend_resource
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.event_support import DiceRoll, RollRevision
-from app.domain.progression_primitives import ResourceBackedD20OutcomeAdjustment
+from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
 
 logger = logging.getLogger(__name__)
 
