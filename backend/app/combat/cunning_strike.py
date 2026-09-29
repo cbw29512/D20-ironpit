@@ -6,6 +6,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition
 from app.content.character_math import proficiency_bonus
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DiceRoll
 from app.domain.size import CreatureSize, size_at_most
 
@@ -83,6 +84,9 @@ def resolve_trip(
     defender: CombatantState,
     dice,
     turn_key: str,
+    *,
+    encounter_defender: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> CunningStrikeTripResolution:
     """Resolve the selected Trip save after Sneak Attack damage is dealt."""
     if attacker.feature_last_turn_keys.get(FEATURE_ID) != turn_key:
@@ -94,7 +98,10 @@ def resolve_trip(
     if scores is None or level is None:
         raise ValueError("Cunning Strike requires certified ability scores and level.")
     dc = 8 + scores.modifier("dexterity") + proficiency_bonus(level)
-    save_roll, succeeded = resolve_saving_throw(defender, "dexterity", dc, dice)
+    save_roll, succeeded = resolve_saving_throw(
+        defender, "dexterity", dc, dice,
+        encounter_roller=encounter_defender, setup=setup,
+    )
     applied = False
     if not succeeded and PRONE_EFFECT_ID not in defender.active_effect_ids:
         defender.active_effect_ids.append(PRONE_EFFECT_ID)
@@ -107,6 +114,9 @@ def resolve_obscure(
     defender: CombatantState,
     dice,
     turn_key: str,
+    *,
+    encounter_defender: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> CunningStrikeObscureResolution:
     """Resolve Obscure with the shared Dexterity save and timed Blinded condition."""
     if attacker.feature_last_turn_keys.get(OBSCURE_FEATURE_ID) != turn_key or defender.is_dead:
@@ -116,7 +126,10 @@ def resolve_obscure(
     if scores is None or level is None:
         raise ValueError("Obscure requires certified ability scores and level.")
     dc = 8 + scores.modifier("dexterity") + proficiency_bonus(level)
-    save_roll, succeeded = resolve_saving_throw(defender, "dexterity", dc, dice)
+    save_roll, succeeded = resolve_saving_throw(
+        defender, "dexterity", dc, dice,
+        encounter_roller=encounter_defender, setup=setup,
+    )
     applied = False
     if not succeeded:
         applied = apply_timed_condition(
