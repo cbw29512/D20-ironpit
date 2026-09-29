@@ -116,7 +116,13 @@
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
-          targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates, naturalRoll: natural });
+          targetId: actualTarget.combatant_id,
+          sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false,
+          affectedStates,
+          naturalRoll: natural,
+          roller: actualTarget,
+          setup: extra.setup || null,
+        });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
       cunningStrikeTrip = damage.cunningStrikeTrip || null;
       cunningStrikeObscure = damage.cunningStrikeObscure || null;
@@ -134,7 +140,9 @@
         if (timed) applied.push(timed);
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
-      hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, attack, attacker.state.template, round) || null : null;
+      hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(
+        actualTarget, attack, attacker.state.template, round, extra.setup || null,
+      ) || null : null;
       if (hitSave?.appliedCondition && !applied.includes(hitSave.appliedCondition)) applied.push(hitSave.appliedCondition);
       Object.assign(outcome, { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage });
       const phase = H().runPhase(H().PHASES.ON_HIT, {
