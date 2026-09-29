@@ -5,6 +5,7 @@
   const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
+  const C = () => window.IRON_PIT_BROWSER_RESOURCE_CONVERSION;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     has: (state, id) => (state.active_effect_ids || []).includes(id),
   };
@@ -14,7 +15,8 @@
   function eligible(source, roller, action, rollKind) {
     if (!(action.rollKinds || []).includes(rollKind) || source.side === roller.side) return false;
     if (!E().available(source.state, "reaction")) return false;
-    if ((source.state.resources?.[action.resourceId] || 0) < (action.resourceCost || 1)) return false;
+    if ((source.state.resources?.[action.resourceId] || 0) < (action.resourceCost || 1)
+        && !C()?.restorationAction(source.state, action.resourceId)) return false;
     if (S().distance(source, roller) > action.range) return false;
     if (action.requiresSourceSight && (Q().has(source.state, "blinded") || Q().has(roller.state, "invisible"))) return false;
     if (action.requiresTargetHearing && Q().has(roller.state, "deafened")) return false;
@@ -60,6 +62,13 @@
       const selected = choose(roller, setup, rollKind, roll, threshold);
       if (!selected) return null;
       const { source, action } = selected;
+      let restoration = null;
+      if ((source.state.resources?.[action.resourceId] || 0) < (action.resourceCost || 1)) {
+        restoration = C()?.restoreInline(source.state, action.resourceId) || null;
+      }
+      if ((source.state.resources?.[action.resourceId] || 0) < (action.resourceCost || 1)) {
+        throw new Error("Resource " + action.resourceId + " is unavailable for " + action.name + ".");
+      }
       const count = action.diceCount || 1;
       const penaltyRolls = Array.from({ length: count }, () => D().roll(action.diceSize));
       const penalty = penaltyRolls.reduce((sum, value) => sum + value, 0);
@@ -88,6 +97,7 @@
         actionId: action.id,
         penaltyTotal: penalty,
         resourceRemaining: source.state.resources[action.resourceId],
+        restorationName: restoration?.name || null,
       };
     } catch (error) {
       console.error("Failed browser reaction roll penalty.", { combatant: roller?.combatant_id, error });
