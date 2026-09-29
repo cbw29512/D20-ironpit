@@ -122,3 +122,11 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
     except Exception:
         logger.exception("Failed to compile 2024 Lyra Silverstring profile at level %s.", level)
         raise
+
+
+def build_lyra_silverstring_level1_profile() -> CharacterBuildProfile:
+    return build_lyra_silverstring_profile(1)
+
+
+def build_lyra_silverstring_level2_profile() -> CharacterBuildProfile:
+    return build_lyra_silverstring_profile(2)
