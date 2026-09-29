@@ -7,6 +7,7 @@ from app.content.cleric_divine_intervention import build_divine_intervention_dam
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
 from app.content.cleric_runtime_loadout import (
     build_seraphine_healing,
+    build_seraphine_initiative_refills,
     build_seraphine_resources,
     build_seraphine_save_spells,
     seraphine_source,
@@ -126,6 +127,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             off_hand="shield", body_style="humanoid",
         ),
         resources=build_seraphine_resources(level),
+        initiative_resource_refill_grants=build_seraphine_initiative_refills(level),
         source=seraphine_source(level),
     )
 
