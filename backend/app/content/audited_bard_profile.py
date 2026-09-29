@@ -48,10 +48,10 @@ def _scores(level: int) -> tuple[AbilityScores, list, list[AbilityIncrease], Abi
 
 
 def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Lyra's legal 2024 Lore Bard progression through level 4."""
+    """Compile Lyra's legal 2024 Lore Bard progression through level 5."""
     try:
-        if level not in {1, 2, 3, 4}:
-            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 4.")
+        if level not in {1, 2, 3, 4, 5}:
+            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 5.")
         hero = HERO_BY_CLASS["bard"]
         base, background_increases, advancement_increases, final = _scores(level)
         audits = [
@@ -114,6 +114,18 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
             audits.extend(lore_bard_level3_audits())
         if level >= 4:
             audits.append(bard_level4_asi_audit())
+        if level >= 5:
+            audits.append(_feature(
+                "font-of-inspiration",
+                "Font of Inspiration",
+                "class",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Short/Long Rest recovery is outside a match because Iron Pit resets between matches; "
+                    "spell-slot conversion is bound to the universal resource-conversion schema."
+                ),
+            ))
         return CharacterBuildProfile(
             id=f"build-lyra-silverstring-l{level}",
             template_id=canonical_template_id("bard", level),
@@ -166,6 +178,10 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                     ["D&D Beyond Basic Rules 2024: Bard 4 — Ability Score Improvement"]
                     if level >= 4 else []
                 ),
+                *(
+                    ["D&D Beyond Basic Rules 2024: Bard 5 — Font of Inspiration"]
+                    if level >= 5 else []
+                ),
             ],
         )
     except Exception:
@@ -188,3 +204,7 @@ def build_lyra_silverstring_level3_profile() -> CharacterBuildProfile:
 
 def build_lyra_silverstring_level4_profile() -> CharacterBuildProfile:
     return build_lyra_silverstring_profile(4)
+
+
+def build_lyra_silverstring_level5_profile() -> CharacterBuildProfile:
+    return build_lyra_silverstring_profile(5)
