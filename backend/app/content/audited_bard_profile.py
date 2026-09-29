@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.bard_2024_lore_profile_support import lore_bard_level3_audits
 from app.content.canonical_combat_build_policy import (
     canonical_background_increases,
     canonical_base_ability_scores,
@@ -109,32 +110,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                 ),
             ])
         if level >= 3:
-            audits.extend([
-                _feature(
-                    "lore-bonus-proficiencies",
-                    "Bonus Proficiencies",
-                    "subclass",
-                    combat_relevant=False,
-                    automated=False,
-                    notes="Canonical choices are Arcana, Deception, and Sleight of Hand; no arena mechanic changes.",
-                ),
-                _feature(
-                    "cutting-words",
-                    "Cutting Words",
-                    "subclass",
-                    combat_relevant=True,
-                    automated=True,
-                    notes="Uses the universal reaction roll-penalty capability with 2024 sight-only legality.",
-                ),
-                _feature(
-                    "bard-combat-spells-2",
-                    "Level 2 Bard Combat Spells",
-                    "class",
-                    combat_relevant=True,
-                    automated=True,
-                    notes="Shatter is the canonical level-2 damage spell.",
-                ),
-            ])
+            audits.extend(lore_bard_level3_audits())
         return CharacterBuildProfile(
             id=f"build-lyra-silverstring-l{level}",
             template_id=canonical_template_id("bard", level),
