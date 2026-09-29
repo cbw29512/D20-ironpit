@@ -182,14 +182,16 @@ def apply_resource_backed_d20_bonus_if_useful(
             key=lambda item: (item.dice_count * item.dice_size, item.source_id),
         )
         bonus_rolls = [dice.roll(rule.dice_size) for _ in range(rule.dice_count)]
-        spend_resource(state, rule.resource_id, rule.resource_cost)
+        revised_total = roll.total + sum(bonus_rolls)
+        if not rule.consume_only_on_success or revised_total >= target_total:
+            spend_resource(state, rule.resource_id, rule.resource_cost)
         return roll.model_copy(update={
             "notation": (
                 f"{roll.notation} + {rule.dice_count}d{rule.dice_size} "
                 f"[{rule.source_name}]"
             ),
             "rolls": [*roll.rolls, *bonus_rolls],
-            "total": roll.total + sum(bonus_rolls),
+            "total": revised_total,
         }), rule.source_name
     except Exception as exc:
         logger.exception(
