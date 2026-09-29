@@ -705,7 +705,7 @@
       "owners": [
         "cleric/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4941,7 +4941,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 337,
-    "supported": 78
+    "planned": 336,
+    "supported": 79
   }
 }
