@@ -6,13 +6,22 @@ from app.domain.class_loadouts import CanonicalSpellChoice, CasterClassId, Class
 
 
 def _spell(
-    spell_id: str, name: str, role: str, *capabilities: str,
+    spell_id: str,
+    name: str,
+    role: str,
+    *capabilities: str,
+    spell_level: int = 1,
+    min_character_level: int = 1,
     always_prepared_from_level: int | None = None,
 ) -> CanonicalSpellChoice:
     return CanonicalSpellChoice(
-        id=spell_id, name=name, spell_level=1, min_character_level=1,
+        id=spell_id,
+        name=name,
+        spell_level=spell_level,
+        min_character_level=min_character_level,
         always_prepared_from_level=always_prepared_from_level,
-        role=role, required_capabilities=list(capabilities),
+        role=role,
+        required_capabilities=list(capabilities),
     )
 
 
@@ -43,6 +52,15 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
         _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope"),
         _spell("identify", "Identify", "utility", "arena-out-of-scope"),
+        _spell(
+            "shatter",
+            "Shatter",
+            "damage",
+            "save-damage",
+            "area",
+            spell_level=2,
+            min_character_level=3,
+        ),
     ),
     "cleric": CLERIC_SPELLS,
     "druid": (
