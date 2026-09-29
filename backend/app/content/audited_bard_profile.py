@@ -17,7 +17,6 @@ from app.domain.character_builds import AbilityIncrease, AbilityScores, Characte
 
 logger = logging.getLogger(__name__)
 
-
 def _feature(
     feature_id: str,
     feature_name: str,
@@ -39,7 +38,6 @@ def _feature(
         notes=notes,
     )
 
-
 def _scores(level: int) -> tuple[AbilityScores, list, list[AbilityIncrease], AbilityScores]:
     base = canonical_base_ability_scores("bard")
     allowed = ["intelligence", "wisdom", "charisma"]
@@ -49,7 +47,6 @@ def _scores(level: int) -> tuple[AbilityScores, list, list[AbilityIncrease], Abi
     for increase in [*background, *advancement]:
         values[increase.ability] += increase.amount
     return base, background, advancement, AbilityScores(**values)
-
 
 def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile Lyra's legal 2024 Lore Bard progression through level 5."""
@@ -181,24 +178,14 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
     except Exception:
         logger.exception("Failed to compile 2024 Lyra Silverstring profile at level %s.", level)
         raise
-
-
 def build_lyra_silverstring_level1_profile() -> CharacterBuildProfile:
     return build_lyra_silverstring_profile(1)
-
-
 def build_lyra_silverstring_level2_profile() -> CharacterBuildProfile:
     return build_lyra_silverstring_profile(2)
-
-
 def build_lyra_silverstring_level3_profile() -> CharacterBuildProfile:
     return build_lyra_silverstring_profile(3)
 
-
-
 def build_lyra_silverstring_level4_profile() -> CharacterBuildProfile:
     return build_lyra_silverstring_profile(4)
-
-
 def build_lyra_silverstring_level5_profile() -> CharacterBuildProfile:
     return build_lyra_silverstring_profile(5)
