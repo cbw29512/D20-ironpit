@@ -89,7 +89,12 @@
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
     const resolved = O().resolveD20(
-      attacker.state, actualTarget.state, attack, attackRoll, M().effectiveArmorClass(actualTarget.state),
+      attacker.state,
+      actualTarget.state,
+      attack,
+      attackRoll,
+      M().effectiveArmorClass(actualTarget.state),
+      { roller: attacker, setup: extra.setup || null },
     );
     const resolvedAttackRoll = resolved.roll, natural = resolved.natural, targetAc = resolved.targetAc;
     const parry = resolved.parry, d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit; if (!hit) BS()?.clearPending?.(attacker.state, extra.turnKey);
