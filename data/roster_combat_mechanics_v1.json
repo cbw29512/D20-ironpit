@@ -1406,7 +1406,7 @@
     },
     {
       "demand_count": 1,
-      "id": "druidic",
+      "id": "druidic-language",
       "kinds": [
         "arena-ignored"
       ],
@@ -3064,7 +3064,7 @@
     },
     {
       "demand_count": 1,
-      "id": "primal-order-warden",
+      "id": "primal-order-magician",
       "kinds": [
         "base-feature"
       ],
