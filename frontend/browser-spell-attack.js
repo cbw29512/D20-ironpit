@@ -150,7 +150,7 @@
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
     if (rangeModifier) description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
-    if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
+    if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (rollPenalty?.restorationName) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.restorationName}.`; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
     const event = {
       sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, attack_name: spell.name, target_ac: targetAc,

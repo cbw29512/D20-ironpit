@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.pit_policy import is_backline
+from app.combat.resource_conversion import restoration_conversion
 from app.domain.d20_bonus_dice import D20BonusDieAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -80,7 +81,11 @@ def choose_d20_bonus_die_action(
             if not is_available(source.state, action.action_cost):
                 continue
             resource = resource_for(source, action)
-            if resource is None or resource.current_uses < action.resource_cost:
+            if resource is None:
+                continue
+            if resource.current_uses < action.resource_cost and restoration_conversion(
+                source.state, action.resource_id,
+            ) is None:
                 continue
             for target in allies:
                 if (

@@ -46,3 +46,18 @@ def bard_level4_asi_audit() -> FeatureAudit:
         automated=True,
         notes="+2 Charisma is applied to Lyra's persistent progression.",
     )
+
+
+def bard_level5_font_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="font-of-inspiration",
+        feature_name="Font of Inspiration",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 5",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Short/Long Rest recovery is outside a match because Iron Pit resets between matches; "
+            "spell-slot conversion uses the universal resource-conversion schema."
+        ),
+    )

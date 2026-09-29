@@ -50,6 +50,33 @@ def restoration_conversion(
         raise RuntimeError("Resource restoration conversion could not be selected.") from exc
 
 
+
+def apply_restoration_conversion(
+    state: CombatantState,
+    target_resource_id: str,
+) -> ResourceConversionAction | None:
+    """Apply the best no-action restoration conversion and return its source metadata."""
+    try:
+        action = restoration_conversion(state, target_resource_id)
+        if action is None:
+            return None
+        spend_resource(state, action.source_resource_id, action.source_cost)
+        gain_resource(
+            state,
+            action.target_resource_id,
+            action.target_gain,
+            allow_overflow=action.target_allows_overflow,
+        )
+        return action
+    except Exception as exc:
+        logger.exception(
+            "Failed inline restoration conversion for %s on %s.",
+            target_resource_id,
+            state.template.name,
+        )
+        raise RuntimeError("Inline resource restoration could not be resolved.") from exc
+
+
 def resolve_resource_conversion(
     state: CombatantState,
     action: ResourceConversionAction,

@@ -5,7 +5,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const D = () => window.IRON_PIT_DICE;
-
+  const C = () => window.IRON_PIT_BROWSER_RESOURCE_CONVERSION;
   function targetAllowed(source, target, action) {
     try {
       if (target.state.is_dead || !target.state.is_alive) return false;
@@ -21,7 +21,6 @@
       throw error;
     }
   }
-
   function conflicts(source, target, action, round) {
     return (target.state.active_d20_bonus_dice || []).some((item) =>
       item.expires_round > round && (
@@ -29,22 +28,21 @@
         || (action.exclusiveGroup && item.exclusive_group === action.exclusiveGroup)
       ));
   }
-
   function attackBonus(member) {
     const template = member.state.template;
     const primary = (template.attacks || []).find((item) => item.id === template.primary_attack_id)
       || (template.attacks || [])[0];
     return primary?.bonus || 0;
   }
-
   function choose(source, setup, round) {
     try {
       const resources = source.state.resources || {};
       const allies = source.side === "heroes" ? setup.heroes : setup.monsters;
       const choices = [];
       for (const action of source.state.template.d20BonusDieActions || []) {
-        if (!E().available(source.state, action.actionCost)
-            || (resources[action.resourceId] || 0) < (action.resourceCost || 1)) continue;
+        if (!E().available(source.state, action.actionCost)) continue;
+        if ((resources[action.resourceId] || 0) < (action.resourceCost || 1)
+            && !C()?.restorationAction(source.state, action.resourceId)) continue;
         for (const target of allies) {
           if (targetAllowed(source, target, action) && !conflicts(source, target, action, round)) {
             choices.push({ action, target });
@@ -62,16 +60,12 @@
       throw error;
     }
   }
-
   function resolveGrant(sequence, round, source, target, action) {
     try {
       if (!E().available(source.state, action.actionCost)) {
         throw new Error(action.actionCost + " is unavailable for " + action.name + ".");
       }
       const resources = source.state.resources || {};
-      if ((resources[action.resourceId] || 0) < (action.resourceCost || 1)) {
-        throw new Error("Resource " + action.resourceId + " is unavailable for " + action.name + ".");
-      }
       if (!targetAllowed(source, target, action)) {
         throw new Error(target.state.template.name + " is not a legal target for " + action.name + ".");
       }
@@ -79,6 +73,13 @@
       const active = target.state.active_d20_bonus_dice || (target.state.active_d20_bonus_dice = []);
       if (conflicts(source, target, action, round)) {
         throw new Error(target.state.template.name + " already has an exclusive " + action.name + " grant.");
+      }
+      let restoration = null;
+      if ((resources[action.resourceId] || 0) < (action.resourceCost || 1)) {
+        restoration = C()?.restoreInline(source.state, action.resourceId) || null;
+        if ((resources[action.resourceId] || 0) < (action.resourceCost || 1)) {
+          throw new Error("Resource " + action.resourceId + " is unavailable for " + action.name + ".");
+        }
       }
       E().spend(source.state, action.actionCost);
       resources[action.resourceId] -= action.resourceCost || 1;
@@ -94,7 +95,9 @@
         target_id: target.combatant_id, target_name: target.state.template.name,
         feature_id: action.id, resource_remaining: resources[action.resourceId],
         animation: action.animation || "inspiration",
-        description: source.state.template.name + " grants " + action.name + " to " + target.state.template.name + ".",
+        description: (restoration ? source.state.template.name + " uses " + restoration.name
+          + " to restore " + action.resourceId + ", then " : "")
+          + source.state.template.name + " grants " + action.name + " to " + target.state.template.name + ".",
       };
     } catch (error) {
       console.error("Browser d20 bonus-die grant failed.", {

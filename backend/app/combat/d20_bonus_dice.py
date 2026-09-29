@@ -5,13 +5,12 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.d20_bonus_die_support import grant_conflicts, resource_for, target_allowed
 from app.combat.dice import DiceProvider
+from app.combat.resource_conversion import apply_restoration_conversion
 from app.combat.resources import resource_available, spend_resource
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant, D20BonusDieAction, D20TestKind
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent, DiceRoll
-
 logger = logging.getLogger(__name__)
-
 
 def resolve_d20_bonus_die_grant(
     sequence: int,
@@ -25,13 +24,18 @@ def resolve_d20_bonus_die_grant(
         if not is_available(source.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
         resource = resource_for(source, action)
-        if resource is None or resource.current_uses < action.resource_cost:
+        if resource is None:
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if not target_allowed(source, target, action):
             raise ValueError(f"{target.state.template.name} is not a legal target for {action.name}.")
         expire_d20_bonus_dice(target.state, round_number)
         if grant_conflicts(source, target, action, round_number):
             raise ValueError(f"{target.state.template.name} already has an exclusive {action.name} grant.")
+        restoration = None
+        if resource.current_uses < action.resource_cost:
+            restoration = apply_restoration_conversion(source.state, action.resource_id)
+            if restoration is None or resource.current_uses < action.resource_cost:
+                raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
 
         spend(source.state, action.action_cost)
         resource.current_uses -= action.resource_cost
@@ -58,6 +62,12 @@ def resolve_d20_bonus_die_grant(
             resource_remaining=resource.current_uses,
             animation=action.animation,
             description=(
+                (
+                    f"{source.state.template.name} uses {restoration.name} to restore "
+                    f"{action.resource_id}, then "
+                )
+                if restoration is not None else ""
+            ) + (
                 f"{source.state.template.name} grants {action.name} to "
                 f"{target.state.template.name}."
             ),
@@ -67,7 +77,6 @@ def resolve_d20_bonus_die_grant(
     except Exception as exc:
         logger.exception("Failed to grant %s from %s.", action.name, source.combatant_id)
         raise RuntimeError("D20 bonus-die grant could not be resolved.") from exc
-
 
 def eligible_d20_bonus_dice(
     state,
@@ -83,7 +92,6 @@ def eligible_d20_bonus_dice(
     except Exception as exc:
         logger.exception("Failed to identify eligible d20 bonus dice for %s.", state.template.name)
         raise RuntimeError("D20 bonus-die eligibility could not be resolved.") from exc
-
 
 def consume_d20_bonus_die(
     state,
@@ -107,7 +115,6 @@ def consume_d20_bonus_die(
     except Exception as exc:
         logger.exception("Failed to consume d20 bonus die for %s.", state.template.name)
         raise RuntimeError("D20 bonus die could not be consumed.") from exc
-
 
 def apply_d20_bonus_die_if_useful(
     state,
@@ -134,7 +141,6 @@ def apply_d20_bonus_die_if_useful(
         logger.exception("Failed to apply d20 bonus die for %s.", state.template.name)
         raise RuntimeError("D20 bonus die could not be applied to the test.") from exc
 
-
 def expire_d20_bonus_dice(state, round_number: int) -> list[str]:
     """Expire grants whose absolute round lifetime has ended."""
     try:
@@ -151,7 +157,6 @@ def expire_d20_bonus_dice(state, round_number: int) -> list[str]:
     except Exception as exc:
         logger.exception("Failed to expire d20 bonus dice for %s.", state.template.name)
         raise RuntimeError("D20 bonus-die expiry could not be resolved.") from exc
-
 
 def apply_resource_backed_d20_bonus_if_useful(
     state,

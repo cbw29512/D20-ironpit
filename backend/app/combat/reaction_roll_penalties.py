@@ -7,6 +7,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.resource_conversion import apply_restoration_conversion, restoration_conversion
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.event_support import DiceRoll, RollRevision
@@ -22,6 +23,22 @@ class ReactionRollPenaltyResult:
     action_id: str
     penalty_total: int
     resource_remaining: int
+    restoration_name: str | None = None
+
+
+def reaction_penalty_description(result: ReactionRollPenaltyResult) -> str:
+    try:
+        restoration = (
+            f" {result.source_name} uses {result.restoration_name}."
+            if result.restoration_name else ""
+        )
+        return (
+            f"{restoration} {result.source_name} uses {result.action_id} "
+            f"to subtract {result.penalty_total} from the roll."
+        )
+    except Exception as exc:
+        logger.exception("Failed to format reaction roll-penalty description.")
+        raise RuntimeError("Reaction roll-penalty description could not be formatted.") from exc
 
 
 def _resource(source: EncounterCombatant, action: ReactionRollPenaltyAction):
@@ -39,7 +56,11 @@ def _eligible(
     if not is_available(source.state, "reaction"):
         return False
     resource = _resource(source, action)
-    if resource is None or resource.current_uses < action.resource_cost:
+    if resource is None:
+        return False
+    if resource.current_uses < action.resource_cost and restoration_conversion(
+        source.state, action.resource_id,
+    ) is None:
         return False
     if combatant_distance(source, roller) > action.range_ft:
         return False
@@ -123,6 +144,11 @@ def apply_reaction_roll_penalty_if_useful(
         resource = _resource(source, action)
         if resource is None:
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
+        restoration = None
+        if resource.current_uses < action.resource_cost:
+            restoration = apply_restoration_conversion(source.state, action.resource_id)
+            if restoration is None or resource.current_uses < action.resource_cost:
+                raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         penalty_rolls = [dice.roll(action.dice_size) for _ in range(action.dice_count)]
         penalty = sum(penalty_rolls)
         replacement_total = roll.total - penalty
@@ -156,6 +182,7 @@ def apply_reaction_roll_penalty_if_useful(
             action_id=action.id,
             penalty_total=penalty,
             resource_remaining=resource.current_uses,
+            restoration_name=restoration.name if restoration is not None else None,
         )
     except (ValueError, RuntimeError):
         raise

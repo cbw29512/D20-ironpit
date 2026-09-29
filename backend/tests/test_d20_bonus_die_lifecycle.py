@@ -10,6 +10,7 @@ from app.combat.d20_bonus_dice import (
 )
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import begin_turn, build_combatant_state
+from app.content.audited_bard import build_lyra_silverstring_level
 from app.content.bard_2014_inspiration import build_bardic_inspiration_2014
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.domain.events import DiceRoll
@@ -74,3 +75,47 @@ def test_same_source_cannot_stack_same_grant_on_recipient() -> None:
     resolve_d20_bonus_die_grant(1, 1, bard, ally, action)
     with pytest.raises(ValueError):
         resolve_d20_bonus_die_grant(2, 1, bard, ally, action)
+
+
+def test_restoration_conversion_spends_slot_only_after_grant_legality() -> None:
+    bard_template = build_lyra_silverstring_level(5)
+    ally_template = build_karnok_stoneward_2014(5).model_copy(
+        update={"id": "font-ally", "name": "Font Ally"}
+    )
+    enemy_template = build_karnok_stoneward_2014(5).model_copy(
+        update={"id": "font-enemy", "name": "Font Enemy"}
+    )
+    bard = EncounterCombatant(
+        combatant_id="font-bard",
+        side="heroes",
+        position_ft=0,
+        state=build_combatant_state(bard_template),
+    )
+    ally = EncounterCombatant(
+        combatant_id="font-ally",
+        side="heroes",
+        position_ft=20,
+        state=build_combatant_state(ally_template),
+    )
+    enemy = EncounterCombatant(
+        combatant_id="font-enemy",
+        side="monsters",
+        position_ft=20,
+        state=build_combatant_state(enemy_template),
+    )
+    inspiration = next(item for item in bard.state.resources if item.id == "bardic-inspiration")
+    slot = next(item for item in bard.state.resources if item.id == "spell-slot-1")
+    inspiration.current_uses = 0
+    slot.current_uses = 1
+    action = bard.state.template.d20_bonus_die_actions[0]
+
+    with pytest.raises(ValueError):
+        resolve_d20_bonus_die_grant(1, 1, bard, enemy, action)
+    assert slot.current_uses == 1
+    assert inspiration.current_uses == 0
+
+    event = resolve_d20_bonus_die_grant(2, 1, bard, ally, action)
+    assert slot.current_uses == 0
+    assert inspiration.current_uses == 0
+    assert len(ally.state.active_d20_bonus_dice) == 1
+    assert "Font of Inspiration" in event.description
