@@ -106,3 +106,27 @@ def build_fireball_2024(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build 2024 Fireball.")
         raise
+
+
+def build_disintegrate_2024(save_dc: int) -> SpellSaveAction:
+    """2024 Disintegrate using the universal save-damage primitive."""
+    try:
+        return SpellSaveAction(
+            id="disintegrate",
+            name="Disintegrate",
+            level=6,
+            action_cost="action",
+            range_ft=60,
+            save_ability="dexterity",
+            dc=save_dc,
+            damage_dice_count=10,
+            damage_dice_size=6,
+            damage_bonus=40,
+            damage_type="force",
+            success_damage="none",
+            upcast_dice_per_level=3,
+            animation="spell-save",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Disintegrate.")
+        raise
