@@ -167,7 +167,7 @@
     else if (override.featureId) description += ` ${override.sourceName || override.featureId} turns the miss into a hit.`;
     else if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
     else if (naturalOne) description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn.";
-    if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (d20Bonus?.sourceName) description += ` ${d20Bonus.sourceName} adds its bonus die to the attack roll.`; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
+    if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (d20Bonus?.sourceName) description += ` ${d20Bonus.sourceName} adds its bonus die to the attack roll.`; if (rollPenalty?.restorationName) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.restorationName}.`; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
     if (!hit && damageRoll !== null) description += ` Graze deals ${damageRoll.total} ${attack.damageType} damage.`;
     if (studiedApplied) description += ` Studied Attacks primes the next attack against ${target.state.template.name}.`;
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`; if (outcome.brutalStrikeEffects?.length) description += ` Brutal Strike applies ${outcome.brutalStrikeEffects.map((item) => item.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())).join(", ")}.`;
