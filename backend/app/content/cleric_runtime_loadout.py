@@ -12,6 +12,7 @@ from app.content.healing_spell_effects import (
 from app.content.offensive_spell_effects import build_inflict_wounds, build_sacred_flame
 from app.domain.actions import HealingAction
 from app.domain.combatants import ResourceDefinition
+from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.spells import SpellSaveAction
 
 
@@ -38,11 +39,32 @@ def build_seraphine_resources(level: int) -> list[ResourceDefinition]:
             name="Divine Intervention",
             max_uses=1,
         ))
+    if level >= 19:
+        resources.append(ResourceDefinition(
+            id="boon-of-fate",
+            name="Boon of Fate",
+            max_uses=1,
+        ))
     resources.extend((
         ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
         ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
     ))
     return resources
+
+
+def build_seraphine_initiative_refills(level: int) -> list[InitiativeResourceRefillGrant]:
+    try:
+        if level < 19:
+            return []
+        return [InitiativeResourceRefillGrant(
+            source_id="boon-of-fate",
+            source_name="Boon of Fate",
+            resource_id="boon-of-fate",
+            when_at_or_below=0,
+            restore_to_max=True,
+        )]
+    except Exception as exc:
+        raise ValueError(f"Failed to build Seraphine initiative refills at level {level}.") from exc
 
 
 def build_seraphine_healing(
