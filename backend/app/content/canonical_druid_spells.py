@@ -28,7 +28,7 @@ def _cantrip(spell_id: str, name: str, role: str, *capabilities: str) -> Canonic
 
 DRUID_CANTRIPS: tuple[CanonicalSpellChoice, ...] = (
     _cantrip("poison-spray", "Poison Spray", "damage", "spell-attack", "cantrip-scaling"),
-    _cantrip("guidance", "Guidance", "utility", "arena-out-of-scope"),
+    _cantrip("elementalism", "Elementalism", "utility", "arena-out-of-scope"),
     _cantrip("mending", "Mending", "utility", "arena-out-of-scope"),
 )
 
