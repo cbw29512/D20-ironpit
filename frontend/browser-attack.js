@@ -136,7 +136,9 @@
         if (timed) applied.push(timed);
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
-      hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, attack, attacker.state.template, round) || null : null;
+      hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(
+        actualTarget, attack, attacker.state.template, round, extra.setup,
+      ) || null : null;
       if (hitSave?.appliedCondition && !applied.includes(hitSave.appliedCondition)) applied.push(hitSave.appliedCondition);
       Object.assign(outcome, { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage });
       const phase = H().runPhase(H().PHASES.ON_HIT, {
