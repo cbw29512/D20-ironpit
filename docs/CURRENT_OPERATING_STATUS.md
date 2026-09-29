@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-29 while advancing the certified 2024 Lore Bard progression through level 18.
+Recorded 2026-09-29 while advancing the certified 2024 Lore Bard progression through level 19.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -28,12 +28,12 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2014 | Warlock (Fiend) | 1–20 |
 | 2014 | Wizard (Evoker) | 1–20 |
 | 2024 | Barbarian (Berserker) | 1–20 |
-| 2024 | Bard (Lore) | 1–18 |
+| 2024 | Bard (Lore) | 1–19 |
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 
-2024 public-ready hero slots after the Bard 18 tranche: **98 / 240**.
+2024 public-ready hero slots after the Bard 19 tranche: **99 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -43,12 +43,14 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.** The 2014 Hero Certification and paired-edition guard workflows were green on the exact PR #436 head before merge.
 
-**2024 canonical pregens are now 98 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, and Life Cleric are complete at levels 1–20. Lore Bard is certified through level 18.
+**2024 canonical pregens are now 99 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, and Life Cleric are complete at levels 1–20. Lore Bard is certified through level 19.
 
-Active implementation lane after merge: **2024 Lore Bard level 19 onward**.
+Active implementation lane after merge: **2024 Lore Bard level 20 onward**.
 
 Bard 18 Superior Inspiration is edition-specific: 2024 restores Bardic Inspiration to two on Initiative when below two; do not substitute the 2014 zero-use-to-one rule.
 Bard 18's new prepared spell is 2024 Teleport, recorded as arena-out-of-scope rather than approximated.
+
+Bard 19 canonical Epic Boon choice: **Boon of Fate**. The 2024 Bard table recommends Boon of Spell Recall but permits any qualified Epic Boon; Lyra uses Boon of Fate so the build reuses the already-certified universal 2d4 D20 outcome-adjustment mechanic.
 
 For each Bard tranche:
 - start from the completed 2014 Lore Bard progression and reuse universal mechanics where behavior is equivalent;

@@ -697,26 +697,16 @@
       "status": "supported"
     },
     {
-      "demand_count": 1,
+      "demand_count": 2,
       "id": "boon-of-fate",
       "kinds": [
         "base-feature"
       ],
       "owners": [
+        "bard/base",
         "cleric/base"
       ],
       "status": "supported"
-    },
-    {
-      "demand_count": 1,
-      "id": "boon-spell-recall",
-      "kinds": [
-        "base-feature"
-      ],
-      "owners": [
-        "bard/base"
-      ],
-      "status": "planned"
     },
     {
       "demand_count": 1,
@@ -4941,7 +4931,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 335,
+    "planned": 334,
     "supported": 80
   }
 }

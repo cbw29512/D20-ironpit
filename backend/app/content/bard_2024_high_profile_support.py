@@ -91,3 +91,19 @@ def bard_level18_superior_inspiration_audit() -> FeatureAudit:
             "the universal initiative-refill primitive restores it to two."
         ),
     )
+
+
+def bard_level19_boon_of_fate_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="boon-of-fate",
+        feature_name="Boon of Fate",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 19; Epic Boon — Boon of Fate",
+        category="feat",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Lyra legally chooses Boon of Fate instead of the recommended Boon of Spell Recall. "
+            "The feat applies +1 Intelligence and reuses the already-certified universal "
+            "resource-backed 2d4 D20 outcome-adjustment primitive within 60 feet."
+        ),
+    )

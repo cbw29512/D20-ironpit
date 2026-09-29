@@ -54,7 +54,7 @@ BARD_COMBAT_LEVELS: dict[int, BardCombatLevel] = {
     16: _r(16, 5, 83, 13, 20, 20, 12, 18, _slots(4, 3, 3, 3, 2, 1, 1, 1), source="D&D Beyond Basic Rules 2024: Bard 16 Ability Score Improvement (+2 Wisdom)"),
     17: _r(17, 6, 88, 13, 20, 20, 12, 19, _slots(4, 3, 3, 3, 2, 1, 1, 1, 1), add=("bard-combat-spells-9",), source="D&D Beyond Basic Rules 2024: Bard 17 level 9 spells"),
     18: _r(18, 6, 93, 13, 20, 20, 12, 20, _slots(4, 3, 3, 3, 3, 1, 1, 1, 1), add=("superior-inspiration",), source="D&D Beyond Basic Rules 2024: Bard 18 Superior Inspiration"),
-    19: _r(19, 6, 98, 14, 20, 20, 12, 21, _slots(4, 3, 3, 3, 3, 2, 1, 1, 1), add=("boon-spell-recall",), source="D&D Beyond Basic Rules 2024: Bard 19 Boon of Spell Recall (+1 Intelligence)"),
+    19: _r(19, 6, 98, 14, 20, 20, 12, 21, _slots(4, 3, 3, 3, 3, 2, 1, 1, 1), add=("boon-of-fate",), source="D&D Beyond Basic Rules 2024: Bard 19 Epic Boon — Boon of Fate (+1 Intelligence)"),
     20: _r(20, 6, 103, 14, 20, 20, 12, 22, _slots(4, 3, 3, 3, 3, 2, 2, 1, 1), add=("words-of-creation",), source="D&D Beyond Basic Rules 2024: Bard 20 Words of Creation"),
 }
 

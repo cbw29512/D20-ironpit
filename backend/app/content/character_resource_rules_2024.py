@@ -35,7 +35,7 @@ def _persistent_rage_refresh(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Persistent Rage refresh uses for level {level}.") from exc
 
 
-def _cleric_boon_of_fate(level: int) -> int:
+def _boon_of_fate(level: int) -> int:
     try:
         return 1 if level >= 19 else 0
     except Exception as exc:
@@ -65,11 +65,14 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("rage", "Rage", barbarian_rage_uses),
         ("persistent-rage-refresh", "Persistent Rage Refresh", _persistent_rage_refresh),
     ),
-    "bard": (("bardic-inspiration", "Bardic Inspiration", _bardic_inspiration),),
+    "bard": (
+        ("bardic-inspiration", "Bardic Inspiration", _bardic_inspiration),
+        ("boon-of-fate", "Boon of Fate", _boon_of_fate),
+    ),
     "cleric": (
         ("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),
         ("divine-intervention", "Divine Intervention", cleric_divine_intervention_uses),
-        ("boon-of-fate", "Boon of Fate", _cleric_boon_of_fate),
+        ("boon-of-fate", "Boon of Fate", _boon_of_fate),
     ),
     "fighter": (
         ("second-wind", "Second Wind", fighter_second_wind_uses),
