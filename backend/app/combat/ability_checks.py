@@ -6,9 +6,11 @@ from app.combat.d20_bonus_dice import (
     apply_d20_bonus_die_if_useful,
     apply_resource_backed_d20_bonus_if_useful,
 )
+from app.combat.d20_outcome_adjustments import apply_resource_backed_d20_outcome_adjustment_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.domain.character_builds import AbilityName
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DiceRoll, RollRevision
 
 logger = logging.getLogger(__name__)
@@ -73,6 +75,8 @@ def resolve_ability_check_outcome(
     *,
     dice: DiceProvider | None = None,
     round_number: int | None = None,
+    encounter_roller: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> tuple[DiceRoll, bool]:
     """Apply universal post-roll ability-check revisions, then test against the DC."""
     try:
@@ -89,6 +93,14 @@ def resolve_ability_check_outcome(
             revised, _ = apply_resource_backed_d20_bonus_if_useful(
                 state, "ability_check", revised, dc, dice,
             )
+        if encounter_roller is not None and setup is not None:
+            if dice is None:
+                raise ValueError("Encounter-aware ability-check adjustment requires dice context.")
+            adjustment = apply_resource_backed_d20_outcome_adjustment_if_useful(
+                encounter_roller, setup, "ability_check", revised, dc, dice,
+            )
+            if adjustment is not None:
+                revised = adjustment.roll
         revised, _, _ = apply_failed_d20_test_override(
             state, revised, failed=revised.total < dc, test_kind="ability_check",
         )

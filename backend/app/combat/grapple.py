@@ -149,7 +149,14 @@ def _escape_choice(state: CombatantState) -> tuple[str, str, int, RollMode]:
 
 
 def resolve_escape_grapple(
-    sequence: int, round_number: int, actor_id: str, state: CombatantState, dice: DiceProvider,
+    sequence: int,
+    round_number: int,
+    actor_id: str,
+    state: CombatantState,
+    dice: DiceProvider,
+    *,
+    encounter_actor: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     if not is_available(state, "action"):
         raise ValueError("Action is not available to escape a grapple.")
@@ -157,7 +164,14 @@ def resolve_escape_grapple(
     check_ability, check_name, bonus, mode = _escape_choice(state)
     check = roll_d20(dice, bonus + d20_modifier(state), mode)
     check, success = resolve_ability_check_outcome(
-        state, check_ability, check, source.escape_dc, dice=dice, round_number=round_number,
+        state,
+        check_ability,
+        check,
+        source.escape_dc,
+        dice=dice,
+        round_number=round_number,
+        encounter_roller=encounter_actor,
+        setup=setup,
     )
     tactical_used = False
     if not success:

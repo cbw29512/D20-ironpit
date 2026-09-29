@@ -11,6 +11,7 @@ from app.combat.defensive_modifier_rules import (
     saving_throw_disadvantage_sources as modifier_save_disadvantage_sources,
 )
 from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful, apply_resource_backed_d20_bonus_if_useful
+from app.combat.d20_outcome_adjustments import apply_resource_backed_d20_outcome_adjustment_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
@@ -21,6 +22,7 @@ from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bo
 from app.combat.rolls import roll_d20
 from app.combat.saving_throw_minimum import apply_saving_throw_minimum
 from app.combat.saving_throw_traits import sure_footed_advantage
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 from app.domain.modifiers import ModifierKind
 from app.domain.saving_throw_context import SavingThrowContext
@@ -84,6 +86,8 @@ def resolve_saving_throw(
     context: SavingThrowContext | None = None,
     *,
     round_number: int | None = None,
+    encounter_roller: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
@@ -119,6 +123,12 @@ def resolve_saving_throw(
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
         if roll.total < dc:
             roll, _, _ = apply_failed_save_reroll(state, roll, dice)
+        if encounter_roller is not None and setup is not None:
+            adjustment = apply_resource_backed_d20_outcome_adjustment_if_useful(
+                encounter_roller, setup, "saving_throw", roll, dc, dice,
+            )
+            if adjustment is not None:
+                roll = adjustment.roll
         roll, _, _ = apply_failed_d20_test_override(
             state, roll, failed=roll.total < dc, test_kind="saving_throw",
         )
