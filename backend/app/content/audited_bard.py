@@ -9,9 +9,12 @@ from app.content.bard_2024_cutting_words import build_cutting_words_2024
 from app.content.bard_2024_font_of_inspiration import build_font_of_inspiration_2024
 from app.content.bard_2024_inspiration import build_bardic_inspiration_2024
 from app.content.bard_2024_spells import build_shatter_2024
+from app.content.cleric_life_domain import DISPEL_MAGIC
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.character_math import saving_throw_bonuses
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_healing_word
+from app.content.offensive_spell_effects import build_guiding_bolt
+from app.content.spell_effects import BLESS
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.weapon_catalog import build_weapon
 from app.domain.combatants import ResourceDefinition
@@ -66,10 +69,10 @@ def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
 
 
 def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Lore Bard through level 5."""
+    """Compile the 2024 support/healer Lore Bard through level 6."""
     try:
-        if level not in {1, 2, 3, 4, 5}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 5.")
+        if level not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 6.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -116,6 +119,17 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 [build_shatter_2024(8 + proficiency_bonus + charisma_modifier)]
                 if level >= 3 else []
             ),
+            spell_attack_actions=(
+                [build_guiding_bolt(proficiency_bonus + charisma_modifier)]
+                if level >= 6 else []
+            ),
+            defensive_spell_actions=(
+                [BLESS.model_copy(deep=True)] if level >= 6 else []
+            ),
+            effect_removal_actions=(
+                [DISPEL_MAGIC.model_copy(deep=True, update={"casting_ability": "charisma"})]
+                if level >= 6 else []
+            ),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
             skill_bonuses={
                 "athletics": scores.modifier("strength"),
@@ -135,8 +149,8 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 body_style="humanoid",
             ),
             source=(
-                "D&D Beyond Basic Rules 2024: Bard, Acolyte, Orc, "
-                "Bardic Inspiration, Healing Word, Cure Wounds, Equipment"
+                "D&D Beyond Basic Rules 2024: Bard, College of Lore, Acolyte, Orc, "
+                "Bardic Inspiration, Healing Word, Cure Wounds, Magical Discoveries, Equipment"
             ),
         )
     except Exception:
