@@ -49,7 +49,7 @@ BARD_COMBAT_LEVELS: dict[int, BardCombatLevel] = {
     11: _r(11, 4, 58, 13, 16, 20, 10, 16, _slots(4, 3, 3, 3, 2, 1), add=("bard-combat-spells-6",), source="D&D Beyond Basic Rules 2024: Bard 11 level 6 spells"),
     12: _r(12, 4, 63, 13, 18, 20, 10, 16, _slots(4, 3, 3, 3, 2, 1), source="D&D Beyond Basic Rules 2024: Bard 12 Ability Score Improvement (+2 Wisdom)"),
     13: _r(13, 5, 68, 13, 18, 20, 10, 17, _slots(4, 3, 3, 3, 2, 1, 1), add=("bard-combat-spells-7",), source="D&D Beyond Basic Rules 2024: Bard 13 level 7 spells"),
-    14: _r(14, 5, 73, 13, 18, 20, 10, 17, _slots(4, 3, 3, 3, 2, 1, 1), source="D&D Beyond Basic Rules 2024: Bard 14"),
+    14: _r(14, 5, 73, 13, 18, 20, 10, 17, _slots(4, 3, 3, 3, 2, 1, 1), source="D&D Beyond Basic Rules 2024: Bard 14; College of Lore 14 Peerless Skill"),
     15: _r(15, 5, 78, 13, 18, 20, 12, 18, _slots(4, 3, 3, 3, 2, 1, 1, 1), add=("bard-combat-spells-8",), source="D&D Beyond Basic Rules 2024: Bard 15 level 8 spells"),
     16: _r(16, 5, 83, 13, 20, 20, 12, 18, _slots(4, 3, 3, 3, 2, 1, 1, 1), source="D&D Beyond Basic Rules 2024: Bard 16 Ability Score Improvement (+2 Wisdom)"),
     17: _r(17, 6, 88, 13, 20, 20, 12, 19, _slots(4, 3, 3, 3, 2, 1, 1, 1, 1), add=("bard-combat-spells-9",), source="D&D Beyond Basic Rules 2024: Bard 17 level 9 spells"),
