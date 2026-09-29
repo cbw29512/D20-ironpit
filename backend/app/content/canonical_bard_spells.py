@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.canonical_bard_high_spells import BARD_HIGH_LEVEL_SPELLS
 from app.domain.class_loadouts import CanonicalSpellChoice
 
 
@@ -160,32 +161,6 @@ BARD_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=5,
         min_character_level=9,
     ),
-    _spell(
-        "fireball",
-        "Fireball",
-        "damage",
-        "save-damage",
-        "area",
-        "magical-secrets",
-        spell_level=3,
-        min_character_level=10,
-    ),
-    _spell(
-        "disintegrate",
-        "Disintegrate",
-        "damage",
-        "save-damage",
-        "magical-secrets",
-        spell_level=6,
-        min_character_level=11,
-    ),
-    _spell(
-        "finger-of-death",
-        "Finger of Death",
-        "damage",
-        "save-damage",
-        "magical-secrets",
-        spell_level=7,
-        min_character_level=13,
-    ),
+    *BARD_HIGH_LEVEL_SPELLS,
+
 )
