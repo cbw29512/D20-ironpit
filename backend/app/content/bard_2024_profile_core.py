@@ -63,3 +63,31 @@ def bard_ability_scores(
     except Exception:
         logger.exception("Failed to compile 2024 Bard ability scores at level %s.", level)
         raise
+
+
+def bard_source_references(level: int) -> list[str]:
+    try:
+        refs = [
+            "D&D Beyond Basic Rules 2024: Bard — Core Traits, Bardic Inspiration, Spellcasting",
+            "D&D Beyond Basic Rules 2024: Acolyte background",
+            "D&D Beyond Basic Rules 2024: Orc species",
+            "D&D Beyond Basic Rules 2024: Studded Leather Armor and Dagger",
+        ]
+        if level >= 2:
+            refs.append("D&D Beyond Basic Rules 2024: Bard 2 — Expertise, Jack of All Trades")
+        if level >= 3:
+            refs.append("D&D Beyond Basic Rules 2024: College of Lore 3 — Bonus Proficiencies, Cutting Words")
+        if level >= 4:
+            refs.append("D&D Beyond Basic Rules 2024: Bard 4 — Ability Score Improvement")
+        if level >= 5:
+            refs.append("D&D Beyond Basic Rules 2024: Bard 5 — Font of Inspiration")
+        if level >= 6:
+            refs.append("D&D Beyond Basic Rules 2024: College of Lore 6 — Magical Discoveries")
+        if level >= 7:
+            refs.append("D&D Beyond Basic Rules 2024: Bard 7 — Countercharm")
+        if level >= 8:
+            refs.append("D&D Beyond Basic Rules 2024: Bard 8 — Ability Score Improvement")
+        return refs
+    except Exception:
+        logger.exception("Failed to compile 2024 Bard source references at level %s.", level)
+        raise
