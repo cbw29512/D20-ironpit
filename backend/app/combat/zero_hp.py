@@ -71,7 +71,14 @@ def _finish_damage(
             end_concentration_if_incapacitated(state, affected_states)
             return outcome
         raise ValueError("A dice provider is required to resolve Concentration damage.")
-    resolve_concentration_damage(state, damage_taken, dice, affected_states)
+    resolve_concentration_damage(
+        state,
+        damage_taken,
+        dice,
+        affected_states,
+        encounter_owner=encounter_target,
+        setup=setup,
+    )
     return outcome
 
 
