@@ -4,10 +4,12 @@ import logging
 
 from app.content.bard_2024_font_of_inspiration import build_font_of_inspiration_2024
 from app.content.bard_2024_inspiration import build_peerless_skill_2024
+from app.content.bard_2024_power_words import build_power_word_kill_words_of_creation_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.bard_2024_spells import build_greater_invisibility_2024, build_shatter_2024
 from app.content.cleric_life_domain import DISPEL_MAGIC
 from app.content.bard_2024_high_damage_spells import (
+    build_circle_of_death_2024,
     build_cone_of_cold_2024,
     build_disintegrate_2024,
     build_finger_of_death_2024,
@@ -53,6 +55,8 @@ def bard_spell_saves(level: int, save_dc: int):
             actions.append(build_sunburst_2024(save_dc))
         if level >= 19:
             actions.append(build_cone_of_cold_2024(save_dc))
+        if level >= 20:
+            actions.append(build_circle_of_death_2024(save_dc))
         return actions
     except Exception:
         logger.exception("Failed to build 2024 Bard spell-save actions at level %s.", level)
@@ -74,6 +78,8 @@ def bard_defensive_spells(level: int):
 
 def bard_threshold_death_actions(level: int):
     try:
+        if level >= 20:
+            return [build_power_word_kill_words_of_creation_2024()]
         return [build_power_word_kill_2024()] if level >= 17 else []
     except Exception:
         logger.exception("Failed to build 2024 Bard threshold-death actions at level %s.", level)
