@@ -506,6 +506,11 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["resource_backed_d20_bonus_dice"] = [
             item.model_dump() for item in features.resource_backed_d20_bonus_dice
         ]
+    if features.resource_backed_d20_outcome_adjustments:
+        row["resource_backed_d20_outcome_adjustments"] = [
+            item.model_dump(mode="json")
+            for item in features.resource_backed_d20_outcome_adjustments
+        ]
     if features.deferred_save_effect:
         row["deferred_save_effect"] = features.deferred_save_effect.model_dump()
     if features.source_reduces_hostile_to_zero_hp_temporary_hp:
@@ -583,6 +588,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
                     "conditionId": item.condition_id, "repeatSaveAbility": item.repeat_save_ability,
                     "repeatSaveDc": item.repeat_save_dc, "repeatSaveTiming": item.repeat_save_timing,
+                    "aboveThresholdSpeedMaximum": item.above_threshold_speed_maximum,
+                    "aboveThresholdExpiresAtStartOfSourceTurn": item.above_threshold_expires_at_start_of_source_turn,
                     "resourceId": item.resource_id, "resourceCost": item.resource_cost,
                     "magicalEffect": item.magical_effect, "animation": item.animation,
                 }
