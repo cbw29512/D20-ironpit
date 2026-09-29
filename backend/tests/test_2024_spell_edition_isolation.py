@@ -53,6 +53,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "disintegrate",
         "finger-of-death",
         "sunburst",
+        "cone-of-cold",
         "power-word-kill",
         "cure-wounds",
         "healing-word",
@@ -284,6 +285,23 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "necrotic",
             "half",
         )
+
+    if "cone-of-cold" in spell_saves:
+        spell = spell_saves["cone-of-cold"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+        ) == (5, "action", 60, "cone", "self", 60, "constitution", 8, 8, "cold", "half", 1)
 
     if "sunburst" in spell_saves:
         spell = spell_saves["sunburst"]
