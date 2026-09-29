@@ -831,8 +831,12 @@ def test_2024_lore_bard_level_eighteen_superior_inspiration_restores_to_two() ->
         combatant_id="lyra-18", side="heroes", position_ft=0,
         state=build_combatant_state(hero),
     )
+    enemy = EncounterCombatant(
+        combatant_id="enemy", side="monsters", position_ft=30,
+        state=build_combatant_state(build_lyra_silverstring_level(1)),
+    )
     setup = EncounterSetup(
-        heroes=[source], monsters=[], hero_total_levels=18, monster_total_cr="0",
+        heroes=[source], monsters=[enemy], hero_total_levels=18, monster_total_cr="1",
     )
     inspiration = next(item for item in source.state.resources if item.id == "bardic-inspiration")
 
