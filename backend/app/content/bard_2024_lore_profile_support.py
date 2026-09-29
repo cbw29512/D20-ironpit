@@ -146,3 +146,15 @@ def bard_level10_magical_secrets_audit() -> FeatureAudit:
             "reusing the existing edition-specific save-damage/area primitive."
         ),
     )
+
+
+def bard_level12_asi_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="ability-score-improvement-12",
+        feature_name="Ability Score Improvement",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 12",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes="+2 Wisdom is applied to Lyra's persistent progression, producing Wisdom 18.",
+    )

@@ -536,3 +536,38 @@ def test_2024_bard_level_eleven_spell_package_uses_magical_secrets_for_disintegr
         "bless",
         "guiding-bolt",
     ]
+
+
+def test_2024_lore_bard_level_twelve_applies_wisdom_asi() -> None:
+    profile = build_lyra_silverstring_profile(12)
+    hero = build_lyra_silverstring_level(12)
+
+    assert hero.max_hp == 63
+    assert (profile.final_ability_scores.charisma, profile.final_ability_scores.wisdom) == (20, 18)
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [
+        ("charisma", 2),
+        ("charisma", 1),
+        ("wisdom", 1),
+        ("wisdom", 2),
+    ]
+    asi = next(
+        item for item in profile.feature_audits
+        if item.feature_id == "ability-score-improvement-12"
+    )
+    assert asi.automated is True
+
+    assert hero.skill_bonuses["perception"] == 12
+    assert hero.skill_bonuses["insight"] == 8
+    assert hero.saving_throw_bonuses["wisdom"] == 4
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["spell-slot-5"] == 2
+    assert resources["spell-slot-6"] == 1
+
+    disintegrate = next(item for item in hero.spell_save_actions if item.id == "disintegrate")
+    assert disintegrate.dc == 17
+
+    level_twelve = canonical_spell_package("bard", 12, "2024", 6)
+    assert level_twelve is not None
+    assert len(level_twelve.cantrips) == 4
+    assert len(level_twelve.spells) == 16
