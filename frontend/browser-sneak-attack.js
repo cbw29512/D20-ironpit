@@ -44,7 +44,7 @@
     return { source: "Sneak Attack", diceCount: diceCount - cost, diceSize: 6, damageType: attack.damageType };
   }
 
-  function resolveObscure(attacker, defender, turnKey) {
+  function resolveObscure(attacker, defender, turnKey, options = {}) {
     if (attacker.feature_last_turn_keys[OBSCURE] !== turnKey) {
       return { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false };
     }
@@ -53,7 +53,10 @@
     const level = attacker.template.level;
     if (!Number.isInteger(dexterity) || !Number.isInteger(level)) throw new Error("Obscure requires certified Dexterity and level.");
     const dc = 8 + Math.floor((dexterity - 10) / 2) + 2 + Math.floor((level - 1) / 4);
-    const save = S().resolveSavingThrow(defender, "dexterity", dc);
+    const save = S().resolveSavingThrow(
+      defender, "dexterity", dc,
+      { roller: options.roller || null, setup: options.setup || null },
+    );
     let applied = false;
     if (!save.succeeded) {
       const separator = turnKey.indexOf(":");
@@ -66,7 +69,7 @@
     return { saveRoll: save.roll, saveDc: dc, saveSucceeded: save.succeeded, applied };
   }
 
-  function resolveTrip(attacker, defender, turnKey) {
+  function resolveTrip(attacker, defender, turnKey, options = {}) {
     if (attacker.feature_last_turn_keys[TRIP] !== turnKey) {
       return { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false };
     }
@@ -77,7 +80,10 @@
       throw new Error("Cunning Strike requires certified Dexterity and level.");
     }
     const dc = 8 + Math.floor((dexterity - 10) / 2) + 2 + Math.floor((level - 1) / 4);
-    const save = S().resolveSavingThrow(defender, "dexterity", dc);
+    const save = S().resolveSavingThrow(
+      defender, "dexterity", dc,
+      { roller: options.roller || null, setup: options.setup || null },
+    );
     const applied = !save.succeeded && !defender.active_effect_ids.includes("prone");
     if (applied) defender.active_effect_ids.push("prone");
     return { saveRoll: save.roll, saveDc: dc, saveSucceeded: save.succeeded, applied };
