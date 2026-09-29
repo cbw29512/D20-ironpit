@@ -75,6 +75,8 @@ def target_allowed(
         return target.combatant_id != healer.combatant_id and target.side == healer.side
     if action.target_mode == "other":
         return target.combatant_id != healer.combatant_id
+    if action.target_mode == "any":
+        return True
     return target.side == healer.side
 
 
