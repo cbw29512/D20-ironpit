@@ -364,3 +364,59 @@ def test_2024_bard_level_eight_spell_package_adds_arena_neutral_tongues() -> Non
         "bless",
         "guiding-bolt",
     ]
+
+def test_2024_lore_bard_level_nine_applies_expertise_and_fifth_level_healing() -> None:
+    profile = build_lyra_silverstring_profile(9)
+    hero = build_lyra_silverstring_level(9)
+
+    assert hero.max_hp == 48
+    assert hero.skill_bonuses["acrobatics"] == 8
+    assert hero.skill_bonuses["perception"] == 11
+    assert hero.skill_bonuses["performance"] == 13
+
+    expertise = next(
+        item for item in profile.feature_audits
+        if item.feature_id == "expertise-9"
+    )
+    assert expertise.automated is True
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["bardic-inspiration"] == 5
+    assert resources["adrenaline-rush"] == 4
+    assert resources["spell-slot-1"] == 4
+    assert resources["spell-slot-2"] == 3
+    assert resources["spell-slot-3"] == 3
+    assert resources["spell-slot-4"] == 3
+    assert resources["spell-slot-5"] == 1
+
+    mass = next(item for item in hero.healing_actions if item.id == "mass-cure-wounds")
+    assert (
+        mass.action_cost,
+        mass.range_ft,
+        mass.max_targets,
+        mass.area_radius_ft,
+        mass.dice_count,
+        mass.dice_size,
+        mass.healing_bonus,
+        mass.resource_id,
+    ) == ("action", 60, 6, 30, 5, 8, 5, "spell-slot-5")
+
+
+def test_2024_bard_level_nine_spell_package_adds_edition_correct_fifth_level_spells() -> None:
+    level_nine = canonical_spell_package("bard", 9, "2024", 5)
+
+    assert level_nine is not None
+    assert len(level_nine.spells) == 14
+    assert [item.id for item in level_nine.spells[-2:]] == [
+        "mass-cure-wounds",
+        "raise-dead",
+    ]
+    mass, raise_dead = level_nine.spells[-2:]
+    assert (mass.spell_level, mass.min_character_level) == (5, 9)
+    assert mass.required_capabilities == ["healing"]
+    assert (raise_dead.spell_level, raise_dead.min_character_level) == (5, 9)
+    assert raise_dead.required_capabilities == ["arena-out-of-scope"]
+    assert [item.id for item in level_nine.always_prepared_spells] == [
+        "bless",
+        "guiding-bolt",
+    ]
