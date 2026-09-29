@@ -66,13 +66,6 @@
         throw new Error(action.actionCost + " is unavailable for " + action.name + ".");
       }
       const resources = source.state.resources || {};
-      let restoration = null;
-      if ((resources[action.resourceId] || 0) < (action.resourceCost || 1)) {
-        restoration = C()?.restoreInline(source.state, action.resourceId) || null;
-        if ((resources[action.resourceId] || 0) < (action.resourceCost || 1)) {
-          throw new Error("Resource " + action.resourceId + " is unavailable for " + action.name + ".");
-        }
-      }
       if (!targetAllowed(source, target, action)) {
         throw new Error(target.state.template.name + " is not a legal target for " + action.name + ".");
       }
@@ -80,6 +73,13 @@
       const active = target.state.active_d20_bonus_dice || (target.state.active_d20_bonus_dice = []);
       if (conflicts(source, target, action, round)) {
         throw new Error(target.state.template.name + " already has an exclusive " + action.name + " grant.");
+      }
+      let restoration = null;
+      if ((resources[action.resourceId] || 0) < (action.resourceCost || 1)) {
+        restoration = C()?.restoreInline(source.state, action.resourceId) || null;
+        if ((resources[action.resourceId] || 0) < (action.resourceCost || 1)) {
+          throw new Error("Resource " + action.resourceId + " is unavailable for " + action.name + ".");
+        }
       }
       E().spend(source.state, action.actionCost);
       resources[action.resourceId] -= action.resourceCost || 1;
