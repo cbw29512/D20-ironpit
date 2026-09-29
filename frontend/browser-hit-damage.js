@@ -17,10 +17,13 @@
     evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total,
   };
 
-  function resolveSaveDamage(defender, attack) {
+  function resolveSaveDamage(defender, attack, options = {}) {
     const effect = attack.onHitSaveDamage;
     if (!effect) return { component: null, saveRoll: null, saveAbility: null, saveDc: null, saveSucceeded: null };
-    const save = S().resolveSavingThrow(defender, effect.saveAbility, effect.dc);
+    const save = S().resolveSavingThrow(
+      defender, effect.saveAbility, effect.dc,
+      { roller: options.roller || null, setup: options.setup || null },
+    );
     const result = {
       component: null, saveRoll: save.roll, saveAbility: effect.saveAbility,
       saveDc: effect.dc, saveSucceeded: save.succeeded,
@@ -146,7 +149,7 @@
     rolled.push(...naturalTwentyDamageComponents(attacker, attack, options.naturalRoll, rolled));
     const smite = P()?.divineSmiteComponent(attacker, defender, attack, critical) || null;
     if (smite) rolled.push(smite);
-    const saveDamage = resolveSaveDamage(defender, attack);
+    const saveDamage = resolveSaveDamage(defender, attack, options);
     const saveComponentPresent = Boolean(saveDamage.component);
     if (saveComponentPresent) rolled.push(saveDamage.component);
     const deflect = MK().applyDeflectMissiles(defender, attack, rolled);
@@ -175,9 +178,11 @@
     }
     const cunningStrikeTrip = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.resolveTrip(
       attacker, defender, turnKey,
+      { roller: options.roller || null, setup: options.setup || null },
     ) || { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false };
     const cunningStrikeObscure = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.resolveObscure(
       attacker, defender, turnKey,
+      { roller: options.roller || null, setup: options.setup || null },
     ) || { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false };
     return {
       damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage, cunningStrikeTrip, cunningStrikeObscure,
