@@ -28,6 +28,7 @@ class ModifierKind(StrEnum):
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
+    SPEED_MAXIMUM = "speed-maximum"
     DEBUFF_COUNTER = "debuff-counter"
     ZERO_HP_REPLACEMENT = "zero-hp-replacement"
     OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
@@ -43,6 +44,7 @@ class CombatModifier(BaseModel):
     kind: ModifierKind
     flat_bonus: int = 0
     minimum_value: int = Field(default=0, ge=0, le=100)
+    maximum_value: int | None = Field(default=None, ge=0, le=1000)
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
     damage_type: DamageType | None = None
@@ -84,6 +86,13 @@ class CombatModifier(BaseModel):
                 raise ValueError("Minimum AC modifiers require a positive minimum and no flat bonus.")
         elif self.minimum_value:
             raise ValueError(f"{self.kind.value} does not accept a minimum value.")
+        if self.kind is ModifierKind.SPEED_MAXIMUM:
+            if self.maximum_value is None:
+                raise ValueError("Speed-maximum modifiers require a maximum value.")
+            if self.flat_bonus:
+                raise ValueError("Speed-maximum modifiers do not accept flat bonuses.")
+        elif self.maximum_value is not None:
+            raise ValueError(f"{self.kind.value} does not accept a maximum value.")
         if self.kind is ModifierKind.BONUS_DAMAGE and self.damage_type is None:
             raise ValueError("Bonus damage requires a damage type.")
         if self.kind is not ModifierKind.BONUS_DAMAGE and self.damage_type is not None:
