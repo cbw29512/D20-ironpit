@@ -25,13 +25,17 @@ _LYRA_DAGGER = AttackExpectation(
 
 
 def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
-    """Independent source-derived combat fingerprint for the certified Bard foundation."""
+    """Independent source-derived combat fingerprint for the certified Bard progression."""
     try:
-        if level not in {1, 2}:
-            raise ValueError("2024 Lyra combat fingerprint currently covers levels 1 through 2.")
+        if level not in {1, 2, 3}:
+            raise ValueError("2024 Lyra combat fingerprint currently covers levels 1 through 3.")
         acrobatics = 2 if level == 1 else 4
-        spell_slots = 2 if level == 1 else 3
-        max_hp = 8 if level == 1 else 13
+        max_hp = {1: 8, 2: 13, 3: 18}[level]
+        slot_rows = {
+            1: (("spell-slot-1", 2),),
+            2: (("spell-slot-1", 3),),
+            3: (("spell-slot-1", 4), ("spell-slot-2", 2)),
+        }
         return PregenCombatProfile(
             template_id=f"lyra-silverstring-l{level}",
             archetype="Bard",
@@ -53,7 +57,7 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
             weapon_masteries=(),
             resources=(
                 ("bardic-inspiration", 3),
-                ("spell-slot-1", spell_slots),
+                *slot_rows[level],
                 ("adrenaline-rush", 2),
                 ("relentless-endurance", 1),
             ),
@@ -66,7 +70,7 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_lyra_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
     try:
-        return tuple(build_lyra_2024_combat_profile(level) for level in (1, 2))
+        return tuple(build_lyra_2024_combat_profile(level) for level in (1, 2, 3))
     except Exception:
         logger.exception("Failed to build 2024 Lyra combat fingerprints.")
         raise
