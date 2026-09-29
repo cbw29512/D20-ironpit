@@ -58,11 +58,14 @@ def resolve_initiative_resource_refills(
                 if usage is not None and usage.current_uses < grant.usage_resource_cost:
                     continue
                 before = resource.current_uses
-                after = (
-                    resource.max_uses
-                    if grant.restore_to_max
-                    else min(resource.max_uses, before + grant.restore_amount)
-                )
+                if grant.restore_to_minimum is not None:
+                    after = min(resource.max_uses, max(before, grant.restore_to_minimum))
+                else:
+                    after = (
+                        resource.max_uses
+                        if grant.restore_to_max
+                        else min(resource.max_uses, before + grant.restore_amount)
+                    )
                 if after <= before:
                     continue
                 if usage is not None:
