@@ -122,7 +122,14 @@ def resolve_saving_throw(
                 revision = _indomitable_revision(roll, reroll)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
         if roll.total < dc:
-            roll, _, _ = apply_failed_save_reroll(state, roll, dice)
+            roll, _, _ = apply_failed_save_reroll(
+                state,
+                roll,
+                dice,
+                context,
+                roller=encounter_roller,
+                setup=setup,
+            )
         if encounter_roller is not None and setup is not None:
             adjustment = apply_resource_backed_d20_outcome_adjustment_if_useful(
                 encounter_roller, setup, "saving_throw", roll, dc, dice,
