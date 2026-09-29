@@ -26,6 +26,21 @@ class ReactionRollPenaltyResult:
     restoration_name: str | None = None
 
 
+def reaction_penalty_description(result: ReactionRollPenaltyResult) -> str:
+    try:
+        restoration = (
+            f" {result.source_name} uses {result.restoration_name}."
+            if result.restoration_name else ""
+        )
+        return (
+            f"{restoration} {result.source_name} uses {result.action_id} "
+            f"to subtract {result.penalty_total} from the roll."
+        )
+    except Exception as exc:
+        logger.exception("Failed to format reaction roll-penalty description.")
+        raise RuntimeError("Reaction roll-penalty description could not be formatted.") from exc
+
+
 def _resource(source: EncounterCombatant, action: ReactionRollPenaltyAction):
     return next((item for item in source.state.resources if item.id == action.resource_id), None)
 
