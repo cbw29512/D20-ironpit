@@ -3,7 +3,10 @@ from __future__ import annotations
 from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
-from app.content.cleric_divine_intervention import build_divine_intervention_damage
+from app.content.cleric_divine_intervention import (
+    build_divine_intervention_damage,
+    build_greater_divine_intervention_wish_power_word_stun,
+)
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
 from app.content.cleric_runtime_loadout import (
     build_seraphine_healing,
@@ -80,6 +83,10 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         initiative_bonus=0,
         weapon_attack=build_seraphine_mace_attack(row.proficiency_bonus),
         saving_throw_actions=[build_divine_intervention_damage(save_dc)] if level >= 10 else [],
+        hp_threshold_condition_actions=(
+            [build_greater_divine_intervention_wish_power_word_stun(save_dc)]
+            if level >= 20 else []
+        ),
         spell_save_actions=build_seraphine_save_spells(level, save_dc, wisdom_modifier, features),
         spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
         defensive_spell_actions=defenses,
