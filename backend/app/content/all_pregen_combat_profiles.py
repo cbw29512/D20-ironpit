@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.barbarian_berserker_2014_combat_profile import build_rokhan_2014_combat_profiles
 from app.content.bard_lore_2014_combat_profile import build_lyra_2014_combat_profiles
+from app.content.bard_2024_combat_profile import build_lyra_2024_combat_profiles
 from app.content.cleric_life_2014_combat_profile import build_seraphine_2014_combat_profiles
 from app.content.druid_land_2014_combat_profile import build_thalen_2014_combat_profiles
 from app.content.fighter_champion_2014_combat_profile import build_karnok_2014_combat_profiles
@@ -19,6 +20,7 @@ def build_all_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     """Return validated combat fingerprints across every supported ruleset."""
     profiles = build_pregen_combat_profiles()
     edition_profiles = [
+        *build_lyra_2024_combat_profiles(),
         *build_karnok_2014_combat_profiles(),
         *build_rokhan_2014_combat_profiles(),
         *build_lyra_2014_combat_profiles(),
