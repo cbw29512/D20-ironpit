@@ -170,4 +170,13 @@ BARD_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=3,
         min_character_level=10,
     ),
+    _spell(
+        "disintegrate",
+        "Disintegrate",
+        "damage",
+        "save-damage",
+        "magical-secrets",
+        spell_level=6,
+        min_character_level=11,
+    ),
 )
