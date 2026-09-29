@@ -12,6 +12,7 @@ from app.content.bard_2024_runtime_support import (
     bard_effect_removals,
     bard_progression_features,
     bard_resource_conversions,
+    bard_resources,
     bard_spell_attacks,
 )
 from app.content.bard_2024_spells import build_shatter_2024
@@ -20,7 +21,6 @@ from app.content.character_math import saving_throw_bonuses
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_healing_word
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.weapon_catalog import build_weapon
-from app.domain.combatants import ResourceDefinition
 from app.domain.models import CombatantTemplate, VisualLoadout, WeaponAttack
 from app.domain.traits import CombatTrait
 
@@ -41,33 +41,6 @@ def _dagger(level: int, dexterity_modifier: int) -> WeaponAttack:
         )
     except Exception:
         logger.exception("Failed to build Lyra's dagger attack at Bard level %s.", level)
-        raise
-
-
-def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
-    try:
-        row = BARD_COMBAT_LEVELS[level]
-        resources = [
-            ResourceDefinition(
-                id="bardic-inspiration",
-                name="Bardic Inspiration",
-                max_uses=max(1, charisma_modifier),
-            ),
-            ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
-            ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
-        ]
-        resources.extend(
-            ResourceDefinition(
-                id=f"spell-slot-{spell_level}",
-                name=f"Spell Slot {spell_level}",
-                max_uses=uses,
-            )
-            for spell_level, uses in enumerate(row.spell_slots, start=1)
-            if uses
-        )
-        return resources
-    except Exception:
-        logger.exception("Failed to build Lyra's resources at Bard level %s.", level)
         raise
 
 
@@ -136,7 +109,7 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 "religion": scores.modifier("intelligence") + proficiency_bonus,
             },
             combat_traits=[CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE],
-            resources=_resources(level, charisma_modifier),
+            resources=bard_resources(level, charisma_modifier),
             weapon_masteries=[],
             visual=VisualLoadout(
                 armor=armor.id,
