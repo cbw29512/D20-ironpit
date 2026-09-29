@@ -2,6 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.content.bard_2024_high_profile_support import (
+    bard_level13_spells_audit,
+    bard_level14_peerless_skill_audit,
+    bard_level15_spells_audit,
+)
 from app.content.bard_2024_lore_profile_support import (
     bard_level4_asi_audit,
     bard_level5_font_audit,
@@ -11,9 +16,6 @@ from app.content.bard_2024_lore_profile_support import (
     bard_level9_audits,
     bard_level10_magical_secrets_audit,
     bard_level12_asi_audit,
-    bard_level13_spells_audit,
-    bard_level14_peerless_skill_audit,
-    bard_level15_spells_audit,
     lore_bard_level3_audits,
 )
 from app.content.bard_2024_profile_core import (
