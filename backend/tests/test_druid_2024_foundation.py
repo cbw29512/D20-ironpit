@@ -59,7 +59,7 @@ def test_2024_druid_level_one_spell_package_is_edition_correct() -> None:
 
     assert package is not None
     assert [item.id for item in package.cantrips] == [
-        "poison-spray", "guidance", "mending",
+        "poison-spray", "elementalism", "mending",
     ]
     assert [item.id for item in package.spells] == [
         "healing-word", "cure-wounds", "longstrider", "detect-magic",
