@@ -13,7 +13,7 @@ from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
-from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
+from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful, reaction_penalty_description
 from app.combat.state import terminate_turn
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -165,12 +165,7 @@ def resolve_attack(
         if outcome_adjustment_name:
             description += f" {outcome_adjustment_name} adjusts the resolved D20 Test."
         if reaction_penalty is not None:
-            if reaction_penalty.restoration_name:
-                description += f" {reaction_penalty.source_name} uses {reaction_penalty.restoration_name}."
-            description += (
-                f" {reaction_penalty.source_name} uses {reaction_penalty.action_id} "
-                f"to subtract {reaction_penalty.penalty_total} from the attack roll."
-            )
+            description += reaction_penalty_description(reaction_penalty)
         if exile_applied is not None:
             description += f" {actual_defender.template.name} is Banished until the source-relative return point."
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
