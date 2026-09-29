@@ -493,3 +493,46 @@ def test_2024_bard_level_ten_spell_package_uses_magical_secrets_without_new_engi
         "bless",
         "guiding-bolt",
     ]
+
+
+def test_2024_lore_bard_level_eleven_adds_sixth_level_magical_secret() -> None:
+    hero = build_lyra_silverstring_level(11)
+
+    assert hero.max_hp == 58
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["bardic-inspiration"] == 5
+    assert resources["spell-slot-5"] == 2
+    assert resources["spell-slot-6"] == 1
+
+    disintegrate = next(item for item in hero.spell_save_actions if item.id == "disintegrate")
+    assert disintegrate.dc == 17
+    assert (
+        disintegrate.level,
+        disintegrate.action_cost,
+        disintegrate.range_ft,
+        disintegrate.save_ability,
+        disintegrate.damage_dice_count,
+        disintegrate.damage_dice_size,
+        disintegrate.damage_bonus,
+        disintegrate.damage_type,
+        disintegrate.success_damage,
+        disintegrate.upcast_dice_per_level,
+    ) == (6, "action", 60, "dexterity", 10, 6, 40, "force", "none", 3)
+
+
+def test_2024_bard_level_eleven_spell_package_uses_magical_secrets_for_disintegrate() -> None:
+    level_eleven = canonical_spell_package("bard", 11, "2024", 6)
+
+    assert level_eleven is not None
+    assert len(level_eleven.cantrips) == 4
+    assert len(level_eleven.spells) == 16
+    assert level_eleven.spells[-1].id == "disintegrate"
+    assert level_eleven.spells[-1].spell_level == 6
+    assert level_eleven.spells[-1].required_capabilities == [
+        "save-damage",
+        "magical-secrets",
+    ]
+    assert [item.id for item in level_eleven.always_prepared_spells] == [
+        "bless",
+        "guiding-bolt",
+    ]

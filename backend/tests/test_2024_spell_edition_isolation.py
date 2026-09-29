@@ -50,6 +50,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "aid",
         "shatter",
         "fireball",
+        "disintegrate",
         "cure-wounds",
         "healing-word",
         "mass-healing-word",
@@ -229,6 +230,32 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "fire",
             "half",
             1,
+        )
+
+    if "disintegrate" in spell_saves:
+        spell = spell_saves["disintegrate"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_bonus,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+        ) == (
+            6,
+            "action",
+            60,
+            "dexterity",
+            10,
+            6,
+            40,
+            "force",
+            "none",
+            3,
         )
 
     if "greater-invisibility" in defenses:

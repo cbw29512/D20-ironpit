@@ -24,10 +24,10 @@ from app.domain.character_builds import CharacterBuildProfile
 logger = logging.getLogger(__name__)
 
 def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Lyra's legal 2024 Lore Bard progression through level 10."""
+    """Compile Lyra's legal 2024 Lore Bard progression through level 11."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
-            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 10.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
+            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 11.")
         hero = HERO_BY_CLASS["bard"]
         base, background_increases, advancement_increases, final = bard_ability_scores(level)
         audits = [

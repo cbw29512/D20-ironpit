@@ -13,6 +13,7 @@ from app.content.audited_bard_profile_levels import (
     build_lyra_silverstring_level8_profile,
     build_lyra_silverstring_level9_profile,
     build_lyra_silverstring_level10_profile,
+    build_lyra_silverstring_level11_profile,
 )
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.audited_cleric_life_high_profile import (
@@ -134,6 +135,7 @@ CERTIFIED_HERO_PROGRESSIONS_2024: tuple[CertifiedHeroProgression, ...] = (
             build_lyra_silverstring_level8_profile,
             build_lyra_silverstring_level9_profile,
             build_lyra_silverstring_level10_profile,
+            build_lyra_silverstring_level11_profile,
         ),
     ),
     CertifiedHeroProgression(
