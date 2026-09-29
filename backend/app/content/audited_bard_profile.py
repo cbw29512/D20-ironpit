@@ -10,7 +10,11 @@ from app.content.bard_2024_lore_profile_support import (
     bard_level8_asi_audit,
     lore_bard_level3_audits,
 )
-from app.content.bard_2024_profile_core import bard_ability_scores, bard_feature_audit
+from app.content.bard_2024_profile_core import (
+    bard_ability_scores,
+    bard_feature_audit,
+    bard_source_references,
+)
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.domain.character_builds import CharacterBuildProfile
@@ -127,40 +131,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
             weapon_masteries=[],
             combat_loadout_kind=None,
             feature_audits=audits,
-            source_references=[
-                "D&D Beyond Basic Rules 2024: Bard — Core Traits, Bardic Inspiration, Spellcasting",
-                "D&D Beyond Basic Rules 2024: Acolyte background",
-                "D&D Beyond Basic Rules 2024: Orc species",
-                "D&D Beyond Basic Rules 2024: Studded Leather Armor and Dagger",
-                *(
-                    ["D&D Beyond Basic Rules 2024: Bard 2 — Expertise, Jack of All Trades"]
-                    if level >= 2 else []
-                ),
-                *(
-                    ["D&D Beyond Basic Rules 2024: College of Lore 3 — Bonus Proficiencies, Cutting Words"]
-                    if level >= 3 else []
-                ),
-                *(
-                    ["D&D Beyond Basic Rules 2024: Bard 4 — Ability Score Improvement"]
-                    if level >= 4 else []
-                ),
-                *(
-                    ["D&D Beyond Basic Rules 2024: Bard 5 — Font of Inspiration"]
-                    if level >= 5 else []
-                ),
-                *(
-                    ["D&D Beyond Basic Rules 2024: College of Lore 6 — Magical Discoveries"]
-                    if level >= 6 else []
-                ),
-                *(
-                    ["D&D Beyond Basic Rules 2024: Bard 7 — Countercharm"]
-                    if level >= 7 else []
-                ),
-                *(
-                    ["D&D Beyond Basic Rules 2024: Bard 8 — Ability Score Improvement"]
-                    if level >= 8 else []
-                ),
-            ],
+            source_references=bard_source_references(level),
         )
     except Exception:
         logger.exception("Failed to compile 2024 Lyra Silverstring profile at level %s.", level)
