@@ -23,6 +23,36 @@ def _spell(
     )
 
 
+def _cantrip(
+    spell_id: str,
+    name: str,
+    role: str,
+    *capabilities: str,
+    min_character_level: int = 1,
+) -> CanonicalSpellChoice:
+    return CanonicalSpellChoice(
+        id=spell_id,
+        name=name,
+        spell_level=0,
+        min_character_level=min_character_level,
+        role=role,
+        required_capabilities=list(capabilities),
+    )
+
+
+BARD_CANTRIPS: tuple[CanonicalSpellChoice, ...] = (
+    _cantrip("dancing-lights", "Dancing Lights", "utility", "arena-out-of-scope"),
+    _cantrip("mage-hand", "Mage Hand", "utility", "arena-out-of-scope"),
+    _cantrip(
+        "message",
+        "Message",
+        "utility",
+        "arena-out-of-scope",
+        min_character_level=4,
+    ),
+)
+
+
 BARD_SPELLS: tuple[CanonicalSpellChoice, ...] = (
     _spell("healing-word", "Healing Word", "healing", "healing"),
     _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
