@@ -103,3 +103,32 @@ def bard_level8_asi_audit() -> FeatureAudit:
         automated=True,
         notes="+1 Charisma and +1 Wisdom, producing Charisma 20 and Wisdom 16.",
     )
+
+def bard_level9_audits() -> list[FeatureAudit]:
+    return [
+        FeatureAudit(
+            feature_id="expertise-9",
+            feature_name="Expertise",
+            source_reference="D&D Beyond Basic Rules 2024: Bard 9",
+            category="class",
+            combat_relevant=True,
+            automated=True,
+            notes=(
+                "Canonical additional Expertise choices are Perception and Performance. "
+                "The shared skill-bonus math doubles proficiency; no Bard-specific resolver is used."
+            ),
+        ),
+        FeatureAudit(
+            feature_id="bard-combat-spells-5",
+            feature_name="Level 5 Bard Spells",
+            source_reference="D&D Beyond Basic Rules 2024: Bard 9; Spells — Mass Cure Wounds, Raise Dead",
+            category="class",
+            combat_relevant=True,
+            automated=True,
+            notes=(
+                "Mass Cure Wounds reuses the certified 2024 group-healing primitive at 5d8 + Charisma. "
+                "Raise Dead has a 1-hour casting time and remains arena-out-of-scope."
+            ),
+        ),
+    ]
+

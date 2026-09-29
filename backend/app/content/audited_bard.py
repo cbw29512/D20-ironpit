@@ -18,7 +18,12 @@ from app.content.bard_2024_runtime_support import (
 from app.content.bard_2024_spells import build_shatter_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.character_math import saving_throw_bonuses
-from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_healing_word
+from app.content.healing_spell_effects import (
+    build_cure_wounds,
+    build_healing_word,
+    build_mass_cure_wounds,
+    build_mass_healing_word,
+)
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, VisualLoadout, WeaponAttack
@@ -45,10 +50,10 @@ def _dagger(level: int, dexterity_modifier: int) -> WeaponAttack:
 
 
 def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Lore Bard through level 8."""
+    """Compile the 2024 support/healer Lore Bard through level 9."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 8.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 9.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -66,6 +71,8 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
         )
         proficiency_bonus = row.proficiency_bonus
         acrobatics_multiplier = 2 if level >= 2 else 1
+        perception_multiplier = 2 if level >= 9 else 1
+        performance_multiplier = 2 if level >= 9 else 1
 
         return CombatantTemplate(
             id=profile.template_id,
@@ -83,6 +90,7 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 build_healing_word(charisma_modifier),
                 build_cure_wounds(charisma_modifier),
                 *([build_mass_healing_word(charisma_modifier)] if level >= 5 else []),
+                *([build_mass_cure_wounds(charisma_modifier)] if level >= 9 else []),
             ],
             d20_bonus_die_actions=[build_bardic_inspiration_2024(level)],
             reaction_roll_penalty_actions=(
@@ -103,8 +111,8 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
             skill_bonuses={
                 "athletics": scores.modifier("strength"),
                 "acrobatics": dexterity_modifier + proficiency_bonus * acrobatics_multiplier,
-                "perception": wisdom_modifier + proficiency_bonus,
-                "performance": charisma_modifier + proficiency_bonus,
+                "perception": wisdom_modifier + proficiency_bonus * perception_multiplier,
+                "performance": charisma_modifier + proficiency_bonus * performance_multiplier,
                 "insight": wisdom_modifier + proficiency_bonus,
                 "religion": scores.modifier("intelligence") + proficiency_bonus,
             },
