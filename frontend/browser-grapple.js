@@ -80,7 +80,7 @@
   }
 
   const shouldEscape = (state) => E().available(state, "action") && state.grapple_sources.some((source) => source.restrains);
-  function escape(sequence, round, member) {
+  function escape(sequence, round, member, setup = null) {
     const state = member.state;
     if (!E().available(state, "action")) throw new Error("Action is unavailable to escape grapple.");
     const source = state.grapple_sources.find((item) => item.restrains) || state.grapple_sources[0];
@@ -100,7 +100,10 @@
     );
     if (needsCheckRuntime && !A()) throw new Error("Ability-check runtime is not loaded.");
     const resolved = A()?.resolve
-      ? A().resolve(state, ability, roll, source.escape_dc)
+      ? A().resolve(state, ability, roll, source.escape_dc, {
+          roller: member,
+          setup,
+        })
       : { roll, succeeded: roll.total >= source.escape_dc };
     roll = resolved.roll;
     let success = resolved.succeeded, tactical = null;
