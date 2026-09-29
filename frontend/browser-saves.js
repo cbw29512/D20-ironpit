@@ -54,6 +54,16 @@
     return [...shared];
   }
 
+  function targetCreatureType(target) {
+    try {
+      const raw = target?.state?.template?.creature_type;
+      return raw ? String(raw).split(" (")[0].trim().toLowerCase() : null;
+    } catch (error) {
+      console.error("Target creature-type normalization failed", { target: target?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, checkResource = options.checkResource !== false;
     const actionCost = action.actionCost || "action";
@@ -62,10 +72,13 @@
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     if (action.requiresTargetSight && !Q().canSee(actor.state, target.state)) throw new Error(`${action.name} requires the actor to see the target.`);
     const effectTags = [...new Set([...(action.effectTags || []).map((tag) => String(tag).trim().toLowerCase()).filter(Boolean), ...(String(action.damageType || "").trim().toLowerCase() === "poison" ? ["poison"] : [])])];
+    const inherentDisadvantage = (action.saveDisadvantageCreatureTypes || [])
+      .map((item) => String(item).trim().toLowerCase()).filter(Boolean)
+      .includes(targetCreatureType(target)) ? [action.name] : [];
     const saveContext = {
       magicalEffect: Boolean(action.magicalEffect), spellEffect: Boolean(options.spellEffect),
       sourceCreatureType: actor.state.template.creature_type || null, effectTags, roundNumber: round,
-      disadvantageSources: [...(options.saveDisadvantageSources || [])],
+      disadvantageSources: [...new Set([...(options.saveDisadvantageSources || []), ...inherentDisadvantage])],
       encounterRoller: target,
       setup: options.setup || null,
     };
