@@ -161,3 +161,54 @@ def test_2024_bard_level_four_spell_package_adds_cantrip_and_utility_spell() -> 
     ]
     knock = level_four.spells[-1]
     assert (knock.spell_level, knock.min_character_level) == (2, 4)
+
+
+
+def test_2024_lore_bard_level_six_reuses_certified_magical_discovery_spells() -> None:
+    profile = build_lyra_silverstring_profile(6)
+    hero = build_lyra_silverstring_level(6)
+
+    assert hero.max_hp == 33
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["spell-slot-1"] == 4
+    assert resources["spell-slot-2"] == 3
+    assert resources["spell-slot-3"] == 3
+
+    magical_discoveries = next(
+        item for item in profile.feature_audits
+        if item.feature_id == "magical-discoveries"
+    )
+    assert magical_discoveries.automated is True
+
+    assert [item.id for item in hero.spell_attack_actions] == ["guiding-bolt"]
+    guiding_bolt = hero.spell_attack_actions[0]
+    assert guiding_bolt.attack_bonus == 7
+    assert (
+        guiding_bolt.range_ft,
+        guiding_bolt.damage_dice_count,
+        guiding_bolt.damage_dice_size,
+        guiding_bolt.damage_type,
+    ) == (120, 4, 6, "radiant")
+
+    assert [item.id for item in hero.defensive_spell_actions] == ["bless"]
+    bless = hero.defensive_spell_actions[0]
+    assert bless.concentration is True
+    assert bless.target_count == 3
+
+    assert [item.id for item in hero.effect_removal_actions] == ["dispel-magic"]
+    dispel = hero.effect_removal_actions[0]
+    assert dispel.casting_ability == "charisma"
+    assert dispel.range_ft == 120
+    assert dispel.resource_id == "spell-slot-3"
+
+
+def test_2024_bard_level_six_spell_package_keeps_discoveries_always_prepared() -> None:
+    level_six = canonical_spell_package("bard", 6, "2024", 4)
+
+    assert level_six is not None
+    assert len(level_six.spells) == 10
+    assert level_six.spells[-1].id == "dispel-magic"
+    assert [item.id for item in level_six.always_prepared_spells] == [
+        "bless",
+        "guiding-bolt",
+    ]
