@@ -11,7 +11,6 @@ from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant, D20BonusDieAction,
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent, DiceRoll
 logger = logging.getLogger(__name__)
-
 def resolve_d20_bonus_die_grant(
     sequence: int,
     round_number: int,
@@ -157,7 +156,6 @@ def expire_d20_bonus_dice(state, round_number: int) -> list[str]:
     except Exception as exc:
         logger.exception("Failed to expire d20 bonus dice for %s.", state.template.name)
         raise RuntimeError("D20 bonus-die expiry could not be resolved.") from exc
-
 def apply_resource_backed_d20_bonus_if_useful(
     state,
     test_kind: D20TestKind,
