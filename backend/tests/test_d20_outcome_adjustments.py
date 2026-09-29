@@ -115,9 +115,10 @@ def test_adjustment_subtracts_from_hostile_success_when_it_can_flip_outcome() ->
 def test_adjustment_preserves_resource_when_out_of_range_or_unable_to_flip() -> None:
     source = _member("source", "heroes", 0, fate=True)
     roller = _member("roller", "heroes", 80)
+    enemy = _member("enemy", "monsters", 20)
     setup = EncounterSetup(
         heroes=[source, roller],
-        monsters=[],
+        monsters=[enemy],
         hero_total_levels=2,
         monster_total_cr="0",
         ruleset="2024",
