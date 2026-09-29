@@ -189,3 +189,19 @@ def bard_level14_peerless_skill_audit() -> FeatureAudit:
             "and ability checks. Bardic Inspiration is consumed only when the revised test succeeds."
         ),
     )
+
+
+def bard_level15_spells_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="bard-combat-spells-8",
+        feature_name="Level 8 Bard Spells",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 15; Spells — Sunburst",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Sunburst is prepared through Magical Secrets and composes the existing area save-damage "
+            "and failed-save timed-condition primitives: Constitution save, 12d6 Radiant, half on success, "
+            "Blinded for up to 1 minute on failure with an end-of-turn repeat save."
+        ),
+    )
