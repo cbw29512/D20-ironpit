@@ -30,7 +30,7 @@ def test_land_damage_features_accumulate_without_rebuilding_levels() -> None:
 
 def test_noncombat_druid_features_stay_out_of_arena_runtime() -> None:
     ignored = druid_arena_ignored(20)
-    assert "druidic" in ignored
+    assert "druidic-language" in ignored
     assert "speak-with-animals" in ignored
     assert "wild-companion" in ignored
 
