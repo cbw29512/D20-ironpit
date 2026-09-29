@@ -5,7 +5,9 @@ import logging
 from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_bard_profile import build_lyra_silverstring_profile
+from app.content.bard_2024_cutting_words import build_cutting_words_2024
 from app.content.bard_2024_inspiration import build_bardic_inspiration_2024
+from app.content.bard_2024_spells import build_shatter_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.character_math import saving_throw_bonuses
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
@@ -63,10 +65,10 @@ def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
 
 
 def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Bard foundation through level 2."""
+    """Compile the 2024 support/healer Lore Bard through level 3."""
     try:
-        if level not in {1, 2}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 2.")
+        if level not in {1, 2, 3}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 3.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -102,6 +104,13 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 build_cure_wounds(charisma_modifier),
             ],
             d20_bonus_die_actions=[build_bardic_inspiration_2024(level)],
+            reaction_roll_penalty_actions=(
+                [build_cutting_words_2024(level)] if level >= 3 else []
+            ),
+            spell_save_actions=(
+                [build_shatter_2024(8 + proficiency_bonus + charisma_modifier)]
+                if level >= 3 else []
+            ),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
             skill_bonuses={
                 "athletics": scores.modifier("strength"),
