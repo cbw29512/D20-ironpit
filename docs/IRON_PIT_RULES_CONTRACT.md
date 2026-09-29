@@ -111,6 +111,8 @@ The target architecture supports hard ruleset profiles:
 - 2014 fights use only 2014 monsters, pregens, spells, features, items, and mechanics.
 - 2024 fights use only 2024 monsters, pregens, spells, features, items, and mechanics.
 - Never cross editions in one fight.
+- A same-named spell, feature, item, or monster is **not** evidence that its mechanics are edition-identical. 2024 content must bind to 2024 source parameters and effect wording; 2014 content must bind to 2014 source parameters and effect wording. Universal resolvers may be shared only after the edition-specific data has been compared semantically.
+- Spell certification must compare outcome-changing spell fingerprints (including action cost, range/targeting, attack vs save, save ability, dice/scaling, damage/healing type, concentration, duration, conditions/modifiers, and upcast behavior) against the selected edition. A 2024 pregen fails closed if a spell fingerprint is missing, inherited from 2014 without proof, or conflicts with 2024 source wording.
 - Shared mechanics live in one universal core; edition differences live in explicit ruleset profiles/data rather than duplicated whole engines.
 - Certification is ruleset-specific.
 

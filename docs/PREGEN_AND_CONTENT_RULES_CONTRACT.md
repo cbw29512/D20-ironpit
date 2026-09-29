@@ -40,7 +40,9 @@ Examples:
 - 2024 Weapon Mastery belongs only to the 2024 ruleset. Mastery properties such as Graze, Nick, Push, Sap, Slow, Vex, Cleave, Topple, or other 2024 mastery behavior must never appear in a 2014 pregen unless an independently legal 2014 rule produces the same effect for another reason.
 - 2014 Fighting Styles, feats, subclass progression, spells, and class features use their 2014 wording and levels.
 - 2024 Fighting Styles, feats, subclass progression, spells, and class features use their 2024 wording and levels.
-- A same-name feature that changed between editions must compile to the correct edition-specific behavior.
+- A same-name feature or spell that changed between editions must compile to the correct edition-specific behavior.
+- Same-name spells are edition-sensitive source data. Before a 2024 pregen level is certified, every combat-relevant spell it can execute must be checked against a 2024 spell fingerprint covering action cost, range/targeting, attack-vs-save semantics, save ability, dice/scaling, damage/healing, concentration/duration, conditions/modifiers, and upcast rules. Reusing a universal spell resolver is encouraged; reusing 2014 spell parameters without an explicit source-equivalence proof is forbidden.
+- When a future 2024 pregen introduces a spell not yet present in the 2024 fingerprint registry, certification fails closed until that spell is reconciled against the 2024 source and added to the registry/test evidence.
 
 ## 4. Canonical pregen roster
 

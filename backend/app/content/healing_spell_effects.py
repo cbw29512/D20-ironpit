@@ -80,6 +80,7 @@ def build_mass_cure_wounds(
             range_ft=60,
             target_mode="self_or_ally",
             max_targets=6,
+            area_radius_ft=30,
             dice_count=5 + (slot_level - 5),
             dice_size=8,
             healing_bonus=spellcasting_modifier + extra_healing_bonus,
