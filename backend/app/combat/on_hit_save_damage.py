@@ -6,6 +6,7 @@ from app.combat.damage import roll_damage_component
 from app.combat.dice import DiceProvider
 from app.combat.rogue_defenses import evasion_damage
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DamageRollComponent, DiceRoll, WeaponAttack
 
 
@@ -22,11 +23,17 @@ def resolve_on_hit_save_damage(
     defender: CombatantState,
     attack: WeaponAttack,
     dice: DiceProvider,
+    *,
+    encounter_defender: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> OnHitSaveDamageResolution:
     effect = attack.on_hit_save_damage
     if effect is None:
         return OnHitSaveDamageResolution()
-    save_roll, succeeded = resolve_saving_throw(defender, effect.save_ability, effect.dc, dice)
+    save_roll, succeeded = resolve_saving_throw(
+        defender, effect.save_ability, effect.dc, dice,
+        encounter_roller=encounter_defender, setup=setup,
+    )
     if succeeded and effect.success_damage == "none":
         return OnHitSaveDamageResolution(None, save_roll, effect.save_ability, effect.dc, True)
     component = roll_damage_component(
