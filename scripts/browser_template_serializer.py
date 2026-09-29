@@ -315,6 +315,9 @@ def _healing(action: Any) -> dict[str, Any]:
             "healingBonus": action.healing_bonus, "restoreToEffectiveMax": action.restore_to_effective_max,
             "percentileSuccessMax": action.percentile_success_max, "resourceId": action.resource_id,
             "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
+            "removableConditions": list(action.removable_conditions),
+            "proneReactionStand": action.prone_reaction_stand,
+            "secondaryTargetWithinFt": action.secondary_target_within_ft,
             "animation": action.animation,
         }
     except Exception:
@@ -604,7 +607,9 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "fallbackDamageBonus": item.fallback_damage_bonus,
                     "fallbackDamageType": item.fallback_damage_type,
                     "resourceId": item.resource_id, "resourceCost": item.resource_cost,
-                    "magicalEffect": item.magical_effect, "animation": item.animation,
+                    "magicalEffect": item.magical_effect, "maxTargets": item.max_targets,
+                    "secondaryTargetWithinFt": item.secondary_target_within_ft,
+                    "animation": item.animation,
                 }
                 for item in template.hp_threshold_instant_death_actions
             ],

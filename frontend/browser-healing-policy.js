@@ -21,9 +21,15 @@
     return (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
   }
 
+  function riderWorthwhile(target, action) {
+    const active = new Set(target.state.active_effect_ids || []);
+    if ((action.removableConditions || []).some((id) => active.has(id))) return true;
+    return Boolean(action.proneReactionStand && active.has("prone") && target.state.reaction_available);
+  }
+
   function targetAllowed(healer, target, action) {
-    if (target.state.is_dead || !target.state.is_alive
-      || target.state.current_hp >= S().effectiveMaxHp(target.state) || swarm(target.state)) return false;
+    if (target.state.is_dead || !target.state.is_alive || swarm(target.state)) return false;
+    if (target.state.current_hp >= S().effectiveMaxHp(target.state) && !riderWorthwhile(target, action)) return false;
     const creatureType = String(target.state.template.creature_type || "").split(" (")[0].toLowerCase();
     const excluded = new Set((action.excludedCreatureTypes || []).map((value) => String(value).toLowerCase()));
     if (creatureType && excluded.has(creatureType)) return false;
@@ -31,6 +37,7 @@
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
     if (action.targetMode === "other") return target.combatant_id !== healer.combatant_id;
+    if (action.targetMode === "any") return true;
     return target.side === healer.side;
   }
 
@@ -44,7 +51,7 @@
     const legal = allies.filter((target) => targetAllowed(healer, target, action));
     if (action.restoreToEffectiveMax) {
       const worthwhile = legal.filter((target) =>
-        target.state.current_hp === 0 || bloodied(target.state));
+        target.state.current_hp === 0 || bloodied(target.state) || riderWorthwhile(target, action));
       if (!worthwhile.length) return null;
       return worthwhile.slice().sort((a, b) =>
         a.state.current_hp / S().effectiveMaxHp(a.state)
@@ -66,7 +73,7 @@
   function worthwhileTargets(healer, setup, action) {
     const allies = healer.side === "heroes" ? setup.heroes : setup.monsters;
     return allies.filter((target) => targetAllowed(healer, target, action)
-      && (target.state.current_hp === 0 || bloodied(target.state)));
+      && (target.state.current_hp === 0 || bloodied(target.state) || riderWorthwhile(target, action)));
   }
 
   function priority(healer, setup, action, target) {
@@ -99,6 +106,11 @@
         || a.state.current_hp / S().effectiveMaxHp(a.state)
           - b.state.current_hp / S().effectiveMaxHp(b.state)
         || a.combatant_id.localeCompare(b.combatant_id));
+    if (action.secondaryTargetWithinFt != null && targets.length) {
+      const primary = targets[0];
+      targets = [primary, ...targets.slice(1).filter((target) =>
+        distance(primary, target) <= action.secondaryTargetWithinFt)];
+    }
     if (action.areaRadiusFt != null) {
       const placement = A()?.bestFriendlyPlacement(
         healer, setup, action.areaRadiusFt, action.range || 5,
@@ -112,6 +124,10 @@
   }
 
   function areaTargetsFit(healer, setup, action, targets) {
+    if (action.secondaryTargetWithinFt != null && targets.length > 1) {
+      const primary = targets[0];
+      if (targets.slice(1).some((target) => distance(primary, target) > action.secondaryTargetWithinFt)) return false;
+    }
     if (action.areaRadiusFt == null) return true;
     if (!setup) return false;
     const ids = targets.map((target) => target.combatant_id);
@@ -122,6 +138,6 @@
 
   window.IRON_PIT_BROWSER_HEALING_POLICY = {
     areaTargetsFit, bloodied, chooseAction, chooseTarget, groupTargets,
-    healingMaximized, resourceAvailable, slotHeal, swarm, targetAllowed, worthwhileTargets,
+    healingMaximized, resourceAvailable, riderWorthwhile, slotHeal, swarm, targetAllowed, worthwhileTargets,
   };
 })();

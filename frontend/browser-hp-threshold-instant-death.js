@@ -17,17 +17,32 @@
 
   function choose(member, setup) {
     for (const action of member.state.template.hp_threshold_instant_death_actions || []) {
-      for (const target of F().targetOrder(member, setup)) {
-        if (legal(member, target, action)) return { target, action };
+      const legalTargets = F().targetOrder(member, setup).filter((target) => legal(member, target, action));
+      if (!legalTargets.length) continue;
+      const primary = legalTargets[0];
+      const targets = [primary];
+      if ((action.maxTargets || 1) > 1) {
+        for (const target of legalTargets.slice(1)) {
+          if (action.secondaryTargetWithinFt != null
+            && F().saveDistance(primary, target, action.secondaryTargetWithinFt) > action.secondaryTargetWithinFt) {
+            continue;
+          }
+          targets.push(target);
+          if (targets.length >= action.maxTargets) break;
+        }
       }
+      return { target: primary, targets, action };
     }
     return null;
   }
 
-  function resolve(sequence, round, member, target, action, setup) {
-    if (!legal(member, target, action)) throw new Error(action.name + " is no longer legal.");
+  function spendOnce(member, action) {
     if (action.resourceId) member.state.resources[action.resourceId] -= (action.resourceCost || 1);
     E().spend(member.state, action.actionCost || "action");
+    return action.resourceId ? member.state.resources[action.resourceId] : null;
+  }
+
+  function resolveTarget(sequence, round, member, target, action, setup, remaining) {
     const hpBefore = target.state.current_hp;
     const states = [...setup.heroes, ...setup.monsters].map((item) => item.state);
     const fallback = target.state.current_hp > action.maxCurrentHp;
@@ -47,8 +62,7 @@
       }];
       if (applied) Z().applyDamage(target.state, applied, false, [action.fallbackDamageType], states);
     } else {
-      const outcome = Z().applyInstantDeath(target.state, states);
-      prevented = outcome === "zero_hp_replacement";
+      prevented = Z().applyInstantDeath(target.state, states) === "zero_hp_replacement";
     }
     const wardLog = window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(target.state) || "";
     return {
@@ -57,8 +71,7 @@
       target_id: target.combatant_id, target_name: target.state.template.name,
       hp_before: hpBefore, hp_after: target.state.current_hp, is_dead: target.state.is_dead,
       damage_roll: damageRoll, damage_components: damageComponents,
-      feature_id: action.id,
-      resource_remaining: action.resourceId ? member.state.resources[action.resourceId] : null,
+      feature_id: action.id, resource_remaining: remaining,
       animation: action.animation || "instant-death",
       description: member.state.template.name + " uses " + action.name + " on " + target.state.template.name + "; "
         + (fallback
@@ -66,6 +79,27 @@
           : (prevented ? target.state.template.name + "'s ward negates the instant-death effect." : target.state.template.name + " dies."))
         + wardLog,
     };
+  }
+
+  function resolve(sequence, round, member, target, action, setup) {
+    if (!legal(member, target, action)) throw new Error(action.name + " is no longer legal.");
+    const remaining = spendOnce(member, action);
+    return resolveTarget(sequence, round, member, target, action, setup, remaining);
+  }
+
+  function resolveGroup(sequence, round, member, targets, action, setup) {
+    if (!targets.length || targets.length > (action.maxTargets || 1)) throw new Error("Illegal threshold target count.");
+    if (targets.some((target) => !legal(member, target, action))) throw new Error("Illegal threshold target.");
+    if (action.secondaryTargetWithinFt != null && targets.length > 1) {
+      const primary = targets[0];
+      if (targets.slice(1).some((target) =>
+        F().saveDistance(primary, target, action.secondaryTargetWithinFt) > action.secondaryTargetWithinFt)) {
+        throw new Error("Threshold secondary target violates linked-target distance.");
+      }
+    }
+    const remaining = spendOnce(member, action);
+    return targets.map((target, index) =>
+      resolveTarget(sequence + index, round, member, target, action, setup, remaining));
   }
 
   function installProvider() {
@@ -77,17 +111,27 @@
       rulesets: ["2014", "2024"],
       discover: ({ member, setup }) => {
         const selected = choose(member, setup);
-        return selected ? { payload: { targetId: selected.target.combatant_id, actionId: selected.action.id } } : null;
+        return selected ? {
+          payload: {
+            targetIds: selected.targets.map((target) => target.combatant_id),
+            actionId: selected.action.id,
+          },
+        } : null;
       },
       resolve: ({ sequence, round, member, setup }, candidate) => {
-        const target = [...setup.heroes, ...setup.monsters].find((item) => item.combatant_id === candidate.payload.targetId) || null;
+        const ids = candidate.payload.targetIds || [candidate.payload.targetId];
+        const targets = ids.map((id) =>
+          [...setup.heroes, ...setup.monsters].find((item) => item.combatant_id === id) || null);
         const action = (member.state.template.hp_threshold_instant_death_actions || [])
           .find((item) => item.id === candidate.payload.actionId) || null;
-        if (!target || !action) throw new Error("HP-threshold instant-death candidate became unavailable.");
-        return { events: [resolve(sequence, round, member, target, action, setup)], sequence: sequence + 1 };
+        if (targets.some((target) => !target) || !action) throw new Error("HP-threshold instant-death candidate became unavailable.");
+        const events = resolveGroup(sequence, round, member, targets, action, setup);
+        return { events, sequence: sequence + events.length };
       },
     });
   }
 
-  window.IRON_PIT_BROWSER_HP_THRESHOLD_INSTANT_DEATH = { choose, installProvider, legal, resolve };
+  window.IRON_PIT_BROWSER_HP_THRESHOLD_INSTANT_DEATH = {
+    choose, installProvider, legal, resolve, resolveGroup,
+  };
 })();

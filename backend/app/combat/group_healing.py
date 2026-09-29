@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from app.combat.action_economy import spend
 from app.combat.friendly_area import best_friendly_area_placement
-from app.combat.healing_policy import healing_dice_maximized, resource_available, slot_heal, target_allowed
+from app.combat.healing_policy import healing_rider_worthwhile, resource_available, slot_heal, target_allowed
+from app.combat.healing_resolution_support import apply_healing_riders, resolve_healing_amount
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.zero_hp import restore_hit_points
@@ -29,7 +30,15 @@ def choose_group_healing_targets(
         target for target in legal
         if target.state.current_hp == 0
         or target.state.current_hp * 2 <= effective_max_hp(target.state)
+        or healing_rider_worthwhile(target, action)
     ]
+    if action.secondary_target_within_ft is not None and worthwhile:
+        primary = worthwhile[0]
+        linked = [
+            target for target in worthwhile[1:]
+            if abs(target.position_ft - primary.position_ft) <= action.secondary_target_within_ft
+        ]
+        worthwhile = [primary, *linked]
     if action.area_radius_ft is not None:
         placement = best_friendly_area_placement(
             healer,
@@ -60,6 +69,13 @@ def resolve_group_healing(
         raise ValueError("Group healing requires one or more legal targets within max_targets.")
     if any(not target_allowed(healer, target, action) for target in targets):
         raise ValueError("Group healing contains an illegal target.")
+    if action.secondary_target_within_ft is not None and len(targets) > 1:
+        primary = targets[0]
+        if any(
+            abs(target.position_ft - primary.position_ft) > action.secondary_target_within_ft
+            for target in targets[1:]
+        ):
+            raise ValueError("Group healing secondary targets violate linked-target distance.")
     if action.area_radius_ft is not None:
         if setup is None:
             raise ValueError("Area group healing requires the actual encounter setup.")
@@ -87,25 +103,33 @@ def resolve_group_healing(
         resource.current_uses -= action.resource_cost
         remaining = resource.current_uses
     events: list[BattleEvent] = []
-    notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}"
     for target in targets:
-        rolls = [action.dice_size for _ in range(action.dice_count)] if healing_dice_maximized(healer, target) else [
-            dice.roll(action.dice_size) for _ in range(action.dice_count)
-        ]
-        total = sum(rolls) + action.healing_bonus
         before = target.state.current_hp
-        healed = restore_hit_points(target.state, total)
+        rolls, total, healed, notation, modifier = resolve_healing_amount(
+            healer, target, action, dice,
+        )
+        removed = apply_healing_riders(target, action)
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="healing",
             actor_id=healer.combatant_id, actor_name=healer.state.template.name,
             target_id=target.combatant_id, target_name=target.state.template.name,
-            healing_roll=DiceRoll(notation=notation, rolls=rolls, modifier=action.healing_bonus, total=total),
+            healing_roll=DiceRoll(notation=notation, rolls=rolls, modifier=modifier, total=total),
             hp_before=before, hp_after=target.state.current_hp,
             death_save_successes=target.state.death_save_successes,
             death_save_failures=target.state.death_save_failures,
             is_stable=target.state.is_stable, is_dead=target.state.is_dead,
             feature_id=action.id, resource_remaining=remaining, animation=action.animation,
-            description=f"{healer.state.template.name} uses {action.name} on {target.state.template.name} and restores {healed} HP.",
+            removed_condition_ids=removed,
+            description=(
+                f"{healer.state.template.name} uses {action.name} on {target.state.template.name} "
+                f"and restores {healed} HP."
+                + (
+                    " Conditions ended: "
+                    + ", ".join(item.replace("_", " ").title() for item in removed)
+                    + "."
+                    if removed else ""
+                )
+            ),
         ))
         sequence += 1
     return events, sequence

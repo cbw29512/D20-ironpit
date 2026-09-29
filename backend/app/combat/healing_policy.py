@@ -38,6 +38,17 @@ def resource_available(
     return resource is not None and resource.current_uses >= action.resource_cost
 
 
+def healing_rider_worthwhile(target: EncounterCombatant, action: HealingAction) -> bool:
+    active = set(target.state.active_effect_ids)
+    if active.intersection(action.removable_conditions):
+        return True
+    return bool(
+        action.prone_reaction_stand
+        and "prone" in active
+        and target.state.reaction_available
+    )
+
+
 def target_allowed(
     healer: EncounterCombatant,
     target: EncounterCombatant,
@@ -45,7 +56,10 @@ def target_allowed(
 ) -> bool:
     if target.state.is_dead or not target.state.is_alive:
         return False
-    if target.state.current_hp >= effective_max_hp(target.state):
+    if (
+        target.state.current_hp >= effective_max_hp(target.state)
+        and not healing_rider_worthwhile(target, action)
+    ):
         return False
     creature_type = str(target.state.template.creature_type or "").split(" (")[0].lower()
     excluded = {item.lower() for item in action.excluded_creature_types}
@@ -61,6 +75,8 @@ def target_allowed(
         return target.combatant_id != healer.combatant_id and target.side == healer.side
     if action.target_mode == "other":
         return target.combatant_id != healer.combatant_id
+    if action.target_mode == "any":
+        return True
     return target.side == healer.side
 
 
@@ -77,7 +93,12 @@ def choose_healing_target(
     allies = setup.heroes if healer.side == "heroes" else setup.monsters
     legal = [target for target in allies if target_allowed(healer, target, action)]
     if action.restore_to_effective_max:
-        worthwhile = [target for target in legal if target.state.current_hp == 0 or is_bloodied(target.state)]
+        worthwhile = [
+            target for target in legal
+            if target.state.current_hp == 0
+            or is_bloodied(target.state)
+            or healing_rider_worthwhile(target, action)
+        ]
         return min(
             worthwhile,
             key=lambda target: (
@@ -111,7 +132,11 @@ def _worthwhile_target_count(
     return sum(
         1 for target in allies
         if target_allowed(healer, target, action)
-        and (target.state.current_hp == 0 or is_bloodied(target.state))
+        and (
+            target.state.current_hp == 0
+            or is_bloodied(target.state)
+            or healing_rider_worthwhile(target, action)
+        )
     )
 
 

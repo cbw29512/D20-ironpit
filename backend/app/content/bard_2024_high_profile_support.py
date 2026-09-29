@@ -107,3 +107,20 @@ def bard_level19_boon_of_fate_audit() -> FeatureAudit:
             "resource-backed 2d4 D20 outcome-adjustment primitive within 60 feet."
         ),
     )
+
+
+def bard_level20_words_of_creation_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="words-of-creation",
+        feature_name="Words of Creation",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 20 — Words of Creation",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Power Word Heal and Power Word Kill are always prepared. Each remains one spell/action "
+            "and may affect a second creature only when that creature is within 10 feet of the first. "
+            "Power Word Heal reuses universal full healing, condition removal, and Reaction spending; "
+            "Power Word Kill reuses the edition-correct threshold/fallback-damage action."
+        ),
+    )

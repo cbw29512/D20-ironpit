@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const P = () => window.IRON_PIT_BROWSER_HEALING_POLICY;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
+  const R = () => window.IRON_PIT_BROWSER_HEALING_RESOLUTION;
 
   function resolveGroup(
     sequence, round, healer, targets, action, turnKey = null, setup = null,
@@ -28,14 +29,29 @@
     const remaining = healer.state.resources[action.resourceId];
     const events = [];
     for (const target of targets) {
-      const maximized = P().healingMaximized(healer, target);
-      const rolls = Array.from(
-        { length: action.diceCount || 0 },
-        () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6),
-      );
-      const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
       const before = target.state.current_hp;
-      const healed = H().restore(target.state, total);
+      let rolls = [], total = 0, healed = 0, notation = "", modifier = 0;
+      if (action.restoreToEffectiveMax) {
+        healed = H().restore(target.state, Number.MAX_SAFE_INTEGER);
+        total = healed;
+        notation = "restore-to-effective-max";
+      } else {
+        const maximized = P().healingMaximized(healer, target);
+        rolls = Array.from(
+          { length: action.diceCount || 0 },
+          () => maximized ? (action.diceSize || 6) : window.IRON_PIT_DICE.roll(action.diceSize || 6),
+        );
+        total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
+        modifier = action.healingBonus || 0;
+        healed = H().restore(target.state, total);
+        notation = rolls.length
+          ? `${rolls.length}d${action.diceSize || 6}+${modifier}`
+          : String(modifier);
+      }
+      const hasRiders = (action.removableConditions || []).length || action.proneReactionStand;
+      const runtime = R();
+      if (hasRiders && !runtime) throw new Error("Healing riders require the browser healing-resolution runtime.");
+      const removed = hasRiders ? runtime.applyRiders(target, action) : [];
       events.push({
         sequence: sequence++,
         round_number: round,
@@ -45,10 +61,7 @@
         target_id: target.combatant_id,
         target_name: target.state.template.name,
         healing_roll: {
-          notation: `${rolls.length}d${action.diceSize || 6}+${action.healingBonus || 0}`,
-          rolls,
-          modifier: action.healingBonus || 0,
-          total,
+          notation, rolls, modifier, total,
         },
         hp_before: before,
         hp_after: target.state.current_hp,
@@ -58,8 +71,10 @@
         is_dead: target.state.is_dead,
         feature_id: action.id,
         resource_remaining: remaining,
+        removed_condition_ids: removed,
         animation: action.animation || "healing",
-        description: `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.`,
+        description: `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.`
+          + (removed.length ? ` Conditions ended: ${removed.join(", ")}.` : ""),
       });
     }
     const rider = H().selfRider(
