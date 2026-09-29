@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import logging
 
-from app.content.bard_2024_lore_profile_support import bard_level4_asi_audit, lore_bard_level3_audits
+from app.content.bard_2024_lore_profile_support import (
+    bard_level4_asi_audit,
+    bard_level5_font_audit,
+    lore_bard_level3_audits,
+)
 from app.content.canonical_combat_build_policy import (
     canonical_background_increases,
     canonical_base_ability_scores,
@@ -115,17 +119,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
         if level >= 4:
             audits.append(bard_level4_asi_audit())
         if level >= 5:
-            audits.append(_feature(
-                "font-of-inspiration",
-                "Font of Inspiration",
-                "class",
-                combat_relevant=True,
-                automated=True,
-                notes=(
-                    "Short/Long Rest recovery is outside a match because Iron Pit resets between matches; "
-                    "spell-slot conversion is bound to the universal resource-conversion schema."
-                ),
-            ))
+            audits.append(bard_level5_font_audit())
         return CharacterBuildProfile(
             id=f"build-lyra-silverstring-l{level}",
             template_id=canonical_template_id("bard", level),
