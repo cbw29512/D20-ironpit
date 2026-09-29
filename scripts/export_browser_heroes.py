@@ -433,9 +433,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "conditionId": item.condition_id, "repeatSaveAbility": item.repeat_save_ability,
                 "repeatSaveDc": item.repeat_save_dc, "repeatSaveTiming": item.repeat_save_timing,
                 "resourceId": item.resource_id, "resourceCost": item.resource_cost,
-                "magicalEffect": item.magical_effect, "maxTargets": item.max_targets,
-                "secondaryTargetWithinFt": item.secondary_target_within_ft,
-                "animation": item.animation,
+                "magicalEffect": item.magical_effect, "animation": item.animation,
             }
             for item in template.hp_threshold_condition_actions
         ],
@@ -448,7 +446,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "fallbackDamageBonus": item.fallback_damage_bonus,
                 "fallbackDamageType": item.fallback_damage_type,
                 "resourceId": item.resource_id, "resourceCost": item.resource_cost,
-                "magicalEffect": item.magical_effect, "animation": item.animation,
+                "magicalEffect": item.magical_effect, "maxTargets": item.max_targets,
+                "secondaryTargetWithinFt": item.secondary_target_within_ft,
+                "animation": item.animation,
             }
             for item in template.hp_threshold_instant_death_actions
         ],
