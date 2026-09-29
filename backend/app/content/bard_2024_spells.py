@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.spells import SpellSaveAction
+from app.domain.spells import DefensiveSpellAction, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
@@ -29,4 +29,27 @@ def build_shatter_2024(save_dc: int) -> SpellSaveAction:
         )
     except Exception:
         logger.exception("Failed to build 2024 Shatter.")
+        raise
+
+
+def build_greater_invisibility_2024() -> DefensiveSpellAction:
+    """Build the explicit 2024 Greater Invisibility fingerprint."""
+    try:
+        return DefensiveSpellAction(
+            id="greater-invisibility",
+            name="Greater Invisibility",
+            level=4,
+            action_cost="action",
+            range_ft=5,
+            duration_minutes=1,
+            target_policy="friendly",
+            target_count=1,
+            condition_ids=["invisible"],
+            concentration=True,
+            priority=95,
+            animation="greater-invisibility",
+            source="D&D Beyond Basic Rules 2024: Greater Invisibility",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Greater Invisibility.")
         raise

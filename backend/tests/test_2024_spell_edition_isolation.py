@@ -57,6 +57,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "mass-cure-wounds-l7",
         "mass-cure-wounds-l8",
         "mass-cure-wounds-l9",
+        "greater-invisibility",
         "lesser-restoration",
         "dispel-magic",
         "divine-intervention-inflict-wounds",
@@ -198,6 +199,18 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "half",
             1,
         )
+
+    if "greater-invisibility" in defenses:
+        spell = defenses["greater-invisibility"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.duration_minutes,
+            spell.target_count,
+            spell.condition_ids,
+            spell.concentration,
+        ) == (4, "action", 5, 1, 1, ["invisible"], True)
 
     if "aid" in defenses:
         spell = defenses["aid"]

@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from app.content.audited_bard import build_lyra_silverstring_level
 from app.content.audited_bard_profile import build_lyra_silverstring_profile
+from app.combat.dice import FixedDiceProvider
+from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.state import build_combatant_state
 from app.content.canonical_spell_policy import canonical_spell_package
+from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.saving_throw_context import SavingThrowContext
 
 
 def test_2024_bard_level_one_is_legal_support_foundation() -> None:
@@ -212,3 +217,96 @@ def test_2024_bard_level_six_spell_package_keeps_discoveries_always_prepared() -
         "bless",
         "guiding-bolt",
     ]
+
+
+
+def _bard7_countercharm_setup():
+    source = EncounterCombatant(
+        combatant_id="lyra-7",
+        side="heroes",
+        position_ft=0,
+        state=build_combatant_state(build_lyra_silverstring_level(7)),
+    )
+    target = EncounterCombatant(
+        combatant_id="lyra-1",
+        side="heroes",
+        position_ft=25,
+        state=build_combatant_state(build_lyra_silverstring_level(1)),
+    )
+    enemy = EncounterCombatant(
+        combatant_id="enemy",
+        side="monsters",
+        position_ft=50,
+        state=build_combatant_state(build_lyra_silverstring_level(1)),
+    )
+    setup = EncounterSetup(
+        heroes=[source, target],
+        monsters=[enemy],
+        hero_total_levels=8,
+        monster_total_cr="1",
+    )
+    return source, target, setup
+
+
+def test_2024_bard_level_seven_countercharm_rerolls_matching_failed_save_with_advantage() -> None:
+    source, target, setup = _bard7_countercharm_setup()
+
+    roll, succeeded = resolve_saving_throw(
+        target.state,
+        "charisma",
+        20,
+        FixedDiceProvider([1, 3, 18]),
+        SavingThrowContext(effect_tags=frozenset({"charmed"})),
+        encounter_roller=target,
+        setup=setup,
+    )
+
+    assert succeeded is True
+    assert roll is not None
+    assert roll.selected_roll == 18
+    assert roll.revisions[-1].source_effect_id == "countercharm"
+    assert "Countercharm" in roll.notation
+    assert source.state.reaction_available is False
+
+
+def test_2024_bard_level_seven_countercharm_ignores_nonmatching_failed_save() -> None:
+    source, target, setup = _bard7_countercharm_setup()
+
+    roll, succeeded = resolve_saving_throw(
+        target.state,
+        "charisma",
+        20,
+        FixedDiceProvider([1]),
+        SavingThrowContext(effect_tags=frozenset({"poison"})),
+        encounter_roller=target,
+        setup=setup,
+    )
+
+    assert succeeded is False
+    assert roll is not None
+    assert not roll.revisions
+    assert source.state.reaction_available is True
+
+
+def test_2024_bard_level_seven_spell_package_adds_greater_invisibility() -> None:
+    level_seven = canonical_spell_package("bard", 7, "2024", 4)
+
+    assert level_seven is not None
+    assert len(level_seven.spells) == 11
+    assert level_seven.spells[-1].id == "greater-invisibility"
+    assert [item.id for item in level_seven.always_prepared_spells] == [
+        "bless",
+        "guiding-bolt",
+    ]
+
+    hero = build_lyra_silverstring_level(7)
+    greater = next(item for item in hero.defensive_spell_actions if item.id == "greater-invisibility")
+    assert (
+        greater.level,
+        greater.action_cost,
+        greater.range_ft,
+        greater.duration_minutes,
+        greater.target_count,
+        greater.condition_ids,
+        greater.concentration,
+    ) == (4, "action", 5, 1, 1, ["invisible"], True)

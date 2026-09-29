@@ -6,6 +6,7 @@ from app.content.bard_2024_lore_profile_support import (
     bard_level4_asi_audit,
     bard_level5_font_audit,
     bard_level6_magical_discoveries_audit,
+    bard_level7_countercharm_audit,
     lore_bard_level3_audits,
 )
 from app.content.canonical_combat_build_policy import (
@@ -50,10 +51,10 @@ def _scores(level: int) -> tuple[AbilityScores, list, list[AbilityIncrease], Abi
     return base, background, advancement, AbilityScores(**values)
 
 def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Lyra's legal 2024 Lore Bard progression through level 6."""
+    """Compile Lyra's legal 2024 Lore Bard progression through level 7."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6}:
-            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 6.")
+        if level not in {1, 2, 3, 4, 5, 6, 7}:
+            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 7.")
         hero = HERO_BY_CLASS["bard"]
         base, background_increases, advancement_increases, final = _scores(level)
         audits = [
@@ -120,6 +121,8 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
             audits.append(bard_level5_font_audit())
         if level >= 6:
             audits.append(bard_level6_magical_discoveries_audit())
+        if level >= 7:
+            audits.append(bard_level7_countercharm_audit())
         return CharacterBuildProfile(
             id=f"build-lyra-silverstring-l{level}",
             template_id=canonical_template_id("bard", level),
@@ -179,6 +182,10 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                 *(
                     ["D&D Beyond Basic Rules 2024: College of Lore 6 — Magical Discoveries"]
                     if level >= 6 else []
+                ),
+                *(
+                    ["D&D Beyond Basic Rules 2024: Bard 7 — Countercharm"]
+                    if level >= 7 else []
                 ),
             ],
         )

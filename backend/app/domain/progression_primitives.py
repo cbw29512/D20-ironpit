@@ -91,8 +91,13 @@ class SavingThrowProficiencyGrant(BaseModel):
 class FailedSaveRerollGrant(BaseModel):
     source_id: str
     source_name: str
-    resource_id: str
+    resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1)
+    action_cost: Literal["reaction"] | None = None
+    target_mode: Literal["self", "self_or_ally"] = "self"
+    range_ft: int = Field(default=0, ge=0)
+    required_effect_tags: list[str] = Field(default_factory=list)
+    reroll_mode: Literal["original", "advantage", "disadvantage"] = "original"
 
 
 class FailedD20TestOverrideGrant(BaseModel):
