@@ -19,7 +19,6 @@ from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 logger = logging.getLogger(__name__)
 
-
 def resolve_attack(
     sequence: int, round_number: int, attacker: CombatantState, defender: CombatantState,
     attack: WeaponAttack, distance_ft: int, dice: DiceProvider,
