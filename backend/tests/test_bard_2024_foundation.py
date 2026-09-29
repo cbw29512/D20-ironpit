@@ -310,3 +310,57 @@ def test_2024_bard_level_seven_spell_package_adds_greater_invisibility() -> None
         greater.condition_ids,
         greater.concentration,
     ) == (4, "action", 5, 1, 1, ["invisible"], True)
+
+
+
+def test_2024_lore_bard_level_eight_applies_split_asi_and_derived_values() -> None:
+    profile = build_lyra_silverstring_profile(8)
+    hero = build_lyra_silverstring_level(8)
+
+    assert (profile.final_ability_scores.charisma, profile.final_ability_scores.wisdom) == (20, 16)
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [
+        ("charisma", 2),
+        ("charisma", 1),
+        ("wisdom", 1),
+    ]
+    asi = next(
+        item for item in profile.feature_audits
+        if item.feature_id == "ability-score-improvement-8"
+    )
+    assert asi.automated is True
+
+    assert hero.max_hp == 43
+    assert hero.ability_scores.charisma == 20
+    assert hero.ability_scores.wisdom == 16
+    assert hero.saving_throw_bonuses["charisma"] == 8
+    assert hero.skill_bonuses["performance"] == 8
+    assert hero.skill_bonuses["perception"] == 6
+    assert hero.skill_bonuses["insight"] == 6
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["bardic-inspiration"] == 5
+    assert resources["spell-slot-1"] == 4
+    assert resources["spell-slot-2"] == 3
+    assert resources["spell-slot-3"] == 3
+    assert resources["spell-slot-4"] == 2
+
+    shatter = next(item for item in hero.spell_save_actions if item.id == "shatter")
+    assert shatter.dc == 16
+    guiding_bolt = next(item for item in hero.spell_attack_actions if item.id == "guiding-bolt")
+    assert guiding_bolt.attack_bonus == 8
+    assert hero.healing_actions[0].healing_bonus == 5
+    assert hero.healing_actions[1].healing_bonus == 5
+
+
+def test_2024_bard_level_eight_spell_package_adds_arena_neutral_tongues() -> None:
+    level_eight = canonical_spell_package("bard", 8, "2024", 5)
+
+    assert level_eight is not None
+    assert len(level_eight.spells) == 12
+    assert level_eight.spells[-1].id == "tongues"
+    assert level_eight.spells[-1].role == "utility"
+    assert level_eight.spells[-1].required_capabilities == ["arena-out-of-scope"]
+    assert [item.id for item in level_eight.always_prepared_spells] == [
+        "bless",
+        "guiding-bolt",
+    ]
