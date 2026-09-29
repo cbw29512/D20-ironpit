@@ -571,3 +571,53 @@ def test_2024_lore_bard_level_twelve_applies_wisdom_asi() -> None:
     assert level_twelve is not None
     assert len(level_twelve.cantrips) == 4
     assert len(level_twelve.spells) == 16
+
+
+def test_2024_lore_bard_level_thirteen_adds_seventh_level_magical_secret() -> None:
+    profile = build_lyra_silverstring_profile(13)
+    hero = build_lyra_silverstring_level(13)
+
+    assert hero.max_hp == 68
+    assert hero.ability_scores.wisdom == 18
+    assert hero.ability_scores.charisma == 20
+    assert hero.skill_bonuses["perception"] == 14
+    assert hero.skill_bonuses["performance"] == 15
+
+    spell_audit = next(
+        item for item in profile.feature_audits
+        if item.feature_id == "bard-combat-spells-7"
+    )
+    assert spell_audit.automated is True
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["adrenaline-rush"] == 5
+    assert resources["spell-slot-6"] == 1
+    assert resources["spell-slot-7"] == 1
+
+    finger = next(item for item in hero.spell_save_actions if item.id == "finger-of-death")
+    assert finger.dc == 18
+    assert (
+        finger.level,
+        finger.action_cost,
+        finger.range_ft,
+        finger.save_ability,
+        finger.damage_dice_count,
+        finger.damage_dice_size,
+        finger.damage_bonus,
+        finger.damage_type,
+        finger.success_damage,
+    ) == (7, "action", 60, "constitution", 7, 8, 30, "necrotic", "half")
+
+
+def test_2024_bard_level_thirteen_spell_package_adds_finger_of_death() -> None:
+    level_thirteen = canonical_spell_package("bard", 13, "2024", 7)
+
+    assert level_thirteen is not None
+    assert len(level_thirteen.cantrips) == 4
+    assert len(level_thirteen.spells) == 17
+    assert level_thirteen.spells[-1].id == "finger-of-death"
+    assert level_thirteen.spells[-1].spell_level == 7
+    assert level_thirteen.spells[-1].required_capabilities == [
+        "save-damage",
+        "magical-secrets",
+    ]
