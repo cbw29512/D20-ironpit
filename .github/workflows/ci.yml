@@ -354,6 +354,7 @@ jobs:
           node frontend/browser-resource-conversion.test.cjs
           node frontend/browser-spell-save-disadvantage.test.cjs
           node frontend/browser-d20-bonus-dice.test.cjs
+          node frontend/browser-failed-save-reroll.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs
