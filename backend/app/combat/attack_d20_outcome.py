@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import logging
 
+from app.combat.d20_bonus_dice import apply_resource_backed_d20_bonus_if_useful
 from app.combat.d20_outcome_adjustments import apply_resource_backed_d20_outcome_adjustment_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
@@ -51,6 +52,19 @@ def resolve_attack_d20_outcome(
         )
         if parry_used:
             target_ac += defender.template.parry_reaction.ac_bonus
+
+        attack_bonus_rules = [
+            rule
+            for rule in attacker.template.progression_features.resource_backed_d20_bonus_dice
+            if "attack" in rule.test_kinds
+        ]
+        if not hit and original_natural not in {1, 20} and attack_bonus_rules:
+            if dice is None:
+                raise ValueError("Resource-backed attack bonus die requires dice context.")
+            attack_roll, _ = apply_resource_backed_d20_bonus_if_useful(
+                attacker, "attack", attack_roll, target_ac, dice,
+            )
+            hit = attack_roll.total >= target_ac
 
         adjustment_id = None
         adjustment_name = None

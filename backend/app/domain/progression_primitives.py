@@ -118,6 +118,7 @@ class ResourceBackedD20BonusDie(BaseModel):
     dice_count: int = Field(default=1, ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
     test_kinds: list[Literal["attack", "saving_throw", "ability_check"]] = Field(min_length=1)
+    consume_only_on_success: bool = False
 
 
 class DeferredSaveEffect(BaseModel):

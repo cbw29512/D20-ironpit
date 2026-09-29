@@ -236,3 +236,76 @@ require("./browser-fighter-progression.test.cjs");
   assert.match(resolved.roll.notation, /Peerless Skill/);
   assert.equal(checking.state.resources["bardic-inspiration"], 4);
 }
+
+
+{
+  const checking = member("resource-backed-success-only-check");
+  checking.state.template.resource_backed_d20_bonus_dice = [{
+    source_id: "peerless-skill-2024",
+    source_name: "Peerless Skill",
+    resource_id: "bardic-inspiration",
+    resource_cost: 1,
+    dice_count: 1,
+    dice_size: 10,
+    test_kinds: ["ability_check"],
+    consume_only_on_success: true,
+  }];
+  checking.state.resources["bardic-inspiration"] = 5;
+  window.IRON_PIT_DICE = { roll: () => 2, rollMany: (count) => Array.from({ length: count }, () => 2) };
+  const original = { notation: "1d20+5", rolls: [5], selected_roll: 5, modifier: 5, total: 10, mode: "normal", revisions: [] };
+  const resolved = window.IRON_PIT_BROWSER_ABILITY_CHECKS.resolve(checking.state, "dexterity", original, 18);
+  assert.equal(resolved.succeeded, false);
+  assert.equal(resolved.roll.total, 12);
+  assert.match(resolved.roll.notation, /Peerless Skill/);
+  assert.equal(checking.state.resources["bardic-inspiration"], 5, "2024 Peerless Skill refunds a still-failed test");
+}
+
+{
+  const attacker = member("resource-backed-attack-success");
+  const defender = member("resource-backed-attack-target");
+  attacker.state.template.resource_backed_d20_bonus_dice = [{
+    source_id: "peerless-skill-2024",
+    source_name: "Peerless Skill",
+    resource_id: "bardic-inspiration",
+    resource_cost: 1,
+    dice_count: 1,
+    dice_size: 10,
+    test_kinds: ["attack"],
+    consume_only_on_success: true,
+  }];
+  attacker.state.resources["bardic-inspiration"] = 5;
+  window.IRON_PIT_DICE = { roll: () => 2, rollMany: (count) => Array.from({ length: count }, () => 2) };
+  const original = { notation: "1d20+5", rolls: [5], selected_roll: 5, modifier: 5, total: 10, mode: "normal", revisions: [] };
+  const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME.resolveD20(
+    attacker.state, defender.state, {}, original, 12,
+  );
+  assert.equal(outcome.hit, true);
+  assert.equal(outcome.roll.total, 12);
+  assert.match(outcome.roll.notation, /Peerless Skill/);
+  assert.equal(attacker.state.resources["bardic-inspiration"], 4);
+}
+
+{
+  const attacker = member("resource-backed-attack-failure");
+  const defender = member("resource-backed-attack-target-failure");
+  attacker.state.template.resource_backed_d20_bonus_dice = [{
+    source_id: "peerless-skill-2024",
+    source_name: "Peerless Skill",
+    resource_id: "bardic-inspiration",
+    resource_cost: 1,
+    dice_count: 1,
+    dice_size: 10,
+    test_kinds: ["attack"],
+    consume_only_on_success: true,
+  }];
+  attacker.state.resources["bardic-inspiration"] = 5;
+  window.IRON_PIT_DICE = { roll: () => 3, rollMany: (count) => Array.from({ length: count }, () => 3) };
+  const original = { notation: "1d20+5", rolls: [2], selected_roll: 2, modifier: 5, total: 7, mode: "normal", revisions: [] };
+  const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME.resolveD20(
+    attacker.state, defender.state, {}, original, 15,
+  );
+  assert.equal(outcome.hit, false);
+  assert.equal(outcome.roll.total, 10);
+  assert.match(outcome.roll.notation, /Peerless Skill/);
+  assert.equal(attacker.state.resources["bardic-inspiration"], 5, "2024 Peerless Skill keeps Inspiration on a miss");
+}

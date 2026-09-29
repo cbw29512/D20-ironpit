@@ -52,11 +52,23 @@
         defenderState, attack, attackRoll, initialHit, baseTargetAc,
       ) || { hit: initialHit, used: false };
       const targetAc = baseTargetAc + (parry.used ? defenderState.template.parry_reaction.ac_bonus : 0);
+      let preAdjustmentRoll = attackRoll;
+      let preAdjustmentHit = parry.hit;
+      const attackBonusRules = (attackerState.template.resource_backed_d20_bonus_dice || [])
+        .filter((rule) => (rule.test_kinds || []).includes("attack"));
+      if (!preAdjustmentHit && ![1, 20].includes(originalNatural) && attackBonusRules.length) {
+        const bonus = window.IRON_PIT_BROWSER_D20_BONUS_DICE;
+        if (!bonus) throw new Error("Resource-backed d20 bonus runtime is not loaded for attacks.");
+        preAdjustmentRoll = bonus.applyResourceBackedIfUseful(
+          attackerState, "attack", preAdjustmentRoll, targetAc,
+        ).roll;
+        preAdjustmentHit = preAdjustmentRoll.total >= targetAc;
+      }
       const adjustment = attackerMember && setup
         ? window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS?.applyIfUseful(
-            attackerMember, setup, "attack", attackRoll, targetAc, originalNatural,
-          ) || { roll: attackRoll, featureId: null, sourceName: null }
-        : { roll: attackRoll, featureId: null, sourceName: null };
+            attackerMember, setup, "attack", preAdjustmentRoll, targetAc, originalNatural,
+          ) || { roll: preAdjustmentRoll, featureId: null, sourceName: null }
+        : { roll: preAdjustmentRoll, featureId: null, sourceName: null };
       attackRoll = adjustment.roll;
       const adjustedNatural = attackRoll.selected_roll;
       const adjustedHit = adjustedNatural !== 1

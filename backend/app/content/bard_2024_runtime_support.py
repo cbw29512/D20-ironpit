@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.bard_2024_font_of_inspiration import build_font_of_inspiration_2024
+from app.content.bard_2024_inspiration import build_peerless_skill_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.bard_2024_spells import build_greater_invisibility_2024, build_shatter_2024
 from app.content.cleric_life_domain import DISPEL_MAGIC
@@ -73,6 +74,9 @@ def bard_effect_removals(level: int):
 def bard_progression_features(level: int) -> ProgressionCombatFeatures:
     try:
         return ProgressionCombatFeatures(
+            resource_backed_d20_bonus_dice=(
+                [build_peerless_skill_2024(level)] if level >= 14 else []
+            ),
             failed_save_reroll_grants=(
                 [
                     FailedSaveRerollGrant(

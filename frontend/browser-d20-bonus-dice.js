@@ -148,7 +148,6 @@
     const grant = useful[0];
     return { roll: consume(state, grant, roll), sourceName: grant.source_name };
   }
-
   function applyResourceBackedIfUseful(state, testKind, roll, targetTotal) {
     try {
       if (roll.total >= targetTotal) return { roll, sourceName: null };
@@ -164,14 +163,17 @@
         || a.source_id.localeCompare(b.source_id));
       const rule = rules[0];
       const bonusRolls = Array.from({ length: rule.dice_count || 1 }, () => D().roll(rule.dice_size));
-      resources[rule.resource_id] -= rule.resource_cost || 1;
+      const revisedTotal = roll.total + bonusRolls.reduce((sum, value) => sum + value, 0);
+      if (!rule.consume_only_on_success || revisedTotal >= targetTotal) {
+        resources[rule.resource_id] -= rule.resource_cost || 1;
+      }
       return {
         roll: {
           ...roll,
           notation: roll.notation + " + " + (rule.dice_count || 1) + "d" + rule.dice_size
             + " [" + rule.source_name + "]",
           rolls: [...(roll.rolls || []), ...bonusRolls],
-          total: roll.total + bonusRolls.reduce((sum, value) => sum + value, 0),
+          total: revisedTotal,
         },
         sourceName: rule.source_name,
       };
@@ -180,7 +182,6 @@
       throw error;
     }
   }
-
   function expire(state, round) {
     try {
       const active = state.active_d20_bonus_dice || [];
@@ -192,7 +193,6 @@
       throw error;
     }
   }
-
   window.IRON_PIT_BROWSER_D20_BONUS_DICE = {
     applyIfUseful, applyResourceBackedIfUseful, choose, consume, eligible, expire, resolveGrant, targetAllowed,
   };
