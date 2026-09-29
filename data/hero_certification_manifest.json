@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 87
+    "public_ready": 88
   },
   "heroes": [
     {
@@ -1583,24 +1583,66 @@
             "id": "college-lore",
             "name": "College of Lore"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "lyra-silverstring-l8",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Bard, Acolyte, Orc, Bardic Inspiration, Healing Word, Cure Wounds, Equipment; College of Lore, Magical Discoveries"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:lyra-dagger",
+            "countercharm",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:greater-invisibility",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "healing-action:mass-healing-word",
+            "resource-conversion:font-of-inspiration-slot-1",
+            "resource-conversion:font-of-inspiration-slot-2",
+            "resource-conversion:font-of-inspiration-slot-3",
+            "resource-conversion:font-of-inspiration-slot-4",
+            "resource:adrenaline-rush",
+            "resource:bardic-inspiration",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:shatter",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:lyra-dagger",
+            "countercharm",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:greater-invisibility",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "healing-action:mass-healing-word",
+            "resource-conversion:font-of-inspiration-slot-1",
+            "resource-conversion:font-of-inspiration-slot-2",
+            "resource-conversion:font-of-inspiration-slot-3",
+            "resource-conversion:font-of-inspiration-slot-4",
+            "resource:adrenaline-rush",
+            "resource:bardic-inspiration",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:shatter",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 9,
