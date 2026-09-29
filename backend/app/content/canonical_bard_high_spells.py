@@ -47,4 +47,8 @@ BARD_HIGH_LEVEL_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         "hp-threshold-instant-death", "fallback-damage", "magical-secrets",
         spell_level=9, min_character_level=17,
     ),
+    _spell(
+        "teleport", "Teleport", "utility", "arena-out-of-scope",
+        spell_level=7, min_character_level=18,
+    ),
 )
