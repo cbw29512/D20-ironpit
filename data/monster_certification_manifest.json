@@ -997,7 +997,8 @@
       "monster_name": "Animated Armor",
       "srd_source_page": 259,
       "srd_source_reference": "SRD 5.2.1 p. 259",
-      "runtime_template_id": "srd-animated-armor",      "detected_combat_mechanics": [
+      "runtime_template_id": "srd-animated-armor",
+      "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack"
@@ -1996,7 +1997,8 @@
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-bugbear-warrior",
-      "monster_name": "Bugbear Warrior",      "srd_source_page": 272,
+      "monster_name": "Bugbear Warrior",
+      "srd_source_page": 272,
       "srd_source_reference": "SRD 5.2.1 p. 272",
       "runtime_template_id": null,
       "detected_combat_mechanics": [
@@ -2995,7 +2997,8 @@
         "spellcasting",
         "trait"
       ],
-      "supported_mechanics": [        "attack-roll",
+      "supported_mechanics": [
+        "attack-roll",
         "damage-or-condition-defense",
         "saving-throw-action"
       ],
@@ -3994,7 +3997,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "reaction"
-      ]    },
+      ]
+    },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-owl",
       "monster_name": "Giant Owl",
@@ -4993,7 +4997,8 @@
       "python_certification_status": "certified",
       "browser_certification_status": "certified",
       "generated_static_status": "current",
-      "public_ready_status": "ready",      "blockers": []
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hippogriff",
@@ -5992,7 +5997,8 @@
       "srd_source_reference": "SRD 5.2.1 p. 308",
       "runtime_template_id": "srd-merfolk-skirmisher",
       "detected_combat_mechanics": [
-        "attack-roll",        "trait",
+        "attack-roll",
+        "trait",
         "unsupported-action-rider"
       ],
       "supported_mechanics": [
@@ -6991,7 +6997,8 @@
     {
       "monster_id": "srd-5.2.1-2024-monster-pteranodon",
       "monster_name": "Pteranodon",
-      "srd_source_page": 359,      "srd_source_reference": "SRD 5.2.1 p. 359",
+      "srd_source_page": 359,
+      "srd_source_reference": "SRD 5.2.1 p. 359",
       "runtime_template_id": "srd-pteranodon",
       "detected_combat_mechanics": [
         "attack-roll",
@@ -7990,7 +7997,8 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense"
-      ],      "unsupported_mechanics": [
+      ],
+      "unsupported_mechanics": [
         "limited-use",
         "reaction",
         "trait"
@@ -8989,7 +8997,8 @@
         "condition-or-control",
         "damage-or-condition-defense",
         "limited-use",
-        "multiattack",        "save-or-complex-action",
+        "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9988,7 +9997,8 @@
       "generated_static_status": "current",
       "public_ready_status": "ready",
       "blockers": []
-    },    {
+    },
+    {
       "monster_id": "srd-5.2.1-2024-monster-crocodile",
       "monster_name": "Crocodile",
       "srd_source_page": 347,
