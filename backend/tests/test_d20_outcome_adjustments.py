@@ -9,7 +9,7 @@ from app.content.monsters import build_commoner
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.event_support import DiceRoll
-from app.domain.progression_primitives import ResourceBackedD20OutcomeAdjustment
+from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
 
 
 def _member(
