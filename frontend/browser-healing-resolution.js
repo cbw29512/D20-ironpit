@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const P = () => window.IRON_PIT_BROWSER_HEALING_POLICY;
+  const R = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
 
   function spendResource(healer, action) {
     if (!action.resourceId) return null;
@@ -45,6 +46,24 @@
     };
   }
 
+  function applyRiders(target, action) {
+    const removed = [];
+    for (const id of action.removableConditions || []) {
+      if ((target.state.active_effect_ids || []).includes(id)) {
+        R().removeCondition(target, id);
+        removed.push(id);
+      }
+    }
+    if (action.proneReactionStand
+      && (target.state.active_effect_ids || []).includes("prone")
+      && target.state.reaction_available) {
+      E().spend(target.state, "reaction");
+      R().removeCondition(target, "prone");
+      removed.push("prone");
+    }
+    return removed;
+  }
+
   function resolve(sequence, round, healer, target, action, turnKey, restore) {
     if (!P().targetAllowed(healer, target, action)
       || !P().resourceAvailable(healer, action, turnKey)) {
@@ -81,9 +100,13 @@
       modifier = action.healingBonus || 0;
     }
 
+    const removed = applyRiders(target, action);
+    const riderText = removed.length
+      ? " Conditions ended: " + removed.map((id) => id.replaceAll("_", " ")).join(", ") + "."
+      : "";
     const description = gate.featureRoll
-      ? `${healer.state.template.name} uses ${action.name} and rolls ${gate.featureRoll.total} on d100; the intervention succeeds. ${target.state.template.name} is restored for ${healed} HP.`
-      : `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.`;
+      ? `${healer.state.template.name} uses ${action.name} and rolls ${gate.featureRoll.total} on d100; the intervention succeeds. ${target.state.template.name} is restored for ${healed} HP.${riderText}`
+      : `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.${riderText}`;
 
     return {
       sequence, round_number: round, event_type: "healing",
@@ -96,9 +119,10 @@
       death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead,
       feature_id: action.id, resource_remaining: remaining,
+      removed_condition_ids: removed,
       animation: action.animation || "healing", description,
     };
   }
 
-  window.IRON_PIT_BROWSER_HEALING_RESOLUTION = { resolve };
+  window.IRON_PIT_BROWSER_HEALING_RESOLUTION = { applyRiders, resolve };
 })();
