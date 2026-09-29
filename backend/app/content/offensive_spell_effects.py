@@ -185,3 +185,27 @@ def build_sunburst_2024(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build 2024 Sunburst.")
         raise
+
+
+def build_cone_of_cold_2024(save_dc: int) -> SpellSaveAction:
+    """2024 Cone of Cold using the shared self-origin cone save-damage primitive."""
+    try:
+        return SpellSaveAction(
+            id="cone-of-cold",
+            name="Cone of Cold",
+            level=5,
+            action_cost="action",
+            range_ft=60,
+            area=AreaTargeting(shape="cone", origin="self", length_ft=60),
+            save_ability="constitution",
+            dc=save_dc,
+            damage_dice_count=8,
+            damage_dice_size=8,
+            damage_type="cold",
+            success_damage="half",
+            upcast_dice_per_level=1,
+            animation="spell-save",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Cone of Cold.")
+        raise
