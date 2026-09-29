@@ -42,6 +42,7 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
             max_hp=max_hp,
             speed_ft=30,
             skill_bonuses=(
+                ("athletics", 0),
                 ("acrobatics", acrobatics),
                 ("perception", 4),
                 ("performance", 5),
