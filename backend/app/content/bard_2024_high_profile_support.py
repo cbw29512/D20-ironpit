@@ -76,3 +76,18 @@ def bard_level17_spells_audit() -> FeatureAudit:
             "otherwise it takes 12d12 Psychic damage through normal damage defenses."
         ),
     )
+
+
+def bard_level18_superior_inspiration_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="superior-inspiration",
+        feature_name="Superior Inspiration",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 18",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "On Initiative, if Bardic Inspiration has fewer than two uses remaining, "
+            "the universal initiative-refill primitive restores it to two."
+        ),
+    )
