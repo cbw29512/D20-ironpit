@@ -7,7 +7,13 @@ from app.content.bard_2024_inspiration import build_peerless_skill_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.bard_2024_spells import build_greater_invisibility_2024, build_shatter_2024
 from app.content.cleric_life_domain import DISPEL_MAGIC
-from app.content.offensive_spell_effects import build_cone_of_cold_2024, build_disintegrate_2024, build_finger_of_death_2024, build_fireball_2024, build_guiding_bolt, build_sunburst_2024
+from app.content.bard_2024_high_damage_spells import (
+    build_cone_of_cold_2024,
+    build_disintegrate_2024,
+    build_finger_of_death_2024,
+    build_sunburst_2024,
+)
+from app.content.offensive_spell_effects import build_fireball_2024, build_guiding_bolt
 from app.content.spell_effects import BLESS
 from app.content.threshold_spell_effects import build_power_word_kill_2024
 from app.domain.combatants import ResourceDefinition
