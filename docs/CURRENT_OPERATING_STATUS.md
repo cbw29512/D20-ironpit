@@ -47,6 +47,8 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 Active implementation lane after merge: **2024 Lore Bard level 19 onward**.
 
+Bard 18 Superior Inspiration is edition-specific: 2024 restores Bardic Inspiration to two on Initiative when below two; do not substitute the 2014 zero-use-to-one rule.
+
 For each Bard tranche:
 - start from the completed 2014 Lore Bard progression and reuse universal mechanics where behavior is equivalent;
 - verify every 2024 class/subclass feature against 2024 rules before carrying behavior forward;
