@@ -126,6 +126,15 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             min_character_level=6,
             always_prepared_from_level=6,
         ),
+        _spell(
+            "greater-invisibility",
+            "Greater Invisibility",
+            "buff",
+            "condition",
+            "concentration",
+            spell_level=4,
+            min_character_level=7,
+        ),
     ),
     "cleric": CLERIC_SPELLS,
     "druid": (
