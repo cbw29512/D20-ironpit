@@ -41,27 +41,48 @@
     return { events: [], sequence, claimed: false };
   }
 
-  function resolveD20(attackerState, defenderState, attack, attackRoll, baseTargetAc) {
+  function resolveD20(attackerState, defenderState, attack, attackRoll, baseTargetAc, context = {}) {
     try {
       const originalNatural = attackRoll.selected_roll;
       const initialHit = originalNatural !== 1 && (originalNatural === 20 || attackRoll.total >= baseTargetAc);
       const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(
         defenderState, attack, attackRoll, initialHit, baseTargetAc,
       ) || { hit: initialHit, used: false };
+      let adjustedRoll = attackRoll;
+      let adjustment = { roll: adjustedRoll, sourceId: null, sourceName: null };
+      if (context.roller && context.setup) {
+        const runtime = window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS;
+        const declared = [...context.setup.heroes, ...context.setup.monsters].some((member) =>
+          (member.state.template.resource_backed_d20_outcome_adjustments || [])
+            .some((grant) => (grant.test_kinds || []).includes("attack")));
+        if (declared && !runtime) throw new Error("D20 outcome adjustment runtime is not loaded for attacks.");
+        adjustment = runtime?.applyIfUseful(
+          context.roller, context.setup, "attack", adjustedRoll,
+          baseTargetAc + (parry.used ? defenderState.template.parry_reaction.ac_bonus : 0),
+          { naturalAttackRoll: originalNatural },
+        ) || adjustment;
+        adjustedRoll = adjustment.roll;
+      }
       const grants = attackerState.template.failed_d20_test_override_grants || [];
       const eligible = grants.some((grant) => (grant.test_kinds || []).includes("attack"));
       if (eligible && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
         throw new Error("Failed-D20 override runtime is not loaded for a declared attack capability.");
       }
       const d20 = window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE?.apply(
-        attackerState, attackRoll, !parry.hit, "attack",
-      ) || { roll: attackRoll, featureId: null, sourceName: null };
+        attackerState,
+        adjustedRoll,
+        originalNatural !== 20 && (originalNatural === 1 || adjustedRoll.total < (
+          baseTargetAc + (parry.used ? defenderState.template.parry_reaction.ac_bonus : 0)
+        )),
+        "attack",
+      ) || { roll: adjustedRoll, featureId: null, sourceName: null };
       const roll = d20.roll, natural = roll.selected_roll;
       const targetAc = baseTargetAc + (parry.used ? defenderState.template.parry_reaction.ac_bonus : 0);
-      const revisedHit = d20.featureId ? (natural === 20 || roll.total >= targetAc) : parry.hit;
+      const adjustedHit = originalNatural !== 1 && (originalNatural === 20 || adjustedRoll.total >= targetAc);
+      const revisedHit = d20.featureId ? (natural === 20 || roll.total >= targetAc) : adjustedHit;
       const miss = window.IRON_PIT_BROWSER_MISS_TO_HIT_OVERRIDE?.apply(attackerState, revisedHit)
         || { hit: revisedHit, featureId: null, sourceName: null };
-      return { roll, natural, targetAc, hit: miss.hit, parry, d20, miss };
+      return { roll, natural, targetAc, hit: miss.hit, parry, adjustment, d20, miss };
     } catch (error) {
       console.error("Browser attack D20 outcome failed", { attacker: attackerState?.template?.name, error });
       throw error;
