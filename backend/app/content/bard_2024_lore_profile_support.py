@@ -76,3 +76,18 @@ def bard_level6_magical_discoveries_audit() -> FeatureAudit:
             "Both bind existing 2024 spell primitives; no new combat resolver is introduced."
         ),
     )
+
+
+def bard_level7_countercharm_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="countercharm",
+        feature_name="Countercharm",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 7",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Uses the universal failed-save reroll primitive: Reaction, self or ally within 30 feet, "
+            "only against effects applying Charmed or Frightened, replacement save with Advantage."
+        ),
+    )
