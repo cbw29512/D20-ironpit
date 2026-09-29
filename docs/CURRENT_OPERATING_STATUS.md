@@ -50,6 +50,8 @@ Active implementation lane after merge: **2024 Lore Bard level 20 onward**.
 Bard 18 Superior Inspiration is edition-specific: 2024 restores Bardic Inspiration to two on Initiative when below two; do not substitute the 2014 zero-use-to-one rule.
 Bard 18's new prepared spell is 2024 Teleport, recorded as arena-out-of-scope rather than approximated.
 
+Bard 19 canonical Epic Boon choice: **Boon of Fate**. The 2024 Bard table recommends Boon of Spell Recall but permits any qualified Epic Boon; Lyra uses Boon of Fate so the build reuses the already-certified universal 2d4 D20 outcome-adjustment mechanic.
+
 For each Bard tranche:
 - start from the completed 2014 Lore Bard progression and reuse universal mechanics where behavior is equivalent;
 - verify every 2024 class/subclass feature against 2024 rules before carrying behavior forward;
