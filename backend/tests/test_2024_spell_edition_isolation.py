@@ -60,6 +60,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "dispel-magic",
         "divine-intervention-inflict-wounds",
         "divine-intervention-mass-cure-wounds",
+        "greater-divine-intervention-wish-power-word-stun",
     }
     surfaced = {
         *spell_attacks,
@@ -72,6 +73,11 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             item.id
             for item in template.saving_throw_actions
             if item.id.startswith("divine-intervention-")
+        ),
+        *(
+            item.id
+            for item in template.hp_threshold_condition_actions
+            if item.id.startswith("greater-divine-intervention-")
         ),
     }
     unknown = sorted(surfaced - known_spell_ids)
@@ -299,4 +305,38 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "necrotic",
             "half",
             "divine-intervention",
+        )
+
+
+    greater_intervention = next(
+        (
+            item for item in template.hp_threshold_condition_actions
+            if item.id == "greater-divine-intervention-wish-power-word-stun"
+        ),
+        None,
+    )
+    if greater_intervention is not None:
+        assert (
+            greater_intervention.action_cost,
+            greater_intervention.range_ft,
+            greater_intervention.max_current_hp,
+            greater_intervention.condition_id,
+            greater_intervention.repeat_save_ability,
+            greater_intervention.repeat_save_timing,
+            greater_intervention.resource_id,
+            greater_intervention.resource_cost,
+            greater_intervention.magical_effect,
+        ) == (
+            "action",
+            60,
+            150,
+            "stunned",
+            "constitution",
+            "target_turn_end",
+            "divine-intervention",
+            1,
+            True,
+        )
+        assert greater_intervention.repeat_save_dc == (
+            8 + 6 + 5
         )
