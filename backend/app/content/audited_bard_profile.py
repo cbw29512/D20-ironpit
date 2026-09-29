@@ -16,18 +16,21 @@ logger = logging.getLogger(__name__)
 def _feature(
     feature_id: str,
     feature_name: str,
+    category: str,
     *,
     combat_relevant: bool,
     automated: bool,
+    runtime_attack_weapon_id: str | None = None,
     notes: str | None = None,
 ) -> FeatureAudit:
     return FeatureAudit(
         feature_id=feature_id,
         feature_name=feature_name,
         source_reference="D&D Beyond Basic Rules 2024: Bard",
-        category="class",
+        category=category,
         combat_relevant=combat_relevant,
         automated=automated,
+        runtime_attack_weapon_id=runtime_attack_weapon_id,
         notes=notes,
     )
 
@@ -50,14 +53,40 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
         hero = HERO_BY_CLASS["bard"]
         base, background_increases, final = _scores()
         audits = [
-            _feature("bardic-inspiration", "Bardic Inspiration", combat_relevant=True, automated=True),
-            _feature("spellcasting", "Spellcasting", combat_relevant=True, automated=True),
+            _feature("bardic-inspiration", "Bardic Inspiration", "class", combat_relevant=True, automated=True),
+            _feature("spellcasting", "Spellcasting", "class", combat_relevant=True, automated=True),
+            _feature("adrenaline-rush", "Adrenaline Rush", "species", combat_relevant=True, automated=True),
+            _feature("relentless-endurance", "Relentless Endurance", "species", combat_relevant=True, automated=True),
+            _feature(
+                "darkvision",
+                "Darkvision",
+                "species",
+                combat_relevant=False,
+                automated=False,
+                notes="Iron Pit's standard arena assumes sufficient visibility.",
+            ),
             _feature(
                 "magic-initiate-cleric",
                 "Magic Initiate (Cleric)",
+                "feat",
                 combat_relevant=False,
                 automated=False,
-                notes="Canonical feat choices are Light, Thaumaturgy, and Detect Magic; no arena mechanic is added.",
+                notes="Canonical feat choices are Light, Thaumaturgy, and Detect Magic; none alter arena combat.",
+            ),
+            _feature(
+                "dagger",
+                "Dagger",
+                "equipment",
+                combat_relevant=True,
+                automated=True,
+                runtime_attack_weapon_id="dagger",
+            ),
+            _feature(
+                "studded-leather",
+                "Studded Leather Armor",
+                "equipment",
+                combat_relevant=True,
+                automated=True,
             ),
         ]
         if level >= 2:
@@ -65,6 +94,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                 _feature(
                     "expertise",
                     "Expertise",
+                    "class",
                     combat_relevant=True,
                     automated=True,
                     notes="Acrobatics is the combat-relevant Expertise choice for grapple escape checks.",
@@ -72,6 +102,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                 _feature(
                     "jack-of-all-trades",
                     "Jack of All Trades",
+                    "class",
                     combat_relevant=False,
                     automated=True,
                     notes="The automated arena uses Lyra's proficient Acrobatics for grapple escape; initiative is not a skill check.",
