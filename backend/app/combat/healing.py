@@ -10,6 +10,7 @@ from app.combat.healing_policy import (
     target_allowed,
 )
 from app.combat.healing_resolution_support import (
+    apply_healing_riders,
     resolve_healing_amount,
     resolve_percentile_healing_gate,
     spend_healing_resource,
@@ -51,14 +52,20 @@ def resolve_healing(
 
     hp_before = target.state.current_hp
     rolls, roll_total, healed, notation, modifier = resolve_healing_amount(healer, target, action, dice)
+    removed = apply_healing_riders(target, action)
+    rider_text = (
+        " Conditions ended: " + ", ".join(item.replace("_", " ").title() for item in removed) + "."
+        if removed else ""
+    )
     description = (
         f"{healer.state.template.name} uses {action.name} on {target.state.template.name} "
-        f"and restores {healed} HP."
+        f"and restores {healed} HP." + rider_text
     )
     if feature_roll is not None:
         description = (
             f"{healer.state.template.name} uses {action.name} and rolls {feature_roll.total} on d100; "
             f"the intervention succeeds. {target.state.template.name} is restored for {healed} HP."
+            + rider_text
         )
 
     return BattleEvent(
@@ -83,6 +90,7 @@ def resolve_healing(
         is_stable=target.state.is_stable,
         is_dead=target.state.is_dead,
         feature_id=action.id,
+        removed_condition_ids=removed,
         resource_remaining=remaining,
         animation=action.animation,
         description=description,
