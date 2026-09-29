@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 79
+    "public_ready": 80
   },
   "heroes": [
     {
@@ -3265,24 +3265,116 @@
             "id": "life-domain",
             "name": "Life Domain"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "seraphine-dawnshield-l20",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Cleric level 20, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Life Domain, Aid, Lesser Restoration, Disciple of Life, Ability Score Improvement, Mending, Inflict Wounds, Sear Undead, Mass Healing Word, Revivify, Dispel Magic, Blessed Healer, Blessed Strikes, Aura of Life, Death Ward, Prayer of Healing, Guardian of Faith, Ability Score Improvement, Greater Restoration, Mass Cure Wounds, Flame Strike, Insect Plague, Divine Intervention, Contagion, Spare the Dying, Heal and sixth-level combat upcasts, seventh-level combat upcasts, Improved Blessed Strikes, eighth-level combat upcasts, Supreme Healing and ninth-level combat upcasts, Boon of Fate, Greater Divine Intervention, Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:seraphine-mace",
+            "blessed-healer",
+            "boon-of-fate",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:shield-of-faith",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:divine-intervention-mass-cure-wounds",
+            "healing-action:healing-word",
+            "healing-action:mass-cure-wounds",
+            "healing-action:mass-cure-wounds-l6",
+            "healing-action:mass-cure-wounds-l7",
+            "healing-action:mass-cure-wounds-l8",
+            "healing-action:mass-cure-wounds-l9",
+            "healing-action:mass-healing-word",
+            "improved-blessed-strikes",
+            "initiative-resource-refill:boon-of-fate",
+            "resource:adrenaline-rush",
+            "resource:boon-of-fate",
+            "resource:channel-divinity",
+            "resource:divine-intervention",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:spell-slot-6",
+            "resource:spell-slot-7",
+            "resource:spell-slot-8",
+            "resource:spell-slot-9",
+            "saving-throw-action:divine-intervention-inflict-wounds",
+            "saving-throw-action:greater-divine-intervention-wish-fireball",
+            "sear-undead",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:inflict-wounds",
+            "spell-save-action:inflict-wounds-l5",
+            "spell-save-action:inflict-wounds-l6",
+            "spell-save-action:inflict-wounds-l7",
+            "spell-save-action:inflict-wounds-l8",
+            "spell-save-action:inflict-wounds-l9",
+            "spell-save-action:sacred-flame",
+            "supreme-healing",
+            "trait:adrenaline-rush",
+            "trait:life-domain",
+            "trait:relentless-endurance"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:seraphine-mace",
+            "blessed-healer",
+            "boon-of-fate",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:shield-of-faith",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:divine-intervention-mass-cure-wounds",
+            "healing-action:healing-word",
+            "healing-action:mass-cure-wounds",
+            "healing-action:mass-cure-wounds-l6",
+            "healing-action:mass-cure-wounds-l7",
+            "healing-action:mass-cure-wounds-l8",
+            "healing-action:mass-cure-wounds-l9",
+            "healing-action:mass-healing-word",
+            "improved-blessed-strikes",
+            "initiative-resource-refill:boon-of-fate",
+            "resource:adrenaline-rush",
+            "resource:boon-of-fate",
+            "resource:channel-divinity",
+            "resource:divine-intervention",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:spell-slot-6",
+            "resource:spell-slot-7",
+            "resource:spell-slot-8",
+            "resource:spell-slot-9",
+            "saving-throw-action:divine-intervention-inflict-wounds",
+            "saving-throw-action:greater-divine-intervention-wish-fireball",
+            "sear-undead",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:inflict-wounds",
+            "spell-save-action:inflict-wounds-l5",
+            "spell-save-action:inflict-wounds-l6",
+            "spell-save-action:inflict-wounds-l7",
+            "spell-save-action:inflict-wounds-l8",
+            "spell-save-action:inflict-wounds-l9",
+            "spell-save-action:sacred-flame",
+            "supreme-healing",
+            "trait:adrenaline-rush",
+            "trait:life-domain",
+            "trait:relentless-endurance"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         }
       ]
     },
@@ -3902,8 +3994,7 @@
             "resource:adrenaline-rush",
             "resource:relentless-endurance",
             "resource:second-wind",
-            "trait:adrenaline-rush",
-            "trait:relentless-endurance",
+            "trait:adrenaline-rush",            "trait:relentless-endurance",
             "trait:savage-attacker"
           ],
           "unsupported_mechanics": [],
@@ -3994,7 +4085,8 @@
             "expanded-critical-range",
             "initiative-advantage",
             "multiattack-or-extra-attack",
-            "post-critical-movement",            "resource:action-surge",
+            "post-critical-movement",
+            "resource:action-surge",
             "resource:adrenaline-rush",
             "resource:relentless-endurance",
             "resource:second-wind",
@@ -4901,8 +4993,7 @@
             "resource:boon-combat-prowess",
             "resource:indomitable",
             "resource:relentless-endurance",
-            "resource:second-wind",
-            "start-turn-resource-refill:boon-combat-prowess",
+            "resource:second-wind",            "start-turn-resource-refill:boon-combat-prowess",
             "studied-attacks",
             "tactical-master",
             "tactical-shift",
@@ -4993,7 +5084,8 @@
           ],
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",          "public_ready_status": "blocked",
+          "generated_static_status": "not-generated",
+          "public_ready_status": "blocked",
           "blockers": [
             "hero-level-not-certified",
             "combat-feature-coverage-not-certified"
@@ -5900,8 +5992,7 @@
           "blockers": [
             "hero-level-not-certified",
             "combat-feature-coverage-not-certified"
-          ]
-        },
+          ]        },
         {
           "level": 19,
           "subclass": {
@@ -5992,7 +6083,8 @@
           ],
           "expected_combat_features": [],
           "supported_mechanics": [],
-          "unsupported_mechanics": [            "hero-level-not-certified",
+          "unsupported_mechanics": [
+            "hero-level-not-certified",
             "combat-feature-coverage-not-certified"
           ],
           "python_certification_status": "blocked",
@@ -6899,8 +6991,7 @@
             "id": "thief",
             "name": "Thief"
           },
-          "runtime_template_id": "mara-quickstep-l11",
-          "source_references": [
+          "runtime_template_id": "mara-quickstep-l11",          "source_references": [
             "D&D Beyond Basic Rules 2024: Rogue 11, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
           "expected_combat_features": [
@@ -6991,7 +7082,8 @@
           "public_ready_status": "ready",
           "blockers": []
         },
-        {          "level": 13,
+        {
+          "level": 13,
           "subclass": {
             "id": "thief",
             "name": "Thief"
@@ -7898,8 +7990,7 @@
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
           "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
+          "public_ready_status": "blocked",          "blockers": [
             "hero-level-not-certified",
             "combat-feature-coverage-not-certified"
           ]
@@ -7990,7 +8081,8 @@
           },
           "runtime_template_id": null,
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"          ],
+            "SRD 5.2.1 / 2024 Free Rules"
+          ],
           "expected_combat_features": [],
           "supported_mechanics": [],
           "unsupported_mechanics": [
@@ -8897,8 +8989,7 @@
           "expected_combat_features": [],
           "supported_mechanics": [],
           "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+            "hero-level-not-certified",            "combat-feature-coverage-not-certified"
           ],
           "python_certification_status": "blocked",
           "browser_certification_status": "blocked",
