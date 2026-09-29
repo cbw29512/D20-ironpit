@@ -638,7 +638,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
         if template.initiative_resource_refill_grants:
             row["initiative_resource_refill_grants"] = [
-                item.model_dump() for item in template.initiative_resource_refill_grants
+                item.model_dump(exclude_none=True) for item in template.initiative_resource_refill_grants
             ]
         if template.resource_conversion_actions:
             row["resource_conversion_actions"] = [
