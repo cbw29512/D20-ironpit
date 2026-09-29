@@ -5,6 +5,7 @@ import logging
 from app.content.bard_2024_lore_profile_support import (
     bard_level4_asi_audit,
     bard_level5_font_audit,
+    bard_level6_magical_discoveries_audit,
     lore_bard_level3_audits,
 )
 from app.content.canonical_combat_build_policy import (
@@ -49,10 +50,10 @@ def _scores(level: int) -> tuple[AbilityScores, list, list[AbilityIncrease], Abi
     return base, background, advancement, AbilityScores(**values)
 
 def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Lyra's legal 2024 Lore Bard progression through level 5."""
+    """Compile Lyra's legal 2024 Lore Bard progression through level 6."""
     try:
-        if level not in {1, 2, 3, 4, 5}:
-            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 5.")
+        if level not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 6.")
         hero = HERO_BY_CLASS["bard"]
         base, background_increases, advancement_increases, final = _scores(level)
         audits = [
@@ -117,6 +118,8 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
             audits.append(bard_level4_asi_audit())
         if level >= 5:
             audits.append(bard_level5_font_audit())
+        if level >= 6:
+            audits.append(bard_level6_magical_discoveries_audit())
         return CharacterBuildProfile(
             id=f"build-lyra-silverstring-l{level}",
             template_id=canonical_template_id("bard", level),
@@ -173,19 +176,12 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                     ["D&D Beyond Basic Rules 2024: Bard 5 — Font of Inspiration"]
                     if level >= 5 else []
                 ),
+                *(
+                    ["D&D Beyond Basic Rules 2024: College of Lore 6 — Magical Discoveries"]
+                    if level >= 6 else []
+                ),
             ],
         )
     except Exception:
         logger.exception("Failed to compile 2024 Lyra Silverstring profile at level %s.", level)
         raise
-def build_lyra_silverstring_level1_profile() -> CharacterBuildProfile:
-    return build_lyra_silverstring_profile(1)
-def build_lyra_silverstring_level2_profile() -> CharacterBuildProfile:
-    return build_lyra_silverstring_profile(2)
-def build_lyra_silverstring_level3_profile() -> CharacterBuildProfile:
-    return build_lyra_silverstring_profile(3)
-
-def build_lyra_silverstring_level4_profile() -> CharacterBuildProfile:
-    return build_lyra_silverstring_profile(4)
-def build_lyra_silverstring_level5_profile() -> CharacterBuildProfile:
-    return build_lyra_silverstring_profile(5)

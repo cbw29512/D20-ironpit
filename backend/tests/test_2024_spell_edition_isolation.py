@@ -285,6 +285,11 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         }
 
     if "dispel-magic" in effect_removals:
+        expected_casting_abilities = {
+            "bard": "charisma",
+            "cleric": "wisdom",
+        }
+        assert progression.class_id in expected_casting_abilities
         spell = effect_removals["dispel-magic"]
         assert (
             spell.level,
@@ -293,7 +298,14 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.casting_ability,
             spell.auto_remove_max_level,
             spell.resource_id,
-        ) == (3, "action", 120, "wisdom", 3, "spell-slot-3")
+        ) == (
+            3,
+            "action",
+            120,
+            expected_casting_abilities[progression.class_id],
+            3,
+            "spell-slot-3",
+        )
 
     divine_healing = healing.get("divine-intervention-mass-cure-wounds")
     if divine_healing is not None:

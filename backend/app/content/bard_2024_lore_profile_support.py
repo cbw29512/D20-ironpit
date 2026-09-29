@@ -61,3 +61,18 @@ def bard_level5_font_audit() -> FeatureAudit:
             "spell-slot conversion uses the universal resource-conversion schema."
         ),
     )
+
+
+def bard_level6_magical_discoveries_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="magical-discoveries",
+        feature_name="Magical Discoveries",
+        source_reference="D&D Beyond Basic Rules 2024: College of Lore 6",
+        category="subclass",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Canonical always-prepared choices are Bless and Guiding Bolt. "
+            "Both bind existing 2024 spell primitives; no new combat resolver is introduced."
+        ),
+    )

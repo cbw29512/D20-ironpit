@@ -1,0 +1,40 @@
+from __future__ import annotations
+
+import logging
+
+from app.content.audited_bard_profile import build_lyra_silverstring_profile
+from app.domain.character_builds import CharacterBuildProfile
+
+logger = logging.getLogger(__name__)
+
+
+def _profile(level: int) -> CharacterBuildProfile:
+    try:
+        return build_lyra_silverstring_profile(level)
+    except Exception:
+        logger.exception("Failed to build 2024 Lyra profile export at level %s.", level)
+        raise
+
+
+def build_lyra_silverstring_level1_profile() -> CharacterBuildProfile:
+    return _profile(1)
+
+
+def build_lyra_silverstring_level2_profile() -> CharacterBuildProfile:
+    return _profile(2)
+
+
+def build_lyra_silverstring_level3_profile() -> CharacterBuildProfile:
+    return _profile(3)
+
+
+def build_lyra_silverstring_level4_profile() -> CharacterBuildProfile:
+    return _profile(4)
+
+
+def build_lyra_silverstring_level5_profile() -> CharacterBuildProfile:
+    return _profile(5)
+
+
+def build_lyra_silverstring_level6_profile() -> CharacterBuildProfile:
+    return _profile(6)

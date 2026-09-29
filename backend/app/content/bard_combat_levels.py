@@ -41,7 +41,7 @@ BARD_COMBAT_LEVELS: dict[int, BardCombatLevel] = {
     3: _r(3, 2, 18, 13, 15, 17, 6, 6, _slots(4, 2), add=("bard-combat-spells-2",), source="D&D Beyond Basic Rules 2024: Bard 3"),
     4: _r(4, 2, 23, 13, 15, 19, 6, 7, _slots(4, 3), source="D&D Beyond Basic Rules 2024: Bard 4 Ability Score Improvement (+2 Charisma)"),
     5: _r(5, 3, 28, 13, 15, 19, 8, 9, _slots(4, 3, 2), add=("font-of-inspiration", "bard-combat-spells-3"), source="D&D Beyond Basic Rules 2024: Bard 5 Font of Inspiration"),
-    6: _r(6, 3, 33, 13, 15, 19, 8, 10, _slots(4, 3, 3), source="D&D Beyond Basic Rules 2024: Bard 6"),
+    6: _r(6, 3, 33, 13, 15, 19, 8, 10, _slots(4, 3, 3), add=("magical-discoveries",), source="D&D Beyond Basic Rules 2024: Bard 6; College of Lore 6 Magical Discoveries"),
     7: _r(7, 3, 38, 13, 15, 19, 8, 11, _slots(4, 3, 3, 1), add=("countercharm", "bard-combat-spells-4"), source="D&D Beyond Basic Rules 2024: Bard 7 Countercharm"),
     8: _r(8, 3, 43, 13, 16, 20, 8, 12, _slots(4, 3, 3, 2), source="D&D Beyond Basic Rules 2024: Bard 8 Ability Score Improvement (+1 Charisma, +1 Wisdom)"),
     9: _r(9, 4, 48, 13, 16, 20, 8, 14, _slots(4, 3, 3, 3, 1), add=("bard-combat-spells-5",), ignored=("expertise-2",), source="D&D Beyond Basic Rules 2024: Bard 9"),
