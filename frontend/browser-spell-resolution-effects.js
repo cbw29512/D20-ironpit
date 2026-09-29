@@ -28,6 +28,7 @@
         damageType: spell.damageType, successDamage: spell.successDamage || "none",
         damageComponents: (spell.damageComponents || []).map((item) => ({ ...item })),
         magicalEffect: true, effectTags: [...(spell.effectTags || [])],
+        saveDisadvantageCreatureTypes: [...(spell.saveDisadvantageCreatureTypes || [])],
         area: spell.area || null,
         animation: spell.animation || "spell-save",
       };
