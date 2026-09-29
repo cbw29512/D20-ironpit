@@ -420,3 +420,76 @@ def test_2024_bard_level_nine_spell_package_adds_edition_correct_fifth_level_spe
         "bless",
         "guiding-bolt",
     ]
+
+def test_2024_lore_bard_level_ten_scales_inspiration_and_adds_fireball() -> None:
+    profile = build_lyra_silverstring_profile(10)
+    hero = build_lyra_silverstring_level(10)
+
+    assert hero.max_hp == 53
+    magical_secrets = next(
+        item for item in profile.feature_audits
+        if item.feature_id == "magical-secrets"
+    )
+    assert magical_secrets.automated is True
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["bardic-inspiration"] == 5
+    assert resources["adrenaline-rush"] == 4
+    assert resources["spell-slot-1"] == 4
+    assert resources["spell-slot-2"] == 3
+    assert resources["spell-slot-3"] == 3
+    assert resources["spell-slot-4"] == 3
+    assert resources["spell-slot-5"] == 2
+
+    inspiration = hero.d20_bonus_die_actions[0]
+    assert (inspiration.id, inspiration.dice_count, inspiration.dice_size) == (
+        "bardic-inspiration",
+        1,
+        10,
+    )
+    cutting_words = hero.reaction_roll_penalty_actions[0]
+    assert (cutting_words.id, cutting_words.dice_count, cutting_words.dice_size) == (
+        "cutting-words",
+        1,
+        10,
+    )
+
+    fireball = next(item for item in hero.spell_save_actions if item.id == "fireball")
+    assert fireball.dc == 17
+    assert fireball.level == 3
+    assert fireball.action_cost == "action"
+    assert fireball.range_ft == 150
+    assert fireball.area is not None
+    assert (
+        fireball.area.shape,
+        fireball.area.origin,
+        fireball.area.radius_ft,
+    ) == ("radius", "point", 20)
+    assert fireball.save_ability == "dexterity"
+    assert (
+        fireball.damage_dice_count,
+        fireball.damage_dice_size,
+        fireball.damage_type,
+        fireball.success_damage,
+        fireball.upcast_dice_per_level,
+    ) == (8, 6, "fire", "half", 1)
+
+
+def test_2024_bard_level_ten_spell_package_uses_magical_secrets_without_new_engine() -> None:
+    level_ten = canonical_spell_package("bard", 10, "2024", 5)
+
+    assert level_ten is not None
+    assert len(level_ten.cantrips) == 4
+    assert level_ten.cantrips[-1].id == "prestidigitation"
+    assert level_ten.cantrips[-1].required_capabilities == ["arena-out-of-scope"]
+    assert len(level_ten.spells) == 15
+    assert level_ten.spells[-1].id == "fireball"
+    assert level_ten.spells[-1].required_capabilities == [
+        "save-damage",
+        "area",
+        "magical-secrets",
+    ]
+    assert [item.id for item in level_ten.always_prepared_spells] == [
+        "bless",
+        "guiding-bolt",
+    ]

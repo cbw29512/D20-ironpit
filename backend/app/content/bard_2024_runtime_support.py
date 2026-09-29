@@ -4,9 +4,9 @@ import logging
 
 from app.content.bard_2024_font_of_inspiration import build_font_of_inspiration_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
-from app.content.bard_2024_spells import build_greater_invisibility_2024
+from app.content.bard_2024_spells import build_greater_invisibility_2024, build_shatter_2024
 from app.content.cleric_life_domain import DISPEL_MAGIC
-from app.content.offensive_spell_effects import build_guiding_bolt
+from app.content.offensive_spell_effects import build_fireball_2024, build_guiding_bolt
 from app.content.spell_effects import BLESS
 from app.domain.combatants import ResourceDefinition
 from app.domain.progression import ProgressionCombatFeatures
@@ -28,6 +28,17 @@ def bard_spell_attacks(level: int, spell_attack_bonus: int):
         return [build_guiding_bolt(spell_attack_bonus)] if level >= 6 else []
     except Exception:
         logger.exception("Failed to build 2024 Bard spell attacks at level %s.", level)
+        raise
+
+
+def bard_spell_saves(level: int, save_dc: int):
+    try:
+        actions = [build_shatter_2024(save_dc)] if level >= 3 else []
+        if level >= 10:
+            actions.append(build_fireball_2024(save_dc))
+        return actions
+    except Exception:
+        logger.exception("Failed to build 2024 Bard spell-save actions at level %s.", level)
         raise
 
 

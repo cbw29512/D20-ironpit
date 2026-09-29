@@ -49,6 +49,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "shield-of-faith",
         "aid",
         "shatter",
+        "fireball",
         "cure-wounds",
         "healing-word",
         "mass-healing-word",
@@ -196,6 +197,36 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             3,
             8,
             "thunder",
+            "half",
+            1,
+        )
+
+    if "fireball" in spell_saves:
+        spell = spell_saves["fireball"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+        ) == (
+            3,
+            "action",
+            150,
+            "radius",
+            "point",
+            20,
+            "dexterity",
+            8,
+            6,
+            "fire",
             "half",
             1,
         )
