@@ -42,4 +42,9 @@ BARD_HIGH_LEVEL_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         "save-damage", "area", "condition", "magical-secrets",
         spell_level=8, min_character_level=15,
     ),
+    _spell(
+        "power-word-kill", "Power Word Kill", "damage",
+        "hp-threshold-instant-death", "fallback-damage", "magical-secrets",
+        spell_level=9, min_character_level=17,
+    ),
 )
