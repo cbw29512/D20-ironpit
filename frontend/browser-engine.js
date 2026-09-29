@@ -113,7 +113,7 @@
       events.push(...cleanup.events);
       nextSequence = cleanup.sequence;
     }
-    const target = L().resolveTargetTiming(nextSequence, round, member, targetTiming);
+    const target = L().resolveTargetTiming(nextSequence, round, member, targetTiming, setup);
     events.push(...target.events);
     nextSequence = target.sequence;
     const source = L().resolveSourceTiming(nextSequence, round, member, setup, sourceTiming);

@@ -87,7 +87,10 @@
       );
       if (distance > item.triggerRadiusFt) continue;
       item.triggeredTurnKeys[mover.combatant_id] = turnKey;
-      const save = S().resolveSavingThrow(mover.state, item.saveAbility, item.dc);
+      const save = S().resolveSavingThrow(mover.state, item.saveAbility, item.dc, {
+        encounterRoller: mover,
+        setup,
+      });
       const raw = save.succeeded ? item.successDamage : item.failureDamage;
       const applied = A().adjustedDamage(mover.state, raw, item.damageType);
       const before = mover.state.current_hp;

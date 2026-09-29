@@ -81,6 +81,7 @@ def resolve_save_event_chain(
             action,
             distance_ft,
             dice,
+            setup=setup,
             **save_options,
         )
         return damage_event_chain(

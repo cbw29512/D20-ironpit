@@ -74,7 +74,14 @@ def resolve_attack(
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
         d20_outcome = resolve_attack_d20_outcome(
-            attacker, actual_defender, attack, attack_roll, effective_armor_class(actual_defender),
+            attacker,
+            actual_defender,
+            attack,
+            attack_roll,
+            effective_armor_class(actual_defender),
+            encounter_roller=reaction_roller,
+            setup=reaction_setup,
+            dice=dice,
         )
         attack_roll, target_ac, hit = d20_outcome.roll, d20_outcome.target_ac, d20_outcome.hit
         if not hit:
@@ -82,6 +89,8 @@ def resolve_attack(
         natural, parry_used = d20_outcome.natural, d20_outcome.parry_used
         d20_override_feature_id, d20_override_name = d20_outcome.d20_override_feature_id, d20_outcome.d20_override_source_name
         miss_override_feature_id, miss_override_name = d20_outcome.miss_override_feature_id, d20_outcome.miss_override_source_name
+        outcome_adjustment_feature_id = d20_outcome.outcome_adjustment_feature_id
+        outcome_adjustment_name = d20_outcome.outcome_adjustment_source_name
         natural_1 = natural == 1
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         natural_1_ends_turn = natural_1 and not off_turn and not (
@@ -154,6 +163,8 @@ def resolve_attack(
         )
         if d20_bonus_source_name:
             description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
+        if outcome_adjustment_name:
+            description += f" {outcome_adjustment_name} adjusts the resolved D20 Test."
         if reaction_penalty is not None:
             description += (
                 f" {reaction_penalty.source_name} uses {reaction_penalty.action_id} "
@@ -176,7 +187,7 @@ def resolve_attack(
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
-            feature_id=d20_override_feature_id or miss_override_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
+            feature_id=d20_override_feature_id or miss_override_feature_id or outcome_adjustment_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
             resource_remaining=(
                 exile_applied[1] if exile_applied is not None
                 else deferred_effect_armed.resource_remaining if deferred_effect_armed is not None else None

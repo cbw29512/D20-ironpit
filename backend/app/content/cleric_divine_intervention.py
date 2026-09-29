@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.healing_spell_effects import build_mass_cure_wounds
-from app.domain.actions import HealingAction, SavingThrowAction
+from app.domain.actions import HealingAction, HpThresholdConditionAction, SavingThrowAction
 
 logger = logging.getLogger(__name__)
 
@@ -48,4 +48,30 @@ def build_divine_intervention_healing(
         })
     except Exception:
         logger.exception("Failed to build Divine Intervention healing action.")
+        raise
+
+
+
+def build_greater_divine_intervention_wish_power_word_stun(
+    save_dc: int,
+) -> HpThresholdConditionAction:
+    """2024 Greater Divine Intervention using Wish to duplicate Power Word Stun."""
+    try:
+        return HpThresholdConditionAction(
+            id="greater-divine-intervention-wish-power-word-stun",
+            name="Greater Divine Intervention: Wish — Power Word Stun",
+            action_cost="action",
+            range_ft=60,
+            max_current_hp=150,
+            condition_id="stunned",
+            repeat_save_ability="constitution",
+            repeat_save_dc=save_dc,
+            repeat_save_timing="target_turn_end",
+            resource_id=_RESOURCE_ID,
+            resource_cost=1,
+            magical_effect=True,
+            animation="power-word-stun",
+        )
+    except Exception:
+        logger.exception("Failed to build Greater Divine Intervention Wish option.")
         raise

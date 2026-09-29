@@ -36,6 +36,7 @@ def resolve_save_action(
     shared_damage_rolls: list[int] | list[list[int]] | None = None, affected_states: list[CombatantState] | None = None,
     spell_effect: bool = False, save_disadvantage_sources: tuple[str, ...] = (),
     resource_remaining_override: int | None = None,
+    setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, action.action_cost):
         raise ValueError(f"{action.action_cost} is not available for {action.name}.")
@@ -63,7 +64,14 @@ def resolve_save_action(
         target.state, action.save_ability, save_context,
     )
     save_roll, succeeded = resolve_saving_throw(
-        target.state, action.save_ability, action.dc, dice, save_context, round_number=round_number,
+        target.state,
+        action.save_ability,
+        action.dc,
+        dice,
+        save_context,
+        round_number=round_number,
+        encounter_roller=target,
+        setup=setup,
     )
     if spend_action: spend(actor.state, action.action_cost)
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
