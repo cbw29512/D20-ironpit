@@ -166,6 +166,8 @@ def resolve_attack(
         if outcome_adjustment_name:
             description += f" {outcome_adjustment_name} adjusts the resolved D20 Test."
         if reaction_penalty is not None:
+            if reaction_penalty.restoration_name:
+                description += f" {reaction_penalty.source_name} uses {reaction_penalty.restoration_name}."
             description += (
                 f" {reaction_penalty.source_name} uses {reaction_penalty.action_id} "
                 f"to subtract {reaction_penalty.penalty_total} from the attack roll."
