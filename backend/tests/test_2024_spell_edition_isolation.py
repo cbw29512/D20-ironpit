@@ -51,6 +51,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "shatter",
         "fireball",
         "disintegrate",
+        "finger-of-death",
         "cure-wounds",
         "healing-word",
         "mass-healing-word",
@@ -256,6 +257,30 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "force",
             "none",
             3,
+        )
+
+    if "finger-of-death" in spell_saves:
+        spell = spell_saves["finger-of-death"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_bonus,
+            spell.damage_type,
+            spell.success_damage,
+        ) == (
+            7,
+            "action",
+            60,
+            "constitution",
+            7,
+            8,
+            30,
+            "necrotic",
+            "half",
         )
 
     if "greater-invisibility" in defenses:
