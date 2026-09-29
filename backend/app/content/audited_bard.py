@@ -71,10 +71,10 @@ def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
 
 
 def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Lore Bard through level 7."""
+    """Compile the 2024 support/healer Lore Bard through level 8."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 7.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 8.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
