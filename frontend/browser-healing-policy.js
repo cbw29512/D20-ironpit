@@ -37,6 +37,7 @@
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
     if (action.targetMode === "other") return target.combatant_id !== healer.combatant_id;
+    if (action.targetMode === "any") return true;
     return target.side === healer.side;
   }
 
