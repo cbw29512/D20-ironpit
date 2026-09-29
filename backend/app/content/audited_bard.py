@@ -6,20 +6,21 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_bard_profile import build_lyra_silverstring_profile
 from app.content.bard_2024_cutting_words import build_cutting_words_2024
-from app.content.bard_2024_font_of_inspiration import build_font_of_inspiration_2024
 from app.content.bard_2024_inspiration import build_bardic_inspiration_2024
-from app.content.bard_2024_spells import build_greater_invisibility_2024, build_shatter_2024
-from app.content.cleric_life_domain import DISPEL_MAGIC
+from app.content.bard_2024_runtime_support import (
+    bard_defensive_spells,
+    bard_effect_removals,
+    bard_progression_features,
+    bard_resource_conversions,
+    bard_resources,
+    bard_spell_attacks,
+)
+from app.content.bard_2024_spells import build_shatter_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.character_math import saving_throw_bonuses
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_healing_word
-from app.content.offensive_spell_effects import build_guiding_bolt
-from app.content.spell_effects import BLESS
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.weapon_catalog import build_weapon
-from app.domain.combatants import ResourceDefinition
-from app.domain.progression import ProgressionCombatFeatures
-from app.domain.progression_primitives import FailedSaveRerollGrant
 from app.domain.models import CombatantTemplate, VisualLoadout, WeaponAttack
 from app.domain.traits import CombatTrait
 
@@ -43,38 +44,11 @@ def _dagger(level: int, dexterity_modifier: int) -> WeaponAttack:
         raise
 
 
-def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
-    try:
-        row = BARD_COMBAT_LEVELS[level]
-        resources = [
-            ResourceDefinition(
-                id="bardic-inspiration",
-                name="Bardic Inspiration",
-                max_uses=max(1, charisma_modifier),
-            ),
-            ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
-            ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
-        ]
-        resources.extend(
-            ResourceDefinition(
-                id=f"spell-slot-{spell_level}",
-                name=f"Spell Slot {spell_level}",
-                max_uses=uses,
-            )
-            for spell_level, uses in enumerate(row.spell_slots, start=1)
-            if uses
-        )
-        return resources
-    except Exception:
-        logger.exception("Failed to build Lyra's resources at Bard level %s.", level)
-        raise
-
-
 def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Lore Bard through level 7."""
+    """Compile the 2024 support/healer Lore Bard through level 8."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 7.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 8.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -114,42 +88,17 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
             reaction_roll_penalty_actions=(
                 [build_cutting_words_2024(level)] if level >= 3 else []
             ),
-            resource_conversion_actions=(
-                build_font_of_inspiration_2024(level) if level >= 5 else []
-            ),
+            resource_conversion_actions=bard_resource_conversions(level),
             spell_save_actions=(
                 [build_shatter_2024(8 + proficiency_bonus + charisma_modifier)]
                 if level >= 3 else []
             ),
-            spell_attack_actions=(
-                [build_guiding_bolt(proficiency_bonus + charisma_modifier)]
-                if level >= 6 else []
+            spell_attack_actions=bard_spell_attacks(
+                level, proficiency_bonus + charisma_modifier,
             ),
-            defensive_spell_actions=(
-                [BLESS.model_copy(deep=True)]
-                + ([build_greater_invisibility_2024()] if level >= 7 else [])
-                if level >= 6 else []
-            ),
-            effect_removal_actions=(
-                [DISPEL_MAGIC.model_copy(deep=True, update={"casting_ability": "charisma"})]
-                if level >= 6 else []
-            ),
-            progression_features=ProgressionCombatFeatures(
-                failed_save_reroll_grants=(
-                    [
-                        FailedSaveRerollGrant(
-                            source_id="countercharm",
-                            source_name="Countercharm",
-                            action_cost="reaction",
-                            target_mode="self_or_ally",
-                            range_ft=30,
-                            required_effect_tags=["charmed", "frightened"],
-                            reroll_mode="advantage",
-                        )
-                    ]
-                    if level >= 7 else []
-                ),
-            ),
+            defensive_spell_actions=bard_defensive_spells(level),
+            effect_removal_actions=bard_effect_removals(level),
+            progression_features=bard_progression_features(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
             skill_bonuses={
                 "athletics": scores.modifier("strength"),
@@ -160,7 +109,7 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 "religion": scores.modifier("intelligence") + proficiency_bonus,
             },
             combat_traits=[CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE],
-            resources=_resources(level, charisma_modifier),
+            resources=bard_resources(level, charisma_modifier),
             weapon_masteries=[],
             visual=VisualLoadout(
                 armor=armor.id,

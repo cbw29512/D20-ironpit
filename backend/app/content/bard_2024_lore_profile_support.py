@@ -91,3 +91,15 @@ def bard_level7_countercharm_audit() -> FeatureAudit:
             "only against effects applying Charmed or Frightened, replacement save with Advantage."
         ),
     )
+
+
+def bard_level8_asi_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="ability-score-improvement-8",
+        feature_name="Ability Score Improvement",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 8",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes="+1 Charisma and +1 Wisdom, producing Charisma 20 and Wisdom 16.",
+    )
