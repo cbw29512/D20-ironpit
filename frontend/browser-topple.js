@@ -14,7 +14,7 @@
     return 2 + Math.floor((level - 1) / 4);
   }
 
-  function resolve(attacker, target, attack) {
+  function resolve(attacker, target, attack, setup = null) {
     try {
       if (!W().active(attacker.state, attack, "Topple")) return empty();
       if (!target.state.is_alive || target.state.is_dead) return empty();
@@ -22,7 +22,9 @@
       const modifier = attack.attackAbilityModifier;
       if (!Number.isInteger(modifier)) throw new Error(`Topple attack ${attack.id || attack.name} requires an explicit attack ability modifier.`);
       const dc = 8 + modifier + proficiencyBonus(attacker.state.template.level);
-      const save = S().resolveSavingThrow(target.state, "constitution", dc);
+      const save = S().resolveSavingThrow(
+        target.state, "constitution", dc, { roller: target, setup },
+      );
       if (!save.succeeded) target.state.active_effect_ids.push("prone");
       return { saveRoll: save.roll, saveDc: dc, saveSucceeded: save.succeeded, applied: !save.succeeded };
     } catch (error) {
@@ -33,7 +35,7 @@
 
   function resolveHit(ctx) {
     const outcome = O().requireOutcome(ctx);
-    outcome.topple = resolve(ctx.member, ctx.target, ctx.attack);
+    outcome.topple = resolve(ctx.member, ctx.target, ctx.attack, ctx.setup || null);
     if (outcome.topple.applied && !outcome.appliedConditions.includes("prone")) {
       outcome.appliedConditions.push("prone");
     }
