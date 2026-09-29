@@ -70,3 +70,27 @@ def build_cone_of_cold_2024(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build 2024 Cone of Cold.")
         raise
+
+
+def build_circle_of_death_2024(save_dc: int) -> SpellSaveAction:
+    """2024 Circle of Death: 8d8 Necrotic, +2d8 per slot above 6."""
+    try:
+        return SpellSaveAction(
+            id="circle-of-death",
+            name="Circle of Death",
+            level=6,
+            action_cost="action",
+            range_ft=150,
+            area=AreaTargeting(shape="radius", origin="point", radius_ft=60),
+            save_ability="constitution",
+            dc=save_dc,
+            damage_dice_count=8,
+            damage_dice_size=8,
+            damage_type="necrotic",
+            success_damage="half",
+            upcast_dice_per_level=2,
+            animation="spell-save",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Circle of Death.")
+        raise
