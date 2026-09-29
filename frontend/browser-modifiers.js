@@ -38,6 +38,14 @@
       throw new Error("Only saving-throw Advantage can require magical-effect context.");
     }
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
+    if (item.kind === "speed-maximum") {
+      if (!Number.isFinite(item.maximum_value) || item.maximum_value < 0) {
+        throw new Error("Speed-maximum modifiers require a nonnegative maximum_value.");
+      }
+      if (item.flat_bonus || 0) throw new Error("Speed-maximum modifiers do not accept flat bonuses.");
+    } else if (item.maximum_value != null) {
+      throw new Error(`${item.kind} does not accept maximum_value.`);
+    }
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
     if (item.consume_on_saving_throw && item.kind !== "saving-throw-disadvantage") throw new Error("Only saving-throw Disadvantage can use consume_on_saving_throw.");
@@ -141,7 +149,11 @@
           : (item.flat_bonus || 0)
       ), 0);
     const base = Math.max(0, state.template.speed_ft + speedDelta);
-    return X()?.effectiveSpeed(state, base) ?? base;
+    const exhausted = X()?.effectiveSpeed(state, base) ?? base;
+    const ceilings = (state.active_modifiers || [])
+      .filter((item) => item.kind === "speed-maximum" && Number.isFinite(item.maximum_value))
+      .map((item) => item.maximum_value);
+    return ceilings.length ? Math.min(exhausted, ...ceilings) : exhausted;
   };
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
