@@ -137,4 +137,20 @@ BARD_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=3,
         min_character_level=8,
     ),
+    _spell(
+        "mass-cure-wounds",
+        "Mass Cure Wounds",
+        "healing",
+        "healing",
+        spell_level=5,
+        min_character_level=9,
+    ),
+    _spell(
+        "raise-dead",
+        "Raise Dead",
+        "utility",
+        "arena-out-of-scope",
+        spell_level=5,
+        min_character_level=9,
+    ),
 )
