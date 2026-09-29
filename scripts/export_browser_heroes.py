@@ -241,6 +241,9 @@ def _healing(action: Any) -> dict[str, Any]:
                 "healingBonus": action.healing_bonus, "restoreToEffectiveMax": action.restore_to_effective_max,
                 "percentileSuccessMax": action.percentile_success_max, "resourceId": action.resource_id,
                 "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
+                "removableConditions": list(action.removable_conditions),
+                "proneReactionStand": action.prone_reaction_stand,
+                "secondaryTargetWithinFt": action.secondary_target_within_ft,
                 "animation": action.animation}
     except Exception:
         logger.exception("Failed to serialize healing action %s.", action.id)
