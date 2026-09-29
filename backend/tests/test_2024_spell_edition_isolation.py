@@ -53,6 +53,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "disintegrate",
         "finger-of-death",
         "sunburst",
+        "power-word-kill",
         "cure-wounds",
         "healing-word",
         "mass-healing-word",
@@ -308,6 +309,19 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             rider.repeat_save_dc,
             rider.repeat_save_timing,
         ) == ("blinded", 10, "constitution", spell.dc, "target_turn_end")
+
+    threshold_actions = {item.id: item for item in template.hp_threshold_instant_death_actions}
+    if "power-word-kill" in threshold_actions:
+        spell = threshold_actions["power-word-kill"]
+        assert (
+            spell.range_ft,
+            spell.max_current_hp,
+            spell.fallback_damage_dice_count,
+            spell.fallback_damage_dice_size,
+            spell.fallback_damage_bonus,
+            spell.fallback_damage_type,
+            spell.resource_id,
+        ) == (60, 100, 12, 12, 0, "psychic", "spell-slot-9")
 
     if "greater-invisibility" in defenses:
         spell = defenses["greater-invisibility"]
