@@ -56,3 +56,63 @@ def test_2024_cleric_changed_spell_fingerprints_do_not_regress_to_2014() -> None
     assert (mass_cure.dice_count, mass_cure.dice_size) == (5, 8)
     assert mass_cure.max_targets == 6
     assert mass_cure.excluded_creature_types == []
+
+
+
+def test_2024_cleric_runtime_spell_contracts_cover_action_cost_range_and_effect_shape() -> None:
+    """Validate the rest of Seraphine's combat spell contract, not just changed dice."""
+    level_three = build_seraphine_dawnshield_level(3)
+
+    bless = next(item for item in level_three.defensive_spell_actions if item.id == "bless")
+    assert bless.action_cost == "action"
+    assert bless.range_ft == 30
+    assert bless.target_count == 3
+    assert bless.concentration is True
+    assert {(item.kind, item.dice_count, item.dice_size) for item in bless.modifier_effects} == {
+        ("attack-roll-bonus-die", 1, 4),
+        ("saving-throw-bonus-die", 1, 4),
+    }
+
+    shield = next(item for item in level_three.defensive_spell_actions if item.id == "shield-of-faith")
+    assert shield.action_cost == "bonus_action"
+    assert shield.range_ft == 60
+    assert shield.duration_minutes == 10
+    assert shield.concentration is True
+    assert [(item.kind, item.flat_bonus) for item in shield.modifier_effects] == [
+        ("armor-class", 2),
+    ]
+
+    aid = next(item for item in level_three.defensive_spell_actions if item.id == "aid")
+    assert aid.action_cost == "action"
+    assert aid.range_ft == 30
+    assert aid.target_count == 3
+    assert aid.duration_minutes == 480
+    assert (aid.max_hp_increase, aid.current_hp_increase) == (5, 5)
+
+    lesser = next(item for item in level_three.condition_removal_actions if item.id == "lesser-restoration")
+    assert lesser.action_cost == "bonus_action"
+    assert lesser.range_ft == 5
+    assert set(lesser.removable_conditions) == {"blinded", "deafened", "paralyzed", "poisoned"}
+    assert lesser.resource_costs == {"spell-slot-2": 1}
+
+    level_five = build_seraphine_dawnshield_level(5)
+    dispel = next(item for item in level_five.effect_removal_actions if item.id == "dispel-magic")
+    assert dispel.action_cost == "action"
+    assert dispel.range_ft == 120
+    assert dispel.auto_remove_max_level == 3
+    assert dispel.casting_ability == "wisdom"
+
+    guiding = next(item for item in level_five.spell_attack_actions if item.id == "guiding-bolt")
+    assert guiding.attack_kind == "ranged"
+    assert guiding.range_ft == 120
+    assert (guiding.damage_dice_count, guiding.damage_dice_size) == (4, 6)
+    assert guiding.damage_type.value == "radiant"
+    assert len(guiding.on_hit_modifier_effects) == 1
+    assert guiding.on_hit_modifier_effects[0].kind == "attacks-against-advantage"
+
+    sacred = next(item for item in level_five.spell_save_actions if item.id == "sacred-flame")
+    assert sacred.save_ability == "dexterity"
+    assert sacred.range_ft == 60
+    assert (sacred.damage_dice_count, sacred.damage_dice_size) == (2, 8)
+    assert sacred.damage_type.value == "radiant"
+    assert sacred.success_damage == "none"
