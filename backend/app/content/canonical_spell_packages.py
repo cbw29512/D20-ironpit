@@ -82,6 +82,22 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             spell_level=2,
             min_character_level=4,
         ),
+        _spell(
+            "mass-healing-word",
+            "Mass Healing Word",
+            "healing",
+            "healing",
+            spell_level=3,
+            min_character_level=5,
+        ),
+        _spell(
+            "sending",
+            "Sending",
+            "utility",
+            "arena-out-of-scope",
+            spell_level=3,
+            min_character_level=5,
+        ),
     ),
     "cleric": CLERIC_SPELLS,
     "druid": (
