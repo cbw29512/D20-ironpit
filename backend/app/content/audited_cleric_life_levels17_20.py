@@ -107,8 +107,8 @@ def build_seraphine_dawnshield_level20_profile() -> CharacterBuildProfile:
         addition = _feature(
             "greater-divine-intervention",
             "Greater Divine Intervention",
-            False,
-            "Audit the 2024 capstone against the existing Divine Intervention resource/cast path.",
+            True,
+            "Wish uses its basic spell-duplication mode to cast edition-correct 2024 Fireball through the existing Divine Intervention resource.",
         )
         data.update(
             feature_audits=[*data["feature_audits"], addition.model_dump()],
