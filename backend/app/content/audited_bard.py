@@ -104,6 +104,7 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
             d20_bonus_die_actions=[build_bardic_inspiration_2024(level)],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
             skill_bonuses={
+                "athletics": scores.modifier("strength"),
                 "acrobatics": dexterity_modifier + proficiency_bonus * acrobatics_multiplier,
                 "perception": wisdom_modifier + proficiency_bonus,
                 "performance": charisma_modifier + proficiency_bonus,
