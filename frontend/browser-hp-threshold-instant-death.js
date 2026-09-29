@@ -31,7 +31,7 @@
           if (targets.length >= action.maxTargets) break;
         }
       }
-      return { targets, action };
+      return { target: primary, targets, action };
     }
     return null;
   }
