@@ -69,3 +69,52 @@ def test_2024_bard_foundation_uses_edition_specific_spell_package() -> None:
         "comprehend-languages",
         "identify",
     ]
+
+
+
+def test_2024_lore_bard_level_three_reuses_universal_cutting_words_and_adds_shatter() -> None:
+    profile = build_lyra_silverstring_profile(3)
+    hero = build_lyra_silverstring_level(3)
+
+    assert profile.subclass_id == "college-lore"
+    assert profile.subclass_name == "College of Lore"
+    assert hero.max_hp == 18
+    assert {item.id: item.max_uses for item in hero.resources}["spell-slot-1"] == 4
+    assert {item.id: item.max_uses for item in hero.resources}["spell-slot-2"] == 2
+
+    cutting_words = hero.reaction_roll_penalty_actions[0]
+    assert cutting_words.id == "cutting-words"
+    assert cutting_words.range_ft == 60
+    assert cutting_words.resource_id == "bardic-inspiration"
+    assert cutting_words.roll_kinds == ["attack", "ability_check", "damage"]
+    assert cutting_words.requires_source_sight is True
+    assert cutting_words.requires_target_hearing is False
+    assert cutting_words.blocked_target_condition_immunity is None
+
+    shatter = hero.spell_save_actions[0]
+    assert shatter.id == "shatter"
+    assert shatter.level == 2
+    assert shatter.range_ft == 60
+    assert shatter.area is not None
+    assert (shatter.area.shape, shatter.area.origin, shatter.area.radius_ft) == ("radius", "point", 10)
+    assert shatter.save_ability == "constitution"
+    assert (shatter.damage_dice_count, shatter.damage_dice_size) == (3, 8)
+    assert shatter.damage_type == "thunder"
+    assert shatter.success_damage == "half"
+    assert shatter.upcast_dice_per_level == 1
+
+
+def test_2024_bard_level_three_spell_package_adds_shatter() -> None:
+    level_three = canonical_spell_package("bard", 3, "2024", 3)
+
+    assert level_three is not None
+    assert [item.id for item in level_three.spells] == [
+        "healing-word",
+        "cure-wounds",
+        "detect-magic",
+        "comprehend-languages",
+        "identify",
+        "shatter",
+    ]
+    shatter = level_three.spells[-1]
+    assert (shatter.spell_level, shatter.min_character_level) == (2, 3)
