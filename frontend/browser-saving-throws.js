@@ -107,6 +107,20 @@
         }
         roll = FR().apply(state, roll).roll;
       }
+      let outcomeAdjustment = { roll, sourceId: null, sourceName: null };
+      if (context.roller && context.setup) {
+        const runtime = window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS;
+        const declared = [...context.setup.heroes, ...context.setup.monsters].some((member) =>
+          (member.state.template.resource_backed_d20_outcome_adjustments || [])
+            .some((grant) => (grant.test_kinds || []).includes("saving_throw")));
+        if (declared && !runtime) {
+          throw new Error("D20 outcome adjustment runtime is not loaded for saving throws.");
+        }
+        outcomeAdjustment = runtime?.applyIfUseful(
+          context.roller, context.setup, "saving_throw", roll, dc,
+        ) || outcomeAdjustment;
+        roll = outcomeAdjustment.roll;
+      }
       const d20Grants = state.template.failed_d20_test_override_grants || [];
       if (d20Grants.some((grant) => (grant.test_kinds || []).includes("saving_throw"))
         && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {
