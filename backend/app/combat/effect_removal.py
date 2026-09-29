@@ -68,7 +68,14 @@ def resolve_effect_removal(
             dc = 10 + effect.spell_level
             check = roll_d20(dice, scores.modifier(action.casting_ability), RollMode.NORMAL)
             check, succeeded = resolve_ability_check_outcome(
-                remover.state, action.casting_ability, check, dc, dice=dice, round_number=round_number,
+                remover.state,
+                action.casting_ability,
+                check,
+                dc,
+                dice=dice,
+                round_number=round_number,
+                encounter_roller=remover,
+                setup=setup,
             )
         if succeeded:
             remove_source_modifiers(
