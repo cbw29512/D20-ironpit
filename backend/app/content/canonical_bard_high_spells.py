@@ -51,4 +51,9 @@ BARD_HIGH_LEVEL_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         "teleport", "Teleport", "utility", "arena-out-of-scope",
         spell_level=7, min_character_level=18,
     ),
+    _spell(
+        "cone-of-cold", "Cone of Cold", "damage",
+        "save-damage", "area", "magical-secrets",
+        spell_level=5, min_character_level=19,
+    ),
 )
