@@ -82,7 +82,10 @@
       );
       if (needsCheckRuntime && !A()) throw new Error("Ability-check runtime is not loaded.");
       const resolved = A()?.resolve
-        ? A().resolve(remover.state, action.castingAbility, check, dc)
+        ? A().resolve(remover.state, action.castingAbility, check, dc, {
+            roller: remover,
+            setup,
+          })
         : { roll: check, succeeded: check.total >= dc };
       check = resolved.roll;
       succeeded = resolved.succeeded;
