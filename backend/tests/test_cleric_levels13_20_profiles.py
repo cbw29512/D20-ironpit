@@ -47,7 +47,7 @@ def test_2024_life_cleric_high_level_blockers_are_explicit() -> None:
     assert audits["cleric-combat-spells-9"].automated is True
     assert audits["supreme-healing"].automated is True
     assert audits["boon-of-fate"].automated is True
-    assert audits["greater-divine-intervention"].automated is False
+    assert audits["greater-divine-intervention"].automated is True
 
 
 
@@ -110,3 +110,25 @@ def test_level_nineteen_binds_boon_of_fate_to_universal_d20_adjustment() -> None
     assert len(refills) == 1
     assert refills[0].source_id == "boon-of-fate"
     assert refills[0].resource_id == "boon-of-fate"
+
+
+
+def test_level_twenty_binds_greater_divine_intervention_to_2024_wish_fireball() -> None:
+    from app.content.audited_cleric import build_seraphine_dawnshield_level
+
+    hero = build_seraphine_dawnshield_level(20)
+    actions = {item.id: item for item in hero.saving_throw_actions}
+    action = actions["greater-divine-intervention-wish-fireball"]
+
+    assert hero.max_hp == 103
+    assert action.name == "Greater Divine Intervention: Wish — Fireball"
+    assert action.action_cost == "action"
+    assert action.range_ft == 150
+    assert action.area is not None
+    assert (action.area.shape, action.area.origin, action.area.radius_ft) == ("radius", "point", 20)
+    assert action.save_ability == "dexterity"
+    assert (action.damage_dice_count, action.damage_dice_size) == (8, 6)
+    assert action.damage_type == "fire"
+    assert action.success_damage == "half"
+    assert action.resource_id == "divine-intervention"
+    assert action.resource_cost == 1
