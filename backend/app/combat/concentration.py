@@ -7,6 +7,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import remove_source_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import DiceRoll
 from app.domain.modifiers import ConcentrationState
 from app.domain.runtime import CombatantState
@@ -112,6 +113,9 @@ def resolve_concentration_damage(
     damage_taken: int,
     dice: DiceProvider,
     affected_states: Iterable[CombatantState] | None = None,
+    *,
+    encounter_owner: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> ConcentrationCheck | None:
     if damage_taken < 0:
         raise ValueError("Concentration damage cannot be negative.")
@@ -121,7 +125,14 @@ def resolve_concentration_damage(
         end_concentration(owner, affected_states)
         return ConcentrationCheck(None, None, False, True, "incapacitated-or-dead")
     dc = concentration_dc(damage_taken)
-    roll, succeeded = resolve_saving_throw(owner, "constitution", dc, dice)
+    roll, succeeded = resolve_saving_throw(
+        owner,
+        "constitution",
+        dc,
+        dice,
+        encounter_roller=encounter_owner,
+        setup=setup,
+    )
     if not succeeded:
         end_concentration(owner, affected_states)
     return ConcentrationCheck(dc, roll, succeeded, not succeeded, "damage")
