@@ -666,3 +666,35 @@ def test_2024_bard_level_fifteen_spell_package_adds_sunburst() -> None:
         "condition",
         "magical-secrets",
     ]
+
+
+def test_2024_lore_bard_level_sixteen_applies_final_wisdom_asi() -> None:
+    profile = build_lyra_silverstring_profile(16)
+    hero = build_lyra_silverstring_level(16)
+
+    assert hero.max_hp == 83
+    assert (profile.final_ability_scores.charisma, profile.final_ability_scores.wisdom) == (20, 20)
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [
+        ("charisma", 2),
+        ("charisma", 1),
+        ("wisdom", 1),
+        ("wisdom", 2),
+        ("wisdom", 2),
+    ]
+    asi = next(
+        item for item in profile.feature_audits
+        if item.feature_id == "ability-score-improvement-16"
+    )
+    assert asi.automated is True
+
+    assert hero.skill_bonuses["perception"] == 15
+    assert hero.skill_bonuses["insight"] == 10
+    assert hero.saving_throw_bonuses["wisdom"] == 5
+
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["spell-slot-8"] == 1
+    assert "spell-slot-9" not in resources
+
+    level_sixteen = canonical_spell_package("bard", 16, "2024", 8)
+    assert level_sixteen is not None
+    assert len(level_sixteen.spells) == 18

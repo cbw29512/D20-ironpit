@@ -58,6 +58,8 @@ def bard_ability_scores(
             ])
         if level >= 12:
             advancement.append(AbilityIncrease(ability="wisdom", amount=2))
+        if level >= 16:
+            advancement.append(AbilityIncrease(ability="wisdom", amount=2))
         values = base.model_dump()
         for increase in [*background, *advancement]:
             values[increase.ability] += increase.amount
@@ -103,6 +105,8 @@ def bard_source_references(level: int) -> list[str]:
             refs.append("D&D Beyond Basic Rules 2024: College of Lore 14 — Peerless Skill")
         if level >= 15:
             refs.append("D&D Beyond Basic Rules 2024: Bard 15 — level 8 spells")
+        if level >= 16:
+            refs.append("D&D Beyond Basic Rules 2024: Bard 16 — Ability Score Improvement")
         return refs
     except Exception:
         logger.exception("Failed to compile 2024 Bard source references at level %s.", level)
