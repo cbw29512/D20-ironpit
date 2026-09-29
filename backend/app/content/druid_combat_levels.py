@@ -34,7 +34,12 @@ def _r(level: int, pb: int, hp: int, intelligence: int, wisdom: int, charisma: i
 
 
 DRUID_COMBAT_LEVELS: dict[int, DruidCombatLevel] = {
-    1: _r(1, 2, 8, 13, 17, 15, 0, 4, _slots(2), add=("druid-spellcasting", "primal-order-warden", "magic-initiate-cleric"), ignored=("druidic", "speak-with-animals"), source="D&D Beyond Basic Rules 2024: Druid 1; Warden Primal Order; Acolyte background"),
+    1: DruidCombatLevel(
+        1, 2, 13, 8, 13, 17, 15, 0, 4, _slots(2),
+        ("druid-spellcasting", "primal-order-magician", "magic-initiate-cleric"),
+        (), ("druidic-language", "speak-with-animals"),
+        "D&D Beyond Basic Rules 2024: Druid 1; Magician Primal Order; Acolyte background",
+    ),
     2: _r(2, 2, 13, 13, 17, 15, 2, 5, _slots(3), add=("wild-shape",), ignored=("wild-companion",), source="D&D Beyond Basic Rules 2024: Druid 2 Wild Shape"),
     3: _r(3, 2, 18, 13, 17, 15, 2, 6, _slots(4, 2), add=("druid-combat-spells-2",), source="D&D Beyond Basic Rules 2024: Druid 3 Druid Subclass"),
     4: _r(4, 2, 23, 13, 19, 15, 2, 7, _slots(4, 3), source="D&D Beyond Basic Rules 2024: Druid 4 Ability Score Improvement (+2 Wisdom)"),
