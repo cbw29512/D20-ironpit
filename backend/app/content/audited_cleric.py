@@ -25,10 +25,8 @@ from app.domain.character_builds import AbilityScores
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
-from app.domain.progression_primitives import (
-    ResourceBackedD20OutcomeAdjustment,
-    SourceDamageTemporaryHpGrant,
-)
+from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
+from app.domain.progression_primitives import SourceDamageTemporaryHpGrant
 from app.domain.traits import CombatTrait
 
 def _modifier(score: int) -> int:
