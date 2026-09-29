@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.content.canonical_bard_spells import BARD_SPELLS
+from app.content.canonical_bard_spells import BARD_CANTRIPS, BARD_SPELLS
 from app.content.canonical_cleric_spells import CLERIC_CANTRIPS, CLERIC_SPELLS
 from app.content.class_spell_progression import CASTING_ABILITIES, max_spell_level, prepared_spell_count
 from app.domain.class_loadouts import CanonicalSpellChoice, CasterClassId, ClassSpellPackage
@@ -44,6 +44,12 @@ def _cantrip(
 
 
 CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
+    "bard": BARD_CANTRIPS,
+    "cleric": CLERIC_CANTRIPS,
+}
+
+
+CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "bard": BARD_SPELLS,
     "cleric": CLERIC_SPELLS,
     "druid": (
