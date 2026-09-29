@@ -15,6 +15,7 @@ from app.combat.on_hit_save_damage import OnHitSaveDamageResolution, resolve_on_
 from app.combat.rogue_defenses import apply_uncanny_dodge
 from app.combat.zero_hp import apply_damage
 from app.combat.zero_hp_save_damage_rider import apply_zero_hp_save_damage_rider, save_damage_caused_zero
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DamageRollComponent, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -97,6 +98,8 @@ def resolve_attack_hit_damage(
     target_event_id: str | None = None,
     brutal_strike_disadvantage: bool = False,
     natural_roll: int | None = None,
+    encounter_defender: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> AttackHitDamageResolution:
     hp_buffer_before = defender.current_hp + defender.temporary_hp
     damage_roll, rolled_components = resolve_weapon_damage(
@@ -106,7 +109,9 @@ def resolve_attack_hit_damage(
         brutal_strike_disadvantage=brutal_strike_disadvantage,
     )
     rolled_components.extend(_natural_twenty_attack_damage(attacker, attack, natural_roll, rolled_components))
-    save_damage = resolve_on_hit_save_damage(defender, attack, dice)
+    save_damage = resolve_on_hit_save_damage(
+        defender, attack, dice, encounter_defender=encounter_defender, setup=setup,
+    )
     save_component_present = save_damage.component is not None
     if save_component_present:
         rolled_components.append(save_damage.component)
@@ -136,8 +141,14 @@ def resolve_attack_hit_damage(
         assert effect is not None
         apply_zero_hp_save_damage_rider(defender, effect, turn_key, affected_states)
         outcome = "unconscious"
-    cunning_strike_trip = resolve_trip(attacker, defender, dice, turn_key)
-    cunning_strike_obscure = resolve_obscure(attacker, defender, dice, turn_key)
+    cunning_strike_trip = resolve_trip(
+        attacker, defender, dice, turn_key,
+        encounter_defender=encounter_defender, setup=setup,
+    )
+    cunning_strike_obscure = resolve_obscure(
+        attacker, defender, dice, turn_key,
+        encounter_defender=encounter_defender, setup=setup,
+    )
     return AttackHitDamageResolution(
         damage_roll=damage_roll,
         damage_components=components,
