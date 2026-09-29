@@ -33,3 +33,16 @@ def lore_bard_level3_audits() -> list[FeatureAudit]:
             notes="Shatter is the canonical level-2 damage spell.",
         ),
     ]
+
+
+
+def bard_level4_asi_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="ability-score-improvement-4",
+        feature_name="Ability Score Improvement",
+        source_reference="D&D Beyond Basic Rules 2024: Bard 4",
+        category="class",
+        combat_relevant=True,
+        automated=True,
+        notes="+2 Charisma is applied to Lyra's persistent progression.",
+    )
