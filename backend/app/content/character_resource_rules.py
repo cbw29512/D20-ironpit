@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.level_resources import (
     barbarian_2014_rage_uses, barbarian_rage_uses,
     cleric_2014_channel_divinity_uses, cleric_2014_divine_intervention_uses,
@@ -78,6 +79,18 @@ def _cleric_boon_of_fate(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Boon of Fate uses for level {level}.") from exc
 
 
+def _bardic_inspiration_2024(level: int) -> int:
+    try:
+        row = BARD_COMBAT_LEVELS.get(level)
+        if row is None:
+            raise ValueError("2024 Bard resource progression covers levels 1 through 20.")
+        return row.bardic_inspiration_uses
+    except ValueError:
+        raise
+    except Exception as exc:
+        raise ValueError(f"Failed to resolve 2024 Bardic Inspiration uses for level {level}.") from exc
+
+
 def _berserker_intimidating_presence(level: int) -> int:
     try:
         return 1 if level >= 14 else 0
@@ -92,6 +105,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("rage", "Rage", barbarian_rage_uses),
         ("persistent-rage-refresh", "Persistent Rage Refresh", _persistent_rage_refresh),
     ),
+    "bard": (("bardic-inspiration", "Bardic Inspiration", _bardic_inspiration_2024),),
     "cleric": (
         ("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),
         ("divine-intervention", "Divine Intervention", cleric_divine_intervention_uses),
