@@ -129,6 +129,7 @@ class SavingThrowAction(BaseModel):
     effect_tags: list[str] = Field(default_factory=list)
     requires_target_hearing: bool = False
     requires_target_sight: bool = False
+    save_disadvantage_creature_types: list[str] = Field(default_factory=list)
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     animation: str = "save-effect"
 
