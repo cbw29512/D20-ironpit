@@ -258,6 +258,17 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.resource_id,
         ) == (3, "action", 120, "wisdom", 3, "spell-slot-3")
 
+    divine_healing = healing.get("divine-intervention-mass-cure-wounds")
+    if divine_healing is not None:
+        assert (
+            divine_healing.action_cost,
+            divine_healing.range_ft,
+            divine_healing.max_targets,
+            divine_healing.dice_count,
+            divine_healing.dice_size,
+            divine_healing.resource_id,
+        ) == ("action", 60, 6, 5, 8, "divine-intervention")
+
     intervention = next(
         (
             item for item in template.saving_throw_actions
