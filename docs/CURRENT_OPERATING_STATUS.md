@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-27 for the final 2014 pregen admission tranche (PR #397).
+Recorded 2026-09-29 after PR #436 merged the first 2024 Lore Bard tranche.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -27,25 +27,32 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2014 | Sorcerer (Draconic) | 1–20 |
 | 2014 | Warlock (Fiend) | 1–20 |
 | 2014 | Wizard (Evoker) | 1–20 |
-| 2024 | Fighter | 1–18 |
-| 2024 | Rogue | 1–20 |
-| 2024 | Cleric (Life) | 1–12 |
-| 2024 | Barbarian | 1–7 |
+| 2024 | Barbarian (Berserker) | 1–20 |
+| 2024 | Bard (Lore) | 1–2 |
+| 2024 | Cleric (Life) | 1–20 |
+| 2024 | Fighter (Champion) | 1–20 |
+| 2024 | Rogue (Thief) | 1–20 |
 
-2024 public-ready hero slots in `data/hero_certification_manifest.json`: **57 / 240**.
+2024 public-ready hero slots in `data/hero_certification_manifest.json`: **82 / 240**.
+2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
 Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitive. Do not add a Paladin-named combat resolver.
 
 ## Active lane
 
-**2014 canonical pregens are complete at 240 / 240 registered level snapshots.**
+**2014 canonical pregens remain complete at 240 / 240 registered level snapshots.** The 2014 Hero Certification and paired-edition guard workflows were green on the exact PR #436 head before merge.
 
-PR #397 completes the final persistent 2014 Evoker Wizard progression. Its exact-head gates must remain green through merge.
+**2024 canonical pregens are now 82 / 240 public-ready.** Fighter, Barbarian, Rogue, and Life Cleric are complete at levels 1–20. Lore Bard is certified through level 2.
 
-Next lane: **full 2014 READY re-audit and touched-engine technical-debt pass**. Reconcile source legality, edition isolation, generated parity, browser/Python behavior, capability duplication, and certification truth across all twelve 1–20 progressions.
+Active implementation lane: **2024 Lore Bard level 3 onward**.
 
-Do **not** begin new 2024 class expansion until that 2014 re-audit is recorded clean. After the re-audit, resume 2024 by reusing certified 2014 mechanics wherever the underlying behavior is equivalent.
+For each Bard tranche:
+- start from the completed 2014 Lore Bard progression and reuse universal mechanics where behavior is equivalent;
+- verify every 2024 class/subclass feature against 2024 rules before carrying behavior forward;
+- keep same-named 2014/2024 spells edition-isolated and require an explicit 2024 spell fingerprint before certification;
+- keep Python/browser parity, independent combat fingerprints, generated parity, and the 2014 guard green before merge;
+- do not weaken Netlify publishing locks.
 
 ## Parked / superseded
 
@@ -110,4 +117,4 @@ Do not restore per-push certification on feature branches. Run generators locall
 2. Never hand-edit generated artifacts.
 3. Never implement a class-named resolver when a universal primitive exists.
 4. Ask one clarification question rather than guessing RAW.
-5. Do not start a second class while the active 2014 class progression is open.
+5. Do not start a second 2024 class while the active 2024 class progression is open.
