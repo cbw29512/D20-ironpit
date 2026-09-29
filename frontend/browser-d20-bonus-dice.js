@@ -6,7 +6,6 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const D = () => window.IRON_PIT_DICE;
   const C = () => window.IRON_PIT_BROWSER_RESOURCE_CONVERSION;
-
   function targetAllowed(source, target, action) {
     try {
       if (target.state.is_dead || !target.state.is_alive) return false;
@@ -22,7 +21,6 @@
       throw error;
     }
   }
-
   function conflicts(source, target, action, round) {
     return (target.state.active_d20_bonus_dice || []).some((item) =>
       item.expires_round > round && (
@@ -30,14 +28,12 @@
         || (action.exclusiveGroup && item.exclusive_group === action.exclusiveGroup)
       ));
   }
-
   function attackBonus(member) {
     const template = member.state.template;
     const primary = (template.attacks || []).find((item) => item.id === template.primary_attack_id)
       || (template.attacks || [])[0];
     return primary?.bonus || 0;
   }
-
   function choose(source, setup, round) {
     try {
       const resources = source.state.resources || {};
@@ -64,7 +60,6 @@
       throw error;
     }
   }
-
   function resolveGrant(sequence, round, source, target, action) {
     try {
       if (!E().available(source.state, action.actionCost)) {
