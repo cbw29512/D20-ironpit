@@ -10,9 +10,7 @@ from app.combat.resources import resource_available, spend_resource
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant, D20BonusDieAction, D20TestKind
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent, DiceRoll
-
 logger = logging.getLogger(__name__)
-
 
 def resolve_d20_bonus_die_grant(
     sequence: int,
@@ -80,7 +78,6 @@ def resolve_d20_bonus_die_grant(
         logger.exception("Failed to grant %s from %s.", action.name, source.combatant_id)
         raise RuntimeError("D20 bonus-die grant could not be resolved.") from exc
 
-
 def eligible_d20_bonus_dice(
     state,
     test_kind: D20TestKind,
@@ -95,7 +92,6 @@ def eligible_d20_bonus_dice(
     except Exception as exc:
         logger.exception("Failed to identify eligible d20 bonus dice for %s.", state.template.name)
         raise RuntimeError("D20 bonus-die eligibility could not be resolved.") from exc
-
 
 def consume_d20_bonus_die(
     state,
@@ -119,7 +115,6 @@ def consume_d20_bonus_die(
     except Exception as exc:
         logger.exception("Failed to consume d20 bonus die for %s.", state.template.name)
         raise RuntimeError("D20 bonus die could not be consumed.") from exc
-
 
 def apply_d20_bonus_die_if_useful(
     state,
@@ -146,7 +141,6 @@ def apply_d20_bonus_die_if_useful(
         logger.exception("Failed to apply d20 bonus die for %s.", state.template.name)
         raise RuntimeError("D20 bonus die could not be applied to the test.") from exc
 
-
 def expire_d20_bonus_dice(state, round_number: int) -> list[str]:
     """Expire grants whose absolute round lifetime has ended."""
     try:
@@ -163,7 +157,6 @@ def expire_d20_bonus_dice(state, round_number: int) -> list[str]:
     except Exception as exc:
         logger.exception("Failed to expire d20 bonus dice for %s.", state.template.name)
         raise RuntimeError("D20 bonus-die expiry could not be resolved.") from exc
-
 
 def apply_resource_backed_d20_bonus_if_useful(
     state,
