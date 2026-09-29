@@ -71,6 +71,13 @@ def _persistent_rage_refresh(level: int) -> int:
         ) from exc
 
 
+def _cleric_boon_of_fate(level: int) -> int:
+    try:
+        return 1 if level >= 19 else 0
+    except Exception as exc:
+        raise ValueError(f"Failed to resolve 2024 Boon of Fate uses for level {level}.") from exc
+
+
 def _berserker_intimidating_presence(level: int) -> int:
     try:
         return 1 if level >= 14 else 0
@@ -88,6 +95,7 @@ _2024_CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "cleric": (
         ("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),
         ("divine-intervention", "Divine Intervention", cleric_divine_intervention_uses),
+        ("boon-of-fate", "Boon of Fate", _cleric_boon_of_fate),
     ),
     "fighter": (
         ("second-wind", "Second Wind", fighter_second_wind_uses),
