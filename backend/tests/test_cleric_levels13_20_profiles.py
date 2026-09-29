@@ -33,7 +33,7 @@ def test_2024_life_cleric_profiles_stage_cleanly_through_level_twenty() -> None:
     for profile in profiles:
         assert profile.character_name == "Seraphine Dawnshield"
         assert profile.ruleset == "2024"
-        assert profile.subclass_id == "life-domain"
+        assert any(item.feature_id == "life-domain" for item in profile.feature_audits)
         assert_canonical_profile_policy(profile)
 
 
