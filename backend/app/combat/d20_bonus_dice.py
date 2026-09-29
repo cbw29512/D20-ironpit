@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.d20_bonus_die_support import grant_conflicts, resource_for, target_allowed
 from app.combat.dice import DiceProvider
+from app.combat.resource_conversion import apply_restoration_conversion
 from app.combat.resources import resource_available, spend_resource
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant, D20BonusDieAction, D20TestKind
 from app.domain.encounters import EncounterCombatant
@@ -25,8 +26,13 @@ def resolve_d20_bonus_die_grant(
         if not is_available(source.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
         resource = resource_for(source, action)
-        if resource is None or resource.current_uses < action.resource_cost:
+        if resource is None:
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
+        restoration = None
+        if resource.current_uses < action.resource_cost:
+            restoration = apply_restoration_conversion(source.state, action.resource_id)
+            if restoration is None or resource.current_uses < action.resource_cost:
+                raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if not target_allowed(source, target, action):
             raise ValueError(f"{target.state.template.name} is not a legal target for {action.name}.")
         expire_d20_bonus_dice(target.state, round_number)
@@ -58,6 +64,12 @@ def resolve_d20_bonus_die_grant(
             resource_remaining=resource.current_uses,
             animation=action.animation,
             description=(
+                (
+                    f"{source.state.template.name} uses {restoration.name} to restore "
+                    f"{action.resource_id}, then "
+                )
+                if restoration is not None else ""
+            ) + (
                 f"{source.state.template.name} grants {action.name} to "
                 f"{target.state.template.name}."
             ),
