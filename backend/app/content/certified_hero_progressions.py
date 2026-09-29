@@ -1,27 +1,6 @@
 from __future__ import annotations
 
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
-from app.content.audited_bard import build_lyra_silverstring_level
-from app.content.audited_bard_profile_levels import (
-    build_lyra_silverstring_level1_profile,
-    build_lyra_silverstring_level2_profile,
-    build_lyra_silverstring_level3_profile,
-    build_lyra_silverstring_level4_profile,
-    build_lyra_silverstring_level5_profile,
-    build_lyra_silverstring_level6_profile,
-    build_lyra_silverstring_level7_profile,
-    build_lyra_silverstring_level8_profile,
-    build_lyra_silverstring_level9_profile,
-    build_lyra_silverstring_level10_profile,
-    build_lyra_silverstring_level11_profile,
-    build_lyra_silverstring_level12_profile,
-    build_lyra_silverstring_level13_profile,
-    build_lyra_silverstring_level14_profile,
-    build_lyra_silverstring_level15_profile,
-    build_lyra_silverstring_level16_profile,
-    build_lyra_silverstring_level17_profile, build_lyra_silverstring_level18_profile,
-    build_lyra_silverstring_level19_profile, build_lyra_silverstring_level20_profile,
-)
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.audited_cleric_life_high_profile import (
     build_seraphine_dawnshield_level7_profile, build_seraphine_dawnshield_level8_profile,
@@ -57,6 +36,8 @@ from app.content.barbarian_progression_profile import (
     build_rokhan_stonefury_level2_profile, build_rokhan_stonefury_level3_profile,
     build_rokhan_stonefury_level4_profile, build_rokhan_stonefury_level5_profile,
 )
+from app.content.certified_bard_2024 import CERTIFIED_BARD_2024
+from app.content.certified_druid_2024 import CERTIFIED_DRUID_2024
 from app.content.certified_hero_progression_model import CertifiedHeroProgression
 from app.content.certified_hero_progressions_2014 import CERTIFIED_HERO_PROGRESSIONS_2014
 from app.content.fighter_asi_progression_profile import build_karnok_stoneward_level6_profile, build_karnok_stoneward_level8_profile, build_karnok_stoneward_level12_profile
@@ -129,31 +110,8 @@ CERTIFIED_HERO_PROGRESSIONS_2024: tuple[CertifiedHeroProgression, ...] = (
             build_rokhan_stonefury_level19_profile, build_rokhan_stonefury_level20_profile,
         ),
     ),
-    CertifiedHeroProgression(
-        class_id="bard", ruleset="2024", template_builder=build_lyra_silverstring_level,
-        profile_builders=(
-            build_lyra_silverstring_level1_profile,
-            build_lyra_silverstring_level2_profile,
-            build_lyra_silverstring_level3_profile,
-            build_lyra_silverstring_level4_profile,
-            build_lyra_silverstring_level5_profile,
-            build_lyra_silverstring_level6_profile,
-            build_lyra_silverstring_level7_profile,
-            build_lyra_silverstring_level8_profile,
-            build_lyra_silverstring_level9_profile,
-            build_lyra_silverstring_level10_profile,
-            build_lyra_silverstring_level11_profile,
-            build_lyra_silverstring_level12_profile,
-            build_lyra_silverstring_level13_profile,
-            build_lyra_silverstring_level14_profile,
-            build_lyra_silverstring_level15_profile,
-            build_lyra_silverstring_level16_profile,
-            build_lyra_silverstring_level17_profile,
-            build_lyra_silverstring_level18_profile,
-            build_lyra_silverstring_level19_profile,
-            build_lyra_silverstring_level20_profile,
-        ),
-    ),
+    CERTIFIED_BARD_2024,
+    CERTIFIED_DRUID_2024,
     CertifiedHeroProgression(
         class_id="cleric", ruleset="2024", template_builder=build_seraphine_dawnshield_level,
         profile_builders=(
