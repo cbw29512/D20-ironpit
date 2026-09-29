@@ -129,4 +129,12 @@ BARD_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=4,
         min_character_level=7,
     ),
+    _spell(
+        "tongues",
+        "Tongues",
+        "utility",
+        "arena-out-of-scope",
+        spell_level=3,
+        min_character_level=8,
+    ),
 )
