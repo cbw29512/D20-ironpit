@@ -14,8 +14,8 @@ from app.content.bard_2024_runtime_support import (
     bard_resource_conversions,
     bard_resources,
     bard_spell_attacks,
+    bard_spell_saves,
 )
-from app.content.bard_2024_spells import build_shatter_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.character_math import saving_throw_bonuses
 from app.content.healing_spell_effects import (
@@ -50,10 +50,10 @@ def _dagger(level: int, dexterity_modifier: int) -> WeaponAttack:
 
 
 def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Lore Bard through level 9."""
+    """Compile the 2024 support/healer Lore Bard through level 10."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 9.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 10.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -97,9 +97,8 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 [build_cutting_words_2024(level)] if level >= 3 else []
             ),
             resource_conversion_actions=bard_resource_conversions(level),
-            spell_save_actions=(
-                [build_shatter_2024(8 + proficiency_bonus + charisma_modifier)]
-                if level >= 3 else []
+            spell_save_actions=bard_spell_saves(
+                level, 8 + proficiency_bonus + charisma_modifier,
             ),
             spell_attack_actions=bard_spell_attacks(
                 level, proficiency_bonus + charisma_modifier,
