@@ -51,6 +51,21 @@
     }
   }
 
+  function restoreInline(state, targetResourceId) {
+    try {
+      const action = restorationAction(state, targetResourceId);
+      if (!action) return null;
+      R().spend(state, action.sourceResourceId, action.sourceCost);
+      gain(state, action);
+      return action;
+    } catch (error) {
+      console.error("Browser inline resource restoration failed", {
+        targetResourceId, combatant: state?.template?.name, error,
+      });
+      throw error;
+    }
+  }
+
   function resolve(sequence, round, member, action) {
     try {
       const state = member.state;
@@ -117,6 +132,6 @@
   }
 
   window.IRON_PIT_BROWSER_RESOURCE_CONVERSION = {
-    allSpellSlotsEmpty, automaticAction, available, installAbilityHooks, restorationAction, resolve,
+    allSpellSlotsEmpty, automaticAction, available, installAbilityHooks, restorationAction, restoreInline, resolve,
   };
 })();
