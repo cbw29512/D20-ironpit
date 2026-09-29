@@ -130,6 +130,8 @@ def _seraphine_profile(level: int, *_legacy: int) -> PregenCombatProfile:
         resources.append(("channel-divinity", row.channel_divinity_uses))
     if level >= 10:
         resources.append(("divine-intervention", 1))
+    if level >= 19:
+        resources.append(("boon-of-fate", 1))
     resources.extend((("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)))
     return PregenCombatProfile(
         f"seraphine-dawnshield-l{level}", "Cleric", level, abilities, ("wisdom", "charisma"),
@@ -188,7 +190,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         *(_karnok_profile(level) for level in range(1, 21)),
         *(_rokhan_profile(level) for level in range(1, 21)),
-        *(_seraphine_profile(level) for level in range(1, 19)),
+        *(_seraphine_profile(level) for level in range(1, 21)),
         *build_mara_quickstep_combat_profiles(20),
     ]
     return {profile.template_id: profile for profile in profiles}

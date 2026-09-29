@@ -3,10 +3,14 @@ from __future__ import annotations
 from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
-from app.content.cleric_divine_intervention import build_divine_intervention_damage
+from app.content.cleric_divine_intervention import (
+    build_divine_intervention_damage,
+    build_greater_divine_intervention_wish_fireball,
+)
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
 from app.content.cleric_runtime_loadout import (
     build_seraphine_healing,
+    build_seraphine_initiative_refills,
     build_seraphine_resources,
     build_seraphine_save_spells,
     seraphine_source,
@@ -24,6 +28,7 @@ from app.domain.character_builds import AbilityScores
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
+from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
 from app.domain.progression_primitives import SourceDamageTemporaryHpGrant
 from app.domain.traits import CombatTrait
 
@@ -75,7 +80,11 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         speed_ft=30,
         initiative_bonus=0,
         weapon_attack=build_seraphine_mace_attack(row.proficiency_bonus),
-        saving_throw_actions=[build_divine_intervention_damage(save_dc)] if level >= 10 else [],
+        saving_throw_actions=(
+            [build_divine_intervention_damage(save_dc)]
+            + ([build_greater_divine_intervention_wish_fireball(save_dc)] if level >= 20 else [])
+            if level >= 10 else []
+        ),
         spell_save_actions=build_seraphine_save_spells(level, save_dc, wisdom_modifier, features),
         spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
         defensive_spell_actions=defenses,
@@ -103,6 +112,22 @@ def _build_seraphine(level: int) -> CombatantTemplate:
                 )
                 if "supreme-healing" in features else None
             ),
+            resource_backed_d20_outcome_adjustments=(
+                [
+                    ResourceBackedD20OutcomeAdjustment(
+                        source_id="boon-of-fate",
+                        source_name="Boon of Fate",
+                        resource_id="boon-of-fate",
+                        dice_count=2,
+                        dice_size=4,
+                        range_ft=60,
+                        test_kinds=["attack", "saving_throw", "ability_check"],
+                        can_add=True,
+                        can_subtract=True,
+                    )
+                ]
+                if "boon-of-fate" in features else []
+            ),
             source_damage_temporary_hp=(
                 SourceDamageTemporaryHpGrant(
                     source_id="improved-blessed-strikes",
@@ -126,6 +151,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             off_hand="shield", body_style="humanoid",
         ),
         resources=build_seraphine_resources(level),
+        initiative_resource_refill_grants=build_seraphine_initiative_refills(level),
         source=seraphine_source(level),
     )
 

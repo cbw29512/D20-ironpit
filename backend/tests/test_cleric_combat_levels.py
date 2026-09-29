@@ -1,5 +1,3 @@
-import pytest
-
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.cleric_combat_levels import (
     CLERIC_COMBAT_LEVELS,
@@ -66,11 +64,7 @@ def test_existing_cleric_runtime_levels_compile_from_table() -> None:
             assert resources.get(f"spell-slot-{spell_level}", 0) == uses
 
 
-def test_complete_cleric_table_advances_through_level_eighteen_then_fails_closed_at_nineteen() -> None:
-    for level in range(1, 19):
+def test_complete_cleric_table_advances_through_level_twenty() -> None:
+    for level in range(1, 21):
         assert unsupported_hero_engine_features(cleric_combat_features(level)) == ()
         assert build_seraphine_dawnshield_level(level).level == level
-
-    assert unsupported_hero_engine_features(cleric_combat_features(19)) == ("boon-of-fate",)
-    with pytest.raises(ValueError, match="boon-of-fate"):
-        build_seraphine_dawnshield_level(19)

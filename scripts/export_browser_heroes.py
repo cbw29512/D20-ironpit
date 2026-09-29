@@ -629,6 +629,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["resource_backed_d20_bonus_dice"] = [
             item.model_dump() for item in progression.resource_backed_d20_bonus_dice
         ]
+    if progression.resource_backed_d20_outcome_adjustments:
+        row["resource_backed_d20_outcome_adjustments"] = [
+            item.model_dump(mode="json") for item in progression.resource_backed_d20_outcome_adjustments
+        ]
     if progression.indomitable_reroll: row["indomitable_reroll"] = True
     if progression.indomitable_bonus: row["indomitable_bonus"] = progression.indomitable_bonus
     if progression.tactical_master_sap_weapon_ids: row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)

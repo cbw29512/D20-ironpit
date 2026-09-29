@@ -43,6 +43,12 @@
           state, "ability_check", revised, dc,
         ).roll;
       }
+      if (options.roller && options.setup) {
+        const adjustment = window.IRON_PIT_BROWSER_D20_OUTCOME_ADJUSTMENTS?.applyIfUseful(
+          options.roller, options.setup, "ability_check", revised, dc,
+        );
+        if (adjustment?.featureId) revised = adjustment.roll;
+      }
       const grants = state.template.failed_d20_test_override_grants || [];
       const eligible = grants.some((grant) => (grant.test_kinds || []).includes("ability_check"));
       if (eligible && !window.IRON_PIT_BROWSER_D20_TEST_OVERRIDE) {

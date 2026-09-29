@@ -10,6 +10,7 @@ from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
+from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.progression_primitives import (
     AbilityCheckMinimum,
@@ -93,6 +94,7 @@ class ProgressionCombatFeatures(BaseModel):
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)
     failed_d20_test_override_grants: list[FailedD20TestOverrideGrant] = Field(default_factory=list)
     resource_backed_d20_bonus_dice: list[ResourceBackedD20BonusDie] = Field(default_factory=list)
+    resource_backed_d20_outcome_adjustments: list[ResourceBackedD20OutcomeAdjustment] = Field(default_factory=list)
     source_reduces_hostile_to_zero_hp_temporary_hp: SourceReducesHostileToZeroHpTemporaryHp | None = None
     source_damage_temporary_hp: SourceDamageTemporaryHpGrant | None = None
     selectable_damage_resistance: SelectableDamageResistance | None = None

@@ -20,13 +20,19 @@
   const resolveSavingThrow = (...args) => window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(...args);
   const saveMode = (...args) => window.IRON_PIT_BROWSER_SAVING_THROWS.saveMode(...args);
 
-  function resolveOnHitConditionSave(target, attack, sourceTemplate = null, round = null) {
+  function resolveOnHitConditionSave(target, attack, sourceTemplate = null, round = null, setup = null) {
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     if (I().immune(target.state, effect.conditionId, sourceTemplate)) return null;
     const effectTags = effect.conditionId === "poisoned" ? ["poison"] : [];
-    const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc, { conditionId: effect.conditionId, effectTags, roundNumber: round });
+    const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
+      conditionId: effect.conditionId,
+      effectTags,
+      roundNumber: round,
+      encounterRoller: target,
+      setup,
+    });
     let appliedCondition = null;
     if (!save.succeeded && !target.state.active_effect_ids.includes(effect.conditionId)) {
       target.state.active_effect_ids.push(effect.conditionId); appliedCondition = effect.conditionId;
@@ -60,6 +66,8 @@
       magicalEffect: Boolean(action.magicalEffect), spellEffect: Boolean(options.spellEffect),
       sourceCreatureType: actor.state.template.creature_type || null, effectTags, roundNumber: round,
       disadvantageSources: [...(options.saveDisadvantageSources || [])],
+      encounterRoller: target,
+      setup: options.setup || null,
     };
     const advantageSources = DF().saveAdvantageSourceNames?.(
       target.state, action.saveAbility, saveContext,

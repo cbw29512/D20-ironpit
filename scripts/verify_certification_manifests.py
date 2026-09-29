@@ -79,6 +79,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.update(rule.source_id for rule in features.failed_d20_test_override_grants)
     if features.resource_backed_d20_bonus_dice:
         mechanics.update(rule.source_id for rule in features.resource_backed_d20_bonus_dice)
+    if features.resource_backed_d20_outcome_adjustments:
+        mechanics.update(rule.source_id for rule in features.resource_backed_d20_outcome_adjustments)
     if features.source_reduces_hostile_to_zero_hp_temporary_hp:
         mechanics.add(features.source_reduces_hostile_to_zero_hp_temporary_hp.source_id)
     if features.source_damage_temporary_hp:
