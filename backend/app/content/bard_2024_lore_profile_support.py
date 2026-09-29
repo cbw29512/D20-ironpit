@@ -174,3 +174,18 @@ def bard_level13_spells_audit() -> FeatureAudit:
             "is disabled by Iron Pit contract."
         ),
     )
+
+
+def bard_level14_peerless_skill_audit() -> FeatureAudit:
+    return FeatureAudit(
+        feature_id="peerless-skill",
+        feature_name="Peerless Skill",
+        source_reference="D&D Beyond Basic Rules 2024: College of Lore 14",
+        category="subclass",
+        combat_relevant=True,
+        automated=True,
+        notes=(
+            "Uses the universal resource-backed failed-d20 bonus die for self attack rolls "
+            "and ability checks. Bardic Inspiration is consumed only when the revised test succeeds."
+        ),
+    )
