@@ -202,6 +202,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.action_cost,
             spell.range_ft,
             spell.max_targets,
+            spell.area_radius_ft,
             spell.dice_count,
             spell.dice_size,
             spell.resource_id,
@@ -227,6 +228,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "action",
             60,
             6,
+            30,
             5 + (expected_slot - 5),
             8,
             expected_resource,
@@ -264,10 +266,11 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             divine_healing.action_cost,
             divine_healing.range_ft,
             divine_healing.max_targets,
+            divine_healing.area_radius_ft,
             divine_healing.dice_count,
             divine_healing.dice_size,
             divine_healing.resource_id,
-        ) == ("action", 60, 6, 5, 8, "divine-intervention")
+        ) == ("action", 60, 6, 30, 5, 8, "divine-intervention")
 
     intervention = next(
         (
