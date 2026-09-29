@@ -38,6 +38,8 @@ def test_2024_bard_level_twenty_raw_progression_and_spell_package() -> None:
     assert len(package.spells) == 22
     assert [item.id for item in package.spells[-2:]] == ["circle-of-death", "legend-lore"]
     assert [item.id for item in package.always_prepared_spells] == [
+        "bless",
+        "guiding-bolt",
         "power-word-kill",
         "power-word-heal",
     ]
@@ -75,7 +77,7 @@ def test_words_of_creation_power_word_heal_is_one_spell_for_two_linked_targets()
     assert (action.max_targets, action.secondary_target_within_ft) == (2, 10)
 
     events, sequence = resolve_group_healing(
-        1, 1, source, [first, second], action, FixedDiceProvider([]), "lyra-turn", setup=setup,
+        1, 1, source, [first, second], action, FixedDiceProvider([1]), "lyra-turn", setup=setup,
     )
 
     assert sequence == 3
@@ -123,11 +125,12 @@ def test_words_of_creation_rejects_second_target_outside_ten_feet() -> None:
     source = _member(20, "lyra", "heroes", 0)
     first = _member(1, "ally-one", "heroes", 10)
     second = _member(1, "ally-two", "heroes", 25)
+    enemy = _member(1, "enemy", "monsters", 50)
     setup = EncounterSetup(
         heroes=[source, first, second],
-        monsters=[],
+        monsters=[enemy],
         hero_total_levels=22,
-        monster_total_cr="0",
+        monster_total_cr="1",
     )
     first.state.current_hp = 1
     second.state.current_hp = 1
