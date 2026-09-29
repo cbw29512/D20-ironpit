@@ -1,5 +1,3 @@
-import pytest
-
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.cleric_combat_levels import (
     CLERIC_COMBAT_LEVELS,
@@ -66,11 +64,7 @@ def test_existing_cleric_runtime_levels_compile_from_table() -> None:
             assert resources.get(f"spell-slot-{spell_level}", 0) == uses
 
 
-def test_complete_cleric_table_advances_through_level_nineteen_then_fails_closed_at_twenty() -> None:
-    for level in range(1, 20):
+def test_complete_cleric_table_advances_through_level_twenty() -> None:
+    for level in range(1, 21):
         assert unsupported_hero_engine_features(cleric_combat_features(level)) == ()
         assert build_seraphine_dawnshield_level(level).level == level
-
-    assert unsupported_hero_engine_features(cleric_combat_features(20)) == ("greater-divine-intervention",)
-    with pytest.raises(ValueError, match="greater-divine-intervention"):
-        build_seraphine_dawnshield_level(20)
