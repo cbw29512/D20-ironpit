@@ -18,10 +18,11 @@ _LYRA_2024_BASE_ABILITIES = AbilityScores(
 
 
 def _abilities(level: int) -> AbilityScores:
-    return (
-        _LYRA_2024_BASE_ABILITIES.model_copy(update={"charisma": 19})
-        if level >= 4 else _LYRA_2024_BASE_ABILITIES
-    )
+    if level >= 8:
+        return _LYRA_2024_BASE_ABILITIES.model_copy(update={"wisdom": 16, "charisma": 20})
+    if level >= 4:
+        return _LYRA_2024_BASE_ABILITIES.model_copy(update={"charisma": 19})
+    return _LYRA_2024_BASE_ABILITIES
 _LYRA_DAGGER = AttackExpectation(
     weapon_id="dagger",
     ability="dexterity",
@@ -34,12 +35,12 @@ _LYRA_DAGGER = AttackExpectation(
 def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
     """Independent source-derived combat fingerprint for the certified Bard progression."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7}:
-            raise ValueError("2024 Lyra combat fingerprint currently covers levels 1 through 7.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
+            raise ValueError("2024 Lyra combat fingerprint currently covers levels 1 through 8.")
         acrobatics = 2 if level == 1 else (4 if level <= 4 else 6)
         abilities = _abilities(level)
         charisma_modifier = abilities.modifier("charisma")
-        max_hp = {1: 8, 2: 13, 3: 18, 4: 23, 5: 28, 6: 33, 7: 38}[level]
+        max_hp = {1: 8, 2: 13, 3: 18, 4: 23, 5: 28, 6: 33, 7: 38, 8: 43}[level]
         slot_rows = {
             1: (("spell-slot-1", 2),),
             2: (("spell-slot-1", 3),),
@@ -48,7 +49,9 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
             5: (("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 2)),
             6: (("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3)),
             7: (("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3), ("spell-slot-4", 1)),
+            8: (("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3), ("spell-slot-4", 2)),
         }
+        wisdom_modifier = abilities.modifier("wisdom")
         return PregenCombatProfile(
             template_id=f"lyra-silverstring-l{level}",
             archetype="Bard",
@@ -61,9 +64,9 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
             skill_bonuses=(
                 ("athletics", 0),
                 ("acrobatics", acrobatics),
-                ("perception", (2 if level <= 4 else 3) + 2),
+                ("perception", (2 if level <= 4 else 3) + wisdom_modifier),
                 ("performance", (2 if level <= 4 else 3) + charisma_modifier),
-                ("insight", (2 if level <= 4 else 3) + 2),
+                ("insight", (2 if level <= 4 else 3) + wisdom_modifier),
                 ("religion", (2 if level <= 4 else 3) + 1),
             ),
             attacks=(_LYRA_DAGGER,),
@@ -83,7 +86,7 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
 
 def build_lyra_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
     try:
-        return tuple(build_lyra_2024_combat_profile(level) for level in (1, 2, 3, 4, 5, 6, 7))
+        return tuple(build_lyra_2024_combat_profile(level) for level in (1, 2, 3, 4, 5, 6, 7, 8))
     except Exception:
         logger.exception("Failed to build 2024 Lyra combat fingerprints.")
         raise
