@@ -149,8 +149,12 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 body_style="humanoid",
             ),
             source=(
-                "D&D Beyond Basic Rules 2024: Bard, College of Lore, Acolyte, Orc, "
-                "Bardic Inspiration, Healing Word, Cure Wounds, Magical Discoveries, Equipment"
+                "D&D Beyond Basic Rules 2024: Bard, Acolyte, Orc, "
+                "Bardic Inspiration, Healing Word, Cure Wounds, Equipment"
+                + (
+                    "; College of Lore, Magical Discoveries"
+                    if level >= 6 else ""
+                )
             ),
         )
     except Exception:
