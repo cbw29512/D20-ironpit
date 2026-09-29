@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const P = () => window.IRON_PIT_BROWSER_HEALING_POLICY;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
+  const R = () => window.IRON_PIT_BROWSER_HEALING_RESOLUTION;
 
   function resolveGroup(
     sequence, round, healer, targets, action, turnKey = null, setup = null,
@@ -47,7 +48,10 @@
           ? `${rolls.length}d${action.diceSize || 6}+${modifier}`
           : String(modifier);
       }
-      const removed = window.IRON_PIT_BROWSER_HEALING_RESOLUTION.applyRiders(target, action);
+      const hasRiders = (action.removableConditions || []).length || action.proneReactionStand;
+      const runtime = R();
+      if (hasRiders && !runtime) throw new Error("Healing riders require the browser healing-resolution runtime.");
+      const removed = hasRiders ? runtime.applyRiders(target, action) : [];
       events.push({
         sequence: sequence++,
         round_number: round,
