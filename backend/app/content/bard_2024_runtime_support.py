@@ -7,10 +7,11 @@ from app.content.bard_2024_inspiration import build_peerless_skill_2024
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.bard_2024_spells import build_greater_invisibility_2024, build_shatter_2024
 from app.content.cleric_life_domain import DISPEL_MAGIC
-from app.content.offensive_spell_effects import build_disintegrate_2024, build_finger_of_death_2024, build_fireball_2024, build_guiding_bolt, build_sunburst_2024
+from app.content.offensive_spell_effects import build_cone_of_cold_2024, build_disintegrate_2024, build_finger_of_death_2024, build_fireball_2024, build_guiding_bolt, build_sunburst_2024
 from app.content.spell_effects import BLESS
 from app.content.threshold_spell_effects import build_power_word_kill_2024
 from app.domain.combatants import ResourceDefinition
+from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.progression_primitives import FailedSaveRerollGrant
 
@@ -44,6 +45,8 @@ def bard_spell_saves(level: int, save_dc: int):
             actions.append(build_finger_of_death_2024(save_dc))
         if level >= 15:
             actions.append(build_sunburst_2024(save_dc))
+        if level >= 19:
+            actions.append(build_cone_of_cold_2024(save_dc))
         return actions
     except Exception:
         logger.exception("Failed to build 2024 Bard spell-save actions at level %s.", level)
@@ -85,6 +88,22 @@ def bard_effect_removals(level: int):
 def bard_progression_features(level: int) -> ProgressionCombatFeatures:
     try:
         return ProgressionCombatFeatures(
+            resource_backed_d20_outcome_adjustments=(
+                [
+                    ResourceBackedD20OutcomeAdjustment(
+                        source_id="boon-of-fate",
+                        source_name="Boon of Fate",
+                        resource_id="boon-of-fate",
+                        dice_count=2,
+                        dice_size=4,
+                        range_ft=60,
+                        test_kinds=["attack", "saving_throw", "ability_check"],
+                        can_add=True,
+                        can_subtract=True,
+                    )
+                ]
+                if level >= 19 else []
+            ),
             resource_backed_d20_bonus_dice=(
                 [build_peerless_skill_2024(level)] if level >= 14 else []
             ),
@@ -124,6 +143,12 @@ def bard_resources(level: int, charisma_modifier: int) -> list[ResourceDefinitio
             ),
             ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
         ]
+        if level >= 19:
+            resources.append(ResourceDefinition(
+                id="boon-of-fate",
+                name="Boon of Fate",
+                max_uses=1,
+            ))
         resources.extend(
             ResourceDefinition(
                 id=f"spell-slot-{spell_level}",
