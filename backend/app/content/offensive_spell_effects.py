@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveAction
+from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
 
@@ -80,3 +81,28 @@ def build_guiding_bolt(attack_bonus: int) -> SpellAttackAction:
         animation="guiding-bolt",
         source="SRD 5.2.1 Guiding Bolt",
     )
+
+
+
+def build_fireball_2024(save_dc: int) -> SpellSaveAction:
+    """2024 Fireball at its printed level for edition-correct reusable casting."""
+    try:
+        return SpellSaveAction(
+            id="fireball",
+            name="Fireball",
+            level=3,
+            action_cost="action",
+            range_ft=150,
+            area=AreaTargeting(shape="radius", origin="point", radius_ft=20),
+            save_ability="dexterity",
+            dc=save_dc,
+            damage_dice_count=8,
+            damage_dice_size=6,
+            damage_type="fire",
+            success_damage="half",
+            upcast_dice_per_level=1,
+            animation="spell-save",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Fireball.")
+        raise
