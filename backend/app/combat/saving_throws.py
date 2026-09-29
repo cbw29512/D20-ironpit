@@ -21,6 +21,14 @@ from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
 
 
+def _target_creature_type(target: EncounterCombatant) -> str | None:
+    try:
+        raw = target.state.template.creature_type
+        return str(raw).split(" (")[0].strip().casefold() if raw else None
+    except Exception as exc:
+        raise ValueError("Target creature type could not be normalized.") from exc
+
+
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
     if distance_ft > action.range_ft:
         return False
@@ -53,12 +61,25 @@ def resolve_save_action(
     effect_tags = {str(tag).strip().casefold() for tag in action.effect_tags if str(tag).strip()}
     if str(action.damage_type or "").casefold() == "poison":
         effect_tags.add("poison")
+    inherent_disadvantage = (
+        (action.name,)
+        if _target_creature_type(target) in {
+            item.strip().casefold()
+            for item in action.save_disadvantage_creature_types
+            if item.strip()
+        }
+        else ()
+    )
+    resolved_disadvantage_sources = tuple(dict.fromkeys([
+        *save_disadvantage_sources,
+        *inherent_disadvantage,
+    ]))
     save_context = SavingThrowContext(
         magical_effect=action.magical_effect,
         spell_effect=spell_effect,
         source_creature_type=source_type,
         effect_tags=frozenset(effect_tags),
-        disadvantage_sources=save_disadvantage_sources,
+        disadvantage_sources=resolved_disadvantage_sources,
     )
     advantage_sources = saving_throw_advantage_source_names(
         target.state, action.save_ability, save_context,
@@ -130,8 +151,8 @@ def resolve_save_action(
     if advantage_sources:
         source_text = " and ".join(advantage_sources)
         description += f" {source_text} grants Advantage on the save."
-    if save_disadvantage_sources:
-        source_text = " and ".join(save_disadvantage_sources)
+    if resolved_disadvantage_sources:
+        source_text = " and ".join(resolved_disadvantage_sources)
         description += f" {source_text} imposes Disadvantage on the save."
     if target.state.template.progression_features.evasion and action.save_ability == "dexterity" and action.success_damage == "half":
         description += " Evasion reduces the damage."
