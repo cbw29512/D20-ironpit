@@ -25,7 +25,10 @@ from app.domain.character_builds import AbilityScores
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import AbilityScaledDamageRider, ProgressionCombatFeatures, SlotHealingSelfRider
-from app.domain.progression_primitives import SourceDamageTemporaryHpGrant
+from app.domain.progression_primitives import (
+    ResourceBackedD20OutcomeAdjustment,
+    SourceDamageTemporaryHpGrant,
+)
 from app.domain.traits import CombatTrait
 
 def _modifier(score: int) -> int:
@@ -103,6 +106,22 @@ def _build_seraphine(level: int) -> CombatantTemplate:
                     source_name="Supreme Healing",
                 )
                 if "supreme-healing" in features else None
+            ),
+            resource_backed_d20_outcome_adjustments=(
+                [
+                    ResourceBackedD20OutcomeAdjustment(
+                        source_id="boon-of-fate",
+                        source_name="Boon of Fate",
+                        resource_id="boon-of-fate",
+                        dice_count=2,
+                        dice_size=4,
+                        range_ft=60,
+                        test_kinds=["attack", "saving_throw", "ability_check"],
+                        can_add=True,
+                        can_subtract=True,
+                    )
+                ]
+                if "boon-of-fate" in features else []
             ),
             source_damage_temporary_hp=(
                 SourceDamageTemporaryHpGrant(
