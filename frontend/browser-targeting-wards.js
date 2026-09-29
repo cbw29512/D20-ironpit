@@ -4,14 +4,17 @@
   const D = () => window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
 
-  function check(attacker, target) {
+  function check(attacker, target, setup = null) {
     D().removeOwnerAttackEnding(attacker.state);
     const gate = D().targetingGate(target.state, attacker.state.template);
     if (!gate) return null;
     const immunityKey = `${target.combatant_id}:${gate.id}`;
     const immunities = attacker.state.targeting_gate_immunity_keys || (attacker.state.targeting_gate_immunity_keys = []);
     if (immunities.includes(immunityKey)) return null;
-    const save = V().resolveSavingThrow(attacker.state, gate.save_ability || "wisdom", gate.save_dc || 1);
+    const save = V().resolveSavingThrow(attacker.state, gate.save_ability || "wisdom", gate.save_dc || 1, {
+      encounterRoller: attacker,
+      setup,
+    });
     if (save.succeeded && gate.success_immunity_hours != null) immunities.push(immunityKey);
     return { gate, roll: save.roll, succeeded: save.succeeded };
   }
