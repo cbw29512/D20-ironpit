@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.healing_spell_effects import build_mass_cure_wounds
+from app.content.offensive_spell_effects import build_fireball_2024
 from app.domain.actions import HealingAction, SavingThrowAction
 
 logger = logging.getLogger(__name__)
@@ -48,4 +49,32 @@ def build_divine_intervention_healing(
         })
     except Exception:
         logger.exception("Failed to build Divine Intervention healing action.")
+        raise
+
+
+
+def build_greater_divine_intervention_wish_fireball(save_dc: int) -> SavingThrowAction:
+    """Wish duplicates printed-level 2024 Fireball through Greater Divine Intervention."""
+    try:
+        spell = build_fireball_2024(save_dc)
+        return SavingThrowAction(
+            id="greater-divine-intervention-wish-fireball",
+            name="Greater Divine Intervention: Wish — Fireball",
+            action_cost=spell.action_cost,
+            save_ability=spell.save_ability,
+            dc=spell.dc,
+            range_ft=spell.range_ft,
+            area=spell.area,
+            damage_dice_count=spell.damage_dice_count,
+            damage_dice_size=spell.damage_dice_size,
+            damage_bonus=spell.damage_bonus,
+            damage_type=spell.damage_type,
+            success_damage=spell.success_damage,
+            resource_id=_RESOURCE_ID,
+            resource_cost=1,
+            magical_effect=True,
+            animation=spell.animation,
+        )
+    except Exception:
+        logger.exception("Failed to build Greater Divine Intervention Wish/Fireball action.")
         raise
