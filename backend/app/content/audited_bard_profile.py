@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import logging
 
-from app.content.bard_2024_lore_profile_support import lore_bard_level3_audits
+from app.content.bard_2024_lore_profile_support import bard_level4_asi_audit, lore_bard_level3_audits
 from app.content.canonical_combat_build_policy import (
     canonical_background_increases,
     canonical_base_ability_scores,
 )
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.domain.character_builds import AbilityScores, CharacterBuildProfile, FeatureAudit
+from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
 
 logger = logging.getLogger(__name__)
 
@@ -36,23 +36,24 @@ def _feature(
     )
 
 
-def _scores() -> tuple[AbilityScores, list, AbilityScores]:
+def _scores(level: int) -> tuple[AbilityScores, list, list[AbilityIncrease], AbilityScores]:
     base = canonical_base_ability_scores("bard")
     allowed = ["intelligence", "wisdom", "charisma"]
-    increases = canonical_background_increases("bard", allowed)
+    background = canonical_background_increases("bard", allowed)
+    advancement = [AbilityIncrease(ability="charisma", amount=2)] if level >= 4 else []
     values = base.model_dump()
-    for increase in increases:
+    for increase in [*background, *advancement]:
         values[increase.ability] += increase.amount
-    return base, increases, AbilityScores(**values)
+    return base, background, advancement, AbilityScores(**values)
 
 
 def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Lyra's legal 2024 Lore Bard progression through level 3."""
+    """Compile Lyra's legal 2024 Lore Bard progression through level 4."""
     try:
-        if level not in {1, 2, 3}:
-            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 3.")
+        if level not in {1, 2, 3, 4}:
+            raise ValueError("2024 Lyra profile currently certifies Bard levels 1 through 4.")
         hero = HERO_BY_CLASS["bard"]
-        base, background_increases, final = _scores()
+        base, background_increases, advancement_increases, final = _scores(level)
         audits = [
             _feature("bardic-inspiration", "Bardic Inspiration", "class", combat_relevant=True, automated=True),
             _feature("spellcasting", "Spellcasting", "class", combat_relevant=True, automated=True),
@@ -111,6 +112,8 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
             ])
         if level >= 3:
             audits.extend(lore_bard_level3_audits())
+        if level >= 4:
+            audits.append(bard_level4_asi_audit())
         return CharacterBuildProfile(
             id=f"build-lyra-silverstring-l{level}",
             template_id=canonical_template_id("bard", level),
@@ -130,6 +133,7 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
             base_ability_scores=base,
             background_allowed_abilities=["intelligence", "wisdom", "charisma"],
             background_increases=background_increases,
+            advancement_increases=advancement_increases,
             final_ability_scores=final,
             class_equipment_option="gold",
             class_equipment=["Studded Leather Armor", "Dagger", "Lute"],
@@ -158,6 +162,10 @@ def build_lyra_silverstring_profile(level: int = 1) -> CharacterBuildProfile:
                     ["D&D Beyond Basic Rules 2024: College of Lore 3 — Bonus Proficiencies, Cutting Words"]
                     if level >= 3 else []
                 ),
+                *(
+                    ["D&D Beyond Basic Rules 2024: Bard 4 — Ability Score Improvement"]
+                    if level >= 4 else []
+                ),
             ],
         )
     except Exception:
@@ -175,3 +183,8 @@ def build_lyra_silverstring_level2_profile() -> CharacterBuildProfile:
 
 def build_lyra_silverstring_level3_profile() -> CharacterBuildProfile:
     return build_lyra_silverstring_profile(3)
+
+
+
+def build_lyra_silverstring_level4_profile() -> CharacterBuildProfile:
+    return build_lyra_silverstring_profile(4)

@@ -118,3 +118,46 @@ def test_2024_bard_level_three_spell_package_adds_shatter() -> None:
     ]
     shatter = level_three.spells[-1]
     assert (shatter.spell_level, shatter.min_character_level) == (2, 3)
+
+
+
+def test_2024_lore_bard_level_four_applies_persistent_charisma_asi() -> None:
+    profile = build_lyra_silverstring_profile(4)
+    hero = build_lyra_silverstring_level(4)
+
+    assert profile.final_ability_scores.charisma == 19
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [("charisma", 2)]
+    assert hero.ability_scores.charisma == 19
+    assert hero.max_hp == 23
+    assert hero.saving_throw_bonuses["charisma"] == 6
+    assert hero.skill_bonuses["performance"] == 6
+    resources = {item.id: item.max_uses for item in hero.resources}
+    assert resources["bardic-inspiration"] == 4
+    assert resources["spell-slot-1"] == 4
+    assert resources["spell-slot-2"] == 3
+    shatter = hero.spell_save_actions[0]
+    assert shatter.dc == 14
+    assert hero.healing_actions[0].healing_bonus == 4
+    assert hero.healing_actions[1].healing_bonus == 4
+
+
+def test_2024_bard_level_four_spell_package_adds_cantrip_and_utility_spell() -> None:
+    level_four = canonical_spell_package("bard", 4, "2024", 4)
+
+    assert level_four is not None
+    assert [item.id for item in level_four.cantrips] == [
+        "dancing-lights",
+        "mage-hand",
+        "message",
+    ]
+    assert [item.id for item in level_four.spells] == [
+        "healing-word",
+        "cure-wounds",
+        "detect-magic",
+        "comprehend-languages",
+        "identify",
+        "shatter",
+        "knock",
+    ]
+    knock = level_four.spells[-1]
+    assert (knock.spell_level, knock.min_character_level) == (2, 4)
