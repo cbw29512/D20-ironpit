@@ -24,6 +24,8 @@ class HpThresholdInstantDeathAction(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     magical_effect: bool = True
+    max_targets: int = Field(default=1, ge=1, le=20)
+    secondary_target_within_ft: int | None = Field(default=None, ge=5)
     animation: str = "instant-death"
 
     @model_validator(mode="after")
@@ -37,4 +39,6 @@ class HpThresholdInstantDeathAction(BaseModel):
             raise ValueError("Threshold fallback damage requires dice count, die size, and damage type.")
         if self.fallback_damage_dice_size == 1:
             raise ValueError("Threshold fallback damage die size must be at least 2.")
+        if self.secondary_target_within_ft is not None and self.max_targets < 2:
+            raise ValueError("Linked secondary-target distance requires a multi-target threshold action.")
         return self
