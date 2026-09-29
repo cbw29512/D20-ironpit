@@ -564,7 +564,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
         row["initiative_resource_refill_grants"] = [
-            item.model_dump() for item in template.initiative_resource_refill_grants
+            item.model_dump(exclude_none=True) for item in template.initiative_resource_refill_grants
         ]
     if template.resource_conversion_actions:
         row["resource_conversion_actions"] = [
