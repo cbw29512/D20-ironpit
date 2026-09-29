@@ -25,6 +25,7 @@ def build_all_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         *build_lyra_2014_combat_profiles(),
         *build_seraphine_2014_combat_profiles(),
         *build_thalen_2014_combat_profiles(),
+        *build_thalen_2024_combat_profiles(),
         *build_rowan_2014_combat_profiles(),
         *build_nyra_2014_combat_profiles(),
         *build_varek_2014_combat_profiles(),
