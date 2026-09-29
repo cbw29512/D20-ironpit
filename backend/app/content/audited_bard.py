@@ -8,7 +8,7 @@ from app.content.audited_bard_profile import build_lyra_silverstring_profile
 from app.content.bard_2024_cutting_words import build_cutting_words_2024
 from app.content.bard_2024_font_of_inspiration import build_font_of_inspiration_2024
 from app.content.bard_2024_inspiration import build_bardic_inspiration_2024
-from app.content.bard_2024_spells import build_shatter_2024
+from app.content.bard_2024_spells import build_greater_invisibility_2024, build_shatter_2024
 from app.content.cleric_life_domain import DISPEL_MAGIC
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.character_math import saving_throw_bonuses
@@ -18,6 +18,8 @@ from app.content.spell_effects import BLESS
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.weapon_catalog import build_weapon
 from app.domain.combatants import ResourceDefinition
+from app.domain.progression import ProgressionCombatFeatures
+from app.domain.progression_primitives import FailedSaveRerollGrant
 from app.domain.models import CombatantTemplate, VisualLoadout, WeaponAttack
 from app.domain.traits import CombatTrait
 
@@ -69,10 +71,10 @@ def _resources(level: int, charisma_modifier: int) -> list[ResourceDefinition]:
 
 
 def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 support/healer Lore Bard through level 6."""
+    """Compile the 2024 support/healer Lore Bard through level 7."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6}:
-            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 6.")
+        if level not in {1, 2, 3, 4, 5, 6, 7}:
+            raise ValueError("2024 Lyra runtime currently supports Bard levels 1 through 7.")
         profile = build_lyra_silverstring_profile(level)
         row = BARD_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -124,11 +126,29 @@ def build_lyra_silverstring_level(level: int) -> CombatantTemplate:
                 if level >= 6 else []
             ),
             defensive_spell_actions=(
-                [BLESS.model_copy(deep=True)] if level >= 6 else []
+                [BLESS.model_copy(deep=True)]
+                + ([build_greater_invisibility_2024()] if level >= 7 else [])
+                if level >= 6 else []
             ),
             effect_removal_actions=(
                 [DISPEL_MAGIC.model_copy(deep=True, update={"casting_ability": "charisma"})]
                 if level >= 6 else []
+            ),
+            progression_features=ProgressionCombatFeatures(
+                failed_save_reroll_grants=(
+                    [
+                        FailedSaveRerollGrant(
+                            source_id="countercharm",
+                            source_name="Countercharm",
+                            action_cost="reaction",
+                            target_mode="self_or_ally",
+                            range_ft=30,
+                            required_effect_tags=["charmed", "frightened"],
+                            reroll_mode="advantage",
+                        )
+                    ]
+                    if level >= 7 else []
+                ),
             ),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("dexterity", "charisma")),
             skill_bonuses={
