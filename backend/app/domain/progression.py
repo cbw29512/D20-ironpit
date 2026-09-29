@@ -10,6 +10,7 @@ from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
+from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.progression_primitives import (
     AbilityCheckMinimum,
@@ -23,7 +24,6 @@ from app.domain.progression_primitives import (
     NaturalTwentyAttackDamageGrant,
     OpeningTargetingWard,
     ResourceBackedD20BonusDie,
-    ResourceBackedD20OutcomeAdjustment,
     ResourceBackedOnHitExile,
     DelayedResourceRefill,
     SavingThrowMinimum,
