@@ -96,6 +96,8 @@ function healingMember(id, position, hp = 20) {
 
   healer.state.resources["spell-slot-9"] = 1;
   healer.state.action_available = true;
+  first.state.current_hp = 1;
+  second.state.current_hp = 1;
   second.position_ft = 25;
   assert.throws(
     () => window.IRON_PIT_BROWSER_HEALING.resolveGroup(
