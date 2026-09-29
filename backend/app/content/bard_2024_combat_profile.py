@@ -76,7 +76,7 @@ def build_lyra_2024_combat_profile(level: int) -> PregenCombatProfile:
             resources=(
                 ("bardic-inspiration", charisma_modifier),
                 *slot_rows[level],
-                ("adrenaline-rush", 2 if level <= 4 else 3),
+                ("adrenaline-rush", proficiency_bonus),
                 ("relentless-endurance", 1),
             ),
             initiative_bonus=0,
