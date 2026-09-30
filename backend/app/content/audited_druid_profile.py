@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile Thalen's 2024 Druid foundation without early subclass leakage."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
-            raise ValueError("2024 Thalen profile currently supports Druid levels 1 through 10.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
+            raise ValueError("2024 Thalen profile currently supports Druid levels 1 through 11.")
         hero = HERO_BY_CLASS["druid"]
         base = canonical_base_ability_scores("druid")
         background_allowed = ["intelligence", "wisdom", "charisma"]
@@ -122,6 +122,13 @@ def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
                         "D&D Beyond Basic Rules 2024: Spells — Thunderwave",
                     ]
                     if level >= 10 else []
+                ),
+                *(
+                    [
+                        "D&D Beyond Basic Rules 2024: Druid 11 — level 6 spell slot",
+                        "D&D Beyond Basic Rules 2024: Spells — Heal",
+                    ]
+                    if level >= 11 else []
                 ),
                 *(
                     ["D&D Beyond Basic Rules 2024: Circle of the Land 3 — Land's Aid, Circle Spells (Arid)"]
