@@ -160,3 +160,31 @@ def build_burning_hands_2024(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build 2024 Burning Hands.")
         raise
+
+
+def build_blur_2024() -> DefensiveSpellAction:
+    """Explicit 2024 Blur fingerprint with universal special-sense bypass."""
+    try:
+        return DefensiveSpellAction(
+            id="blur",
+            name="Blur",
+            level=2,
+            action_cost="action",
+            range_ft=0,
+            duration_minutes=1,
+            target_policy="self",
+            target_count=1,
+            modifier_effects=[
+                SpellModifierEffect(
+                    kind="attacks-against-disadvantage",
+                    bypass_attacker_senses=["blindsight", "truesight"],
+                ),
+            ],
+            concentration=True,
+            priority=70,
+            animation="blur",
+            source="D&D Beyond Basic Rules 2024: Blur",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Blur.")
+        raise
