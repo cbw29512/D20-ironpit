@@ -48,7 +48,7 @@ LOCKED RULE/ARCHITECTURE DECISIONS
 - AGENTS: Netlify publishing lock, exact-head verification, no source-name resolvers.
 
 NEXT EXACT ACTION
-- Create and verify the isolated repair PR against this exact branch head.
+- Verify the early-ending lifecycle follow-up on PR #473 before merge. First repair head: 1826b0419b2874741ff2af81e3fa3dd9b426c2fc; follow-up exact-head CI is UNKNOWN until its update completes.
 
 DO NOT CARRY FORWARD
 - Prior-head CI, old counts, exhaustive RAW claims, assumed live deployment, or Druid 17 ownership.

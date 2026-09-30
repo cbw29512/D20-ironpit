@@ -61,6 +61,10 @@ for (const page of ["frontend/index.html", "index.html"]) {
   T.expireSourceStart(1, 11, owner, wardSetup);
   assert.deepEqual(warded.state.active_modifiers.map((modifier) => modifier.source_id), ["other"]);
   assert.deepEqual(warded.state.timed_effects.map((effect) => effect.source_id), ["other"]);
+  assert.deepEqual(window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS.removeOwnerAttackEnding(warded.state), ["sanctuary"]);
+  assert.deepEqual(warded.state.active_modifiers, []);
+  assert.deepEqual(warded.state.timed_effects, []);
+  assert.ok(!warded.state.active_effect_ids.includes("sanctuary"));
   assert.deepEqual(S.buildState(structuredClone(template)).active_modifiers, []);
 }
 console.log("2014 RAW, turn selection, duration and both website entry points passed.");

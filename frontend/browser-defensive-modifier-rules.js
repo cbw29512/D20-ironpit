@@ -80,10 +80,23 @@
     .sort((a, b) => (b.save_dc || 0) - (a.save_dc || 0) || a.id.localeCompare(b.id))[0] || null;
 
   function removeOwnerAttackEnding(state) {
-    const removed = (state.active_modifiers || []).filter((item) => item.ends_on_owner_attack)
-      .map((item) => item.source_effect_id);
-    state.active_modifiers = (state.active_modifiers || []).filter((item) => !item.ends_on_owner_attack);
-    return [...new Set(removed)].sort();
+    try {
+      const ending = (state.active_modifiers || []).filter((item) => item.ends_on_owner_attack);
+      state.active_modifiers = (state.active_modifiers || []).filter((item) => !item.ends_on_owner_attack);
+      // Match source and effect together; another source's surviving buff stays active.
+      for (const effect of [...(state.timed_effects || [])]) {
+        const matches = (item) => item.source_id === effect.source_id && item.source_effect_id === effect.source_effect_id;
+        if (ending.some(matches) && !state.active_modifiers.some(matches)) {
+          const timed = window.IRON_PIT_BROWSER_TIMED;
+          if (!timed) throw new Error("Attack-ending timed modifier cleanup requires the lifecycle runtime.");
+          timed.removeGroup(state, effect);
+        }
+      }
+      return [...new Set(ending.map((item) => item.source_effect_id))].sort();
+    } catch (error) {
+      console.error("Attack-ending modifier cleanup failed.", state.template?.id, error);
+      throw error;
+    }
   }
 
   window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = {

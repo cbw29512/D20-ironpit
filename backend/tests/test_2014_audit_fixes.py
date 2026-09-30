@@ -2,6 +2,7 @@
 import pytest
 from app.combat.condition_rules import can_see
 from app.combat.dice import SeededDiceProvider
+from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modifiers
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.hp_threshold_condition import legal_hp_threshold_condition
 from app.combat.hp_threshold_instant_death import legal_hp_threshold_instant_death
@@ -67,6 +68,10 @@ def test_sanctuary_source_duration_and_other_sources(cast_round, expiry_round):
     expire_start_of_turn_conditions(1, expiry_round, actor, setup)
     assert [item.source_id for item in target.state.active_modifiers] == ["other"]
     assert [item.source_id for item in target.state.timed_effects] == ["other"]
+    assert remove_owner_attack_ending_modifiers(target.state) == ["sanctuary"]
+    assert not target.state.active_modifiers
+    assert not target.state.timed_effects
+    assert "sanctuary" not in target.state.active_effect_ids
     assert build_combatant_state(target.state.template).active_modifiers == []
 
 

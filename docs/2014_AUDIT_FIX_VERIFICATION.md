@@ -35,3 +35,7 @@ The encounter probes execute production browser modules in Node. They do not con
 ## Other active work
 
 PR #472 belongs to the other window's Druid 17 lane. This branch contains no Druid progression, Foresight, or initiative/Death Save changes. Shared exporter and workflow files have independent additions, and generated data must be regenerated when reconciling either merge order. Re-anchor and run exact-head checks after main changes; do not copy verification across heads.
+
+## Early-ending lifecycle follow-up
+
+The source-owned duration marker is also removed when all attack-ending modifiers from that source/effect group have ended. This keeps live condition/buff state consistent with actual protection and prevents a stale card marker or later duplicate expiration event. Python uses defensive_modifier_lifecycle.py and the existing timed group remover; browser uses the same group identity/removal model. The permanent duration regressions also verify this early-ending cleanup. The first repair head (1826b0419b2874741ff2af81e3fa3dd9b426c2fc) passed the full local suite; targeted follow-up checks passed before updating the PR. Final-head full checks are rerun, and the PR checks are authoritative for exact-head completion.
