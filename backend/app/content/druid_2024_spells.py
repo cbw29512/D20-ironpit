@@ -120,3 +120,29 @@ def build_starry_wisp_2024(
     except Exception:
         logger.exception("Failed to build 2024 Starry Wisp at level %s.", character_level)
         raise
+
+
+def build_thunderwave_2024(save_dc: int) -> SpellSaveAction:
+    """2024 Thunderwave on universal area-save damage plus failed-save push."""
+    try:
+        return SpellSaveAction(
+            id="thunderwave",
+            name="Thunderwave",
+            level=1,
+            action_cost="action",
+            range_ft=15,
+            area=AreaTargeting(shape="cube", origin="self", length_ft=15),
+            save_ability="constitution",
+            dc=save_dc,
+            damage_dice_count=2,
+            damage_dice_size=8,
+            damage_type="thunder",
+            success_damage="half",
+            upcast_dice_per_level=1,
+            failed_save_push_ft=10,
+            animation="spell-save",
+            source="D&D Beyond Basic Rules 2024: Thunderwave",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Thunderwave.")
+        raise
