@@ -126,7 +126,7 @@
   function revertIfIncapacitated(state) {
     const active = state.replacement_form;
     if (!active || !active.ends_on_incapacitated) return false;
-    if (!state.is_dead && !Q()?.incapacitated(state)) return false;
+    if (!state.is_dead && !state.is_unconscious && !Q()?.incapacitated(state)) return false;
     revert(state, false);
     return true;
   }
