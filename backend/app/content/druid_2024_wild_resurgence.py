@@ -36,6 +36,7 @@ def build_wild_resurgence_2024(
             action_cost="none",
             source_resource_id="wild-shape",
             source_cost=1,
+            source_reserve=1,
             additional_source_costs={"wild-resurgence-slot-restore": 1},
             target_resource_id="spell-slot-1",
             target_gain=1,
