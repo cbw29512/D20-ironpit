@@ -12,7 +12,7 @@ from app.combat.grapple import (
     speed_is_zero,
 )
 from app.combat.hit_modifiers import apply_hit_modifier_effects
-from app.combat.modifier_stack import effective_speed
+from app.combat.modifier_stack import d20_test_advantage_sources, effective_speed
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, CombatantTemplate, WeaponAttack
 from app.domain.size import size_at_most
@@ -31,7 +31,7 @@ def attack_roll_condition_sources(
     target_id: str | None = None,
 ) -> tuple[int, int]:
     """Return Advantage and Disadvantage sources from supported conditions and wards."""
-    advantage = 0
+    advantage = d20_test_advantage_sources(attacker)
     disadvantage = attack_disadvantage_sources(attacker)
     disadvantage += attacks_against_disadvantage_sources(defender, attacker.template, distance_ft)
     ignores_unseen = attacker.template.progression_features.ignore_unseen_target_attack_disadvantage
