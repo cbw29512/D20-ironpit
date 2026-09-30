@@ -85,8 +85,7 @@ def validate_barrier_layout(
     try:
         if setup.map_definition is None or caster.state.position is None:
             raise ValueError("Persistent barriers require the authoritative grid.")
-        if not action.min_sections <= len(section_edges) <= action.max_sections:
-            raise ValueError(
+        if (\n            action.required_support_material\n            and action.required_support_material not in setup.map_definition.support_materials\n        ):\n            raise ValueError(\n                f"{action.name} requires {action.required_support_material} support on this map."\n            )\n        if not action.min_sections <= len(section_edges) <= action.max_sections:\n            raise ValueError(
                 f"{action.name} requires between {action.min_sections} and "
                 f"{action.max_sections} sections."
             )
