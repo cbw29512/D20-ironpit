@@ -15,7 +15,7 @@ MAP = BattleMapDefinition(id="save-push", width_squares=8, height_squares=8)
 
 
 def _member(combatant_id: str, side: str, x: int, y: int) -> EncounterCombatant:
-    template = build_goblin_warrior().model_copy(update={"id": combatant_id, "name": combatant_id})
+    template = build_goblin_warrior().model_copy(update={\n        "id": combatant_id,\n        "name": combatant_id,\n        "saving_throw_bonuses": {"constitution": 0},\n    })
     state = build_combatant_state(template)
     state.position = GridPosition(x=x, y=y)
     return EncounterCombatant(combatant_id=combatant_id, side=side, position_ft=x * 5, state=state)
