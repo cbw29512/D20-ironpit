@@ -34,8 +34,23 @@ def test_2024_druid_level_ten_reuses_universal_defenses_and_damage_spell() -> No
     }
 
     assert package is not None
+    assert len(package.cantrips) == 5
+    assert package.cantrips[-1].id == "thunderclap"
     assert len(package.spells) == 15
     assert package.spells[-1].id == "thunderwave"
+
+    thunderclap = next(item for item in hero.spell_save_actions if item.id == "thunderclap")
+    assert thunderclap.level == 0
+    assert thunderclap.save_ability == "constitution"
+    assert thunderclap.damage_dice_count == 2
+    assert thunderclap.damage_dice_size == 6
+    assert thunderclap.damage_bonus == 5
+    assert thunderclap.damage_type == "thunder"
+    assert thunderclap.success_damage == "none"
+    assert thunderclap.area is not None
+    assert thunderclap.area.shape == "emanation"
+    assert thunderclap.area.origin == "self"
+    assert thunderclap.area.radius_ft == 5
 
     thunderwave = next(item for item in hero.spell_save_actions if item.id == "thunderwave")
     assert thunderwave.level == 1
