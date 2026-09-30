@@ -170,6 +170,32 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     "resistance. Bonus Action moves the zone up to 60 feet while remaining within 120 feet."
                 ),
             ))
+        if level >= 15:
+            audits.extend([
+                druid_feature_audit(
+                    "improved-elemental-fury-potent-spellcasting",
+                    "Improved Elemental Fury: Potent Spellcasting",
+                    "class",
+                    combat_relevant=True,
+                    automated=True,
+                    notes=(
+                        "The existing Druid cantrip actions remain unchanged except for source data range: "
+                        "cantrips with a printed range of at least 10 feet gain +300 feet. Poison Spray, "
+                        "Fire Bolt, and Starry Wisp therefore compile to 330/420/360 feet; Self-range "
+                        "Thunderclap does not qualify. No Druid-named combat resolver is added."
+                    ),
+                ),
+                druid_feature_audit(
+                    "druid-combat-spells-8", "Level 8 Spellcasting: Sunburst", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Damage-first preparation selects explicit 2024 Sunburst and reuses the already-certified "
+                        "area save-damage plus failed-save timed-condition primitives: Constitution save, 12d6 "
+                        "Radiant, half on success, and Blinded for up to 1 minute with an end-of-turn repeat save. "
+                        "Its Darkness-dispel clause is arena-inert while Iron Pit has no Dim Light/Darkness state."
+                    ),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)
