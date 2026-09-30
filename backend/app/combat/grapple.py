@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
-from app.combat.ability_checks import resolve_ability_check_outcome
+from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
@@ -133,9 +133,11 @@ def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     ))
     disadvantage = ability_check_disadvantage_sources(state)
     disadvantage += int(has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID))
-    if (advantage > 0) == (disadvantage > 0):
-        return RollMode.NORMAL
-    return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
+    return ability_check_roll_mode(
+        state,
+        advantage_sources=advantage,
+        disadvantage_sources=disadvantage,
+    )
 
 
 def _escape_choice(state: CombatantState) -> tuple[str, str, int, RollMode]:
