@@ -87,6 +87,8 @@ def _save(action) -> dict[str, object]:
     }
     if action.effect_tags:
         result["effect_tags"] = list(action.effect_tags)
+    if action.automatic_failure_creature_types:
+        result["automatic_failure_creature_types"] = list(action.automatic_failure_creature_types)
     if action.damage_dice_count:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
         result["damage_type"] = action.damage_type
