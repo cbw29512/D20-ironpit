@@ -417,6 +417,7 @@ jobs:
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-condition-lifecycle.test.cjs
           node frontend/browser-invisibility-suppression.test.cjs
+          node frontend/browser-timed-effect-owned-resistances.test.cjs
           node frontend/browser-condition-removal.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-movement-mode-grants.test.cjs
