@@ -115,4 +115,33 @@ assert.equal(
   5,
 );
 
+
+const sightWall = {
+  blocks_line_of_sight: true,
+  sections: [{
+    current_hp: 20,
+    destroyed: false,
+    edges: [
+      { first: { x: 2, y: 1 }, second: { x: 2, y: 2 } },
+      { first: { x: 3, y: 1 }, second: { x: 3, y: 2 } },
+    ],
+  }],
+};
+const sightSource = member("sight-source", "heroes", 2, 0);
+const sightTarget = member("sight-target", "monsters", 2, 3);
+assert.equal(
+  window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(
+    sightSource, sightTarget, { persistent_barriers: [sightWall] },
+  ),
+  false,
+);
+sightWall.sections[0].current_hp = 0;
+sightWall.sections[0].destroyed = true;
+assert.equal(
+  window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(
+    sightSource, sightTarget, { persistent_barriers: [sightWall] },
+  ),
+  true,
+);
+
 console.log("Grid movement browser parity regressions passed.");
