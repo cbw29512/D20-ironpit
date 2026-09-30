@@ -29,10 +29,13 @@ def apply_hamstring_blow(defender: CombatantState, source_id: str, round_number:
 
 
 def apply_forceful_blow(
-    attacker: EncounterCombatant, defender: EncounterCombatant, setup: EncounterSetup,
+    attacker: EncounterCombatant,
+    defender: EncounterCombatant,
+    setup: EncounterSetup,
+    round_number: int,
 ) -> int:
     """Push the target 15 feet straight away. Following the target remains optional."""
-    return push_straight_away(defender, attacker, setup, 15)
+    return push_straight_away(defender, attacker, setup, 15, round_number=round_number)
 
 
 def apply_staggering_blow(defender: CombatantState, source_id: str) -> bool:
@@ -121,7 +124,7 @@ def apply_brutal_strike_effects(
         elif effect_id == "forceful-blow":
             if setup is None:
                 raise ValueError("Forceful Blow requires encounter geometry.")
-            apply_forceful_blow(attacker, defender, setup)
+            apply_forceful_blow(attacker, defender, setup, round_number)
         else:
             raise ValueError(f"Unsupported Brutal Strike effect: {effect_id}")
     if selected:
