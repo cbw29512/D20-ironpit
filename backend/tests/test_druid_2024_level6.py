@@ -4,6 +4,7 @@ from app.combat.alternate_spell_casts import available_alternate_casts, spend_al
 from app.combat.state import build_combatant_state
 from app.content.audited_druid import build_thalen_greenbough_level
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
+from app.content.canonical_spell_policy import canonical_spell_package
 
 
 def _resource(state, resource_id: str):
