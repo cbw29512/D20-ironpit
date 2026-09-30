@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.content.cleric_life_domain import DISPEL_MAGIC, LESSER_RESTORATION
+from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
 from app.content.druid_2024_land_spells import (
     build_blur_2024,
     build_burning_hands_2024,
