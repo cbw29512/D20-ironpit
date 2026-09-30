@@ -7,6 +7,10 @@ const vm = require("node:vm");
 
 global.window = globalThis;
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+let formLifecycleChecks = 0;
+window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = {
+  revertIfIncapacitated: () => { formLifecycleChecks += 1; return false; },
+};
 vm.runInThisContext(
   fs.readFileSync(path.join(__dirname, "browser-timed-conditions.js"), "utf8"),
   { filename: "browser-timed-conditions.js" },
@@ -30,6 +34,7 @@ timed.apply(state, "ward", "ally", {
   ownedDamageResistances: ["fire"],
 });
 
+assert.equal(formLifecycleChecks, 2, "timed condition application must invoke replacement-form lifecycle");
 assert.equal(timed.ownsDamageResistance(state, "fire"), true);
 assert.equal(timed.ownsDamageResistance(state, "force"), false);
 assert.deepEqual(state.temporary_damage_resistances, undefined,
