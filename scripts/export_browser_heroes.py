@@ -401,6 +401,7 @@ def _resource_conversion(action: Any) -> dict[str, Any]:
         "additionalSourceCosts": dict(action.additional_source_costs),
         "requiresTargetEmpty": action.requires_target_empty,
         "oncePerTurn": action.once_per_turn,
+        "oncePerTurnGroup": action.once_per_turn_group,
         "targetResourceId": action.target_resource_id,
         "targetGain": action.target_gain,
         "targetAllowsOverflow": action.target_allows_overflow,
