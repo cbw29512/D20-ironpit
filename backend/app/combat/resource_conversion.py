@@ -45,6 +45,7 @@ def conversion_available(
 def restoration_conversion(
     state: CombatantState,
     target_resource_id: str,
+    turn_key: str | None = None,
 ) -> ResourceConversionAction | None:
     """Choose an available no-action conversion that restores one depleted action resource."""
     try:
@@ -52,7 +53,7 @@ def restoration_conversion(
             action for action in state.template.resource_conversion_actions
             if action.action_cost == "none"
             and action.target_resource_id == target_resource_id
-            and conversion_available(state, action)
+            and conversion_available(state, action, turn_key)
         ]
         return sorted(candidates, key=lambda action: (-action.priority, action.id))[0] if candidates else None
     except Exception as exc:
@@ -68,10 +69,11 @@ def restoration_conversion(
 def apply_restoration_conversion(
     state: CombatantState,
     target_resource_id: str,
+    turn_key: str | None = None,
 ) -> ResourceConversionAction | None:
     """Apply the best no-action restoration conversion and return its source metadata."""
     try:
-        action = restoration_conversion(state, target_resource_id)
+        action = restoration_conversion(state, target_resource_id, turn_key)
         if action is None:
             return None
         spend_resource(state, action.source_resource_id, action.source_cost)
@@ -83,6 +85,10 @@ def apply_restoration_conversion(
             action.target_gain,
             allow_overflow=action.target_allows_overflow,
         )
+        if action.once_per_turn:
+            if turn_key is None:
+                raise ValueError(f"Resource conversion {action.id!r} requires a turn key.")
+            state.feature_last_turn_keys[action.id] = turn_key
         return action
     except Exception as exc:
         logger.exception(
