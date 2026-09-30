@@ -20,15 +20,15 @@
     }
   }
 
-  function diagonalAllowed(map, mover, current, destination, members, helpers) {
+  function diagonalAllowed(map, mover, current, destination, members, helpers, barriers = null) {
     try {
       const dx = destination.x - current.x;
       const dy = destination.y - current.y;
       if (dx === 0 || dy === 0) return true;
       const sideX = { x: current.x + dx, y: current.y };
       const sideY = { x: current.x, y: current.y + dy };
-      return helpers.movementStepCostFt(map, mover, sideX, members) != null
-        || helpers.movementStepCostFt(map, mover, sideY, members) != null;
+      return helpers.movementStepCostFt(map, mover, sideX, members, current, barriers) != null
+        || helpers.movementStepCostFt(map, mover, sideY, members, current, barriers) != null;
     } catch (error) {
       console.error("Failed to validate diagonal grid movement", {
         mover: mover.combatant_id,
@@ -38,7 +38,7 @@
     }
   }
 
-  function searchPathToward(map, mover, target, members, desiredDistanceFt, helpers) {
+  function searchPathToward(map, mover, target, members, desiredDistanceFt, helpers, barriers = null) {
     try {
       if (desiredDistanceFt < 0) throw new Error("Desired distance cannot be negative.");
       const api = support();
@@ -89,7 +89,7 @@
         for (const [dx, dy] of OFFSETS) {
           const destination = { x: current.x + dx, y: current.y + dy };
           if (destination.x < 0 || destination.y < 0) continue;
-          const stepCost = helpers.movementStepCostFt(map, mover, destination, members);
+          const stepCost = helpers.movementStepCostFt(map, mover, destination, members, current, barriers);
           if (stepCost == null || !diagonalAllowed(
             map,
             mover,
@@ -97,6 +97,7 @@
             destination,
             members,
             helpers,
+            barriers,
           )) continue;
           const nextCost = node.cost + stepCost;
           const nextKey = api.keyOf(destination);
