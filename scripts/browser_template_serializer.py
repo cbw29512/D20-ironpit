@@ -591,6 +591,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
             "initiative_bonus": template.initiative_bonus,
+        "blindsight_ft": template.blindsight_ft, "truesight_ft": template.truesight_ft,
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
