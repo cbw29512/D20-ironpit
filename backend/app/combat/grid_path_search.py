@@ -37,7 +37,22 @@ def _diagonal_step_allowed(
         side_x = GridPosition(x=current.x + dx, y=current.y)
         side_y = GridPosition(x=current.x, y=current.y + dy)
         return (
-            movement_step_cost_ft(\n                map_definition, mover, side_x, members, origin=current, barriers=barriers,\n            ) is not None\n            or movement_step_cost_ft(\n                map_definition, mover, side_y, members, origin=current, barriers=barriers,\n            ) is not None
+            movement_step_cost_ft(
+                map_definition,
+                mover,
+                side_x,
+                members,
+                origin=current,
+                barriers=barriers,
+            ) is not None
+            or movement_step_cost_ft(
+                map_definition,
+                mover,
+                side_y,
+                members,
+                origin=current,
+                barriers=barriers,
+            ) is not None
         )
     except Exception:
         logger.exception("Failed to validate diagonal movement for %s.", mover.combatant_id)
@@ -92,8 +107,21 @@ def search_path_toward(
                 if next_x < 0 or next_y < 0:
                     continue
                 destination = GridPosition(x=next_x, y=next_y)
-                step_cost = movement_step_cost_ft(\n                    map_definition, mover, destination, members, origin=current, barriers=barriers,\n                )\n                if step_cost is None or not _diagonal_step_allowed(
-                    map_definition, mover, current, destination, members, barriers,
+                step_cost = movement_step_cost_ft(
+                    map_definition,
+                    mover,
+                    destination,
+                    members,
+                    origin=current,
+                    barriers=barriers,
+                )
+                if step_cost is None or not _diagonal_step_allowed(
+                    map_definition,
+                    mover,
+                    current,
+                    destination,
+                    members,
+                    barriers,
                 ):
                     continue
                 next_cost = cost + step_cost
