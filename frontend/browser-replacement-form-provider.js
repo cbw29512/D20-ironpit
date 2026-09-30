@@ -15,9 +15,9 @@
     S().registerProvider({
       id: "replacement-form-setup", category: C().REPLACEMENT_FORM_SETUP, rulesets: ["2014", "2024"],
       discover: ({ member, setup, turnKey }) => {
-        if (member.state.replacement_form || !E().available(member.state, "action")) return null;
+        if (member.state.replacement_form) return null;
         const action = (member.state.template.replacement_form_actions || [])[0];
-        if (!action) return null;
+        if (!action || !E().available(member.state, action.actionCost)) return null;
         if (!RES()?.available(member.state, action.resourceId, action.resourceCost || 1)) return null;
         if (action.setupSpellId && member.state.concentration?.effect_id !== action.setupSpellId) {
           const choice = SP()?.chooseById(member, setup, turnKey, action.setupSpellId) || null;
@@ -43,7 +43,9 @@
         const source = registry?.[candidate.payload.formTemplateId];
         if (!source) throw new Error("Replacement-form source became unavailable.");
         if (!RFC() || !RF()) throw new Error("Replacement-form compiler/runtime is not loaded.");
-        const active = RFC().compile(member.state.template, source, Boolean(action.retainSpellcasting));
+        const active = RFC().compile(
+          member.state.template, source, Boolean(action.retainSpellcasting), Boolean(action.retainCreatureType)
+        );
         const originalName = member.state.template.name;
         const result = RF().enter(member.state, action, active);
         return {
