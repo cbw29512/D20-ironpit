@@ -69,6 +69,7 @@ def test_2024_druid_level_seven_arid_blight_is_exact_and_natural_recovery_eligib
         blight.upcast_dice_per_level,
     ) == (4, "action", 30, "constitution", 8, 8, "necrotic", "half", 1)
     assert blight.automatic_failure_creature_types == ["Plant"]
+    assert blight.requires_target_sight is True
 
     state = build_combatant_state(hero)
     grants = state.template.progression_features.alternate_spell_cast_grants
