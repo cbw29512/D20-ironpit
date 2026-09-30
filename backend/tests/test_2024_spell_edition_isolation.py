@@ -39,6 +39,8 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
     known_spell_ids = {
         "guiding-bolt",
         "sacred-flame",
+        "poison-spray",
+        "longstrider",
         "inflict-wounds",
         "inflict-wounds-l5",
         "inflict-wounds-l6",
@@ -91,6 +93,19 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         f"{progression.class_id} level {level} exposes 2024 spell mechanics without "
         f"an edition fingerprint: {unknown}"
     )
+
+    if "poison-spray" in spell_attacks:
+        spell = spell_attacks["poison-spray"]
+        expected_dice = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.attack_kind,
+            spell.range_ft,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+        ) == (0, "action", "ranged", 30, expected_dice, 12, "poison")
 
     if "guiding-bolt" in spell_attacks:
         spell = spell_attacks["guiding-bolt"]
@@ -379,6 +394,21 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert spell.removable_conditions == [
             "charmed", "frightened", "paralyzed", "poisoned", "stunned",
         ]
+
+    if "longstrider" in defenses:
+        spell = defenses["longstrider"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.duration_minutes,
+            spell.target_count,
+            spell.target_count_per_slot_above,
+            spell.concentration,
+        ) == (1, "action", 5, 60, 1, 1, False)
+        assert len(spell.modifier_effects) == 1
+        assert spell.modifier_effects[0].kind == "speed"
+        assert spell.modifier_effects[0].flat_bonus == 10
 
     if "greater-invisibility" in defenses:
         spell = defenses["greater-invisibility"]

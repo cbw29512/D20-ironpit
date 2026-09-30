@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 100
+    "public_ready": 101
   },
   "heroes": [
     {
@@ -4407,24 +4407,34 @@
         {
           "level": 1,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "thalen-greenbough-l1",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:thalen-sickle",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "resource:spell-slot-1",
+            "spell-attack-action:poison-spray"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:thalen-sickle",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "resource:spell-slot-1",
+            "spell-attack-action:poison-spray"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 2,

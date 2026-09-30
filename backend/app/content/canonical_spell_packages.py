@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.canonical_bard_spells import BARD_CANTRIPS, BARD_SPELLS
 from app.content.canonical_cleric_spells import CLERIC_CANTRIPS, CLERIC_SPELLS
+from app.content.canonical_druid_spells import DRUID_CANTRIPS, DRUID_SPELLS
 from app.content.class_spell_progression import CASTING_ABILITIES, max_spell_level, prepared_spell_count
 from app.domain.class_loadouts import CanonicalSpellChoice, CasterClassId, ClassSpellPackage
 
@@ -46,18 +47,14 @@ def _cantrip(
 CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "bard": BARD_CANTRIPS,
     "cleric": CLERIC_CANTRIPS,
+    "druid": DRUID_CANTRIPS,
 }
 
 
 CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "bard": BARD_SPELLS,
     "cleric": CLERIC_SPELLS,
-    "druid": (
-        _spell("animal-friendship", "Animal Friendship", "control", "charmed"),
-        _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
-        _spell("faerie-fire", "Faerie Fire", "debuff", "modifier-stack", "concentration"),
-        _spell("thunderwave", "Thunderwave", "damage", "save-damage", "forced-movement"),
-    ),
+    "druid": DRUID_SPELLS,
     "paladin": (
         _spell("heroism", "Heroism", "buff", "modifier-stack", "concentration"),
         _spell("searing-smite", "Searing Smite", "mixed", "spell-buff", "ongoing-damage"),
@@ -104,11 +101,15 @@ def build_class_spell_package(class_id: CasterClassId, character_level: int) -> 
         spell for spell in CANONICAL_CANTRIPS.get(class_id, ())
         if spell.min_character_level <= character_level
     ]
-    if class_id == "cleric":
-        expected_cantrips = 3 + int(character_level >= 4) + int(character_level >= 10)
+    if class_id in {"cleric", "druid"}:
+        expected_cantrips = (
+            3 + int(character_level >= 4) + int(character_level >= 10)
+            if class_id == "cleric"
+            else 3 + int(character_level >= 4) + int(character_level >= 10)
+        )
         if len(cantrips) != expected_cantrips:
             raise ValueError(
-                f"Cleric level {character_level} canonical package needs {expected_cantrips} cantrips, "
+                f"{class_id.title()} level {character_level} canonical package needs {expected_cantrips} cantrips, "
                 f"has {len(cantrips)}."
             )
     return ClassSpellPackage(
