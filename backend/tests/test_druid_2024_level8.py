@@ -62,6 +62,15 @@ def test_2024_druid_level_eight_wild_shape_uses_certified_cr_one_brown_bear() ->
 
     source = replacement_form_source_template("2024", action.form_template_id)
     assert source.challenge_rating == "1"
+    assert source.ability_scores is not None
+    assert source.ability_scores.model_dump() == {
+        "strength": 17,
+        "dexterity": 12,
+        "constitution": 15,
+        "intelligence": 2,
+        "wisdom": 13,
+        "charisma": 7,
+    }
 
     active = compile_replacement_form_template(
         hero,
@@ -74,6 +83,13 @@ def test_2024_druid_level_eight_wild_shape_uses_certified_cr_one_brown_bear() ->
     assert active.id.endswith("--form-srd-brown-bear")
     assert active.max_hp == hero.max_hp
     assert active.creature_type == "Humanoid"
+    assert active.ability_scores is not None
+    assert active.ability_scores.strength == 17
+    assert active.ability_scores.dexterity == 12
+    assert active.ability_scores.constitution == 15
+    assert active.ability_scores.intelligence == hero.ability_scores.intelligence
+    assert active.ability_scores.wisdom == hero.ability_scores.wisdom
+    assert active.ability_scores.charisma == hero.ability_scores.charisma
 
 
 def test_2024_druid_level_eight_freedom_of_movement_reuses_debuff_counters() -> None:
