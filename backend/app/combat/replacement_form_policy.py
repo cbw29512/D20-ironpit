@@ -26,12 +26,14 @@ def resolve_replacement_form_setup(
     """Cast a declared setup spell, then transform on a later legal Action."""
     try:
         state = member.state
-        if state.replacement_form is not None or not is_available(state, "action"):
+        if state.replacement_form is not None:
             return [], sequence
         actions = state.template.replacement_form_actions
         if not actions:
             return [], sequence
         action = actions[0]
+        if not is_available(state, action.action_cost):
+            return [], sequence
         if not resource_available(state, action.resource_id, action.resource_cost):
             return [], sequence
 
@@ -66,6 +68,7 @@ def resolve_replacement_form_setup(
             source,
             retain_spellcasting=action.retain_spellcasting,
             retained_spell_action_ids=action.retained_spell_action_ids,
+            retain_creature_type=action.retain_creature_type,
         )
         result = resolve_replacement_form_action(state, action, active)
         event = BattleEvent(
