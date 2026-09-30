@@ -9,7 +9,9 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-state.js", "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js",
+  "browser-state.js", "browser-rolls.js", "browser-modifiers.js", "browser-defensive-modifier-rules.js",
+  "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js",
+  "browser-attack.js", "browser-saving-throws.js", "browser-saves.js",
 ]) load(file);
 
 let queue = [];
@@ -38,6 +40,22 @@ const zombie = () => S.buildState(structuredClone(template));
   const state = zombie(); queue = [20];
   assert.equal(A.applyDamage(state, 10, false, ["bludgeoning"]), "undead_fortitude");
   assert.equal(state.current_hp, 1); assert.equal(state.is_dead, false); assert.deepEqual(queue, []);
+}
+{
+  const state = zombie();
+  state.active_modifiers.push({
+    id: "source:foresight:zombie:0",
+    source_id: "source",
+    source_effect_id: "foresight",
+    source_name: "Foresight",
+    source_is_magical: true,
+    kind: "d20-test-advantage",
+  });
+  queue = [1, 11];
+  assert.equal(A.applyDamage(state, 10, false, ["bludgeoning"]), "undead_fortitude");
+  assert.equal(state.current_hp, 1);
+  assert.equal(state.is_dead, false);
+  assert.deepEqual(queue, []);
 }
 {
   const state = zombie(); queue = [1];
