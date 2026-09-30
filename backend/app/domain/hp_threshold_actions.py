@@ -16,6 +16,7 @@ class HpThresholdInstantDeathAction(BaseModel):
     name: str
     action_cost: ActionCost = "action"
     range_ft: int = Field(ge=0)
+    requires_target_sight: bool = False
     max_current_hp: int = Field(ge=1)
     fallback_damage_dice_count: int = Field(default=0, ge=0, le=40)
     fallback_damage_dice_size: int = Field(default=0, ge=0, le=100)

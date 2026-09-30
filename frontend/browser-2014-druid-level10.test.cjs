@@ -20,8 +20,9 @@ load("browser-condition-immunity.js");
 const hero = window.IRON_PIT_BROWSER_HEROES["thalen-greenbough-2014-l10"];
 assert.ok(hero);
 assert.deepEqual(hero.damage_immunities, ["poison"]);
-assert.equal(hero.canonical_prepared_spells.length, 15);
-assert.equal(hero.canonical_prepared_spells.at(-1).id, "scrying");
+// This legacy 2014 card exports its compiled actions, not a 2024 spell-package overlay.
+assert.ok(hero.healingActions.some((action) => action.id === "cure-wounds"));
+assert.ok(hero.defensive_spell_actions.some((action) => action.id === "freedom-of-movement"));
 
 const state = {
   template: hero,

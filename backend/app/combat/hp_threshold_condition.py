@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.condition_rules import can_see
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.resources import resource_state
 from app.combat.timed_conditions import apply_timed_condition
@@ -24,6 +25,9 @@ def legal_hp_threshold_condition(
         if target.state.is_dead or not target.state.is_alive or target.state.current_hp <= 0:
             return False
         if target.state.current_hp > action.max_current_hp:
+            return False
+        # Source data owns visibility; all sources share the ordinary sight predicate.
+        if action.requires_target_sight and not can_see(actor.state, target.state):
             return False
         if combatant_distance(actor, target) > action.range_ft:
             return False

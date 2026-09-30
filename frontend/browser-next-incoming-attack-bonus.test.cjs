@@ -64,7 +64,7 @@ function attack(attacker, target, values, sequence) {
   assert.equal(sourceEvent.hit, false);
   assert.equal(M.nextIncomingAttackRollFlat(target.state, ally.combatant_id), 5);
 
-  const allyEvent = attack(ally, target, [8, 4], 2);
+  const allyEvent = attack(ally, target, [8, 4, 4, 4, 4], 2);
   assert.equal(allyEvent.hit, true);
   assert.equal(allyEvent.attack_roll.modifier, ally.state.template.attacks[0].bonus + 5);
   assert.equal(M.nextIncomingAttackRollFlat(target.state, ally.combatant_id), 0);

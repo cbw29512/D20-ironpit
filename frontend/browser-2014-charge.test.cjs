@@ -1,6 +1,7 @@
 "use strict";
 
 const assert = require("node:assert/strict");
+require("./browser-test-runtime.cjs").loadWebsite();
 
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
 const charge = (monsterId, attackId) => roster[monsterId].attacks.find((attack) => attack.id === attackId).charge;
@@ -43,7 +44,7 @@ const originalResolve = window.IRON_PIT_BROWSER_ATTACK.resolveAttack;
 let observed = null;
 window.IRON_PIT_BROWSER_ATTACK.resolveAttack = (sequence, round, member, target, attack, distance, options) => {
   observed = { attack, options };
-  return { hit: false, target_id: target.combatant_id };
+  return { sequence, actor_id: member.combatant_id, hit: false, target_id: target.combatant_id, damage_roll: null };
 };
 const elkAttack = roster["2014-elk"].attacks.find((attack) => attack.id === "2014-elk-ram");
 const member = {
@@ -92,7 +93,7 @@ let pair = pouncePair();
 let calls = [];
 window.IRON_PIT_BROWSER_ATTACK.resolveAttack = (sequence, round, actor, defender, attack) => {
   calls.push(attack.id);
-  return { hit: true, target_id: defender.combatant_id };
+  return { sequence, actor_id: actor.combatant_id, hit: true, target_id: defender.combatant_id, damage_roll: null };
 };
 window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, pair.actor, pair.defender, pair.setup);
 assert.deepEqual(calls, ["2014-allosaurus-claw"], "Pounce Bite must not fire when the target is not Prone");
@@ -103,7 +104,7 @@ calls = [];
 window.IRON_PIT_BROWSER_ATTACK.resolveAttack = (sequence, round, actor, defender, attack) => {
   calls.push(attack.id);
   if (calls.length === 1) defender.state.active_effect_ids.push("prone");
-  return { hit: true, target_id: defender.combatant_id };
+  return { sequence, actor_id: actor.combatant_id, hit: true, target_id: defender.combatant_id, damage_roll: null };
 };
 window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, pair.actor, pair.defender, pair.setup);
 assert.deepEqual(calls, ["2014-allosaurus-claw", "2014-allosaurus-bite"]);
@@ -115,7 +116,7 @@ pair.actor.state.bonus_action_available = false;
 calls = [];
 window.IRON_PIT_BROWSER_ATTACK.resolveAttack = (sequence, round, actor, defender, attack) => {
   calls.push(attack.id);
-  return { hit: true, target_id: defender.combatant_id };
+  return { sequence, actor_id: actor.combatant_id, hit: true, target_id: defender.combatant_id, damage_roll: null };
 };
 window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, pair.actor, pair.defender, pair.setup);
 assert.deepEqual(calls, ["2014-allosaurus-claw"], "Pounce follow-up must require an available Bonus Action");

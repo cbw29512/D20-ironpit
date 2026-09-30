@@ -64,7 +64,7 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
             hp_threshold_condition_actions=[
                 *([HpThresholdConditionAction(
                     id="power-word-stun", name="Power Word Stun", action_cost="action",
-                    range_ft=60, max_current_hp=150, condition_id="stunned",
+                    range_ft=60, requires_target_sight=True, max_current_hp=150, condition_id="stunned",
                     repeat_save_ability="constitution", repeat_save_dc=save_dc,
                     repeat_save_timing="target_turn_end", resource_id="spell-slot-8",
                     resource_cost=1, magical_effect=True, animation="spell-condition",
@@ -73,7 +73,7 @@ def build_elian_starweaver_2014(level: int) -> CombatantTemplate:
             hp_threshold_instant_death_actions=[
                 *([HpThresholdInstantDeathAction(
                     id="power-word-kill", name="Power Word Kill", action_cost="action",
-                    range_ft=60, max_current_hp=100, resource_id="spell-slot-9",
+                    range_ft=60, requires_target_sight=True, max_current_hp=100, resource_id="spell-slot-9",
                     resource_cost=1, magical_effect=True, animation="instant-death",
                 )] if level >= 17 else []),
             ],

@@ -163,6 +163,7 @@ class HpThresholdConditionAction(BaseModel):
     name: str
     action_cost: ActionCost = "action"
     range_ft: int = Field(ge=0)
+    requires_target_sight: bool = False
     max_current_hp: int = Field(ge=1)
     condition_id: ConditionName
     repeat_save_ability: AbilityName

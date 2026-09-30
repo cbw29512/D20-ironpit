@@ -49,12 +49,14 @@ window.IRON_PIT_BROWSER_GRAPPLE = { cleanup() {}, shouldEscape: () => false };
 
 window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION = {
   discoverCandidates(profileId, ctx) {
+    if (profileId === "signatureThreshold") return [];
     calls.push(["discover", profileId, ctx.sequence]);
     if (profileId === "normalPreMove") return [];
     assert.equal(profileId, "normalPostMove");
     return [{ providerId: "standard-attack", category: "standard-attack" }];
   },
   selectCandidate(profileId, candidates) {
+    if (profileId === "signatureThreshold") return null;
     calls.push(["select", profileId, candidates.length]);
     return candidates[0] || null;
   },
