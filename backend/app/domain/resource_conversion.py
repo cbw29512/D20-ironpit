@@ -15,6 +15,7 @@ class ResourceConversionAction(BaseModel):
     action_cost: Literal["action", "bonus_action", "none"]
     source_resource_id: str
     source_cost: int = Field(ge=1)
+    source_reserve: int = Field(default=0, ge=0)
     additional_source_costs: dict[str, int] = Field(default_factory=dict)
     target_resource_id: str
     target_gain: int = Field(ge=1)
