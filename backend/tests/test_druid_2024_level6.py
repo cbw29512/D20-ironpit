@@ -27,6 +27,22 @@ def test_2024_druid_level_six_progression_and_natural_recovery_resource() -> Non
     assert resources["spell-slot-3"] == 3
     assert resources["natural-recovery-free-cast"] == 1
 
+    package = canonical_spell_package("druid", 6, "2024", 4)
+    assert package is not None
+    assert len(package.spells) == 10
+    assert package.spells[-1].id == "aid"
+
+    aid = next(item for item in hero.defensive_spell_actions if item.id == "aid")
+    assert (
+        aid.level,
+        aid.action_cost,
+        aid.range_ft,
+        aid.duration_minutes,
+        aid.target_count,
+        aid.max_hp_increase,
+        aid.current_hp_increase,
+    ) == (2, "action", 30, 480, 3, 5, 5)
+
     audit = next(
         item for item in profile.feature_audits
         if item.feature_id == "natural-recovery"
