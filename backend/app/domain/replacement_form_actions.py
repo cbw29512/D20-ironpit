@@ -18,6 +18,7 @@ class ReplacementFormAction(BaseModel):
     hp_mode: Literal["form_pool", "retain_owner"] = "form_pool"
     temporary_hp_on_enter: int = Field(default=0, ge=0)
     retain_creature_type: bool = False
+    ends_on_incapacitated: bool = False
     retain_spellcasting: bool = False
     retained_spell_action_ids: list[str] = Field(default_factory=list)
     setup_spell_id: str | None = None
