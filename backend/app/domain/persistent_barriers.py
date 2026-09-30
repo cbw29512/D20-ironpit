@@ -51,6 +51,7 @@ class PersistentBarrierAction(BaseModel):
     duration_rounds: int = Field(ge=1)
     permanent_after_full_duration: bool = False
     max_sections: int = Field(ge=1, le=100)
+    sections_must_be_contiguous: bool = False
     section_length_ft: int = Field(ge=5)
     section_height_ft: int = Field(ge=0)
     section_thickness_inches: int = Field(ge=1)
