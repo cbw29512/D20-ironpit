@@ -15,6 +15,9 @@ class ReplacementFormAction(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1)
     voluntary_revert_action: Literal["action", "bonus_action"] = "bonus_action"
+    hp_mode: Literal["form_pool", "retain_owner"] = "form_pool"
+    temporary_hp_on_enter: int = Field(default=0, ge=0)
+    retain_creature_type: bool = False
     retain_spellcasting: bool = False
     retained_spell_action_ids: list[str] = Field(default_factory=list)
     setup_spell_id: str | None = None
