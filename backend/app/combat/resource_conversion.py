@@ -11,7 +11,11 @@ from app.domain.resource_conversion import ResourceConversionAction
 logger = logging.getLogger(__name__)
 
 
-def conversion_available(state: CombatantState, action: ResourceConversionAction) -> bool:
+def conversion_available(
+    state: CombatantState,
+    action: ResourceConversionAction,
+    turn_key: str | None = None,
+) -> bool:
     try:
         if action.action_cost != "none" and not is_available(state, action.action_cost):
             return False
@@ -25,6 +29,11 @@ def conversion_available(state: CombatantState, action: ResourceConversionAction
         target = next((item for item in state.resources if item.id == action.target_resource_id), None)
         if target is None:
             raise ValueError(f"Resource conversion target {action.target_resource_id!r} is missing.")
+        if action.requires_target_empty and target.current_uses != 0:
+            return False
+        if action.once_per_turn:
+            if turn_key is None or state.feature_last_turn_keys.get(action.id) == turn_key:
+                return False
         return action.target_allows_overflow or target.current_uses < target.max_uses
     except ValueError:
         raise
@@ -91,9 +100,10 @@ def resolve_resource_conversion(
     sequence: int,
     round_number: int,
     actor_id: str,
+    turn_key: str | None = None,
 ) -> BattleEvent:
     try:
-        if not conversion_available(state, action):
+        if not conversion_available(state, action, turn_key):
             raise ValueError(f"Resource conversion {action.id!r} is unavailable.")
         if action.action_cost != "none":
             spend(state, action.action_cost)
@@ -106,6 +116,10 @@ def resolve_resource_conversion(
             action.target_gain,
             allow_overflow=action.target_allows_overflow,
         )
+        if action.once_per_turn:
+            if turn_key is None:
+                raise ValueError(f"Resource conversion {action.id!r} requires a turn key.")
+            state.feature_last_turn_keys[action.id] = turn_key
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
