@@ -29,7 +29,7 @@
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_id: null,
       grapple_sources: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
-      active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
+      current_round: null, active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
       feature_last_turn_keys: {}, feature_use_counts: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], active_conditional_damage_defenses: [],

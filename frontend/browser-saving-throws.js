@@ -84,6 +84,7 @@
         DF().consumeSavingThrowModifiers?.(state);
         return { roll: null, succeeded: false };
       }
+      context = { ...context, roundNumber: context.roundNumber ?? state.current_round };
       const baseBonus = state.template.saving_throw_bonuses?.[ability];
       if (baseBonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
       const modifiers = M();

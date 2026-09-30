@@ -144,6 +144,7 @@
     let resolvedRound = 0;
     for (let round = 1; round <= 100; round += 1) {
       resolvedRound = round;
+      for (const member of [...setup.heroes, ...setup.monsters]) member.state.current_round = round;
       const roundTurnOrder = (
         round === 1 && Array.isArray(init.first_round_turn_order)
       ) ? init.first_round_turn_order : init.turn_order;

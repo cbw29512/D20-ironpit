@@ -119,3 +119,19 @@ def test_restoration_conversion_spends_slot_only_after_grant_legality() -> None:
     assert inspiration.current_uses == 0
     assert len(ally.state.active_d20_bonus_dice) == 1
     assert "Font of Inspiration" in event.description
+
+
+@pytest.mark.parametrize("round_number, succeeds", [(1, True), (101, False)])
+def test_nested_concentration_save_uses_current_round(round_number, succeeds):
+    from app.combat.concentration import start_concentration, resolve_concentration_damage
+
+    setup = _setup()
+    bard, ally = setup.heroes
+    resolve_d20_bonus_die_grant(1, 1, bard, ally, bard.state.template.d20_bonus_die_actions[0])
+    ally.state.current_round = round_number
+    start_concentration(ally.state, ally.combatant_id, "test-concentration", 1)
+    result = resolve_concentration_damage(ally.state, 1, FixedDiceProvider([1, 8]))
+    assert result.succeeded is succeeds
+    assert (ally.state.concentration is not None) is succeeds
+    assert ally.state.active_d20_bonus_dice == []
+    assert build_combatant_state(ally.state.template).current_round is None

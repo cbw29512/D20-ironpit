@@ -1,5 +1,6 @@
 from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_turn_support import save_choice
 from app.combat.recharge import resolve_recharge_checks
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
@@ -53,6 +54,7 @@ def test_shared_2014_area_save_spends_once_and_shares_damage_rolls() -> None:
         map_definition=BattleMapDefinition(id="area-test", width_squares=10, height_squares=10),
     )
 
+    assert save_choice(actor, setup) is not None
     selected = choose_area_save(actor, setup)
     assert selected is not None
     action, placement = selected
@@ -71,9 +73,17 @@ def test_shared_2014_area_save_spends_once_and_shares_damage_rolls() -> None:
     assert events[0].resource_remaining == 0
     assert events[1].resource_remaining == 0
 
+    first.state = build_combatant_state(commoner)
+    first.state.position = GridPosition(x=2, y=1)
+    actor.state.action_available = True
+    assert save_choice(actor, setup) is None
+    checks = resolve_recharge_checks(actor.state, FixedDiceProvider([1]))
+    assert checks[0].restored is False
+    assert save_choice(actor, setup) is None
     checks = resolve_recharge_checks(actor.state, FixedDiceProvider([5]))
     assert checks[0].restored is True
     assert actor.state.resources[0].current_uses == 1
+    assert save_choice(actor, setup) is not None
 
 
 def test_complex_2014_save_control_remains_fail_closed() -> None:

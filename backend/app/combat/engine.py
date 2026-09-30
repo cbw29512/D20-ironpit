@@ -65,6 +65,8 @@ def run_duel(
         )
 
         for round_number in range(1, MAX_ROUNDS + 1):
+            for state in order:
+                state.current_round = round_number
             for attacker in order:
                 defender = monster if attacker is fighter else fighter
                 if attacker.current_hp <= 0 or defender.current_hp <= 0:
