@@ -183,3 +183,48 @@ console.log("Browser replacement form lifecycle parity passed.");
   assert.equal(target.replacement_form, null);
   assert.equal(target.template.id, "thalen-l2");
 }
+
+
+{
+  const target = state();
+  target.current_hp = 13;
+  const owner = target.template;
+  const active = {
+    id: "thalen-l2--form-srd-wolf", name: "Thalen", kind: "character",
+    max_hp: 13, creature_type: "Humanoid", unlimited_resources: [], traits: [],
+  };
+  const action = {
+    id: "wild-shape", name: "Wild Shape", actionCost: "bonus_action",
+    resourceId: "wild-shape", resourceCost: 1, voluntaryRevertAction: "bonus_action",
+    hpMode: "retain_owner", temporaryHpOnEnter: 2, retainCreatureType: true,
+    endsOnIncapacitated: true, replaceExistingForm: true,
+  };
+
+  window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.enter(target, action, active);
+  target.temporary_hp = 1;
+  target.bonus_action_available = true;
+  const refreshed = window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.enter(target, action, active);
+
+  assert.equal(refreshed.resource_remaining, 0);
+  assert.equal(target.current_hp, 13);
+  assert.equal(target.temporary_hp, 2);
+  assert.equal(target.replacement_form.original_template, owner);
+  assert.equal(target.bonus_action_available, false);
+  window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.revert(target, false);
+  assert.equal(target.template, owner);
+}
+
+{
+  const target = state();
+  const active = { id: "thalen-l2--form-2014-wolf", name: "Thalen", kind: "character", max_hp: 11, unlimited_resources: [] };
+  const action = {
+    id: "wild-shape", name: "Wild Shape", actionCost: "action",
+    resourceId: "wild-shape", resourceCost: 1,
+  };
+  window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.enter(target, action, active);
+  target.action_available = true;
+  assert.throws(
+    () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.enter(target, action, active),
+    /already transformed/,
+  );
+}
