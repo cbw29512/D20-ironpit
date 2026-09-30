@@ -82,9 +82,10 @@ def build_druid_2024_feature_audits(level: int) -> list[FeatureAudit]:
                 _feature(
                     "wild-shape", "Wild Shape", "class", combat_relevant=True, automated=True,
                     notes=(
-                        "2024 Wild Shape reuses the replacement-form engine: Bonus Action, Wolf form, "
-                        "owner HP retained, 2 Temporary HP on entry, Humanoid creature type retained, "
-                        "and spellcasting unavailable while transformed."
+                        "2024 Wild Shape reuses the replacement-form engine: Bonus Action, canonical "
+                        + ("Brown Bear CR 1 form" if level >= 8 else "Wolf form")
+                        + f", owner HP retained, {level} Temporary HP on entry, Humanoid creature type "
+                        "retained, and spellcasting unavailable while transformed."
                     ),
                 ),
                 _feature(
@@ -163,6 +164,19 @@ def build_druid_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     "cantrip through the generic spell-action damage bonus."
                 ),
             ))
+        if level >= 8:
+            audits.extend([
+                _feature(
+                    "ability-score-improvement-l8", "Ability Score Improvement (+1 Wisdom, +1 Charisma)",
+                    "class", combat_relevant=True, automated=True,
+                    notes="Canonical land-damage progression raises Wisdom 19→20 and Charisma 15→16.",
+                ),
+                _feature(
+                    "wild-shape-improvement-l8", "Wild Shape Improvement", "class",
+                    combat_relevant=True, automated=True,
+                    notes="Known forms increase to eight, CR 1 and Fly Speed become legal; canonical combat form is Brown Bear.",
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid feature audits for level %s.", level)
