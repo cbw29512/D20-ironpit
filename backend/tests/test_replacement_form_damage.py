@@ -112,3 +112,31 @@ def test_retained_owner_hp_form_uses_temp_hp_then_owner_hp_without_auto_revert()
     assert state.current_hp == 10
     assert state.replacement_form is not None
     assert state.template.id.endswith("--form-srd-wolf")
+
+
+def test_retained_owner_hp_form_reverts_when_owner_becomes_unconscious() -> None:
+    template = build_thalen_greenbough_level(2)
+    state = build_combatant_state(template)
+    action = template.replacement_form_actions[0]
+    source = replacement_form_source_template("2024", action.form_template_id)
+    form = compile_replacement_form_template(
+        template, source,
+        retain_spellcasting=action.retain_spellcasting,
+        retain_creature_type=action.retain_creature_type,
+        retain_hit_points=True,
+    )
+    enter_replacement_form(
+        state, source_id=action.id, source_name=action.name, form_template=form,
+        action_cost=action.action_cost, resource_id=action.resource_id,
+        resource_cost=action.resource_cost, voluntary_revert_action=action.voluntary_revert_action,
+        hp_mode=action.hp_mode, temporary_hp_on_enter=action.temporary_hp_on_enter,
+        ends_on_incapacitated=action.ends_on_incapacitated,
+    )
+
+    outcome = apply_damage(state, 15, dice=FixedDice())
+
+    assert outcome == "unconscious"
+    assert state.current_hp == 0
+    assert state.is_unconscious is True
+    assert state.replacement_form is None
+    assert state.template.id == "thalen-greenbough-l2"
