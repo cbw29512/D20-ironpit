@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from app.combat.replacement_forms import enter_replacement_form, revert_replacement_form
 from app.combat.state import build_combatant_state
 from app.combat.timed_conditions import apply_timed_condition
@@ -105,3 +107,82 @@ def test_incapacitating_timed_condition_reverts_declared_form() -> None:
     assert applied == "stunned"
     assert state.replacement_form is None
     assert state.template.id == template.id
+
+
+def test_replacement_form_refresh_requires_explicit_permission() -> None:
+    template = build_thalen_greenbough_2014(1).model_copy(update={
+        "resources": [ResourceDefinition(id="wild-shape", name="Wild Shape", max_uses=2)],
+    })
+    state = build_combatant_state(template)
+    form = _wolf_form(template)
+
+    enter_replacement_form(
+        state,
+        source_id="test-form",
+        source_name="Test Form",
+        form_template=form,
+        action_cost="bonus_action",
+        resource_id="wild-shape",
+    )
+    state.bonus_action_available = True
+
+    with pytest.raises(ValueError, match="already in a replacement form"):
+        enter_replacement_form(
+            state,
+            source_id="test-form",
+            source_name="Test Form",
+            form_template=form,
+            action_cost="bonus_action",
+            resource_id="wild-shape",
+        )
+
+
+def test_declared_replacement_form_refresh_reuses_original_owner_and_refreshes_temp_hp() -> None:
+    template = build_thalen_greenbough_2014(1).model_copy(update={
+        "resources": [ResourceDefinition(id="wild-shape", name="Wild Shape", max_uses=2)],
+    })
+    state = build_combatant_state(template)
+    state.current_hp = 6
+    form = compile_replacement_form_template(
+        template,
+        canonical_wild_shape_template_2014(2),
+        retain_hit_points=True,
+    )
+
+    enter_replacement_form(
+        state,
+        source_id="test-form",
+        source_name="Test Form",
+        form_template=form,
+        action_cost="bonus_action",
+        resource_id="wild-shape",
+        hp_mode="retain_owner",
+        temporary_hp_on_enter=2,
+        replace_existing_form=True,
+    )
+    state.temporary_hp = 1
+    state.bonus_action_available = True
+
+    result = enter_replacement_form(
+        state,
+        source_id="test-form",
+        source_name="Test Form",
+        form_template=form,
+        action_cost="bonus_action",
+        resource_id="wild-shape",
+        hp_mode="retain_owner",
+        temporary_hp_on_enter=2,
+        replace_existing_form=True,
+    )
+
+    assert result.resource_remaining == 0
+    assert state.current_hp == 6
+    assert state.temporary_hp == 2
+    assert state.replacement_form is not None
+    assert state.replacement_form.original_template.id == template.id
+    assert state.template.id == form.id
+    assert state.bonus_action_available is False
+
+    revert_replacement_form(state, spend_voluntary_action=False)
+    assert state.template.id == template.id
+    assert state.current_hp == 6
