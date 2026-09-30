@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 
-window.IRON_PIT_ACTION_ECONOMY = { available: (state, cost) => cost === "action" && state.action_available };
+window.IRON_PIT_ACTION_ECONOMY = { available: (state, cost) => cost === "action" ? state.action_available : cost === "bonus_action" && state.bonus_action_available };
 window.IRON_PIT_BROWSER_RESOURCES = { available: () => true };
 window.IRON_PIT_BROWSER_SPELL_POLICY = {
   chooseById: (_member, _setup, _turnKey, id) => ({ action: { id, name: "Faerie Fire" }, slotLevel: 1, targetIds: ["monster-1"] }),
@@ -23,6 +23,7 @@ window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = {
   enter: (state, action, active) => { state.template = active; state.replacement_form = { source_id: action.id }; return { resource_remaining: 1 }; },
 };
 window.IRON_PIT_BROWSER_MONSTERS_2014 = { "2014-wolf": { id: "2014-wolf", name: "Wolf", kind: "monster", max_hp: 11 } };
+window.IRON_PIT_BROWSER_MONSTERS_2024 = { "srd-wolf": { id: "srd-wolf", name: "Wolf", kind: "monster", max_hp: 11 } };
 
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
@@ -65,3 +66,28 @@ const ctx = { sequence: 4, round: 1, turnKey: "1:hero-thalen", member: actor, se
 }
 
 console.log("Browser replacement-form Main Action provider parity passed.");
+
+{
+  const druid2024 = {
+    combatant_id: "hero-thalen-2024", side: "heroes",
+    state: {
+      action_available: false, bonus_action_available: true, replacement_form: null,
+      concentration: null, resources: { "wild-shape": 2 },
+      template: {
+        id: "thalen-greenbough-l2", name: "Thalen Greenbough", kind: "character", ruleset: "2024",
+        replacement_form_actions: [{
+          id: "wild-shape", name: "Wild Shape", actionCost: "bonus_action", formTemplateId: "srd-wolf",
+          resourceId: "wild-shape", resourceCost: 1, voluntaryRevertAction: "bonus_action",
+          hpMode: "retain_owner", temporaryHpOnEnter: 2, retainCreatureType: true,
+        }],
+      },
+    },
+  };
+  const ctx2024 = {
+    sequence: 8, round: 1, turnKey: "1:hero-thalen-2024", member: druid2024,
+    setup: { heroes: [druid2024], monsters: [target] },
+  };
+  const candidates = S.discoverCandidates("normalPreMove", ctx2024);
+  assert.equal(candidates.length, 1);
+  assert.equal(candidates[0].payload.kind, "transform");
+}
