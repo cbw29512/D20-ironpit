@@ -5,31 +5,19 @@ import logging
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
 from app.content.druid_2024_land_features import build_natures_sanctuary_2024
 from app.content.druid_2024_land_spells import (
-    build_blight_2024,
     build_blur_2024,
-    build_burning_hands_2024,
-    build_fire_bolt_2024,
     build_lands_aid_2024,
     build_wall_of_stone_2024,
 )
-from app.content.druid_2024_spells import (
-    build_faerie_fire_2024,
-    build_longstrider_2024,
-    build_poison_spray_2024,
-    build_starry_wisp_2024,
-    build_thunderclap_2024,
-    build_thunderwave_2024,
-)
-from app.content.bard_2024_high_damage_spells import build_cone_of_cold_2024, build_sunburst_2024
+from app.content.druid_2024_spells import build_longstrider_2024
 from app.content.healing_spell_effects import build_cure_wounds, build_heal_2024, build_healing_word, build_mass_cure_wounds
-from app.content.offensive_spell_effects import build_fireball_2024
 from app.content.shared_movement_spells_2024 import freedom_of_movement_2024
 from app.content.druid_2024_wild_resurgence import build_wild_resurgence_2024
+from app.content.druid_2024_offensive_actions import druid_offensive_actions
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.models import ResourceDefinition
 from app.domain.replacement_form_actions import ReplacementFormAction
-from app.domain.spells import SpellAttackAction, SpellSaveAction
 
 logger = logging.getLogger(__name__)
 
@@ -85,53 +73,18 @@ def druid_resources(level: int, spell_slots: tuple[int, ...], wild_shape_uses: i
         raise
 
 
-def _with_cantrip_range_bonus(
-    action: SpellAttackAction | SpellSaveAction,
-    bonus_ft: int,
-) -> SpellAttackAction | SpellSaveAction:
-    """Apply a source-provided range bonus only to qualifying ranged cantrips."""
-    try:
-        if bonus_ft <= 0 or action.level != 0 or action.range_ft < 10:
-            return action
-        return action.model_copy(update={"range_ft": action.range_ft + bonus_ft})
-    except Exception:
-        logger.exception("Failed to apply cantrip range bonus to %s.", action.id)
-        raise
-
-
 def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> dict[str, list[object]]:
     try:
         save_dc = 8 + proficiency_bonus + wisdom_modifier
-        attack_bonus = proficiency_bonus + wisdom_modifier
-        cantrip_damage_bonus = wisdom_modifier if level >= 7 else 0
-        cantrip_range_bonus = 300 if level >= 15 else 0
-        spell_attack_actions = [
-            build_poison_spray_2024(attack_bonus, level, cantrip_damage_bonus),
-            *([build_fire_bolt_2024(attack_bonus, level, cantrip_damage_bonus)] if level >= 3 else []),
-            *([build_starry_wisp_2024(attack_bonus, level, cantrip_damage_bonus)] if level >= 4 else []),
-        ]
-        spell_save_actions = [
-            *([build_faerie_fire_2024(save_dc)] if level >= 2 else []),
-            *([build_burning_hands_2024(save_dc)] if level >= 3 else []),
-            *([build_fireball_2024(save_dc)] if level >= 5 else []),
-            *([build_blight_2024(save_dc)] if level >= 7 else []),
-            *([build_cone_of_cold_2024(save_dc)] if level >= 9 else []),
-            *([build_thunderclap_2024(save_dc, level, cantrip_damage_bonus)] if level >= 10 else []),
-            *([build_thunderwave_2024(save_dc)] if level >= 10 else []),
-            *([build_sunburst_2024(save_dc)] if level >= 15 else []),
-        ]
-        spell_attack_actions = [
-            _with_cantrip_range_bonus(action, cantrip_range_bonus)
-            for action in spell_attack_actions
-        ]
-        spell_save_actions = [
-            _with_cantrip_range_bonus(action, cantrip_range_bonus)
-            for action in spell_save_actions
-        ]
+        spell_attacks, spell_saves = druid_offensive_actions(
+            level,
+            proficiency_bonus,
+            wisdom_modifier,
+        )
         return {
             "saving_throw_actions": [build_lands_aid_2024(save_dc, level)] if level >= 3 else [],
-            "spell_attack_actions": spell_attack_actions,
-            "spell_save_actions": spell_save_actions,
+            "spell_attack_actions": spell_attacks,
+            "spell_save_actions": spell_saves,
             "defensive_spell_actions": [
                 build_longstrider_2024(),
                 *([build_blur_2024()] if level >= 3 else []),
