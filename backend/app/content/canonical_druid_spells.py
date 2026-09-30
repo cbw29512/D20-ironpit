@@ -68,6 +68,10 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         "arena-out-of-scope", spell_level=3, min_character_level=5,
     ),
     _spell(
+        "aid", "Aid", "buff", "max-hp-increase",
+        spell_level=2, min_character_level=6,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",

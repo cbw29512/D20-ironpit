@@ -138,6 +138,19 @@ def build_druid_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     "Wild Shape plus the once-per-Long-Rest gate to regain one level 1 spell slot."
                 ),
             ))
+        if level >= 6:
+            audits.append(_feature(
+                "natural-recovery",
+                "Natural Recovery",
+                "subclass",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Once per Long Rest, cast one prepared level 1+ Circle Spell without expending "
+                    "a spell slot via the universal alternate-spell-cast grant. The Short-Rest slot "
+                    "recovery half occurs outside an active Iron Pit match and needs no fight-time resolver."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid feature audits for level %s.", level)
