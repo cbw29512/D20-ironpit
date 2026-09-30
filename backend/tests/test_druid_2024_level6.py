@@ -45,6 +45,9 @@ def test_2024_druid_level_six_progression_and_natural_recovery_resource() -> Non
         aid.current_hp_increase,
     ) == (2, "action", 30, 480, 3, 5, 5)
 
+    combat = build_pregen_combat_profiles()[hero.id]
+    assert_character_resources_raw_ready(hero, profile, combat)
+
     audit = next(
         item for item in profile.feature_audits
         if item.feature_id == "natural-recovery"
