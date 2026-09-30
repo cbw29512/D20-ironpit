@@ -13,6 +13,7 @@ from app.content.druid_2024_spells import (
     build_faerie_fire_2024,
     build_longstrider_2024,
     build_poison_spray_2024,
+    build_starry_wisp_2024,
 )
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
 from app.domain.models import ResourceDefinition
@@ -68,6 +69,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
             "spell_attack_actions": [
                 build_poison_spray_2024(attack_bonus, level),
                 *([build_fire_bolt_2024(attack_bonus, level)] if level >= 3 else []),
+                *([build_starry_wisp_2024(attack_bonus, level)] if level >= 4 else []),
             ],
             "spell_save_actions": [
                 *([build_faerie_fire_2024(save_dc)] if level >= 2 else []),

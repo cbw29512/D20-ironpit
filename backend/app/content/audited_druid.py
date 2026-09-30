@@ -32,8 +32,8 @@ def _sickle(proficiency_bonus: int, strength_modifier: int) -> WeaponAttack:
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
     """Compile the certified 2024 Land-Druid progression."""
     try:
-        if level not in {1, 2, 3}:
-            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 3.")
+        if level not in {1, 2, 3, 4}:
+            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 4.")
         profile = build_thalen_greenbough_profile(level)
         row = DRUID_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -100,8 +100,9 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
             ),
             source=(
                 "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, "
-                "Poison Spray, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Lesser Restoration, "
-                "Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Land's Aid, Wild Shape, Equipment"
+                "Poison Spray, Starry Wisp, Healing Word, Cure Wounds, Longstrider, Faerie Fire, "
+                "Lesser Restoration, Detect Poison and Disease, Circle of the Land (Arid), Blur, "
+                "Burning Hands, Fire Bolt, Land's Aid, Wild Shape, Equipment"
             ),
         )
     except Exception:
