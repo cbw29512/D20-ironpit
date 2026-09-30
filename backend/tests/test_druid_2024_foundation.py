@@ -127,8 +127,9 @@ def test_2024_druid_level_two_adds_raw_wild_shape_and_faerie_fire() -> None:
         action.temporary_hp_on_enter,
         action.retain_creature_type,
         action.ends_on_incapacitated,
+        action.replace_existing_form,
         action.retain_spellcasting,
-    ) == ("wild-shape", "bonus_action", "srd-wolf", "wild-shape", "retain_owner", 2, True, True, False)
+    ) == ("wild-shape", "bonus_action", "srd-wolf", "wild-shape", "retain_owner", 2, True, True, True, False)
 
     faerie_fire = hero.spell_save_actions[0]
     assert (
