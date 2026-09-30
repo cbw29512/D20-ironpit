@@ -1,10 +1,12 @@
 from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
+from app.combat.modifier_stack import add_modifier
 from app.combat.saving_throws import resolve_save_action
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.demo import build_goblin_warrior
 from app.domain.models import DamageType, EncounterCombatant, OnHitDamage, SavingThrowAction
+from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.traits import CombatTrait
 
 
@@ -32,6 +34,27 @@ def test_undead_fortitude_success_leaves_monster_at_one_hp() -> None:
     assert state.is_alive is True
     assert state.is_dead is False
 
+
+
+def test_undead_fortitude_uses_universal_d20_test_advantage() -> None:
+    state = _zombie_state()
+    add_modifier(state, CombatModifier(
+        id="source:foresight:zombie:0",
+        source_id="source",
+        source_effect_id="foresight",
+        source_name="Foresight",
+        source_is_magical=True,
+        kind=ModifierKind.D20_TEST_ADVANTAGE,
+    ))
+    outcome = apply_damage(
+        state,
+        state.current_hp,
+        damage_types={DamageType.BLUDGEONING},
+        dice=FixedDiceProvider([1, 11]),
+    )
+    assert outcome == "undead_fortitude"
+    assert state.current_hp == 1
+    assert state.is_dead is False
 
 def test_undead_fortitude_failure_kills_monster() -> None:
     state = _zombie_state()
