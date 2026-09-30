@@ -50,6 +50,7 @@ class PersistentBarrierAction(BaseModel):
     concentration: bool = False
     duration_rounds: int = Field(ge=1)
     permanent_after_full_duration: bool = False
+    min_sections: int = Field(default=1, ge=1, le=100)
     max_sections: int = Field(ge=1, le=100)
     sections_must_be_contiguous: bool = False
     section_length_ft: int = Field(ge=5)
@@ -67,6 +68,8 @@ class PersistentBarrierAction(BaseModel):
     @model_validator(mode="after")
     def validate_grid_dimensions(self) -> "PersistentBarrierAction":
         try:
+            if self.min_sections > self.max_sections:
+                raise ValueError("Barrier minimum sections cannot exceed maximum sections.")
             if self.section_length_ft % 5:
                 raise ValueError("Barrier section length must use 5-foot grid increments.")
             if self.permanent_after_full_duration and not self.concentration:
