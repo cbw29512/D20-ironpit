@@ -4,6 +4,7 @@ import logging
 
 from app.content.monster_equipment import build_monster_visual
 from app.content.monster_wolf_attacks import build_dire_wolf_bite, build_wolf_bite
+from app.domain.character_builds import AbilityScores
 from app.domain.models import (
     AttackActionDefinition,
     AttackActionSlot,
@@ -26,6 +27,7 @@ def build_legacy_wolf() -> CombatantTemplate:
             id="srd-wolf", name="Wolf", archetype="Wolf", challenge_rating="1/4",
             kind="monster", ruleset="2024", size=CreatureSize.MEDIUM,
             armor_class=12, max_hp=11, speed_ft=40, initiative_bonus=2,
+            ability_scores=AbilityScores(strength=14, dexterity=15, constitution=12, intelligence=3, wisdom=12, charisma=6),
             weapon_attack=build_wolf_bite(), combat_traits=[CombatTrait.PACK_TACTICS],
             visual=build_monster_visual("fur", "bite", "wolf"),
             source="SRD 5.2.1 Wolf p. 364",
