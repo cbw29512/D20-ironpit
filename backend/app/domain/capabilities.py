@@ -44,6 +44,8 @@ class CombatantDefinition(BaseModel):
     speed_ft: int = Field(ge=0)
     movement_modes: MovementModes | None = None
     initiative_bonus: int
+    blindsight_ft: int = Field(default=0, ge=0)
+    truesight_ft: int = Field(default=0, ge=0)
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
     primary_attack_id: str
