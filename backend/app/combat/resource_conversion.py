@@ -21,6 +21,11 @@ def conversion_available(
             return False
         if not resource_available(state, action.source_resource_id, action.source_cost):
             return False
+        source = next((item for item in state.resources if item.id == action.source_resource_id), None)
+        if source is None:
+            raise ValueError(f"Resource conversion source {action.source_resource_id!r} is missing.")
+        if source.current_uses - action.source_cost < action.source_reserve:
+            return False
         if any(
             not resource_available(state, resource_id, cost)
             for resource_id, cost in action.additional_source_costs.items()
