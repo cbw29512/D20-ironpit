@@ -37,7 +37,7 @@ def test_2024_druid_level_five_progression_and_spells() -> None:
 
     assert package is not None
     assert len(package.spells) == 9
-    assert [item.id for item in package.spells][-2:] == ["dispel-magic", "daylight"]
+    assert [item.id for item in package.spells][-2:] == ["dispel-magic", "water-breathing"]
 
     fireball = next(item for item in hero.spell_save_actions if item.id == "fireball")
     assert (
