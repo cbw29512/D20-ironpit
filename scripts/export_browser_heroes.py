@@ -398,6 +398,7 @@ def _resource_conversion(action: Any) -> dict[str, Any]:
         "actionCost": action.action_cost,
         "sourceResourceId": action.source_resource_id,
         "sourceCost": action.source_cost,
+        "sourceReserve": action.source_reserve,
         "additionalSourceCosts": dict(action.additional_source_costs),
         "requiresTargetEmpty": action.requires_target_empty,
         "oncePerTurn": action.once_per_turn,
