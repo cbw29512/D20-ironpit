@@ -135,7 +135,7 @@
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
       if (!spell.concentration && !target.state.active_buff_effect_ids.includes(spell.id)) target.state.active_buff_effect_ids.push(spell.id);
     }
-    if (spell.concentration || spell.modifierEffects?.length) {
+    if (spell.concentration || spell.modifierEffects?.length || spell.movementModeGrants?.length) {
       if (!SM()) throw new Error("Browser spell-modifier runtime is not loaded.");
       const resolvedSpell = { ...spell, durationMinutes: effectiveDurationMinutes };
       SM().apply(member.state, targets.map((target) => ({ targetId: target.combatant_id, state: target.state })), member.combatant_id, resolvedSpell, 0, states);
@@ -146,6 +146,9 @@
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
     details.push(...(spell.conditionIds || []));
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
+    details.push(...(spell.movementModeGrants || []).map((grant) =>
+      grant.matchCurrentSpeed ? `${grant.mode} Speed equals current Speed` : `${grant.mode} Speed ${grant.fixedSpeedFt} ft.`,
+    ));
     if (durationOption) details.push(`${durationOption.name}: ${effectiveDurationMinutes} minutes`);
     if (spell.concentration) details.push("Concentration");
     const single = targets.length === 1 ? targets[0] : null;
