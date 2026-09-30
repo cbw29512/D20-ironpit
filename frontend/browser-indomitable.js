@@ -16,7 +16,7 @@
     const roll = M().applyD20Bonus(
       state,
       "saving-throw-bonus-die",
-      R().d20(saveBonus + M().savingThrowFlat(state) + bonus, S().saveMode(state, ability)),
+      R().d20(saveBonus + M().savingThrowFlat(state, ability) + bonus, S().saveMode(state, ability)),
     );
     const suffix = bonus ? ` +${bonus}` : "";
     return { ...roll, notation: `${roll.notation} [Indomitable${suffix}]` };
