@@ -6,10 +6,11 @@
   function resolve(state, damageTaken, damageTypes = [], critical = false) {
     if (!state.template.traits?.includes("undead-fortitude")) return false;
     if (critical || damageTypes.includes("radiant")) return false;
-    const bonus = state.template.saving_throw_bonuses?.constitution;
-    if (!Number.isInteger(bonus)) throw new Error(`${state.template.name} lacks a Constitution saving throw bonus.`);
     const dc = 5 + damageTaken;
-    if (R().d20(bonus).total < dc) return false;
+    const saves = window.IRON_PIT_BROWSER_SAVES;
+    if (!saves) throw new Error("Undead Fortitude requires the shared saving-throw runtime.");
+    const { succeeded } = saves.resolveSavingThrow(state, "constitution", dc);
+    if (!succeeded) return false;
     state.current_hp = 1;
     state.is_alive = true;
     state.is_dead = false;
