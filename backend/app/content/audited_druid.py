@@ -65,6 +65,8 @@ def _source_reference(level: int) -> str:
         parts.extend(["Ability Score Improvement"])
     if level >= 13:
         parts.extend(["Fire Storm"])
+    if level >= 14:
+        parts.extend(["Nature's Sanctuary", "Land's Aid Improvement"])
     return "D&D Beyond Basic Rules 2024: " + ", ".join(parts)
 
 
@@ -72,8 +74,8 @@ def _source_reference(level: int) -> str:
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
     """Compile the certified 2024 Land-Druid progression."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}:
-            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 13.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}:
+            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 14.")
         profile = build_thalen_greenbough_profile(level)
         row = DRUID_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
