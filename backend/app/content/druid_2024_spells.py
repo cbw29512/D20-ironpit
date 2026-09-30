@@ -9,7 +9,11 @@ from app.domain.targeting import AreaTargeting
 logger = logging.getLogger(__name__)
 
 
-def build_poison_spray_2024(attack_bonus: int, character_level: int) -> SpellAttackAction:
+def build_poison_spray_2024(
+    attack_bonus: int,
+    character_level: int,
+    damage_bonus: int = 0,
+) -> SpellAttackAction:
     """Explicit 2024 Poison Spray fingerprint."""
     try:
         return SpellAttackAction(
@@ -22,6 +26,7 @@ def build_poison_spray_2024(attack_bonus: int, character_level: int) -> SpellAtt
             attack_bonus=attack_bonus,
             damage_dice_count=cantrip_damage_dice(character_level),
             damage_dice_size=12,
+            damage_bonus=damage_bonus,
             damage_type="poison",
             animation="spell-attack",
             source="D&D Beyond Basic Rules 2024: Poison Spray",
@@ -84,7 +89,11 @@ def build_faerie_fire_2024(save_dc: int) -> SpellSaveAction:
         raise
 
 
-def build_starry_wisp_2024(attack_bonus: int, character_level: int) -> SpellAttackAction:
+def build_starry_wisp_2024(
+    attack_bonus: int,
+    character_level: int,
+    damage_bonus: int = 0,
+) -> SpellAttackAction:
     """Explicit 2024 Starry Wisp fingerprint."""
     try:
         return SpellAttackAction(
@@ -97,6 +106,7 @@ def build_starry_wisp_2024(attack_bonus: int, character_level: int) -> SpellAtta
             attack_bonus=attack_bonus,
             damage_dice_count=cantrip_damage_dice(character_level),
             damage_dice_size=8,
+            damage_bonus=damage_bonus,
             damage_type="radiant",
             on_hit_modifier_effects=[
                 SpellModifierEffect(
