@@ -147,6 +147,7 @@ console.log("Browser replacement-form Main Action provider parity passed.");
           targetAllowsOverflow: false,
           requiresTargetEmpty: true,
           oncePerTurn: true,
+          oncePerTurnGroup: "wild-resurgence-regain-wild-shape",
           automation: "manual",
           priority: 99,
         }],
@@ -173,7 +174,7 @@ console.log("Browser replacement-form Main Action provider parity passed.");
   assert.equal(druid5.state.resources["spell-slot-1"], 3);
   assert.equal(druid5.state.resources["wild-shape"], 0, "restored use is immediately spent on Wild Shape");
   assert.equal(
-    druid5.state.feature_last_turn_keys["wild-resurgence-regain-wild-shape-slot-1"],
+    druid5.state.feature_last_turn_keys["wild-resurgence-regain-wild-shape"],
     ctx5.turnKey,
   );
 }
