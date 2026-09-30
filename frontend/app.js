@@ -72,15 +72,21 @@
     return rows.find((card) => card.runnable_template_id === templateId && card.coverage_status === "raw_ready") || null;
   }
   function loadSample() {
-    if (state.fighting || (state.session && !state.session.complete) || !state.catalog) return;
-    const is2014 = state.ruleset === "2014";
-    const heroes = is2014 ? [cardByTemplate("heroes", "2014-brown-bear"), cardByTemplate("heroes", "2014-bandit")] : [cardByTemplate("heroes", "karnok-stoneward-l1"), cardByTemplate("heroes", "seraphine-dawnshield-l1")];
-    const monsters = is2014 ? [cardByTemplate("monsters", "2014-skeleton"), cardByTemplate("monsters", "2014-goblin")] : [cardByTemplate("monsters", "srd-goblin-warrior"), cardByTemplate("monsters", "srd-wolf")];
-    if ([...heroes, ...monsters].some((card) => !card)) { el("status").textContent = "Sample matchup could not find its certified cards."; return; }
-    state.heroSlots.fill(null); state.monsterSlots.fill(null);
-    heroes.forEach((card, index) => { state.heroSlots[index] = card; }); monsters.forEach((card, index) => { state.monsterSlots[index] = card; });
-    invalidateRun(); clearResult(is2014 ? "2014 sample loaded: Brown Bear + Bandit vs Skeleton + Goblin." : "2024 sample loaded: Karnok + Seraphine vs Goblin Warrior + Wolf."); render();
-    el("status").textContent = "Sample loaded. Choose FIGHT, STEP FIGHT, or TURBO.";
+    try {
+      if (state.fighting || (state.session && !state.session.complete) || !state.catalog) return;
+      const is2014 = state.ruleset === "2014";
+      const heroes = is2014 ? [cardByTemplate("heroes", "karnok-stoneward-2014-l1"), cardByTemplate("heroes", "seraphine-dawnshield-2014-l1")] : [cardByTemplate("heroes", "karnok-stoneward-l1"), cardByTemplate("heroes", "seraphine-dawnshield-l1")];
+      const monsters = is2014 ? [cardByTemplate("monsters", "2014-skeleton"), cardByTemplate("monsters", "2014-goblin")] : [cardByTemplate("monsters", "srd-goblin-warrior"), cardByTemplate("monsters", "srd-wolf")];
+      if ([...heroes, ...monsters].some((card) => !card)) { el("status").textContent = "Sample matchup could not find its certified cards."; return; }
+      state.heroSlots.fill(null); state.monsterSlots.fill(null);
+      heroes.forEach((card, index) => { state.heroSlots[index] = card; }); monsters.forEach((card, index) => { state.monsterSlots[index] = card; });
+      invalidateRun(); clearResult(is2014 ? "2014 sample loaded: Karnok + Seraphine vs Skeleton + Goblin." : "2024 sample loaded: Karnok + Seraphine vs Goblin Warrior + Wolf."); render();
+      el("status").textContent = "Sample loaded. Choose FIGHT, STEP FIGHT, or TURBO.";
+    } catch (error) {
+      console.error("Certified sample matchup could not be loaded", { ruleset: state.ruleset, error });
+      el("status").textContent = "Sample matchup could not be loaded.";
+      throw error;
+    }
   }
 
   async function changeRuleset(nextRuleset) {

@@ -99,8 +99,8 @@
 
   function eventRow(event) {
     const row = document.createElement("article"), title = document.createElement("strong"), detail = document.createElement("p");
-    row.className = "battle-event"; title.textContent = L()?.title(event) || event.event_type || "Combat event";
-    detail.textContent = L()?.detail(event) || ""; row.append(title, detail);
+    row.className = "battle-event"; title.textContent = `Round ${event.round_number} · ${event.event_type || "Combat event"}`;
+    detail.textContent = L().format(event); row.append(title, detail);
     const audit = auditDetails(event); if (audit) row.append(audit); return row;
   }
 
@@ -108,6 +108,17 @@
     const log = el("battle-log");
     for (const event of events) log.append(eventRow(event));
     log.scrollTop = log.scrollHeight;
+  }
+
+  function writeLog(battle) {
+    try {
+      // Replace the visible projection; Step supplies a prefix, Watch the full stream.
+      el("battle-log").replaceChildren();
+      appendEvents(battle.events || []);
+    } catch (error) {
+      console.error("Battle event log could not be rendered", error);
+      throw error;
+    }
   }
 
   function resetBattleView() {
@@ -119,24 +130,5 @@
     }
   }
 
-  function syncCombatants(battle) {
-    const members = [...battle.setup.heroes, ...battle.setup.monsters];
-    members.forEach((member) => {
-      const slot = document.querySelector(`.battle-card.occupied[data-combatant-id="${member.combatant_id}"]`);
-      if (!slot) return;
-      const state = member.state, maxHp = state.template.max_hp, hp = Math.max(0, state.current_hp);
-      slot.dataset.currentHp = String(hp); slot.querySelector(".hp-text").textContent = `${hp} / ${maxHp} HP`;
-      slot.querySelector(".card-hp span").style.width = `${maxHp ? (hp / maxHp) * 100 : 0}%`;
-      slot.classList.toggle("dead", state.is_dead || !state.is_alive);
-    });
-  }
-
-  function syncInitiative(battle) {
-    const positions = new Map(battle.initiative.turn_order.map((id, index) => [id, index + 1]));
-    for (const node of document.querySelectorAll(".battle-card.occupied")) {
-      const position = positions.get(node.dataset.combatantId); node.querySelector(".initiative-badge").textContent = position || "—";
-    }
-  }
-
-  window.IRON_PIT_BATTLEFIELD_VIEW = { appendEvents, render, resetBattleView, showResult, syncCombatants, syncInitiative };
+  window.IRON_PIT_BATTLEFIELD_VIEW = { appendEvents, render, resetBattleView, showResult, writeLog };
 })();
