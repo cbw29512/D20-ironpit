@@ -13,10 +13,12 @@
     return action.targetAllowsOverflow || current < maximum;
   }
 
-  function available(state, action) {
+  function available(state, action, turnKey = null) {
     try {
       if (action.actionCost !== "none" && !E()?.available(state, action.actionCost)) return false;
       if (!R()?.available(state, action.sourceResourceId, action.sourceCost)) return false;
+      if (action.requiresTargetEmpty && (state.resources[action.targetResourceId] || 0) !== 0) return false;
+      if (action.oncePerTurn && (!turnKey || state.feature_last_turn_keys?.[action.id] === turnKey)) return false;
       for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
         if (!R()?.available(state, resourceId, cost)) return false;
       }
@@ -72,16 +74,21 @@
     }
   }
 
-  function resolve(sequence, round, member, action) {
+  function resolve(sequence, round, member, action, turnKey = null) {
     try {
       const state = member.state;
-      if (!available(state, action)) return null;
+      if (!available(state, action, turnKey)) return null;
       if (action.actionCost !== "none") E().spend(state, action.actionCost);
       const sourceRemaining = R().spend(state, action.sourceResourceId, action.sourceCost);
       for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
         R().spend(state, resourceId, cost);
       }
       const targetRemaining = gain(state, action);
+      if (action.oncePerTurn) {
+        if (!turnKey) throw new Error(`Resource conversion ${action.id} requires a turn key.`);
+        state.feature_last_turn_keys ||= {};
+        state.feature_last_turn_keys[action.id] = turnKey;
+      }
       return {
         sequence,
         round_number: round,
