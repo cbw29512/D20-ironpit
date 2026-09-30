@@ -146,3 +146,32 @@ def build_thunderwave_2024(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build 2024 Thunderwave.")
         raise
+
+
+def build_thunderclap_2024(
+    save_dc: int,
+    character_level: int,
+    damage_bonus: int = 0,
+) -> SpellSaveAction:
+    """Explicit 2024 Thunderclap fingerprint using shared emanation save damage."""
+    try:
+        return SpellSaveAction(
+            id="thunderclap",
+            name="Thunderclap",
+            level=0,
+            action_cost="action",
+            range_ft=0,
+            area=AreaTargeting(shape="emanation", origin="self", radius_ft=5),
+            save_ability="constitution",
+            dc=save_dc,
+            damage_dice_count=cantrip_damage_dice(character_level),
+            damage_dice_size=6,
+            damage_bonus=damage_bonus,
+            damage_type="thunder",
+            success_damage="none",
+            animation="spell-save",
+            source="D&D Beyond Player's Handbook 2024: Thunderclap",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Thunderclap at level %s.", character_level)
+        raise
