@@ -8,6 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 load("browser-grid-geometry.js");
+load("browser-grid-barriers.js");
 load("browser-grid-movement-support.js");
 load("browser-grid-path-search-support.js");
 load("browser-grid-path-search.js");
@@ -86,5 +87,32 @@ const blockers = [
 const blockedPlan = M.planToward(map, trapped, trappedTarget, [trapped, trappedTarget, ...blockers], 5, 30);
 assert.deepEqual(blockedPlan.path, []);
 assert.equal(blockedPlan.goal_reachable, false);
+
+
+const persistentBarrier = {
+  blocks_movement: true,
+  sections: [{
+    section_id: "panel-1",
+    current_hp: 180,
+    destroyed: false,
+    edges: [{ first: { x: 0, y: 0 }, second: { x: 1, y: 0 } }],
+  }],
+};
+assert.equal(
+  M.movementStepCostFt(map, mover, { x: 1, y: 0 }, [mover], { x: 0, y: 0 }, [persistentBarrier]),
+  null,
+);
+const barrierTarget = member("barrier-target", "monsters", 3, 0);
+const aroundBarrier = M.planToward(map, mover, barrierTarget, [mover, barrierTarget], 5, 30, [persistentBarrier]);
+assert.ok(aroundBarrier.path.length > 0);
+assert.notDeepEqual(aroundBarrier.path[0], { x: 1, y: 0 });
+assert.equal(aroundBarrier.goal_reachable, true);
+
+persistentBarrier.sections[0].current_hp = 0;
+persistentBarrier.sections[0].destroyed = true;
+assert.equal(
+  M.movementStepCostFt(map, mover, { x: 1, y: 0 }, [mover], { x: 0, y: 0 }, [persistentBarrier]),
+  5,
+);
 
 console.log("Grid movement browser parity regressions passed.");
