@@ -39,6 +39,14 @@ def build_thalen_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
                 attacks=attacks, weapon_masteries=(),
                 resources=(("spell-slot-1", 3), ("wild-shape", 2)), initiative_bonus=0,
             ),
+            PregenCombatProfile(
+                template_id="thalen-greenbough-l3", archetype="Druid", level=3,
+                abilities=abilities, save_proficiencies=("intelligence", "wisdom"),
+                armor_class=13, max_hp=18, speed_ft=35, skill_bonuses=skills,
+                attacks=attacks, weapon_masteries=(),
+                resources=(("spell-slot-1", 4), ("spell-slot-2", 2), ("wild-shape", 2)),
+                initiative_bonus=0,
+            ),
         )
     except Exception:
         logger.exception("Failed to build 2024 Thalen combat fingerprint.")
