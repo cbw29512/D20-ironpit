@@ -16,23 +16,34 @@ from app.domain.models import BattleEvent, SavingThrowAction
 logger = logging.getLogger(__name__)
 
 
-def _resource_ready_or_restorable(actor: EncounterCombatant, action: SavingThrowAction) -> bool:
+def _resource_ready_or_restorable(
+    actor: EncounterCombatant,
+    action: SavingThrowAction,
+    turn_key: str | None = None,
+) -> bool:
     try:
         if action_resource_available(actor.state, action):
             return True
-        return action.resource_id is not None and restoration_conversion(actor.state, action.resource_id) is not None
+        return (
+            action.resource_id is not None
+            and restoration_conversion(actor.state, action.resource_id, turn_key) is not None
+        )
     except Exception:
         logger.exception("Failed bonus-save resource check for %s.", actor.combatant_id)
         raise
 
 
-def choose_bonus_save_action(actor: EncounterCombatant, setup: EncounterSetup):
+def choose_bonus_save_action(
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+    turn_key: str | None = None,
+):
     """Choose one legal Bonus Action saving-throw ability without consuming the normal Action."""
     try:
         if not is_available(actor.state, "bonus_action"):
             return None
         for action in actor.state.template.saving_throw_actions:
-            if action.action_cost != "bonus_action" or not _resource_ready_or_restorable(actor, action):
+            if action.action_cost != "bonus_action" or not _resource_ready_or_restorable(actor, action, turn_key):
                 continue
             if action.area is not None:
                 placements = legal_area_save_placements(actor, setup, action)
@@ -58,7 +69,8 @@ def resolve_bonus_save_action(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve a selected Bonus Action save, restoring its resource on demand when declared."""
     try:
-        choice = choose_bonus_save_action(actor, setup)
+        turn_key = f"{round_number}:{actor.combatant_id}"
+        choice = choose_bonus_save_action(actor, setup, turn_key)
         if choice is None:
             return [], sequence
         action, placement, target, distance = choice
@@ -66,7 +78,7 @@ def resolve_bonus_save_action(
         if not action_resource_available(actor.state, action):
             if action.resource_id is None:
                 raise ValueError(f"{action.name} has no restorable resource.")
-            conversion = restoration_conversion(actor.state, action.resource_id)
+            conversion = restoration_conversion(actor.state, action.resource_id, turn_key)
             if conversion is None:
                 raise ValueError(f"{action.name} resource cannot be restored.")
             events.append(resolve_resource_conversion(
@@ -75,6 +87,7 @@ def resolve_bonus_save_action(
                 sequence=sequence,
                 round_number=round_number,
                 actor_id=actor.combatant_id,
+                turn_key=turn_key,
             ))
             sequence += 1
         if placement is not None:
