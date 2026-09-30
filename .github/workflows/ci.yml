@@ -434,6 +434,7 @@ jobs:
           node frontend/browser-words-of-creation-2024.test.cjs
           node frontend/browser-superior-inspiration-2024.test.cjs
           node frontend/browser-area-save-actions.test.cjs
+          node frontend/browser-automatic-save-failures.test.cjs
           node frontend/browser-blur-senses.test.cjs
           node frontend/browser-spell-area.test.cjs
           node frontend/browser-spell-cast-effects.test.cjs
