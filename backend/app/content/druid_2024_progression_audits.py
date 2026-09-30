@@ -159,6 +159,17 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     "It is therefore preserved as arena-out-of-scope instead of approximated."
                 ),
             ))
+        if level >= 14:
+            audits.append(druid_feature_audit(
+                "natures-sanctuary", "Nature's Sanctuary", "subclass",
+                combat_relevant=True, automated=True,
+                notes=(
+                    "Universal persistent beneficial-zone composition: spend one Wild Shape with a Magic "
+                    "Action to place a 15-foot Cube within 120 feet for 1 minute. Source and allies in the "
+                    "zone gain Half Cover (+2 AC and +2 Dexterity saves); allies also gain Arid Fire "
+                    "resistance. Bonus Action moves the zone up to 60 feet while remaining within 120 feet."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)
