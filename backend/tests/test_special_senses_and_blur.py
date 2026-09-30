@@ -4,7 +4,7 @@ from app.combat.defensive_modifier_rules import attacks_against_disadvantage_sou
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.state import build_combatant_state
 from app.content.audited_druid import build_thalen_greenbough_level
-from app.content.druid_2024_spells import build_blur_2024
+from app.content.druid_2024_land_spells import build_blur_2024
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_special_senses import parse_special_senses
 
