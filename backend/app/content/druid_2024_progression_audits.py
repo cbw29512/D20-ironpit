@@ -86,6 +86,27 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 9:
+            audits.extend([
+                druid_feature_audit(
+                    "druid-combat-spells-5", "Level 5 Spellcasting", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Canonical combat-first preparation adds 2024 Thunderwave and Mass Cure Wounds. "
+                        "Thunderwave reuses universal failed-save forced movement; Mass Cure Wounds reuses "
+                        "the shared multi-target healing action."
+                    ),
+                ),
+                druid_feature_audit(
+                    "circle-spells-5-wall-of-stone", "Circle Spells: Arid — Wall of Stone", "subclass",
+                    combat_relevant=True, automated=False,
+                    notes=(
+                        "Required level-9 Arid Circle Spell. Universal persistent-barrier schema and "
+                        "movement blocking are staged, but casting, destruction, and concentration lifecycle "
+                        "must be complete before Druid 9 certification."
+                    ),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)
