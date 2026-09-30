@@ -89,7 +89,7 @@ Current migration sequence:
 1. **Conditions / buffs / debuffs**
    - remove class/feature-name immunity branches where an existing condition-immunity or debuff-counter primitive can express the rule;
    - preserve source qualifiers such as creature type, magical/nonmagical origin, effect tags, duration, and resource cost;
-   - Nature's Ward is the immediate Druid proving case: poison/disease immunity plus Fey/Elemental-scoped Charmed/Frightened immunity.
+   - Nature's Ward (Druid 10) is 2024-edition-specific: immunity to the Poisoned condition plus damage resistance from the current land choice; canonical Arid grants Fire resistance. Reuse generic condition-immunity and damage-resistance data, not a Druid-named resolver.
 2. **Attacks / saves / checks**
    - keep legality, roll-mode modifiers, bonuses, DC/AC comparison, and final result separate;
    - source abilities provide data, not alternate attack/save engines.
@@ -113,7 +113,7 @@ Refactor discipline:
 
 Immediate examples:
 
-- **Nature's Ward (Druid 10):** use typed checks -> universal modifiers/counters -> result; no Druid-named resolver.
+- **Nature's Ward (Druid 10):** 2024 Arid grants Poisoned immunity and Fire resistance. Bind those to generic condition-immunity and damage-resistance data; do not carry forward the 2014 feature by name.
 - **Mindless Rage:** preserve the 2014 vs 2024 difference for already-active Charm/Frighten while migrating it to shared condition/debuff semantics in a dedicated tranche.
 
 ## CI / spend
