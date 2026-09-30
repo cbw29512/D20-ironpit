@@ -272,6 +272,10 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         row["replacementHp"] = effect.replacement_hp
     if effect.prevents_instant_death:
         row["preventsInstantDeath"] = True
+    if effect.source_creature_types:
+        row["sourceCreatureTypes"] = list(effect.source_creature_types)
+    if effect.bypass_attacker_senses:
+        row["bypassAttackerSenses"] = list(effect.bypass_attacker_senses)
     if effect.consume_on_attack_against:
         row["consumeOnAttackAgainst"] = True
     if effect.expires_after_source_turns is not None:
