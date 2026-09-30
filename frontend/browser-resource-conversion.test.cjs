@@ -108,4 +108,36 @@ assert.equal(druid.state.resources["wild-shape"], 1);
 assert.equal(druid.state.resources["spell-slot-1"], 3);
 assert.equal(C.available(druid.state, resurgenceAction, "1:thalen"), false);
 
+
+const freeAutomatic = member();
+const freeAction = {
+  id: "free-slot-recovery",
+  name: "Free Slot Recovery",
+  actionCost: "none",
+  sourceResourceId: "sorcery-points",
+  sourceCost: 1,
+  targetResourceId: "spell-slot-1",
+  targetGain: 1,
+  targetAllowsOverflow: false,
+  automation: "when-all-spell-slots-empty",
+  priority: 50,
+};
+freeAutomatic.state.template.resource_conversion_actions = [freeAction];
+freeAutomatic.state.template.resources["spell-slot-1"] = 3;
+freeAutomatic.state.resources["spell-slot-1"] = 0;
+freeAutomatic.state.resources["sorcery-points"] = 2;
+const hookResult = window.IRON_PIT_BROWSER_ABILITY_HOOKS.runPhase(
+  window.IRON_PIT_BROWSER_ABILITY_HOOKS.PHASES.BONUS_ACTION_WINDOW,
+  {
+    sequence: 20,
+    round: 1,
+    member: freeAutomatic,
+    setup: { heroes: [freeAutomatic], monsters: [] },
+    bonusActionCheckpoint: "beforeEscape",
+  },
+);
+assert.equal(hookResult.events[0].feature_id, "free-slot-recovery");
+assert.equal(hookResult.claimed, false, "a no-action conversion must not claim the Bonus Action window");
+assert.equal(freeAutomatic.state.bonus_action_available, true);
+
 console.log("Browser resource conversion regressions passed.");
