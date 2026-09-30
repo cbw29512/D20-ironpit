@@ -5062,6 +5062,7 @@
             "expires_at_start_of_source_turn": false
           }
         ],
+        "movement_mode_grants": [],
         "concentration": false,
         "priority": 20,
         "animation": "longstrider",
