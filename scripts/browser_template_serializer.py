@@ -358,6 +358,27 @@ def persistent_hazard_row(action: Any) -> dict[str, Any]:
         raise
 
 
+def persistent_barrier_row(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            "concentration": action.concentration, "durationRounds": action.duration_rounds,
+            "permanentAfterFullDuration": action.permanent_after_full_duration,
+            "maxSections": action.max_sections, "sectionLengthFt": action.section_length_ft,
+            "sectionHeightFt": action.section_height_ft,
+            "sectionThicknessInches": action.section_thickness_inches,
+            "armorClass": action.armor_class, "hitPointsPerSection": action.hit_points_per_section,
+            "damageImmunities": list(action.damage_immunities),
+            "blocksMovement": action.blocks_movement,
+            "blocksLineOfSight": action.blocks_line_of_sight,
+            "material": action.material, "animation": action.animation, "source": action.source,
+        }
+    except Exception:
+        logger.exception("Failed to serialize persistent barrier %s.", action.id)
+        raise
+
+
 def defense_row(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
@@ -748,6 +769,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.persistent_hazard_actions:
             row["persistent_hazard_actions"] = [
                 persistent_hazard_row(item) for item in template.persistent_hazard_actions
+            ]
+        if template.persistent_barrier_actions:
+            row["persistent_barrier_actions"] = [
+                persistent_barrier_row(item) for item in template.persistent_barrier_actions
             ]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
