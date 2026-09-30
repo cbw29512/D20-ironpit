@@ -40,6 +40,7 @@ def build_wild_resurgence_2024(
             target_resource_id="spell-slot-1",
             target_gain=1,
             target_allows_overflow=False,
+            automation="when-all-spell-slots-empty",
             priority=80,
             source="D&D Beyond Basic Rules 2024: Druid 5 — Wild Resurgence",
         ))
