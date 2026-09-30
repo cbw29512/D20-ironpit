@@ -91,10 +91,7 @@ console.log("Browser replacement-form Main Action provider parity passed.");
   const candidates = S.discoverCandidates("normalPreMove", ctx2024);
   assert.equal(candidates.length, 1);
   assert.equal(candidates[0].payload.kind, "transform");
-}
 
-
-{
   const original = druid2024.state.template;
   druid2024.state.replacement_form = {
     source_id: "wild-shape",
