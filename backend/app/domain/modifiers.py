@@ -146,8 +146,7 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a save DC.")
         if self.kind is not ModifierKind.TARGETING_SAVE_GATE and self.success_immunity_hours is not None:
             raise ValueError(f"{self.kind.value} does not accept targeting-gate success immunity.")
-        if self.kind not in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and self.save_ability:
-            raise ValueError(f"{self.kind.value} does not accept a save ability.")
+        if self.kind not in {\n            ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.SAVING_THROW_FLAT,\n            ModifierKind.TARGETING_SAVE_GATE,\n        } and self.save_ability:\n            raise ValueError(f"{self.kind.value} does not accept a save ability.")
         if self.requires_magical_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
             raise ValueError("Only saving-throw Advantage can require a magical-effect context.")
         if self.requires_spell_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
