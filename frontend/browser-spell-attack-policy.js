@@ -33,7 +33,7 @@
         const attackCount = attackCountAtSlot(spell, slotLevel);
         for (const target of enemies) {
           const distance = S().distance(member, target);
-          if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0 || distance > castRange) continue;
+          if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0 || distance > castRange || !window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) continue;
           candidates.push({
             spell, target, index, slotLevel,
             score: O().spellAttack(member, target, spell, setup) * attackCount,
