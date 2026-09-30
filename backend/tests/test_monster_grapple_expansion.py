@@ -1,12 +1,14 @@
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_source_audit import audit_monster_source
+from app.content.monster_special_senses import complete_monster_special_senses
 from app.content.monsters_grapple_expansion import build_grapple_expansion
 from app.domain.size import CreatureSize
 
 
 def _templates():
-    return {template.name: template for template in complete_monster_saving_throws(build_grapple_expansion())}
+    templates = complete_monster_saving_throws(build_grapple_expansion())
+    return {template.name: template for template in complete_monster_special_senses(templates)}
 
 
 def test_grapple_expansion_is_exactly_source_audited() -> None:
