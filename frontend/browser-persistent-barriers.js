@@ -69,6 +69,9 @@
       throw new Error(`${action.name} has an illegal section count.`);
     }
     const expected = action.sectionLengthFt / 5, keys = new Set();
+    const geometry = window.IRON_PIT_BROWSER_GRID_GEOMETRY;
+    const casterCells = geometry.occupiedCells(caster.state.position, caster.state.template.size);
+    const members = [...setup.heroes, ...setup.monsters];
     for (const edges of sectionEdges) {
       if (!straightSection(edges, expected)) throw new Error(`${action.name} has an illegal panel shape.`);
       for (const edge of edges) {
@@ -80,6 +83,22 @@
             || cell.x >= setup.map_definition.width_squares
             || cell.y >= setup.map_definition.height_squares) {
             throw new Error(`${action.name} edge lies outside the map.`);
+          }
+        }
+        const distanceFt = Math.min(...casterCells.map(([x, y]) => Math.min(
+          Math.max(Math.abs((edge.first.x - x) * 5), Math.abs((edge.first.y - y) * 5)),
+          Math.max(Math.abs((edge.second.x - x) * 5), Math.abs((edge.second.y - y) * 5)),
+        )));
+        if (distanceFt > action.castRangeFt) throw new Error(`${action.name} edge exceeds cast range.`);
+        for (const member of members) {
+          if (!member.state.position) continue;
+          const cells = new Set(
+            geometry.occupiedCells(member.state.position, member.state.template.size)
+              .map(([x, y]) => `${x},${y}`),
+          );
+          if (cells.has(`${edge.first.x},${edge.first.y}`)
+            && cells.has(`${edge.second.x},${edge.second.y}`)) {
+            throw new Error(`${action.name} would cut through a creature space.`);
           }
         }
       }
