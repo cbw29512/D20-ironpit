@@ -164,6 +164,7 @@ console.log("Browser replacement form lifecycle parity passed.");
     id: "wild-shape", name: "Wild Shape", actionCost: "bonus_action",
     resourceId: "wild-shape", resourceCost: 1, voluntaryRevertAction: "bonus_action",
     hpMode: "retain_owner", temporaryHpOnEnter: 2, retainCreatureType: true,
+    endsOnIncapacitated: true,
   };
   const entered = window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.enter(target, action, active);
   assert.equal(entered.resource_remaining, 1);
@@ -176,4 +177,9 @@ console.log("Browser replacement form lifecycle parity passed.");
   const formDamage = window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.applyDamage(target, 3);
   assert.deepEqual(formDamage, { excess: 3, reverted: false });
   assert.notEqual(target.replacement_form, null, "retained-owner HP forms do not auto-revert from damage");
+
+  target.is_unconscious = true;
+  assert.equal(window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.revertIfIncapacitated(target), true);
+  assert.equal(target.replacement_form, null);
+  assert.equal(target.template.id, "thalen-l2");
 }
