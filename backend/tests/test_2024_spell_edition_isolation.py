@@ -80,6 +80,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "heal-l8",
         "heal-l9",
         "greater-invisibility",
+        "foresight",
         "freedom-of-movement",
         "lesser-restoration",
         "dispel-magic",
@@ -615,6 +616,22 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.condition_ids,
             spell.concentration,
         ) == (4, "action", 5, 1, 1, ["invisible"], True)
+
+    if "foresight" in defenses:
+        spell = defenses["foresight"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.duration_minutes,
+            spell.target_policy,
+            spell.concentration,
+            spell.free_opening_cast,
+        ) == (9, "action", 5, 480, "self", False, True)
+        assert {item.kind for item in spell.modifier_effects} == {
+            "d20-test-advantage",
+            "attacks-against-disadvantage",
+        }
 
     if "freedom-of-movement" in defenses:
         spell = defenses["freedom-of-movement"]

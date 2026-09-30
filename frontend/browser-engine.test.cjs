@@ -10,7 +10,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-ability-hooks.js",
+  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-ability-hooks.js", "browser-ability-checks.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-weapon-mastery.js",
   "browser-state.js", "browser-resources.js", "browser-resource-conversion.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-graze.js", "browser-vex.js", "browser-attack-outcome.js", "browser-attack.js", "browser-reactions.js",

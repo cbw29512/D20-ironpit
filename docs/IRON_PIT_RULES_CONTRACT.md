@@ -4,6 +4,10 @@ This is the authoritative product/rules contract for Iron Pit. It describes the 
 
 If implementation and this contract disagree, either fix the implementation or make an explicit product decision to revise this file. Historical milestone documents and conversational progress claims are not authority.
 
+## Arena-entry buff casting
+
+When a canonical combatant can legally cast a non-Concentration buff before combat and that buff is selected as its deterministic opening preparation, Iron Pit may mark that specific opening cast as **free at arena entry**. A free opening cast still requires the spell to be legally prepared or known and the combatant to have access to a slot of the printed spell level, but it does not consume that spell slot. This is an explicit arena setup rule, not a change to the spell's RAW casting rules. Runtime data must opt into the rule declaratively; existing opening spells continue to consume slots unless so marked.
+
 ## 1. Core architecture
 
 - Iron Pit is a rules-first automated D&D combat simulator.
@@ -213,9 +217,10 @@ Normal initiative bonuses and ruleset-specific initiative mechanics apply, with 
 - Before initiative is rolled, each combatant may activate **one legal available combat buff** as its opening buff.
 - This opening activation is free in action economy: it does not consume the combatant's Action, Bonus Action, or Reaction.
 - The buff still pays every other printed cost and requirement that remains meaningful in Iron Pit, including spell slots, charges, class resources, target/range legality, and Concentration.
+- **Explicit Foresight arena exception:** when a Druid of level 17+ selects **Foresight** as its one opening buff, the precombat cast does **not** expend the level-9 spell slot. This is an Iron Pit arena override recorded here, not a change to 2024 RAW. The spell otherwise keeps its legal target, duration, and effect semantics. Other opening-buff spells continue to pay their printed spell-slot/resource costs unless this contract records another explicit exception.
 - A combatant receives only one opening-buff activation per fight. A spell, class feature, subclass feature, species feature, item effect, or other source competes for that same single opening-buff opportunity when it is otherwise legal.
 - The opening buff resolves in the precombat phase before initiative. Its normal duration/lifecycle begins there; source-turn timing continues normally once round 1 starts. An effect that lasts until the end of the source's next turn therefore expires at the end of that combatant's first turn.
-- Opening-buff selection is universal Arena policy. Do not create class-, spell-, or source-name exceptions. The source ability supplies its normal parameters and exact player-facing name; the shared precombat buff pipeline supplies the free activation.
+- Opening-buff selection is universal Arena policy. Do not create class-, spell-, or source-name exceptions in resolver logic; explicit arena overrides recorded in this contract must be represented as declarative source parameters consumed by the shared precombat pipeline. The source ability supplies its exact player-facing name and parameters; the shared precombat buff pipeline supplies the activation.
 - Buffs that require a separate combat entity, an unavailable target, an unsupported outcome-changing mechanic, or another illegal precondition remain unavailable and do not bypass normal certification gates.
 
 ## 8. Action economy

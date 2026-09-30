@@ -111,7 +111,7 @@
     const resourceId = `spell-slot-${slotLevel}`;
     if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
     member.state.opening_buff_id = spell.id;
-    member.state.resources[resourceId] -= 1;
+    if (!spell.freeOpeningCast) member.state.resources[resourceId] -= 1;
     let durationRemaining = null;
     let effectiveDurationMinutes = spell.durationMinutes || 0;
     if (durationOption) {
@@ -156,7 +156,7 @@
       target_id: single?.combatant_id || null, target_name: single?.state.template.name || null,
       feature_id: durationOption?.id || spell.id, concentration_started_effect_id: spell.concentration ? spell.id : null,
       resource_remaining: durationOption ? durationRemaining : member.state.resources[resourceId], animation: spell.animation || "precombat-defense",
-      description: `Precombat preparation: ${member.state.template.name} casts ${spell.name} with a level ${slotLevel} slot on ${targets.map((target) => target.state.template.name).join(", ")} (${details.join("; ")}).` };
+      description: `Precombat preparation: ${member.state.template.name} casts ${spell.name} ${spell.freeOpeningCast ? "as the free opening buff" : `with a level ${slotLevel} slot`} on ${targets.map((target) => target.state.template.name).join(", ")} (${details.join("; ")}).` };
   }
 
   function prepare(setup, sequence = 1) {

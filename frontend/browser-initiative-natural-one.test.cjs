@@ -14,7 +14,7 @@ for (const file of [
   "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
   "browser-reactions.js", "browser-saving-throws.js", "browser-saves.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
   "browser-standard-attack-action.js", "browser-multiattack.js", "browser-action-surge.js", "browser-formation.js",
-  "browser-initiative.js",
+  "browser-ability-checks.js", "browser-initiative.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {

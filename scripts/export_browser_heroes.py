@@ -250,7 +250,10 @@ def _defense(action: Any) -> dict[str, Any]:
            "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,
            "damageResistances": list(action.damage_resistances),
            "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
-           "concentration": action.concentration, "priority": action.priority, "animation": action.animation}
+           "concentration": action.concentration,
+           "priority": action.priority, "animation": action.animation}
+    if action.free_opening_cast:
+        row["freeOpeningCast"] = True
     if action.movement_mode_grants:
         row["movementModeGrants"] = [
             {

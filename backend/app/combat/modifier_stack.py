@@ -129,6 +129,11 @@ def effective_speed(state: CombatantState) -> int:
     return speed_after_exhaustion(state, base)
 
 
+def d20_test_advantage_sources(state: CombatantState) -> int:
+    """Return universal Advantage sources that apply to every D20 Test."""
+    return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.D20_TEST_ADVANTAGE)
+
+
 def attacks_against_advantage_sources(state: CombatantState) -> int:
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.ATTACKS_AGAINST_ADVANTAGE)
 

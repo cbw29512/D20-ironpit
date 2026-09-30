@@ -43,10 +43,14 @@
     }
   }
   const saveAdvantage = (state, ability, context = {}) =>
-    saveAdvantageModifiers(state, ability, context).length;
+    saveAdvantageModifiers(state, ability, context).length
+      + (window.IRON_PIT_BROWSER_MODIFIERS?.d20TestAdvantage(state) || 0);
   function saveAdvantageSourceNames(state, ability, context = {}) {
     try {
-      return [...new Set(saveAdvantageModifiers(state, ability, context)
+      const contextual = saveAdvantageModifiers(state, ability, context);
+      const universal = (state.active_modifiers || [])
+        .filter((item) => item.kind === "d20-test-advantage");
+      return [...new Set([...contextual, ...universal]
         .map((item) => item.source_name || item.source_effect_id))].sort();
     } catch (error) {
       console.error("Failed to identify browser saving-throw Advantage sources", {
@@ -67,7 +71,7 @@
     return [...new Set(removed)].sort();
   }
   const deathSaveAdvantage = (state) => (state.active_modifiers || [])
-    .some((item) => item.kind === "death-save-advantage");
+    .some((item) => item.kind === "death-save-advantage" || item.kind === "d20-test-advantage");
   const healingMaximized = (state) => (state.active_modifiers || [])
     .some((item) => item.kind === "healing-maximize");
   const conditionImmune = (state, conditionId, sourceTemplate = null) => (state.active_modifiers || [])

@@ -1,6 +1,18 @@
 (() => {
   "use strict";
 
+  function mode(state, advantageSources = 0, disadvantageSources = 0) {
+    try {
+      const generic = window.IRON_PIT_BROWSER_MODIFIERS?.d20TestAdvantage(state) || 0;
+      return window.IRON_PIT_BROWSER_ROLLS.modeFromSources(
+        advantageSources + generic, disadvantageSources,
+      );
+    } catch (error) {
+      console.error("Browser ability-check roll mode failed", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
   function applyMinimum(state, ability, roll) {
     try {
       const rules = (state.template.ability_check_minimums || []).filter((rule) => rule.ability === ability);
@@ -64,5 +76,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_ABILITY_CHECKS = { applyMinimum, resolve };
+  window.IRON_PIT_BROWSER_ABILITY_CHECKS = { applyMinimum, mode, resolve };
 })();

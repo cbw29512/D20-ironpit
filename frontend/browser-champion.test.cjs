@@ -109,6 +109,7 @@ setDice([4, 17, 10]);
 load("browser-grid-geometry.js");
 load("browser-arena-map.js");
 load("browser-grid-placement.js");
+load("browser-ability-checks.js");
 load("browser-initiative.js");
 load("browser-engine.js");
 {
