@@ -45,6 +45,11 @@ DRUID_CANTRIPS: tuple[CanonicalSpellChoice, ...] = (
         "spell-attack", "cantrip-scaling", "invisibility-benefits-suppressed",
         min_character_level=4,
     ),
+    _cantrip(
+        "thunderclap", "Thunderclap", "damage",
+        "save-damage", "area", "cantrip-scaling",
+        min_character_level=10,
+    ),
 )
 
 
@@ -86,6 +91,10 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
     _spell(
         "mass-cure-wounds", "Mass Cure Wounds", "healing", "healing", "multi-target-healing",
         spell_level=5, min_character_level=9,
+    ),
+    _spell(
+        "thunderwave", "Thunderwave", "damage", "save-damage", "area", "forced-movement",
+        spell_level=1, min_character_level=10,
     ),
     _spell(
         "speak-with-animals",

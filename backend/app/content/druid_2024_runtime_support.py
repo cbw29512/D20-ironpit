@@ -16,6 +16,8 @@ from app.content.druid_2024_spells import (
     build_longstrider_2024,
     build_poison_spray_2024,
     build_starry_wisp_2024,
+    build_thunderclap_2024,
+    build_thunderwave_2024,
 )
 from app.content.bard_2024_high_damage_spells import build_cone_of_cold_2024
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_cure_wounds
@@ -99,6 +101,8 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
                 *([build_fireball_2024(save_dc)] if level >= 5 else []),
                 *([build_blight_2024(save_dc)] if level >= 7 else []),
                 *([build_cone_of_cold_2024(save_dc)] if level >= 9 else []),
+                *([build_thunderclap_2024(save_dc, level, cantrip_damage_bonus)] if level >= 10 else []),
+                *([build_thunderwave_2024(save_dc)] if level >= 10 else []),
             ],
             "defensive_spell_actions": [
                 build_longstrider_2024(),

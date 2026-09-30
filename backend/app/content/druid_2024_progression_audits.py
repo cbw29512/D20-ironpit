@@ -108,6 +108,26 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 10:
+            audits.extend([
+                druid_feature_audit(
+                    "natures-ward", "Nature's Ward", "subclass",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "2024 Arid Nature's Ward composes universal defenses: immunity to the Poisoned "
+                        "condition plus Fire resistance. No 2014 Fey/Elemental charm/fear behavior carries forward."
+                    ),
+                ),
+                druid_feature_audit(
+                    "druid-combat-spell-l10", "Prepared Spell: Thunderwave", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Damage-first fifteenth prepared spell is explicit 2024 Thunderwave: 15-foot self-origin "
+                        "cube, Constitution save, 2d8 Thunder, half on success, 10-foot push on failure, "
+                        "and +1d8 per slot level above 1."
+                    ),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)

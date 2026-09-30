@@ -90,6 +90,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["effectTags"] = list(action.effect_tags)
     if action.automatic_failure_creature_types:
         row["automaticFailureCreatureTypes"] = list(action.automatic_failure_creature_types)
+    if action.failed_save_push_ft:
+        row["failedSavePushFt"] = action.failed_save_push_ft
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,
@@ -134,6 +136,8 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.area is not None: row["area"] = action.area.model_dump(mode="json")
     if action.duration_minutes is not None: row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
+    if action.failed_save_push_ft:
+        row["failedSavePushFt"] = action.failed_save_push_ft
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,

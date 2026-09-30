@@ -41,6 +41,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "sacred-flame",
         "poison-spray",
         "starry-wisp",
+        "thunderclap",
         "longstrider",
         "faerie-fire",
         "fire-bolt",
@@ -57,6 +58,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "shield-of-faith",
         "aid",
         "shatter",
+        "thunderwave",
         "fireball",
         "disintegrate",
         "finger-of-death",
@@ -216,6 +218,74 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert spell.modifier_effects[0].kind == "armor-class"
         assert spell.modifier_effects[0].flat_bonus == 2
 
+
+    if "thunderclap" in spell_saves:
+        spell = spell_saves["thunderclap"]
+        expected_dice = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
+        expected_bonus = (
+            template.ability_scores.modifier("wisdom")
+            if progression.class_id == "druid" and level >= 7
+            else 0
+        )
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_bonus,
+            spell.damage_type,
+            spell.success_damage,
+        ) == (
+            0,
+            "action",
+            0,
+            "emanation",
+            "self",
+            5,
+            "constitution",
+            expected_dice,
+            6,
+            expected_bonus,
+            "thunder",
+            "none",
+        )
+
+    if "thunderwave" in spell_saves:
+        spell = spell_saves["thunderwave"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+            spell.failed_save_push_ft,
+        ) == (
+            1,
+            "action",
+            15,
+            "cube",
+            "self",
+            15,
+            "constitution",
+            2,
+            8,
+            "thunder",
+            "half",
+            1,
+            10,
+        )
 
     if "shatter" in spell_saves:
         spell = spell_saves["shatter"]

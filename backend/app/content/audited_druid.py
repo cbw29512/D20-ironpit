@@ -14,7 +14,7 @@ from app.content.druid_2024_runtime_support import (
 )
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.content.weapon_catalog import build_weapon
-from app.domain.models import CombatantTemplate, VisualLoadout, WeaponAttack
+from app.domain.models import CombatantTemplate, DamageType, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
 logger = logging.getLogger(__name__)
@@ -57,6 +57,8 @@ def _source_reference(level: int) -> str:
         parts.extend(["Ability Score Improvement", "Wild Shape Improvement", "Freedom of Movement"])
     if level >= 9:
         parts.extend(["Cone of Cold", "Mass Cure Wounds", "Wall of Stone"])
+    if level >= 10:
+        parts.extend(["Nature's Ward", "Thunderwave"])
     return "D&D Beyond Basic Rules 2024: " + ", ".join(parts)
 
 
@@ -64,8 +66,8 @@ def _source_reference(level: int) -> str:
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
     """Compile the certified 2024 Land-Druid progression."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
-            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 9.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
+            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 10.")
         profile = build_thalen_greenbough_profile(level)
         row = DRUID_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -124,6 +126,8 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
             },
             resources=druid_resources(level, row.spell_slots, row.wild_shape_uses),
             replacement_form_actions=wild_shape_actions(level),
+            damage_resistances=[DamageType.FIRE] if level >= 10 else [],
+            condition_immunities=["poisoned"] if level >= 10 else [],
             weapon_masteries=[],
             visual=VisualLoadout(
                 armor="leather",
