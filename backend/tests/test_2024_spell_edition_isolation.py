@@ -75,6 +75,10 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "mass-cure-wounds-l7",
         "mass-cure-wounds-l8",
         "mass-cure-wounds-l9",
+        "heal",
+        "heal-l7",
+        "heal-l8",
+        "heal-l9",
         "greater-invisibility",
         "freedom-of-movement",
         "lesser-restoration",
@@ -471,6 +475,26 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert spell.max_targets == (2 if level >= 20 and progression.class_id == "bard" else 1)
         assert spell.secondary_target_within_ft == (
             10 if level >= 20 and progression.class_id == "bard" else None
+        )
+
+    if "heal" in healing:
+        spell = healing["heal"]
+        assert (
+            spell.action_cost,
+            spell.range_ft,
+            spell.target_mode,
+            spell.dice_count,
+            spell.healing_bonus,
+            spell.resource_id,
+            spell.removable_conditions,
+        ) == (
+            "action",
+            60,
+            "self_or_ally",
+            0,
+            70,
+            "spell-slot-6",
+            ["blinded", "deafened", "poisoned"],
         )
 
     if "power-word-heal" in healing:
