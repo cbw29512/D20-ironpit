@@ -466,6 +466,7 @@ jobs:
           node frontend/browser-druid10-2024.test.cjs
           node frontend/browser-druid11-2024.test.cjs
           node frontend/browser-druid12-2024.test.cjs
+          node frontend/browser-druid13-2024.test.cjs
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-paladin-oath-spells-2014.test.cjs

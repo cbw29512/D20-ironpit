@@ -12,7 +12,7 @@ def build_thalen_2024_high_combat_profiles(
     abilities_l8: AbilityScores,
     attacks: tuple[AttackExpectation, ...],
 ) -> tuple[PregenCombatProfile, ...]:
-    """Independent source-derived combat fingerprints for Druid levels 9–12."""
+    """Independent source-derived combat fingerprints for Druid levels 9–13."""
     try:
         abilities_l12 = abilities_l8.model_copy(update={"charisma": 18})
         high_skills = (
@@ -75,6 +75,28 @@ def build_thalen_2024_high_combat_profiles(
                     ("natural-recovery-free-cast", 1),
                 ),
                 **shared, **ward,
+            ),
+            PregenCombatProfile(
+                template_id="thalen-greenbough-l13", level=13, abilities=abilities_l12,
+                max_hp=68,
+                skill_bonuses=(
+                    ("athletics", 0), ("acrobatics", 0), ("nature", 11), ("survival", 10),
+                    ("insight", 10), ("religion", 6), ("perception", 10),
+                ),
+                resources=(
+                    ("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3),
+                    ("spell-slot-4", 3), ("spell-slot-5", 2), ("spell-slot-6", 1),
+                    ("spell-slot-7", 1), ("wild-shape", 3),
+                    ("wild-resurgence-slot-restore", 1), ("natural-recovery-free-cast", 1),
+                ),
+                archetype="Druid",
+                save_proficiencies=("intelligence", "wisdom"),
+                armor_class=13,
+                speed_ft=35,
+                attacks=attacks,
+                weapon_masteries=(),
+                initiative_bonus=0,
+                **ward,
             ),
         )
     except Exception:
