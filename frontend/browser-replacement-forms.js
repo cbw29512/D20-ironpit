@@ -68,10 +68,11 @@
 
   function resolveAction(state, action) {
     try {
-      const source = formRegistry(state.template.ruleset)[action.formTemplateId];
+      const owner = state.replacement_form?.original_template || state.template;
+      const source = formRegistry(owner.ruleset)[action.formTemplateId];
       if (!source) throw new Error("Unknown replacement form template: " + action.formTemplateId);
       const activeTemplate = compileActiveTemplate(
-        state.template, source, Boolean(action.retainSpellcasting), action.retainedSpellActionIds || [],
+        owner, source, Boolean(action.retainSpellcasting), action.retainedSpellActionIds || [],
         Boolean(action.retainCreatureType), (action.hpMode || "form_pool") === "retain_owner",
       );
       return enter(state, action, activeTemplate);
@@ -83,12 +84,14 @@
 
   function enter(state, action, activeTemplate) {
     try {
-      if (state.replacement_form) throw new Error(state.template.name + " is already transformed.");
+      const currentForm = state.replacement_form;
+      if (currentForm && !action?.replaceExistingForm) throw new Error(state.template.name + " is already transformed.");
       if (!action || !activeTemplate) throw new Error("Replacement form action and compiled template are required.");
-      if (activeTemplate.kind !== state.template.kind) throw new Error("Replacement form must preserve combatant lifecycle kind.");
+      const ownerTemplate = currentForm?.original_template || state.template;
+      if (activeTemplate.kind !== ownerTemplate.kind) throw new Error("Replacement form must preserve combatant lifecycle kind.");
       E().spend(state, action.actionCost);
       const remaining = R().spend(state, action.resourceId, action.resourceCost || 1);
-      const originalTemplate = state.template;
+      const originalTemplate = ownerTemplate;
       state.replacement_form = {
         source_id: action.id, source_name: action.name, original_template: originalTemplate,
         form_template: activeTemplate, original_hp: state.current_hp,
