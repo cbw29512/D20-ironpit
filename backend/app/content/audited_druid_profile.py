@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile Thalen's 2024 Druid foundation without early subclass leakage."""
     try:
-        if level not in {1, 2}:
-            raise ValueError("2024 Thalen profile currently certifies Druid levels 1 through 2.")
+        if level not in {1, 2, 3}:
+            raise ValueError("2024 Thalen profile currently certifies Druid levels 1 through 3.")
         hero = HERO_BY_CLASS["druid"]
         base = canonical_base_ability_scores("druid")
         background_allowed = ["intelligence", "wisdom", "charisma"]
@@ -35,8 +35,8 @@ def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
             class_name=hero.class_name,
             level=level,
             ruleset="2024",
-            subclass_id=None,
-            subclass_name=None,
+            subclass_id="circle-land" if level >= 3 else None,
+            subclass_name="Circle of the Land" if level >= 3 else None,
             build_id="land-damage",
             species_id="wood-elf",
             species_name="Wood Elf",
@@ -70,6 +70,10 @@ def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
                 "D&D Beyond Basic Rules 2024: Equipment — Leather Armor, Shield, Sickle",
                 "D&D Beyond Basic Rules 2024: Spells — Poison Spray, Healing Word, Cure Wounds, Longstrider, Faerie Fire",
                 "D&D Beyond Basic Rules 2024: Druid 2 — Wild Shape, Wild Companion",
+                *(
+                    ["D&D Beyond Basic Rules 2024: Circle of the Land 3 — Land's Aid, Circle Spells (Arid)"]
+                    if level >= 3 else []
+                ),
             ],
         )
     except Exception:
