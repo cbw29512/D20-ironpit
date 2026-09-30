@@ -49,5 +49,6 @@ assert.equal(blight.damageType, "necrotic");
 assert.equal(blight.successDamage, "half");
 assert.equal(blight.upcastDicePerLevel, 1);
 assert.deepEqual(blight.automaticFailureCreatureTypes, ["Plant"]);
+assert.equal(blight.requiresTargetSight, true);
 
 console.log("Generated browser 2024 Druid 7 Potent Spellcasting and Blight regressions passed.");
