@@ -14,18 +14,18 @@
       || (state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
   }
 
-  function resourceReadyOrRestorable(state, action) {
+  function resourceReadyOrRestorable(state, action, turnKey = null) {
     if (resourceAvailable(state, action)) return true;
-    return Boolean(action.resourceId && R()?.restorationAction(state, action.resourceId));
+    return Boolean(action.resourceId && R()?.restorationAction(state, action.resourceId, turnKey));
   }
 
-  function choose(member, setup) {
+  function choose(member, setup, turnKey = null) {
     try {
       if (!E().available(member.state, "bonus_action")) return null;
       const candidates = [];
       for (const action of member.state.template.saving_throw_actions || []) {
         if ((action.actionCost || "action") !== "bonus_action"
-          || !resourceReadyOrRestorable(member.state, action)) continue;
+          || !resourceReadyOrRestorable(member.state, action, turnKey)) continue;
         if (action.area) {
           const placements = T().legalPlacements(member, setup, action.area, action.range)
             .filter((placement) => placement.targetIds.length)
@@ -60,13 +60,14 @@
 
   function resolve(sequence, round, member, setup) {
     try {
-      const selected = choose(member, setup);
+      const turnKey = `${round}:${member.combatant_id}`;
+      const selected = choose(member, setup, turnKey);
       if (!selected) return null;
       const events = [];
       if (!resourceAvailable(member.state, selected.action)) {
-        const conversion = R()?.restorationAction(member.state, selected.action.resourceId);
+        const conversion = R()?.restorationAction(member.state, selected.action.resourceId, turnKey);
         if (!conversion) throw new Error(`${selected.action.name} resource cannot be restored.`);
-        const restored = R().resolve(sequence, round, member, conversion);
+        const restored = R().resolve(sequence, round, member, conversion, turnKey);
         if (!restored) throw new Error(`${selected.action.name} restoration became unavailable.`);
         events.push(restored);
         sequence += 1;
