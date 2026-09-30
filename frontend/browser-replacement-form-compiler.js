@@ -7,7 +7,7 @@
     return Object.fromEntries([...keys].map((key) => [key, Math.max(left[key] ?? -99, right[key] ?? -99)]));
   };
 
-  function compile(original, form, retainSpellcasting = false, retainCreatureType = false) {
+  function compile(original, form, retainSpellcasting = false, retainCreatureType = false, retainHitPoints = false) {
     try {
       if (original.kind !== "character") throw new Error("Replacement-form owner must be a character.");
       if (form.kind !== "monster") throw new Error("Replacement-form source must be monster-form data.");
@@ -26,6 +26,7 @@
       }
       active.id = `${original.id}--form-${form.id}`;
       if (retainCreatureType) active.creature_type = original.creature_type;
+      if (retainHitPoints) active.max_hp = original.max_hp;
       active.name = original.name;
       active.archetype = original.archetype;
       active.level = original.level;
