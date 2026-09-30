@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def build_druid_2024_high_progression_audits(level: int) -> list[FeatureAudit]:
-    """Return Druid progression audits introduced at levels 11 through 16."""
+    """Return Druid progression audits introduced at levels 11 through 17."""
     try:
         audits: list[FeatureAudit] = []
         if level >= 11:
@@ -88,6 +88,19 @@ def build_druid_2024_high_progression_audits(level: int) -> list[FeatureAudit]:
                     "Wisdom is already 20, so the canonical land-damage progression uses the repeatable "
                     "Ability Score Improvement feat again to raise Charisma 18→20. Spell slots, prepared "
                     "spells, and existing combat actions remain unchanged."
+                ),
+            ))
+        if level >= 17:
+            audits.append(druid_feature_audit(
+                "druid-combat-spells-9", "Level 9 Spellcasting: Foresight", "class",
+                combat_relevant=True, automated=True,
+                notes=(
+                    "The level-17 damage/healing-first review found no simple 9th-level Druid damage or "
+                    "healing spell suitable for exact arena automation: Storm of Vengeance requires a "
+                    "round-staged persistent storm subsystem and True Resurrection is combat-inert. The "
+                    "canonical build therefore prepares explicit 2024 Foresight. It uses universal D20-test "
+                    "Advantage plus attacks-against-Disadvantage modifiers and the Iron Pit free arena-entry "
+                    "buff rule, so the legal level-9 slot remains available after precombat setup."
                 ),
             ))
         return audits
