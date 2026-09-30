@@ -82,3 +82,31 @@ def build_faerie_fire_2024(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build 2024 Faerie Fire.")
         raise
+
+
+def build_starry_wisp_2024(attack_bonus: int, character_level: int) -> SpellAttackAction:
+    """Explicit 2024 Starry Wisp fingerprint."""
+    try:
+        return SpellAttackAction(
+            id="starry-wisp",
+            name="Starry Wisp",
+            level=0,
+            action_cost="action",
+            attack_kind="ranged",
+            range_ft=60,
+            attack_bonus=attack_bonus,
+            damage_dice_count=cantrip_damage_dice(character_level),
+            damage_dice_size=8,
+            damage_type="radiant",
+            on_hit_modifier_effects=[
+                SpellModifierEffect(
+                    kind="invisibility-benefits-suppressed",
+                    expires_after_source_turns=1,
+                ),
+            ],
+            animation="spell-attack",
+            source="D&D Beyond Basic Rules 2024: Starry Wisp",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Starry Wisp at level %s.", character_level)
+        raise
