@@ -50,8 +50,17 @@
       if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
       C().start(owner, sourceId, spell.id, roundNumber, states, expiresRound);
     }
-    if ((spell.conditionIds || []).length && !T()) throw new Error("Browser timed-condition runtime is not loaded.");
+    if (((spell.conditionIds || []).length || (spell.movementModeGrants || []).length) && !T()) {
+      throw new Error("Browser timed-condition runtime is not loaded.");
+    }
     for (const { targetId, state } of targets) {
+      if ((spell.movementModeGrants || []).length) {
+        T().apply(state, spell.id, sourceId, {
+          sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
+          appliedRound: roundNumber, expiresRound, expiryTiming: "source_turn_start",
+          ownedMovementModeGrants: spell.movementModeGrants, useDefaultPoisonRecovery: false,
+        });
+      }
       for (const conditionId of spell.conditionIds || []) {
         T().apply(state, conditionId, sourceId, {
           sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
