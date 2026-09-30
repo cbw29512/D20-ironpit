@@ -54,6 +54,7 @@
     state.death_save_failures = 0;
     endDodge(state);
     applyProne(state);
+    RF()?.revertIfIncapacitated(state);
     return "unconscious";
   }
 
