@@ -18,24 +18,31 @@ def resolve_undead_fortitude(
     dice: DiceProvider | None,
 ) -> bool:
     """Resolve SRD 5.2.1 Undead Fortitude after lethal damage reaches 0 HP."""
-    if CombatTrait.UNDEAD_FORTITUDE not in state.template.combat_traits:
-        return False
-    if critical or DamageType.RADIANT in damage_types:
-        return False
-    if dice is None:
-        raise ValueError("Undead Fortitude requires a dice provider for its Constitution saving throw.")
-    bonus = state.template.saving_throw_bonuses.get("constitution")
-    if bonus is None:
-        raise ValueError(f"{state.template.name} lacks a Constitution saving throw bonus.")
-    dc = 5 + damage_taken
-    if dice.roll(20) + bonus < dc:
-        return False
-    state.current_hp = 1
-    state.is_alive = True
-    state.is_dead = False
-    state.is_unconscious = False
-    state.is_stable = False
-    return True
+    try:
+        if CombatTrait.UNDEAD_FORTITUDE not in state.template.combat_traits:
+            return False
+        if critical or DamageType.RADIANT in damage_types:
+            return False
+        if dice is None:
+            raise ValueError("Undead Fortitude requires a dice provider for its Constitution saving throw.")
+        dc = 5 + damage_taken
+        # Keep this trait on the same universal saving-throw path as every other Constitution save.
+        from app.combat.saving_throw_rolls import resolve_saving_throw
+
+        _, succeeded = resolve_saving_throw(state, "constitution", dc, dice)
+        if not succeeded:
+            return False
+        state.current_hp = 1
+        state.is_alive = True
+        state.is_dead = False
+        state.is_unconscious = False
+        state.is_stable = False
+        return True
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Undead Fortitude failed for %s.", state.template.id)
+        raise RuntimeError("Undead Fortitude could not be resolved.") from exc
 
 
 def resolve_effect_bound_survival_save(state: CombatantState, dice: DiceProvider | None) -> bool:
