@@ -92,9 +92,25 @@
       const aimMembers = enemies.length ? enemies : friends;
       const areaDirections = ["radius", "emanation"].includes(area.shape) ? [null] : directions(directionOrigins, aimMembers);
       for (const origin of origins) {
+        if (area.origin === "point" && !window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenPoints(
+          actorOrigins, [origin], setup.persistent_barriers || [],
+        )) continue;
         for (const direction of areaDirections) {
-          const targetIds = enemies.filter((enemy) => hits(area, actorOrigins, origin, direction, enemy)).map((enemy) => enemy.combatant_id);
-          const friendlyIds = friends.filter((friend) => hits(area, actorOrigins, origin, direction, friend)).map((friend) => friend.combatant_id);
+          const effectSources = area.shape === "emanation" ? actorOrigins : [origin];
+          const targetIds = enemies.filter((enemy) =>
+            hits(area, actorOrigins, origin, direction, enemy)
+            && window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenPoints(
+              effectSources,
+              points(enemy),
+              setup.persistent_barriers || [],
+            )).map((enemy) => enemy.combatant_id);
+          const friendlyIds = friends.filter((friend) =>
+            hits(area, actorOrigins, origin, direction, friend)
+            && window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenPoints(
+              effectSources,
+              points(friend),
+              setup.persistent_barriers || [],
+            )).map((friend) => friend.combatant_id);
           const sourceInArea = hits(area, actorOrigins, origin, direction, actor);
           if (!targetIds.length && !allowNoEnemyTargets) continue;
           if (!targetIds.length && !friendlyIds.length && !sourceInArea) continue;
