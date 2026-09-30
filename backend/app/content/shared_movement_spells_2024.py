@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.domain.debuffs import DebuffCounter
+from app.domain.movement import MovementModeGrant
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,9 @@ def freedom_of_movement_2024() -> DefensiveSpellAction:
             modifier_effects=[
                 SpellModifierEffect(kind="debuff-counter", debuff_counter=counter)
                 for counter in counters
+            ],
+            movement_mode_grants=[
+                MovementModeGrant(mode="swim", match_current_speed=True),
             ],
             animation="freedom-of-movement",
             source="D&D Beyond Basic Rules 2024: Freedom of Movement",
