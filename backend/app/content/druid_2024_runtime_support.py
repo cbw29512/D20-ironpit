@@ -9,13 +9,13 @@ from app.content.druid_2024_land_spells import (
     build_burning_hands_2024,
     build_fire_bolt_2024,
     build_lands_aid_2024,
+    build_wall_of_stone_2024,
 )
 from app.content.druid_2024_spells import (
     build_faerie_fire_2024,
     build_longstrider_2024,
     build_poison_spray_2024,
     build_starry_wisp_2024,
-    build_thunderwave_2024,
 )
 from app.content.bard_2024_high_damage_spells import build_cone_of_cold_2024
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_cure_wounds
@@ -113,6 +113,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
             ],
             "condition_removal_actions": [LESSER_RESTORATION] if level >= 3 else [],
             "effect_removal_actions": [DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],
+            "persistent_barrier_actions": [build_wall_of_stone_2024()] if level >= 9 else [],
             "resource_conversion_actions": (
                 build_wild_resurgence_2024(tuple(DRUID_COMBAT_LEVELS[level].spell_slots))
                 if level >= 5 else []
@@ -142,6 +143,7 @@ def natural_recovery_alternate_casts(level: int) -> list[AlternateSpellCastGrant
                 ("blur", 2),
                 ("fireball", 3),
                 *((("blight", 4),) if level >= 7 else ()),
+                *((("wall-of-stone", 5),) if level >= 9 else ()),
             )
         ]
     except Exception:
