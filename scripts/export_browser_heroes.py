@@ -89,6 +89,12 @@ def _save(action: Any) -> dict[str, Any]:
              "damageBonus": item.damage_bonus, "damageType": item.damage_type}
             for item in action.damage_components
         ]
+    if action.area_healing_rider is not None:
+        row["areaHealingRider"] = {
+            "diceCount": action.area_healing_rider.dice_count,
+            "diceSize": action.area_healing_rider.dice_size,
+            "healingBonus": action.area_healing_rider.healing_bonus,
+        }
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = {
             "effectId": action.failed_save_timed_effect.effect_id,
