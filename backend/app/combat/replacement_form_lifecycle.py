@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import is_incapacitated
 from app.combat.replacement_forms import revert_replacement_form
 from app.domain.models import CombatantState
 
@@ -14,7 +15,7 @@ def revert_replacement_form_if_incapacitated(state: CombatantState) -> bool:
         active = state.replacement_form
         if active is None or not active.ends_on_incapacitated:
             return False
-        if not (state.is_dead or state.is_unconscious):
+        if not (state.is_dead or is_incapacitated(state)):
             return False
         revert_replacement_form(state, spend_voluntary_action=False)
         return True
