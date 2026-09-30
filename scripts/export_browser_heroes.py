@@ -398,6 +398,7 @@ def _resource_conversion(action: Any) -> dict[str, Any]:
         "actionCost": action.action_cost,
         "sourceResourceId": action.source_resource_id,
         "sourceCost": action.source_cost,
+        "additionalSourceCosts": dict(action.additional_source_costs),
         "targetResourceId": action.target_resource_id,
         "targetGain": action.target_gain,
         "targetAllowsOverflow": action.target_allows_overflow,
