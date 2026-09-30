@@ -86,6 +86,28 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 9:
+            audits.extend([
+                druid_feature_audit(
+                    "druid-combat-spells-5", "Level 5 Spellcasting", "class",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Canonical damage/healing-first preparation adds 2024 Cone of Cold and "
+                        "Mass Cure Wounds. Cone of Cold reuses the universal area save-damage engine; "
+                        "Mass Cure Wounds reuses the shared multi-target healing action."
+                    ),
+                ),
+                druid_feature_audit(
+                    "circle-spells-5-wall-of-stone", "Circle Spells: Arid — Wall of Stone", "subclass",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Required level-9 Arid Circle Spell uses the universal persistent-barrier engine: "
+                        "exact ten-panel geometry, stone support, movement and line-of-effect blocking, "
+                        "AC/HP/immunities, destruction breaches, Concentration cleanup, full-duration "
+                        "permanence, spell-slot casting, and Natural Recovery alternate casting."
+                    ),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)

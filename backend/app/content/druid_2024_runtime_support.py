@@ -9,6 +9,7 @@ from app.content.druid_2024_land_spells import (
     build_burning_hands_2024,
     build_fire_bolt_2024,
     build_lands_aid_2024,
+    build_wall_of_stone_2024,
 )
 from app.content.druid_2024_spells import (
     build_faerie_fire_2024,
@@ -16,7 +17,8 @@ from app.content.druid_2024_spells import (
     build_poison_spray_2024,
     build_starry_wisp_2024,
 )
-from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
+from app.content.bard_2024_high_damage_spells import build_cone_of_cold_2024
+from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_cure_wounds
 from app.content.offensive_spell_effects import build_fireball_2024
 from app.content.shared_movement_spells_2024 import freedom_of_movement_2024
 from app.content.druid_2024_wild_resurgence import build_wild_resurgence_2024
@@ -96,6 +98,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
                 *([build_burning_hands_2024(save_dc)] if level >= 3 else []),
                 *([build_fireball_2024(save_dc)] if level >= 5 else []),
                 *([build_blight_2024(save_dc)] if level >= 7 else []),
+                *([build_cone_of_cold_2024(save_dc)] if level >= 9 else []),
             ],
             "defensive_spell_actions": [
                 build_longstrider_2024(),
@@ -106,9 +109,11 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
             "healing_actions": [
                 build_healing_word(wisdom_modifier),
                 build_cure_wounds(wisdom_modifier),
+                *([build_mass_cure_wounds(wisdom_modifier)] if level >= 9 else []),
             ],
             "condition_removal_actions": [LESSER_RESTORATION] if level >= 3 else [],
             "effect_removal_actions": [DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],
+            "persistent_barrier_actions": [build_wall_of_stone_2024()] if level >= 9 else [],
             "resource_conversion_actions": (
                 build_wild_resurgence_2024(tuple(DRUID_COMBAT_LEVELS[level].spell_slots))
                 if level >= 5 else []
@@ -138,6 +143,7 @@ def natural_recovery_alternate_casts(level: int) -> list[AlternateSpellCastGrant
                 ("blur", 2),
                 ("fireball", 3),
                 *((("blight", 4),) if level >= 7 else ()),
+                *((("wall-of-stone", 5),) if level >= 9 else ()),
             )
         ]
     except Exception:

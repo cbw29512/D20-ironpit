@@ -44,6 +44,7 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
             requires_target_hearing=spell.requires_target_hearing,
             requires_target_sight=spell.requires_target_sight,
             failed_save_timed_effect=spell.failed_save_timed_effect,
+            failed_save_push_ft=spell.failed_save_push_ft,
             animation=spell.animation,
         )
     except Exception:

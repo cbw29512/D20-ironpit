@@ -150,6 +150,7 @@ class SavingThrowAction(BaseModel):
     requires_target_hearing: bool = False
     requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
+    failed_save_push_ft: int = Field(default=0, ge=0)
     area_healing_rider: AreaHealingRider | None = None
     animation: str = "save-effect"
 

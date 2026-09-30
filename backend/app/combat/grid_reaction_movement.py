@@ -41,6 +41,7 @@ def move_toward_on_grid(
             members,
             desired_distance_ft,
             mover.state.movement_remaining_ft,
+            setup.persistent_barriers,
         )
         if not plan.path:
             return [], sequence, None
@@ -53,7 +54,14 @@ def move_toward_on_grid(
             if approaches_fear_source(mover, destination, setup):
                 break
             before_position = mover.state.position.model_copy(deep=True)
-            step_cost = movement_step_cost_ft(setup.map_definition, mover, destination, members)
+            step_cost = movement_step_cost_ft(
+                setup.map_definition,
+                mover,
+                destination,
+                members,
+                origin=before_position,
+                barriers=setup.persistent_barriers,
+            )
             if step_cost is None or step_cost > mover.state.movement_remaining_ft:
                 break
             was_prone = "prone" in mover.state.active_effect_ids

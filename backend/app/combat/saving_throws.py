@@ -9,6 +9,7 @@ from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.condition_rules import can_see
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
+from app.combat.forced_movement import push_straight_away
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.failed_d20_test_override import source_name_for_roll
 from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
@@ -131,6 +132,11 @@ def resolve_save_action(
             restrains=action.restrains_while_grappled,
             source_is_magical=action.magical_effect,
         )
+    pushed_ft = 0
+    if not succeeded and target.state.is_alive and not target.state.is_dead and action.failed_save_push_ft:
+        if setup is None:
+            raise ValueError(f"{action.name} forced movement requires encounter setup.")
+        pushed_ft = push_straight_away(target, actor, setup, action.failed_save_push_ft)
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     if automatic_failure:
         description = (
@@ -151,6 +157,7 @@ def resolve_save_action(
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
+    if pushed_ft: description += f" {target.state.template.name} is pushed {pushed_ft} feet away."
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,

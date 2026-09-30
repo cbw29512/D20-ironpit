@@ -4,6 +4,7 @@ import logging
 
 from app.content.offensive_spell_effects import cantrip_damage_dice
 from app.domain.actions import AreaHealingRider, SavingThrowAction
+from app.domain.persistent_barriers import PersistentBarrierAction
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellModifierEffect, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
@@ -101,4 +102,37 @@ def build_blur_2024() -> DefensiveSpellAction:
         )
     except Exception:
         logger.exception("Failed to build 2024 Blur.")
+        raise
+
+
+def build_wall_of_stone_2024() -> PersistentBarrierAction:
+    """Compile the 2024 6-inch Wall of Stone panel option as barrier source data."""
+    try:
+        return PersistentBarrierAction(
+            id="wall-of-stone",
+            name="Wall of Stone",
+            level=5,
+            action_cost="action",
+            cast_range_ft=120,
+            concentration=True,
+            duration_rounds=100,
+            permanent_after_full_duration=True,
+            min_sections=10,
+            max_sections=10,
+            sections_must_be_contiguous=True,
+            section_length_ft=10,
+            section_height_ft=10,
+            section_thickness_inches=6,
+            armor_class=15,
+            hit_points_per_section=180,
+            damage_immunities=["poison", "psychic"],
+            blocks_movement=True,
+            blocks_line_of_sight=True,
+            material="stone",
+            required_support_material="stone",
+            animation="wall-of-stone",
+            source="D&D Beyond Basic Rules 2024: Wall of Stone",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Wall of Stone.")
         raise

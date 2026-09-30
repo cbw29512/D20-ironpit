@@ -44,6 +44,7 @@ def choose_offensive_movement_intent(
                     members,
                     desired_distance,
                     attacker.state.movement_remaining_ft,
+                    setup.persistent_barriers,
                 )
                 if not plan.goal_reachable or not plan.path:
                     continue

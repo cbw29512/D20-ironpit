@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import replace
 
+from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.area_spell_ally_protection import eligible_area_spell_allies
 from app.combat.area_targeting import legal_area_placements
 from app.combat.condition_rules import can_see
@@ -33,6 +34,7 @@ def legal_single_spell_targets(
             and not target.state.is_dead
             and target.state.current_hp > 0
             and combatant_distance(caster, target) <= limit
+            and clear_line_between_members(caster, target, setup)
             and (not action.requires_target_hearing or "deafened" not in target.state.active_effect_ids)
             and (not action.requires_target_sight or can_see(caster.state, target.state))
         ]

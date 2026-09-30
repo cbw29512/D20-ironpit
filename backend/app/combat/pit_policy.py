@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
@@ -104,7 +105,11 @@ def choose_attack(
         for target in target_order(attacker, setup, prefer_backline=prefer_backline):
             distance = combatant_distance(attacker, target)
             for attack in profiles:
-                if attack_allowed_against(attack, attacker.combatant_id, target.state) and _attack_in_range(attack, distance):
+                if (
+                    clear_line_between_members(attacker, target, setup)
+                    and attack_allowed_against(attack, attacker.combatant_id, target.state)
+                    and _attack_in_range(attack, distance)
+                ):
                     return target, attack, distance
         return None
     except Exception as exc:

@@ -8,6 +8,7 @@
         width_squares: 24,
         height_squares: 16,
         cell_size_ft: 5,
+        support_materials: ["stone"],
       };
     } catch (error) {
       console.error("Failed to build standard browser Iron Pit map", { error });

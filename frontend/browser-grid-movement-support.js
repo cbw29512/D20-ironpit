@@ -80,9 +80,12 @@
     }
   }
 
-  function movementStepCostFt(map, mover, destination, members) {
+  function movementStepCostFt(map, mover, destination, members, origin = null, barriers = null) {
     try {
       if (!geometry().inBounds(map, destination, mover.state.template.size)) return null;
+      if (origin && window.IRON_PIT_BROWSER_GRID_BARRIERS?.blocksTransition(origin, destination, barriers)) {
+        return null;
+      }
       let cost = map.cell_size_ft || 5;
       for (const occupant of occupantsAt(mover, destination, members)) {
         if (!canPassThrough(mover, occupant)) return null;

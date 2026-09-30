@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.grid_barriers import barrier_blocks_transition
 from app.combat.grid_geometry import footprints_overlap, position_in_bounds
 from app.combat.grid_passage import can_pass_through, creature_space_is_difficult
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, GridPosition
+from app.domain.persistent_barriers import PersistentBarrierState
 
 logger = logging.getLogger(__name__)
 
@@ -48,10 +50,15 @@ def movement_step_cost_ft(
     mover: EncounterCombatant,
     destination: GridPosition,
     members: list[EncounterCombatant],
+    *,
+    origin: GridPosition | None = None,
+    barriers: list[PersistentBarrierState] | None = None,
 ) -> int | None:
     """Return 5/10 feet for a legal adjacent destination, or None when passage is illegal."""
     try:
         if not position_in_bounds(map_definition, destination, mover.state.template.size):
+            return None
+        if origin is not None and barrier_blocks_transition(origin, destination, barriers):
             return None
         cost = map_definition.cell_size_ft
         for occupant in overlapping_occupants(mover, destination, members):

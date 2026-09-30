@@ -31,6 +31,7 @@
             members,
             option.range,
             member.state.movement_remaining_ft,
+            setup.persistent_barriers || [],
           );
           if (!plan.goal_reachable || !plan.path.length) continue;
           if (plan.final_distance_ft >= distance) continue;

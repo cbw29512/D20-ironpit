@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-30 while advancing the certified 2024 Circle of the Land Druid progression through level 8.
+Recorded 2026-09-30 while advancing the certified 2024 Circle of the Land Druid progression through level 9.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,7 +34,7 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–8 |
 
-2024 public-ready hero slots after the Druid 8 tranche: **108 / 240**.
+2024 public-ready hero slots on current `main`: **108 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -42,11 +42,20 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 ## Active lane
 
-**2014 canonical pregens remain complete at 240 / 240 registered level snapshots.** The 2014 Hero Certification and paired-edition guard workflows were green on the exact PR #436 head before merge.
+**2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are now 108 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 8.
+**2024 canonical pregens are 108 / 240 on current `main`; PR #464 raises the generated branch manifest to 109 / 240 for Druid 9.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 8 on `main`, with level 9 in exact-head certification.
 
-Active implementation lane after merge: **2024 Circle of the Land Druid level 9 onward**.
+Active implementation lane: **finish/merge 2024 Circle of the Land Druid level 9, then re-anchor and continue level 10 onward**.
+
+### Druid spell-selection policy
+
+For Iron Pit caster pregens, ordinary prepared-spell choices prioritize **damage and healing** when legal choices are available and mechanically useful in arena combat. Utility/control options do not displace a stronger damage/healing choice merely because they are newly available. Always-prepared subclass spells are still source-audited and implemented when combat-relevant, but they do not redefine the canonical optimization lane.
+
+Druid 9 follows that policy:
+- **Cone of Cold** is the new damaging prepared choice: 60-foot self-origin cone, Constitution save, 8d8 Cold, half on success, +1d8 per slot above 5.
+- **Mass Cure Wounds** is the new healing prepared choice: point within 60 feet, up to six creatures in a 30-foot-radius sphere, 5d8 + Wisdom modifier, +1d8 per slot above 5.
+- **Wall of Stone** is an Arid Circle spell granted independently of ordinary prepared choices. It is represented through a universal persistent-barrier primitive and does not replace the damage/healing-first choices.
 
 Bard 20 Words of Creation is edition-specific: 2024 always prepares Power Word Heal and Power Word Kill, and either spell may affect one additional creature only when that second creature is within 10 feet of the first. Power Word Heal is modeled as one atomic healing resolution that also ends Charmed, Frightened, Paralyzed, Poisoned, and Stunned, with the target optionally spending its Reaction to stand from Prone.
 
@@ -59,28 +68,28 @@ For each Druid tranche:
 - start from the completed 2014 Circle of the Land Druid progression and reuse universal mechanics where behavior is equivalent;
 - verify every 2024 class/subclass feature against 2024 rules before carrying behavior forward;
 - keep same-named 2014/2024 spells edition-isolated and require an explicit 2024 spell fingerprint before certification;
+- prioritize damaging/healing prepared spells for the Iron Pit combat build;
 - keep Python/browser parity, independent combat fingerprints, generated parity, and the 2014 guard green before merge;
 - do not weaken Netlify publishing locks.
 
 ## Parked / superseded
 
-Stale stacked PRs whose work already landed on `main` (2014 Paladin 20, 2014 Rogue 20, 2014 Monk 20, 2024 Rogue 20, 2024 Cleric through 12) are to be closed as superseded. Do not rebase them.
+Stale stacked PRs whose work already landed on `main` are to be closed as superseded. Do not rebase them.
 
-Universal-engine PRs that are still current against `main` may stay open only if they are required by the 2014 Cleric lane (healing, conditions, save tags, upcasting).
-
+Universal-engine PRs that are still current against `main` may stay open only if they serve a current combat requirement.
 
 ## Universal combat refactor plan
 
 Architecture target: **checks -> modifiers -> result -> state mutation -> audit**.
 
-This is now the default refactor direction for the engine. Named abilities remain source/audit metadata; combat resolution depends on universal typed facts.
+This is the default refactor direction for the engine. Named abilities remain source/audit metadata; combat resolution depends on universal typed facts.
 
 Current migration sequence:
 
 1. **Conditions / buffs / debuffs**
    - remove class/feature-name immunity branches where an existing condition-immunity or debuff-counter primitive can express the rule;
    - preserve source qualifiers such as creature type, magical/nonmagical origin, effect tags, duration, and resource cost;
-   - Nature's Ward is the immediate Druid proving case: poison/disease immunity plus Fey/Elemental-scoped Charmed/Frightened immunity.
+   - Nature's Ward (Druid 10) is 2024-edition-specific: immunity to the Poisoned condition plus damage resistance from the current land choice; canonical Arid grants Fire resistance. Reuse generic condition-immunity and damage-resistance data, not a Druid-named resolver.
 2. **Attacks / saves / checks**
    - keep legality, roll-mode modifiers, bonuses, DC/AC comparison, and final result separate;
    - source abilities provide data, not alternate attack/save engines.
@@ -104,8 +113,8 @@ Refactor discipline:
 
 Immediate examples:
 
-- **Nature's Ward (Druid 10):** completed as the proving case for typed checks -> universal modifiers/counters -> result; no Druid-named resolver.
-- **Mindless Rage:** known named branch in the condition-immunity path. Do not mechanically collapse it yet; preserve the 2014 vs 2024 difference for already-active Charm/Frighten while migrating it to shared condition/debuff semantics in a dedicated tranche.
+- **Nature's Ward (Druid 10):** 2024 Arid grants Poisoned immunity and Fire resistance. Bind those to generic condition-immunity and damage-resistance data; do not carry forward the 2014 feature by name.
+- **Mindless Rage:** preserve the 2014 vs 2024 difference for already-active Charm/Frighten while migrating it to shared condition/debuff semantics in a dedicated tranche.
 
 ## CI / spend
 
@@ -114,10 +123,10 @@ September 2026 included Actions usage was exhausted by Iron Pit volume (~$197 gr
 Heavy workflows are gated:
 
 - `2014-hero-certification.yml` — `main`, PRs into `main`, or `workflow_dispatch`
-- `sync-generated.yml` — `main` or `workflow_dispatch` only (never `feat/2014-*`)
-- `ci.yml` — `main` + pull_request (unchanged)
+- `sync-generated.yml` — `main` or `workflow_dispatch` only
+- `ci.yml` — `main` + pull_request
 
-Do not restore per-push certification on feature branches. Run generators locally; commit owned outputs; use **Run workflow** when a cert pass is required.
+Do not restore per-push certification on feature branches. Generated artifacts must be produced by the repository generator, never hand-edited.
 
 ## Agent rules for this repo
 
@@ -126,7 +135,6 @@ Do not restore per-push certification on feature branches. Run generators locall
 3. Never implement a class-named resolver when a universal primitive exists.
 4. Ask one clarification question rather than guessing RAW.
 5. Do not start a second 2024 class while the active 2024 class progression is open.
-
 
 ## 2024 Druid lane
 
@@ -145,15 +153,11 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Level 3 chooses **Circle of the Land — Arid** and adds Land's Aid plus always-prepared Blur, Burning Hands, and Fire Bolt.
 - Land's Aid reuses the universal area-save engine with a generic independent area-healing rider; one Wild Shape use pays for the entire Magic action.
 - Blur reuses the modifier stack with source-derived Blindsight/Truesight ranges and distance-aware bypass; no Blur-named attack resolver exists.
-- The 2024 monster source audit now reconciles Blindsight/Truesight to the vendored SRD source. Generated capability/browser artifacts carry those ranges.
-- Level 4 takes the canonical **+2 Wisdom ASI** (17→19), adds **Starry Wisp** as the fourth Druid cantrip, and fills the seventh prepared-spell slot with arena-neutral **Detect Poison and Disease**; all Wisdom-derived spell/save/skill math is profile-derived.
-
-- Level 5 adds **Wild Resurgence** through the universal resource-conversion engine: spell-slot-to-Wild-Shape restoration is target-empty and shared once-per-turn across slot levels; Wild-Shape-to-1st-level-slot restoration uses the same engine with a once-per-Long-Rest gate and preserves one Wild Shape use under automatic arena policy.
-- Level 5 reuses the explicit **2024 Fireball** fingerprint for Arid Land, reuses universal **Dispel Magic** with Wisdom casting, and uses **Water Breathing** as the ninth arena-neutral prepared Druid spell.
-- Level 6 adds **Natural Recovery** through the universal alternate-spell-cast resource: one prepared Circle Spell of level 1+ can be cast without a spell slot once per Long Rest; **Aid** is the tenth ordinary prepared Druid spell.
-- Level 7 chooses **Elemental Fury: Potent Spellcasting** and adds Wisdom (+4) to each damaging Druid cantrip through the generic spell-action damage bonus; it does not add a Druid-named resolver.
-- Arid Land level 7 adds explicit **2024 Blight**. Its Plant-creature automatic failure is a new universal save parameter with Python/browser parity, and **Divination** is the eleventh ordinary prepared Druid spell as an arena-neutral choice.
-- Level 8 takes the canonical **+1 Wisdom / +1 Charisma ASI** (Wisdom 19→20, Charisma 15→16), advances to two 4th-level slots and twelve ordinary prepared Druid spells, and upgrades the deterministic Wild Shape combat form to certified **Brown Bear (CR 1)** while retaining the 2024 owner-HP/Temporary-HP lifecycle.
-- **Freedom of Movement** is the twelfth prepared spell and remains edition-isolated: it composes existing universal debuff counters with the existing source-owned movement-mode grant so Swim Speed equals current Speed; no spell-named resolver was added.
-- Level 8 Wild Shape audit records eight known forms, CR 1 maximum, and Fly Speed legality; the arena's canonical deterministic form remains Brown Bear rather than inventing form-selection heuristics.
+- Level 4 takes the canonical **+2 Wisdom ASI** (17→19), adds **Starry Wisp** as the fourth Druid cantrip, and fills the seventh prepared-spell slot with arena-neutral **Detect Poison and Disease**.
+- Level 5 adds **Wild Resurgence** through the universal resource-conversion engine and reuses the explicit **2024 Fireball** fingerprint for Arid Land; **Dispel Magic** and **Water Breathing** fill the remaining progression needs.
+- Level 6 adds **Natural Recovery** through the universal alternate-spell-cast resource; **Aid** is the tenth ordinary prepared Druid spell.
+- Level 7 chooses **Elemental Fury: Potent Spellcasting** and adds Wisdom (+4) to each damaging Druid cantrip through generic spell-action damage bonus; Arid adds explicit **2024 Blight** and **Divination** is the eleventh ordinary prepared spell.
+- Level 8 takes **+1 Wisdom / +1 Charisma** (Wisdom 19→20, Charisma 15→16), upgrades deterministic Wild Shape to certified **Brown Bear (CR 1)**, and adds **Freedom of Movement** as the twelfth ordinary prepared spell.
+- Level 9 advances to PB +4, 48 HP, slots 4/3/3/3/1, and fourteen ordinary prepared Druid spells. The new prepared choices are **Cone of Cold** and **Mass Cure Wounds** under the damage/healing-first policy.
+- Arid level 9 additionally grants **Wall of Stone**. Its source data binds to a reusable persistent-barrier engine for blocked edges, forced-movement interaction, destructible sections, support legality, concentration lifecycle, and Python/browser parity; it is not a Druid-named resolver.
 - Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.

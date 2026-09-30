@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
+from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import auto_hit_spell_expected_damage
@@ -51,6 +52,7 @@ def choose_auto_hit_spell(
                         or target.state.is_dead
                         or target.state.current_hp <= 0
                         or combatant_distance(caster, target) > action.range_ft
+                        or not clear_line_between_members(caster, target, setup)
                     ):
                         continue
                     score = auto_hit_spell_expected_damage(

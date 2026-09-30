@@ -80,6 +80,14 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=4, min_character_level=8,
     ),
     _spell(
+        "cone-of-cold", "Cone of Cold", "damage", "save-damage", "area",
+        spell_level=5, min_character_level=9,
+    ),
+    _spell(
+        "mass-cure-wounds", "Mass Cure Wounds", "healing", "healing", "multi-target-healing",
+        spell_level=5, min_character_level=9,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",

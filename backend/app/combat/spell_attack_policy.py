@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import spell_attack_expected_damage
@@ -51,6 +52,7 @@ def choose_spell_attack(
                 if (
                     not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0
                     or distance > effective_range
+                    or not clear_line_between_members(caster, target, setup)
                 ):
                     continue
                 range_modifier = choose_spell_range_modifier(

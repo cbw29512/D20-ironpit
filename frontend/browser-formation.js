@@ -83,7 +83,7 @@
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
     for (const target of targetOrder(member, setup, preferBackline)) {
       const distance = attackDistance(member, target);
-      const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
+      const attack = profiles.find((profile) => (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) && targetAllowed(member, target, profile) && attackInRange(profile, distance));
       if (attack) return { target, attack, distance };
     }
     return null;

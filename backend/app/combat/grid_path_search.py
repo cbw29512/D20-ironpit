@@ -7,6 +7,7 @@ from app.combat.grid_geometry import footprint_distance_ft
 from app.combat.grid_pathing_support import movement_step_cost_ft, overlapping_occupants, position_for, reconstruct_path
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, GridPosition
+from app.domain.persistent_barriers import PersistentBarrierState
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ def _diagonal_step_allowed(
     current: GridPosition,
     destination: GridPosition,
     members: list[EncounterCombatant],
+    barriers: list[PersistentBarrierState] | None = None,
 ) -> bool:
     """Reject diagonal squeezing only when both orthogonal side steps are blocked."""
     try:
@@ -35,8 +37,22 @@ def _diagonal_step_allowed(
         side_x = GridPosition(x=current.x + dx, y=current.y)
         side_y = GridPosition(x=current.x, y=current.y + dy)
         return (
-            movement_step_cost_ft(map_definition, mover, side_x, members) is not None
-            or movement_step_cost_ft(map_definition, mover, side_y, members) is not None
+            movement_step_cost_ft(
+                map_definition,
+                mover,
+                side_x,
+                members,
+                origin=current,
+                barriers=barriers,
+            ) is not None
+            or movement_step_cost_ft(
+                map_definition,
+                mover,
+                side_y,
+                members,
+                origin=current,
+                barriers=barriers,
+            ) is not None
         )
     except Exception:
         logger.exception("Failed to validate diagonal movement for %s.", mover.combatant_id)
@@ -49,6 +65,7 @@ def search_path_toward(
     target: EncounterCombatant,
     members: list[EncounterCombatant],
     desired_distance_ft: int,
+    barriers: list[PersistentBarrierState] | None = None,
 ) -> list[GridPosition]:
     """Search the full legal map for a direct, deterministic route toward the target."""
     try:
@@ -90,9 +107,21 @@ def search_path_toward(
                 if next_x < 0 or next_y < 0:
                     continue
                 destination = GridPosition(x=next_x, y=next_y)
-                step_cost = movement_step_cost_ft(map_definition, mover, destination, members)
+                step_cost = movement_step_cost_ft(
+                    map_definition,
+                    mover,
+                    destination,
+                    members,
+                    origin=current,
+                    barriers=barriers,
+                )
                 if step_cost is None or not _diagonal_step_allowed(
-                    map_definition, mover, current, destination, members,
+                    map_definition,
+                    mover,
+                    current,
+                    destination,
+                    members,
+                    barriers,
                 ):
                     continue
                 next_cost = cost + step_cost

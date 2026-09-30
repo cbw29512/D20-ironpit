@@ -424,6 +424,9 @@ jobs:
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs
           node frontend/browser-reaction-movement.test.cjs
+          node frontend/browser-forced-movement.test.cjs
+          node frontend/browser-save-forced-movement.test.cjs
+          node frontend/browser-persistent-barriers.test.cjs
           node frontend/browser-damage-triggered-reactions.test.cjs
           node frontend/browser-fiendish-resilience-2014.test.cjs
           node frontend/browser-exile-2014.test.cjs
@@ -459,6 +462,7 @@ jobs:
           node frontend/browser-druid4-2024.test.cjs
           node frontend/browser-druid7-2024.test.cjs
           node frontend/browser-druid8-2024.test.cjs
+          node frontend/browser-druid9-2024.test.cjs
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-paladin-oath-spells-2014.test.cjs

@@ -10,6 +10,11 @@ from app.content.certified_heroes import build_all_certified_hero_entries
 from app.content.class_spell_progression import CASTING_ABILITIES
 from app.domain.models import CombatantTemplate, WeaponAttack
 
+try:
+    from scripts.browser_template_serializer import persistent_barrier_row
+except ModuleNotFoundError:
+    from browser_template_serializer import persistent_barrier_row
+
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-heroes.js"
@@ -431,7 +436,8 @@ def _spell_package(class_id: str, level: int, template: CombatantTemplate):
     if not (
         template.spell_save_actions or template.spell_attack_actions or template.auto_hit_spell_actions
         or template.persistent_spell_attack_actions
-        or template.persistent_hazard_actions or template.defensive_spell_actions or template.healing_actions
+        or template.persistent_hazard_actions or template.persistent_barrier_actions
+        or template.defensive_spell_actions or template.healing_actions
     ):
         return None
     casting_modifier = None
@@ -483,6 +489,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         ],
         "healingActions": [_healing(item) for item in template.healing_actions],
         "persistent_hazard_actions": [_persistent_hazard(item) for item in template.persistent_hazard_actions],
+        "persistent_barrier_actions": [persistent_barrier_row(item) for item in template.persistent_barrier_actions],
         "damage_resistances": [item.value for item in template.damage_resistances],
         "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
         "damage_immunities": [item.value for item in template.damage_immunities],

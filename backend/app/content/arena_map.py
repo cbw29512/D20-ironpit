@@ -15,6 +15,7 @@ def build_standard_iron_pit_map() -> BattleMapDefinition:
             width_squares=24,
             height_squares=16,
             cell_size_ft=5,
+            support_materials=["stone"],
         )
     except Exception:
         logger.exception("Failed to build the standard Iron Pit VTT map definition.")

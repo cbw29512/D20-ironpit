@@ -6,7 +6,11 @@ from typing import Any
 from app.combat.charge_profiles import charge_profile_for_attack
 from app.domain.models import CombatantTemplate, WeaponAttack
 from app.domain.traits import CombatTrait
-from browser_recharge_serializer import recharge_rows
+
+try:
+    from scripts.browser_recharge_serializer import recharge_rows
+except ModuleNotFoundError:
+    from browser_recharge_serializer import recharge_rows
 
 logger = logging.getLogger(__name__)
 
@@ -244,6 +248,8 @@ def _spell(action: Any) -> dict[str, Any]:
             "expiryTiming": action.failed_save_timed_effect.expiry_timing,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
+    if action.failed_save_push_ft:
+        row["failedSavePushFt"] = action.failed_save_push_ft
     if action.failed_save_modifier_effects:
         row["failedSaveModifierEffects"] = [
             _modifier_effect(effect) for effect in action.failed_save_modifier_effects
@@ -353,6 +359,29 @@ def persistent_hazard_row(action: Any) -> dict[str, Any]:
         }
     except Exception:
         logger.exception("Failed to serialize persistent hazard %s.", action.id)
+        raise
+
+
+def persistent_barrier_row(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            "concentration": action.concentration, "durationRounds": action.duration_rounds,
+            "permanentAfterFullDuration": action.permanent_after_full_duration,
+            "minSections": action.min_sections, "maxSections": action.max_sections,
+            "sectionsMustBeContiguous": action.sections_must_be_contiguous, "sectionLengthFt": action.section_length_ft,
+            "sectionHeightFt": action.section_height_ft,
+            "sectionThicknessInches": action.section_thickness_inches,
+            "armorClass": action.armor_class, "hitPointsPerSection": action.hit_points_per_section,
+            "damageImmunities": list(action.damage_immunities),
+            "blocksMovement": action.blocks_movement,
+            "blocksLineOfSight": action.blocks_line_of_sight,
+            "material": action.material, "requiredSupportMaterial": action.required_support_material,
+            "animation": action.animation, "source": action.source,
+        }
+    except Exception:
+        logger.exception("Failed to serialize persistent barrier %s.", action.id)
         raise
 
 
@@ -746,6 +775,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.persistent_hazard_actions:
             row["persistent_hazard_actions"] = [
                 persistent_hazard_row(item) for item in template.persistent_hazard_actions
+            ]
+        if template.persistent_barrier_actions:
+            row["persistent_barrier_actions"] = [
+                persistent_barrier_row(item) for item in template.persistent_barrier_actions
             ]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]

@@ -19,6 +19,7 @@ class BattleMapDefinition(BaseModel):
     width_squares: int = Field(ge=1)
     height_squares: int = Field(ge=1)
     cell_size_ft: Literal[5] = 5
+    support_materials: list[str] = Field(default_factory=list)
 
 
 class DeploymentZone(BaseModel):

@@ -7,6 +7,7 @@ from app.combat.grid_path_search import search_path_toward
 from app.combat.grid_pathing_support import movement_step_cost_ft, overlapping_occupants, position_for
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, GridMovementPlan, GridPosition
+from app.domain.persistent_barriers import PersistentBarrierState
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +18,23 @@ def _affordable_legal_prefix(
     members: list[EncounterCombatant],
     route: list[GridPosition],
     movement_budget_ft: int,
+    barriers: list[PersistentBarrierState] | None = None,
 ) -> tuple[list[GridPosition], int]:
     """Return the farthest legal stopping point along a precomputed full-map route."""
     try:
         spent = 0
         last_legal_index = -1
         last_legal_cost = 0
+        origin = position_for(mover)
         for index, destination in enumerate(route):
-            step_cost = movement_step_cost_ft(map_definition, mover, destination, members)
+            step_cost = movement_step_cost_ft(
+                map_definition,
+                mover,
+                destination,
+                members,
+                origin=origin,
+                barriers=barriers,
+            )
             if step_cost is None:
                 raise ValueError(f"Search returned an illegal movement step at {destination}.")
             if spent + step_cost > movement_budget_ft:
@@ -33,6 +43,7 @@ def _affordable_legal_prefix(
             if not overlapping_occupants(mover, destination, members):
                 last_legal_index = index
                 last_legal_cost = spent
+            origin = destination
         if last_legal_index < 0:
             return [], 0
         return route[: last_legal_index + 1], last_legal_cost
@@ -48,6 +59,7 @@ def plan_movement_toward(
     members: list[EncounterCombatant],
     desired_distance_ft: int,
     movement_budget_ft: int,
+    barriers: list[PersistentBarrierState] | None = None,
 ) -> GridMovementPlan:
     """Search the full route first, then walk the affordable legal prefix this turn."""
     try:
@@ -59,6 +71,7 @@ def plan_movement_toward(
             target,
             members,
             desired_distance_ft,
+            barriers,
         )
         target_position = position_for(target)
         route_goal_position = route[-1] if route else position_for(mover)
@@ -75,6 +88,7 @@ def plan_movement_toward(
             members,
             route,
             movement_budget_ft,
+            barriers,
         )
         final_position = path[-1] if path else position_for(mover)
         final_distance = footprint_distance_ft(

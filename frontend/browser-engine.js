@@ -73,6 +73,7 @@
         ruleset,
         map_definition: mapDefinition,
         persistent_hazards: [],
+        persistent_barriers: [],
       };
     } catch (error) { console.error("Failed to build browser encounter setup", { selection, error }); throw error; }
   }
@@ -154,6 +155,7 @@
         window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
         S().refreshStartOfTurn(member.state);
         C()?.endIfExpired(member.state, round, states);
+        window.IRON_PIT_BROWSER_GRID_BARRIERS?.cleanup(setup, round);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));

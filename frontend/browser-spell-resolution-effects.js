@@ -27,6 +27,7 @@
         damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
         damageType: spell.damageType, successDamage: spell.successDamage || "none",
         damageComponents: (spell.damageComponents || []).map((item) => ({ ...item })),
+        failedSavePushFt: spell.failedSavePushFt || 0,
         magicalEffect: true, effectTags: [...(spell.effectTags || [])],
         area: spell.area || null,
         animation: spell.animation || "spell-save",
