@@ -39,6 +39,8 @@ def _strip_extension_defaults(value):
             continue
         if key == "prevents_instant_death" and item is False:
             continue
+        if key == "free_opening_cast" and item is False:
+            continue
         if key in {
             "effect_tags",
             "required_effect_tags",
