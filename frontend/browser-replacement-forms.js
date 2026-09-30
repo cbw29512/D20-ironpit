@@ -85,6 +85,7 @@
         form_template: activeTemplate, original_hp: state.current_hp,
         form_hp: activeTemplate.max_hp, form_max_hp: activeTemplate.max_hp,
         hp_mode: action.hpMode || "form_pool",
+        ends_on_incapacitated: Boolean(action.endsOnIncapacitated),
         resource_id: action.resourceId || null, resource_cost: action.resourceCost || 1,
         voluntary_revert_action: action.voluntaryRevertAction || "bonus_action",
       };
@@ -111,6 +112,14 @@
       console.error("Browser replacement form reversion failed", { combatant: state?.template?.name, error });
       throw error;
     }
+  }
+
+  function revertIfIncapacitated(state) {
+    const active = state.replacement_form;
+    if (!active || !active.ends_on_incapacitated) return false;
+    if (!state.is_dead && !state.is_unconscious) return false;
+    revert(state, false);
+    return true;
   }
 
   function applyDamage(state, amount) {
