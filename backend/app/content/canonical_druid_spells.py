@@ -105,6 +105,10 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=7, min_character_level=13,
     ),
     _spell(
+        "sunburst", "Sunburst", "damage", "save-damage", "area", "condition",
+        spell_level=8, min_character_level=15,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",
