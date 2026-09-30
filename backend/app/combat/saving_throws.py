@@ -4,6 +4,7 @@ from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
 from app.combat.action_economy import is_available, spend
+from app.combat.automatic_save_failures import automatically_fails_save
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.condition_rules import can_see
 from app.combat.dice import DiceProvider
@@ -60,19 +61,24 @@ def resolve_save_action(
         effect_tags=frozenset(effect_tags),
         disadvantage_sources=save_disadvantage_sources,
     )
-    advantage_sources = saving_throw_advantage_source_names(
+    automatic_failure = automatically_fails_save(action, target)
+    advantage_sources = () if automatic_failure else saving_throw_advantage_source_names(
         target.state, action.save_ability, save_context,
     )
-    save_roll, succeeded = resolve_saving_throw(
-        target.state,
-        action.save_ability,
-        action.dc,
-        dice,
-        save_context,
-        round_number=round_number,
-        encounter_roller=target,
-        setup=setup,
-    )
+    if automatic_failure:
+        save_roll = None
+        succeeded = False
+    else:
+        save_roll, succeeded = resolve_saving_throw(
+            target.state,
+            action.save_ability,
+            action.dc,
+            dice,
+            save_context,
+            round_number=round_number,
+            encounter_roller=target,
+            setup=setup,
+        )
     if spend_action: spend(actor.state, action.action_cost)
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
@@ -126,7 +132,14 @@ def resolve_save_action(
             source_is_magical=action.magical_effect,
         )
     outcome = "SUCCEEDS" if succeeded else "FAILS"
-    description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
+    if automatic_failure:
+        description = (
+            f"{target.state.template.name} automatically FAILS a DC {action.dc} "
+            f"{action.save_ability.title()} save against {actor.state.template.name}'s {action.name} "
+            f"because its creature type is {target.state.template.creature_type}."
+        )
+    else:
+        description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if advantage_sources:
         source_text = " and ".join(advantage_sources)
         description += f" {source_text} grants Advantage on the save."
