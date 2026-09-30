@@ -34,5 +34,49 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_GRID_BARRIERS = { edgeKey, blocksTransition };
+  function cleanup(setup, roundNumber) {
+    try {
+      if (!Array.isArray(setup?.persistent_barriers)) {
+        if (setup) setup.persistent_barriers = [];
+        return [];
+      }
+      const members = new Map(
+        [...(setup.heroes || []), ...(setup.monsters || [])]
+          .map((member) => [member.combatant_id, member]),
+      );
+      const kept = [], removed = [];
+      for (const barrier of setup.persistent_barriers) {
+        if ((barrier.sections || []).every((section) => section.destroyed || (section.current_hp ?? 0) <= 0)) {
+          removed.push(barrier.barrier_id);
+          continue;
+        }
+        if (roundNumber >= barrier.expires_round) {
+          if (barrier.permanent_after_full_duration) {
+            barrier.concentration = false;
+            barrier.permanent_after_full_duration = false;
+            kept.push(barrier);
+          } else {
+            removed.push(barrier.barrier_id);
+          }
+          continue;
+        }
+        if (barrier.concentration) {
+          const source = members.get(barrier.source_id);
+          const current = source?.state?.concentration || null;
+          if (!current || current.source_id !== barrier.source_id || current.effect_id !== barrier.action_id) {
+            removed.push(barrier.barrier_id);
+            continue;
+          }
+        }
+        kept.push(barrier);
+      }
+      setup.persistent_barriers = kept;
+      return removed;
+    } catch (error) {
+      console.error("Failed to clean browser persistent barriers", { error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_GRID_BARRIERS = { edgeKey, blocksTransition, cleanup };
 })();
