@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, ConditionName
 from app.domain.hit_effects import OnHitTimedEffect
+from app.domain.movement import MovementModeGrant
 from app.domain.save_damage import DamageTypeName, SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.targeting import AreaTargeting
@@ -35,6 +36,7 @@ class DefensiveSpellAction(BaseModel):
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
+    movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     concentration: bool = False
     priority: int = 0
     animation: str = "precombat-defense"
@@ -43,7 +45,10 @@ class DefensiveSpellAction(BaseModel):
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
-        if not direct_hp and not self.damage_resistances and not self.condition_ids and not self.modifier_effects:
+        if not (
+            direct_hp or self.damage_resistances or self.condition_ids
+            or self.modifier_effects or self.movement_mode_grants
+        ):
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
         if self.concentration and (direct_hp or self.damage_resistances):
             raise ValueError("Concentration defenses require source-owned modifier or timed-condition effects.")
