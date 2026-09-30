@@ -4,6 +4,7 @@ import itertools
 import logging
 from dataclasses import dataclass
 
+from app.combat.barrier_line_of_effect import clear_line_between_points
 from app.combat.area_shapes import (
     Direction, Point, cell_center_ft, cone_contains, cube_contains, emanation_contains,
     line_contains, normalized, radius_contains,
@@ -99,9 +100,33 @@ def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area
         directions = (None,) if area.shape in {"radius", "emanation"} else _directions(direction_origins, aim_members)
         placements: dict[tuple[tuple[str, ...], tuple[str, ...], bool], AreaPlacement] = {}
         for origin in origins:
+            if (
+                area.origin == "point"
+                and not clear_line_between_points(actor_points, (origin,), setup.persistent_barriers)
+            ):
+                continue
             for direction in directions:
-                target_ids = tuple(enemy.combatant_id for enemy in enemies if _hits(area, actor_points, origin, direction, enemy))
-                friendly_ids = tuple(friend.combatant_id for friend in friends if _hits(area, actor_points, origin, direction, friend))
+                effect_sources = actor_points if area.shape == "emanation" else (origin,)
+                target_ids = tuple(
+                    enemy.combatant_id
+                    for enemy in enemies
+                    if _hits(area, actor_points, origin, direction, enemy)
+                    and clear_line_between_points(
+                        effect_sources,
+                        _points(enemy),
+                        setup.persistent_barriers,
+                    )
+                )
+                friendly_ids = tuple(
+                    friend.combatant_id
+                    for friend in friends
+                    if _hits(area, actor_points, origin, direction, friend)
+                    and clear_line_between_points(
+                        effect_sources,
+                        _points(friend),
+                        setup.persistent_barriers,
+                    )
+                )
                 source_in_area = _hits(area, actor_points, origin, direction, actor)
                 if not target_ids and not allow_no_enemy_targets: continue
                 if not target_ids and not friendly_ids and not source_in_area: continue
