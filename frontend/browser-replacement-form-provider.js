@@ -44,7 +44,8 @@
         if (!source) throw new Error("Replacement-form source became unavailable.");
         if (!RFC() || !RF()) throw new Error("Replacement-form compiler/runtime is not loaded.");
         const active = RFC().compile(
-          member.state.template, source, Boolean(action.retainSpellcasting), Boolean(action.retainCreatureType)
+          member.state.template, source, Boolean(action.retainSpellcasting), Boolean(action.retainCreatureType),
+          (action.hpMode || "form_pool") === "retain_owner"
         );
         const originalName = member.state.template.name;
         const result = RF().enter(member.state, action, active);
