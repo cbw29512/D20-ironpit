@@ -6,6 +6,7 @@ from app.combat.activation_movement import resolve_activation_movement
 from app.combat.barbarian import enter_rage
 from app.combat.bonus_save_actions import resolve_bonus_save_action
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
+from app.combat.resource_conversion import automatic_resource_conversion, resolve_resource_conversion
 from app.combat.stationary_attack_advantage import use_stationary_attack_advantage
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -49,6 +50,18 @@ def resolve_feature_activation_phase(
                 )
                 events.extend(movement_events)
                 sync_paladin_auras_2014(setup)
+
+        conversion = automatic_resource_conversion(attacker.state, turn_key)
+        if conversion is not None:
+            events.append(resolve_resource_conversion(
+                attacker.state,
+                conversion,
+                sequence=sequence,
+                round_number=round_number,
+                actor_id=attacker.combatant_id,
+                turn_key=turn_key,
+            ))
+            sequence += 1
 
         bonus_save_events, sequence = resolve_bonus_save_action(
             sequence,
