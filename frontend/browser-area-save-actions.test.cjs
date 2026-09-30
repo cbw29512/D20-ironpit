@@ -21,7 +21,7 @@ const calls = [];
 window.IRON_PIT_BROWSER_SAVES = {
   legalAction: () => true,
   resolveAction: (sequence, round, actor, target, action, distance, options) => {
-    calls.push({ target: target.combatant_id, rolls: [...options.sharedDamageRolls] });
+    calls.push({ target: target.combatant_id, rolls: options.sharedDamageRolls ? [...options.sharedDamageRolls] : [] });
     return {
       sequence, round_number: round, event_type: "saving_throw",
       actor_id: actor.combatant_id, target_id: target.combatant_id,
