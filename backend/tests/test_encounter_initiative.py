@@ -4,6 +4,7 @@ from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.domain.models import EncounterSelection
+from app.domain.modifiers import CombatModifier, ModifierKind
 
 
 def _setup(heroes: list[str], monsters: list[str]):
@@ -50,6 +51,26 @@ def test_initiative_event_preserves_full_advantage_roll_provenance() -> None:
     assert fighter_event.attack_roll.rolls == [7, 18]
     assert next_sequence == 3
 
+
+
+def test_universal_d20_test_advantage_applies_to_initiative() -> None:
+    setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
+    _neutralize_initiative(setup)
+    hero = setup.heroes[0].state
+    hero.active_modifiers.append(CombatModifier(
+        id="hero:foresight:d20",
+        source_id=setup.heroes[0].combatant_id,
+        source_effect_id="foresight",
+        source_name="Foresight",
+        kind=ModifierKind.D20_TEST_ADVANTAGE,
+    ))
+
+    initiative = roll_encounter_initiative(setup, FixedDiceProvider([2, 17, 10]))
+    hero_group = next(group for group in initiative.groups if group.side == "heroes")
+
+    assert hero_group.initiative_roll.mode == "advantage"
+    assert hero_group.initiative_roll.rolls == [2, 17]
+    assert hero_group.initiative_roll.selected_roll == 17
 
 def test_natural_20_has_top_priority_over_higher_normal_roll() -> None:
     setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
