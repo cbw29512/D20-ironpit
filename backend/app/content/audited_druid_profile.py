@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile Thalen's 2024 Druid foundation without early subclass leakage."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}:
-            raise ValueError("2024 Thalen profile currently supports Druid levels 1 through 15.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}:
+            raise ValueError("2024 Thalen profile currently supports Druid levels 1 through 16.")
         hero = HERO_BY_CLASS["druid"]
         base = canonical_base_ability_scores("druid")
         background_allowed = ["intelligence", "wisdom", "charisma"]
@@ -33,6 +33,8 @@ def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
                 AbilityIncrease(ability="charisma", amount=1),
             ])
         if level >= 12:
+            advancement.append(AbilityIncrease(ability="charisma", amount=2))
+        if level >= 16:
             advancement.append(AbilityIncrease(ability="charisma", amount=2))
         values = base.model_dump()
         for increase in [*background, *advancement]:
