@@ -40,6 +40,7 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
     _spell("longstrider", "Longstrider", "buff", "modifier-stack"),
     _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
     _spell("faerie-fire", "Faerie Fire", "control", "save-modifier", "area", "concentration", min_character_level=2),
+    _spell("lesser-restoration", "Lesser Restoration", "healing", "condition-removal", "bonus-action", spell_level=2, min_character_level=3),
     _spell(
         "speak-with-animals",
         "Speak with Animals",
