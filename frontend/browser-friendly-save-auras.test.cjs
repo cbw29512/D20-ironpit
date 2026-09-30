@@ -7,6 +7,7 @@ const vm = require("node:vm");
 global.window = {};
 window.IRON_PIT_BROWSER_STATE = { distance: (a, b) => Math.abs(a.position_ft - b.position_ft) };
 window.IRON_PIT_BROWSER_MODIFIERS = {
+  d20TestAdvantage: () => 0,
   add: (state, modifier) => {
     state.active_modifiers ||= [];
     if (!state.active_modifiers.some((item) => item.id === modifier.id)) state.active_modifiers.push(modifier);
