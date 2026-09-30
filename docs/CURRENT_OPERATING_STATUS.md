@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-29 while advancing the certified 2024 Circle of the Land Druid progression through level 4.
+Recorded 2026-09-29 while advancing the certified 2024 Circle of the Land Druid progression through level 5.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -32,9 +32,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
-| 2024 | Druid (Land) | 1–4 |
+| 2024 | Druid (Land) | 1–5 |
 
-2024 public-ready hero slots after the Druid 4 tranche: **104 / 240**.
+2024 public-ready hero slots after the Druid 5 tranche: **105 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -44,9 +44,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.** The 2014 Hero Certification and paired-edition guard workflows were green on the exact PR #436 head before merge.
 
-**2024 canonical pregens are now 104 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 4.
+**2024 canonical pregens are now 105 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 5.
 
-Active implementation lane after merge: **2024 Circle of the Land Druid level 5 onward**.
+Active implementation lane after merge: **2024 Circle of the Land Druid level 6 onward**.
 
 Bard 20 Words of Creation is edition-specific: 2024 always prepares Power Word Heal and Power Word Kill, and either spell may affect one additional creature only when that second creature is within 10 feet of the first. Power Word Heal is modeled as one atomic healing resolution that also ends Charmed, Frightened, Paralyzed, Poisoned, and Stunned, with the target optionally spending its Reaction to stand from Prone.
 
@@ -56,7 +56,7 @@ Bard 18's new prepared spell is 2024 Teleport, recorded as arena-out-of-scope ra
 Bard 19 canonical Epic Boon choice: **Boon of Fate**. The 2024 Bard table recommends Boon of Spell Recall but permits any qualified Epic Boon; Lyra uses Boon of Fate so the build reuses the already-certified universal 2d4 D20 outcome-adjustment mechanic.
 
 For each Druid tranche:
-- start from the completed 2014 Lore Bard progression and reuse universal mechanics where behavior is equivalent;
+- start from the completed 2014 Circle of the Land Druid progression and reuse universal mechanics where behavior is equivalent;
 - verify every 2024 class/subclass feature against 2024 rules before carrying behavior forward;
 - keep same-named 2014/2024 spells edition-isolated and require an explicit 2024 spell fingerprint before certification;
 - keep Python/browser parity, independent combat fingerprints, generated parity, and the 2014 guard green before merge;
@@ -99,7 +99,7 @@ Refactor discipline:
 - Python reference and browser implementation move together;
 - add/regenerate permanent parity tests for every migrated path;
 - do not create a new primitive when existing checks/modifiers can compose the rule;
-- do not stall the active 2014 Druid lane for unrelated cosmetic rewrites;
+- do not stall the active 2024 Druid lane for unrelated cosmetic rewrites;
 - when a named special case is discovered during active work, migrate it if the shared replacement is small and safe; otherwise record it here and continue the canonical lane.
 
 Immediate examples:
@@ -147,3 +147,7 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Blur reuses the modifier stack with source-derived Blindsight/Truesight ranges and distance-aware bypass; no Blur-named attack resolver exists.
 - The 2024 monster source audit now reconciles Blindsight/Truesight to the vendored SRD source. Generated capability/browser artifacts carry those ranges.
 - Level 4 takes the canonical **+2 Wisdom ASI** (17→19), adds **Starry Wisp** as the fourth Druid cantrip, and fills the seventh prepared-spell slot with arena-neutral **Detect Poison and Disease**; all Wisdom-derived spell/save/skill math is profile-derived.
+
+- Level 5 adds **Wild Resurgence** through the universal resource-conversion engine: spell-slot-to-Wild-Shape restoration is target-empty and shared once-per-turn across slot levels; Wild-Shape-to-1st-level-slot restoration uses the same engine with a once-per-Long-Rest gate and preserves one Wild Shape use under automatic arena policy.
+- Level 5 reuses the explicit **2024 Fireball** fingerprint for Arid Land, reuses universal **Dispel Magic** with Wisdom casting, and uses **Water Breathing** as the ninth arena-neutral prepared Druid spell.
+- Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.
