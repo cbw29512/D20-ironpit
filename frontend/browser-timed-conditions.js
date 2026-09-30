@@ -3,6 +3,7 @@
 
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
+  const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const POISONED = "poisoned";
   const POISON_RECOVERY_DC = 10;
 
@@ -48,6 +49,7 @@
       return_damage_excluded_creature_types: [...(options.returnDamageExcludedCreatureTypes || [])],
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
+    RF()?.revertIfIncapacitated(state);
     return effectId;
   }
 
