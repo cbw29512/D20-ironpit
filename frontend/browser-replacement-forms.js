@@ -3,6 +3,7 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const R = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
 
   function mergeBonuses(owner = {}, form = {}) {
     const keys = new Set([...Object.keys(owner || {}), ...Object.keys(form || {})]);
@@ -125,7 +126,7 @@
   function revertIfIncapacitated(state) {
     const active = state.replacement_form;
     if (!active || !active.ends_on_incapacitated) return false;
-    if (!state.is_dead && !state.is_unconscious) return false;
+    if (!state.is_dead && !Q()?.incapacitated(state)) return false;
     revert(state, false);
     return true;
   }
