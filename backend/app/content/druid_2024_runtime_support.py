@@ -20,7 +20,7 @@ from app.content.druid_2024_spells import (
     build_thunderwave_2024,
 )
 from app.content.bard_2024_high_damage_spells import build_cone_of_cold_2024
-from app.content.healing_spell_effects import build_cure_wounds, build_healing_word, build_mass_cure_wounds
+from app.content.healing_spell_effects import build_cure_wounds, build_heal_2024, build_healing_word, build_mass_cure_wounds
 from app.content.offensive_spell_effects import build_fireball_2024
 from app.content.shared_movement_spells_2024 import freedom_of_movement_2024
 from app.content.druid_2024_wild_resurgence import build_wild_resurgence_2024
@@ -114,6 +114,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
                 build_healing_word(wisdom_modifier),
                 build_cure_wounds(wisdom_modifier),
                 *([build_mass_cure_wounds(wisdom_modifier)] if level >= 9 else []),
+                *([build_heal_2024()] if level >= 11 else []),
             ],
             "condition_removal_actions": [LESSER_RESTORATION] if level >= 3 else [],
             "effect_removal_actions": [DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],

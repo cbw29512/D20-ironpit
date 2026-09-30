@@ -128,6 +128,16 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 11:
+            audits.append(druid_feature_audit(
+                "druid-combat-spells-6", "Level 6 Spellcasting: Heal", "class",
+                combat_relevant=True, automated=True,
+                notes=(
+                    "Damage/healing-first preparation selects explicit 2024 Heal: Action, 60 feet, "
+                    "70 fixed HP restored, and Blinded, Deafened, and Poisoned removed through the "
+                    "universal healing action."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)

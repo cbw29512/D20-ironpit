@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-30 while advancing the certified 2024 Circle of the Land Druid progression through level 9.
+Recorded 2026-09-30 while advancing the certified 2024 Circle of the Land Druid progression through level 11.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -32,9 +32,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
-| 2024 | Druid (Land) | 1–8 |
+| 2024 | Druid (Land) | 1–10 |
 
-2024 public-ready hero slots on current `main`: **108 / 240**.
+2024 public-ready hero slots on current `main`: **110 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -44,9 +44,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 108 / 240 on current `main`; PR #464 raises the generated branch manifest to 109 / 240 for Druid 9.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 8 on `main`, with level 9 in exact-head certification.
+**2024 canonical pregens are 110 / 240 on current `main`; PR #466 advances Circle of the Land Druid to level 11.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 10 on `main`.
 
-Active implementation lane: **finish/merge 2024 Circle of the Land Druid level 9, then re-anchor and continue level 10 onward**.
+Active implementation lane: **finish/merge 2024 Circle of the Land Druid level 11, then re-anchor and continue level 12 onward**.
 
 ### Druid spell-selection policy
 
@@ -160,4 +160,6 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Level 8 takes **+1 Wisdom / +1 Charisma** (Wisdom 19→20, Charisma 15→16), upgrades deterministic Wild Shape to certified **Brown Bear (CR 1)**, and adds **Freedom of Movement** as the twelfth ordinary prepared spell.
 - Level 9 advances to PB +4, 48 HP, slots 4/3/3/3/1, and fourteen ordinary prepared Druid spells. The new prepared choices are **Cone of Cold** and **Mass Cure Wounds** under the damage/healing-first policy.
 - Arid level 9 additionally grants **Wall of Stone**. Its source data binds to a reusable persistent-barrier engine for blocked edges, forced-movement interaction, destructible sections, support legality, concentration lifecycle, and Python/browser parity; it is not a Druid-named resolver.
+- Level 10 adds **Nature's Ward** through universal defenses: Poisoned immunity plus Arid Fire resistance. It also adds **Thunderclap** and prepares **Thunderwave** under the damage-first policy.
+- Level 11 advances to 58 HP, 16 prepared spells, and a level-6 slot. The new prepared spell is **Heal**: 70 fixed HP plus removal of Blinded, Deafened, and Poisoned through the universal healing action.
 - Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.
