@@ -34,15 +34,18 @@ def enter_replacement_form(
     hp_mode: str = "form_pool",
     temporary_hp_on_enter: int = 0,
     ends_on_incapacitated: bool = False,
+    replace_existing_form: bool = False,
 ) -> ReplacementFormResult:
     try:
-        if state.replacement_form is not None:
+        active_form = state.replacement_form
+        if active_form is not None and not replace_existing_form:
             raise ValueError(f"{state.template.name} is already in a replacement form.")
-        if form_template.kind != state.template.kind:
+        owner_template = active_form.original_template if active_form is not None else state.template
+        if form_template.kind != owner_template.kind:
             raise ValueError("Compiled replacement form must preserve the combatant lifecycle kind.")
         spend(state, action_cost)
         remaining = spend_resource(state, resource_id, resource_cost)
-        original_template = state.template
+        original_template = owner_template
         state.replacement_form = ReplacementFormState(
             source_id=source_id,
             source_name=source_name,
@@ -106,10 +109,14 @@ def resolve_replacement_form_action(
 ) -> ReplacementFormResult:
     """Resolve one declared replacement-form action through the shared lifecycle."""
     try:
-        if active_form_template.id != f"{state.template.id}--form-{action.form_template_id}":
+        owner_template = (
+            state.replacement_form.original_template
+            if state.replacement_form is not None else state.template
+        )
+        if active_form_template.id != f"{owner_template.id}--form-{action.form_template_id}":
             raise ValueError(
                 f"Compiled replacement form {active_form_template.id} does not match "
-                f"declared form {action.form_template_id} for {state.template.id}."
+                f"declared form {action.form_template_id} for {owner_template.id}."
             )
         return enter_replacement_form(
             state,
@@ -123,6 +130,7 @@ def resolve_replacement_form_action(
             hp_mode=action.hp_mode,
             temporary_hp_on_enter=action.temporary_hp_on_enter,
             ends_on_incapacitated=action.ends_on_incapacitated,
+            replace_existing_form=action.replace_existing_form,
         )
     except ValueError:
         raise
