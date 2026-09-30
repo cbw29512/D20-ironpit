@@ -20,7 +20,7 @@ const defense = (id, level, priority = 0) => ({
   id, name: id, level, actionCost: "action", range: 0, durationMinutes: 60,
   targetPolicy: "self", targetCount: 1,
   temporaryHp: 5, temporaryHpPerSlotAbove: 5, damageResistances: [], conditionIds: [], modifierEffects: [],
-  concentration: false, priority, animation: "precombat-defense",
+  movementModeGrants: [], concentration: false, priority, animation: "precombat-defense",
 });
 function caster(spells, slots) {
   const template = structuredClone(base);
@@ -71,6 +71,20 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
   const c = caster([spell], { 1: 1 });
   P.prepare({ heroes: [c], monsters: [enemy()] });
   assert.deepEqual(c.state.temporary_damage_resistances, ["fire"]);
+}
+
+{
+  const swim = {
+    ...defense("swim-buff", 1),
+    temporaryHp: 0,
+    temporaryHpPerSlotAbove: 0,
+    movementModeGrants: [{ mode: "swim", fixedSpeedFt: null, matchCurrentSpeed: true }],
+  };
+  const c = caster([swim], { 1: 1 });
+  P.prepare({ heroes: [c], monsters: [enemy()] });
+  const effect = c.state.timed_effects.find((item) => item.source_effect_id === "swim-buff");
+  assert.ok(effect);
+  assert.deepEqual(effect.owned_movement_mode_grants, swim.movementModeGrants);
 }
 
 {
