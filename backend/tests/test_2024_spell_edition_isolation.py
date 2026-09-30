@@ -40,6 +40,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "guiding-bolt",
         "sacred-flame",
         "poison-spray",
+        "starry-wisp",
         "longstrider",
         "faerie-fire",
         "fire-bolt",
@@ -110,6 +111,23 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.damage_dice_size,
             spell.damage_type,
         ) == (0, "action", "ranged", 30, expected_dice, 12, "poison")
+
+    if "starry-wisp" in spell_attacks:
+        spell = spell_attacks["starry-wisp"]
+        expected_dice = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.attack_kind,
+            spell.range_ft,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+        ) == (0, "action", "ranged", 60, expected_dice, 8, "radiant")
+        assert len(spell.on_hit_modifier_effects) == 1
+        rider = spell.on_hit_modifier_effects[0]
+        assert rider.kind == "invisibility-benefits-suppressed"
+        assert rider.expires_after_source_turns == 1
 
     if "guiding-bolt" in spell_attacks:
         spell = spell_attacks["guiding-bolt"]
