@@ -99,11 +99,12 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                 ),
                 druid_feature_audit(
                     "circle-spells-5-wall-of-stone", "Circle Spells: Arid — Wall of Stone", "subclass",
-                    combat_relevant=True, automated=False,
+                    combat_relevant=True, automated=True,
                     notes=(
-                        "Required level-9 Arid Circle Spell. Universal persistent-barrier schema and "
-                        "movement blocking are staged, but casting, destruction, and concentration lifecycle "
-                        "must be complete before Druid 9 certification."
+                        "Required level-9 Arid Circle Spell uses the universal persistent-barrier engine: "
+                        "exact ten-panel geometry, stone support, movement and line-of-effect blocking, "
+                        "AC/HP/immunities, destruction breaches, Concentration cleanup, full-duration "
+                        "permanence, spell-slot casting, and Natural Recovery alternate casting."
                     ),
                 ),
             ])
