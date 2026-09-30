@@ -159,7 +159,7 @@ def resolve_resource_conversion(
         if action.once_per_turn:
             if turn_key is None:
                 raise ValueError(f"Resource conversion {action.id!r} requires a turn key.")
-            state.feature_last_turn_keys[action.id] = turn_key
+            state.feature_last_turn_keys[action.once_per_turn_group or action.id] = turn_key
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
