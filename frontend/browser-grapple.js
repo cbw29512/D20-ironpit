@@ -92,7 +92,10 @@
     const ability = useAthletics ? "strength" : "dexterity";
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
     const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
-    let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
+    let roll = R().d20(
+      bonus,
+      A()?.mode ? A().mode(state, advantage, disadvantage) : R().modeFromSources(advantage, disadvantage),
+    );
     const needsCheckRuntime = (state.template.ability_check_minimums || []).some(
       (rule) => rule.ability === ability,
     ) || (state.template.failed_d20_test_override_grants || []).some(
