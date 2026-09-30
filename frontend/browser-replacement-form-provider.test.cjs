@@ -79,6 +79,7 @@ console.log("Browser replacement-form Main Action provider parity passed.");
           id: "wild-shape", name: "Wild Shape", actionCost: "bonus_action", formTemplateId: "srd-wolf",
           resourceId: "wild-shape", resourceCost: 1, voluntaryRevertAction: "bonus_action",
           hpMode: "retain_owner", temporaryHpOnEnter: 2, retainCreatureType: true,
+          replaceExistingForm: true,
         }],
       },
     },
@@ -90,4 +91,24 @@ console.log("Browser replacement-form Main Action provider parity passed.");
   const candidates = S.discoverCandidates("normalPreMove", ctx2024);
   assert.equal(candidates.length, 1);
   assert.equal(candidates[0].payload.kind, "transform");
+}
+
+
+{
+  const original = druid2024.state.template;
+  druid2024.state.replacement_form = {
+    source_id: "wild-shape",
+    original_template: original,
+  };
+  druid2024.state.template = { ...original, id: original.id + "--form-srd-wolf" };
+  druid2024.state.bonus_action_available = true;
+  const candidates = S.discoverCandidates("normalPreMove", ctx2024);
+  assert.equal(candidates.length, 1, "2024 Wild Shape can be used again while transformed");
+  assert.equal(candidates[0].payload.kind, "transform");
+}
+
+{
+  actor.state.action_available = true;
+  const blocked = S.discoverCandidates("normalPreMove", ctx);
+  assert.equal(blocked.length, 0, "2014 Wild Shape cannot replace an active form");
 }
