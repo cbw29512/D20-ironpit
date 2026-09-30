@@ -80,7 +80,10 @@ def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
                     if level >= 5 else []
                 ),
                 *(
-                    ["D&D Beyond Basic Rules 2024: Circle of the Land 6 — Natural Recovery"]
+                    [
+                        "D&D Beyond Basic Rules 2024: Circle of the Land 6 — Natural Recovery",
+                        "D&D Beyond Basic Rules 2024: Spells — Aid",
+                    ]
                     if level >= 6 else []
                 ),
                 *(
