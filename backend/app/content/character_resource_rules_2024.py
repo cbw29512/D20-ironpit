@@ -127,6 +127,13 @@ SUBCLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     "path-berserker": (
         ("intimidating-presence", "Intimidating Presence", _berserker_intimidating_presence),
     ),
+    "circle-land": (
+        (
+            "natural-recovery-free-cast",
+            "Natural Recovery: Free Circle Spell",
+            _land_natural_recovery_free_cast,
+        ),
+    ),
 }
 
 SPECIES_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
