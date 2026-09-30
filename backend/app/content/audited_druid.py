@@ -56,7 +56,7 @@ def _source_reference(level: int) -> str:
     if level >= 8:
         parts.extend(["Ability Score Improvement", "Wild Shape Improvement", "Freedom of Movement"])
     if level >= 9:
-        parts.extend(["Thunderwave", "Mass Cure Wounds", "Wall of Stone"])
+        parts.extend(["Cone of Cold", "Mass Cure Wounds", "Wall of Stone"])
     return "D&D Beyond Basic Rules 2024: " + ", ".join(parts)
 
 
