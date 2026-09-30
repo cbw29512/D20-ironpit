@@ -91,6 +91,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
         events.extend(refill_events)
 
         for round_number in range(1, MAX_ENCOUNTER_ROUNDS + 1):
+            for member in combatants:
+                member.state.current_round = round_number
             round_turn_order = initiative.first_round_turn_order if round_number == 1 else initiative.turn_order
             for combatant_id in round_turn_order:
                 outcome = resolve_encounter_outcome(setup)

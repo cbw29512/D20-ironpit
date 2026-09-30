@@ -119,3 +119,11 @@ The existing single-target save fallback is preserved exactly, including its his
 ## 2014 audit correction (2026-09-30)
 
 The `signatureThreshold` opportunity permits only `hp-threshold-instant-death` then `hp-threshold-condition`. It runs after urgent support and before optional Bonus Action setup such as Hex. Normal post-move selection recomputes those same categories before ordinary spell offense. This corrects starvation of available high-level source actions under the strongest-useful-legal-action policy; it does not change RAW spell targeting or grant an additional Action. Python delegates post-move selection to `encounter_main_action.py`; browser providers remain the resolution owners. Action Surge stays attack-only.
+
+## Preset stress-test eligibility correction (2026-09-30)
+
+Single-target save fallback discovery rejects actions whose declared resource
+is unavailable, using the existing shared resource-availability primitive in
+both engines. A spent breath weapon cannot be selected again until its normal
+recharge succeeds. This corrects illegal candidate discovery; resolution and
+recharge timing remain unchanged.

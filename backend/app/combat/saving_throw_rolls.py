@@ -105,6 +105,8 @@ def resolve_saving_throw(
         consume_saving_throw_modifiers(state)
         if state.active_d20_bonus_dice:
             if round_number is None:
+                round_number = state.current_round
+            if round_number is None:
                 raise ValueError("Active d20 bonus die requires saving-throw round context.")
             roll, _ = apply_d20_bonus_die_if_useful(
                 state, "saving_throw", roll, dc, dice, round_number,

@@ -422,3 +422,16 @@ Python and browser implementations must preserve behavioral parity. A new named 
 HP-threshold source actions declare `requires_target_sight`; legality consumes the ordinary universal visibility predicate before any resource or Action spending. The browser serializers preserve the same flag. 2014 Power Word Kill/Stun require sight; other sources retain their independently audited parameters.
 
 Finite nonconcentration defensive spells with modifier payloads register their spell identity in the existing source-owned timed-effect lifecycle. Source-turn-start expiration removes only the matching source/effect group, including its modifiers, and preserves other sources. Duration is derived from the spell or legal duration override; an opening cast expires after its allotted combat rounds. Concentration spells retain concentration-owned expiration, and explicit short modifier lifetimes remain authoritative. Every new match constructs fresh state.
+
+## Encounter round context for nested saves (2026-09-30)
+
+Temporary combat state owns `current_round` (initially null). Both engines set
+it for every combatant at the start of each encounter round, before any turn
+or reaction. Nested saving throws, including damage-triggered Concentration
+checks, use an explicit round when supplied, otherwise this authoritative
+state value. Finite D20 bonus dice still fail closed if neither context exists.
+This preserves bonus-die expiry/consumption without guessing a round or dropping
+a bonus. Fresh fight states reset the clock; immutable templates never own it.
+Python: runtime schema, encounter/duel engines and saving_throw_rolls. Browser:
+browser-state, browser-engine and browser-saving-throws. Existing shared
+Concentration/damage and bonus-die resolvers remain the only resolution paths.

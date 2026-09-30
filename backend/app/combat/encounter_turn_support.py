@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.resources import resource_available
+
 from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
@@ -112,6 +114,8 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
                 if action.action_cost != "action":
+                    continue
+                if not resource_available(attacker.state, action.resource_id, action.resource_cost):
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance):

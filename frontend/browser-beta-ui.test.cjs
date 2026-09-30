@@ -42,9 +42,22 @@ console.error = (...args) => errors.push(args.map((arg) => arg instanceof Error 
 const click = async (id) => { await el(id).listeners.click(); };
 
 (async () => {
-  load("app.js");
+  load("combat-presets.js"); load("app.js");
   for (let i = 0; i < 10 && !api; i += 1) await Promise.resolve();
   assert.ok(api, `production app must initialize: ${JSON.stringify(errors)}`);
+  assert.equal(el("combat-presets").children.length, 12);
+  await el("combat-presets").children[1].listeners.click();
+  assert.equal(api.state.heroSlots.filter(Boolean).length, 1);
+  assert.equal(api.state.heroSlots[0].class_id, "barbarian");
+  assert.equal(api.state.monsterSlots.filter(Boolean).length, 2);
+  assert.ok(api.state.monsterSlots.filter(Boolean).every((card) => card.runnable_template_id === "2014-goblin"));
+  assert.equal(api.state.session, null);
+  assert.match(el("status").textContent, /Rage/);
+  const before = JSON.stringify(api.state.heroSlots);
+  api.state.session = { complete: false };
+  await el("combat-presets").children[0].listeners.click();
+  assert.equal(JSON.stringify(api.state.heroSlots), before);
+  api.state.session = null;
   await click("quick-test");
   const heroes = api.state.heroSlots.filter(Boolean), monsters = api.state.monsterSlots.filter(Boolean);
   assert.deepEqual(heroes.map((c) => c.runnable_template_id), ["karnok-stoneward-2014-l1", "seraphine-dawnshield-2014-l1"]);

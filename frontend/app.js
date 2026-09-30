@@ -25,6 +25,7 @@
     el("rerun-button").disabled = state.fighting || active || !state.hasRun;
     el("quick-test").disabled = state.fighting || active; el("reset-fight").disabled = state.fighting;
     rulesetUi()?.syncDisabled(state);
+    window.IRON_PIT_COMBAT_PRESETS?.sync(state);
   }
 
   function clearResult(message = "Cards loaded. Press FIGHT when both sides are ready.") {
@@ -71,6 +72,13 @@
     const rows = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
     return rows.find((card) => card.runnable_template_id === templateId && card.coverage_status === "raw_ready") || null;
   }
+  function loadCards(heroes, monsters, message) {
+    try {
+      state.heroSlots = [...heroes, ...Array(MAX_SLOTS - heroes.length).fill(null)];
+      state.monsterSlots = [...monsters, ...Array(MAX_SLOTS - monsters.length).fill(null)];
+      invalidateRun(); clearResult(message); render(); el("status").textContent = message;
+    } catch (error) { console.error("Matchup card loading failed", error); throw error; }
+  }
   function loadSample() {
     try {
       if (state.fighting || (state.session && !state.session.complete) || !state.catalog) return;
@@ -78,9 +86,7 @@
       const heroes = is2014 ? [cardByTemplate("heroes", "karnok-stoneward-2014-l1"), cardByTemplate("heroes", "seraphine-dawnshield-2014-l1")] : [cardByTemplate("heroes", "karnok-stoneward-l1"), cardByTemplate("heroes", "seraphine-dawnshield-l1")];
       const monsters = is2014 ? [cardByTemplate("monsters", "2014-skeleton"), cardByTemplate("monsters", "2014-goblin")] : [cardByTemplate("monsters", "srd-goblin-warrior"), cardByTemplate("monsters", "srd-wolf")];
       if ([...heroes, ...monsters].some((card) => !card)) { el("status").textContent = "Sample matchup could not find its certified cards."; return; }
-      state.heroSlots.fill(null); state.monsterSlots.fill(null);
-      heroes.forEach((card, index) => { state.heroSlots[index] = card; }); monsters.forEach((card, index) => { state.monsterSlots[index] = card; });
-      invalidateRun(); clearResult(is2014 ? "2014 sample loaded: Karnok + Seraphine vs Skeleton + Goblin." : "2024 sample loaded: Karnok + Seraphine vs Goblin Warrior + Wolf."); render();
+      loadCards(heroes, monsters, is2014 ? "2014 sample loaded: Karnok + Seraphine vs Skeleton + Goblin." : "2024 sample loaded: Karnok + Seraphine vs Goblin Warrior + Wolf.");
       el("status").textContent = "Sample loaded. Choose FIGHT, STEP FIGHT, or TURBO.";
     } catch (error) {
       console.error("Certified sample matchup could not be loaded", { ruleset: state.ruleset, error });
@@ -115,10 +121,11 @@
       await loadRulesetUi();
       await rulesetUi().ensureBundle(state.ruleset);
       if (window.IRON_PIT_CANONICAL_MONSTERS_READY !== true) throw new Error("Canonical RAW-certified monster bundle did not load.");
-      const required = [window.IRON_PIT_BROWSER_ENGINE, window.IRON_PIT_BROWSER_CATALOG, window.IRON_PIT_ENCOUNTER_PICKER, view(), picker(), window.IRON_PIT_EXECUTION, actions(), rulesetUi()];
+      const required = [window.IRON_PIT_BROWSER_ENGINE, window.IRON_PIT_BROWSER_CATALOG, window.IRON_PIT_ENCOUNTER_PICKER, view(), picker(), window.IRON_PIT_EXECUTION, actions(), rulesetUi(), window.IRON_PIT_COMBAT_PRESETS];
       if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
       rulesetUi().install(state, changeRuleset); state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(state.ruleset); picker().bind(() => state);
-      actions().install({ state, matchup, render, updateControls, clearResult }); rulesetUi().update(state); render();
+      actions().install({ state, matchup, render, updateControls, clearResult });
+      window.IRON_PIT_COMBAT_PRESETS.install({ state, load: loadCards }); rulesetUi().update(state); render();
       el("status").textContent = "Iron Pit 2014 Beta ready. Choose certified pregens and monsters, or load the sample matchup.";
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }
   }
