@@ -40,23 +40,22 @@ def test_2024_druid_level_nine_progression_prioritizes_damage_and_healing() -> N
     assert package is not None
     assert len(package.spells) == 14
     assert [spell.id for spell in package.spells][-2:] == [
-        "thunderwave",
+        "cone-of-cold",
         "mass-cure-wounds",
     ]
 
-    thunderwave = next(item for item in hero.spell_save_actions if item.id == "thunderwave")
-    assert thunderwave.level == 1
-    assert thunderwave.save_ability == "constitution"
-    assert thunderwave.damage_dice_count == 2
-    assert thunderwave.damage_dice_size == 8
-    assert thunderwave.damage_type == "thunder"
-    assert thunderwave.success_damage == "half"
-    assert thunderwave.upcast_dice_per_level == 1
-    assert thunderwave.failed_save_push_ft == 10
-    assert thunderwave.area is not None
-    assert thunderwave.area.shape == "cube"
-    assert thunderwave.area.origin == "self"
-    assert thunderwave.area.length_ft == 15
+    cone = next(item for item in hero.spell_save_actions if item.id == "cone-of-cold")
+    assert cone.level == 5
+    assert cone.save_ability == "constitution"
+    assert cone.damage_dice_count == 8
+    assert cone.damage_dice_size == 8
+    assert cone.damage_type == "cold"
+    assert cone.success_damage == "half"
+    assert cone.upcast_dice_per_level == 1
+    assert cone.area is not None
+    assert cone.area.shape == "cone"
+    assert cone.area.origin == "self"
+    assert cone.area.length_ft == 60
 
     mass = next(item for item in hero.healing_actions if item.id == "mass-cure-wounds")
     assert mass.action_cost == "action"
