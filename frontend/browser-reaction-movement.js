@@ -30,7 +30,13 @@
       }
       const members = [...setup.heroes, ...setup.monsters];
       const plan = GM().planToward(
-        setup.map_definition, mover, target, members, desired, mover.state.movement_remaining_ft,
+        setup.map_definition,
+        mover,
+        target,
+        members,
+        desired,
+        mover.state.movement_remaining_ft,
+        setup.persistent_barriers || [],
       );
       if (!plan.path.length) return { events: [], sequence, movement: null };
       const events = [], reactors = mover.side === "heroes" ? setup.monsters : setup.heroes;
@@ -38,7 +44,14 @@
       for (const destination of plan.path) {
         if (GR().approachesFearSource(mover, destination, setup)) break;
         const beforePosition = { ...mover.state.position };
-        const stepCost = GS().movementStepCostFt(setup.map_definition, mover, destination, members);
+        const stepCost = GS().movementStepCostFt(
+          setup.map_definition,
+          mover,
+          destination,
+          members,
+          beforePosition,
+          setup.persistent_barriers || [],
+        );
         if (stepCost == null || stepCost > mover.state.movement_remaining_ft) break;
         const wasProne = mover.state.active_effect_ids.includes("prone");
         for (const reactor of reactors) {
