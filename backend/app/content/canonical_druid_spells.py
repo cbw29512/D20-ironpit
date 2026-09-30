@@ -88,6 +88,10 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=5, min_character_level=9,
     ),
     _spell(
+        "thunderwave", "Thunderwave", "damage", "save-damage", "area", "forced-movement",
+        spell_level=1, min_character_level=10,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",
