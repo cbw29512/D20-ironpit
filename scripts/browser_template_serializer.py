@@ -581,6 +581,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "id": template.id, "name": template.name, "archetype": template.archetype,
             "level": template.level, "challenge_rating": template.challenge_rating, "kind": template.kind,
             "ruleset": template.ruleset, "size": template.size.value,
+            "ability_scores": template.ability_scores.model_dump() if template.ability_scores else None,
             "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
             "initiative_bonus": template.initiative_bonus,
