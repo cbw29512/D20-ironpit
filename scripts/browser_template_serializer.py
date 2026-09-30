@@ -385,6 +385,29 @@ def persistent_barrier_row(action: Any) -> dict[str, Any]:
         raise
 
 
+def persistent_beneficial_zone_row(action: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": action.id, "name": action.name, "actionCost": action.action_cost,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "castRangeFt": action.cast_range_ft, "durationRounds": action.duration_rounds,
+            "shape": action.shape, "lengthFt": action.length_ft,
+            "moveActionCost": action.move_action_cost, "moveDistanceFt": action.move_distance_ft,
+            "moveRangeFt": action.move_range_ft,
+            "armorClassBonus": action.armor_class_bonus,
+            "savingThrowBonus": action.saving_throw_bonus,
+            "savingThrowAbilities": list(action.saving_throw_abilities),
+            "allyDamageResistances": list(action.ally_damage_resistances),
+            "includeSourceForDefense": action.include_source_for_defense,
+            "endIfSourceIncapacitated": action.end_if_source_incapacitated,
+            "endIfSourceDead": action.end_if_source_dead,
+            "animation": action.animation, "source": action.source,
+        }
+    except Exception:
+        logger.exception("Failed to serialize persistent beneficial zone %s.", action.id)
+        raise
+
+
 def defense_row(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
@@ -779,6 +802,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.persistent_barrier_actions:
             row["persistent_barrier_actions"] = [
                 persistent_barrier_row(item) for item in template.persistent_barrier_actions
+            ]
+        if template.persistent_beneficial_zone_actions:
+            row["persistent_beneficial_zone_actions"] = [
+                persistent_beneficial_zone_row(item) for item in template.persistent_beneficial_zone_actions
             ]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
