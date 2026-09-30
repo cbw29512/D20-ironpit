@@ -2,35 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.content.druid_2024_audit_support import druid_feature_audit
+from app.content.druid_2024_high_progression_audits import build_druid_2024_high_progression_audits
 from app.domain.character_builds import FeatureAudit
 
 logger = logging.getLogger(__name__)
-
-
-def druid_feature_audit(
-    feature_id: str,
-    feature_name: str,
-    category: str,
-    *,
-    combat_relevant: bool,
-    automated: bool,
-    notes: str | None = None,
-    runtime_attack_weapon_id: str | None = None,
-) -> FeatureAudit:
-    try:
-        return FeatureAudit(
-            feature_id=feature_id,
-            feature_name=feature_name,
-            source_reference="D&D Beyond Basic Rules 2024: Druid / Character Origins",
-            category=category,
-            combat_relevant=combat_relevant,
-            automated=automated,
-            notes=notes,
-            runtime_attack_weapon_id=runtime_attack_weapon_id,
-        )
-    except Exception:
-        logger.exception("Failed to build 2024 Druid feature audit for %s.", feature_id)
-        raise
 
 
 def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
@@ -128,48 +104,7 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
-        if level >= 11:
-            audits.append(druid_feature_audit(
-                "druid-combat-spells-6", "Level 6 Spellcasting: Heal", "class",
-                combat_relevant=True, automated=True,
-                notes=(
-                    "Damage/healing-first preparation selects explicit 2024 Heal: Action, 60 feet, "
-                    "70 fixed HP restored, and Blinded, Deafened, and Poisoned removed through the "
-                    "universal healing action."
-                ),
-            ))
-        if level >= 12:
-            audits.append(druid_feature_audit(
-                "ability-score-improvement-l12", "Ability Score Improvement (+2 Charisma)", "class",
-                combat_relevant=True, automated=True,
-                notes=(
-                    "Wisdom is already 20, so the canonical land-damage progression uses the repeatable "
-                    "Ability Score Improvement feat to raise Charisma 16→18 without changing the prepared "
-                    "damage/healing package."
-                ),
-            ))
-        if level >= 13:
-            audits.append(druid_feature_audit(
-                "druid-combat-spells-7", "Level 7 Spellcasting: Fire Storm", "class",
-                combat_relevant=False, automated=True,
-                notes=(
-                    "Damage-first preparation selects 2024 Fire Storm. Its 7d10 Fire damage and Dexterity "
-                    "save are source-audited, but the spell's freely arranged ten contiguous 10-foot cubes "
-                    "require multi-cube battlefield geometry that Iron Pit does not yet model exactly. "
-                    "It is therefore preserved as arena-out-of-scope instead of approximated."
-                ),
-            ))
-        if level >= 14:
-            audits.append(druid_feature_audit(
-                "natures-sanctuary", "Nature's Sanctuary", "subclass",
-                combat_relevant=True, automated=True,
-                notes=(
-                    "Universal persistent beneficial-zone composition: spend one Wild Shape with a Magic "
-                    "Action to place a 15-foot Cube within 120 feet for 1 minute. Source and allies in the "
-                    "zone gain Half Cover (+2 AC and +2 Dexterity saves); allies also gain Arid Fire "
-                    "resistance. Bonus Action moves the zone up to 60 feet while remaining within 120 feet."
-                ),
-            ))
+        audits.extend(build_druid_2024_high_progression_audits(level))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)

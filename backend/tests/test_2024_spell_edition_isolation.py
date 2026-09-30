@@ -118,7 +118,11 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.damage_dice_count,
             spell.damage_dice_size,
             spell.damage_type,
-        ) == (0, "action", "ranged", 30, expected_dice, 12, "poison")
+        ) == (
+            0, "action", "ranged",
+            30 + (300 if progression.class_id == "druid" and level >= 15 else 0),
+            expected_dice, 12, "poison",
+        )
 
     if "starry-wisp" in spell_attacks:
         spell = spell_attacks["starry-wisp"]
@@ -131,7 +135,11 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.damage_dice_count,
             spell.damage_dice_size,
             spell.damage_type,
-        ) == (0, "action", "ranged", 60, expected_dice, 8, "radiant")
+        ) == (
+            0, "action", "ranged",
+            60 + (300 if progression.class_id == "druid" and level >= 15 else 0),
+            expected_dice, 8, "radiant",
+        )
         assert len(spell.on_hit_modifier_effects) == 1
         rider = spell.on_hit_modifier_effects[0]
         assert rider.kind == "invisibility-benefits-suppressed"
@@ -552,7 +560,11 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert (
             spell.level, spell.action_cost, spell.attack_kind, spell.range_ft,
             spell.damage_dice_count, spell.damage_dice_size, spell.damage_type,
-        ) == (0, "action", "ranged", 120, expected_dice, 10, "fire")
+        ) == (
+            0, "action", "ranged",
+            120 + (300 if progression.class_id == "druid" and level >= 15 else 0),
+            expected_dice, 10, "fire",
+        )
 
     if "burning-hands" in spell_saves:
         spell = spell_saves["burning-hands"]
