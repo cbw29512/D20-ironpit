@@ -31,6 +31,8 @@ def enter_replacement_form(
     resource_id: str | None = None,
     resource_cost: int = 1,
     voluntary_revert_action: str = "bonus_action",
+    hp_mode: str = "form_pool",
+    temporary_hp_on_enter: int = 0,
 ) -> ReplacementFormResult:
     try:
         if state.replacement_form is not None:
@@ -48,11 +50,14 @@ def enter_replacement_form(
             original_hp=state.current_hp,
             form_hp=form_template.max_hp,
             form_max_hp=form_template.max_hp,
+            hp_mode=hp_mode,
             resource_id=resource_id,
             resource_cost=resource_cost,
             voluntary_revert_action=voluntary_revert_action,
         )
         state.template = form_template
+        if temporary_hp_on_enter:
+            state.temporary_hp = max(state.temporary_hp, temporary_hp_on_enter)
         return ReplacementFormResult(
             source_id=source_id,
             form_name=form_template.name,
@@ -103,6 +108,8 @@ def apply_replacement_form_damage(
         active = state.replacement_form
         if active is None or amount == 0:
             return amount, False
+        if active.hp_mode == "retain_owner":
+            return amount, False
         absorbed = min(active.form_hp, amount)
         active.form_hp -= absorbed
         excess = amount - absorbed
@@ -138,6 +145,8 @@ def resolve_replacement_form_action(
             resource_id=action.resource_id,
             resource_cost=action.resource_cost,
             voluntary_revert_action=action.voluntary_revert_action,
+            hp_mode=action.hp_mode,
+            temporary_hp_on_enter=action.temporary_hp_on_enter,
         )
     except ValueError:
         raise
