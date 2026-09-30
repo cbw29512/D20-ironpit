@@ -4,6 +4,10 @@ This is the authoritative product/rules contract for Iron Pit. It describes the 
 
 If implementation and this contract disagree, either fix the implementation or make an explicit product decision to revise this file. Historical milestone documents and conversational progress claims are not authority.
 
+## Arena-entry buff casting
+
+When a canonical combatant can legally cast a non-Concentration buff before combat and that buff is selected as its deterministic opening preparation, Iron Pit may mark that specific opening cast as **free at arena entry**. A free opening cast still requires the spell to be legally prepared or known and the combatant to have access to a slot of the printed spell level, but it does not consume that spell slot. This is an explicit arena setup rule, not a change to the spell's RAW casting rules. Runtime data must opt into the rule declaratively; existing opening spells continue to consume slots unless so marked.
+
 ## 1. Core architecture
 
 - Iron Pit is a rules-first automated D&D combat simulator.
