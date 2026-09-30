@@ -100,6 +100,34 @@ def apply_restoration_conversion(
         raise RuntimeError("Inline resource restoration could not be resolved.") from exc
 
 
+
+def all_spell_slots_empty(state: CombatantState) -> bool:
+    try:
+        slots = [item for item in state.resources if item.id.startswith("spell-slot-")]
+        return bool(slots) and all(item.current_uses <= 0 for item in slots)
+    except Exception as exc:
+        logger.exception("Failed to inspect spell-slot resources for %s.", state.template.name)
+        raise RuntimeError("Spell-slot resource inspection could not be resolved.") from exc
+
+
+def automatic_resource_conversion(
+    state: CombatantState,
+    turn_key: str | None = None,
+) -> ResourceConversionAction | None:
+    """Choose the highest-priority declared automatic conversion without mutating state."""
+    try:
+        candidates = [
+            action for action in state.template.resource_conversion_actions
+            if action.automation == "when-all-spell-slots-empty"
+            and all_spell_slots_empty(state)
+            and conversion_available(state, action, turn_key)
+        ]
+        return sorted(candidates, key=lambda action: (-action.priority, action.id))[0] if candidates else None
+    except Exception as exc:
+        logger.exception("Failed to choose automatic resource conversion for %s.", state.template.name)
+        raise RuntimeError("Automatic resource conversion could not be selected.") from exc
+
+
 def resolve_resource_conversion(
     state: CombatantState,
     action: ResourceConversionAction,
