@@ -41,11 +41,11 @@
     return state.resources[action.targetResourceId];
   }
 
-  function restorationAction(state, targetResourceId) {
+  function restorationAction(state, targetResourceId, turnKey = null) {
     try {
       const candidates = (state.template.resource_conversion_actions || [])
         .filter((action) => action.actionCost === "none" && action.targetResourceId === targetResourceId)
-        .filter((action) => available(state, action))
+        .filter((action) => available(state, action, turnKey))
         .sort((a, b) => (b.priority || 0) - (a.priority || 0) || a.id.localeCompare(b.id));
       return candidates[0] || null;
     } catch (error) {
@@ -56,15 +56,20 @@
     }
   }
 
-  function restoreInline(state, targetResourceId) {
+  function restoreInline(state, targetResourceId, turnKey = null) {
     try {
-      const action = restorationAction(state, targetResourceId);
+      const action = restorationAction(state, targetResourceId, turnKey);
       if (!action) return null;
       R().spend(state, action.sourceResourceId, action.sourceCost);
       for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
         R().spend(state, resourceId, cost);
       }
       gain(state, action);
+      if (action.oncePerTurn) {
+        if (!turnKey) throw new Error(`Resource conversion ${action.id} requires a turn key.`);
+        state.feature_last_turn_keys ||= {};
+        state.feature_last_turn_keys[action.id] = turnKey;
+      }
       return action;
     } catch (error) {
       console.error("Browser inline resource restoration failed", {
