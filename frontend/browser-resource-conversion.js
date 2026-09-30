@@ -18,7 +18,8 @@
       if (action.actionCost !== "none" && !E()?.available(state, action.actionCost)) return false;
       if (!R()?.available(state, action.sourceResourceId, action.sourceCost)) return false;
       if (action.requiresTargetEmpty && (state.resources[action.targetResourceId] || 0) !== 0) return false;
-      if (action.oncePerTurn && (!turnKey || state.feature_last_turn_keys?.[action.id] === turnKey)) return false;
+      const turnLimitId = action.oncePerTurnGroup || action.id;
+      if (action.oncePerTurn && (!turnKey || state.feature_last_turn_keys?.[turnLimitId] === turnKey)) return false;
       for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
         if (!R()?.available(state, resourceId, cost)) return false;
       }
@@ -68,7 +69,7 @@
       if (action.oncePerTurn) {
         if (!turnKey) throw new Error(`Resource conversion ${action.id} requires a turn key.`);
         state.feature_last_turn_keys ||= {};
-        state.feature_last_turn_keys[action.id] = turnKey;
+        state.feature_last_turn_keys[action.oncePerTurnGroup || action.id] = turnKey;
       }
       return action;
     } catch (error) {
