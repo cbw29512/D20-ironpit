@@ -5,6 +5,8 @@ from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.druid_2014_wild_shape_forms import canonical_wild_shape_template_2014
 from app.content.druid_land_2014_runtime import build_thalen_greenbough_2014
+from app.content.audited_druid import build_thalen_greenbough_level
+from app.content.replacement_form_registry import replacement_form_source_template
 from app.content.replacement_form_compiler import compile_replacement_form_template
 from app.domain.combatants import ResourceDefinition
 
@@ -68,3 +70,45 @@ def test_exact_form_hp_damage_reverts_without_harming_original_body() -> None:
     assert outcome == "damaged"
     assert state.replacement_form is None
     assert state.current_hp == original_hp
+
+
+def test_retained_owner_hp_form_uses_temp_hp_then_owner_hp_without_auto_revert() -> None:
+    template = build_thalen_greenbough_level(2)
+    state = build_combatant_state(template)
+    action = template.replacement_form_actions[0]
+    source = replacement_form_source_template("2024", action.form_template_id)
+    form = compile_replacement_form_template(
+        template,
+        source,
+        retain_spellcasting=action.retain_spellcasting,
+        retain_creature_type=action.retain_creature_type,
+        retain_hit_points=action.hp_mode == "retain_owner",
+    )
+
+    enter_replacement_form(
+        state,
+        source_id=action.id,
+        source_name=action.name,
+        form_template=form,
+        action_cost=action.action_cost,
+        resource_id=action.resource_id,
+        resource_cost=action.resource_cost,
+        voluntary_revert_action=action.voluntary_revert_action,
+        hp_mode=action.hp_mode,
+        temporary_hp_on_enter=action.temporary_hp_on_enter,
+    )
+
+    assert state.template.max_hp == 13
+    assert state.template.creature_type == "Humanoid"
+    assert state.temporary_hp == 2
+    assert state.current_hp == 13
+    assert state.replacement_form is not None
+    assert state.replacement_form.hp_mode == "retain_owner"
+
+    outcome = apply_damage(state, 5, dice=FixedDice())
+
+    assert outcome == "damaged"
+    assert state.temporary_hp == 0
+    assert state.current_hp == 10
+    assert state.replacement_form is not None
+    assert state.template.id.endswith("--form-srd-wolf")
