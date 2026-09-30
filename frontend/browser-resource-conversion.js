@@ -148,7 +148,11 @@
         const action = automaticAction(member.state);
         if (!action) return null;
         const event = resolve(sequence, round, member, action);
-        return event ? { events: [event], sequence: sequence + 1, claimed: true } : null;
+        return event ? {
+          events: [event],
+          sequence: sequence + 1,
+          claimed: action.actionCost !== "none",
+        } : null;
       },
     });
   }
