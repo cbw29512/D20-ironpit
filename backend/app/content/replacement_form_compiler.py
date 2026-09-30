@@ -15,6 +15,7 @@ def compile_replacement_form_template(
     retain_spellcasting: bool = False,
     retained_spell_action_ids: list[str] | None = None,
     retain_creature_type: bool = False,
+    retain_hit_points: bool = False,
 ) -> CombatantTemplate:
     """Compose an active replacement-form template without mutating either source template."""
     try:
@@ -56,6 +57,7 @@ def compile_replacement_form_template(
             "kind": "character",
             "ruleset": original.ruleset,
             "creature_type": original.creature_type if retain_creature_type else form.creature_type,
+            "max_hp": original.max_hp if retain_hit_points else form.max_hp,
             "ability_scores": active_scores,
             "saving_throw_bonuses": saves,
             "skill_bonuses": skills,
