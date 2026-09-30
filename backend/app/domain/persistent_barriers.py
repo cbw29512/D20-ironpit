@@ -62,6 +62,7 @@ class PersistentBarrierAction(BaseModel):
     blocks_movement: bool = True
     blocks_line_of_sight: bool = True
     material: str | None = None
+    required_support_material: str | None = None
     animation: str = "persistent-barrier"
     source: str | None = None
 
