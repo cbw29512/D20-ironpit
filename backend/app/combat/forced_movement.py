@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from math import gcd
 
+from app.combat.grid_barriers import barrier_blocks_transition
 from app.combat.grid_geometry import position_in_bounds
 from app.combat.grid_pathing_support import overlapping_occupants
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -24,7 +25,7 @@ def push_straight_away(
     setup: EncounterSetup,
     distance_ft: int,
 ) -> int:
-    """Move directly away on the exact grid ray without spending Speed or provoking OAs."""
+    """Move directly away without spending Speed; stop at creatures, walls, or map edges."""
     if distance_ft < 0 or distance_ft % 5:
         raise ValueError("Forced movement distance must be a nonnegative multiple of 5 feet.")
     if setup.map_definition is None or mover.state.position is None or source.state.position is None:
@@ -35,11 +36,14 @@ def push_straight_away(
     members = [*setup.heroes, *setup.monsters]
     moved = 0
     for _ in range(distance_ft // 5):
+        origin = mover.state.position.model_copy(deep=True)
         destination = GridPosition(
-            x=mover.state.position.x + step_x,
-            y=mover.state.position.y + step_y,
+            x=origin.x + step_x,
+            y=origin.y + step_y,
         )
         if not position_in_bounds(setup.map_definition, destination, mover.state.template.size):
+            break
+        if barrier_blocks_transition(origin, destination, setup.persistent_barriers):
             break
         if overlapping_occupants(mover, destination, members):
             break
