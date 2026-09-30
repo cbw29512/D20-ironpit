@@ -30,8 +30,23 @@ assert.deepEqual(hero.resources, {
   "natural-recovery-free-cast": 1,
 });
 
+assert.equal(hero.canonical_cantrips.length, 5);
+assert.equal(hero.canonical_cantrips.at(-1).id, "thunderclap");
 assert.equal(hero.canonical_prepared_spells.length, 15);
 assert.equal(hero.canonical_prepared_spells.at(-1).id, "thunderwave");
+
+const thunderclap = hero.spell_save_actions.find((item) => item.id === "thunderclap");
+assert.ok(thunderclap, "Druid 10 must expose 2024 Thunderclap.");
+assert.equal(thunderclap.level, 0);
+assert.equal(thunderclap.saveAbility, "constitution");
+assert.equal(thunderclap.damageDiceCount, 2);
+assert.equal(thunderclap.damageDiceSize, 6);
+assert.equal(thunderclap.damageBonus, 5);
+assert.equal(thunderclap.damageType, "thunder");
+assert.equal(thunderclap.successDamage, "none");
+assert.deepEqual(thunderclap.area, {
+  shape: "emanation", origin: "self", radius_ft: 5, length_ft: null, width_ft: null,
+});
 
 const thunderwave = hero.spell_save_actions.find((item) => item.id === "thunderwave");
 assert.ok(thunderwave, "Druid 10 must expose 2024 Thunderwave.");
