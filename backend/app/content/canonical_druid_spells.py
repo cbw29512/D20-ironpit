@@ -23,14 +23,28 @@ def _spell(
     )
 
 
-def _cantrip(spell_id: str, name: str, role: str, *capabilities: str) -> CanonicalSpellChoice:
-    return _spell(spell_id, name, role, *capabilities, spell_level=0)
+def _cantrip(
+    spell_id: str,
+    name: str,
+    role: str,
+    *capabilities: str,
+    min_character_level: int = 1,
+) -> CanonicalSpellChoice:
+    return _spell(
+        spell_id, name, role, *capabilities,
+        spell_level=0, min_character_level=min_character_level,
+    )
 
 
 DRUID_CANTRIPS: tuple[CanonicalSpellChoice, ...] = (
     _cantrip("poison-spray", "Poison Spray", "damage", "spell-attack", "cantrip-scaling"),
     _cantrip("elementalism", "Elementalism", "utility", "arena-out-of-scope"),
     _cantrip("mending", "Mending", "utility", "arena-out-of-scope"),
+    _cantrip(
+        "starry-wisp", "Starry Wisp", "damage",
+        "spell-attack", "cantrip-scaling", "invisibility-benefits-suppressed",
+        min_character_level=4,
+    ),
 )
 
 
@@ -41,6 +55,10 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
     _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
     _spell("faerie-fire", "Faerie Fire", "control", "save-modifier", "area", "concentration", min_character_level=2),
     _spell("lesser-restoration", "Lesser Restoration", "healing", "condition-removal", "bonus-action", spell_level=2, min_character_level=3),
+    _spell(
+        "detect-poison-disease", "Detect Poison and Disease", "utility",
+        "arena-out-of-scope", min_character_level=4,
+    ),
     _spell(
         "speak-with-animals",
         "Speak with Animals",
