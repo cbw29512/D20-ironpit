@@ -19,7 +19,7 @@
         for (const target of enemies) {
           const distance = S().distance(caster, target);
           if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0
-            || distance > action.range || !window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(caster, target, setup)) continue;
+            || distance > action.range || window.IRON_PIT_BROWSER_GRID_BARRIERS && !window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(caster, target, setup)) continue;
           candidates.push({
             action, target, slotLevel, projectileCount, index,
             expectedDamage: O().autoHitSpell(target, action, projectileCount),
