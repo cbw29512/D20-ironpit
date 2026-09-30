@@ -6,23 +6,11 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
 from app.content.character_math import saving_throw_bonuses
-from app.content.cleric_life_domain import LESSER_RESTORATION
-from app.content.druid_2024_land_spells import (
-    build_blur_2024,
-    build_burning_hands_2024,
-    build_fire_bolt_2024,
-    build_lands_aid_2024,
-)
-from app.content.druid_2024_spells import (
-    build_faerie_fire_2024,
-    build_longstrider_2024,
-    build_poison_spray_2024,
-)
+from app.content.druid_2024_runtime_support import druid_actions, druid_resources, wild_shape_actions
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
 from app.content.weapon_catalog import build_weapon
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.replacement_form_actions import ReplacementFormAction
+from app.domain.models import CombatantTemplate, VisualLoadout, WeaponAttack
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
 logger = logging.getLogger(__name__)
@@ -40,22 +28,6 @@ def _sickle(proficiency_bonus: int, strength_modifier: int) -> WeaponAttack:
         attack_ability_modifier=strength_modifier,
     )
 
-
-def _wild_shape(level: int) -> list[ReplacementFormAction]:
-    try:
-        if level < 2:
-            return []
-        return [ReplacementFormAction(
-            id="wild-shape", name="Wild Shape", action_cost="bonus_action",
-            form_template_id="srd-wolf", resource_id="wild-shape", resource_cost=1,
-            voluntary_revert_action="bonus_action", hp_mode="retain_owner",
-            temporary_hp_on_enter=level, retain_creature_type=True,
-            ends_on_incapacitated=True, replace_existing_form=True,
-            retain_spellcasting=False, source="D&D Beyond Basic Rules 2024: Druid — Wild Shape",
-        )]
-    except Exception:
-        logger.exception("Failed to build 2024 Wild Shape at Druid level %s.", level)
-        raise
 
 
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
@@ -95,26 +67,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
             speed_ft=35,
             initiative_bonus=scores.modifier("dexterity"),
             weapon_attack=_sickle(pb, scores.modifier("strength")),
-            saving_throw_actions=[
-                build_lands_aid_2024(8 + pb + wisdom_modifier, level),
-            ] if level >= 3 else [],
-            spell_attack_actions=[
-                build_poison_spray_2024(pb + wisdom_modifier, level),
-                *([build_fire_bolt_2024(pb + wisdom_modifier, level)] if level >= 3 else []),
-            ],
-            spell_save_actions=[
-                *([build_faerie_fire_2024(8 + pb + wisdom_modifier)] if level >= 2 else []),
-                *([build_burning_hands_2024(8 + pb + wisdom_modifier)] if level >= 3 else []),
-            ],
-            defensive_spell_actions=[
-                build_longstrider_2024(),
-                *([build_blur_2024()] if level >= 3 else []),
-            ],
-            healing_actions=[
-                build_healing_word(wisdom_modifier),
-                build_cure_wounds(wisdom_modifier),
-            ],
-            condition_removal_actions=[LESSER_RESTORATION] if level >= 3 else [],
+            **druid_actions(level, pb, wisdom_modifier),
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
@@ -137,22 +90,8 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                 "religion": scores.modifier("intelligence") + pb,
                 "perception": wisdom_modifier + pb,
             },
-            resources=[
-                *[
-                    ResourceDefinition(
-                        id=f"spell-slot-{slot_level}",
-                        name=f"Spell Slot {slot_level}",
-                        max_uses=max_uses,
-                    )
-                    for slot_level, max_uses in enumerate(row.spell_slots, start=1)
-                    if max_uses
-                ],
-                *(
-                    [ResourceDefinition(id="wild-shape", name="Wild Shape", max_uses=row.wild_shape_uses)]
-                    if row.wild_shape_uses else []
-                ),
-            ],
-            replacement_form_actions=_wild_shape(level),
+            resources=druid_resources(row.spell_slots, row.wild_shape_uses),
+            replacement_form_actions=wild_shape_actions(level),
             weapon_masteries=[],
             visual=VisualLoadout(
                 armor="leather",
