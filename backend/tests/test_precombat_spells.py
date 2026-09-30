@@ -48,6 +48,20 @@ def test_precombat_uses_one_declared_defense_and_printed_level_slot() -> None:
     assert caster.state.bonus_action_available is True
 
 
+def test_free_opening_spell_requires_but_does_not_spend_its_slot() -> None:
+    spell = DefensiveSpellAction(
+        id="free-opening", name="Free Opening", level=9, duration_minutes=480,
+        temporary_hp=1, free_opening_cast=True, priority=100,
+    )
+    caster = _caster([spell], {9: 1})
+    events, sequence = prepare_defenses(_setup(caster))
+
+    assert sequence == 2
+    assert events[0].feature_id == "free-opening"
+    assert "free opening buff" in events[0].description
+    assert next(item for item in caster.state.resources if item.id == "spell-slot-9").current_uses == 1
+
+
 def test_precombat_does_not_use_higher_level_slot_when_upcasting_is_deferred() -> None:
     caster = _caster([_defense("false-life-like", 1)], {3: 1})
     events, sequence = prepare_defenses(_setup(caster))

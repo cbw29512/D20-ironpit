@@ -6,6 +6,7 @@ from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.models import RollMode
+from app.domain.modifiers import CombatModifier, ModifierKind
 
 
 def _downed_character():
@@ -120,6 +121,24 @@ def test_natural_one_on_death_save_counts_as_two_failures() -> None:
     assert event.death_save_roll is not None
     assert event.death_save_roll.total == 1
 
+
+
+def test_universal_d20_test_advantage_applies_to_death_saves() -> None:
+    state = _downed_character()
+    state.active_modifiers.append(CombatModifier(
+        id="hero:foresight:d20",
+        source_id="hero-1",
+        source_effect_id="foresight",
+        source_name="Foresight",
+        kind=ModifierKind.D20_TEST_ADVANTAGE,
+    ))
+
+    event = resolve_death_save(1, 1, "hero-1", state, FixedDiceProvider([4, 15]))
+
+    assert event.death_save_roll is not None
+    assert event.death_save_roll.mode is RollMode.ADVANTAGE
+    assert event.death_save_roll.rolls == [4, 15]
+    assert event.death_save_roll.selected_roll == 15
 
 def test_natural_twenty_restores_one_hp_resets_saves_and_leaves_prone() -> None:
     state = _downed_character()
