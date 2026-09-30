@@ -285,3 +285,20 @@ def test_2024_druid_level_four_applies_wisdom_asi_and_starry_wisp() -> None:
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["ability-score-improvement-l4"].automated is True
+
+
+
+def test_2024_druid_source_evidence_is_level_scoped() -> None:
+    level_one = build_thalen_greenbough_level(1).source
+    level_five = build_thalen_greenbough_level(5).source
+
+    assert level_one is not None
+    assert "Wild Resurgence" not in level_one
+    assert "Fireball" not in level_one
+    assert "Starry Wisp" not in level_one
+
+    assert level_five is not None
+    assert "Wild Resurgence" in level_five
+    assert "Fireball" in level_five
+    assert "Dispel Magic" in level_five
+    assert "Water Breathing" in level_five
