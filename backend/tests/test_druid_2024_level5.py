@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from app.combat.resource_conversion import conversion_available, resolve_resource_conversion
+from app.combat.resource_conversion import (
+    conversion_available,
+    restoration_conversion,
+    resolve_resource_conversion,
+)
 from app.combat.state import build_combatant_state
 from app.content.audited_druid import build_thalen_greenbough_level
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
@@ -79,6 +83,10 @@ def test_2024_druid_level_five_wild_resurgence_is_raw_gated() -> None:
     state = build_combatant_state(hero)
     _resource(state, "wild-shape").current_uses = 0
 
+    assert restoration_conversion(state, "wild-shape") is None
+    restored = restoration_conversion(state, "wild-shape", "1:thalen")
+    assert restored is not None
+    assert restored.id == "wild-resurgence-regain-wild-shape-slot-1"
     assert conversion_available(state, regain_shape, "1:thalen") is True
     resolve_resource_conversion(
         state,
