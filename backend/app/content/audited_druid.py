@@ -39,7 +39,7 @@ def _wild_shape(level: int) -> list[ReplacementFormAction]:
             form_template_id="srd-wolf", resource_id="wild-shape", resource_cost=1,
             voluntary_revert_action="bonus_action", hp_mode="retain_owner",
             temporary_hp_on_enter=level, retain_creature_type=True,
-            retain_spellcasting=False, source="D&D Beyond Basic Rules 2024: Druid — Wild Shape",
+            ends_on_incapacitated=True, retain_spellcasting=False, source="D&D Beyond Basic Rules 2024: Druid — Wild Shape",
         )]
     except Exception:
         logger.exception("Failed to build 2024 Wild Shape at Druid level %s.", level)
