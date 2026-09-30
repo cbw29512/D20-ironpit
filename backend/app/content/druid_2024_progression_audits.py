@@ -92,9 +92,9 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     "druid-combat-spells-5", "Level 5 Spellcasting", "class",
                     combat_relevant=True, automated=True,
                     notes=(
-                        "Canonical combat-first preparation adds 2024 Thunderwave and Mass Cure Wounds. "
-                        "Thunderwave reuses universal failed-save forced movement; Mass Cure Wounds reuses "
-                        "the shared multi-target healing action."
+                        "Canonical damage/healing-first preparation adds 2024 Cone of Cold and "
+                        "Mass Cure Wounds. Cone of Cold reuses the universal area save-damage engine; "
+                        "Mass Cure Wounds reuses the shared multi-target healing action."
                     ),
                 ),
                 druid_feature_audit(
