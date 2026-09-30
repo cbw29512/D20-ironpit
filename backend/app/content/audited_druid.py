@@ -7,12 +7,14 @@ from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
 from app.content.character_math import saving_throw_bonuses
 from app.content.cleric_life_domain import LESSER_RESTORATION
-from app.content.druid_2024_spells import (
+from app.content.druid_2024_land_spells import (
     build_blur_2024,
     build_burning_hands_2024,
-    build_faerie_fire_2024,
     build_fire_bolt_2024,
     build_lands_aid_2024,
+)
+from app.content.druid_2024_spells import (
+    build_faerie_fire_2024,
     build_longstrider_2024,
     build_poison_spray_2024,
 )
