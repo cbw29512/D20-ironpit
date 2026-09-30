@@ -23,15 +23,16 @@
     }
   }
 
-  function affordableLegalPrefix(map, mover, members, route, movementBudgetFt) {
+  function affordableLegalPrefix(map, mover, members, route, movementBudgetFt, barriers = null) {
     try {
       const api = support();
       let spent = 0;
       let lastLegalIndex = -1;
       let lastLegalCost = 0;
+      let origin = api.position(mover);
       for (let index = 0; index < route.length; index += 1) {
         const destination = route[index];
-        const stepCost = api.movementStepCostFt(map, mover, destination, members);
+        const stepCost = api.movementStepCostFt(map, mover, destination, members, origin, barriers);
         if (stepCost == null) {
           throw new Error(`Path search returned an illegal step at ${destination.x},${destination.y}.`);
         }
@@ -41,6 +42,7 @@
           lastLegalIndex = index;
           lastLegalCost = spent;
         }
+        origin = destination;
       }
       if (lastLegalIndex < 0) return { path: [], cost: 0 };
       return { path: route.slice(0, lastLegalIndex + 1), cost: lastLegalCost };
@@ -50,7 +52,7 @@
     }
   }
 
-  function planToward(map, mover, target, members, desiredDistanceFt, movementBudgetFt) {
+  function planToward(map, mover, target, members, desiredDistanceFt, movementBudgetFt, barriers = null) {
     try {
       if (desiredDistanceFt < 0 || movementBudgetFt < 0) {
         throw new Error("Movement distance values cannot be negative.");
@@ -68,6 +70,7 @@
         members,
         desiredDistanceFt,
         helpers,
+        barriers,
       );
       const targetPosition = api.position(target);
       const routeGoalPosition = route.length ? route[route.length - 1] : api.position(mover);
@@ -77,7 +80,7 @@
         targetPosition,
         target.state.template.size,
       );
-      const prefix = affordableLegalPrefix(map, mover, members, route, movementBudgetFt);
+      const prefix = affordableLegalPrefix(map, mover, members, route, movementBudgetFt, barriers);
       const finalPosition = prefix.path.length ? prefix.path[prefix.path.length - 1] : api.position(mover);
       const finalDistance = api.geometry().footprintDistanceFt(
         finalPosition,
@@ -119,9 +122,9 @@
     }
   }
 
-  function movementStepCostFt(map, mover, destination, members) {
+  function movementStepCostFt(map, mover, destination, members, origin = null, barriers = null) {
     try {
-      return support().movementStepCostFt(map, mover, destination, members);
+      return support().movementStepCostFt(map, mover, destination, members, origin, barriers);
     } catch (error) {
       console.error("Failed browser movement-cost proxy", { mover: mover.combatant_id, error });
       throw error;
