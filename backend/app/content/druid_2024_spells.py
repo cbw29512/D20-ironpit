@@ -113,3 +113,50 @@ def build_lands_aid_2024(save_dc: int, character_level: int) -> SavingThrowActio
     except Exception:
         logger.exception("Failed to build 2024 Land's Aid at Druid level %s.", character_level)
         raise
+
+
+def build_fire_bolt_2024(attack_bonus: int, character_level: int) -> SpellAttackAction:
+    """Explicit 2024 Fire Bolt fingerprint."""
+    try:
+        return SpellAttackAction(
+            id="fire-bolt",
+            name="Fire Bolt",
+            level=0,
+            action_cost="action",
+            attack_kind="ranged",
+            range_ft=120,
+            attack_bonus=attack_bonus,
+            damage_dice_count=cantrip_damage_dice(character_level),
+            damage_dice_size=10,
+            damage_type="fire",
+            animation="spell-attack",
+            source="D&D Beyond Basic Rules 2024: Fire Bolt",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Fire Bolt at level %s.", character_level)
+        raise
+
+
+def build_burning_hands_2024(save_dc: int) -> SpellSaveAction:
+    """Explicit 2024 Burning Hands fingerprint."""
+    try:
+        return SpellSaveAction(
+            id="burning-hands",
+            name="Burning Hands",
+            level=1,
+            action_cost="action",
+            range_ft=15,
+            area=AreaTargeting(shape="cone", origin="self", length_ft=15),
+            save_ability="dexterity",
+            dc=save_dc,
+            damage_dice_count=3,
+            damage_dice_size=6,
+            damage_type="fire",
+            success_damage="half",
+            upcast_dice_per_level=1,
+            animation="burning-hands",
+            source="D&D Beyond Basic Rules 2024: Burning Hands",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Burning Hands.")
+        raise
