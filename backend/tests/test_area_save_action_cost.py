@@ -119,6 +119,7 @@ def test_area_save_healing_rider_spends_one_action_and_resource_with_independent
 def test_area_save_healing_rider_can_be_used_with_no_hostile_targets_if_healing_is_needed() -> None:
     actor = _member("actor", "heroes", 0)
     ally = _member("ally", "heroes", 5)
+    enemy = _member("enemy", "monsters", 55)
     ally.state.current_hp = 1
     actor.state.template.resources = [
         ResourceDefinition(id="wild-shape", name="Wild Shape", max_uses=2),
@@ -140,8 +141,8 @@ def test_area_save_healing_rider_can_be_used_with_no_hostile_targets_if_healing_
     )
     actor.state.template.saving_throw_actions = [action]
     setup = EncounterSetup(
-        heroes=[actor, ally], monsters=[], hero_total_levels=2,
-        monster_total_cr="0", ruleset="2024",
+        heroes=[actor, ally], monsters=[enemy], hero_total_levels=2,
+        monster_total_cr="1", ruleset="2024",
         map_definition=BattleMapDefinition(id="lands-aid-heal-only", width_squares=12, height_squares=12),
     )
 
