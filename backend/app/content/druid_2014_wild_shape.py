@@ -35,6 +35,7 @@ def wild_shape_action_2014(level: int) -> ReplacementFormAction:
             resource_id="wild-shape",
             resource_cost=1,
             voluntary_revert_action="bonus_action",
+            ends_on_incapacitated=True,
             retain_spellcasting=level >= 18,
             retained_spell_action_ids=(
                 list(_ARCHDRUID_SPELL_ACTION_IDS)
