@@ -41,6 +41,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "sacred-flame",
         "poison-spray",
         "longstrider",
+        "faerie-fire",
         "inflict-wounds",
         "inflict-wounds-l5",
         "inflict-wounds-l6",
@@ -394,6 +395,23 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert spell.removable_conditions == [
             "charmed", "frightened", "paralyzed", "poisoned", "stunned",
         ]
+
+    if "faerie-fire" in spell_saves:
+        spell = spell_saves["faerie-fire"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.save_ability,
+            spell.concentration,
+            spell.duration_minutes,
+        ) == (1, "action", 60, "cube", "point", 20, "dexterity", True, 1)
+        assert {item.kind for item in spell.failed_save_modifier_effects} == {
+            "attacks-against-advantage", "invisibility-benefits-suppressed",
+        }
 
     if "longstrider" in defenses:
         spell = defenses["longstrider"]
