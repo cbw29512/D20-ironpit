@@ -105,7 +105,12 @@ def choose_attack(
         for target in target_order(attacker, setup, prefer_backline=prefer_backline):
             distance = combatant_distance(attacker, target)
             for attack in profiles:
-                if (\n                    clear_line_between_members(attacker, target, setup)\n                    and attack_allowed_against(attack, attacker.combatant_id, target.state)\n                    and _attack_in_range(attack, distance)\n                ):\n                    return target, attack, distance
+                if (
+                    clear_line_between_members(attacker, target, setup)
+                    and attack_allowed_against(attack, attacker.combatant_id, target.state)
+                    and _attack_in_range(attack, distance)
+                ):
+                    return target, attack, distance
         return None
     except Exception as exc:
         logger.exception("Pit attack selection failed for %s.", attacker.combatant_id)
