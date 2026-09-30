@@ -42,6 +42,9 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "poison-spray",
         "longstrider",
         "faerie-fire",
+        "fire-bolt",
+        "burning-hands",
+        "blur",
         "inflict-wounds",
         "inflict-wounds-l5",
         "inflict-wounds-l6",
@@ -427,6 +430,37 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert len(spell.modifier_effects) == 1
         assert spell.modifier_effects[0].kind == "speed"
         assert spell.modifier_effects[0].flat_bonus == 10
+
+
+    if "fire-bolt" in spell_attacks:
+        spell = spell_attacks["fire-bolt"]
+        expected_dice = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
+        assert (
+            spell.level, spell.action_cost, spell.attack_kind, spell.range_ft,
+            spell.damage_dice_count, spell.damage_dice_size, spell.damage_type,
+        ) == (0, "action", "ranged", 120, expected_dice, 10, "fire")
+
+    if "burning-hands" in spell_saves:
+        spell = spell_saves["burning-hands"]
+        assert (
+            spell.level, spell.action_cost, spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.save_ability, spell.damage_dice_count, spell.damage_dice_size,
+            spell.damage_type, spell.success_damage, spell.upcast_dice_per_level,
+        ) == (1, "action", 15, "cone", "self", 15, "dexterity", 3, 6, "fire", "half", 1)
+
+    if "blur" in defenses:
+        spell = defenses["blur"]
+        assert (
+            spell.level, spell.action_cost, spell.range_ft, spell.duration_minutes,
+            spell.target_policy, spell.concentration,
+        ) == (2, "action", 0, 1, "self", True)
+        assert len(spell.modifier_effects) == 1
+        modifier = spell.modifier_effects[0]
+        assert modifier.kind == "attacks-against-disadvantage"
+        assert modifier.bypass_attacker_senses == ["blindsight", "truesight"]
 
     if "greater-invisibility" in defenses:
         spell = defenses["greater-invisibility"]
