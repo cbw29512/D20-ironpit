@@ -95,6 +95,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
             "defensive_spell_actions": [
                 build_longstrider_2024(),
                 *([build_blur_2024()] if level >= 3 else []),
+                *([AID.model_copy(deep=True)] if level >= 6 else []),
             ],
             "healing_actions": [
                 build_healing_word(wisdom_modifier),
