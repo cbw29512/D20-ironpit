@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from app.combat.effective_movement_modes import effective_movement_modes
+from app.combat.spell_modifiers import apply_spell_modifiers
+from app.combat.state import build_combatant_state
 from app.content.audited_druid import build_thalen_greenbough_level
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
 from app.content.canonical_spell_policy import canonical_spell_package
@@ -98,6 +101,14 @@ def test_2024_druid_level_eight_freedom_of_movement_reuses_debuff_counters() -> 
         for item in spell.modifier_effects
         if item.debuff_counter is not None
     }
+    assert len(spell.movement_mode_grants) == 1
+    swim = spell.movement_mode_grants[0]
+    assert (swim.mode, swim.fixed_speed_ft, swim.match_current_speed) == ("swim", None, True)
+
+    state = build_combatant_state(hero)
+    apply_spell_modifiers(state, [("thalen", state)], "thalen", spell, 0)
+    assert effective_movement_modes(state).swim_ft == hero.speed_ft
+
     assert signatures == {
         ("difficult-terrain", "any", "prevent", 0),
         ("speed-reduction", "magical", "prevent", 0),
