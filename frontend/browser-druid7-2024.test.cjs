@@ -51,4 +51,36 @@ assert.equal(blight.upcastDicePerLevel, 1);
 assert.deepEqual(blight.automaticFailureCreatureTypes, ["Plant"]);
 assert.equal(blight.requiresTargetSight, true);
 
-console.log("Generated browser 2024 Druid 7 Potent Spellcasting and Blight regressions passed.");
+const level8 = window.IRON_PIT_BROWSER_HEROES["thalen-greenbough-l8"];
+assert.ok(level8, "2024 Druid 8 must exist in generated browser heroes.");
+assert.equal(level8.level, 8);
+assert.equal(level8.max_hp, 43);
+assert.equal(level8.ability_scores.wisdom, 20);
+assert.equal(level8.ability_scores.charisma, 16);
+assert.equal(level8.saving_throw_bonuses.wisdom, 8);
+assert.deepEqual(level8.resources, {
+  "spell-slot-1": 4,
+  "spell-slot-2": 3,
+  "spell-slot-3": 3,
+  "spell-slot-4": 2,
+  "wild-shape": 3,
+  "wild-resurgence-slot-restore": 1,
+  "natural-recovery-free-cast": 1,
+});
+assert.equal(level8.canonical_prepared_spells.length, 12);
+assert.equal(level8.canonical_prepared_spells.at(-1).id, "freedom-of-movement");
+
+const level8Form = level8.replacement_form_actions[0];
+assert.equal(level8Form.formTemplateId, "srd-brown-bear");
+assert.equal(level8Form.temporaryHpOnEnter, 8);
+assert.equal(level8Form.hpMode, "retain_owner");
+
+const freedom = level8.defensive_spell_actions.find((spell) => spell.id === "freedom-of-movement");
+assert.ok(freedom, "Druid 8 must expose 2024 Freedom of Movement.");
+assert.equal(freedom.level, 4);
+assert.equal(freedom.targetCountPerSlotAbove, 1);
+assert.deepEqual(freedom.movementModeGrants, [
+  { mode: "swim", fixedSpeedFt: null, matchCurrentSpeed: true },
+]);
+
+console.log("Generated browser 2024 Druid 7-8 regressions passed.");

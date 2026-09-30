@@ -7,6 +7,7 @@ from app.content.monster_bear_attacks import (
 )
 from app.content.monster_equipment import build_monster_visual
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
+from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate
 from app.domain.size import CreatureSize
 
@@ -52,6 +53,14 @@ def build_brown_bear() -> CombatantTemplate:
         max_hp=22,
         speed_ft=40,
         initiative_bonus=1,
+        ability_scores=AbilityScores(
+            strength=17,
+            dexterity=12,
+            constitution=15,
+            intelligence=2,
+            wisdom=13,
+            charisma=7,
+        ),
         weapon_attack=bite,
         alternate_weapon_attacks=[claw],
         attack_action=AttackActionDefinition(

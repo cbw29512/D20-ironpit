@@ -18,6 +18,7 @@ from app.content.druid_2024_spells import (
 )
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
 from app.content.offensive_spell_effects import build_fireball_2024
+from app.content.shared_movement_spells_2024 import freedom_of_movement_2024
 from app.content.druid_2024_wild_resurgence import build_wild_resurgence_2024
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.domain.alternate_spell_casts import AlternateSpellCastGrant
@@ -31,9 +32,10 @@ def wild_shape_actions(level: int) -> list[ReplacementFormAction]:
     try:
         if level < 2:
             return []
+        form_template_id = "srd-brown-bear" if level >= 8 else "srd-wolf"
         return [ReplacementFormAction(
             id="wild-shape", name="Wild Shape", action_cost="bonus_action",
-            form_template_id="srd-wolf", resource_id="wild-shape", resource_cost=1,
+            form_template_id=form_template_id, resource_id="wild-shape", resource_cost=1,
             voluntary_revert_action="bonus_action", hp_mode="retain_owner",
             temporary_hp_on_enter=level, retain_creature_type=True,
             ends_on_incapacitated=True, replace_existing_form=True,
@@ -99,6 +101,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
                 build_longstrider_2024(),
                 *([build_blur_2024()] if level >= 3 else []),
                 *([AID.model_copy(deep=True)] if level >= 6 else []),
+                *([freedom_of_movement_2024()] if level >= 8 else []),
             ],
             "healing_actions": [
                 build_healing_word(wisdom_modifier),

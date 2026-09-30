@@ -76,6 +76,10 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=4, min_character_level=7,
     ),
     _spell(
+        "freedom-of-movement", "Freedom of Movement", "buff", "debuff-counter",
+        spell_level=4, min_character_level=8,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",

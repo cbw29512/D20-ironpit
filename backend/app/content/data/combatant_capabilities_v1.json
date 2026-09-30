@@ -2501,6 +2501,14 @@
     "ruleset": "2024",
     "creature_type": "Beast",
     "size": "large",
+    "ability_scores": {
+      "strength": 17,
+      "dexterity": 12,
+      "constitution": 15,
+      "intelligence": 2,
+      "wisdom": 13,
+      "charisma": 7
+    },
     "armor_class": 11,
     "max_hp": 22,
     "speed_ft": 40,
@@ -5062,6 +5070,7 @@
             "expires_at_start_of_source_turn": false
           }
         ],
+        "movement_mode_grants": [],
         "concentration": false,
         "priority": 20,
         "animation": "longstrider",

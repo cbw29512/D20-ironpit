@@ -24,6 +24,7 @@ def build_thalen_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
             ("insight", 5), ("religion", 3), ("perception", 5),
         )
         abilities_l4 = abilities.model_copy(update={"wisdom": 19})
+        abilities_l8 = abilities_l4.model_copy(update={"wisdom": 20, "charisma": 16})
         skills_l4 = (
             ("athletics", 0), ("acrobatics", 0), ("nature", 7), ("survival", 6),
             ("insight", 6), ("religion", 3), ("perception", 6),
@@ -103,6 +104,22 @@ def build_thalen_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
                 resources=(
                     ("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3),
                     ("spell-slot-4", 1), ("wild-shape", 3),
+                    ("wild-resurgence-slot-restore", 1), ("natural-recovery-free-cast", 1),
+                ),
+                initiative_bonus=0,
+            ),
+            PregenCombatProfile(
+                template_id="thalen-greenbough-l8", archetype="Druid", level=8,
+                abilities=abilities_l8, save_proficiencies=("intelligence", "wisdom"),
+                armor_class=13, max_hp=43, speed_ft=35,
+                skill_bonuses=(
+                    ("athletics", 0), ("acrobatics", 0), ("nature", 9), ("survival", 8),
+                    ("insight", 8), ("religion", 4), ("perception", 8),
+                ),
+                attacks=attacks, weapon_masteries=(),
+                resources=(
+                    ("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3),
+                    ("spell-slot-4", 2), ("wild-shape", 3),
                     ("wild-resurgence-slot-restore", 1), ("natural-recovery-free-cast", 1),
                 ),
                 initiative_bonus=0,

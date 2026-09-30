@@ -74,6 +74,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "mass-cure-wounds-l8",
         "mass-cure-wounds-l9",
         "greater-invisibility",
+        "freedom-of-movement",
         "lesser-restoration",
         "dispel-magic",
         "divine-intervention-inflict-wounds",
@@ -508,6 +509,33 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.condition_ids,
             spell.concentration,
         ) == (4, "action", 5, 1, 1, ["invisible"], True)
+
+    if "freedom-of-movement" in defenses:
+        spell = defenses["freedom-of-movement"]
+        assert (
+            spell.level, spell.action_cost, spell.range_ft, spell.duration_minutes,
+            spell.target_policy, spell.target_count, spell.target_count_per_slot_above,
+            spell.concentration,
+        ) == (4, "action", 5, 60, "friendly", 1, 1, False)
+        signatures = {
+            (
+                item.debuff_counter.debuff_id,
+                item.debuff_counter.source_scope,
+                item.debuff_counter.mode,
+                item.debuff_counter.movement_cost_ft,
+            )
+            for item in spell.modifier_effects
+            if item.debuff_counter is not None
+        }
+        assert ("difficult-terrain", "any", "prevent", 0) in signatures
+        assert ("speed-reduction", "magical", "prevent", 0) in signatures
+        assert ("paralyzed", "magical", "prevent", 0) in signatures
+        assert ("restrained", "magical", "prevent", 0) in signatures
+        assert ("grappled", "nonmagical", "remove-with-movement", 5) in signatures
+        assert ("restrained", "nonmagical", "remove-with-movement", 5) in signatures
+        assert len(spell.movement_mode_grants) == 1
+        swim = spell.movement_mode_grants[0]
+        assert (swim.mode, swim.fixed_speed_ft, swim.match_current_speed) == ("swim", None, True)
 
     if "aid" in defenses:
         spell = defenses["aid"]

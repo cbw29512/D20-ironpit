@@ -368,6 +368,15 @@ def defense_row(action: Any) -> dict[str, Any]:
         "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
         "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
     }
+    if action.movement_mode_grants:
+        row["movementModeGrants"] = [
+            {
+                "mode": grant.mode,
+                "fixedSpeedFt": grant.fixed_speed_ft,
+                "matchCurrentSpeed": grant.match_current_speed,
+            }
+            for grant in action.movement_mode_grants
+        ]
     if action.max_hp_increase:
         row["maxHpIncrease"] = action.max_hp_increase
     if action.current_hp_increase:
