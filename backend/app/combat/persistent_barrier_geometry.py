@@ -83,8 +83,9 @@ def validate_barrier_layout(
     try:
         if setup.map_definition is None or caster.state.position is None:
             raise ValueError("Persistent barriers require the authoritative grid.")
-        if not 1 <= len(section_edges) <= action.max_sections:
-            raise ValueError(f"{action.name} requires between 1 and {action.max_sections} sections.")
+        if not action.min_sections <= len(section_edges) <= action.max_sections:
+            raise ValueError(\n                f"{action.name} requires between {action.min_sections} and "
+                f"{action.max_sections} sections."\n            )
         expected_edges = action.section_length_ft // 5
         seen_edges: set[tuple[tuple[int, int], tuple[int, int]]] = set()
         members = [*setup.heroes, *setup.monsters]
