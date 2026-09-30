@@ -2,6 +2,7 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
+  const A = () => window.IRON_PIT_BROWSER_ABILITY_CHECKS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { abilityCheckDisadvantage: () => 0, d20Modifier: () => 0 };
 
@@ -59,7 +60,9 @@
       const state = group.members[0].state;
       const advantage = Number(Boolean(state.template.initiative_advantage));
       const disadvantage = Number(Q().incapacitated(state)) + X().abilityCheckDisadvantage(state);
-      const mode = R().modeFromSources(advantage, disadvantage);
+      const checks = A();
+      if (!checks) throw new Error("Browser initiative requires browser-ability-checks.js.");
+      const mode = checks.mode(state, advantage, disadvantage);
       const roll = R().d20(state.template.initiative_bonus + X().d20Modifier(state), mode);
       group.initiative_roll = roll;
       group.natural_roll = roll.selected_roll;
