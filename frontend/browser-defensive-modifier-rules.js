@@ -43,7 +43,8 @@
     }
   }
   const saveAdvantage = (state, ability, context = {}) =>
-    saveAdvantageModifiers(state, ability, context).length;
+    saveAdvantageModifiers(state, ability, context).length
+      + (window.IRON_PIT_BROWSER_MODIFIERS?.d20TestAdvantage(state) || 0);
   function saveAdvantageSourceNames(state, ability, context = {}) {
     try {
       return [...new Set(saveAdvantageModifiers(state, ability, context)
