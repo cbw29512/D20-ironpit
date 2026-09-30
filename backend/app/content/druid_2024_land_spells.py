@@ -78,6 +78,7 @@ def build_blight_2024(save_dc: int) -> SpellSaveAction:
             success_damage="half",
             upcast_dice_per_level=1,
             automatic_failure_creature_types=["Plant"],
+            requires_target_sight=True,
             animation="blight",
             source="D&D Beyond Basic Rules 2024: Blight",
         )
