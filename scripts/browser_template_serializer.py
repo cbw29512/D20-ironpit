@@ -373,7 +373,8 @@ def persistent_barrier_row(action: Any) -> dict[str, Any]:
             "damageImmunities": list(action.damage_immunities),
             "blocksMovement": action.blocks_movement,
             "blocksLineOfSight": action.blocks_line_of_sight,
-            "material": action.material, "requiredSupportMaterial": action.required_support_material,\n            "animation": action.animation, "source": action.source,
+            "material": action.material, "requiredSupportMaterial": action.required_support_material,
+            "animation": action.animation, "source": action.source,
         }
     except Exception:
         logger.exception("Failed to serialize persistent barrier %s.", action.id)
