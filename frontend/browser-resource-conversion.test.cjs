@@ -9,6 +9,7 @@ vm.runInThisContext(fs.readFileSync("frontend/browser-ability-hooks.js", "utf8")
 vm.runInThisContext(fs.readFileSync("frontend/browser-resource-conversion.js", "utf8"));
 
 const C = window.IRON_PIT_BROWSER_RESOURCE_CONVERSION;
+C.installAbilityHooks();
 const action = {
   id: "create-spell-slot-1",
   name: "Font of Magic: Create 1st-Level Spell Slot",
