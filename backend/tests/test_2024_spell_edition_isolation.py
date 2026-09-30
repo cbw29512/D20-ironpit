@@ -494,7 +494,8 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.success_damage,
             spell.upcast_dice_per_level,
             spell.automatic_failure_creature_types,
-        ) == (4, "action", 30, "constitution", 8, 8, "necrotic", "half", 1, ["Plant"])
+            spell.requires_target_sight,
+        ) == (4, "action", 30, "constitution", 8, 8, "necrotic", "half", 1, ["Plant"], True)
 
     if "greater-invisibility" in defenses:
         spell = defenses["greater-invisibility"]
