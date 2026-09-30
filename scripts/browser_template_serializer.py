@@ -361,22 +361,22 @@ def defense_row(action: Any) -> dict[str, Any]:
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
         "range": action.range_ft, "durationMinutes": action.duration_minutes,
         "targetPolicy": action.target_policy, "targetCount": action.target_count,
-        "targetCountPerSlotAbove": action.target_count_per_slot_above,
         "temporaryHp": action.temporary_hp,
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
         "damageResistances": list(action.damage_resistances),
         "conditionIds": list(action.condition_ids),
         "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
-        "movementModeGrants": [
+        "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
+    }
+    if action.movement_mode_grants:
+        row["movementModeGrants"] = [
             {
                 "mode": grant.mode,
                 "fixedSpeedFt": grant.fixed_speed_ft,
                 "matchCurrentSpeed": grant.match_current_speed,
             }
             for grant in action.movement_mode_grants
-        ],
-        "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
-    }
+        ]
     if action.max_hp_increase:
         row["maxHpIncrease"] = action.max_hp_increase
     if action.current_hp_increase:
