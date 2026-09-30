@@ -94,7 +94,7 @@
       if (action.oncePerTurn) {
         if (!turnKey) throw new Error(`Resource conversion ${action.id} requires a turn key.`);
         state.feature_last_turn_keys ||= {};
-        state.feature_last_turn_keys[action.id] = turnKey;
+        state.feature_last_turn_keys[action.oncePerTurnGroup || action.id] = turnKey;
       }
       return {
         sequence,
