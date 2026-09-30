@@ -70,7 +70,7 @@ def test_2024_druid_level_nine_progression_prioritizes_damage_and_healing() -> N
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["druid-combat-spells-5"].automated is True
     assert audits["circle-spells-5-wall-of-stone"].combat_relevant is True
-    assert audits["circle-spells-5-wall-of-stone"].automated is False
+    assert audits["circle-spells-5-wall-of-stone"].automated is True
 
     assert_pregen_combat_stats(hero, combat)
     assert_character_resources_raw_ready(hero, profile, combat)
