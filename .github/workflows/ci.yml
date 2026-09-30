@@ -426,6 +426,7 @@ jobs:
           node frontend/browser-reaction-movement.test.cjs
           node frontend/browser-forced-movement.test.cjs
           node frontend/browser-save-forced-movement.test.cjs
+          node frontend/browser-persistent-barriers.test.cjs
           node frontend/browser-damage-triggered-reactions.test.cjs
           node frontend/browser-fiendish-resilience-2014.test.cjs
           node frontend/browser-exile-2014.test.cjs
