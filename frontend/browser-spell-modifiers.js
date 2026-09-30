@@ -29,6 +29,7 @@
       replacement_hp: effect.replacementHp || 0,
       prevents_instant_death: Boolean(effect.preventsInstantDeath),
       source_creature_types: [...(effect.sourceCreatureTypes || [])],
+      bypass_attacker_senses: [...(effect.bypassAttackerSenses || [])],
       save_ability: effect.saveAbility || null,
       save_dc: effect.saveDc ?? null,
       concentration_required: Boolean(spell.concentration),

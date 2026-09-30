@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -55,6 +56,7 @@ class CombatModifier(BaseModel):
     replacement_hp: int = Field(default=0, ge=0)
     prevents_instant_death: bool = False
     source_creature_types: list[str] = Field(default_factory=list)
+    bypass_attacker_senses: list[Literal["blindsight", "truesight"]] = Field(default_factory=list)
     required_active_effect_ids: list[str] = Field(default_factory=list)
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -119,13 +121,17 @@ class CombatModifier(BaseModel):
             raise ValueError("Zero-HP replacement modifiers require positive replacement HP.")
         if self.kind is not ModifierKind.ZERO_HP_REPLACEMENT and (self.replacement_hp or self.prevents_instant_death):
             raise ValueError(f"{self.kind.value} does not accept zero-HP replacement fields.")
-        if self.kind is ModifierKind.ATTACKS_AGAINST_DISADVANTAGE and not self.source_creature_types:
-            raise ValueError("Typed attack Disadvantage requires source creature types.")
+        if self.kind is ModifierKind.ATTACKS_AGAINST_DISADVANTAGE and not (self.source_creature_types or self.bypass_attacker_senses):
+            raise ValueError("Attack Disadvantage requires source types or declared sensory bypass.")
         if self.source_creature_types and self.kind not in {
             ModifierKind.ATTACKS_AGAINST_DISADVANTAGE, ModifierKind.CONDITION_IMMUNITY,
             ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE,
         }:
             raise ValueError(f"{self.kind.value} does not accept source creature types.")
+        if self.bypass_attacker_senses and self.kind is not ModifierKind.ATTACKS_AGAINST_DISADVANTAGE:
+            raise ValueError(f"{self.kind.value} does not accept attacker-sense bypass.")
+        if len(set(self.bypass_attacker_senses)) != len(self.bypass_attacker_senses):
+            raise ValueError("Attacker-sense bypass values must be unique.")
         if self.required_active_effect_ids and self.kind is not ModifierKind.CONDITION_IMMUNITY:
             raise ValueError(f"{self.kind.value} does not accept active-effect requirements.")
         required_effects = [item.strip().casefold() for item in self.required_active_effect_ids]

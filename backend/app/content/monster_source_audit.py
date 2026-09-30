@@ -13,6 +13,7 @@ from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
+from app.content.monster_special_senses import parse_special_senses
 from app.content.monster_trait_source_audit import trait_issues
 from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
 from app.domain.models import CombatantTemplate
@@ -110,6 +111,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
             (template.initiative_bonus == _initiative(row), "initiative-mismatch"),
             (template.saving_throw_bonuses == parse_saving_throw_bonuses(row), "saving-throws-mismatch"),
+            ((template.blindsight_ft, template.truesight_ft) == parse_special_senses(row), "special-senses-mismatch"),
         )
         issues = [label for passed, label in checks if not passed]
         issues.extend(movement_mode_issues(template, row))

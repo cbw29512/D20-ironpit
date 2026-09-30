@@ -158,3 +158,78 @@ def test_2024_druid_level_two_preserves_wild_companion_without_summoning() -> No
     assert audits["wild-companion"].combat_relevant is False
     assert audits["wild-companion"].automated is False
     assert "arena-unavailable" in (audits["wild-companion"].notes or "")
+
+
+def test_2024_circle_of_land_level_three_is_raw_and_arid() -> None:
+    profile = build_thalen_greenbough_profile(3)
+    hero = build_thalen_greenbough_level(3)
+    package = canonical_spell_package("druid", 3, "2024", 3)
+
+    assert_canonical_profile_policy(profile)
+    assert (profile.subclass_id, profile.subclass_name) == ("circle-land", "Circle of the Land")
+    assert hero.max_hp == 18
+    assert {item.id: item.max_uses for item in hero.resources} == {
+        "spell-slot-1": 4,
+        "spell-slot-2": 2,
+        "wild-shape": 2,
+    }
+
+    assert package is not None
+    assert [item.id for item in package.spells] == [
+        "healing-word", "cure-wounds", "longstrider", "detect-magic",
+        "faerie-fire", "lesser-restoration",
+    ]
+
+    assert [item.id for item in hero.spell_attack_actions] == ["poison-spray", "fire-bolt"]
+    fire_bolt = hero.spell_attack_actions[1]
+    assert (
+        fire_bolt.action_cost, fire_bolt.range_ft, fire_bolt.attack_bonus,
+        fire_bolt.damage_dice_count, fire_bolt.damage_dice_size, fire_bolt.damage_type,
+    ) == ("action", 120, 5, 1, 10, "fire")
+
+    assert [item.id for item in hero.spell_save_actions] == ["faerie-fire", "burning-hands"]
+    burning_hands = hero.spell_save_actions[1]
+    assert (
+        burning_hands.level, burning_hands.range_ft,
+        burning_hands.area.shape if burning_hands.area else None,
+        burning_hands.area.origin if burning_hands.area else None,
+        burning_hands.area.length_ft if burning_hands.area else None,
+        burning_hands.save_ability, burning_hands.dc,
+        burning_hands.damage_dice_count, burning_hands.damage_dice_size,
+        burning_hands.damage_type, burning_hands.success_damage,
+        burning_hands.upcast_dice_per_level,
+    ) == (1, 15, "cone", "self", 15, "dexterity", 13, 3, 6, "fire", "half", 1)
+
+    assert [item.id for item in hero.defensive_spell_actions] == ["longstrider", "blur"]
+    blur = hero.defensive_spell_actions[1]
+    assert blur.concentration is True
+    assert blur.target_policy == "self"
+    assert blur.modifier_effects[0].kind == "attacks-against-disadvantage"
+    assert blur.modifier_effects[0].bypass_attacker_senses == ["blindsight", "truesight"]
+
+    assert [item.id for item in hero.condition_removal_actions] == ["lesser-restoration"]
+    lesser = hero.condition_removal_actions[0]
+    assert (lesser.action_cost, lesser.range_ft, lesser.resource_costs) == (
+        "bonus_action", 5, {"spell-slot-2": 1},
+    )
+
+    assert [item.id for item in hero.saving_throw_actions] == ["lands-aid"]
+    lands_aid = hero.saving_throw_actions[0]
+    assert (
+        lands_aid.action_cost, lands_aid.range_ft,
+        lands_aid.area.shape if lands_aid.area else None,
+        lands_aid.area.radius_ft if lands_aid.area else None,
+        lands_aid.save_ability, lands_aid.dc,
+        lands_aid.damage_dice_count, lands_aid.damage_dice_size,
+        lands_aid.damage_type, lands_aid.success_damage,
+        lands_aid.resource_id, lands_aid.resource_cost,
+    ) == ("action", 60, "radius", 10, "constitution", 13, 2, 6, "necrotic", "half", "wild-shape", 1)
+    assert lands_aid.area_healing_rider is not None
+    assert (
+        lands_aid.area_healing_rider.dice_count,
+        lands_aid.area_healing_rider.dice_size,
+    ) == (2, 6)
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["lands-aid"].automated is True
+    assert audits["land-arid-spells"].automated is True

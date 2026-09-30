@@ -196,6 +196,12 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiresTargetHearing"] = True
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
+    if action.area_healing_rider is not None:
+        row["areaHealingRider"] = {
+            "diceCount": action.area_healing_rider.dice_count,
+            "diceSize": action.area_healing_rider.dice_size,
+            "healingBonus": action.area_healing_rider.healing_bonus,
+        }
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = {
             "effectId": action.failed_save_timed_effect.effect_id,
@@ -266,6 +272,10 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         row["replacementHp"] = effect.replacement_hp
     if effect.prevents_instant_death:
         row["preventsInstantDeath"] = True
+    if effect.source_creature_types:
+        row["sourceCreatureTypes"] = list(effect.source_creature_types)
+    if effect.bypass_attacker_senses:
+        row["bypassAttackerSenses"] = list(effect.bypass_attacker_senses)
     if effect.consume_on_attack_against:
         row["consumeOnAttackAgainst"] = True
     if effect.expires_after_source_turns is not None:
@@ -585,6 +595,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
             "initiative_bonus": template.initiative_bonus,
+        "blindsight_ft": template.blindsight_ft, "truesight_ft": template.truesight_ft,
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],

@@ -89,6 +89,12 @@ def _save(action: Any) -> dict[str, Any]:
              "damageBonus": item.damage_bonus, "damageType": item.damage_type}
             for item in action.damage_components
         ]
+    if action.area_healing_rider is not None:
+        row["areaHealingRider"] = {
+            "diceCount": action.area_healing_rider.dice_count,
+            "diceSize": action.area_healing_rider.dice_size,
+            "healingBonus": action.area_healing_rider.healing_bonus,
+        }
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = {
             "effectId": action.failed_save_timed_effect.effect_id,
@@ -135,6 +141,7 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
     if effect.replacement_hp: row["replacementHp"] = effect.replacement_hp
     if effect.prevents_instant_death: row["preventsInstantDeath"] = True
     if effect.source_creature_types: row["sourceCreatureTypes"] = list(effect.source_creature_types)
+    if effect.bypass_attacker_senses: row["bypassAttackerSenses"] = list(effect.bypass_attacker_senses)
     if effect.save_ability: row["saveAbility"] = effect.save_ability
     if effect.save_dc is not None: row["saveDc"] = effect.save_dc
     if effect.consume_on_attack_against: row["consumeOnAttackAgainst"] = True
@@ -424,7 +431,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "creature_type": template.creature_type,
         "ability_scores": template.ability_scores.model_dump() if template.ability_scores else None,
         "armor_class": template.armor_class, "max_hp": template.max_hp, "speed_ft": template.speed_ft,
-        "initiative_bonus": template.initiative_bonus, "saving_throw_bonuses": template.saving_throw_bonuses,
+        "initiative_bonus": template.initiative_bonus,
+        "blindsight_ft": template.blindsight_ft, "truesight_ft": template.truesight_ft, "saving_throw_bonuses": template.saving_throw_bonuses,
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "hp_threshold_condition_actions": [

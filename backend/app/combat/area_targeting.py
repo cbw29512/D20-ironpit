@@ -86,23 +86,26 @@ def _point_origins(actor: EncounterCombatant, setup: EncounterSetup, range_ft: i
     return tuple(candidates)
 
 
-def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area: AreaTargeting, range_ft: int, *, actor_position: GridPosition | None = None) -> list[AreaPlacement]:
+def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area: AreaTargeting, range_ft: int, *, actor_position: GridPosition | None = None, allow_no_enemy_targets: bool = False) -> list[AreaPlacement]:
     """Return distinct placements with enemy targets and explicit friendly exposure."""
     try:
         enemies = _living_side(actor, setup, opponents=True)
-        if not enemies: return []
         friends = _living_side(actor, setup, opponents=False)
+        if not enemies and not allow_no_enemy_targets: return []
         actor_points = _points(actor, actor_position)
         origins = _point_origins(actor, setup, range_ft, actor_position) if area.origin == "point" else actor_points
         direction_origins = origins if area.origin == "point" else actor_points
-        directions = (None,) if area.shape in {"radius", "emanation"} else _directions(direction_origins, enemies)
-        placements: dict[tuple[tuple[str, ...], tuple[str, ...]], AreaPlacement] = {}
+        aim_members = enemies if enemies else friends
+        directions = (None,) if area.shape in {"radius", "emanation"} else _directions(direction_origins, aim_members)
+        placements: dict[tuple[tuple[str, ...], tuple[str, ...], bool], AreaPlacement] = {}
         for origin in origins:
             for direction in directions:
                 target_ids = tuple(enemy.combatant_id for enemy in enemies if _hits(area, actor_points, origin, direction, enemy))
-                if not target_ids: continue
                 friendly_ids = tuple(friend.combatant_id for friend in friends if _hits(area, actor_points, origin, direction, friend))
-                key = (target_ids, friendly_ids)
+                source_in_area = _hits(area, actor_points, origin, direction, actor)
+                if not target_ids and not allow_no_enemy_targets: continue
+                if not target_ids and not friendly_ids and not source_in_area: continue
+                key = (target_ids, friendly_ids, source_in_area)
                 if key not in placements:
                     placements[key] = AreaPlacement(target_ids, origin, direction, friendly_ids)
         return sorted(
@@ -111,4 +114,23 @@ def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area
         )
     except Exception:
         logger.exception("Failed universal area targeting for %s.", actor.combatant_id)
+        raise
+
+
+def member_in_area_placement(
+    actor: EncounterCombatant,
+    member: EncounterCombatant,
+    area: AreaTargeting,
+    placement: AreaPlacement,
+) -> bool:
+    """Return whether a combatant occupies any square covered by one resolved area placement."""
+    try:
+        actor_points = _points(actor)
+        return _hits(area, actor_points, placement.origin, placement.direction, member)
+    except Exception:
+        logger.exception(
+            "Failed area-membership check for %s in %s's placement.",
+            member.combatant_id,
+            actor.combatant_id,
+        )
         raise

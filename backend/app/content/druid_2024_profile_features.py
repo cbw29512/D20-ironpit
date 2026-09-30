@@ -95,6 +95,27 @@ def build_druid_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 3:
+            audits.extend([
+                _feature(
+                    "lands-aid", "Land's Aid", "subclass", combat_relevant=True, automated=True,
+                    notes=(
+                        "Magic Action spends one Wild Shape use; a point within 60 feet creates a "
+                        "10-foot-radius sphere. Chosen creatures make Constitution saves for 2d6 "
+                        "Necrotic damage (half on success), and one chosen creature in the area "
+                        "independently regains 2d6 HP through the generic area-healing rider."
+                    ),
+                ),
+                _feature(
+                    "land-arid-spells", "Circle Spells: Arid", "subclass",
+                    combat_relevant=True, automated=True,
+                    notes=(
+                        "Canonical land choice is Arid: Blur, Burning Hands, and Fire Bolt are always "
+                        "prepared and use explicit 2024 fingerprints. Blur uses universal "
+                        "Blindsight/Truesight bypass ranges rather than unconditional Disadvantage."
+                    ),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid feature audits for level %s.", level)

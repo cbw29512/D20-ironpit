@@ -21,6 +21,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -210,6 +212,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -370,6 +374,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -545,6 +551,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -708,6 +716,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -924,6 +934,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1083,6 +1095,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1215,6 +1229,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1373,6 +1389,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1507,6 +1525,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1637,6 +1657,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1784,6 +1806,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1914,6 +1938,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2054,6 +2080,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2193,6 +2221,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2332,6 +2362,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2481,6 +2513,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2660,6 +2694,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2794,6 +2830,8 @@
       "hover": false
     },
     "initiative_bonus": -1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2924,6 +2962,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3056,6 +3096,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3186,6 +3228,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3318,6 +3362,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3448,6 +3494,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3583,6 +3631,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3715,6 +3765,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3850,6 +3902,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4014,6 +4068,8 @@
       "hover": false
     },
     "initiative_bonus": -1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4165,6 +4221,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4304,6 +4362,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4463,6 +4523,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4591,6 +4653,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4791,6 +4855,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4988,6 +5054,7 @@
             "dice_count": 0,
             "dice_size": 0,
             "source_creature_types": [],
+            "bypass_attacker_senses": [],
             "consume_on_attack_against": false,
             "ends_on_owner_attack": false,
             "expires_at_start_of_source_turn": false
@@ -5069,6 +5136,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5220,6 +5289,8 @@
       "hover": false
     },
     "initiative_bonus": -1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5350,6 +5421,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5478,6 +5551,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 60,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5604,6 +5679,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5732,6 +5809,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5860,6 +5939,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5989,6 +6070,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6115,6 +6198,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6243,6 +6328,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6371,6 +6458,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6499,6 +6588,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6627,6 +6718,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6753,6 +6846,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6883,6 +6978,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7015,6 +7112,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7147,6 +7246,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7298,6 +7399,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7428,6 +7531,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7560,6 +7665,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7690,6 +7797,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7827,6 +7936,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7961,6 +8072,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8091,6 +8204,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8223,6 +8338,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8359,6 +8476,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8493,6 +8612,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 120,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8623,6 +8744,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8758,6 +8881,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8890,6 +9015,8 @@
       "hover": false
     },
     "initiative_bonus": -1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9022,6 +9149,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9154,6 +9283,8 @@
       "hover": false
     },
     "initiative_bonus": -1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9336,6 +9467,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9485,6 +9618,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9638,6 +9773,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9816,6 +9953,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9977,6 +10116,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10119,6 +10260,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10261,6 +10404,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10421,6 +10566,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 60,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10624,6 +10771,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10809,6 +10958,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10969,6 +11120,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11110,6 +11263,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11256,6 +11411,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11452,6 +11609,8 @@
       "hover": false
     },
     "initiative_bonus": 4,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11599,6 +11758,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11747,6 +11908,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11897,6 +12060,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12048,6 +12213,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12202,6 +12369,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12367,6 +12536,8 @@
       "hover": false
     },
     "initiative_bonus": 6,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12515,6 +12686,8 @@
       "hover": false
     },
     "initiative_bonus": -1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12705,6 +12878,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12885,6 +13060,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13073,6 +13250,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 60,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13233,6 +13412,8 @@
       "hover": true
     },
     "initiative_bonus": 4,
+    "blindsight_ft": 60,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13374,6 +13555,8 @@
       "hover": false
     },
     "initiative_bonus": -1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13570,6 +13753,8 @@
       "hover": false
     },
     "initiative_bonus": -2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13705,6 +13890,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13848,6 +14035,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13989,6 +14178,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14146,6 +14337,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14289,6 +14482,8 @@
       "hover": false
     },
     "initiative_bonus": 4,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14494,6 +14689,8 @@
       "hover": false
     },
     "initiative_bonus": -2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14645,6 +14842,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14836,6 +15035,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 120,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14968,6 +15169,8 @@
       "hover": false
     },
     "initiative_bonus": -3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15109,6 +15312,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15294,6 +15499,8 @@
       "hover": false
     },
     "initiative_bonus": -2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15433,6 +15640,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15576,6 +15785,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15715,6 +15926,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15879,6 +16092,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16021,6 +16236,8 @@
       "hover": false
     },
     "initiative_bonus": 4,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16206,6 +16423,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16367,6 +16586,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16510,6 +16731,8 @@
       "hover": false
     },
     "initiative_bonus": -5,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16664,6 +16887,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16861,6 +17086,8 @@
       "hover": false
     },
     "initiative_bonus": -2,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17000,6 +17227,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 60,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17155,6 +17384,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 60,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17291,6 +17522,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17423,6 +17656,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17558,6 +17793,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17720,6 +17957,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17885,6 +18124,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18093,6 +18334,8 @@
       "hover": false
     },
     "initiative_bonus": 4,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18300,6 +18543,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18505,6 +18750,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18713,6 +18960,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18917,6 +19166,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 10,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19123,6 +19374,8 @@
       "hover": false
     },
     "initiative_bonus": 5,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19336,6 +19589,8 @@
       "hover": false
     },
     "initiative_bonus": 4,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19547,6 +19802,8 @@
       "hover": false
     },
     "initiative_bonus": 4,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19761,6 +20018,8 @@
       "hover": false
     },
     "initiative_bonus": 4,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19971,6 +20230,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20183,6 +20444,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20323,6 +20586,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 60,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20483,6 +20748,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20643,6 +20910,8 @@
       "hover": false
     },
     "initiative_bonus": 2,
+    "blindsight_ft": 30,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20813,6 +21082,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20997,6 +21268,8 @@
       "hover": false
     },
     "initiative_bonus": 0,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -21209,6 +21482,8 @@
       "hover": false
     },
     "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -21344,6 +21619,8 @@
       "hover": false
     },
     "initiative_bonus": 3,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],

@@ -113,3 +113,10 @@ def test_raw_ready_monsters_have_precise_srd_page_references() -> None:
     for card in build_monster_catalog():
         if card.coverage_status is CoverageStatus.RAW_READY:
             assert card.source_reference == f"SRD 5.2.1 p. {card.source_page}"
+
+def test_source_audit_detects_special_sense_drift() -> None:
+    rows = _rows_by_name()
+    crab = next(template for template in build_arena_roster().monsters if template.name == "Crab").model_copy(deep=True)
+    assert crab.blindsight_ft == 30
+    crab.blindsight_ft = 0
+    assert "special-senses-mismatch" in audit_monster_source(crab, rows["Crab"])

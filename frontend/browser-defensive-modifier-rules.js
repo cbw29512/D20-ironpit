@@ -6,8 +6,18 @@
     const types = item.source_creature_types || [];
     return !types.length || types.map((value) => value.toLowerCase()).includes(baseType(template));
   };
-  const attacksAgainstDisadvantage = (state, attackerTemplate) => (state.active_modifiers || [])
-    .filter((item) => item.kind === "attacks-against-disadvantage" && sourceMatches(item, attackerTemplate)).length;
+  const senseBypasses = (item, attackerTemplate, distance) => {
+    if (distance == null) return false;
+    const ranges = {
+      blindsight: Number(attackerTemplate?.blindsight_ft || 0),
+      truesight: Number(attackerTemplate?.truesight_ft || 0),
+    };
+    return (item.bypass_attacker_senses || []).some((sense) => ranges[sense] >= distance);
+  };
+  const attacksAgainstDisadvantage = (state, attackerTemplate, distance = null) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "attacks-against-disadvantage"
+      && sourceMatches(item, attackerTemplate)
+      && !senseBypasses(item, attackerTemplate, distance)).length;
   function saveAdvantageModifiers(state, ability, context = {}) {
     try {
       const contextTags = new Set(

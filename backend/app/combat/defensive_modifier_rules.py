@@ -17,14 +17,30 @@ def _source_type_matches(modifier: CombatModifier, source: CombatantTemplate | N
     return source_type is not None and source_type in {item.casefold() for item in modifier.source_creature_types}
 
 
+def _attacker_sense_bypasses(
+    modifier: CombatModifier,
+    attacker: CombatantTemplate,
+    distance_ft: int | None,
+) -> bool:
+    if distance_ft is None:
+        return False
+    ranges = {
+        "blindsight": attacker.blindsight_ft,
+        "truesight": attacker.truesight_ft,
+    }
+    return any(ranges[sense] >= distance_ft for sense in modifier.bypass_attacker_senses)
+
+
 def attacks_against_disadvantage_sources(
     defender: CombatantState,
     attacker: CombatantTemplate,
+    distance_ft: int | None = None,
 ) -> int:
     return sum(
         1 for item in defender.active_modifiers
         if item.kind is ModifierKind.ATTACKS_AGAINST_DISADVANTAGE
         and _source_type_matches(item, attacker)
+        and not _attacker_sense_bypasses(item, attacker, distance_ft)
     )
 
 

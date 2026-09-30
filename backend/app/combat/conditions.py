@@ -33,7 +33,7 @@ def attack_roll_condition_sources(
     """Return Advantage and Disadvantage sources from supported conditions and wards."""
     advantage = 0
     disadvantage = attack_disadvantage_sources(attacker)
-    disadvantage += attacks_against_disadvantage_sources(defender, attacker.template)
+    disadvantage += attacks_against_disadvantage_sources(defender, attacker.template, distance_ft)
     ignores_unseen = attacker.template.progression_features.ignore_unseen_target_attack_disadvantage
     if has_condition(attacker, BLINDED_EFFECT_ID) and not ignores_unseen:
         disadvantage += 1

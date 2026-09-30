@@ -21,12 +21,12 @@ const calls = [];
 window.IRON_PIT_BROWSER_SAVES = {
   legalAction: () => true,
   resolveAction: (sequence, round, actor, target, action, distance, options) => {
-    calls.push({ target: target.combatant_id, rolls: [...options.sharedDamageRolls] });
+    calls.push({ target: target.combatant_id, rolls: options.sharedDamageRolls ? [...options.sharedDamageRolls] : [] });
     return {
       sequence, round_number: round, event_type: "saving_throw",
       actor_id: actor.combatant_id, target_id: target.combatant_id,
       resource_remaining: options.resourceRemaining,
-      damage_components: [{ rolls: [...options.sharedDamageRolls] }],
+      damage_components: options.sharedDamageRolls ? [{ rolls: [...options.sharedDamageRolls] }] : [],
     };
   },
 };
@@ -42,7 +42,7 @@ function member(id, side, x, y) {
     state: {
       position: { x, y }, is_alive: true, is_dead: false, current_hp: 10,
       action_available: true, bonus_action_available: true, reaction_available: true, resources: {},
-      grapple_sources: [], template: { size: "medium", saving_throw_actions: [] },
+      grapple_sources: [], template: { size: "medium", max_hp: 10, saving_throw_actions: [] },
     },
   };
 }
@@ -101,3 +101,76 @@ assert.equal(bonusActor.state.bonus_action_available, false);
 assert.equal(bonusActor.state.action_available, true);
 
 console.log("Universal browser area-save resource and action-cost parity passed.");
+
+
+window.IRON_PIT_BROWSER_STATE = {
+  effectiveMaxHp: (state) => state.template.max_hp,
+};
+window.IRON_PIT_BROWSER_HEALING = {
+  restore: (state, amount) => {
+    const before = state.current_hp;
+    state.current_hp = Math.min(state.template.max_hp, state.current_hp + amount);
+    return state.current_hp - before;
+  },
+};
+
+{
+  const healer = member("hero:druid", "heroes", 1, 1);
+  const ally = member("hero:ally", "heroes", 2, 1);
+  const enemy = member("monster:enemy", "monsters", 3, 1);
+  ally.state.current_hp = 1;
+  healer.state.resources["wild-shape"] = 2;
+  const landsAid = {
+    id: "lands-aid", name: "Land's Aid", actionCost: "action",
+    saveAbility: "constitution", dc: 20, range: 60,
+    area: { shape: "radius", origin: "point", radius_ft: 10 },
+    damageDiceCount: 2, damageDiceSize: 6, damageType: "necrotic",
+    successDamage: "half", resourceId: "wild-shape", resourceCost: 1,
+    areaHealingRider: { diceCount: 2, diceSize: 6, healingBonus: 0 },
+    animation: "lands-aid",
+  };
+  healer.state.template.saving_throw_actions = [landsAid];
+  const mixedSetup = {
+    heroes: [healer, ally], monsters: [enemy],
+    map_definition: { width_squares: 12, height_squares: 12 },
+  };
+  const rolls = [[3, 4], [5, 6]];
+  window.IRON_PIT_DICE = { rollMany: () => rolls.shift() };
+  const mixed = A.choose(healer, mixedSetup);
+  assert.ok(mixed);
+  const resolved = A.resolve(20, 1, healer, mixedSetup, mixed);
+  const healing = resolved.events.find((event) => event.event_type === "healing");
+  assert.ok(healing);
+  assert.deepEqual(healing.healing_roll.rolls, [5, 6]);
+  assert.equal(healing.target_id, "hero:ally");
+  assert.equal(ally.state.current_hp, 10);
+  assert.equal(healer.state.resources["wild-shape"], 1);
+  assert.equal(healer.state.action_available, false);
+}
+
+{
+  const healer = member("hero:druid-only", "heroes", 1, 1);
+  const ally = member("hero:ally-only", "heroes", 2, 1);
+  ally.state.current_hp = 1;
+  healer.state.resources["wild-shape"] = 2;
+  healer.state.template.saving_throw_actions = [{
+    id: "lands-aid", name: "Land's Aid", actionCost: "action",
+    saveAbility: "constitution", dc: 13, range: 60,
+    area: { shape: "radius", origin: "point", radius_ft: 10 },
+    damageDiceCount: 2, damageDiceSize: 6, damageType: "necrotic",
+    successDamage: "half", resourceId: "wild-shape", resourceCost: 1,
+    areaHealingRider: { diceCount: 2, diceSize: 6, healingBonus: 0 },
+    animation: "lands-aid",
+  }];
+  const healOnlySetup = {
+    heroes: [healer, ally], monsters: [],
+    map_definition: { width_squares: 12, height_squares: 12 },
+  };
+  window.IRON_PIT_DICE = { rollMany: () => [5, 6] };
+  const selectedHeal = A.choose(healer, healOnlySetup);
+  assert.ok(selectedHeal);
+  const resolvedHeal = A.resolve(30, 1, healer, healOnlySetup, selectedHeal);
+  assert.deepEqual(resolvedHeal.events.map((event) => event.event_type), ["healing"]);
+  assert.equal(resolvedHeal.events[0].target_id, "hero:ally-only");
+  assert.equal(healer.state.resources["wild-shape"], 1);
+}
