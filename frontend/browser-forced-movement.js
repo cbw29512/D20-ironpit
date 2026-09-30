@@ -18,6 +18,9 @@
     for (let i = 0; i < distanceFt / 5; i += 1) {
       const destination = { x: mover.state.position.x + stepX, y: mover.state.position.y + stepY };
       if (!G().inBounds(setup.map_definition, destination, mover.state.template.size)) break;
+      if (window.IRON_PIT_BROWSER_GRID_BARRIERS?.blocksTransition(
+        mover.state.position, destination, setup.persistent_barriers || [],
+      )) break;
       const blocked = members.some((member) => member.combatant_id !== mover.combatant_id
         && member.state.position && G().overlaps(destination, mover.state.template.size,
           member.state.position, member.state.template.size));
