@@ -166,3 +166,23 @@ BattleCast's extracted engine is MIT licensed. This Iron Pit tranche uses the ar
 8. Replace the current battlefield presentation with the moving card-token VTT and live overlays.
 9. Remove migration-only fixed-formation/scalar-distance code after no certified path depends on it.
 10. Re-audit all 330 monsters and canonical heroes after each universal capability tranche.
+
+## Separate reset controls (2026-09-30)
+
+Chris requires two distinct controls. **Reset Fight** discards the temporary
+fight/session and results while preserving every selected card and slot. Cards
+are rebuilt from their immutable source templates, restoring full HP and
+clearing fight-only initiative, conditions, concentration, resource displays
+and visual state. The next fight builds fresh runtime state normally.
+
+**Reset Board** performs the same lifecycle reset and empties all six hero and
+six monster slots. Both clear prior outcome, event log and Turbo/replay state,
+and invalidate Run Again. Neither rolls dice or changes combat rules. Resets
+may discard a paused Step/replay session; they are disabled while a resolution
+or animation operation is running, preventing stale callbacks from restoring
+discarded results.
+
+The battlefield and its fight/reset controls come immediately after the site
+header. Purpose-built/custom fight presets follow the battlefield; they must
+not displace the board below the preset list. Both website entry pages use
+this same section order.

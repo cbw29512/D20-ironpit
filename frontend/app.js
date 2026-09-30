@@ -23,7 +23,8 @@
     const active = Boolean(state.session && !state.session.complete);
     for (const id of ["fight-button", "step-fight-button", "turbo-button"]) el(id).disabled = state.fighting || active || !ready;
     el("rerun-button").disabled = state.fighting || active || !state.hasRun;
-    el("quick-test").disabled = state.fighting || active; el("reset-fight").disabled = state.fighting;
+    el("quick-test").disabled = state.fighting || active;
+    for (const id of ["reset-fight", "reset-board"]) el(id).disabled = state.fighting;
     rulesetUi()?.syncDisabled(state);
     window.IRON_PIT_COMBAT_PRESETS?.sync(state);
   }
@@ -63,10 +64,15 @@
     return { heroes, monsters, error, selection: { ruleset: state.ruleset, hero_ids: heroes.cards.map((card) => card.runnable_template_id), monster_ids: monsters.cards.map((card) => card.runnable_template_id) } };
   }
 
-  function resetFight() {
-    if (state.fighting) return;
-    state.session = null; state.turboBatch = null; turboView().hide(); clearResult("Battle reset. Cards are still loaded.");
-    render(); el("status").textContent = "Battle reset. Press FIGHT, STEP FIGHT, or TURBO.";
+  function resetBattle(clearBoard = false) {
+    try {
+      if (state.fighting) return;
+      // Selections are immutable cards; rebuilding the view drops all live fight overlays.
+      if (clearBoard) { state.heroSlots.fill(null); state.monsterSlots.fill(null); }
+      invalidateRun();
+      const message = clearBoard ? "Board cleared. Choose pregens and monsters, or load a preset." : "Fight reset. Loaded cards restored; ready for a fresh fight.";
+      clearResult(message); render(); el("status").textContent = message;
+    } catch (error) { console.error("Battle reset failed", { clearBoard, error }); el("status").textContent = "Could not reset the battle."; }
   }
   function cardByTemplate(side, templateId) {
     const rows = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
@@ -130,5 +136,6 @@
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }
   }
 
-  el("reset-fight").addEventListener("click", resetFight); el("quick-test").addEventListener("click", loadSample); boot();
+  el("reset-fight").addEventListener("click", () => resetBattle(false));
+  el("reset-board").addEventListener("click", () => resetBattle(true)); el("quick-test").addEventListener("click", loadSample); boot();
 })();
