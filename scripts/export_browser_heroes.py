@@ -680,6 +680,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "hpMode": item.hp_mode,
                 "temporaryHpOnEnter": item.temporary_hp_on_enter,
                 "retainCreatureType": item.retain_creature_type,
+                "endsOnIncapacitated": item.ends_on_incapacitated,
                 "retainSpellcasting": item.retain_spellcasting,
                 **({"retainedSpellActionIds": list(item.retained_spell_action_ids)} if item.retained_spell_action_ids else {}),
                 "setupSpellId": item.setup_spell_id,
