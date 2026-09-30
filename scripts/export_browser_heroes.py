@@ -141,6 +141,7 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
     if effect.replacement_hp: row["replacementHp"] = effect.replacement_hp
     if effect.prevents_instant_death: row["preventsInstantDeath"] = True
     if effect.source_creature_types: row["sourceCreatureTypes"] = list(effect.source_creature_types)
+    if effect.bypass_attacker_senses: row["bypassAttackerSenses"] = list(effect.bypass_attacker_senses)
     if effect.save_ability: row["saveAbility"] = effect.save_ability
     if effect.save_dc is not None: row["saveDc"] = effect.save_dc
     if effect.consume_on_attack_against: row["consumeOnAttackAgainst"] = True
