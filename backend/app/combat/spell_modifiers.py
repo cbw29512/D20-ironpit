@@ -83,6 +83,21 @@ def apply_spell_modifiers(
             expires_round=expires_round,
         )
     for target_id, target in targets:
+        if spell.movement_mode_grants:
+            apply_timed_condition(
+                target,
+                spell.id,
+                source_id,
+                source_effect_id=spell.id,
+                source_template=owner.template,
+                source_is_magical=True,
+                applied_round=round_number,
+                expires_round=expires_round,
+                expiry_timing="source_turn_start",
+                owned_movement_mode_grants=spell.movement_mode_grants,
+                affected_states=list(affected_states or []),
+                use_default_poison_recovery=False,
+            )
         for condition_id in spell.condition_ids:
             apply_timed_condition(
                 target,
