@@ -26,7 +26,7 @@ window.IRON_PIT_BROWSER_SAVES = {
       sequence, round_number: round, event_type: "saving_throw",
       actor_id: actor.combatant_id, target_id: target.combatant_id,
       resource_remaining: options.resourceRemaining,
-      damage_components: [{ rolls: [...options.sharedDamageRolls] }],
+      damage_components: options.sharedDamageRolls ? [{ rolls: [...options.sharedDamageRolls] }] : [],
     };
   },
 };
