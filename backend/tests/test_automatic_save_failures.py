@@ -30,7 +30,7 @@ def test_creature_type_automatic_save_failure_skips_d20_roll() -> None:
         target,
         action,
         5,
-        FixedDiceProvider([]),
+        FixedDiceProvider([20]),
     )
 
     assert event.save_succeeded is False
