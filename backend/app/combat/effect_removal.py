@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.ability_checks import resolve_ability_check_outcome
+from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
 from app.combat.dice import DiceProvider
 from app.combat.effect_removal_targets import TrackedSpellEffect, tracked_spell_effects
 from app.combat.modifier_stack import remove_source_modifiers
@@ -12,7 +12,6 @@ from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.domain.effect_removal import EffectRemovalAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
-from app.domain.models import RollMode
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +65,11 @@ def resolve_effect_removal(
             if scores is None:
                 raise ValueError("Effect-removal ability check requires certified ability scores.")
             dc = 10 + effect.spell_level
-            check = roll_d20(dice, scores.modifier(action.casting_ability), RollMode.NORMAL)
+            check = roll_d20(
+                dice,
+                scores.modifier(action.casting_ability),
+                ability_check_roll_mode(remover.state),
+            )
             check, succeeded = resolve_ability_check_outcome(
                 remover.state,
                 action.casting_ability,
