@@ -73,6 +73,7 @@ def test_2024_druid_level_five_wild_resurgence_is_raw_gated() -> None:
     assert regain_shape.target_resource_id == "wild-shape"
     assert regain_shape.requires_target_empty is True
     assert regain_shape.once_per_turn is True
+    assert regain_shape.once_per_turn_group == "wild-resurgence-regain-wild-shape"
 
     regain_slot = actions["wild-resurgence-regain-level-1-slot"]
     assert regain_slot.action_cost == "none"
@@ -98,6 +99,11 @@ def test_2024_druid_level_five_wild_resurgence_is_raw_gated() -> None:
     )
     assert _resource(state, "wild-shape").current_uses == 1
     assert conversion_available(state, regain_shape, "1:thalen") is False
+
+    _resource(state, "wild-shape").current_uses = 0
+    regain_shape_l2 = actions["wild-resurgence-regain-wild-shape-slot-2"]
+    assert conversion_available(state, regain_shape_l2, "1:thalen") is False
+    assert conversion_available(state, regain_shape_l2, "2:thalen") is True
 
     _resource(state, "spell-slot-1").current_uses = 3
     _resource(state, "wild-shape").current_uses = 1
