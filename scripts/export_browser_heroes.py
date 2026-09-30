@@ -421,6 +421,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "id": template.id, "class_id": class_id, "build_id": build_id, "name": template.name,
         "archetype": template.archetype, "level": template.level, "kind": template.kind,
         "ruleset": template.ruleset, "size": template.size.value,
+        "creature_type": template.creature_type,
         "ability_scores": template.ability_scores.model_dump() if template.ability_scores else None,
         "armor_class": template.armor_class, "max_hp": template.max_hp, "speed_ft": template.speed_ft,
         "initiative_bonus": template.initiative_bonus, "saving_throw_bonuses": template.saving_throw_bonuses,
