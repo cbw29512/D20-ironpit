@@ -533,6 +533,9 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert ("restrained", "magical", "prevent", 0) in signatures
         assert ("grappled", "nonmagical", "remove-with-movement", 5) in signatures
         assert ("restrained", "nonmagical", "remove-with-movement", 5) in signatures
+        assert len(spell.movement_mode_grants) == 1
+        swim = spell.movement_mode_grants[0]
+        assert (swim.mode, swim.fixed_speed_ft, swim.match_current_speed) == ("swim", None, True)
 
     if "aid" in defenses:
         spell = defenses["aid"]
