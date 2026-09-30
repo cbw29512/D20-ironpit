@@ -354,6 +354,7 @@ jobs:
           node frontend/browser-resource-conversion.test.cjs
           node frontend/browser-spell-save-disadvantage.test.cjs
           node frontend/browser-d20-bonus-dice.test.cjs
+          node frontend/browser-d20-test-advantage.test.cjs
           node frontend/browser-failed-save-reroll.test.cjs
           node frontend/browser-turn-end-lifecycle-hooks.test.cjs
           node frontend/browser-effect-bound-survival.test.cjs
@@ -467,6 +468,7 @@ jobs:
           node frontend/browser-druid11-2024.test.cjs
           node frontend/browser-druid12-2024.test.cjs
           node frontend/browser-druid13-2024.test.cjs
+          node frontend/browser-druid17-2024.test.cjs
           node frontend/browser-2014-paladin.test.cjs
           node frontend/browser-2014-paladin-auras.test.cjs
           node frontend/browser-paladin-oath-spells-2014.test.cjs

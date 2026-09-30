@@ -52,6 +52,19 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
 }
 
 {
+  const freeOpening = {
+    ...defense("free-opening", 9, 100),
+    freeOpeningCast: true,
+  };
+  const c = caster([freeOpening], { 9: 1 });
+  const result = P.prepare({ heroes: [c], monsters: [enemy()] });
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].feature_id, "free-opening");
+  assert.match(result.events[0].description, /free opening buff/);
+  assert.equal(c.state.resources["spell-slot-9"], 1);
+}
+
+{
   const c = caster([defense("no-upcast", 1)], { 3: 1 });
   const result = P.prepare({ heroes: [c], monsters: [enemy()] });
   assert.equal(result.events.length, 0);

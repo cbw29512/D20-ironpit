@@ -7,6 +7,7 @@ from app.combat.defensive_modifier_lifecycle import consume_saving_throw_modifie
 from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, CombatantTemplate
 from app.domain.modifiers import CombatModifier, ModifierKind
+from app.combat.modifier_stack import d20_test_advantage_sources
 from app.domain.saving_throw_context import SavingThrowContext
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ def saving_throw_advantage_sources(
     ability: str,
     context: SavingThrowContext | None = None,
 ) -> int:
-    return len(_saving_throw_advantage_modifiers(state, ability, context))
+    return len(_saving_throw_advantage_modifiers(state, ability, context)) + d20_test_advantage_sources(state)
 
 
 def saving_throw_advantage_source_names(
@@ -89,9 +90,14 @@ def saving_throw_advantage_source_names(
     context: SavingThrowContext | None = None,
 ) -> list[str]:
     try:
+        contextual = _saving_throw_advantage_modifiers(state, ability, context)
+        universal = [
+            item for item in state.active_modifiers
+            if item.kind is ModifierKind.D20_TEST_ADVANTAGE
+        ]
         return sorted({
             item.source_name or item.source_effect_id
-            for item in _saving_throw_advantage_modifiers(state, ability, context)
+            for item in [*contextual, *universal]
         })
     except Exception:
         logger.exception(
@@ -108,7 +114,10 @@ def saving_throw_disadvantage_sources(state: CombatantState) -> int:
 
 
 def death_save_advantage_sources(state: CombatantState) -> int:
-    return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.DEATH_SAVE_ADVANTAGE)
+    return sum(
+        1 for item in state.active_modifiers
+        if item.kind in {ModifierKind.DEATH_SAVE_ADVANTAGE, ModifierKind.D20_TEST_ADVANTAGE}
+    )
 
 
 def healing_is_maximized(state: CombatantState) -> bool:
