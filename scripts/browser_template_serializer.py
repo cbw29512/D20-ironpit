@@ -244,6 +244,8 @@ def _spell(action: Any) -> dict[str, Any]:
             "expiryTiming": action.failed_save_timed_effect.expiry_timing,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
+    if action.failed_save_push_ft:
+        row["failedSavePushFt"] = action.failed_save_push_ft
     if action.failed_save_modifier_effects:
         row["failedSaveModifierEffects"] = [
             _modifier_effect(effect) for effect in action.failed_save_modifier_effects
