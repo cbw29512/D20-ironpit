@@ -28,7 +28,7 @@ def use_indomitable(state: CombatantState, ability: str, dice: DiceProvider) -> 
         ModifierKind.SAVING_THROW_BONUS_DIE,
         roll_d20(
             dice,
-            state.template.saving_throw_bonuses[ability] + saving_throw_flat_bonus(state) + bonus,
+            state.template.saving_throw_bonuses[ability] + saving_throw_flat_bonus(state, ability) + bonus,
             saving_throw_mode(state, ability),
         ),
         dice,

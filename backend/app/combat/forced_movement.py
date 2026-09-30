@@ -5,6 +5,7 @@ from math import gcd
 from app.combat.grid_barriers import barrier_blocks_transition
 from app.combat.grid_geometry import position_in_bounds
 from app.combat.grid_pathing_support import overlapping_occupants
+from app.combat.persistent_beneficial_zone_effects import sync_persistent_beneficial_zones
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 
@@ -24,6 +25,8 @@ def push_straight_away(
     source: EncounterCombatant,
     setup: EncounterSetup,
     distance_ft: int,
+    *,
+    round_number: int = 1,
 ) -> int:
     """Move directly away without spending Speed; stop at creatures, walls, or map edges."""
     if distance_ft < 0 or distance_ft % 5:
@@ -49,4 +52,5 @@ def push_straight_away(
             break
         mover.state.position = destination
         moved += 5
+        sync_persistent_beneficial_zones(setup, round_number)
     return moved

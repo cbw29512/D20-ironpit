@@ -95,7 +95,7 @@ def resolve_saving_throw(
             return None, False
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
-        modifier = state.template.saving_throw_bonuses[ability] + saving_throw_flat_bonus(state)
+        modifier = state.template.saving_throw_bonuses[ability] + saving_throw_flat_bonus(state, ability)
         roll = apply_d20_bonus_dice(
             state,
             ModifierKind.SAVING_THROW_BONUS_DIE,

@@ -121,7 +121,10 @@
     ));
     return before - state.active_modifiers.length;
   }
-  const savingThrowFlat = (state) => flat(state, "saving-throw-flat");
+  const savingThrowFlat = (state, ability = null) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "saving-throw-flat"
+      && (!item.save_ability || !ability || item.save_ability === ability))
+    .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   function damageSourceQualifiers(state, attack) {
     const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
     for (const item of state.active_modifiers || []) {

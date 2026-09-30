@@ -9,6 +9,7 @@ from app.combat.grid_pathing_support import movement_step_cost_ft
 from app.combat.grid_reaction_movement_support import approaches_fear_source, distance_to_position
 from app.combat.grapple import speed_is_zero
 from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_attack
+from app.combat.persistent_beneficial_zone_effects import sync_persistent_beneficial_zones
 from app.combat.persistent_hazards import resolve_persistent_hazard_entries
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -99,6 +100,7 @@ def move_toward_on_grid(
             )
             mover.state.position = destination.model_copy(deep=True)
             mover.state.movement_remaining_ft -= step_cost
+            sync_persistent_beneficial_zones(setup, round_number)
             after_distance = footprint_distance_ft(
                 mover.state.position,
                 mover.state.template.size,

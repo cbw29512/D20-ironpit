@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
+from app.content.druid_2024_land_features import build_natures_sanctuary_2024
 from app.content.druid_2024_land_spells import (
     build_blight_2024,
     build_blur_2024,
@@ -119,6 +120,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
             "condition_removal_actions": [LESSER_RESTORATION] if level >= 3 else [],
             "effect_removal_actions": [DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],
             "persistent_barrier_actions": [build_wall_of_stone_2024()] if level >= 9 else [],
+            "persistent_beneficial_zone_actions": [build_natures_sanctuary_2024()] if level >= 14 else [],
             "resource_conversion_actions": (
                 build_wild_resurgence_2024(tuple(DRUID_COMBAT_LEVELS[level].spell_slots))
                 if level >= 5 else []

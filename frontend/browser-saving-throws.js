@@ -87,7 +87,7 @@
       const baseBonus = state.template.saving_throw_bonuses?.[ability];
       if (baseBonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
       const modifiers = M();
-      const bonus = baseBonus + (modifiers.savingThrowFlat?.(state) || 0);
+      const bonus = baseBonus + (modifiers.savingThrowFlat?.(state, ability) || 0);
       const baseRoll = R().d20(bonus, saveMode(state, ability, context));
       let roll = modifiers.applyD20Bonus?.(state, "saving-throw-bonus-die", baseRoll) || baseRoll; if ((state.active_d20_bonus_dice || []).length) { if (!Number.isInteger(context.roundNumber)) throw new Error("Active d20 bonus die requires saving-throw round context."); roll = DB().applyIfUseful(state, "saving_throw", roll, dc, context.roundNumber).roll; }
       const resourceBacked = state.template.resource_backed_d20_bonus_dice || [];
