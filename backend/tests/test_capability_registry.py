@@ -17,6 +17,8 @@ MIGRATED = {
 
 def test_data_registry_compiles_representative_capabilities() -> None:
     wolf = build_combatant_from_capabilities("srd-wolf")
+    assert wolf.ability_scores is not None
+    assert wolf.ability_scores.model_dump() == {"strength": 14, "dexterity": 15, "constitution": 12, "intelligence": 3, "wisdom": 12, "charisma": 6}
     dire = build_combatant_from_capabilities("srd-dire-wolf")
     snake = build_combatant_from_capabilities("srd-giant-constrictor-snake")
     assert wolf.ruleset == "2024"
