@@ -5,6 +5,8 @@ from app.combat.state import build_combatant_state
 from app.content.audited_druid import build_thalen_greenbough_level
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
 from app.content.canonical_spell_policy import canonical_spell_package
+from app.content.character_resource_audit import assert_character_resources_raw_ready
+from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 
 
 def _resource(state, resource_id: str):
