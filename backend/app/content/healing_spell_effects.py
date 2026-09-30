@@ -91,3 +91,29 @@ def build_mass_cure_wounds(
     except Exception:
         logger.exception("Failed to build Mass Cure Wounds at slot level %s.", slot_level)
         raise
+
+
+def build_heal_2024(slot_level: int = 6) -> HealingAction:
+    """2024 Heal using universal fixed healing plus condition removal."""
+    try:
+        if not 6 <= slot_level <= 9:
+            raise ValueError("Heal slot level must be between 6 and 9.")
+        suffix = "" if slot_level == 6 else f"-l{slot_level}"
+        label = "Heal" if slot_level == 6 else f"Heal ({slot_level}th-Level)"
+        return HealingAction(
+            id=f"heal{suffix}",
+            name=label,
+            action_cost="action",
+            range_ft=60,
+            target_mode="self_or_ally",
+            dice_count=0,
+            dice_size=6,
+            healing_bonus=70 + 10 * (slot_level - 6),
+            resource_id=f"spell-slot-{slot_level}",
+            resource_cost=1,
+            removable_conditions=["blinded", "deafened", "poisoned"],
+            animation="healing",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Heal at slot level %s.", slot_level)
+        raise
