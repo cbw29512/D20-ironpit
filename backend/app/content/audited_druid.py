@@ -50,7 +50,7 @@ def _source_reference(level: int) -> str:
     if level >= 5:
         parts.extend(["Fireball", "Dispel Magic", "Water Breathing", "Wild Resurgence"])
     if level >= 6:
-        parts.append("Natural Recovery")
+        parts.extend(["Natural Recovery", "Aid"])
     return "D&D Beyond Basic Rules 2024: " + ", ".join(parts)
 
 
