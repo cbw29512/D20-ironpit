@@ -430,7 +430,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "creature_type": template.creature_type,
         "ability_scores": template.ability_scores.model_dump() if template.ability_scores else None,
         "armor_class": template.armor_class, "max_hp": template.max_hp, "speed_ft": template.speed_ft,
-        "initiative_bonus": template.initiative_bonus, "saving_throw_bonuses": template.saving_throw_bonuses,
+        "initiative_bonus": template.initiative_bonus,
+        "blindsight_ft": template.blindsight_ft, "truesight_ft": template.truesight_ft, "saving_throw_bonuses": template.saving_throw_bonuses,
         "skill_bonuses": template.skill_bonuses, "attacks": [_attack(item) for item in attacks],
         "primary_attack_id": template.weapon_attack.id, "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "hp_threshold_condition_actions": [
