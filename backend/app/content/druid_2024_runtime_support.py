@@ -19,6 +19,7 @@ from app.content.healing_spell_effects import build_cure_wounds, build_healing_w
 from app.content.offensive_spell_effects import build_fireball_2024
 from app.content.druid_2024_wild_resurgence import build_wild_resurgence_2024
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
+from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.models import ResourceDefinition
 from app.domain.replacement_form_actions import ReplacementFormAction
 
@@ -63,6 +64,12 @@ def druid_resources(level: int, spell_slots: tuple[int, ...], wild_shape_uses: i
                 name="Wild Resurgence: Regain Spell Slot",
                 max_uses=1,
             ))
+        if level >= 6:
+            resources.append(ResourceDefinition(
+                id="natural-recovery-free-cast",
+                name="Natural Recovery: Free Circle Spell",
+                max_uses=1,
+            ))
         return resources
     except Exception:
         logger.exception("Failed to compile 2024 Druid resources.")
@@ -102,4 +109,29 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
         }
     except Exception:
         logger.exception("Failed to compile 2024 Druid actions at level %s.", level)
+        raise
+
+
+def natural_recovery_alternate_casts(level: int) -> list[AlternateSpellCastGrant]:
+    """Bind the 2024 Circle of the Land free Circle Spell cast to the shared alternate-cast engine."""
+    try:
+        if level < 6:
+            return []
+        return [
+            AlternateSpellCastGrant(
+                source_id=f"natural-recovery-{spell_id}",
+                source_name="Natural Recovery",
+                spell_id=spell_id,
+                cast_level=cast_level,
+                resource_id="natural-recovery-free-cast",
+                priority=95,
+            )
+            for spell_id, cast_level in (
+                ("burning-hands", 1),
+                ("blur", 2),
+                ("fireball", 3),
+            )
+        ]
+    except Exception:
+        logger.exception("Failed to build 2024 Natural Recovery alternate casts at Druid level %s.", level)
         raise
