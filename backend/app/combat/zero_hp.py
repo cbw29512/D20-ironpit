@@ -8,7 +8,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
-from app.combat.replacement_forms import apply_replacement_form_damage, revert_replacement_form_if_incapacitated
+from app.combat.replacement_form_lifecycle import apply_replacement_form_damage, revert_replacement_form_if_incapacitated
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement
