@@ -18,6 +18,7 @@ class ModifierKind(StrEnum):
     SAVING_THROW_FLAT = "saving-throw-flat"
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
     SAVING_THROW_ADVANTAGE = "saving-throw-advantage"
+    D20_TEST_ADVANTAGE = "d20-test-advantage"
     SAVING_THROW_DISADVANTAGE = "saving-throw-disadvantage"
     DEATH_SAVE_ADVANTAGE = "death-save-advantage"
     HEALING_MAXIMIZE = "healing-maximize"
@@ -93,7 +94,7 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
         advantage_kinds = {
             ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.ATTACKS_AGAINST_DISADVANTAGE,
-            ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE,
+            ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE, ModifierKind.D20_TEST_ADVANTAGE,
         }
         if self.kind in advantage_kinds and self.flat_bonus:
             raise ValueError("Attack roll-mode modifiers do not accept a flat bonus.")
@@ -121,8 +122,6 @@ class CombatModifier(BaseModel):
             raise ValueError("Zero-HP replacement modifiers require positive replacement HP.")
         if self.kind is not ModifierKind.ZERO_HP_REPLACEMENT and (self.replacement_hp or self.prevents_instant_death):
             raise ValueError(f"{self.kind.value} does not accept zero-HP replacement fields.")
-        if self.kind is ModifierKind.ATTACKS_AGAINST_DISADVANTAGE and not (self.source_creature_types or self.bypass_attacker_senses):
-            raise ValueError("Attack Disadvantage requires source types or declared sensory bypass.")
         if self.source_creature_types and self.kind not in {
             ModifierKind.ATTACKS_AGAINST_DISADVANTAGE, ModifierKind.CONDITION_IMMUNITY,
             ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE,
