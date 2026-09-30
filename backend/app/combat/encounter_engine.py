@@ -20,6 +20,7 @@ from app.combat.initiative_resource_refill import resolve_initiative_resource_re
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_buffs import prepare_opening_buffs
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
+from app.combat.persistent_barrier_lifecycle import cleanup_persistent_barriers
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
@@ -102,6 +103,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
+                cleanup_persistent_barriers(setup, round_number)
                 expiry_events, sequence = expire_start_of_turn_conditions(
                     sequence, round_number, member, setup,
                 )
