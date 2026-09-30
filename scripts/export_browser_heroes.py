@@ -9,7 +9,11 @@ from app.content.canonical_hero_policy import canonical_spell_package
 from app.content.certified_heroes import build_all_certified_hero_entries
 from app.content.class_spell_progression import CASTING_ABILITIES
 from app.domain.models import CombatantTemplate, WeaponAttack
-from browser_template_serializer import persistent_barrier_row
+
+try:
+    from scripts.browser_template_serializer import persistent_barrier_row
+except ModuleNotFoundError:
+    from browser_template_serializer import persistent_barrier_row
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
