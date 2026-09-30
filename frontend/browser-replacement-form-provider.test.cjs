@@ -23,7 +23,7 @@ window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = {
   enter: (state, action, active) => { state.template = active; state.replacement_form = { source_id: action.id }; return { resource_remaining: 1 }; },
 };
 window.IRON_PIT_BROWSER_MONSTERS_2014 = { "2014-wolf": { id: "2014-wolf", name: "Wolf", kind: "monster", max_hp: 11 } };
-window.IRON_PIT_BROWSER_MONSTERS_2024 = { "srd-wolf": { id: "srd-wolf", name: "Wolf", kind: "monster", max_hp: 11 } };
+window.IRON_PIT_BROWSER_MONSTERS = { "srd-wolf": { id: "srd-wolf", name: "Wolf", kind: "monster", max_hp: 11 } };
 
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
