@@ -6,7 +6,16 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
 from app.content.character_math import saving_throw_bonuses
-from app.content.druid_2024_spells import build_faerie_fire_2024, build_longstrider_2024, build_poison_spray_2024
+from app.content.cleric_life_domain import LESSER_RESTORATION
+from app.content.druid_2024_spells import (
+    build_blur_2024,
+    build_burning_hands_2024,
+    build_faerie_fire_2024,
+    build_fire_bolt_2024,
+    build_lands_aid_2024,
+    build_longstrider_2024,
+    build_poison_spray_2024,
+)
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
 from app.content.weapon_catalog import build_weapon
@@ -50,8 +59,8 @@ def _wild_shape(level: int) -> list[ReplacementFormAction]:
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
     """Compile the certified 2024 Land-Druid progression."""
     try:
-        if level not in {1, 2}:
-            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 2.")
+        if level not in {1, 2, 3}:
+            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 3.")
         profile = build_thalen_greenbough_profile(level)
         row = DRUID_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -68,7 +77,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
         )
         if armor_class != row.armor_class:
             raise ValueError(
-                f"2024 Druid level 1 AC drifted: compiled {armor_class}, spine {row.armor_class}."
+                f"2024 Druid level {level} AC drifted: compiled {armor_class}, spine {row.armor_class}."
             )
         return CombatantTemplate(
             id=profile.template_id,
@@ -84,15 +93,26 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
             speed_ft=35,
             initiative_bonus=scores.modifier("dexterity"),
             weapon_attack=_sickle(pb, scores.modifier("strength")),
+            saving_throw_actions=[
+                build_lands_aid_2024(8 + pb + wisdom_modifier, level),
+            ] if level >= 3 else [],
             spell_attack_actions=[
                 build_poison_spray_2024(pb + wisdom_modifier, level),
+                *([build_fire_bolt_2024(pb + wisdom_modifier, level)] if level >= 3 else []),
             ],
-            spell_save_actions=[build_faerie_fire_2024(8 + pb + wisdom_modifier)] if level >= 2 else [],
-            defensive_spell_actions=[build_longstrider_2024()],
+            spell_save_actions=[
+                *([build_faerie_fire_2024(8 + pb + wisdom_modifier)] if level >= 2 else []),
+                *([build_burning_hands_2024(8 + pb + wisdom_modifier)] if level >= 3 else []),
+            ],
+            defensive_spell_actions=[
+                build_longstrider_2024(),
+                *([build_blur_2024()] if level >= 3 else []),
+            ],
             healing_actions=[
                 build_healing_word(wisdom_modifier),
                 build_cure_wounds(wisdom_modifier),
             ],
+            condition_removal_actions=[LESSER_RESTORATION] if level >= 3 else [],
             progression_features=ProgressionCombatFeatures(
                 saving_throw_advantage_grants=[
                     SavingThrowAdvantageGrant(
@@ -116,7 +136,15 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                 "perception": wisdom_modifier + pb,
             },
             resources=[
-                ResourceDefinition(id="spell-slot-1", name="Spell Slot 1", max_uses=row.spell_slots[0]),
+                *[
+                    ResourceDefinition(
+                        id=f"spell-slot-{slot_level}",
+                        name=f"Spell Slot {slot_level}",
+                        max_uses=max_uses,
+                    )
+                    for slot_level, max_uses in enumerate(row.spell_slots, start=1)
+                    if max_uses
+                ],
                 *(
                     [ResourceDefinition(id="wild-shape", name="Wild Shape", max_uses=row.wild_shape_uses)]
                     if row.wild_shape_uses else []
@@ -132,7 +160,8 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
             ),
             source=(
                 "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, "
-                "Poison Spray, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Wild Shape, Equipment"
+                "Poison Spray, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Lesser Restoration, "
+                "Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Land's Aid, Wild Shape, Equipment"
             ),
         )
     except Exception:
