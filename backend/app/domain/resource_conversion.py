@@ -19,6 +19,8 @@ class ResourceConversionAction(BaseModel):
     target_resource_id: str
     target_gain: int = Field(ge=1)
     target_allows_overflow: bool = False
+    requires_target_empty: bool = False
+    once_per_turn: bool = False
     automation: ResourceConversionAutomation = "manual"
     priority: int = 0
     source: str | None = None
