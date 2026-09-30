@@ -104,6 +104,8 @@ def clear_line_between_members(
     setup: EncounterSetup,
 ) -> bool:
     try:
+        if not setup.persistent_barriers:
+            return True
         return clear_line_between_points(
             member_points(source),
             member_points(target),
