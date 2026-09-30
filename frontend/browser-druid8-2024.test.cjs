@@ -51,6 +51,9 @@ assert.equal(spell.targetPolicy, "friendly");
 assert.equal(spell.targetCount, 1);
 assert.equal(spell.targetCountPerSlotAbove, 1);
 assert.equal(spell.concentration, false);
+assert.deepEqual(spell.movementModeGrants, [
+  { mode: "swim", fixedSpeedFt: null, matchCurrentSpeed: true },
+]);
 
 const signatures = spell.modifierEffects
   .filter((item) => item.debuffCounter)
