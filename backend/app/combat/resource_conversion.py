@@ -32,7 +32,8 @@ def conversion_available(
         if action.requires_target_empty and target.current_uses != 0:
             return False
         if action.once_per_turn:
-            if turn_key is None or state.feature_last_turn_keys.get(action.id) == turn_key:
+            turn_limit_id = action.once_per_turn_group or action.id
+            if turn_key is None or state.feature_last_turn_keys.get(turn_limit_id) == turn_key:
                 return False
         return action.target_allows_overflow or target.current_uses < target.max_uses
     except ValueError:
@@ -88,7 +89,7 @@ def apply_restoration_conversion(
         if action.once_per_turn:
             if turn_key is None:
                 raise ValueError(f"Resource conversion {action.id!r} requires a turn key.")
-            state.feature_last_turn_keys[action.id] = turn_key
+            state.feature_last_turn_keys[action.once_per_turn_group or action.id] = turn_key
         return action
     except Exception as exc:
         logger.exception(
