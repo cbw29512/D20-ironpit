@@ -9,6 +9,7 @@
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const RFC = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORM_COMPILER;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const RC = () => window.IRON_PIT_BROWSER_RESOURCE_CONVERSION;
 
   function register() {
     if (!S()) throw new Error("Replacement-form provider requires browser-main-action-selection.js.");
@@ -19,7 +20,8 @@
         const action = (owner.replacement_form_actions || [])[0];
         if (member.state.replacement_form && !action?.replaceExistingForm) return null;
         if (!action || !E().available(member.state, action.actionCost)) return null;
-        if (!RES()?.available(member.state, action.resourceId, action.resourceCost || 1)) return null;
+        const resourceReady = RES()?.available(member.state, action.resourceId, action.resourceCost || 1);
+        if (!resourceReady && !RC()?.restorationAction(member.state, action.resourceId, turnKey)) return null;
         if (action.setupSpellId && member.state.concentration?.effect_id !== action.setupSpellId) {
           const choice = SP()?.chooseById(member, setup, turnKey, action.setupSpellId) || null;
           return choice ? { payload: { kind: "setup-spell", choice } } : null;
@@ -49,16 +51,26 @@
           owner, source, Boolean(action.retainSpellcasting), Boolean(action.retainCreatureType),
           (action.hpMode || "form_pool") === "retain_owner"
         );
+        const events = [];
+        if (!RES()?.available(member.state, action.resourceId, action.resourceCost || 1)) {
+          const conversion = RC()?.restorationAction(member.state, action.resourceId, turnKey);
+          if (!conversion) throw new Error("Replacement-form resource restoration became unavailable.");
+          const restored = RC().resolve(sequence, round, member, conversion, turnKey);
+          if (!restored) throw new Error("Replacement-form resource restoration failed.");
+          events.push(restored);
+          sequence += 1;
+        }
         const originalName = member.state.template.name;
         const result = RF().enter(member.state, action, active);
-        return {
-          events: [{
+        events.push({
             sequence, round_number: round, event_type: "feature",
             actor_id: member.combatant_id, actor_name: originalName,
             feature_id: action.id, resource_remaining: result.resource_remaining,
             animation: "transform",
             description: originalName + " uses " + action.name + " and enters the " + source.name + " replacement form.",
-          }],
+          });
+        return {
+          events,
           sequence: sequence + 1,
         };
       },
