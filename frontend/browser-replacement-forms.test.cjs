@@ -152,3 +152,28 @@ function state() {
 }
 
 console.log("Browser replacement form lifecycle parity passed.");
+
+{
+  const target = state();
+  target.current_hp = 18;
+  const active = {
+    id: "thalen-l2--form-srd-wolf", name: "Thalen", kind: "character",
+    max_hp: 18, creature_type: "Humanoid", unlimited_resources: [], traits: [],
+  };
+  const action = {
+    id: "wild-shape", name: "Wild Shape", actionCost: "bonus_action",
+    resourceId: "wild-shape", resourceCost: 1, voluntaryRevertAction: "bonus_action",
+    hpMode: "retain_owner", temporaryHpOnEnter: 2, retainCreatureType: true,
+  };
+  const entered = window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.enter(target, action, active);
+  assert.equal(entered.resource_remaining, 1);
+  assert.equal(target.bonus_action_available, false);
+  assert.equal(target.action_available, true);
+  assert.equal(target.temporary_hp, 2);
+  assert.equal(target.current_hp, 18);
+  assert.equal(target.replacement_form.hp_mode, "retain_owner");
+
+  const formDamage = window.IRON_PIT_BROWSER_REPLACEMENT_FORMS.applyDamage(target, 3);
+  assert.deepEqual(formDamage, { excess: 3, reverted: false });
+  assert.notEqual(target.replacement_form, null, "retained-owner HP forms do not auto-revert from damage");
+}
