@@ -17,7 +17,7 @@ def _setup():
 def test_creature_type_automatic_save_failure_skips_d20_roll() -> None:
     _, actor, target = _setup()
     action = actor.state.template.saving_throw_actions[0].model_copy(update={
-        "automatic_failure_creature_types": ["Humanoid"],
+        "automatic_failure_creature_types": [target.state.template.creature_type],
         "damage_dice_count": 0,
         "damage_type": None,
         "grapple_escape_dc": None,
@@ -36,7 +36,7 @@ def test_creature_type_automatic_save_failure_skips_d20_roll() -> None:
     assert event.save_succeeded is False
     assert event.saving_throw_roll is None
     assert "automatically FAILS" in event.description
-    assert "Humanoid" in event.description
+    assert target.state.template.creature_type in event.description
 
 
 def test_creature_type_automatic_save_failure_does_not_replace_normal_save() -> None:
