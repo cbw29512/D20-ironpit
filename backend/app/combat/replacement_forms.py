@@ -33,6 +33,7 @@ def enter_replacement_form(
     voluntary_revert_action: str = "bonus_action",
     hp_mode: str = "form_pool",
     temporary_hp_on_enter: int = 0,
+    ends_on_incapacitated: bool = False,
 ) -> ReplacementFormResult:
     try:
         if state.replacement_form is not None:
@@ -51,6 +52,7 @@ def enter_replacement_form(
             form_hp=form_template.max_hp,
             form_max_hp=form_template.max_hp,
             hp_mode=hp_mode,
+            ends_on_incapacitated=ends_on_incapacitated,
             resource_id=resource_id,
             resource_cost=resource_cost,
             voluntary_revert_action=voluntary_revert_action,
@@ -95,6 +97,23 @@ def revert_replacement_form(
     except Exception as exc:
         logger.exception("Failed to revert replacement form for %s.", state.template.name)
         raise RuntimeError("Replacement form could not be reverted.") from exc
+
+
+def revert_replacement_form_if_incapacitated(state: CombatantState) -> bool:
+    """Revert an active form when its declared lifecycle ends on incapacitation."""
+    try:
+        active = state.replacement_form
+        if active is None or not active.ends_on_incapacitated:
+            return False
+        if not (state.is_dead or state.is_unconscious):
+            return False
+        revert_replacement_form(state, spend_voluntary_action=False)
+        return True
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed incapacitation-triggered replacement-form reversion for %s.", state.template.name)
+        raise RuntimeError("Replacement-form incapacitation lifecycle could not be resolved.") from exc
 
 
 def apply_replacement_form_damage(
@@ -147,6 +166,7 @@ def resolve_replacement_form_action(
             voluntary_revert_action=action.voluntary_revert_action,
             hp_mode=action.hp_mode,
             temporary_hp_on_enter=action.temporary_hp_on_enter,
+            ends_on_incapacitated=action.ends_on_incapacitated,
         )
     except ValueError:
         raise
