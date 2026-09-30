@@ -84,10 +84,13 @@
         source_id: action.id, source_name: action.name, original_template: originalTemplate,
         form_template: activeTemplate, original_hp: state.current_hp,
         form_hp: activeTemplate.max_hp, form_max_hp: activeTemplate.max_hp,
+        hp_mode: action.hpMode || "form_pool",
         resource_id: action.resourceId || null, resource_cost: action.resourceCost || 1,
         voluntary_revert_action: action.voluntaryRevertAction || "bonus_action",
       };
       state.template = activeTemplate;
+      const entryTemporaryHp = Number(action.temporaryHpOnEnter || 0);
+      if (entryTemporaryHp > 0) state.temporary_hp = Math.max(Number(state.temporary_hp || 0), entryTemporaryHp);
       return { source_id: action.id, form_name: activeTemplate.name, resource_remaining: remaining, reverted: false };
     } catch (error) {
       console.error("Browser replacement form entry failed", { combatant: state?.template?.name, error });
@@ -115,6 +118,7 @@
       if (amount < 0) throw new Error("Replacement-form damage cannot be negative.");
       const active = state.replacement_form;
       if (!active || amount === 0) return { excess: amount, reverted: false };
+      if ((active.hp_mode || "form_pool") === "retain_owner") return { excess: amount, reverted: false };
       const absorbed = Math.min(active.form_hp, amount);
       active.form_hp -= absorbed;
       const excess = amount - absorbed;
