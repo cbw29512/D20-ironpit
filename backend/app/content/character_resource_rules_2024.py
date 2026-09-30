@@ -73,6 +73,13 @@ def _druid_wild_resurgence_slot_restore(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Wild Resurgence slot-restore uses for level {level}.") from exc
 
 
+def _land_natural_recovery_free_cast(level: int) -> int:
+    try:
+        return 1 if level >= 6 else 0
+    except Exception as exc:
+        raise ValueError(f"Failed to resolve 2024 Natural Recovery free-cast uses for level {level}.") from exc
+
+
 def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
