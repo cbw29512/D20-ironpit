@@ -6,7 +6,11 @@ from typing import Any
 from app.combat.charge_profiles import charge_profile_for_attack
 from app.domain.models import CombatantTemplate, WeaponAttack
 from app.domain.traits import CombatTrait
-from browser_recharge_serializer import recharge_rows
+
+try:
+    from scripts.browser_recharge_serializer import recharge_rows
+except ModuleNotFoundError:
+    from browser_recharge_serializer import recharge_rows
 
 logger = logging.getLogger(__name__)
 
