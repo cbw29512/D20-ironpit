@@ -9,7 +9,14 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 
 window.IRON_PIT_ACTION_ECONOMY = { available: (state, cost) => cost === "action" ? state.action_available : cost === "bonus_action" && state.bonus_action_available };
-window.IRON_PIT_BROWSER_RESOURCES = { available: () => true };
+window.IRON_PIT_BROWSER_RESOURCES = {
+  available: (state, id, cost = 1) => (state.resources?.[id] || 0) >= cost,
+  spend: (state, id, cost = 1) => {
+    if ((state.resources?.[id] || 0) < cost) throw new Error("resource unavailable");
+    state.resources[id] -= cost;
+    return state.resources[id];
+  },
+};
 window.IRON_PIT_BROWSER_SPELL_POLICY = {
   chooseById: (_member, _setup, _turnKey, id) => ({ action: { id, name: "Faerie Fire" }, slotLevel: 1, targetIds: ["monster-1"] }),
 };
@@ -20,11 +27,17 @@ window.IRON_PIT_BROWSER_REPLACEMENT_FORM_COMPILER = {
   compile: (original, form) => ({ ...original, id: original.id + "--form-" + form.id, max_hp: form.max_hp }),
 };
 window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = {
-  enter: (state, action, active) => { state.template = active; state.replacement_form = { source_id: action.id }; return { resource_remaining: 1 }; },
+  enter: (state, action, active) => {
+    state.resources[action.resourceId] -= action.resourceCost || 1;
+    state.template = active;
+    state.replacement_form = { source_id: action.id };
+    return { resource_remaining: state.resources[action.resourceId] };
+  },
 };
 window.IRON_PIT_BROWSER_MONSTERS_2014 = { "2014-wolf": { id: "2014-wolf", name: "Wolf", kind: "monster", max_hp: 11 } };
 window.IRON_PIT_BROWSER_MONSTERS = { "srd-wolf": { id: "srd-wolf", name: "Wolf", kind: "monster", max_hp: 11 } };
 
+load("browser-resource-conversion.js");
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
 load("browser-replacement-form-provider.js");
@@ -108,4 +121,59 @@ console.log("Browser replacement-form Main Action provider parity passed.");
   actor.state.action_available = true;
   const blocked = S.discoverCandidates("normalPreMove", ctx);
   assert.equal(blocked.length, 0, "2014 Wild Shape cannot replace an active form");
+}
+
+
+{
+  const druid5 = {
+    combatant_id: "hero-thalen-2024-l5", side: "heroes",
+    state: {
+      action_available: false, bonus_action_available: true, replacement_form: null,
+      concentration: null,
+      feature_last_turn_keys: {},
+      resources: { "wild-shape": 0, "spell-slot-1": 4, "wild-resurgence-slot-restore": 1 },
+      template: {
+        id: "thalen-greenbough-l5", name: "Thalen Greenbough", kind: "character", ruleset: "2024",
+        resources: { "wild-shape": 2, "spell-slot-1": 4, "wild-resurgence-slot-restore": 1 },
+        resource_conversion_actions: [{
+          id: "wild-resurgence-regain-wild-shape-slot-1",
+          name: "Wild Resurgence (Spend Level 1 Slot)",
+          actionCost: "none",
+          sourceResourceId: "spell-slot-1",
+          sourceCost: 1,
+          additionalSourceCosts: {},
+          targetResourceId: "wild-shape",
+          targetGain: 1,
+          targetAllowsOverflow: false,
+          requiresTargetEmpty: true,
+          oncePerTurn: true,
+          automation: "manual",
+          priority: 99,
+        }],
+        replacement_form_actions: [{
+          id: "wild-shape", name: "Wild Shape", actionCost: "bonus_action", formTemplateId: "srd-wolf",
+          resourceId: "wild-shape", resourceCost: 1, voluntaryRevertAction: "bonus_action",
+          hpMode: "retain_owner", temporaryHpOnEnter: 5, retainCreatureType: true,
+          replaceExistingForm: true,
+        }],
+      },
+    },
+  };
+  const ctx5 = {
+    sequence: 12, round: 2, turnKey: "2:hero-thalen-2024-l5", member: druid5,
+    setup: { heroes: [druid5], monsters: [target] },
+  };
+  const candidates = S.discoverCandidates("normalPreMove", ctx5);
+  assert.equal(candidates.length, 1, "Wild Resurgence makes zero-use Wild Shape legally restorable");
+  assert.equal(candidates[0].payload.kind, "transform");
+  const resolved = S.resolveCandidate("normalPreMove", candidates[0], ctx5);
+  assert.deepEqual(resolved.events.map((event) => event.feature_id), [
+    "wild-resurgence-regain-wild-shape-slot-1", "wild-shape",
+  ]);
+  assert.equal(druid5.state.resources["spell-slot-1"], 3);
+  assert.equal(druid5.state.resources["wild-shape"], 0, "restored use is immediately spent on Wild Shape");
+  assert.equal(
+    druid5.state.feature_last_turn_keys["wild-resurgence-regain-wild-shape-slot-1"],
+    ctx5.turnKey,
+  );
 }
