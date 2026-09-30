@@ -53,7 +53,8 @@ def resolve_defensive_spell(
     ):
         raise ValueError(f"{spell.name} is already active on a selected target.")
     member.state.opening_buff_id = spell.id
-    resource.current_uses -= 1
+    if not spell.free_opening_cast:
+        resource.current_uses -= 1
     duration_remaining = spend_spell_duration_modifier(member.state, duration_modifier)
     effective_duration = effective_spell_duration_minutes(spell.duration_minutes, duration_modifier)
     temp_hp_details: list[str] = []
@@ -103,7 +104,8 @@ def resolve_defensive_spell(
         concentration_started_effect_id=spell.id if spell.concentration else None,
         animation=spell.animation,
         description=(
-            f"Precombat preparation: {member.state.template.name} casts {spell.name} with a level {slot_level} slot "
+            f"Precombat preparation: {member.state.template.name} casts {spell.name} "
+            f"{'as the free opening buff' if spell.free_opening_cast else f'with a level {slot_level} slot'} "
             f"on {names} ({'; '.join(details)})."
         ),
     )

@@ -3,10 +3,11 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 
+from app.combat.ability_checks import ability_check_roll_mode
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
-from app.combat.rolls import resolve_roll_mode, roll_d20
+from app.combat.rolls import roll_d20
 from app.domain.encounters import EncounterCombatant, EncounterInitiative, EncounterSetup, FirstRoundExtraTurn, InitiativeGroup
 from app.domain.models import RollMode
 
@@ -14,11 +15,16 @@ logger = logging.getLogger(__name__)
 
 
 def _initiative_mode(member: EncounterCombatant) -> RollMode:
-    state = member.state
-    return resolve_roll_mode(
-        advantage_sources=int(state.template.progression_features.initiative_advantage),
-        disadvantage_sources=int(is_incapacitated(state)) + ability_check_disadvantage_sources(state),
-    )
+    try:
+        state = member.state
+        return ability_check_roll_mode(
+            state,
+            advantage_sources=int(state.template.progression_features.initiative_advantage),
+            disadvantage_sources=int(is_incapacitated(state)) + ability_check_disadvantage_sources(state),
+        )
+    except Exception as exc:
+        logger.exception("Failed to resolve initiative roll mode for %s.", member.state.template.name)
+        raise RuntimeError("Initiative roll mode could not be resolved.") from exc
 
 
 def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> InitiativeGroup:

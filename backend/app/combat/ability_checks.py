@@ -9,11 +9,30 @@ from app.combat.d20_bonus_dice import (
 from app.combat.d20_outcome_adjustments import apply_resource_backed_d20_outcome_adjustment_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
+from app.combat.modifier_stack import d20_test_advantage_sources
+from app.combat.rolls import resolve_roll_mode
 from app.domain.character_builds import AbilityName
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import CombatantState, DiceRoll, RollRevision
+from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 
 logger = logging.getLogger(__name__)
+
+
+def ability_check_roll_mode(
+    state: CombatantState,
+    *,
+    advantage_sources: int = 0,
+    disadvantage_sources: int = 0,
+) -> RollMode:
+    """Resolve ability-check roll mode including universal D20-test modifiers."""
+    try:
+        return resolve_roll_mode(
+            advantage_sources + d20_test_advantage_sources(state),
+            disadvantage_sources,
+        )
+    except Exception as exc:
+        logger.exception("Failed to resolve ability-check roll mode for %s.", state.template.name)
+        raise RuntimeError("Ability-check roll mode could not be resolved.") from exc
 
 
 def apply_ability_check_minimum(

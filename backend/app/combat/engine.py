@@ -3,12 +3,13 @@ from __future__ import annotations
 import logging
 import uuid
 
+from app.combat.ability_checks import ability_check_roll_mode
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.fighter import use_second_wind
 from app.combat.policy import should_use_second_wind
-from app.combat.rolls import resolve_roll_mode, roll_d20
+from app.combat.rolls import roll_d20
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.state import build_combatant_state
 from app.combat.turns import prepare_attack
@@ -35,7 +36,8 @@ def run_duel(
         sequence = 1
 
         for state in (fighter, monster):
-            initiative_mode = resolve_roll_mode(
+            initiative_mode = ability_check_roll_mode(
+                state,
                 advantage_sources=int(state.template.progression_features.initiative_advantage),
                 disadvantage_sources=ability_check_disadvantage_sources(state),
             )
