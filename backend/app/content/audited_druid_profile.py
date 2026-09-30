@@ -111,7 +111,7 @@ def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
                 *(
                     [
                         "D&D Beyond Basic Rules 2024: Druid 9 — level 5 spell slots",
-                        "D&D Beyond Basic Rules 2024: Spells — Thunderwave, Mass Cure Wounds",
+                        "D&D Beyond Basic Rules 2024: Spells — Cone of Cold, Mass Cure Wounds",
                         "D&D Beyond Basic Rules 2024: Circle of the Land 9 — Arid Circle Spell: Wall of Stone",
                     ]
                     if level >= 9 else []
