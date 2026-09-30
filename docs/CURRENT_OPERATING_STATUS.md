@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-30 while advancing the certified 2024 Circle of the Land Druid progression through level 11.
+Recorded 2026-09-30 for the level-15 Circle of the Land Druid tranche; once this tranche is on `main`, level 15 is the certified endpoint and level 16 is next.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -32,9 +32,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
-| 2024 | Druid (Land) | 1–10 |
+| 2024 | Druid (Land) | 1–15 |
 
-2024 public-ready hero slots on current `main`: **110 / 240**.
+2024 public-ready hero slots on current `main`: **115 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -44,9 +44,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 110 / 240 on current `main`; PR #466 advances Circle of the Land Druid to level 11.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 10 on `main`.
+**2024 canonical pregens are 115 / 240 on current `main`.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 15.
 
-Active implementation lane: **finish/merge 2024 Circle of the Land Druid level 11, then re-anchor and continue level 12 onward**.
+Active implementation lane: **re-anchor after Druid level 15, then advance the same persistent Circle of the Land Druid to level 16**.
 
 ### Druid spell-selection policy
 
@@ -162,4 +162,8 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Arid level 9 additionally grants **Wall of Stone**. Its source data binds to a reusable persistent-barrier engine for blocked edges, forced-movement interaction, destructible sections, support legality, concentration lifecycle, and Python/browser parity; it is not a Druid-named resolver.
 - Level 10 adds **Nature's Ward** through universal defenses: Poisoned immunity plus Arid Fire resistance. It also adds **Thunderclap** and prepares **Thunderwave** under the damage-first policy.
 - Level 11 advances to 58 HP, 16 prepared spells, and a level-6 slot. The new prepared spell is **Heal**: 70 fixed HP plus removal of Blinded, Deafened, and Poisoned through the universal healing action.
+- Level 12 advances to 63 HP and uses the repeatable **Ability Score Improvement** feat for +2 Charisma (16→18); Wisdom remains capped at 20 and the damage/healing spell package is preserved.
+- Level 13 advances to PB +5, 68 HP, 17 prepared spells, and a level-7 slot. **Fire Storm** is the damage-first preparation but remains explicitly arena-out-of-scope because its ten freely arranged contiguous cubes require unsupported multi-cube battlefield geometry.
+- Level 14 advances to 73 HP, improves **Land's Aid** to 4d6 damage/healing, and adds **Nature's Sanctuary** through the universal persistent-beneficial-zone engine: a movable 15-foot cube that grants Half Cover and the Arid Fire resistance according to its source rules.
+- Level 15 advances to 78 HP, adds a level-8 slot and the 18th prepared spell **Sunburst**, reusing the certified 2024 area save-damage and timed-Blinded primitives. **Improved Elemental Fury: Potent Spellcasting** increases qualifying Druid cantrip ranges by 300 feet as compiled action data; Poison Spray, Fire Bolt, and Starry Wisp become 330/420/360 feet while Self-range Thunderclap remains unchanged.
 - Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.
