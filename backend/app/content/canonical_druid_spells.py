@@ -45,6 +45,11 @@ DRUID_CANTRIPS: tuple[CanonicalSpellChoice, ...] = (
         "spell-attack", "cantrip-scaling", "invisibility-benefits-suppressed",
         min_character_level=4,
     ),
+    _cantrip(
+        "thunderclap", "Thunderclap", "damage",
+        "save-damage", "area", "cantrip-scaling",
+        min_character_level=10,
+    ),
 )
 
 
