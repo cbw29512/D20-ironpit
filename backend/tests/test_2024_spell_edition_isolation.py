@@ -581,6 +581,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         expected_casting_abilities = {
             "bard": "charisma",
             "cleric": "wisdom",
+            "druid": "wisdom",
         }
         assert progression.class_id in expected_casting_abilities
         spell = effect_removals["dispel-magic"]
