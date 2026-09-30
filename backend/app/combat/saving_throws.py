@@ -136,7 +136,7 @@ def resolve_save_action(
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.failed_save_push_ft:
         if setup is None:
             raise ValueError(f"{action.name} forced movement requires encounter setup.")
-        pushed_ft = push_straight_away(target, actor, setup, action.failed_save_push_ft)
+        pushed_ft = push_straight_away(target, actor, setup, action.failed_save_push_ft, round_number=round_number)
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     if automatic_failure:
         description = (
