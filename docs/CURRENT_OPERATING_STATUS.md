@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-30 for the level-15 Circle of the Land Druid tranche; once this tranche is on `main`, level 15 is the certified endpoint and level 16 is next.
+Recorded 2026-09-30 for the level-16 Circle of the Land Druid tranche; once this tranche is on `main`, level 16 is the certified endpoint and level 17 is next.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -32,9 +32,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
-| 2024 | Druid (Land) | 1–15 |
+| 2024 | Druid (Land) | 1–16 |
 
-2024 public-ready hero slots on current `main`: **115 / 240**.
+2024 public-ready hero slots on current `main`: **116 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -44,9 +44,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 115 / 240 on current `main`.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 15.
+**2024 canonical pregens are 116 / 240 on current `main`.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 16.
 
-Active implementation lane: **re-anchor after Druid level 15, then advance the same persistent Circle of the Land Druid to level 16**.
+Active implementation lane: **re-anchor after Druid level 16, then advance the same persistent Circle of the Land Druid to level 17**.
 
 ### Druid spell-selection policy
 
@@ -165,5 +165,5 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Level 12 advances to 63 HP and uses the repeatable **Ability Score Improvement** feat for +2 Charisma (16→18); Wisdom remains capped at 20 and the damage/healing spell package is preserved.
 - Level 13 advances to PB +5, 68 HP, 17 prepared spells, and a level-7 slot. **Fire Storm** is the damage-first preparation but remains explicitly arena-out-of-scope because its ten freely arranged contiguous cubes require unsupported multi-cube battlefield geometry.
 - Level 14 advances to 73 HP, improves **Land's Aid** to 4d6 damage/healing, and adds **Nature's Sanctuary** through the universal persistent-beneficial-zone engine: a movable 15-foot cube that grants Half Cover and the Arid Fire resistance according to its source rules.
-- Level 15 advances to 78 HP, adds a level-8 slot and the 18th prepared spell **Sunburst**, reusing the certified 2024 area save-damage and timed-Blinded primitives. **Improved Elemental Fury: Potent Spellcasting** increases qualifying Druid cantrip ranges by 300 feet as compiled action data; Poison Spray, Fire Bolt, and Starry Wisp become 330/420/360 feet while Self-range Thunderclap remains unchanged.
+- Level 15 advances to 78 HP, adds a level-8 slot and the 18th prepared spell **Sunburst**, reusing the certified 2024 area save-damage and timed-Blinded primitives. **Improved Elemental Fury: Potent Spellcasting** increases qualifying Druid cantrip ranges by 300 feet as compiled action data; Poison Spray, Fire Bolt, and Starry Wisp become 330/420/360 feet while Self-range Thunderclap remains unchanged.\n- Level 16 advances to 83 HP and uses the repeatable **Ability Score Improvement** feat for +2 Charisma (18→20). Wisdom, spell slots, prepared spells, and the damage/healing package remain unchanged.
 - Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.

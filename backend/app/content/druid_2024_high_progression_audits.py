@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def build_druid_2024_high_progression_audits(level: int) -> list[FeatureAudit]:
-    """Return Druid progression audits introduced at levels 11 through 15."""
+    """Return Druid progression audits introduced at levels 11 through 16."""
     try:
         audits: list[FeatureAudit] = []
         if level >= 11:
@@ -80,6 +80,16 @@ def build_druid_2024_high_progression_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 16:
+            audits.append(druid_feature_audit(
+                "ability-score-improvement-l16", "Ability Score Improvement (+2 Charisma)", "class",
+                combat_relevant=True, automated=True,
+                notes=(
+                    "Wisdom is already 20, so the canonical land-damage progression uses the repeatable "
+                    "Ability Score Improvement feat again to raise Charisma 18→20. Spell slots, prepared "
+                    "spells, and existing combat actions remain unchanged."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build high-level 2024 Druid progression audits for level %s.", level)

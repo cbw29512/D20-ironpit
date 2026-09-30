@@ -37,8 +37,8 @@ def _sickle(proficiency_bonus: int, strength_modifier: int) -> WeaponAttack:
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
     """Compile the certified 2024 Land-Druid progression."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}:
-            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 15.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}:
+            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 16.")
         profile = build_thalen_greenbough_profile(level)
         row = DRUID_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
