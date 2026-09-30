@@ -115,6 +115,15 @@ class ConditionRemovalAction(BaseModel):
         return self
 
 
+class AreaHealingRider(BaseModel):
+    """Independent healing rolled once for one beneficial target inside the action area."""
+
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(default=6, ge=2, le=100)
+    healing_bonus: int = Field(default=0, ge=0)
+
+
+
 class SavingThrowAction(BaseModel):
     id: str
     name: str
@@ -140,6 +149,7 @@ class SavingThrowAction(BaseModel):
     requires_target_hearing: bool = False
     requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
+    area_healing_rider: AreaHealingRider | None = None
     animation: str = "save-effect"
 
 
