@@ -17,6 +17,9 @@
     try {
       if (action.actionCost !== "none" && !E()?.available(state, action.actionCost)) return false;
       if (!R()?.available(state, action.sourceResourceId, action.sourceCost)) return false;
+      for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
+        if (!R()?.available(state, resourceId, cost)) return false;
+      }
       return targetCanGain(state, action);
     } catch (error) {
       console.error("Browser resource conversion availability failed", {
@@ -56,6 +59,9 @@
       const action = restorationAction(state, targetResourceId);
       if (!action) return null;
       R().spend(state, action.sourceResourceId, action.sourceCost);
+      for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
+        R().spend(state, resourceId, cost);
+      }
       gain(state, action);
       return action;
     } catch (error) {
@@ -72,6 +78,9 @@
       if (!available(state, action)) return null;
       if (action.actionCost !== "none") E().spend(state, action.actionCost);
       const sourceRemaining = R().spend(state, action.sourceResourceId, action.sourceCost);
+      for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
+        R().spend(state, resourceId, cost);
+      }
       const targetRemaining = gain(state, action);
       return {
         sequence,
@@ -82,7 +91,7 @@
         feature_id: action.id,
         resource_remaining: sourceRemaining,
         animation: "resource-conversion",
-        description: `${state.template.name} uses ${action.name}, spending ${action.sourceCost} ${action.sourceResourceId} and gaining ${action.targetGain} ${action.targetResourceId} (${targetRemaining} available).`,
+        description: `${state.template.name} uses ${action.name}, spending ${action.sourceCost} ${action.sourceResourceId}${Object.entries(action.additionalSourceCosts || {}).map(([id, cost]) => ` and ${cost} ${id}`).join("")} and gaining ${action.targetGain} ${action.targetResourceId} (${targetRemaining} available).`,
       };
     } catch (error) {
       console.error("Browser resource conversion resolution failed", {
