@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import logging
 
-from app.content.druid_2024_progression_audits import (
-    build_druid_2024_progression_audits,
-    druid_feature_audit,
-)
+from app.content.druid_2024_audit_support import druid_feature_audit
+from app.content.druid_2024_progression_audits import build_druid_2024_progression_audits
 from app.domain.character_builds import FeatureAudit
 
 logger = logging.getLogger(__name__)
