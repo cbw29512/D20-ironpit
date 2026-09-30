@@ -109,6 +109,10 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=8, min_character_level=15,
     ),
     _spell(
+        "foresight", "Foresight", "buff", "d20-test-advantage", "attacks-against-disadvantage",
+        spell_level=9, min_character_level=17,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",
