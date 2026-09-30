@@ -96,3 +96,63 @@ def test_2024_druid_level_one_spell_package_is_edition_correct() -> None:
         longstrider.target_count_per_slot_above,
         longstrider.concentration,
     ) == ("longstrider", "action", 5, 60, 1, 1, False)
+
+
+def test_2024_druid_level_two_adds_raw_wild_shape_and_faerie_fire() -> None:
+    profile = build_thalen_greenbough_profile(2)
+    hero = build_thalen_greenbough_level(2)
+    package = canonical_spell_package("druid", 2, "2024", 3)
+
+    assert_canonical_profile_policy(profile)
+    assert profile.level == 2
+    assert profile.subclass_id is None
+    assert hero.max_hp == 13
+    assert hero.creature_type == "Humanoid"
+    assert {item.id: item.max_uses for item in hero.resources} == {
+        "spell-slot-1": 3,
+        "wild-shape": 2,
+    }
+    assert package is not None
+    assert [item.id for item in package.spells] == [
+        "healing-word", "cure-wounds", "longstrider", "detect-magic", "faerie-fire",
+    ]
+
+    action = hero.replacement_form_actions[0]
+    assert (
+        action.id,
+        action.action_cost,
+        action.form_template_id,
+        action.resource_id,
+        action.hp_mode,
+        action.temporary_hp_on_enter,
+        action.retain_creature_type,
+        action.retain_spellcasting,
+    ) == ("wild-shape", "bonus_action", "srd-wolf", "wild-shape", "retain_owner", 2, True, False)
+
+    faerie_fire = hero.spell_save_actions[0]
+    assert (
+        faerie_fire.id,
+        faerie_fire.action_cost,
+        faerie_fire.range_ft,
+        faerie_fire.area.shape if faerie_fire.area else None,
+        faerie_fire.area.origin if faerie_fire.area else None,
+        faerie_fire.area.length_ft if faerie_fire.area else None,
+        faerie_fire.save_ability,
+        faerie_fire.concentration,
+        faerie_fire.duration_minutes,
+    ) == ("faerie-fire", "action", 60, "cube", "point", 20, "dexterity", True, 1)
+    assert {item.kind for item in faerie_fire.failed_save_modifier_effects} == {
+        "attacks-against-advantage",
+        "invisibility-benefits-suppressed",
+    }
+
+
+def test_2024_druid_level_two_preserves_wild_companion_without_summoning() -> None:
+    profile = build_thalen_greenbough_profile(2)
+    audits = {item.feature_id: item for item in profile.feature_audits}
+
+    assert audits["wild-shape"].combat_relevant is True
+    assert audits["wild-shape"].automated is True
+    assert audits["wild-companion"].combat_relevant is False
+    assert audits["wild-companion"].automated is False
+    assert "arena-unavailable" in (audits["wild-companion"].notes or "")
