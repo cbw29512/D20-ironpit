@@ -26,6 +26,7 @@ def build_wild_resurgence_2024(
                 target_gain=1,
                 requires_target_empty=True,
                 once_per_turn=True,
+                once_per_turn_group="wild-resurgence-regain-wild-shape",
                 priority=100 - spell_level,
                 source="D&D Beyond Basic Rules 2024: Druid 5 — Wild Resurgence",
             ))
