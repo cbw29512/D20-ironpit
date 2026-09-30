@@ -86,7 +86,9 @@
   }
 
   function clearBetweenMembers(source, target, setup) {
-    return clearBetweenPoints(memberPoints(source), memberPoints(target), setup?.persistent_barriers || []);
+    const barriers = setup?.persistent_barriers || [];
+    if (!barriers.length) return true;
+    return clearBetweenPoints(memberPoints(source), memberPoints(target), barriers);
   }
 
   function cleanup(setup, roundNumber) {
