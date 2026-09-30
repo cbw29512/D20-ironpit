@@ -5,6 +5,7 @@ import logging
 from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, CombatantTemplate
 from app.domain.modifiers import CombatModifier, ModifierKind
+from app.combat.modifier_stack import d20_test_advantage_sources
 from app.domain.saving_throw_context import SavingThrowContext
 
 logger = logging.getLogger(__name__)
@@ -81,7 +82,7 @@ def saving_throw_advantage_sources(
     ability: str,
     context: SavingThrowContext | None = None,
 ) -> int:
-    return len(_saving_throw_advantage_modifiers(state, ability, context))
+    return len(_saving_throw_advantage_modifiers(state, ability, context)) + d20_test_advantage_sources(state)
 
 
 def saving_throw_advantage_source_names(
