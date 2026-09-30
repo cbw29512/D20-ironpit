@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def freedom_of_movement_2024() -> DefensiveSpellAction:
-    """Build 2024 Freedom of Movement from universal debuff counters."""
+    """Compose 2024 Freedom of Movement from universal counters and movement grants."""
     try:
         counters = [
             DebuffCounter(debuff_id="difficult-terrain"),
