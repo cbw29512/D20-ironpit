@@ -138,6 +138,16 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     "universal healing action."
                 ),
             ))
+        if level >= 12:
+            audits.append(druid_feature_audit(
+                "ability-score-improvement-l12", "Ability Score Improvement (+2 Charisma)", "class",
+                combat_relevant=True, automated=True,
+                notes=(
+                    "Wisdom is already 20, so the canonical land-damage progression uses the repeatable "
+                    "Ability Score Improvement feat to raise Charisma 16→18 without changing the prepared "
+                    "damage/healing package."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)
