@@ -25,6 +25,8 @@ def push_straight_away(
     source: EncounterCombatant,
     setup: EncounterSetup,
     distance_ft: int,
+    *,
+    round_number: int = 1,
 ) -> int:
     """Move directly away without spending Speed; stop at creatures, walls, or map edges."""
     if distance_ft < 0 or distance_ft % 5:
@@ -50,5 +52,5 @@ def push_straight_away(
             break
         mover.state.position = destination
         moved += 5
-        sync_persistent_beneficial_zones(setup, 1)
+        sync_persistent_beneficial_zones(setup, round_number)
     return moved
