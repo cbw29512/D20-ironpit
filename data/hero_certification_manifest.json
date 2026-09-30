@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 101
+    "public_ready": 102
   },
   "heroes": [
     {
@@ -4409,7 +4409,7 @@
           "subclass": null,
           "runtime_template_id": "thalen-greenbough-l1",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Equipment"
+            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Wild Shape, Equipment"
           ],
           "expected_combat_features": [
             "attack:thalen-sickle",
@@ -4439,24 +4439,38 @@
         {
           "level": 2,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "thalen-greenbough-l2",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Wild Shape, Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:thalen-sickle",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "resource:spell-slot-1",
+            "resource:wild-shape",
+            "spell-attack-action:poison-spray",
+            "spell-save-action:faerie-fire"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:thalen-sickle",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "resource:spell-slot-1",
+            "resource:wild-shape",
+            "spell-attack-action:poison-spray",
+            "spell-save-action:faerie-fire"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 3,

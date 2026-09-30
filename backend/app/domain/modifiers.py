@@ -32,6 +32,7 @@ class ModifierKind(StrEnum):
     ZERO_HP_REPLACEMENT = "zero-hp-replacement"
     OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
     DAMAGE_SOURCE_QUALIFIER = "damage-source-qualifier"
+    INVISIBILITY_BENEFITS_SUPPRESSED = "invisibility-benefits-suppressed"
 
 
 class CombatModifier(BaseModel):

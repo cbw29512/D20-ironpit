@@ -41,6 +41,7 @@
     state.is_stable = false;
     endDodge(state);
     applyProne(state);
+    RF()?.revertIfIncapacitated(state);
   }
 
   function stabilizeAtZero(state) {
@@ -53,6 +54,7 @@
     state.death_save_failures = 0;
     endDodge(state);
     applyProne(state);
+    RF()?.revertIfIncapacitated(state);
     return "unconscious";
   }
 
@@ -63,6 +65,7 @@
     state.is_unconscious = false;
     state.is_stable = false;
     endDodge(state);
+    RF()?.revertIfIncapacitated(state);
   }
 
   function finish(state, outcome, incoming, affectedStates) {

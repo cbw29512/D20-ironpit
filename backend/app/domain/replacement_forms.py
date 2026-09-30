@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from app.domain.combatants import CombatantTemplate
@@ -19,6 +21,8 @@ class ReplacementFormState(BaseModel):
     original_hp: int = Field(ge=0)
     form_hp: int = Field(ge=0)
     form_max_hp: int = Field(ge=1)
+    hp_mode: Literal["form_pool", "retain_owner"] = "form_pool"
+    ends_on_incapacitated: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1)
     voluntary_revert_action: str = "bonus_action"

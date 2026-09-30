@@ -31,15 +31,21 @@ def enter_replacement_form(
     resource_id: str | None = None,
     resource_cost: int = 1,
     voluntary_revert_action: str = "bonus_action",
+    hp_mode: str = "form_pool",
+    temporary_hp_on_enter: int = 0,
+    ends_on_incapacitated: bool = False,
+    replace_existing_form: bool = False,
 ) -> ReplacementFormResult:
     try:
-        if state.replacement_form is not None:
+        active_form = state.replacement_form
+        if active_form is not None and not replace_existing_form:
             raise ValueError(f"{state.template.name} is already in a replacement form.")
-        if form_template.kind != state.template.kind:
+        owner_template = active_form.original_template if active_form is not None else state.template
+        if form_template.kind != owner_template.kind:
             raise ValueError("Compiled replacement form must preserve the combatant lifecycle kind.")
         spend(state, action_cost)
         remaining = spend_resource(state, resource_id, resource_cost)
-        original_template = state.template
+        original_template = owner_template
         state.replacement_form = ReplacementFormState(
             source_id=source_id,
             source_name=source_name,
@@ -48,11 +54,15 @@ def enter_replacement_form(
             original_hp=state.current_hp,
             form_hp=form_template.max_hp,
             form_max_hp=form_template.max_hp,
+            hp_mode=hp_mode,
+            ends_on_incapacitated=ends_on_incapacitated,
             resource_id=resource_id,
             resource_cost=resource_cost,
             voluntary_revert_action=voluntary_revert_action,
         )
         state.template = form_template
+        if temporary_hp_on_enter:
+            state.temporary_hp = max(state.temporary_hp, temporary_hp_on_enter)
         return ReplacementFormResult(
             source_id=source_id,
             form_name=form_template.name,
@@ -92,31 +102,6 @@ def revert_replacement_form(
         raise RuntimeError("Replacement form could not be reverted.") from exc
 
 
-def apply_replacement_form_damage(
-    state: CombatantState,
-    amount: int,
-) -> tuple[int, bool]:
-    """Apply damage to active form HP and return (excess_damage, reverted)."""
-    try:
-        if amount < 0:
-            raise ValueError("Replacement-form damage cannot be negative.")
-        active = state.replacement_form
-        if active is None or amount == 0:
-            return amount, False
-        absorbed = min(active.form_hp, amount)
-        active.form_hp -= absorbed
-        excess = amount - absorbed
-        if active.form_hp > 0:
-            return 0, False
-        revert_replacement_form(state, spend_voluntary_action=False)
-        return excess, True
-    except ValueError:
-        raise
-    except Exception as exc:
-        logger.exception("Failed to resolve replacement-form damage for %s.", state.template.name)
-        raise RuntimeError("Replacement-form damage could not be resolved.") from exc
-
-
 def resolve_replacement_form_action(
     state: CombatantState,
     action: ReplacementFormAction,
@@ -124,10 +109,14 @@ def resolve_replacement_form_action(
 ) -> ReplacementFormResult:
     """Resolve one declared replacement-form action through the shared lifecycle."""
     try:
-        if active_form_template.id != f"{state.template.id}--form-{action.form_template_id}":
+        owner_template = (
+            state.replacement_form.original_template
+            if state.replacement_form is not None else state.template
+        )
+        if active_form_template.id != f"{owner_template.id}--form-{action.form_template_id}":
             raise ValueError(
                 f"Compiled replacement form {active_form_template.id} does not match "
-                f"declared form {action.form_template_id} for {state.template.id}."
+                f"declared form {action.form_template_id} for {owner_template.id}."
             )
         return enter_replacement_form(
             state,
@@ -138,6 +127,10 @@ def resolve_replacement_form_action(
             resource_id=action.resource_id,
             resource_cost=action.resource_cost,
             voluntary_revert_action=action.voluntary_revert_action,
+            hp_mode=action.hp_mode,
+            temporary_hp_on_enter=action.temporary_hp_on_enter,
+            ends_on_incapacitated=action.ends_on_incapacitated,
+            replace_existing_form=action.replace_existing_form,
         )
     except ValueError:
         raise

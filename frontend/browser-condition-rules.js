@@ -11,7 +11,11 @@
     return !I().immune(state, id);
   }
 
-  const canSee = (observer, target) => !has(observer, "blinded") && !has(target, "invisible");
+  const invisibilitySuppressed = (state) => Boolean(
+    (state.active_modifiers || []).some((item) => item.kind === "invisibility-benefits-suppressed")
+  );
+  const canSee = (observer, target) => !has(observer, "blinded")
+    && (!has(target, "invisible") || invisibilitySuppressed(target));
 
   function incapacitated(state) {
     if (I().immune(state, "incapacitated")) return false;
@@ -24,5 +28,5 @@
   const suppressAttackAdvantage = (state) => Boolean(state.template?.suppress_attack_advantage_while_not_incapacitated) && !incapacitated(state);
   const speedZero = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "restrained");
 
-  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, canSee, has, incapacitated, speedZero, suppressAttackAdvantage };
+  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, canSee, has, incapacitated, invisibilitySuppressed, speedZero, suppressAttackAdvantage };
 })();

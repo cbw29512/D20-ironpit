@@ -8,7 +8,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
-from app.combat.replacement_forms import apply_replacement_form_damage
+from app.combat.replacement_form_lifecycle import apply_replacement_form_damage, revert_replacement_form_if_incapacitated
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement
@@ -36,6 +36,7 @@ def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     state.is_unconscious = False
     state.is_stable = False
     state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
+    revert_replacement_form_if_incapacitated(state)
     return "dead"
 
 
@@ -46,6 +47,7 @@ def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
     if not condition_is_immune(state, PRONE_EFFECT_ID) and PRONE_EFFECT_ID not in state.active_effect_ids:
         state.active_effect_ids.append(PRONE_EFFECT_ID)
+    revert_replacement_form_if_incapacitated(state)
     return "unconscious"
 
 

@@ -2034,6 +2034,14 @@
     "ruleset": "2024",
     "creature_type": "Beast",
     "size": "medium",
+    "ability_scores": {
+      "strength": 14,
+      "dexterity": 15,
+      "constitution": 12,
+      "intelligence": 3,
+      "wisdom": 12,
+      "charisma": 6
+    },
     "armor_class": 12,
     "max_hp": 11,
     "speed_ft": 40,

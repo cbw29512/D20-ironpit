@@ -6,11 +6,12 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
 from app.content.character_math import saving_throw_bonuses
-from app.content.druid_2024_spells import build_longstrider_2024, build_poison_spray_2024
+from app.content.druid_2024_spells import build_faerie_fire_2024, build_longstrider_2024, build_poison_spray_2024
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.replacement_form_actions import ReplacementFormAction
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 
 logger = logging.getLogger(__name__)
@@ -29,11 +30,28 @@ def _sickle(proficiency_bonus: int, strength_modifier: int) -> WeaponAttack:
     )
 
 
-def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
-    """Compile the 2024 Land-Druid concept through its certified level-1 foundation."""
+def _wild_shape(level: int) -> list[ReplacementFormAction]:
     try:
-        if level != 1:
-            raise ValueError("2024 Thalen runtime currently supports Druid level 1 only.")
+        if level < 2:
+            return []
+        return [ReplacementFormAction(
+            id="wild-shape", name="Wild Shape", action_cost="bonus_action",
+            form_template_id="srd-wolf", resource_id="wild-shape", resource_cost=1,
+            voluntary_revert_action="bonus_action", hp_mode="retain_owner",
+            temporary_hp_on_enter=level, retain_creature_type=True,
+            ends_on_incapacitated=True, replace_existing_form=True,
+            retain_spellcasting=False, source="D&D Beyond Basic Rules 2024: Druid — Wild Shape",
+        )]
+    except Exception:
+        logger.exception("Failed to build 2024 Wild Shape at Druid level %s.", level)
+        raise
+
+
+def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
+    """Compile the certified 2024 Land-Druid progression."""
+    try:
+        if level not in {1, 2}:
+            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 2.")
         profile = build_thalen_greenbough_profile(level)
         row = DRUID_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -59,6 +77,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
             level=level,
             kind="character",
             ruleset="2024",
+            creature_type="Humanoid",
             ability_scores=scores,
             armor_class=armor_class,
             max_hp=row.max_hp,
@@ -68,6 +87,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
             spell_attack_actions=[
                 build_poison_spray_2024(pb + wisdom_modifier, level),
             ],
+            spell_save_actions=[build_faerie_fire_2024(8 + pb + wisdom_modifier)] if level >= 2 else [],
             defensive_spell_actions=[build_longstrider_2024()],
             healing_actions=[
                 build_healing_word(wisdom_modifier),
@@ -96,8 +116,13 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                 "perception": wisdom_modifier + pb,
             },
             resources=[
-                ResourceDefinition(id="spell-slot-1", name="Spell Slot 1", max_uses=2),
+                ResourceDefinition(id="spell-slot-1", name="Spell Slot 1", max_uses=row.spell_slots[0]),
+                *(
+                    [ResourceDefinition(id="wild-shape", name="Wild Shape", max_uses=row.wild_shape_uses)]
+                    if row.wild_shape_uses else []
+                ),
             ],
+            replacement_form_actions=_wild_shape(level),
             weapon_masteries=[],
             visual=VisualLoadout(
                 armor="leather",
@@ -107,7 +132,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
             ),
             source=(
                 "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, "
-                "Poison Spray, Healing Word, Cure Wounds, Longstrider, Equipment"
+                "Poison Spray, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Wild Shape, Equipment"
             ),
         )
     except Exception:

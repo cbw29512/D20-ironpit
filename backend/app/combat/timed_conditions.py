@@ -5,6 +5,7 @@ import logging
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.debuff_counters import movement_counter_cost
+from app.combat.replacement_form_lifecycle import revert_replacement_form_if_incapacitated
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
 from app.domain.models import CombatantState, CombatantTemplate, DebuffCounter, TimedEffect
@@ -125,6 +126,7 @@ def apply_timed_condition(
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
+        revert_replacement_form_if_incapacitated(state)
         end_concentration_if_incapacitated(state, affected_states)
         return effect_id
     except Exception:

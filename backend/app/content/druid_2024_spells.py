@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.content.offensive_spell_effects import cantrip_damage_dice
-from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellModifierEffect
+from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellModifierEffect, SpellSaveAction
+from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
 
@@ -51,4 +52,33 @@ def build_longstrider_2024() -> DefensiveSpellAction:
         )
     except Exception:
         logger.exception("Failed to build 2024 Longstrider.")
+        raise
+
+
+def build_faerie_fire_2024(save_dc: int) -> SpellSaveAction:
+    """Explicit 2024 Faerie Fire fingerprint using shared area-save modifiers."""
+    try:
+        return SpellSaveAction(
+            id="faerie-fire",
+            name="Faerie Fire",
+            level=1,
+            action_cost="action",
+            range_ft=60,
+            area=AreaTargeting(shape="cube", origin="point", length_ft=20),
+            save_ability="dexterity",
+            dc=save_dc,
+            damage_dice_count=0,
+            damage_type=None,
+            success_damage="none",
+            failed_save_modifier_effects=[
+                SpellModifierEffect(kind="attacks-against-advantage"),
+                SpellModifierEffect(kind="invisibility-benefits-suppressed"),
+            ],
+            concentration=True,
+            duration_minutes=1,
+            animation="faerie-fire",
+            source="D&D Beyond Basic Rules 2024: Faerie Fire",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Faerie Fire.")
         raise

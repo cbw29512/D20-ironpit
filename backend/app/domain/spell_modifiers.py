@@ -11,7 +11,7 @@ SpellModifierKind = Literal[
     "armor-class", "armor-class-minimum", "attack-roll-bonus-die", "saving-throw-bonus-die", "saving-throw-advantage",
     "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
     "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "speed", "debuff-counter",
-    "zero-hp-replacement",
+    "zero-hp-replacement", "invisibility-benefits-suppressed",
 ]
 
 

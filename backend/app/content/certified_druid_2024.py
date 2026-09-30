@@ -9,5 +9,6 @@ CERTIFIED_DRUID_2024 = CertifiedHeroProgression(
     class_id="druid",
     ruleset="2024",
     template_builder=build_thalen_greenbough_level,
-    profile_builders=(build_thalen_greenbough_profile,),
+    profile_level_builder=build_thalen_greenbough_profile,
+    max_level=2,
 )

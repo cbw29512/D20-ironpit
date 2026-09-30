@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.models import CombatantState
+from app.domain.modifiers import ModifierKind
 
 BLINDED = "blinded"
 INVISIBLE = "invisible"
@@ -28,9 +29,17 @@ def has_condition(state: CombatantState, condition_id: str) -> bool:
     return not condition_is_immune(state, condition_id)
 
 
+def invisibility_benefits_suppressed(state: CombatantState) -> bool:
+    return any(
+        item.kind is ModifierKind.INVISIBILITY_BENEFITS_SUPPRESSED
+        for item in state.active_modifiers
+    )
+
+
 def can_see(observer: CombatantState, target: CombatantState) -> bool:
     """Return whether the observer can visually perceive the target under supported visibility rules."""
-    return not has_condition(observer, BLINDED) and not has_condition(target, INVISIBLE)
+    target_hidden = has_condition(target, INVISIBLE) and not invisibility_benefits_suppressed(target)
+    return not has_condition(observer, BLINDED) and not target_hidden
 
 
 def is_incapacitated(state: CombatantState) -> bool:

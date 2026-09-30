@@ -19,33 +19,25 @@ def build_thalen_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
             wisdom=17,
             charisma=15,
         )
+        skills = (
+            ("athletics", 0), ("acrobatics", 0), ("nature", 6), ("survival", 5),
+            ("insight", 5), ("religion", 3), ("perception", 5),
+        )
+        attacks = (AttackExpectation("sickle", "strength", 1, 4, "slashing"),)
         return (
             PregenCombatProfile(
-                template_id="thalen-greenbough-l1",
-                archetype="Druid",
-                level=1,
-                abilities=abilities,
-                save_proficiencies=("intelligence", "wisdom"),
-                armor_class=13,
-                max_hp=8,
-                speed_ft=35,
-                skill_bonuses=(
-                    ("athletics", 0),
-                    ("acrobatics", 0),
-                    ("nature", 6),
-                    ("survival", 5),
-                    ("insight", 5),
-                    ("religion", 3),
-                    ("perception", 5),
-                ),
-                attacks=(
-                    AttackExpectation(
-                        "sickle", "strength", 1, 4, "slashing",
-                    ),
-                ),
-                weapon_masteries=(),
-                resources=(("spell-slot-1", 2),),
+                template_id="thalen-greenbough-l1", archetype="Druid", level=1,
+                abilities=abilities, save_proficiencies=("intelligence", "wisdom"),
+                armor_class=13, max_hp=8, speed_ft=35, skill_bonuses=skills,
+                attacks=attacks, weapon_masteries=(), resources=(("spell-slot-1", 2),),
                 initiative_bonus=0,
+            ),
+            PregenCombatProfile(
+                template_id="thalen-greenbough-l2", archetype="Druid", level=2,
+                abilities=abilities, save_proficiencies=("intelligence", "wisdom"),
+                armor_class=13, max_hp=13, speed_ft=35, skill_bonuses=skills,
+                attacks=attacks, weapon_masteries=(),
+                resources=(("spell-slot-1", 3), ("wild-shape", 2)), initiative_bonus=0,
             ),
         )
     except Exception:

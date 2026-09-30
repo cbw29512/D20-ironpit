@@ -3,13 +3,17 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const R = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
 
   function mergeBonuses(owner = {}, form = {}) {
     const keys = new Set([...Object.keys(owner || {}), ...Object.keys(form || {})]);
     return Object.fromEntries([...keys].map((key) => [key, Math.max(owner?.[key] ?? -99, form?.[key] ?? -99)]));
   }
 
-  function compileActiveTemplate(owner, form, retainSpellcasting = false, retainedSpellActionIds = []) {
+  function compileActiveTemplate(
+    owner, form, retainSpellcasting = false, retainedSpellActionIds = [],
+    retainCreatureType = false, retainHitPoints = false,
+  ) {
     try {
       if (!owner || owner.kind !== "character") throw new Error("Replacement-form owner must be a character.");
       if (!form || form.kind !== "monster") throw new Error("Replacement-form source must be a monster/beast template.");
@@ -28,6 +32,8 @@
         replacement_form_actions: structuredClone(owner.replacement_form_actions || []),
         source: (owner.source || "") + "; replacement form: " + (form.source || form.name),
       });
+      if (retainCreatureType) active.creature_type = owner.creature_type;
+      if (retainHitPoints) active.max_hp = owner.max_hp;
       const allowed = new Set(retainedSpellActionIds || []);
       const keep = (actions) => structuredClone((actions || []).filter((action) => allowed.has(action.id)));
       if (retainSpellcasting) {
@@ -62,9 +68,13 @@
 
   function resolveAction(state, action) {
     try {
-      const source = formRegistry(state.template.ruleset)[action.formTemplateId];
+      const owner = state.replacement_form?.original_template || state.template;
+      const source = formRegistry(owner.ruleset)[action.formTemplateId];
       if (!source) throw new Error("Unknown replacement form template: " + action.formTemplateId);
-      const activeTemplate = compileActiveTemplate(state.template, source, Boolean(action.retainSpellcasting), action.retainedSpellActionIds || []);
+      const activeTemplate = compileActiveTemplate(
+        owner, source, Boolean(action.retainSpellcasting), action.retainedSpellActionIds || [],
+        Boolean(action.retainCreatureType), (action.hpMode || "form_pool") === "retain_owner",
+      );
       return enter(state, action, activeTemplate);
     } catch (error) {
       console.error("Browser replacement form action failed", { combatant: state?.template?.name, action: action?.id, error });
@@ -74,20 +84,26 @@
 
   function enter(state, action, activeTemplate) {
     try {
-      if (state.replacement_form) throw new Error(state.template.name + " is already transformed.");
+      const currentForm = state.replacement_form;
+      if (currentForm && !action?.replaceExistingForm) throw new Error(state.template.name + " is already transformed.");
       if (!action || !activeTemplate) throw new Error("Replacement form action and compiled template are required.");
-      if (activeTemplate.kind !== state.template.kind) throw new Error("Replacement form must preserve combatant lifecycle kind.");
+      const ownerTemplate = currentForm?.original_template || state.template;
+      if (activeTemplate.kind !== ownerTemplate.kind) throw new Error("Replacement form must preserve combatant lifecycle kind.");
       E().spend(state, action.actionCost);
       const remaining = R().spend(state, action.resourceId, action.resourceCost || 1);
-      const originalTemplate = state.template;
+      const originalTemplate = ownerTemplate;
       state.replacement_form = {
         source_id: action.id, source_name: action.name, original_template: originalTemplate,
         form_template: activeTemplate, original_hp: state.current_hp,
         form_hp: activeTemplate.max_hp, form_max_hp: activeTemplate.max_hp,
+        hp_mode: action.hpMode || "form_pool",
+        ends_on_incapacitated: Boolean(action.endsOnIncapacitated),
         resource_id: action.resourceId || null, resource_cost: action.resourceCost || 1,
         voluntary_revert_action: action.voluntaryRevertAction || "bonus_action",
       };
       state.template = activeTemplate;
+      const entryTemporaryHp = Number(action.temporaryHpOnEnter || 0);
+      if (entryTemporaryHp > 0) state.temporary_hp = Math.max(Number(state.temporary_hp || 0), entryTemporaryHp);
       return { source_id: action.id, form_name: activeTemplate.name, resource_remaining: remaining, reverted: false };
     } catch (error) {
       console.error("Browser replacement form entry failed", { combatant: state?.template?.name, error });
@@ -110,11 +126,20 @@
     }
   }
 
+  function revertIfIncapacitated(state) {
+    const active = state.replacement_form;
+    if (!active || !active.ends_on_incapacitated) return false;
+    if (!state.is_dead && !state.is_unconscious && !Q()?.incapacitated(state)) return false;
+    revert(state, false);
+    return true;
+  }
+
   function applyDamage(state, amount) {
     try {
       if (amount < 0) throw new Error("Replacement-form damage cannot be negative.");
       const active = state.replacement_form;
       if (!active || amount === 0) return { excess: amount, reverted: false };
+      if ((active.hp_mode || "form_pool") === "retain_owner") return { excess: amount, reverted: false };
       const absorbed = Math.min(active.form_hp, amount);
       active.form_hp -= absorbed;
       const excess = amount - absorbed;
@@ -127,5 +152,7 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = { applyDamage, compileActiveTemplate, enter, resolveAction, revert };
+  window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = {
+    applyDamage, compileActiveTemplate, enter, resolveAction, revert, revertIfIncapacitated,
+  };
 })();

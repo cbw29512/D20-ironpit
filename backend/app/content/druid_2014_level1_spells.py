@@ -70,6 +70,7 @@ def faerie_fire_2014(save_dc: int) -> SpellSaveAction:
             success_damage="none",
             failed_save_modifier_effects=[
                 SpellModifierEffect(kind="attacks-against-advantage"),
+                SpellModifierEffect(kind="invisibility-benefits-suppressed"),
             ],
             concentration=True,
             duration_minutes=1,

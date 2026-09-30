@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-29 while starting the certified 2024 Circle of the Land Druid progression at level 1.
+Recorded 2026-09-29 while advancing the certified 2024 Circle of the Land Druid progression through level 2.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -32,9 +32,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
-| 2024 | Druid (Land) | 1 |
+| 2024 | Druid (Land) | 1–2 |
 
-2024 public-ready hero slots after the Druid 1 tranche: **101 / 240**.
+2024 public-ready hero slots after the Druid 2 tranche: **102 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -44,9 +44,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.** The 2014 Hero Certification and paired-edition guard workflows were green on the exact PR #436 head before merge.
 
-**2024 canonical pregens are now 101 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 1.
+**2024 canonical pregens are now 102 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 2.
 
-Active implementation lane after merge: **2024 Circle of the Land Druid level 2 onward**.
+Active implementation lane after merge: **2024 Circle of the Land Druid level 3 onward**.
 
 Bard 20 Words of Creation is edition-specific: 2024 always prepares Power Word Heal and Power Word Kill, and either spell may affect one additional creature only when that second creature is within 10 feet of the first. Power Word Heal is modeled as one atomic healing resolution that also ends Charmed, Frightened, Paralyzed, Poisoned, and Stunned, with the target optionally spending its Reaction to stand from Prone.
 
@@ -139,3 +139,6 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Longstrider uses an explicit 2024 fingerprint.
 - Druidic always prepares Speak with Animals; it is arena-neutral, not approximated.
 - Unsupported or only-partially-generalized spell mechanics are not substituted with 2014 behavior.
+- Level 2 uses the shared replacement-form engine for 2024 Wild Shape: Bonus Action entry, Wolf form, owner HP retained, Druid-level Temporary HP, retained Humanoid creature type, no spellcasting while shaped, and generic reversion on Incapacitated/death.
+- Wild Companion remains source-audited but arena-unavailable under the global no-separate-summon rule.
+- 2024 Faerie Fire is edition-fingerprinted and uses the shared area-save/modifier engine; the same tranche re-audited 2014 Faerie Fire to suppress Invisible benefits through a universal modifier.
