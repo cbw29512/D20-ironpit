@@ -90,3 +90,59 @@ def test_resource_conversion_schema_rejects_same_source_and_target() -> None:
             target_resource_id="x",
             target_gain=1,
         )
+
+
+
+def test_resource_conversion_can_require_additional_finite_resources() -> None:
+    state = _state()
+    state.resources.append(ResourceState(
+        id="once-per-rest",
+        name="Once Per Rest",
+        current_uses=1,
+        max_uses=1,
+    ))
+    slot = _resource(state, "spell-slot-1")
+    slot.current_uses = 0
+    action = ResourceConversionAction(
+        id="multi-cost",
+        name="Multi Cost",
+        action_cost="none",
+        source_resource_id="sorcery-points",
+        source_cost=1,
+        additional_source_costs={"once-per-rest": 1},
+        target_resource_id="spell-slot-1",
+        target_gain=1,
+    )
+
+    assert conversion_available(state, action) is True
+    resolve_resource_conversion(
+        state, action, sequence=1, round_number=1, actor_id="nyra"
+    )
+    assert _resource(state, "sorcery-points").current_uses == 1
+    assert _resource(state, "once-per-rest").current_uses == 0
+    assert slot.current_uses == 1
+    assert conversion_available(state, action) is False
+
+
+def test_resource_conversion_multi_cost_fails_closed_when_gate_is_empty() -> None:
+    state = _state()
+    state.resources.append(ResourceState(
+        id="once-per-rest",
+        name="Once Per Rest",
+        current_uses=0,
+        max_uses=1,
+    ))
+    slot = _resource(state, "spell-slot-1")
+    slot.current_uses = 0
+    action = ResourceConversionAction(
+        id="multi-cost-blocked",
+        name="Multi Cost Blocked",
+        action_cost="none",
+        source_resource_id="sorcery-points",
+        source_cost=1,
+        additional_source_costs={"once-per-rest": 1},
+        target_resource_id="spell-slot-1",
+        target_gain=1,
+    )
+
+    assert conversion_available(state, action) is False
