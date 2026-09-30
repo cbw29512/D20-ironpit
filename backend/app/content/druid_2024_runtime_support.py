@@ -11,6 +11,7 @@ from app.content.druid_2024_land_spells import (
 )
 from app.content.druid_2024_spells import build_longstrider_2024
 from app.content.healing_spell_effects import build_cure_wounds, build_heal_2024, build_healing_word, build_mass_cure_wounds
+from app.content.foresight_2024 import build_foresight_2024
 from app.content.shared_movement_spells_2024 import freedom_of_movement_2024
 from app.content.druid_2024_wild_resurgence import build_wild_resurgence_2024
 from app.content.druid_2024_offensive_actions import druid_offensive_actions
@@ -90,6 +91,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
                 *([build_blur_2024()] if level >= 3 else []),
                 *([AID.model_copy(deep=True)] if level >= 6 else []),
                 *([freedom_of_movement_2024()] if level >= 8 else []),
+                *([build_foresight_2024()] if level >= 17 else []),
             ],
             "healing_actions": [
                 build_healing_word(wisdom_modifier),
