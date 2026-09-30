@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import pytest
 
-from app.combat.resource_conversion import conversion_available, resolve_resource_conversion
+from app.combat.resource_conversion import (
+    all_spell_slots_empty,
+    automatic_resource_conversion,
+    conversion_available,
+    resolve_resource_conversion,
+)
 from app.content.sorcerer_draconic_2014_runtime import build_nyra_emberveil_2014
 from app.domain.encounters import EncounterCombatant
 from app.domain.resource_conversion import ResourceConversionAction
@@ -146,3 +151,27 @@ def test_resource_conversion_multi_cost_fails_closed_when_gate_is_empty() -> Non
     )
 
     assert conversion_available(state, action) is False
+
+
+
+def test_python_automatic_conversion_matches_browser_empty_slot_policy() -> None:
+    state = _state()
+    for resource in state.resources:
+        if resource.id.startswith("spell-slot-"):
+            resource.current_uses = 0
+
+    assert all_spell_slots_empty(state) is True
+    action = automatic_resource_conversion(state)
+    assert action is not None
+    assert action.id == "create-spell-slot-1"
+
+    event = resolve_resource_conversion(
+        state,
+        action,
+        sequence=1,
+        round_number=1,
+        actor_id="nyra",
+    )
+    assert event.feature_id == "create-spell-slot-1"
+    assert _resource(state, "spell-slot-1").current_uses == 1
+    assert state.bonus_action_available is False
