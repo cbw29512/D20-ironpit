@@ -99,9 +99,9 @@ console.log("Browser replacement-form Main Action provider parity passed.");
   };
   druid2024.state.template = { ...original, id: original.id + "--form-srd-wolf" };
   druid2024.state.bonus_action_available = true;
-  const candidates = S.discoverCandidates("normalPreMove", ctx2024);
-  assert.equal(candidates.length, 1, "2024 Wild Shape can be used again while transformed");
-  assert.equal(candidates[0].payload.kind, "transform");
+  const refreshCandidates = S.discoverCandidates("normalPreMove", ctx2024);
+  assert.equal(refreshCandidates.length, 1, "2024 Wild Shape can be used again while transformed");
+  assert.equal(refreshCandidates[0].payload.kind, "transform");
 }
 
 {
