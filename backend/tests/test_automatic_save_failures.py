@@ -16,8 +16,11 @@ def _setup():
 
 def test_creature_type_automatic_save_failure_skips_d20_roll() -> None:
     _, actor, target = _setup()
+    # Karnok predates explicit creature-type metadata, so use a local typed target
+    # to prove the universal creature-type gate without depending on legacy hero data.
+    target.state.template = target.state.template.model_copy(update={"creature_type": "Humanoid"})
     action = actor.state.template.saving_throw_actions[0].model_copy(update={
-        "automatic_failure_creature_types": [target.state.template.creature_type],
+        "automatic_failure_creature_types": ["Humanoid"],
         "damage_dice_count": 0,
         "damage_type": None,
         "grapple_escape_dc": None,
