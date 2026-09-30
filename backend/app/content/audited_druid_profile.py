@@ -9,7 +9,7 @@ from app.content.canonical_combat_build_policy import (
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.druid_2024_profile_features import build_druid_2024_feature_audits
-from app.domain.character_builds import CharacterBuildProfile
+from app.domain.character_builds import AbilityIncrease, CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +17,15 @@ logger = logging.getLogger(__name__)
 def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile Thalen's 2024 Druid foundation without early subclass leakage."""
     try:
-        if level not in {1, 2, 3}:
-            raise ValueError("2024 Thalen profile currently certifies Druid levels 1 through 3.")
+        if level not in {1, 2, 3, 4}:
+            raise ValueError("2024 Thalen profile currently certifies Druid levels 1 through 4.")
         hero = HERO_BY_CLASS["druid"]
         base = canonical_base_ability_scores("druid")
         background_allowed = ["intelligence", "wisdom", "charisma"]
         background = canonical_background_increases("druid", background_allowed)
+        advancement = [AbilityIncrease(ability="wisdom", amount=2)] if level >= 4 else []
         values = base.model_dump()
-        for increase in background:
+        for increase in [*background, *advancement]:
             values[increase.ability] += increase.amount
         final = type(base)(**values)
         return CharacterBuildProfile(
@@ -47,7 +48,7 @@ def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
             base_ability_scores=base,
             background_allowed_abilities=background_allowed,
             background_increases=background,
-            advancement_increases=[],
+            advancement_increases=advancement,
             final_ability_scores=final,
             class_equipment_option="package",
             class_equipment=[
@@ -70,6 +71,10 @@ def build_thalen_greenbough_profile(level: int = 1) -> CharacterBuildProfile:
                 "D&D Beyond Basic Rules 2024: Equipment — Leather Armor, Shield, Sickle",
                 "D&D Beyond Basic Rules 2024: Spells — Poison Spray, Healing Word, Cure Wounds, Longstrider, Faerie Fire",
                 "D&D Beyond Basic Rules 2024: Druid 2 — Wild Shape, Wild Companion",
+                *(
+                    ["D&D Beyond Basic Rules 2024: Druid 4 — Ability Score Improvement; Starry Wisp"]
+                    if level >= 4 else []
+                ),
                 *(
                     ["D&D Beyond Basic Rules 2024: Circle of the Land 3 — Land's Aid, Circle Spells (Arid)"]
                     if level >= 3 else []
