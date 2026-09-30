@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.replacement_forms import resolve_replacement_form_action
+from app.combat.resource_conversion import restoration_conversion, resolve_resource_conversion
 from app.combat.resources import resource_available
 from app.combat.spell_fixed_slot_policy import choose_named_spell
 from app.combat.spell_resolution import resolve_spell
@@ -38,8 +39,20 @@ def resolve_replacement_form_setup(
             return [], sequence
         if not is_available(state, action.action_cost):
             return [], sequence
+        events: list[BattleEvent] = []
         if not resource_available(state, action.resource_id, action.resource_cost):
-            return [], sequence
+            conversion = restoration_conversion(state, action.resource_id, turn_key)
+            if conversion is None:
+                return [], sequence
+            events.append(resolve_resource_conversion(
+                state,
+                conversion,
+                sequence=sequence,
+                round_number=round_number,
+                actor_id=member.combatant_id,
+                turn_key=turn_key,
+            ))
+            sequence += 1
 
         if action.setup_spell_id:
             concentration = state.concentration
@@ -52,7 +65,7 @@ def resolve_replacement_form_setup(
                     action.setup_spell_id,
                 )
                 if choice is not None:
-                    return resolve_spell(
+                    spell_events, sequence = resolve_spell(
                         sequence,
                         round_number,
                         member,
@@ -61,6 +74,7 @@ def resolve_replacement_form_setup(
                         turn_key,
                         dice,
                     )
+                    return [*events, *spell_events], sequence
                 return [], sequence
 
         source = replacement_form_source_template(
@@ -90,7 +104,7 @@ def resolve_replacement_form_setup(
                 f"{source.name} replacement form."
             ),
         )
-        return [event], sequence + 1
+        return [*events, event], sequence + 1
     except ValueError:
         raise
     except Exception as exc:
