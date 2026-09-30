@@ -155,6 +155,8 @@ def build_thalen_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
                     ("wild-resurgence-slot-restore", 1), ("natural-recovery-free-cast", 1),
                 ),
                 initiative_bonus=0,
+                damage_resistances=("fire",),
+                condition_immunities=("poisoned",),
             ),
         )
     except Exception:
