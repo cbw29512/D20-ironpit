@@ -12,9 +12,10 @@ def build_thalen_2024_high_combat_profiles(
     abilities_l8: AbilityScores,
     attacks: tuple[AttackExpectation, ...],
 ) -> tuple[PregenCombatProfile, ...]:
-    """Independent source-derived combat fingerprints for Druid levels 9–15."""
+    """Independent source-derived combat fingerprints for Druid levels 9–16."""
     try:
         abilities_l12 = abilities_l8.model_copy(update={"charisma": 18})
+        abilities_l16 = abilities_l12.model_copy(update={"charisma": 20})
         high_skills = (
             ("athletics", 0), ("acrobatics", 0), ("nature", 10), ("survival", 9),
             ("insight", 9), ("religion", 5), ("perception", 9),
@@ -123,6 +124,28 @@ def build_thalen_2024_high_combat_profiles(
             PregenCombatProfile(
                 template_id="thalen-greenbough-l15", level=15, abilities=abilities_l12,
                 max_hp=78,
+                skill_bonuses=(
+                    ("athletics", 0), ("acrobatics", 0), ("nature", 11), ("survival", 10),
+                    ("insight", 10), ("religion", 6), ("perception", 10),
+                ),
+                resources=(
+                    ("spell-slot-1", 4), ("spell-slot-2", 3), ("spell-slot-3", 3),
+                    ("spell-slot-4", 3), ("spell-slot-5", 2), ("spell-slot-6", 1),
+                    ("spell-slot-7", 1), ("spell-slot-8", 1), ("wild-shape", 3),
+                    ("wild-resurgence-slot-restore", 1), ("natural-recovery-free-cast", 1),
+                ),
+                archetype="Druid",
+                save_proficiencies=("intelligence", "wisdom"),
+                armor_class=13,
+                speed_ft=35,
+                attacks=attacks,
+                weapon_masteries=(),
+                initiative_bonus=0,
+                **ward,
+            ),
+            PregenCombatProfile(
+                template_id="thalen-greenbough-l16", level=16, abilities=abilities_l16,
+                max_hp=83,
                 skill_bonuses=(
                     ("athletics", 0), ("acrobatics", 0), ("nature", 11), ("survival", 10),
                     ("insight", 10), ("religion", 6), ("perception", 10),
