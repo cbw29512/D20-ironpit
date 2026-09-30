@@ -418,9 +418,11 @@ def defense_row(action: Any) -> dict[str, Any]:
         "damageResistances": list(action.damage_resistances),
         "conditionIds": list(action.condition_ids),
         "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
-        "concentration": action.concentration, "freeOpeningCast": action.free_opening_cast,
+        "concentration": action.concentration,
         "priority": action.priority, "animation": action.animation,
     }
+    if action.free_opening_cast:
+        row["freeOpeningCast"] = True
     if action.movement_mode_grants:
         row["movementModeGrants"] = [
             {
