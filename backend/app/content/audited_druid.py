@@ -28,12 +28,31 @@ def _sickle(proficiency_bonus: int, strength_modifier: int) -> WeaponAttack:
     )
 
 
+def _source_reference(level: int) -> str:
+    parts = [
+        "Wood Elf", "Acolyte", "Druid", "Primal Order: Magician",
+        "Poison Spray", "Healing Word", "Cure Wounds", "Longstrider", "Equipment",
+    ]
+    if level >= 2:
+        parts.extend(["Faerie Fire", "Wild Shape"])
+    if level >= 3:
+        parts.extend([
+            "Lesser Restoration", "Circle of the Land (Arid)", "Blur",
+            "Burning Hands", "Fire Bolt", "Land's Aid",
+        ])
+    if level >= 4:
+        parts.extend(["Starry Wisp", "Detect Poison and Disease"])
+    if level >= 5:
+        parts.extend(["Fireball", "Dispel Magic", "Water Breathing", "Wild Resurgence"])
+    return "D&D Beyond Basic Rules 2024: " + ", ".join(parts)
+
+
 
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
     """Compile the certified 2024 Land-Druid progression."""
     try:
-        if level not in {1, 2, 3, 4}:
-            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 4.")
+        if level not in {1, 2, 3, 4, 5}:
+            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 5.")
         profile = build_thalen_greenbough_profile(level)
         row = DRUID_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -89,7 +108,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                 "religion": scores.modifier("intelligence") + pb,
                 "perception": wisdom_modifier + pb,
             },
-            resources=druid_resources(row.spell_slots, row.wild_shape_uses),
+            resources=druid_resources(level, row.spell_slots, row.wild_shape_uses),
             replacement_form_actions=wild_shape_actions(level),
             weapon_masteries=[],
             visual=VisualLoadout(
@@ -98,12 +117,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                 off_hand="wooden-shield",
                 body_style="humanoid",
             ),
-            source=(
-                "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, "
-                "Poison Spray, Starry Wisp, Healing Word, Cure Wounds, Longstrider, Faerie Fire, "
-                "Lesser Restoration, Detect Poison and Disease, Circle of the Land (Arid), Blur, "
-                "Burning Hands, Fire Bolt, Land's Aid, Wild Shape, Equipment"
-            ),
+            source=_source_reference(level),
         )
     except Exception:
         logger.exception("Failed to compile 2024 Thalen Greenbough at Druid level %s.", level)

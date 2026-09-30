@@ -11,15 +11,35 @@ from app.domain.resource_conversion import ResourceConversionAction
 logger = logging.getLogger(__name__)
 
 
-def conversion_available(state: CombatantState, action: ResourceConversionAction) -> bool:
+def conversion_available(
+    state: CombatantState,
+    action: ResourceConversionAction,
+    turn_key: str | None = None,
+) -> bool:
     try:
         if action.action_cost != "none" and not is_available(state, action.action_cost):
             return False
         if not resource_available(state, action.source_resource_id, action.source_cost):
             return False
+        source = next((item for item in state.resources if item.id == action.source_resource_id), None)
+        if source is None:
+            raise ValueError(f"Resource conversion source {action.source_resource_id!r} is missing.")
+        if source.current_uses - action.source_cost < action.source_reserve:
+            return False
+        if any(
+            not resource_available(state, resource_id, cost)
+            for resource_id, cost in action.additional_source_costs.items()
+        ):
+            return False
         target = next((item for item in state.resources if item.id == action.target_resource_id), None)
         if target is None:
             raise ValueError(f"Resource conversion target {action.target_resource_id!r} is missing.")
+        if action.requires_target_empty and target.current_uses != 0:
+            return False
+        if action.once_per_turn:
+            turn_limit_id = action.once_per_turn_group or action.id
+            if turn_key is None or state.feature_last_turn_keys.get(turn_limit_id) == turn_key:
+                return False
         return action.target_allows_overflow or target.current_uses < target.max_uses
     except ValueError:
         raise
@@ -31,6 +51,7 @@ def conversion_available(state: CombatantState, action: ResourceConversionAction
 def restoration_conversion(
     state: CombatantState,
     target_resource_id: str,
+    turn_key: str | None = None,
 ) -> ResourceConversionAction | None:
     """Choose an available no-action conversion that restores one depleted action resource."""
     try:
@@ -38,7 +59,7 @@ def restoration_conversion(
             action for action in state.template.resource_conversion_actions
             if action.action_cost == "none"
             and action.target_resource_id == target_resource_id
-            and conversion_available(state, action)
+            and conversion_available(state, action, turn_key)
         ]
         return sorted(candidates, key=lambda action: (-action.priority, action.id))[0] if candidates else None
     except Exception as exc:
@@ -54,19 +75,26 @@ def restoration_conversion(
 def apply_restoration_conversion(
     state: CombatantState,
     target_resource_id: str,
+    turn_key: str | None = None,
 ) -> ResourceConversionAction | None:
     """Apply the best no-action restoration conversion and return its source metadata."""
     try:
-        action = restoration_conversion(state, target_resource_id)
+        action = restoration_conversion(state, target_resource_id, turn_key)
         if action is None:
             return None
         spend_resource(state, action.source_resource_id, action.source_cost)
+        for resource_id, cost in action.additional_source_costs.items():
+            spend_resource(state, resource_id, cost)
         gain_resource(
             state,
             action.target_resource_id,
             action.target_gain,
             allow_overflow=action.target_allows_overflow,
         )
+        if action.once_per_turn:
+            if turn_key is None:
+                raise ValueError(f"Resource conversion {action.id!r} requires a turn key.")
+            state.feature_last_turn_keys[action.once_per_turn_group or action.id] = turn_key
         return action
     except Exception as exc:
         logger.exception(
@@ -77,6 +105,34 @@ def apply_restoration_conversion(
         raise RuntimeError("Inline resource restoration could not be resolved.") from exc
 
 
+
+def all_spell_slots_empty(state: CombatantState) -> bool:
+    try:
+        slots = [item for item in state.resources if item.id.startswith("spell-slot-")]
+        return bool(slots) and all(item.current_uses <= 0 for item in slots)
+    except Exception as exc:
+        logger.exception("Failed to inspect spell-slot resources for %s.", state.template.name)
+        raise RuntimeError("Spell-slot resource inspection could not be resolved.") from exc
+
+
+def automatic_resource_conversion(
+    state: CombatantState,
+    turn_key: str | None = None,
+) -> ResourceConversionAction | None:
+    """Choose the highest-priority declared automatic conversion without mutating state."""
+    try:
+        candidates = [
+            action for action in state.template.resource_conversion_actions
+            if action.automation == "when-all-spell-slots-empty"
+            and all_spell_slots_empty(state)
+            and conversion_available(state, action, turn_key)
+        ]
+        return sorted(candidates, key=lambda action: (-action.priority, action.id))[0] if candidates else None
+    except Exception as exc:
+        logger.exception("Failed to choose automatic resource conversion for %s.", state.template.name)
+        raise RuntimeError("Automatic resource conversion could not be selected.") from exc
+
+
 def resolve_resource_conversion(
     state: CombatantState,
     action: ResourceConversionAction,
@@ -84,19 +140,26 @@ def resolve_resource_conversion(
     sequence: int,
     round_number: int,
     actor_id: str,
+    turn_key: str | None = None,
 ) -> BattleEvent:
     try:
-        if not conversion_available(state, action):
+        if not conversion_available(state, action, turn_key):
             raise ValueError(f"Resource conversion {action.id!r} is unavailable.")
         if action.action_cost != "none":
             spend(state, action.action_cost)
         source_remaining = spend_resource(state, action.source_resource_id, action.source_cost)
+        for resource_id, cost in action.additional_source_costs.items():
+            spend_resource(state, resource_id, cost)
         target_remaining = gain_resource(
             state,
             action.target_resource_id,
             action.target_gain,
             allow_overflow=action.target_allows_overflow,
         )
+        if action.once_per_turn:
+            if turn_key is None:
+                raise ValueError(f"Resource conversion {action.id!r} requires a turn key.")
+            state.feature_last_turn_keys[action.once_per_turn_group or action.id] = turn_key
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -108,7 +171,12 @@ def resolve_resource_conversion(
             animation="resource-conversion",
             description=(
                 f"{state.template.name} uses {action.name}, spending {action.source_cost} "
-                f"{action.source_resource_id} and gaining {action.target_gain} "
+                f"{action.source_resource_id}"
+                + "".join(
+                    f" and {cost} {resource_id}"
+                    for resource_id, cost in action.additional_source_costs.items()
+                )
+                + f" and gaining {action.target_gain} "
                 f"{action.target_resource_id} ({target_remaining} available)."
             ),
         )

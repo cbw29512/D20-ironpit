@@ -125,6 +125,19 @@ def build_druid_2024_feature_audits(level: int) -> list[FeatureAudit]:
                 automated=True,
                 notes="Canonical land-damage progression raises Wisdom 17→19 and all derived Druid spell math.",
             ))
+        if level >= 5:
+            audits.append(_feature(
+                "wild-resurgence",
+                "Wild Resurgence",
+                "class",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Universal resource conversion: at zero Wild Shape, spend one spell slot with no "
+                    "action to regain one use, limited once on each turn; alternatively spend one "
+                    "Wild Shape plus the once-per-Long-Rest gate to regain one level 1 spell slot."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid feature audits for level %s.", level)

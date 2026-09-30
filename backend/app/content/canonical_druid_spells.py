@@ -60,6 +60,14 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         "arena-out-of-scope", min_character_level=4,
     ),
     _spell(
+        "dispel-magic", "Dispel Magic", "control",
+        "effect-removal", spell_level=3, min_character_level=5,
+    ),
+    _spell(
+        "water-breathing", "Water Breathing", "utility",
+        "arena-out-of-scope", spell_level=3, min_character_level=5,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",

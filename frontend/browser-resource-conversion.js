@@ -13,10 +13,17 @@
     return action.targetAllowsOverflow || current < maximum;
   }
 
-  function available(state, action) {
+  function available(state, action, turnKey = null) {
     try {
       if (action.actionCost !== "none" && !E()?.available(state, action.actionCost)) return false;
       if (!R()?.available(state, action.sourceResourceId, action.sourceCost)) return false;
+      if ((state.resources[action.sourceResourceId] - action.sourceCost) < (action.sourceReserve || 0)) return false;
+      if (action.requiresTargetEmpty && (state.resources[action.targetResourceId] || 0) !== 0) return false;
+      const turnLimitId = action.oncePerTurnGroup || action.id;
+      if (action.oncePerTurn && (!turnKey || state.feature_last_turn_keys?.[turnLimitId] === turnKey)) return false;
+      for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
+        if (!R()?.available(state, resourceId, cost)) return false;
+      }
       return targetCanGain(state, action);
     } catch (error) {
       console.error("Browser resource conversion availability failed", {
@@ -36,11 +43,11 @@
     return state.resources[action.targetResourceId];
   }
 
-  function restorationAction(state, targetResourceId) {
+  function restorationAction(state, targetResourceId, turnKey = null) {
     try {
       const candidates = (state.template.resource_conversion_actions || [])
         .filter((action) => action.actionCost === "none" && action.targetResourceId === targetResourceId)
-        .filter((action) => available(state, action))
+        .filter((action) => available(state, action, turnKey))
         .sort((a, b) => (b.priority || 0) - (a.priority || 0) || a.id.localeCompare(b.id));
       return candidates[0] || null;
     } catch (error) {
@@ -51,12 +58,20 @@
     }
   }
 
-  function restoreInline(state, targetResourceId) {
+  function restoreInline(state, targetResourceId, turnKey = null) {
     try {
-      const action = restorationAction(state, targetResourceId);
+      const action = restorationAction(state, targetResourceId, turnKey);
       if (!action) return null;
       R().spend(state, action.sourceResourceId, action.sourceCost);
+      for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
+        R().spend(state, resourceId, cost);
+      }
       gain(state, action);
+      if (action.oncePerTurn) {
+        if (!turnKey) throw new Error(`Resource conversion ${action.id} requires a turn key.`);
+        state.feature_last_turn_keys ||= {};
+        state.feature_last_turn_keys[action.oncePerTurnGroup || action.id] = turnKey;
+      }
       return action;
     } catch (error) {
       console.error("Browser inline resource restoration failed", {
@@ -66,13 +81,21 @@
     }
   }
 
-  function resolve(sequence, round, member, action) {
+  function resolve(sequence, round, member, action, turnKey = null) {
     try {
       const state = member.state;
-      if (!available(state, action)) return null;
+      if (!available(state, action, turnKey)) return null;
       if (action.actionCost !== "none") E().spend(state, action.actionCost);
       const sourceRemaining = R().spend(state, action.sourceResourceId, action.sourceCost);
+      for (const [resourceId, cost] of Object.entries(action.additionalSourceCosts || {})) {
+        R().spend(state, resourceId, cost);
+      }
       const targetRemaining = gain(state, action);
+      if (action.oncePerTurn) {
+        if (!turnKey) throw new Error(`Resource conversion ${action.id} requires a turn key.`);
+        state.feature_last_turn_keys ||= {};
+        state.feature_last_turn_keys[action.oncePerTurnGroup || action.id] = turnKey;
+      }
       return {
         sequence,
         round_number: round,
@@ -82,7 +105,7 @@
         feature_id: action.id,
         resource_remaining: sourceRemaining,
         animation: "resource-conversion",
-        description: `${state.template.name} uses ${action.name}, spending ${action.sourceCost} ${action.sourceResourceId} and gaining ${action.targetGain} ${action.targetResourceId} (${targetRemaining} available).`,
+        description: `${state.template.name} uses ${action.name}, spending ${action.sourceCost} ${action.sourceResourceId}${Object.entries(action.additionalSourceCosts || {}).map(([id, cost]) => ` and ${cost} ${id}`).join("")} and gaining ${action.targetGain} ${action.targetResourceId} (${targetRemaining} available).`,
       };
     } catch (error) {
       console.error("Browser resource conversion resolution failed", {
@@ -126,7 +149,11 @@
         const action = automaticAction(member.state);
         if (!action) return null;
         const event = resolve(sequence, round, member, action);
-        return event ? { events: [event], sequence: sequence + 1, claimed: true } : null;
+        return event ? {
+          events: [event],
+          sequence: sequence + 1,
+          claimed: action.actionCost !== "none",
+        } : null;
       },
     });
   }

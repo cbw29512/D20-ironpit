@@ -66,6 +66,13 @@ def _druid_wild_shape(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Druid Wild Shape uses for level {level}.") from exc
 
 
+def _druid_wild_resurgence_slot_restore(level: int) -> int:
+    try:
+        return 1 if level >= 5 else 0
+    except Exception as exc:
+        raise ValueError(f"Failed to resolve 2024 Wild Resurgence slot-restore uses for level {level}.") from exc
+
+
 def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
@@ -99,6 +106,11 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     ),
     "druid": (
         ("wild-shape", "Wild Shape", _druid_wild_shape),
+        (
+            "wild-resurgence-slot-restore",
+            "Wild Resurgence: Regain Spell Slot",
+            _druid_wild_resurgence_slot_restore,
+        ),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
