@@ -5,7 +5,6 @@ from collections import deque
 
 from app.combat.grid_geometry import footprint_distance_ft, occupied_cells
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.grid import GridPosition
 from app.domain.persistent_barriers import GridBarrierEdge, PersistentBarrierAction
 from app.domain.size import CreatureSize
 
@@ -44,7 +43,10 @@ def _section_is_straight_connected(edges: list[GridBarrierEdge]) -> bool:
         for first, second in segments:
             adjacency[first].add(second)
             adjacency[second].add(first)
-        return len(vertices) == len(edges) + 1 and sum(len(items) == 1 for items in adjacency.values()) == 2
+        return (
+            len(vertices) == len(edges) + 1
+            and sum(len(items) == 1 for items in adjacency.values()) == 2
+        )
     except Exception:
         logger.exception("Failed to validate barrier section geometry.")
         raise
@@ -84,8 +86,11 @@ def validate_barrier_layout(
         if setup.map_definition is None or caster.state.position is None:
             raise ValueError("Persistent barriers require the authoritative grid.")
         if not action.min_sections <= len(section_edges) <= action.max_sections:
-            raise ValueError(\n                f"{action.name} requires between {action.min_sections} and "
-                f"{action.max_sections} sections."\n            )
+            raise ValueError(
+                f"{action.name} requires between {action.min_sections} and "
+                f"{action.max_sections} sections."
+            )
+
         expected_edges = action.section_length_ft // 5
         seen_edges: set[tuple[tuple[int, int], tuple[int, int]]] = set()
         members = [*setup.heroes, *setup.monsters]
@@ -93,19 +98,22 @@ def validate_barrier_layout(
         for group in section_edges:
             if len(group) != expected_edges or not _section_is_straight_connected(group):
                 raise ValueError(
-                    f"Each {action.name} section must be one straight {action.section_length_ft}-foot panel."
+                    f"Each {action.name} section must be one straight "
+                    f"{action.section_length_ft}-foot panel."
                 )
             for edge in group:
                 key = edge.canonical_key()
                 if key in seen_edges:
                     raise ValueError(f"{action.name} cannot reuse the same barrier edge.")
                 seen_edges.add(key)
+
                 for cell in (edge.first, edge.second):
                     if not (
                         0 <= cell.x < setup.map_definition.width_squares
                         and 0 <= cell.y < setup.map_definition.height_squares
                     ):
                         raise ValueError(f"{action.name} barrier edge lies outside the map.")
+
                 distance = min(
                     footprint_distance_ft(
                         caster.state.position,
@@ -117,12 +125,18 @@ def validate_barrier_layout(
                 )
                 if distance > action.cast_range_ft:
                     raise ValueError(f"{action.name} barrier edge exceeds its cast range.")
+
                 for member in members:
                     if member.state.position is None:
                         continue
                     cells = occupied_cells(member.state.position, member.state.template.size)
-                    if (edge.first.x, edge.first.y) in cells and (edge.second.x, edge.second.y) in cells:
-                        raise ValueError(f"{action.name} placement would cut through a creature space.")
+                    if (
+                        (edge.first.x, edge.first.y) in cells
+                        and (edge.second.x, edge.second.y) in cells
+                    ):
+                        raise ValueError(
+                            f"{action.name} placement would cut through a creature space."
+                        )
 
         if action.sections_must_be_contiguous and not _all_segments_connected(section_edges):
             raise ValueError(f"{action.name} sections must form one contiguous barrier.")
