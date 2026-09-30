@@ -120,6 +120,8 @@ def _spell(action: Any) -> dict[str, Any]:
         "concentration": action.concentration, "animation": action.animation,
     }
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
+    if action.requires_target_hearing: row["requiresTargetHearing"] = True
+    if action.requires_target_sight: row["requiresTargetSight"] = True
     if action.automatic_failure_creature_types:
         row["automaticFailureCreatureTypes"] = list(action.automatic_failure_creature_types)
     if action.failed_save_modifier_effects:
