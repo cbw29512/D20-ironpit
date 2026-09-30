@@ -116,6 +116,15 @@ def build_druid_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 4:
+            audits.append(_feature(
+                "ability-score-improvement-l4",
+                "Ability Score Improvement (+2 Wisdom)",
+                "class",
+                combat_relevant=True,
+                automated=True,
+                notes="Canonical land-damage progression raises Wisdom 17→19 and all derived Druid spell math.",
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid feature audits for level %s.", level)
