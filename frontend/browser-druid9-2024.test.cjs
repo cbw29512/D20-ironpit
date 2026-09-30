@@ -48,7 +48,7 @@ assert.deepEqual(cone.area, {
   shape: "cone", origin: "self", radius_ft: null, length_ft: 60, width_ft: null,
 });
 
-const mass = hero.healing_actions.find((item) => item.id === "mass-cure-wounds");
+const mass = hero.healingActions.find((item) => item.id === "mass-cure-wounds");
 assert.ok(mass, "Druid 9 must expose Mass Cure Wounds.");
 assert.equal(mass.range, 60);
 assert.equal(mass.areaRadiusFt, 30);
