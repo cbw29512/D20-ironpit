@@ -122,8 +122,8 @@ def test_wall_supports_natural_recovery_drop_and_full_duration_permanence() -> N
         item for item in caster.state.template.progression_features.alternate_spell_cast_grants
         if item.spell_id == "wall-of-stone"
     )
-    slot = caster.state.resources_by_id["spell-slot-5"]
-    free = caster.state.resources_by_id["natural-recovery-free-cast"]
+    slot = next(item for item in caster.state.resources if item.id == "spell-slot-5")
+    free = next(item for item in caster.state.resources if item.id == "natural-recovery-free-cast")
 
     cast_persistent_barrier(
         1, 1, caster, setup, action, _ten_panel_wall(), "1:thalen",
