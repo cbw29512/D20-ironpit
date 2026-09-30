@@ -6,6 +6,7 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
 from app.content.character_math import saving_throw_bonuses
+from app.content.druid_2024_sources import druid_runtime_source_reference
 from app.content.druid_2024_runtime_support import (
     druid_actions,
     druid_resources,
@@ -31,46 +32,6 @@ def _sickle(proficiency_bonus: int, strength_modifier: int) -> WeaponAttack:
         attack_ability="strength",
         attack_ability_modifier=strength_modifier,
     )
-
-
-def _source_reference(level: int) -> str:
-    parts = [
-        "Wood Elf", "Acolyte", "Druid", "Primal Order: Magician",
-        "Poison Spray", "Healing Word", "Cure Wounds", "Longstrider", "Equipment",
-    ]
-    if level >= 2:
-        parts.extend(["Faerie Fire", "Wild Shape"])
-    if level >= 3:
-        parts.extend([
-            "Lesser Restoration", "Circle of the Land (Arid)", "Blur",
-            "Burning Hands", "Fire Bolt", "Land's Aid",
-        ])
-    if level >= 4:
-        parts.extend(["Starry Wisp", "Detect Poison and Disease"])
-    if level >= 5:
-        parts.extend(["Fireball", "Dispel Magic", "Water Breathing", "Wild Resurgence"])
-    if level >= 6:
-        parts.extend(["Natural Recovery", "Aid"])
-    if level >= 7:
-        parts.extend(["Elemental Fury: Potent Spellcasting", "Blight", "Divination"])
-    if level >= 8:
-        parts.extend(["Ability Score Improvement", "Wild Shape Improvement", "Freedom of Movement"])
-    if level >= 9:
-        parts.extend(["Cone of Cold", "Mass Cure Wounds", "Wall of Stone"])
-    if level >= 10:
-        parts.extend(["Nature's Ward", "Thunderwave"])
-    if level >= 11:
-        parts.extend(["Heal"])
-    if level >= 12:
-        parts.extend(["Ability Score Improvement"])
-    if level >= 13:
-        parts.extend(["Fire Storm"])
-    if level >= 14:
-        parts.extend(["Nature's Sanctuary", "Land's Aid Improvement"])
-    if level >= 15:
-        parts.extend(["Improved Elemental Fury: Potent Spellcasting", "Sunburst"])
-    return "D&D Beyond Basic Rules 2024: " + ", ".join(parts)
-
 
 
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
@@ -145,7 +106,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                 off_hand="wooden-shield",
                 body_style="humanoid",
             ),
-            source=_source_reference(level),
+            source=druid_runtime_source_reference(level),
         )
     except Exception:
         logger.exception("Failed to compile 2024 Thalen Greenbough at Druid level %s.", level)
