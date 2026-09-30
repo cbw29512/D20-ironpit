@@ -23,6 +23,11 @@ def build_thalen_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
             ("athletics", 0), ("acrobatics", 0), ("nature", 6), ("survival", 5),
             ("insight", 5), ("religion", 3), ("perception", 5),
         )
+        abilities_l4 = abilities.model_copy(update={"wisdom": 19})
+        skills_l4 = (
+            ("athletics", 0), ("acrobatics", 0), ("nature", 7), ("survival", 6),
+            ("insight", 6), ("religion", 3), ("perception", 6),
+        )
         attacks = (AttackExpectation("sickle", "strength", 1, 4, "slashing"),)
         return (
             PregenCombatProfile(
@@ -45,6 +50,14 @@ def build_thalen_2024_combat_profiles() -> tuple[PregenCombatProfile, ...]:
                 armor_class=13, max_hp=18, speed_ft=35, skill_bonuses=skills,
                 attacks=attacks, weapon_masteries=(),
                 resources=(("spell-slot-1", 4), ("spell-slot-2", 2), ("wild-shape", 2)),
+                initiative_bonus=0,
+            ),
+            PregenCombatProfile(
+                template_id="thalen-greenbough-l4", archetype="Druid", level=4,
+                abilities=abilities_l4, save_proficiencies=("intelligence", "wisdom"),
+                armor_class=13, max_hp=23, speed_ft=35, skill_bonuses=skills_l4,
+                attacks=attacks, weapon_masteries=(),
+                resources=(("spell-slot-1", 4), ("spell-slot-2", 3), ("wild-shape", 2)),
                 initiative_bonus=0,
             ),
         )
