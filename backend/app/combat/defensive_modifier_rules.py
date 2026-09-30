@@ -91,9 +91,14 @@ def saving_throw_advantage_source_names(
     context: SavingThrowContext | None = None,
 ) -> list[str]:
     try:
+        contextual = _saving_throw_advantage_modifiers(state, ability, context)
+        universal = [
+            item for item in state.active_modifiers
+            if item.kind is ModifierKind.D20_TEST_ADVANTAGE
+        ]
         return sorted({
             item.source_name or item.source_effect_id
-            for item in _saving_throw_advantage_modifiers(state, ability, context)
+            for item in [*contextual, *universal]
         })
     except Exception:
         logger.exception(
@@ -121,7 +126,10 @@ def consume_saving_throw_modifiers(state: CombatantState) -> list[str]:
 
 
 def death_save_advantage_sources(state: CombatantState) -> int:
-    return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.DEATH_SAVE_ADVANTAGE)
+    return sum(
+        1 for item in state.active_modifiers
+        if item.kind in {ModifierKind.DEATH_SAVE_ADVANTAGE, ModifierKind.D20_TEST_ADVANTAGE}
+    )
 
 
 def healing_is_maximized(state: CombatantState) -> bool:
