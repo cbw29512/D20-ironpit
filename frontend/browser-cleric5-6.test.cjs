@@ -47,7 +47,8 @@ const ally1 = member(H["seraphine-dawnshield-l4"], "ally1", "heroes", 5);
 const ally2 = member(H["seraphine-dawnshield-l4"], "ally2", "heroes", 10);
 ally1.state.current_hp = 1;
 ally2.state.current_hp = 2;
-cleric.state.current_hp = 10;
+cleric.state.current_hp = cleric.state.template.max_hp - 5;
+const clericBefore = cleric.state.current_hp;
 const setup = { heroes: [cleric, ally1, ally2], monsters: [] };
 
 let dice = [4, 4, 3, 3];
@@ -57,7 +58,7 @@ assert.deepEqual(targets.map((item) => item.combatant_id), ["ally1", "ally2"]);
 const result = HEAL.resolveGroup(1, 1, cleric, targets, mass, "1:cleric");
 assert.equal(result.events.length, 3);
 assert.equal(result.events.at(-1).feature_id, "blessed-healer");
-assert.equal(cleric.state.current_hp, 15);
+assert.equal(cleric.state.current_hp, clericBefore + 5);
 assert.equal(cleric.state.resources["spell-slot-3"], 2);
 assert.equal(cleric.state.bonus_action_available, false);
 assert.equal(cleric.state.action_available, true);

@@ -470,6 +470,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             {
                 "id": item.id, "name": item.name, "actionCost": item.action_cost,
                 "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                "requiresTargetSight": item.requires_target_sight,
                 "conditionId": item.condition_id, "repeatSaveAbility": item.repeat_save_ability,
                 "repeatSaveDc": item.repeat_save_dc, "repeatSaveTiming": item.repeat_save_timing,
                 "resourceId": item.resource_id, "resourceCost": item.resource_cost,
@@ -481,6 +482,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             {
                 "id": item.id, "name": item.name, "actionCost": item.action_cost,
                 "range": item.range_ft, "maxCurrentHp": item.max_current_hp,
+                "requiresTargetSight": item.requires_target_sight,
                 "fallbackDamageDiceCount": item.fallback_damage_dice_count,
                 "fallbackDamageDiceSize": item.fallback_damage_dice_size,
                 "fallbackDamageBonus": item.fallback_damage_bonus,

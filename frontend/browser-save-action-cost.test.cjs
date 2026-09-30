@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-action-economy.js", "browser-saving-throws.js", "browser-saves.js",
+  "browser-rolls.js", "browser-action-economy.js", "browser-saving-throws.js", "browser-saves.js",
 ]) load(file);
 
 window.IRON_PIT_DICE = {
@@ -20,7 +20,7 @@ window.IRON_PIT_BROWSER_GRAPPLE = { apply: () => [] };
 window.IRON_PIT_BROWSER_STATE = { sizeAtMost: () => true };
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
 window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = { saveAdvantage: () => 0, saveAdvantageSourceNames: () => [] };
-window.IRON_PIT_BROWSER_CONDITION_RULES = { canSee: () => true, autoFailStrDex: () => false };
+window.IRON_PIT_BROWSER_CONDITION_RULES = { canSee: () => true, autoFailStrDex: () => false, incapacitated: () => false };
 
 const state = () => ({
   template: { name: "Tester", creature_type: "humanoid", saving_throw_bonuses: { wisdom: 0 } },

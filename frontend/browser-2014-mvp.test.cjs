@@ -1,6 +1,7 @@
 "use strict";
 
 const assert = require("node:assert/strict");
+require("./browser-test-runtime.cjs").loadWebsite();
 
 const deterministicDice = (seed = 2014) => {
   let state = seed >>> 0;

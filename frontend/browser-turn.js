@@ -99,6 +99,10 @@
       }
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
       const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
+      // Signature actions resolve before optional Bonus Action spell setup.
+      const signature = resolveMainActionOpportunity("signatureThreshold", sequence, round, member, setup, turnKey);
+      events.push(...signature.events); sequence = signature.sequence;
+      if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       let bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "beforeEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member, setup)); return finalize(events, sequence, round, member, setup, turnKey); }

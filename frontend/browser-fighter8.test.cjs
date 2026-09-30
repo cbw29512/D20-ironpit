@@ -1,6 +1,7 @@
 "use strict";
 
 const assert = require("node:assert/strict");
+require("./browser-test-runtime.cjs").loadWebsite();
 
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l8"];
 assert.ok(fighter, "generated Fighter 8 card must exist");

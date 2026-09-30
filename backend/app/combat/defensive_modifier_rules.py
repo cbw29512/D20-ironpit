@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.defensive_modifier_lifecycle import consume_saving_throw_modifiers, remove_owner_attack_ending_modifiers
+
 from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, CombatantTemplate
 from app.domain.modifiers import CombatModifier, ModifierKind
@@ -9,13 +11,11 @@ from app.domain.saving_throw_context import SavingThrowContext
 
 logger = logging.getLogger(__name__)
 
-
 def _source_type_matches(modifier: CombatModifier, source: CombatantTemplate | None) -> bool:
     if not modifier.source_creature_types:
         return True
     source_type = base_creature_type(source.creature_type) if source is not None else None
     return source_type is not None and source_type in {item.casefold() for item in modifier.source_creature_types}
-
 
 def _attacker_sense_bypasses(
     modifier: CombatModifier,
@@ -29,7 +29,6 @@ def _attacker_sense_bypasses(
         "truesight": attacker.truesight_ft,
     }
     return any(ranges[sense] >= distance_ft for sense in modifier.bypass_attacker_senses)
-
 
 def attacks_against_disadvantage_sources(
     defender: CombatantState,
@@ -107,17 +106,6 @@ def saving_throw_disadvantage_sources(state: CombatantState) -> int:
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.SAVING_THROW_DISADVANTAGE)
 
 
-def consume_saving_throw_modifiers(state: CombatantState) -> list[str]:
-    removed = [
-        item.source_effect_id for item in state.active_modifiers
-        if item.kind is ModifierKind.SAVING_THROW_DISADVANTAGE and item.consume_on_saving_throw
-    ]
-    state.active_modifiers = [
-        item for item in state.active_modifiers
-        if not (item.kind is ModifierKind.SAVING_THROW_DISADVANTAGE and item.consume_on_saving_throw)
-    ]
-    return sorted(set(removed))
-
 
 def death_save_advantage_sources(state: CombatantState) -> int:
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.DEATH_SAVE_ADVANTAGE)
@@ -159,9 +147,3 @@ def targeting_save_gate(
         and _source_type_matches(item, source)
     ]
     return max(gates, key=lambda item: (item.save_dc or 0, item.id), default=None)
-
-
-def remove_owner_attack_ending_modifiers(state: CombatantState) -> list[str]:
-    removed = [item.source_effect_id for item in state.active_modifiers if item.ends_on_owner_attack]
-    state.active_modifiers = [item for item in state.active_modifiers if not item.ends_on_owner_attack]
-    return sorted(set(removed))

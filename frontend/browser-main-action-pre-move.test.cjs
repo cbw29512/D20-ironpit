@@ -57,11 +57,13 @@ window.IRON_PIT_BROWSER_GRAPPLE = { cleanup() {}, shouldEscape: () => false };
 
 window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION = {
   discoverCandidates(profileId, ctx) {
+    if (profileId === "signatureThreshold") return [];
     calls.push(["discover", profileId, ctx.sequence, ctx.turnKey]);
     assert.equal(profileId, "normalPreMove");
     return selectorHasCandidate ? [{ providerId: "spell-offense", category: "spell-offense" }] : [];
   },
   selectCandidate(profileId, candidates) {
+    if (profileId === "signatureThreshold") return null;
     calls.push(["select", profileId, candidates.length]);
     return candidates[0] || null;
   },

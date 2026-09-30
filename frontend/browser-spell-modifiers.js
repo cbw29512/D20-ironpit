@@ -41,36 +41,49 @@
   }
 
   function apply(owner, targets, sourceId, spell, roundNumber, states = []) {
-    const built = targets.flatMap(({ targetId, state }) => (spell.modifierEffects || [])
-      .map((effect, index) => ({ state, modifier: build(sourceId, targetId, spell, effect, index, roundNumber) })));
-    const modifiers = built.map(({ modifier }) => modifier);
-    const durationRounds = spell.durationMinutes * 10;
-    const expiresRound = roundNumber + durationRounds + (roundNumber === 0 ? 1 : 0);
-    if (spell.concentration) {
-      if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
-      C().start(owner, sourceId, spell.id, roundNumber, states, expiresRound);
-    }
-    if (((spell.conditionIds || []).length || (spell.movementModeGrants || []).length) && !T()) {
-      throw new Error("Browser timed-condition runtime is not loaded.");
-    }
-    for (const { targetId, state } of targets) {
-      if ((spell.movementModeGrants || []).length) {
-        T().apply(state, spell.id, sourceId, {
-          sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
-          appliedRound: roundNumber, expiresRound, expiryTiming: "source_turn_start",
-          ownedMovementModeGrants: spell.movementModeGrants, useDefaultPoisonRecovery: false,
-        });
+    try {
+      const built = targets.flatMap(({ targetId, state }) => (spell.modifierEffects || [])
+        .map((effect, index) => ({ state, modifier: build(sourceId, targetId, spell, effect, index, roundNumber) })));
+      const modifiers = built.map(({ modifier }) => modifier);
+      const durationRounds = spell.durationMinutes * 10;
+      const expiresRound = roundNumber + durationRounds + (roundNumber === 0 ? 1 : 0);
+      if (spell.concentration) {
+        if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
+        C().start(owner, sourceId, spell.id, roundNumber, states, expiresRound);
       }
-      for (const conditionId of spell.conditionIds || []) {
-        T().apply(state, conditionId, sourceId, {
-          sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
-          appliedRound: roundNumber, expiresRound, expiryTiming: "source_turn_start",
-          useDefaultPoisonRecovery: false,
-        });
+      if (((spell.conditionIds || []).length || (spell.movementModeGrants || []).length || (!spell.concentration && (spell.modifierEffects || []).length && durationRounds > 0)) && !T()) {
+        throw new Error("Browser timed-condition runtime is not loaded.");
       }
+      for (const { targetId, state } of targets) {
+        // Existing timed groups own cleanup; no Sanctuary-specific expiration path.
+        if (!spell.concentration && (spell.modifierEffects || []).length && durationRounds > 0) {
+          T().apply(state, spell.id, sourceId, {
+            sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
+            appliedRound: roundNumber, expiresRound, expiryTiming: "source_turn_start",
+            useDefaultPoisonRecovery: false,
+          });
+        }
+        if ((spell.movementModeGrants || []).length) {
+          T().apply(state, spell.id, sourceId, {
+            sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
+            appliedRound: roundNumber, expiresRound, expiryTiming: "source_turn_start",
+            ownedMovementModeGrants: spell.movementModeGrants, useDefaultPoisonRecovery: false,
+          });
+        }
+        for (const conditionId of spell.conditionIds || []) {
+          T().apply(state, conditionId, sourceId, {
+            sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
+            appliedRound: roundNumber, expiresRound, expiryTiming: "source_turn_start",
+            useDefaultPoisonRecovery: false,
+          });
+        }
+      }
+      for (const { state, modifier } of built) M().add(state, modifier);
+      return modifiers;
+    } catch (error) {
+      console.error("Spell modifier application failed.", sourceId, spell.id, error);
+      throw error;
     }
-    for (const { state, modifier } of built) M().add(state, modifier);
-    return modifiers;
   }
 
   window.IRON_PIT_BROWSER_SPELL_MODIFIERS = { apply, build };

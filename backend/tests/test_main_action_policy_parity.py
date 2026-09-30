@@ -3,6 +3,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PYTHON_TURN = REPO_ROOT / "backend" / "app" / "combat" / "encounter_combat_turn.py"
+PYTHON_MAIN_ACTION = REPO_ROOT / "backend" / "app" / "combat" / "encounter_main_action.py"
 PYTHON_ACTION_SURGE = REPO_ROOT / "backend" / "app" / "combat" / "encounter_action_surge.py"
 BROWSER_PROFILES = REPO_ROOT / "frontend" / "browser-main-action-profiles.js"
 
@@ -15,8 +16,10 @@ def _positions_in_order(source: str, tokens: list[str]) -> list[int]:
 
 def test_python_normal_post_move_main_action_policy_order_is_stable() -> None:
     source = PYTHON_TURN.read_text(encoding="utf-8")
-    post_move = source[source.index("movement_events, sequence = move_to_enable_offense("):]
+    assert "return resolve_post_move_action(" in source
+    post_move = PYTHON_MAIN_ACTION.read_text(encoding="utf-8")
     _positions_in_order(post_move, [
+        "threshold_event, sequence = resolve_hp_threshold_turn(",
         "spell_events, sequence = resolve_best_spell_offense(",
         "presence = resolve_intimidating_presence(",
         "deferred = resolve_deferred_save_effect(",
@@ -35,6 +38,8 @@ def test_browser_normal_post_move_profile_matches_python_policy_order() -> None:
     end = source.index("]),", start)
     profile = source[start:end]
     _positions_in_order(profile, [
+        "CATEGORIES.HP_THRESHOLD_INSTANT_DEATH",
+        "CATEGORIES.HP_THRESHOLD_CONDITION",
         "CATEGORIES.SPELL_OFFENSE",
         "CATEGORIES.INTIMIDATING_PRESENCE_2014",
         "CATEGORIES.DEFERRED_EFFECT",

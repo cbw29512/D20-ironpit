@@ -51,8 +51,9 @@ Canonical profiles for the first migration are:
 
 | Profile | Allowed category order |
 |---|---|
-| `normalPreMove` | `spell-offense` |
-| `normalPostMove` | `spell-offense`, `intimidating-presence-2014`, `attack-action`, `area-save`, `save-action`, `standard-attack`, `dodge` |
+| `signatureThreshold` | `hp-threshold-instant-death`, `hp-threshold-condition` |
+| `normalPreMove` | `replacement-form-setup`, `spell-offense` |
+| `normalPostMove` | `hp-threshold-instant-death`, `hp-threshold-condition`, `replacement-form-setup`, `spell-offense`, `intimidating-presence-2014`, `attack-action`, `area-save`, `save-action`, `standard-attack`, `dodge` |
 | `actionSurgeAttack` | `attack-action`, `standard-attack` |
 
 The Action Surge profile deliberately preserves the currently certified Iron Pit attack-only extra-Action path. Architecture migration must not broaden it into Magic or other Action families.
@@ -73,13 +74,14 @@ The Action Surge profile deliberately preserves the currently certified Iron Pit
 - Charge/closing and offensive movement remain outside Main Action candidate selection.
 - Support actions, Bonus Actions, reactions, and end-turn cleanup remain outside this contract.
 
-## Certified policy to preserve
+## Current normal-turn policy
 
 Python and browser currently use the same normal-turn preference:
 
-1. pre-move best spell offense;
+1. legal HP-threshold instant-death, then HP-threshold condition Action after urgent support, before optional Bonus Action spell setup;
+2. pre-move best spell offense;
 2. charge/closing and offensive movement;
-3. post-move best spell offense;
+3. recompute HP-threshold Actions after movement, then post-move best spell offense;
 4. 2014 Intimidating Presence;
 5. Attack/Multiattack action;
 6. area save action;
@@ -87,7 +89,7 @@ Python and browser currently use the same normal-turn preference:
 8. standard attack;
 9. Dodge fallback.
 
-The migration changes orchestration, not those choices.
+The initial migration preserved these choices. The 2014 audit correction below explicitly promotes legal threshold actions ahead of ordinary offense.
 
 ## Registered provider families
 
@@ -113,3 +115,7 @@ The existing single-target save fallback is preserved exactly, including its his
 4. Route `normalPostMove` through the selector and remove named Action-family branches from `browser-turn.js`. **Complete.**
 5. Reuse the same selector infrastructure for Action Surge with the restrictive `actionSurgeAttack` profile. **Complete.**
 6. Keep Python as the rules oracle and add permanent Python/browser policy-parity tests before each live behavior migration.
+
+## 2014 audit correction (2026-09-30)
+
+The `signatureThreshold` opportunity permits only `hp-threshold-instant-death` then `hp-threshold-condition`. It runs after urgent support and before optional Bonus Action setup such as Hex. Normal post-move selection recomputes those same categories before ordinary spell offense. This corrects starvation of available high-level source actions under the strongest-useful-legal-action policy; it does not change RAW spell targeting or grant an additional Action. Python delegates post-move selection to `encounter_main_action.py`; browser providers remain the resolution owners. Action Surge stays attack-only.

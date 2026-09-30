@@ -416,3 +416,9 @@ Timed self effects may declare a source-owned emanation that resolves against op
 For an `enemy_turn_start` emanation, the universal turn-start phase discovers active source-owned timed effects, evaluates shared battlefield distance/geometry, applies the normal typed damage-defense and zero-HP lifecycle, and emits the source ability name only as presentation/audit metadata. Expiry remains owned by the underlying timed-effect lifecycle, so ending the timed effect automatically ends its emanation and any source-owned modifiers.
 
 Python and browser implementations must preserve behavioral parity. A new named class, spell, monster, or item feature that has the same timing/range/damage semantics binds to this component instead of adding another resolver.
+
+## Finite modifier spells and threshold targeting (2014 audit correction)
+
+HP-threshold source actions declare `requires_target_sight`; legality consumes the ordinary universal visibility predicate before any resource or Action spending. The browser serializers preserve the same flag. 2014 Power Word Kill/Stun require sight; other sources retain their independently audited parameters.
+
+Finite nonconcentration defensive spells with modifier payloads register their spell identity in the existing source-owned timed-effect lifecycle. Source-turn-start expiration removes only the matching source/effect group, including its modifiers, and preserves other sources. Duration is derived from the spell or legal duration override; an opening cast expires after its allotted combat rounds. Concentration spells retain concentration-owned expiration, and explicit short modifier lifetimes remain authoritative. Every new match constructs fresh state.

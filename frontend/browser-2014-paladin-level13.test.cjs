@@ -13,6 +13,7 @@ const load = (name) => vm.runInThisContext(
 load("browser-modifiers.js");
 load("browser-zero-hp-replacement.js");
 load("browser-zero-hp.js");
+load("browser-timed-conditions.js");
 load("browser-spell-modifiers.js");
 load("browser-precombat-spells.js");
 
@@ -88,6 +89,7 @@ function member() {
     active_effect_ids: [],
     active_buff_effect_ids: [],
     active_modifiers: [],
+    timed_effects: [],
     temporary_damage_resistances: [],
     pending_zero_hp_replacement_logs: [],
     opening_buff_id: null,

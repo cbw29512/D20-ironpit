@@ -1,6 +1,7 @@
 "use strict";
 
 const assert = require("node:assert/strict");
+require("./browser-test-runtime.cjs").loadWebsite();
 
 const H = window.IRON_PIT_BROWSER_HEROES;
 const S = window.IRON_PIT_BROWSER_STATE;
