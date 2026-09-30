@@ -360,6 +360,7 @@ jobs:
           node frontend/browser-effect-bound-survival.test.cjs
           node frontend/battle-lab.test.cjs
           node frontend/browser-execution.test.cjs
+          node frontend/browser-beta-ui.test.cjs
           node frontend/browser-audit.test.cjs
           node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-dice-recording.test.cjs
