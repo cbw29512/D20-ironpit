@@ -46,6 +46,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "fire-bolt",
         "burning-hands",
         "blur",
+        "blight",
         "inflict-wounds",
         "inflict-wounds-l5",
         "inflict-wounds-l6",
@@ -479,6 +480,22 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         modifier = spell.modifier_effects[0]
         assert modifier.kind == "attacks-against-disadvantage"
         assert modifier.bypass_attacker_senses == ["blindsight", "truesight"]
+
+    if "blight" in spell_saves:
+        spell = spell_saves["blight"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+            spell.automatic_failure_creature_types,
+            spell.requires_target_sight,
+        ) == (4, "action", 30, "constitution", 8, 8, "necrotic", "half", 1, ["Plant"], True)
 
     if "greater-invisibility" in defenses:
         spell = defenses["greater-invisibility"]

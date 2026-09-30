@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-29 while advancing the certified 2024 Circle of the Land Druid progression through level 5.
+Recorded 2026-09-30 while advancing the certified 2024 Circle of the Land Druid progression through level 7.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -32,9 +32,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
-| 2024 | Druid (Land) | 1–5 |
+| 2024 | Druid (Land) | 1–7 |
 
-2024 public-ready hero slots after the Druid 5 tranche: **105 / 240**.
+2024 public-ready hero slots after the Druid 7 tranche: **107 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -44,9 +44,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.** The 2014 Hero Certification and paired-edition guard workflows were green on the exact PR #436 head before merge.
 
-**2024 canonical pregens are now 105 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 5.
+**2024 canonical pregens are now 107 / 240 public-ready after this tranche.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 7.
 
-Active implementation lane after merge: **2024 Circle of the Land Druid level 6 onward**.
+Active implementation lane after merge: **2024 Circle of the Land Druid level 8 onward**.
 
 Bard 20 Words of Creation is edition-specific: 2024 always prepares Power Word Heal and Power Word Kill, and either spell may affect one additional creature only when that second creature is within 10 feet of the first. Power Word Heal is modeled as one atomic healing resolution that also ends Charmed, Frightened, Paralyzed, Poisoned, and Stunned, with the target optionally spending its Reaction to stand from Prone.
 
@@ -150,4 +150,7 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 
 - Level 5 adds **Wild Resurgence** through the universal resource-conversion engine: spell-slot-to-Wild-Shape restoration is target-empty and shared once-per-turn across slot levels; Wild-Shape-to-1st-level-slot restoration uses the same engine with a once-per-Long-Rest gate and preserves one Wild Shape use under automatic arena policy.
 - Level 5 reuses the explicit **2024 Fireball** fingerprint for Arid Land, reuses universal **Dispel Magic** with Wisdom casting, and uses **Water Breathing** as the ninth arena-neutral prepared Druid spell.
+- Level 6 adds **Natural Recovery** through the universal alternate-spell-cast resource: one prepared Circle Spell of level 1+ can be cast without a spell slot once per Long Rest; **Aid** is the tenth ordinary prepared Druid spell.
+- Level 7 chooses **Elemental Fury: Potent Spellcasting** and adds Wisdom (+4) to each damaging Druid cantrip through the generic spell-action damage bonus; it does not add a Druid-named resolver.
+- Arid Land level 7 adds explicit **2024 Blight**. Its Plant-creature automatic failure is a new universal save parameter with Python/browser parity, and **Divination** is the eleventh ordinary prepared Druid spell as an arena-neutral choice.
 - Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.

@@ -72,6 +72,10 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=2, min_character_level=6,
     ),
     _spell(
+        "divination", "Divination", "utility", "arena-out-of-scope",
+        spell_level=4, min_character_level=7,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",

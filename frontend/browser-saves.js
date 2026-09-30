@@ -69,10 +69,17 @@
       encounterRoller: target,
       setup: options.setup || null,
     };
-    const advantageSources = DF().saveAdvantageSourceNames?.(
+    const targetType = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
+    const automaticFailureTypes = (action.automaticFailureCreatureTypes || [])
+      .map((creatureType) => String(creatureType).trim().toLowerCase())
+      .filter(Boolean);
+    const automaticallyFails = Boolean(targetType && automaticFailureTypes.includes(targetType));
+    const advantageSources = automaticallyFails ? [] : (DF().saveAdvantageSourceNames?.(
       target.state, action.saveAbility, saveContext,
-    ) || [];
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, saveContext);
+    ) || []);
+    const save = automaticallyFails
+      ? { roll: null, succeeded: false }
+      : resolveSavingThrow(target.state, action.saveAbility, action.dc, saveContext);
     let resourceRemaining = options.resourceRemaining ?? null;
     if (action.resourceId && options.spendResource !== false) {
       actor.state.resources[action.resourceId] -= action.resourceCost || 1; resourceRemaining = actor.state.resources[action.resourceId];
@@ -126,10 +133,12 @@
       );
     }
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
-    let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    let description = automaticallyFails
+      ? `${target.state.template.name} automatically FAILS a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name} because its creature type is ${target.state.template.creature_type}.`
+      : `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
     if (advantageSources.length) description += ` ${advantageSources.join(" and ")} grants Advantage on the save.`;
     if (saveContext.disadvantageSources.length) description += ` ${saveContext.disadvantageSources.join(" and ")} imposes Disadvantage on the save.`;
-    const d20OverrideName = DO().sourceNameForRoll(target.state, save.roll);
+    const d20OverrideName = save.roll ? DO().sourceNameForRoll(target.state, save.roll) : null;
     if (d20OverrideName) description += ` ${d20OverrideName} turns the failed saving throw roll into a 20.`;
     if (target.state.template.evasion && action.saveAbility === "dexterity" && action.successDamage === "half") description += " Evasion reduces the damage.";
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;

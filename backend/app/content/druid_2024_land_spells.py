@@ -28,13 +28,17 @@ def build_lands_aid_2024(save_dc: int, character_level: int) -> SavingThrowActio
         raise
 
 
-def build_fire_bolt_2024(attack_bonus: int, character_level: int) -> SpellAttackAction:
+def build_fire_bolt_2024(
+    attack_bonus: int,
+    character_level: int,
+    damage_bonus: int = 0,
+) -> SpellAttackAction:
     try:
         return SpellAttackAction(
             id="fire-bolt", name="Fire Bolt", level=0, action_cost="action",
             attack_kind="ranged", range_ft=120, attack_bonus=attack_bonus,
             damage_dice_count=cantrip_damage_dice(character_level), damage_dice_size=10,
-            damage_type="fire", animation="spell-attack",
+            damage_bonus=damage_bonus, damage_type="fire", animation="spell-attack",
             source="D&D Beyond Basic Rules 2024: Fire Bolt",
         )
     except Exception:
@@ -54,6 +58,32 @@ def build_burning_hands_2024(save_dc: int) -> SpellSaveAction:
         )
     except Exception:
         logger.exception("Failed to build 2024 Burning Hands.")
+        raise
+
+
+def build_blight_2024(save_dc: int) -> SpellSaveAction:
+    """Explicit 2024 Blight fingerprint using the universal save pipeline."""
+    try:
+        return SpellSaveAction(
+            id="blight",
+            name="Blight",
+            level=4,
+            action_cost="action",
+            range_ft=30,
+            save_ability="constitution",
+            dc=save_dc,
+            damage_dice_count=8,
+            damage_dice_size=8,
+            damage_type="necrotic",
+            success_damage="half",
+            upcast_dice_per_level=1,
+            automatic_failure_creature_types=["Plant"],
+            requires_target_sight=True,
+            animation="blight",
+            source="D&D Beyond Basic Rules 2024: Blight",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Blight.")
         raise
 
 

@@ -151,6 +151,18 @@ def build_druid_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     "recovery half occurs outside an active Iron Pit match and needs no fight-time resolver."
                 ),
             ))
+        if level >= 7:
+            audits.append(_feature(
+                "elemental-fury-potent-spellcasting",
+                "Elemental Fury: Potent Spellcasting",
+                "class",
+                combat_relevant=True,
+                automated=True,
+                notes=(
+                    "Canonical Elemental Fury choice adds Wisdom modifier to every damaging Druid "
+                    "cantrip through the generic spell-action damage bonus."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid feature audits for level %s.", level)
