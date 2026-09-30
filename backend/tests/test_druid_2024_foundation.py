@@ -233,3 +233,55 @@ def test_2024_circle_of_land_level_three_is_raw_and_arid() -> None:
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["lands-aid"].automated is True
     assert audits["land-arid-spells"].automated is True
+
+
+def test_2024_druid_level_four_applies_wisdom_asi_and_starry_wisp() -> None:
+    profile = build_thalen_greenbough_profile(4)
+    hero = build_thalen_greenbough_level(4)
+    package = canonical_spell_package("druid", 4, "2024", 4)
+
+    assert_canonical_profile_policy(profile)
+    assert profile.subclass_id == "circle-land"
+    assert profile.final_ability_scores.wisdom == 19
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [("wisdom", 2)]
+    assert hero.max_hp == 23
+    assert hero.saving_throw_bonuses["wisdom"] == 6
+    assert hero.skill_bonuses["nature"] == 7
+    assert hero.skill_bonuses["survival"] == 6
+    assert hero.skill_bonuses["perception"] == 6
+    assert {item.id: item.max_uses for item in hero.resources} == {
+        "spell-slot-1": 4,
+        "spell-slot-2": 3,
+        "wild-shape": 2,
+    }
+
+    assert package is not None
+    assert [item.id for item in package.cantrips] == [
+        "poison-spray", "elementalism", "mending", "starry-wisp",
+    ]
+    assert [item.id for item in package.spells] == [
+        "healing-word", "cure-wounds", "longstrider", "detect-magic",
+        "faerie-fire", "lesser-restoration", "detect-poison-disease",
+    ]
+
+    assert [item.id for item in hero.spell_attack_actions] == [
+        "poison-spray", "fire-bolt", "starry-wisp",
+    ]
+    poison, fire_bolt, starry = hero.spell_attack_actions
+    assert poison.attack_bonus == 6
+    assert fire_bolt.attack_bonus == 6
+    assert (
+        starry.action_cost, starry.range_ft, starry.attack_bonus,
+        starry.damage_dice_count, starry.damage_dice_size, starry.damage_type,
+    ) == ("action", 60, 6, 1, 8, "radiant")
+    assert len(starry.on_hit_modifier_effects) == 1
+    rider = starry.on_hit_modifier_effects[0]
+    assert rider.kind == "invisibility-benefits-suppressed"
+    assert rider.expires_after_source_turns == 1
+
+    assert hero.saving_throw_actions[0].dc == 14
+    assert all(item.dc == 14 for item in hero.spell_save_actions)
+    assert hero.replacement_form_actions[0].temporary_hp_on_enter == 4
+
+    audits = {item.feature_id: item for item in profile.feature_audits}
+    assert audits["ability-score-improvement-l4"].automated is True
