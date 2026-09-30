@@ -29,7 +29,7 @@ def _r(level: int, pb: int, hp: int, intelligence: int, wisdom: int, charisma: i
        wild_shape: int, prepared: int, slots: tuple[int, int, int, int, int, int, int, int, int], *,
        add: tuple[str, ...] = (), remove: tuple[str, ...] = (), ignored: tuple[str, ...] = (),
        source: str = "") -> DruidCombatLevel:
-    return DruidCombatLevel(level, pb, 16, hp, intelligence, wisdom, charisma, wild_shape,
+    return DruidCombatLevel(level, pb, 13, hp, intelligence, wisdom, charisma, wild_shape,
                             prepared, slots, add, remove, ignored, source)
 
 
