@@ -662,6 +662,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 {
                     "id": item.id, "name": item.name, "actionCost": item.action_cost,
                     "sourceResourceId": item.source_resource_id, "sourceCost": item.source_cost,
+                    "additionalSourceCosts": dict(item.additional_source_costs),
                     "targetResourceId": item.target_resource_id, "targetGain": item.target_gain,
                     "targetAllowsOverflow": item.target_allows_overflow,
                     "automation": item.automation, "priority": item.priority, "source": item.source,
