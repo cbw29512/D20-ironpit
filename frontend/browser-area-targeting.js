@@ -80,22 +80,25 @@
     throw new Error(`Unsupported browser area shape: ${area.shape}`);
   }
 
-  function legalPlacements(actor, setup, area, rangeFt = 0) {
+  function legalPlacements(actor, setup, area, rangeFt = 0, allowNoEnemyTargets = false) {
     try {
       if (!area || !["self", "point"].includes(area.origin)) throw new Error("Browser universal area has an invalid origin.");
       if (!setup.map_definition) throw new Error("Area targeting requires an authoritative battle map.");
       const enemies = livingSide(actor, setup, true);
-      if (!enemies.length) return [];
       const friends = livingSide(actor, setup, false), actorOrigins = points(actor), result = new Map();
+      if (!enemies.length && !allowNoEnemyTargets) return [];
       const origins = area.origin === "point" ? pointOrigins(actor, setup, rangeFt) : actorOrigins;
       const directionOrigins = area.origin === "point" ? origins : actorOrigins;
-      const areaDirections = ["radius", "emanation"].includes(area.shape) ? [null] : directions(directionOrigins, enemies);
+      const aimMembers = enemies.length ? enemies : friends;
+      const areaDirections = ["radius", "emanation"].includes(area.shape) ? [null] : directions(directionOrigins, aimMembers);
       for (const origin of origins) {
         for (const direction of areaDirections) {
           const targetIds = enemies.filter((enemy) => hits(area, actorOrigins, origin, direction, enemy)).map((enemy) => enemy.combatant_id);
-          if (!targetIds.length) continue;
           const friendlyIds = friends.filter((friend) => hits(area, actorOrigins, origin, direction, friend)).map((friend) => friend.combatant_id);
-          const key = `${targetIds.join("|")}::${friendlyIds.join("|")}`;
+          const sourceInArea = hits(area, actorOrigins, origin, direction, actor);
+          if (!targetIds.length && !allowNoEnemyTargets) continue;
+          if (!targetIds.length && !friendlyIds.length && !sourceInArea) continue;
+          const key = `${targetIds.join("|")}::${friendlyIds.join("|")}::${sourceInArea}`;
           if (!result.has(key)) result.set(key, { targetIds, enemyIds: targetIds, friendlyIds, origin, direction });
         }
       }
@@ -108,5 +111,16 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_AREA_TARGETING = { legalPlacements };
+  function memberInPlacement(actor, member, area, placement) {
+    try {
+      return hits(area, points(actor), placement.origin, placement.direction, member);
+    } catch (error) {
+      console.error("Failed browser area-membership check", {
+        actor: actor?.combatant_id, member: member?.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_AREA_TARGETING = { legalPlacements, memberInPlacement };
 })();
