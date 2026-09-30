@@ -5,6 +5,7 @@ from app.content.monster_limited_use_source_audit import complete_monster_limite
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
 from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_source_audit import audit_monster_source
+from app.content.monster_special_senses import complete_monster_special_senses
 from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monsters_swarms import build_swarm_candidates
@@ -21,6 +22,7 @@ def _candidates():
     monsters = complete_monster_legendary_fingerprints(monsters)
     monsters = complete_monster_spellcasting_fingerprints(monsters)
     monsters = complete_monster_saving_throws(monsters)
+    monsters = complete_monster_special_senses(monsters)
     return complete_unarmed_opportunity_profiles(monsters)
 
 
