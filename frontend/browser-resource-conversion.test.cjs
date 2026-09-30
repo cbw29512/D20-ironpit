@@ -61,4 +61,51 @@ const empty = member();
 empty.state.resources["sorcery-points"] = 0;
 assert.equal(C.available(empty.state, action), false);
 
+
+const resurgenceAction = {
+  id: "wild-resurgence-regain-wild-shape-slot-1",
+  name: "Wild Resurgence",
+  actionCost: "none",
+  sourceResourceId: "spell-slot-1",
+  sourceCost: 1,
+  additionalSourceCosts: {},
+  targetResourceId: "wild-shape",
+  targetGain: 1,
+  targetAllowsOverflow: false,
+  requiresTargetEmpty: true,
+  oncePerTurn: true,
+  automation: "manual",
+  priority: 99,
+};
+const druid = {
+  combatant_id: "thalen",
+  state: {
+    template: {
+      name: "Thalen",
+      ruleset: "2024",
+      resources: { "spell-slot-1": 4, "wild-shape": 2 },
+      resource_conversion_actions: [resurgenceAction],
+      unlimited_resources: [],
+    },
+    resources: { "spell-slot-1": 4, "wild-shape": 0 },
+    feature_last_turn_keys: {},
+    action_available: true,
+    bonus_action_available: true,
+    reaction_available: true,
+    is_dead: false,
+    is_unconscious: false,
+    turn_terminated: false,
+  },
+};
+assert.equal(C.restorationAction(druid.state, "wild-shape"), null);
+assert.equal(
+  C.restorationAction(druid.state, "wild-shape", "1:thalen").id,
+  "wild-resurgence-regain-wild-shape-slot-1",
+);
+const resurgenceEvent = C.resolve(2, 1, druid, resurgenceAction, "1:thalen");
+assert.equal(resurgenceEvent.feature_id, resurgenceAction.id);
+assert.equal(druid.state.resources["wild-shape"], 1);
+assert.equal(druid.state.resources["spell-slot-1"], 3);
+assert.equal(C.available(druid.state, resurgenceAction, "1:thalen"), false);
+
 console.log("Browser resource conversion regressions passed.");
