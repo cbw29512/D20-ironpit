@@ -4409,7 +4409,7 @@
           "subclass": null,
           "runtime_template_id": "thalen-greenbough-l1",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Starry Wisp, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Lesser Restoration, Detect Poison and Disease, Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Fireball, Dispel Magic, Wild Resurgence, Land's Aid, Wild Shape, Equipment"
+            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Equipment"
           ],
           "expected_combat_features": [
             "attack:thalen-sickle",
@@ -4441,7 +4441,7 @@
           "subclass": null,
           "runtime_template_id": "thalen-greenbough-l2",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Starry Wisp, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Lesser Restoration, Detect Poison and Disease, Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Fireball, Dispel Magic, Wild Resurgence, Land's Aid, Wild Shape, Equipment"
+            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Equipment, Faerie Fire, Wild Shape"
           ],
           "expected_combat_features": [
             "attack:thalen-sickle",
@@ -4480,7 +4480,7 @@
           },
           "runtime_template_id": "thalen-greenbough-l3",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Starry Wisp, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Lesser Restoration, Detect Poison and Disease, Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Fireball, Dispel Magic, Wild Resurgence, Land's Aid, Wild Shape, Equipment"
+            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Equipment, Faerie Fire, Wild Shape, Lesser Restoration, Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Land's Aid"
           ],
           "expected_combat_features": [
             "attack:thalen-sickle",
@@ -4531,7 +4531,7 @@
           },
           "runtime_template_id": "thalen-greenbough-l4",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Starry Wisp, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Lesser Restoration, Detect Poison and Disease, Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Fireball, Dispel Magic, Wild Resurgence, Land's Aid, Wild Shape, Equipment"
+            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Equipment, Faerie Fire, Wild Shape, Lesser Restoration, Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Land's Aid, Starry Wisp, Detect Poison and Disease"
           ],
           "expected_combat_features": [
             "attack:thalen-sickle",
@@ -4584,7 +4584,7 @@
           },
           "runtime_template_id": "thalen-greenbough-l5",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Starry Wisp, Healing Word, Cure Wounds, Longstrider, Faerie Fire, Lesser Restoration, Detect Poison and Disease, Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Fireball, Dispel Magic, Wild Resurgence, Land's Aid, Wild Shape, Equipment"
+            "D&D Beyond Basic Rules 2024: Wood Elf, Acolyte, Druid, Primal Order: Magician, Poison Spray, Healing Word, Cure Wounds, Longstrider, Equipment, Faerie Fire, Wild Shape, Lesser Restoration, Circle of the Land (Arid), Blur, Burning Hands, Fire Bolt, Land's Aid, Starry Wisp, Detect Poison and Disease, Fireball, Dispel Magic, Water Breathing, Wild Resurgence"
           ],
           "expected_combat_features": [
             "attack:thalen-sickle",
