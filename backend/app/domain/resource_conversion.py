@@ -21,6 +21,7 @@ class ResourceConversionAction(BaseModel):
     target_allows_overflow: bool = False
     requires_target_empty: bool = False
     once_per_turn: bool = False
+    once_per_turn_group: str | None = None
     automation: ResourceConversionAutomation = "manual"
     priority: int = 0
     source: str | None = None
@@ -35,6 +36,8 @@ class ResourceConversionAction(BaseModel):
             raise ValueError("Primary resource conversion source cannot also be an additional source resource.")
         if any(cost < 1 for cost in self.additional_source_costs.values()):
             raise ValueError("Additional resource conversion costs must be positive integers.")
+        if self.once_per_turn_group is not None and not self.once_per_turn:
+            raise ValueError("Resource conversion turn-limit group requires once_per_turn=True.")
         if self.automation == "when-all-spell-slots-empty" and not self.target_resource_id.startswith("spell-slot-"):
             raise ValueError("Spell-slot-empty automation must create a spell-slot resource.")
         return self
