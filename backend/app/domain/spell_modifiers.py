@@ -8,7 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, DamageTypeName
 from app.domain.debuffs import DebuffCounter
 
 SpellModifierKind = Literal[
-    "armor-class", "armor-class-minimum", "attack-roll-bonus-die", "saving-throw-bonus-die", "saving-throw-advantage",
+    "armor-class", "armor-class-minimum", "attack-roll-bonus-die", "saving-throw-bonus-die", "saving-throw-advantage", "d20-test-advantage",
     "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
     "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "speed", "debuff-counter",
     "zero-hp-replacement", "invisibility-benefits-suppressed",
@@ -65,8 +65,6 @@ class SpellModifierEffect(BaseModel):
             raise ValueError("Zero-HP replacement effects require positive replacement HP.")
         if self.kind != "zero-hp-replacement" and (self.replacement_hp or self.prevents_instant_death):
             raise ValueError(f"{self.kind} does not accept zero-HP replacement fields.")
-        if self.kind == "attacks-against-disadvantage" and not (self.source_creature_types or self.bypass_attacker_senses):
-            raise ValueError("Attack Disadvantage requires source types or declared sensory bypass.")
         if self.source_creature_types and self.kind not in {"attacks-against-disadvantage", "condition-immunity"}:
             raise ValueError(f"{self.kind} does not accept source creature types.")
         if self.bypass_attacker_senses and self.kind != "attacks-against-disadvantage":
