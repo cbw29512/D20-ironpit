@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.offensive_spell_effects import cantrip_damage_dice
+from app.domain.actions import AreaHealingRider, SavingThrowAction
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellModifierEffect, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
@@ -81,4 +82,34 @@ def build_faerie_fire_2024(save_dc: int) -> SpellSaveAction:
         )
     except Exception:
         logger.exception("Failed to build 2024 Faerie Fire.")
+        raise
+
+
+def build_lands_aid_2024(save_dc: int, character_level: int) -> SavingThrowAction:
+    """2024 Circle of the Land Land's Aid through the shared area-save/healing rider."""
+    try:
+        dice_count = 2 + int(character_level >= 10) + int(character_level >= 14)
+        return SavingThrowAction(
+            id="lands-aid",
+            name="Land's Aid",
+            action_cost="action",
+            save_ability="constitution",
+            dc=save_dc,
+            range_ft=60,
+            area=AreaTargeting(shape="radius", origin="point", radius_ft=10),
+            damage_dice_count=dice_count,
+            damage_dice_size=6,
+            damage_type="necrotic",
+            success_damage="half",
+            resource_id="wild-shape",
+            resource_cost=1,
+            magical_effect=True,
+            area_healing_rider=AreaHealingRider(
+                dice_count=dice_count,
+                dice_size=6,
+            ),
+            animation="lands-aid",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Land's Aid at Druid level %s.", character_level)
         raise
