@@ -38,6 +38,7 @@ class DefensiveSpellAction(BaseModel):
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     concentration: bool = False
+    free_opening_cast: bool = False
     priority: int = 0
     animation: str = "precombat-defense"
     source: str | None = None
