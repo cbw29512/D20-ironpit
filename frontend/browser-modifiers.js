@@ -4,7 +4,7 @@
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set([
     "armor-class", "armor-class-minimum", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
-    "saving-throw-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
+    "saving-throw-advantage", "d20-test-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "next-incoming-attack-roll-flat", "targeting-save-gate", "speed", "debuff-counter",
     "zero-hp-replacement", "opportunity-attack-suppressed", "damage-source-qualifier", "invisibility-benefits-suppressed",
   ]);
@@ -147,6 +147,7 @@
     return X()?.effectiveSpeed(state, base) ?? base;
   };
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
+  const d20TestAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "d20-test-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
 
@@ -183,7 +184,7 @@
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
-    add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
+    add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage, d20TestAdvantage,
     damageSourceQualifiers, consumeNextAttackAgainstAdvantage, consumeNextIncomingAttackRollFlat, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     expireTargetTurn, nextAttackAgainstAdvantage, nextIncomingAttackRollFlat, removeSource, savingThrowFlat, validate,
   };
