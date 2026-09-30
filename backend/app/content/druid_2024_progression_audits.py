@@ -148,6 +148,17 @@ def build_druid_2024_progression_audits(level: int) -> list[FeatureAudit]:
                     "damage/healing package."
                 ),
             ))
+        if level >= 13:
+            audits.append(druid_feature_audit(
+                "druid-combat-spells-7", "Level 7 Spellcasting: Fire Storm", "class",
+                combat_relevant=False, automated=True,
+                notes=(
+                    "Damage-first preparation selects 2024 Fire Storm. Its 7d10 Fire damage and Dexterity "
+                    "save are source-audited, but the spell's freely arranged ten contiguous 10-foot cubes "
+                    "require multi-cube battlefield geometry that Iron Pit does not yet model exactly. "
+                    "It is therefore preserved as arena-out-of-scope instead of approximated."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Druid progression audits for level %s.", level)
