@@ -69,6 +69,7 @@ def resolve_replacement_form_setup(
             retain_spellcasting=action.retain_spellcasting,
             retained_spell_action_ids=action.retained_spell_action_ids,
             retain_creature_type=action.retain_creature_type,
+            retain_hit_points=action.hp_mode == "retain_owner",
         )
         result = resolve_replacement_form_action(state, action, active)
         event = BattleEvent(
