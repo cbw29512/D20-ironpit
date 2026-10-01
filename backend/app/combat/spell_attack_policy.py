@@ -27,6 +27,7 @@ def _slot_levels(caster: EncounterCombatant, action: SpellAttackAction, turn_key
         caster.state,
         turn_key,
         action.level,
+        action_cost=action.action_cost,
         higher_slot_scaling=action.attacks_per_slot_above > 0,
     )
 
