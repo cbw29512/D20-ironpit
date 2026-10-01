@@ -44,7 +44,7 @@
             attack,
             setup,
             turnKey,
-            { distanceOverrideFt: distance },
+            { distanceOverrideFt: distance, recordSpellCast: !active },
           );
           if (!active) {
             member.state.persistent_spell_attacks = member.state.persistent_spell_attacks
