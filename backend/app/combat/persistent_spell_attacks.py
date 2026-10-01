@@ -72,6 +72,7 @@ def resolve_persistent_spell_attack(
                     turn_key,
                     dice,
                     distance_override_ft=distance,
+                    record_spell_cast=active is None,
                 )
                 if active is None:
                     member.state.persistent_spell_attacks = [
