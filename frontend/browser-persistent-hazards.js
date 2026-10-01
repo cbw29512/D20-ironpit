@@ -34,8 +34,11 @@
     const resourceId = `spell-slot-${action.level}`;
     const resource = action.level > 0 ? caster.state.resources?.[resourceId] : null;
     if (action.level > 0 && !(resource > 0)) throw new Error(`No level ${action.level} spell slot remains.`);
+    if (action.level > 0 && !SC().slotSpellAvailable(caster.state, turnKey, {
+      spellLevel: action.level, actionCost: action.actionCost,
+    })) throw new Error(`${action.name} is not legal under the active edition's per-turn casting rule.`);
     if (action.level > 0) {
-      SC().markSlotSpellCast(caster.state, turnKey);
+      SC().markSlotSpellCast(caster.state, turnKey, { spellLevel: action.level, actionCost: action.actionCost });
       caster.state.resources[resourceId] -= 1;
     }
     E().spend(caster.state, action.actionCost);
