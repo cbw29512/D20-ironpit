@@ -16,7 +16,6 @@ from app.domain.tactical_actions import BonusActionTacticalGrant
 
 logger = logging.getLogger(__name__)
 
-
 def _grants(member: EncounterCombatant) -> list[BonusActionTacticalGrant]:
     grants = list(member.state.template.bonus_tactical_action_grants)
     if (
@@ -32,11 +31,8 @@ def _grants(member: EncounterCombatant) -> list[BonusActionTacticalGrant]:
         ))
     return grants
 
-
 def choose_offensive_dash_grant(
-    member: EncounterCombatant,
-    setup: EncounterSetup,
-    turn_key: str,
+    member: EncounterCombatant, setup: EncounterSetup, turn_key: str,
 ) -> BonusActionTacticalGrant | None:
     """Choose the cheapest declared Bonus Action Dash only when it enables offense."""
     try:
@@ -73,12 +69,8 @@ def choose_offensive_dash_grant(
         logger.exception("Failed to choose tactical Dash for %s.", member.combatant_id)
         raise RuntimeError("Tactical Dash choice could not be resolved.") from exc
 
-
 def resolve_bonus_tactical_grant(
-    sequence: int,
-    round_number: int,
-    member: EncounterCombatant,
-    grant: BonusActionTacticalGrant,
+    sequence: int, round_number: int, member: EncounterCombatant, grant: BonusActionTacticalGrant,
 ) -> BattleEvent:
     """Resolve one declared Bonus Action by composing standard tactical effects."""
     try:
@@ -113,13 +105,9 @@ def resolve_bonus_tactical_grant(
         logger.exception("Failed tactical Bonus Action for %s.", member.combatant_id)
         raise RuntimeError("Tactical Bonus Action could not be resolved.") from exc
 
-
 def use_offensive_dash(
-    sequence: int,
-    round_number: int,
-    member: EncounterCombatant,
-    setup: EncounterSetup,
-    turn_key: str,
+    sequence: int, round_number: int, member: EncounterCombatant,
+    setup: EncounterSetup, turn_key: str,
 ) -> BattleEvent | None:
     try:
         grant = choose_offensive_dash_grant(member, setup, turn_key)
@@ -128,11 +116,8 @@ def use_offensive_dash(
         logger.exception("Failed offensive tactical Dash for %s.", member.combatant_id)
         raise RuntimeError("Offensive tactical Dash could not be resolved.") from exc
 
-
 def resolve_defensive_tactical_grant(
-    sequence: int,
-    round_number: int,
-    member: EncounterCombatant,
+    sequence: int, round_number: int, member: EncounterCombatant,
 ) -> BattleEvent | None:
     """Use a declared defensive Bonus Action only when no earlier Bonus Action claimed the turn."""
     try:
