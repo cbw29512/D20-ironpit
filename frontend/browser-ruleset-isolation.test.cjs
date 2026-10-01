@@ -25,7 +25,8 @@ for (const file of [
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
-  "browser-steady-aim.js", "browser-persistent-spell-attacks.js", "browser-targeted-concentration-damage.js", "browser-resource-conversion.js", "browser-area-shapes.js", "browser-area-targeting.js", "browser-area-save-actions.js", "browser-bonus-save-actions.js", "browser-bonus-attacks.js", "browser-ability-hook-installation.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-ability-checks.js", "browser-initiative.js", "browser-engine.js",
+  "browser-steady-aim.js", "browser-persistent-spell-attacks.js", "browser-targeted-concentration-damage.js", "browser-resource-conversion.js", "browser-area-shapes.js", "browser-area-targeting.js", "browser-area-save-actions.js", "browser-bonus-save-actions.js", "browser-bonus-attacks.js",
+  "browser-tactical-actions.js", "browser-ability-hook-installation.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-ability-checks.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const { resolveRuleset, selectedRuleset } = window.IRON_PIT_BROWSER_ENGINE;
