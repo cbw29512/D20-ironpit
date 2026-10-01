@@ -748,6 +748,16 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             }
             for item in template.bonus_attack_grants
         ]
+    if template.bonus_tactical_action_grants:
+        row["bonusTacticalActionGrants"] = [
+            {
+                "id": item.id, "name": item.name, "effects": list(item.effects),
+                "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                "priority": item.priority, "usePolicy": item.use_policy,
+                "jumpDistanceMultiplier": item.jump_distance_multiplier,
+            }
+            for item in template.bonus_tactical_action_grants
+        ]
     if template.area_weapon_attack_actions:
         row["area_weapon_attack_actions"] = [
             {
