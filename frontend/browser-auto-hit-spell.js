@@ -11,7 +11,9 @@
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${action.name} requires a living enemy target.`);
     if (S().distance(caster, target) > action.range) throw new Error(`${action.name} target is out of range.`);
-    if (!C().slotSpellAvailable(caster.state, turnKey)) throw new Error("A spell slot was already expended this turn.");
+    if (!C().slotSpellAvailable(caster.state, turnKey, {
+      spellLevel: action.level, actionCost: action.actionCost,
+    })) throw new Error(`${action.name} is not legal under the active edition's per-turn casting rule.`);
     const resourceId = `spell-slot-${choice.slotLevel}`;
     if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains for ${action.name}.`);
 
@@ -36,7 +38,7 @@
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
     A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states);
-    C().markSlotSpellCast(caster.state, turnKey);
+    C().markSlotSpellCast(caster.state, turnKey, { spellLevel: action.level, actionCost: action.actionCost });
     caster.state.resources[resourceId] -= 1;
     E().spend(caster.state, action.actionCost);
 
