@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spellcasting import slot_spell_available, spell_level_from_resource_id
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import ConditionRemovalAction
 
@@ -91,8 +91,15 @@ def choose_condition_removal_action(
         for action in remover.state.template.condition_removal_actions:
             if action.action_cost == "reaction" or not is_available(remover.state, action.action_cost):
                 continue
-            if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
-                continue
+            if action.expends_spell_slot:
+                slot_ids = [item for item in action.resource_costs if item.startswith("spell-slot-")]
+                if len(slot_ids) != 1:
+                    raise ValueError(f"{action.name} must declare exactly one spell-slot resource.")
+                level = spell_level_from_resource_id(slot_ids[0])
+                if level is None or not slot_spell_available(
+                    remover.state, turn_key, spell_level=level, action_cost=action.action_cost,
+                ):
+                    continue
             for target in allies:
                 if not target_allowed(remover, target, action):
                     continue
