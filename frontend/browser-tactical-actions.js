@@ -39,13 +39,13 @@
   function chooseOffensiveDashGrant(member, setup, turnKey) {
     try {
       if (!E().available(member.state, "action") || !E().available(member.state, "bonus_action")) return null;
-      const speed = M().effectiveSpeed(member.state);
-      if (!(speed > 0)) return null;
       const candidates = grants(member).filter((item) =>
         item.usePolicy === "enable-offense"
         && (item.effects || []).includes("dash")
         && resourceAvailable(member.state, item));
       if (!candidates.length) return null;
+      const speed = M().effectiveSpeed(member.state);
+      if (!(speed > 0)) return null;
       const normalMove = member.state.movement_remaining_ft;
       let dashWouldHelp = false;
       for (const target of F().targetOrder(member, setup)) {
