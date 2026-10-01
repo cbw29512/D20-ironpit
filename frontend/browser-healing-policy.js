@@ -17,7 +17,13 @@
 
   function resourceAvailable(member, action, turnKey = null) {
     if (!action.resourceId) return true;
-    if (slotHeal(action) && (!turnKey || !C().slotSpellAvailable(member.state, turnKey))) return false;
+    if (slotHeal(action)) {
+      if (!turnKey) return false;
+      const level = C().spellLevelFromResourceId(action.resourceId);
+      if (level == null || !C().slotSpellAvailable(member.state, turnKey, {
+        spellLevel: level, actionCost: action.actionCost,
+      })) return false;
+    }
     return (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
   }
 
