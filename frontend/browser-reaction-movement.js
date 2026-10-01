@@ -107,6 +107,7 @@
 
   function moveToward(sequence, round, mover, target, setup, desired, movementSource = "speed", options = {}) {
     try {
+      options = { ...options, disengaged: options.disengaged === true || mover.state.disengaged_this_turn === true };
       if (setup?.map_definition) {
         if (!mover.state.position || !target.state.position) throw new Error("Grid encounter cannot mix position authority.");
         return gridMoveToward(sequence, round, mover, target, setup, desired, movementSource, options);
