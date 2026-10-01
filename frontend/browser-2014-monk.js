@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const ADR = () => window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
@@ -15,17 +16,14 @@
 
   function applyDeflectMissiles(defender, attack, components) {
     try {
-      if (!defender.template.deflect_missiles || attack.kind !== "ranged" || !E().available(defender, "reaction") || defender.current_hp <= 0) {
-        return { components, used: false, reduction: 0 };
-      }
-      const reduction = D().roll(10) + mod(defender.template.ability_scores.dexterity) + defender.template.level;
-      E().spend(defender, "reaction");
-      let remaining = reduction;
-      const reduced = components.map((part) => {
-        const amount = Math.min(part.total, remaining); remaining -= amount;
-        return { ...part, total: part.total - amount };
-      });
-      return { components: reduced, used: true, reduction };
+      if (!ADR()?.apply) throw new Error("Deflect Missiles requires browser attack damage reduction.");
+      const result = ADR().apply(defender, attack, components);
+      const used = result.used && result.sourceId === "deflect-missiles";
+      return {
+        components: result.components,
+        used,
+        reduction: used ? result.reduction : 0,
+      };
     } catch (error) {
       console.error("Browser Deflect Missiles failed", { defender: defender?.template?.name, error });
       throw error;
