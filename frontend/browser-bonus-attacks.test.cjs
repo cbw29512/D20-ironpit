@@ -25,9 +25,11 @@ window.IRON_PIT_BROWSER_RESOURCES = {
 };
 window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH = null;
 window.IRON_PIT_BROWSER_STATE = {
-  nearestTarget: (_member, setup) => setup.monsters[0] || null,
   distance: () => 5,
   packTactics: () => false,
+};
+window.IRON_PIT_BROWSER_GRID_BARRIERS = {
+  clearBetweenMembers: (_member, target) => target.combatant_id !== "blocked",
 };
 window.IRON_PIT_BROWSER_ATTACK = {
   resolveAttack(sequence, round, actor, target, attack, _distance, options) {
@@ -46,6 +48,7 @@ window.IRON_PIT_BROWSER_ATTACK = {
 
 load("browser-action-economy.js");
 load("browser-ability-hooks.js");
+load("browser-formation.js");
 load("browser-bonus-attacks.js");
 
 const attack = {
@@ -76,13 +79,19 @@ const actor = {
     is_unconscious: false,
   },
 };
+const blocked = {
+  combatant_id: "blocked",
+  side: "monsters",
+  position_ft: 5,
+  state: { template: { ruleset: "2024", attacks: [] }, current_hp: 10, is_alive: true, is_dead: false },
+};
 const target = {
   combatant_id: "target",
   side: "monsters",
   position_ft: 5,
-  state: { template: { ruleset: "2024" }, current_hp: 10, is_alive: true, is_dead: false },
+  state: { template: { ruleset: "2024", attacks: [] }, current_hp: 10, is_alive: true, is_dead: false },
 };
-const setup = { heroes: [actor], monsters: [target] };
+const setup = { heroes: [actor], monsters: [blocked, target] };
 
 {
   const result = window.IRON_PIT_BROWSER_BONUS_ATTACKS.resolve(
@@ -90,6 +99,8 @@ const setup = { heroes: [actor], monsters: [target] };
   );
   assert.equal(result.sequence, 2);
   assert.deepEqual(result.events.map((event) => event.feature_id), ["martial-arts"]);
+  assert.equal(result.events[0].target_id, "target",
+    "shared attack legality must skip a nearer target blocked by line of effect");
   assert.equal(actor.state.bonus_action_available, false);
   assert.equal(actor.state.action_available, true,
     "2024 Martial Arts must not spend or require the Attack action");
