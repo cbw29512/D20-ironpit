@@ -68,6 +68,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                 "charisma": scores.modifier("charisma"),
             },
             skill_bonuses={
+                "athletics": strength,
                 "acrobatics": dexterity + pb,
                 "history": intelligence + pb,
                 "insight": wisdom + pb,
