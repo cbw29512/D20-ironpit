@@ -65,7 +65,7 @@ function monk() {
             id: "patient-defense-focus",
             name: "Patient Defense",
             effects: ["disengage", "dodge"],
-            resourceId: "focus",
+            resourceId: "focus-points",
             resourceCost: 1,
             priority: 90,
             usePolicy: "defensive-fallback",
@@ -101,7 +101,7 @@ function monk() {
   assert.equal(event.feature_id, "step-of-the-wind-dash");
   assert.equal(event.movement_ft, 40);
   assert.equal(actor.state.movement_remaining_ft, 80);
-  assert.equal(actor.state.resources.focus, 2);
+  assert.equal(actor.state.resources["focus-points"], 2);
   assert.equal(actor.state.bonus_action_available, false);
 }
 
@@ -110,7 +110,7 @@ function monk() {
   const grant = actor.state.template.bonusTacticalActionGrants[1];
   const event = window.IRON_PIT_BROWSER_TACTICAL_ACTIONS.resolve(1, 1, actor, grant);
   assert.equal(event.feature_id, "patient-defense-focus");
-  assert.equal(actor.state.resources.focus, 1);
+  assert.equal(actor.state.resources["focus-points"], 1);
   assert.equal(actor.state.disengaged_this_turn, true);
   assert.ok(actor.state.active_effect_ids.includes("dodge"));
   assert.equal(actor.state.bonus_action_available, false);
@@ -131,7 +131,7 @@ function monk() {
   });
   assert.equal(result.claimed, true);
   assert.equal(result.events[0].feature_id, "patient-defense-focus");
-  assert.equal(actor.state.resources.focus, 1);
+  assert.equal(actor.state.resources["focus-points"], 1);
   assert.ok(actor.state.active_effect_ids.includes("dodge"));
 }
 
