@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.dice import DiceProvider
+from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.events import BattleEvent
+from app.domain.events import BattleEvent, DiceRoll
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.runtime import ResourceState
 
@@ -42,6 +44,7 @@ def _resource_by_id(
 def resolve_initiative_resource_refills(
     sequence: int,
     setup: EncounterSetup,
+    dice: DiceProvider | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Apply source-declared finite-resource restoration after initiative is rolled."""
     try:
@@ -68,22 +71,54 @@ def resolve_initiative_resource_refills(
                     )
                 if after <= before:
                     continue
+                if grant.healing_rider is not None and dice is None:
+                    raise ValueError(
+                        f"{grant.source_name} requires dice for its initiative healing rider."
+                    )
                 if usage is not None:
                     usage.current_uses -= grant.usage_resource_cost
                 resource.current_uses = after
                 regained = after - before
+                hp_before = member.state.current_hp
+                healing_roll = None
+                healed = 0
+                if grant.healing_rider is not None:
+                    rolls = [
+                        dice.roll(grant.healing_rider.dice_size)
+                        for _ in range(grant.healing_rider.dice_count)
+                    ]
+                    total = sum(rolls) + grant.healing_rider.healing_bonus
+                    healed = restore_hit_points(member.state, total)
+                    healing_roll = DiceRoll(
+                        notation=(
+                            f"{grant.healing_rider.dice_count}d{grant.healing_rider.dice_size}"
+                            f"+{grant.healing_rider.healing_bonus}"
+                        ),
+                        rolls=rolls,
+                        modifier=grant.healing_rider.healing_bonus,
+                        total=total,
+                    )
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=0,
                     event_type="feature",
                     actor_id=member.combatant_id,
                     actor_name=member.state.template.name,
+                    target_id=member.combatant_id if healing_roll is not None else None,
+                    target_name=member.state.template.name if healing_roll is not None else None,
+                    healing_roll=healing_roll,
+                    hp_before=hp_before if healing_roll is not None else None,
+                    hp_after=member.state.current_hp if healing_roll is not None else None,
                     feature_id=grant.source_id,
                     resource_remaining=after,
                     animation="initiative",
                     description=(
                         f"{member.state.template.name} regains {regained} "
                         f"{resource.name} from {grant.source_name}."
+                        + (
+                            f" {grant.source_name} also restores {healed} HP."
+                            if healing_roll is not None else ""
+                        )
                     ),
                 ))
                 sequence += 1
