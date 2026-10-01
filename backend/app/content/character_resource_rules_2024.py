@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import logging
 
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
 from app.content.level_resources import (
@@ -14,6 +15,8 @@ from app.content.level_resources import (
 )
 
 ResourceRule = tuple[str, str, Callable[[int], int]]
+
+logger = logging.getLogger(__name__)
 
 
 def _bardic_inspiration(level: int) -> int:
@@ -87,6 +90,18 @@ def _land_natural_recovery_free_cast(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Natural Recovery free-cast uses for level {level}.") from exc
 
 
+def _monk_focus_points(level: int) -> int:
+    try:
+        if not 1 <= level <= 20:
+            raise ValueError("2024 Monk Focus progression covers levels 1 through 20.")
+        return level if level >= 2 else 0
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to resolve 2024 Monk Focus Points for level %s.", level)
+        raise ValueError(f"Failed to resolve 2024 Monk Focus Points for level {level}.") from exc
+
+
 def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
@@ -128,6 +143,7 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("boon-of-fate", "Boon of Fate", _boon_of_fate),
         ("nature-magician-conversion", "Nature Magician", _druid_nature_magician),
     ),
+    "monk": (("focus-points", "Focus Points", _monk_focus_points),),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
 }
