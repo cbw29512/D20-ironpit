@@ -19,9 +19,13 @@ function node() {
   };
 }
 const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
-assert.ok(html.indexOf('<section class="battlefield"') < html.indexOf('<section class="preset-panel"'), "board must precede custom fights");
 const rootHtml = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-assert.ok(rootHtml.indexOf('<section class="battlefield"') < rootHtml.indexOf('<section class="preset-panel"'));
+for (const page of [html, rootHtml]) {
+  const sections = [...page.matchAll(/<section\b[^>]*>/g)].map((match) => match[0]);
+  assert.match(sections[0], /class="battlefield"/, "board must be first");
+  assert.match(sections[1], /class="log-panel"/, "log must directly follow the board");
+  assert.match(sections[2], /class="preset-panel"/, "prebuilt fights must directly follow the log");
+}
 const elements = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => [match[1], node()]));
 const el = (id) => { assert.ok(elements.has(id), `missing page element #${id}`); return elements.get(id); };
 global.document = { getElementById: el, createElement: node, querySelector: () => null, querySelectorAll: () => [] };
