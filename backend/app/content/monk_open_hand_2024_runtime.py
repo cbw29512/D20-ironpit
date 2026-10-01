@@ -5,13 +5,11 @@ import logging
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.character_math import proficiency_bonus
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.content.level_resources import orc_adrenaline_rush_uses
 from app.content.monk_open_hand_2024_attacks import build_kael_unarmed_attack_2024
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.domain.bonus_attacks import BonusAttackGrant
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
+from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +29,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
         wisdom = scores.modifier("wisdom")
         constitution = scores.modifier("constitution")
         strength = scores.modifier("strength")
+        intelligence = scores.modifier("intelligence")
         unarmed = build_kael_unarmed_attack_2024(level, scores)
         return CombatantTemplate(
             id=canonical_template_id("monk", level),
@@ -45,6 +44,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             max_hp=8 + constitution,
             speed_ft=30,
             initiative_bonus=dexterity + pb,
+            starts_with_heroic_inspiration=True,
             progression_features=ProgressionCombatFeatures(
                 martial_arts_bonus_attack=True,
                 martial_arts_die_size=6,
@@ -63,31 +63,26 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                 "strength": strength + pb,
                 "dexterity": dexterity + pb,
                 "constitution": constitution,
-                "intelligence": scores.modifier("intelligence"),
+                "intelligence": intelligence,
                 "wisdom": wisdom,
                 "charisma": scores.modifier("charisma"),
             },
             skill_bonuses={
                 "acrobatics": dexterity + pb,
+                "history": intelligence + pb,
                 "insight": wisdom + pb,
+                "nature": intelligence + pb,
+                "perception": wisdom + pb,
+                "religion": intelligence + pb,
                 "sleight-of-hand": dexterity + pb,
                 "stealth": dexterity + pb,
             },
-            combat_traits=[CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE],
             visual=VisualLoadout(
                 armor="unarmored",
                 main_hand="unarmed",
                 body_style="humanoid",
             ),
-            resources=[
-                ResourceDefinition(
-                    id="adrenaline-rush",
-                    name="Adrenaline Rush",
-                    max_uses=orc_adrenaline_rush_uses(level),
-                ),
-                ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
-            ],
-            source="D&D Beyond Basic Rules 2024: Monk 1, Orc, Criminal, Alert",
+            source="D&D Beyond Basic Rules 2024: Monk 1, Human, Criminal, Alert, Skilled",
         )
     except Exception:
         logger.exception("Failed to build 2024 Kael Stillwater at level %s.", level)
