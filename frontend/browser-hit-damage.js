@@ -147,12 +147,8 @@
     const saveDamage = resolveSaveDamage(defender, attack);
     const saveComponentPresent = Boolean(saveDamage.component);
     if (saveComponentPresent) rolled.push(saveDamage.component);
-    if (defender.template.attackDamageReductionReaction && typeof ADR()?.apply !== "function") {
-      throw new Error("Declared attack damage reduction Reaction requires browser-attack-damage-reduction.js.");
-    }
-    const reduction = ADR()?.apply(defender, attack, rolled) || {
-      components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null,
-    };
+    if (defender.template.attackDamageReductionReaction && typeof ADR()?.apply !== "function") throw new Error("Declared attack damage reduction Reaction requires browser-attack-damage-reduction.js.");
+    const reduction = ADR()?.apply(defender, attack, rolled) || { components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null };
     const uncanny = RD().applyUncannyDodge(attacker, defender, reduction.components);
     const bypassTypes = resistanceBypassTypes(attacker);
     const damageComponents = uncanny.components.map((part) => ({
@@ -185,10 +181,8 @@
     return {
       damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage, cunningStrikeTrip, cunningStrikeObscure,
       uncannyDodgeUsed: uncanny.used,
-      damageReductionReactionUsed: reduction.used,
-      damageReductionReactionSourceId: reduction.sourceId,
-      damageReductionReactionSourceName: reduction.sourceName,
-      damageReductionReactionReduction: reduction.reduction,
+      damageReductionReactionUsed: reduction.used, damageReductionReactionSourceId: reduction.sourceId,
+      damageReductionReactionSourceName: reduction.sourceName, damageReductionReactionReduction: reduction.reduction,
       deflectMissilesUsed: reduction.used && reduction.sourceId === "deflect-missiles",
       deflectMissilesReduction: reduction.used && reduction.sourceId === "deflect-missiles"
         ? reduction.reduction : 0,
