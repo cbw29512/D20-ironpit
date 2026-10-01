@@ -44,6 +44,8 @@ def resolve_bonus_attack_grant(
                 if current is None:
                     break
                 target, attack, distance = current
+                if grant.on_hit_condition_save is not None:
+                    attack = attack.model_copy(update={"on_hit_condition_save": grant.on_hit_condition_save})
                 pack = pack_tactics_active(attacker, target, setup)
                 strike_events, sequence = resolve_attack_event_chain(
                     sequence,
