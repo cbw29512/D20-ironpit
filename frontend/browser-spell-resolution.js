@@ -21,6 +21,10 @@
       FX().scaledSpell(spell, choice.slotLevel);
       if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
       if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
+      const expendsSpellSlot = !choice.alternateCast && choice.slotLevel > 0;
+      if (!SC().spellCastAvailable(caster.state, turnKey, spell.level, spell.actionCost, { expendsSpellSlot })) {
+        throw new Error(`${spell.name} is not legal under the active edition's per-turn casting rule.`);
+      }
 
       let remaining = null;
       if (choice.alternateCast) {
@@ -38,10 +42,10 @@
       } else if (choice.slotLevel > 0) {
         const resourceId = `spell-slot-${choice.slotLevel}`;
         if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
-        SC().markSlotSpellCast(caster.state, turnKey);
         caster.state.resources[resourceId] -= 1;
         remaining = caster.state.resources[resourceId];
       }
+      SC().markSpellCast(caster.state, turnKey, spell.level, spell.actionCost, { expendsSpellSlot });
       E().spend(caster.state, spell.actionCost);
       const rangeRemaining = choice.rangeModifier
         ? (P()?.spendRangeModifier
