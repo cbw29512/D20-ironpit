@@ -21,7 +21,11 @@
       for (const grant of grants) {
         const cost = grant.resourceCost || 1;
         if (!R().available(state, grant.resourceId, cost)) continue;
-        const firstChoice = F()?.chooseAttack?.(member, setup, grant.attackIds || []);
+        const formation = F();
+        if (!formation || typeof formation.chooseAttack !== "function") {
+          throw new Error("Browser Bonus Action attacks require browser-formation.js.");
+        }
+        const firstChoice = formation.chooseAttack(member, setup, grant.attackIds || []);
         if (!firstChoice) continue;
         let { target, attack, distance } = firstChoice;
 
@@ -32,7 +36,7 @@
         for (let index = 0; index < count; index += 1) {
           if (state.turn_terminated) break;
           if (index > 0) {
-            const nextChoice = F()?.chooseAttack?.(member, setup, grant.attackIds || []);
+            const nextChoice = formation.chooseAttack(member, setup, grant.attackIds || []);
             if (!nextChoice) break;
             ({ target, attack, distance } = nextChoice);
           }
