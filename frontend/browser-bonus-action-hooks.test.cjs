@@ -76,6 +76,7 @@ assert.deepEqual(registrations, [
   ["targeted-concentration-damage", 35, ["2014", "2024"]],
   ["persistent-spell-attack", 40, ["2014"]],
   ["bonus-attack-grant", 90, ["2014", "2024"]],
+  ["bonus-tactical-defense", 100, ["2014", "2024"]],
   ["monk-bonus-attack-2014", 100, ["2014"]],
   ["frenzy-bonus-attack-2014", 110, ["2014"]],
   ["rage-maintain", 120, ["2024"]],
