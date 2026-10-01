@@ -15,7 +15,7 @@ from app.combat.healing_resolution_support import (
     resolve_percentile_healing_gate,
     spend_healing_resource,
 )
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_slot_spell_cast, spell_level_from_resource_id
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
 
@@ -34,7 +34,12 @@ def resolve_healing(
     if slot_heal(action):
         if turn_key is None:
             raise ValueError("Spell-slot healing requires an active turn key.")
-        mark_slot_spell_cast(healer.state, turn_key)
+        level = spell_level_from_resource_id(action.resource_id)
+        if level is None:
+            raise ValueError("Spell-slot healing has no valid spell-slot resource.")
+        mark_slot_spell_cast(
+            healer.state, turn_key, spell_level=level, action_cost=action.action_cost,
+        )
 
     spend(healer.state, action.action_cost)
     remaining = spend_healing_resource(healer, action)
