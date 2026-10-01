@@ -57,6 +57,7 @@ load("browser-rage.js");
 load("browser-support.js");
 load("browser-steady-aim.js");
 load("browser-frenzy-2014.js");
+load("browser-bonus-attacks.js");
 load("browser-2014-monk.js");
 load("browser-targeted-concentration-damage.js");
 load("browser-persistent-spell-attacks.js");
@@ -73,6 +74,7 @@ assert.deepEqual(registrations, [
   ["resource-conversion", 30, ["2014", "2024"]],
   ["targeted-concentration-damage", 35, ["2014", "2024"]],
   ["persistent-spell-attack", 40, ["2014"]],
+  ["bonus-attack-grant", 90, ["2014", "2024"]],
   ["monk-bonus-attack-2014", 100, ["2014"]],
   ["frenzy-bonus-attack-2014", 110, ["2014"]],
   ["rage-maintain", 120, ["2024"]],
