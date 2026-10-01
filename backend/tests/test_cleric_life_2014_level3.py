@@ -135,7 +135,9 @@ def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> No
     assert cleric.state.action_available is True
     assert cleric.state.bonus_action_available is False
     assert _resource(cleric, "spell-slot-2") == 1
-    assert cleric.state.spell_slot_expended_turn_key == "1:cleric"
+    assert cleric.state.spell_slot_expended_turn_key is None
+    assert cleric.state.bonus_action_spell_cast_turn_key == "1:cleric"
+    assert cleric.state.non_action_cantrip_spell_cast_turn_key == "1:cleric"
     assert len(cleric.state.persistent_spell_attacks) == 1
     active = cleric.state.persistent_spell_attacks[0]
     assert active.slot_level == 2
@@ -154,7 +156,9 @@ def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> No
     assert cleric.state.action_available is True
     assert cleric.state.bonus_action_available is False
     assert _resource(cleric, "spell-slot-2") == slot_before
-    assert cleric.state.spell_slot_expended_turn_key == "1:cleric"
+    assert cleric.state.spell_slot_expended_turn_key is None
+    assert cleric.state.bonus_action_spell_cast_turn_key == "1:cleric"
+    assert cleric.state.non_action_cantrip_spell_cast_turn_key == "1:cleric"
 
     next(item for item in cleric.state.resources if item.id == "spell-slot-2").current_uses = 0
     begin_turn(cleric.state)
