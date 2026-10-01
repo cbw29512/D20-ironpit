@@ -35,22 +35,22 @@ def test_2024_monk_level_two_profile_and_runtime_match_raw_delta() -> None:
     assert monk.max_hp == 17
     assert monk.speed_ft == 40
     assert {item.id: item.max_uses for item in monk.resources} == {
-        "focus": 2,
+        "focus-points": 2,
         "uncanny-metabolism": 1,
     }
     grants = {item.id: item for item in monk.bonus_attack_grants}
     assert grants["flurry-of-blows"].attack_count == 2
-    assert grants["flurry-of-blows"].resource_id == "focus"
+    assert grants["flurry-of-blows"].resource_id == "focus-points"
     assert grants["flurry-of-blows"].resource_cost == 1
     tactics = {item.id: item for item in monk.bonus_tactical_action_grants}
     assert tactics["step-of-the-wind-dash"].effects == ["dash"]
     assert tactics["step-of-the-wind-dash"].resource_id is None
     assert tactics["patient-defense-focus"].effects == ["disengage", "dodge"]
-    assert tactics["patient-defense-focus"].resource_id == "focus"
+    assert tactics["patient-defense-focus"].resource_id == "focus-points"
     assert tactics["step-of-the-wind-focus"].jump_distance_multiplier == 2
     refill = monk.initiative_resource_refill_grants[0]
     assert refill.source_id == "uncanny-metabolism"
-    assert refill.resource_id == "focus"
+    assert refill.resource_id == "focus-points"
     assert refill.restore_to_max is True
     assert refill.usage_resource_id == "uncanny-metabolism"
     assert refill.healing_rider is not None
@@ -73,7 +73,7 @@ def test_flurry_of_blows_reuses_bonus_attack_grant_and_spends_one_focus() -> Non
     assert [event.feature_id for event in events] == ["flurry-of-blows", "flurry-of-blows"]
     assert monk.state.bonus_action_available is False
     assert monk.state.action_available is True
-    assert _resource(monk, "focus").current_uses == 1
+    assert _resource(monk, "focus-points").current_uses == 1
 
 
 def test_step_of_the_wind_free_dash_uses_universal_tactical_action() -> None:
@@ -91,7 +91,7 @@ def test_step_of_the_wind_free_dash_uses_universal_tactical_action() -> None:
     assert event.movement_ft == 40
     assert monk.state.movement_remaining_ft == 80
     assert monk.state.bonus_action_available is False
-    assert _resource(monk, "focus").current_uses == 2
+    assert _resource(monk, "focus-points").current_uses == 2
 
 
 def test_patient_defense_composes_disengage_and_dodge_without_named_resolver() -> None:
@@ -107,7 +107,7 @@ def test_patient_defense_composes_disengage_and_dodge_without_named_resolver() -
     assert monk.state.disengaged_this_turn is True
     assert "dodge" in monk.state.active_effect_ids
     assert monk.state.bonus_action_available is False
-    assert _resource(monk, "focus").current_uses == 1
+    assert _resource(monk, "focus-points").current_uses == 1
 
 
 def test_uncanny_metabolism_refills_focus_heals_and_consumes_long_rest_use() -> None:
@@ -116,7 +116,7 @@ def test_uncanny_metabolism_refills_focus_heals_and_consumes_long_rest_use() -> 
     setup = EncounterSetup(
         heroes=[monk], monsters=[target], hero_total_levels=2, monster_total_cr="2", ruleset="2024",
     )
-    _resource(monk, "focus").current_uses = 0
+    _resource(monk, "focus-points").current_uses = 0
     monk.state.current_hp = 8
 
     events, sequence = resolve_initiative_resource_refills(1, setup, FixedDiceProvider([4]))
@@ -127,7 +127,7 @@ def test_uncanny_metabolism_refills_focus_heals_and_consumes_long_rest_use() -> 
     assert events[0].healing_roll is not None
     assert events[0].healing_roll.total == 6
     assert monk.state.current_hp == 14
-    assert _resource(monk, "focus").current_uses == 2
+    assert _resource(monk, "focus-points").current_uses == 2
     assert _resource(monk, "uncanny-metabolism").current_uses == 0
 
     again, next_sequence = resolve_initiative_resource_refills(sequence, setup, FixedDiceProvider([6]))
