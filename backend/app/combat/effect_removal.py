@@ -24,7 +24,9 @@ def choose_effect_removal_action(
     for action in remover.state.template.effect_removal_actions:
         if not is_available(remover.state, action.action_cost):
             continue
-        if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
+        if action.expends_spell_slot and not slot_spell_available(
+            remover.state, turn_key, spell_level=action.level, action_cost=action.action_cost,
+        ):
             continue
         if action.resource_id is not None:
             resource = next((item for item in remover.state.resources if item.id == action.resource_id), None)
@@ -54,7 +56,9 @@ def resolve_effect_removal(
         if action.resource_id is not None:
             resource = next(item for item in remover.state.resources if item.id == action.resource_id)
             if action.expends_spell_slot:
-                mark_slot_spell_cast(remover.state, turn_key)
+                mark_slot_spell_cast(
+                    remover.state, turn_key, spell_level=action.level, action_cost=action.action_cost,
+                )
             resource.current_uses -= action.resource_cost
             remaining = resource.current_uses
         check = None
