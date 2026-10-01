@@ -25,8 +25,12 @@ def test_2024_monk_level_one_profile_and_runtime_are_raw_aligned() -> None:
     monk = build_kael_stillwater_2024()
 
     assert profile.ruleset == monk.ruleset == "2024"
+    assert profile.species_id == "human"
     assert profile.background_id == "criminal"
     assert profile.origin_feat_id == "alert"
+    assert {"resourceful", "skillful", "versatile", "skilled"}.issubset(
+        {item.feature_id for item in profile.feature_audits}
+    )
     assert profile.base_ability_scores.model_dump() == {
         "strength": 13, "dexterity": 15, "constitution": 14,
         "intelligence": 10, "wisdom": 10, "charisma": 10,
@@ -38,12 +42,15 @@ def test_2024_monk_level_one_profile_and_runtime_are_raw_aligned() -> None:
     assert monk.max_hp == 10
     assert monk.armor_class == 13
     assert monk.initiative_bonus == 5
+    assert monk.starts_with_heroic_inspiration is True
+    assert build_combatant_state(monk).heroic_inspiration is True
     assert monk.saving_throw_bonuses["strength"] == 3
     assert monk.saving_throw_bonuses["dexterity"] == 5
     assert monk.weapon_attack.weapon.id == "unarmed-strike"
     assert monk.weapon_attack.weapon.dice_size == 6
     assert monk.weapon_attack.attack_bonus == 5
     assert monk.weapon_attack.damage_bonus == 3
+    assert monk.resources == []
     assert len(monk.bonus_attack_grants) == 1
     assert monk.bonus_attack_grants[0].id == "martial-arts"
     assert monk.bonus_attack_grants[0].attack_ids == ["kael-2024-unarmed"]
