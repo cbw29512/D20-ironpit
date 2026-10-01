@@ -21,6 +21,7 @@ from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_sup
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.timed_self_buffs import choose_timed_self_buff_action, resolve_timed_self_buff
 from app.combat.saving_throws import legal_save_action
+from app.combat.tactical_actions import resolve_defensive_tactical_grant
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -38,6 +39,10 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
             sequence, round_number, attacker, setup, dice, turn_key,
         )
         events.extend(bonus_attack_events)
+        defensive = resolve_defensive_tactical_grant(sequence, round_number, attacker)
+        if defensive is not None:
+            events.append(defensive)
+            sequence += 1
         monk_events, sequence = resolve_monk_bonus_attacks(
             sequence,
             round_number,
