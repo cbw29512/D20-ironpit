@@ -88,7 +88,7 @@ def build_kael_2024_combat_profiles(max_level: int = 2) -> list[PregenCombatProf
                     ),
                 ),
                 weapon_masteries=(),
-                resources=(("focus", 2), ("uncanny-metabolism", 1)),
+                resources=(("focus-points", 2), ("uncanny-metabolism", 1)),
             ))
         return rows
     except Exception:
