@@ -103,6 +103,8 @@ const cleric = {
     resources: { "spell-slot-1": 4, "spell-slot-2": 2 },
     persistent_spell_attacks: [],
     spell_slot_expended_turn_key: null,
+    bonus_action_spell_cast_turn_key: null,
+    non_action_cantrip_spell_cast_turn_key: null,
     action_available: true,
     bonus_action_available: true,
     active_modifiers: [],
@@ -138,7 +140,9 @@ const setup = {
   assert.equal(event.hit, true);
   assert.equal(event.damage_roll.total, 7);
   assert.equal(cleric.state.resources["spell-slot-2"], 1);
-  assert.equal(cleric.state.spell_slot_expended_turn_key, "1:cleric");
+  assert.equal(cleric.state.spell_slot_expended_turn_key, null);
+  assert.equal(cleric.state.bonus_action_spell_cast_turn_key, "1:cleric");
+  assert.equal(cleric.state.non_action_cantrip_spell_cast_turn_key, "1:cleric");
   assert.equal(cleric.state.bonus_action_available, false);
   assert.equal(cleric.state.action_available, true);
   assert.equal(cleric.state.persistent_spell_attacks.length, 1);
@@ -157,7 +161,9 @@ const setup = {
   assert.ok(event);
   assert.equal(event.feature_id, "spiritual-weapon");
   assert.equal(cleric.state.resources["spell-slot-2"], slotBefore);
-  assert.equal(cleric.state.spell_slot_expended_turn_key, "1:cleric");
+  assert.equal(cleric.state.spell_slot_expended_turn_key, null);
+  assert.equal(cleric.state.bonus_action_spell_cast_turn_key, "1:cleric");
+  assert.equal(cleric.state.non_action_cantrip_spell_cast_turn_key, "1:cleric");
   assert.equal(cleric.state.bonus_action_available, false);
   assert.equal(cleric.state.action_available, true);
   assert.ok(event.movement_ft <= 20);
