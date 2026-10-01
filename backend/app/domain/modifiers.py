@@ -31,6 +31,7 @@ class ModifierKind(StrEnum):
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
     SPEED_MULTIPLIER = "speed-multiplier"
+    SPEED_MULTIPLIER = "speed-multiplier"
     DEBUFF_COUNTER = "debuff-counter"
     ZERO_HP_REPLACEMENT = "zero-hp-replacement"
     OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
@@ -46,6 +47,7 @@ class CombatModifier(BaseModel):
     source_is_magical: bool = False
     kind: ModifierKind
     flat_bonus: int = 0
+    multiplier: float = Field(default=1.0, gt=0.0, le=4.0)
     multiplier: float = Field(default=1.0, gt=0.0, le=4.0)
     minimum_value: int = Field(default=0, ge=0, le=100)
     dice_count: int = Field(default=0, ge=0, le=20)
@@ -171,6 +173,11 @@ class CombatModifier(BaseModel):
             raise ValueError("Only targeting save gates can end when their owner attacks.")
         if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
             raise ValueError("Speed modifiers require a nonzero flat bonus.")
+        if self.kind is ModifierKind.SPEED_MULTIPLIER:
+            if self.flat_bonus != 0 or self.multiplier == 1.0:
+                raise ValueError("Speed multipliers require a non-1 multiplier and no flat bonus.")
+        elif self.multiplier != 1.0:
+            raise ValueError(f"{self.kind.value} does not accept a multiplier.")
         if self.kind is ModifierKind.SPEED_MULTIPLIER:
             if self.flat_bonus != 0 or self.multiplier == 1.0:
                 raise ValueError("Speed multipliers require a non-1 multiplier and no flat bonus.")
