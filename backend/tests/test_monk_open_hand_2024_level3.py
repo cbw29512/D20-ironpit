@@ -169,7 +169,9 @@ def test_2024_open_hand_topple_is_composed_only_into_flurry_hits() -> None:
             1,
             monk,
             setup,
-            FixedDiceProvider([10, 4, 1, 10, 4, 1]),
+            # First hit Topples the target; the second melee attack therefore rolls with
+            # Advantage against Prone and consumes two d20s before damage and the save.
+            FixedDiceProvider([10, 4, 1, 10, 4, 4, 1]),
             "1:monk",
         )
 
