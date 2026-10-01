@@ -26,7 +26,6 @@ from app.domain.progression_primitives import (
     OpeningTargetingWard,
     ResourceBackedD20BonusDie,
     ResourceBackedOnHitExile,
-    ResourceBackedOnHitSaveRider,
     DelayedResourceRefill,
     SavingThrowMinimum,
     SavingThrowProficiencyGrant,
