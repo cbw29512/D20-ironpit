@@ -117,7 +117,7 @@ def test_2024_deflect_attacks_ignores_attack_damage_without_bps_component() -> N
             monk,
             fire_attack,
             [_component(DamageType.FIRE, 12)],
-            FixedDiceProvider([]),
+            FixedDiceProvider([1]),
         )
 
         assert result.used is False
@@ -139,7 +139,7 @@ def test_2014_deflect_missiles_reuses_universal_reducer_but_remains_ranged_only(
             legacy,
             legacy.template.weapon_attack,
             [_component(DamageType.BLUDGEONING, 8)],
-            FixedDiceProvider([]),
+            FixedDiceProvider([1]),
         )
         assert melee.used is False
         assert legacy.reaction_available is True
