@@ -8,39 +8,17 @@ from app.content.canonical_combat_build_policy import (
 )
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
+from app.content.monk_open_hand_2024_profile_features import build_monk_2024_feature_audits
+from app.domain.character_builds import CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
 
-def _feature(
-    feature_id: str,
-    feature_name: str,
-    category: str,
-    *,
-    combat_relevant: bool = True,
-    notes: str | None = None,
-) -> FeatureAudit:
-    try:
-        return FeatureAudit(
-            feature_id=feature_id,
-            feature_name=feature_name,
-            source_reference="D&D Beyond Basic Rules 2024",
-            category=category,
-            combat_relevant=combat_relevant,
-            automated=True,
-            notes=notes,
-        )
-    except Exception:
-        logger.exception("Failed to build 2024 Monk feature audit for %s.", feature_id)
-        raise
-
-
 def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile the legal 2024 Kael progression through the currently supported level."""
+    """Compile the legal persistent 2024 Kael progression through the current level."""
     try:
-        if level not in {1, 2, 3}:
-            raise ValueError("The current 2024 Monk profile tranche supports levels 1-3 only.")
+        if level not in {1, 2, 3, 4}:
+            raise ValueError("The current 2024 Monk profile tranche supports levels 1-4 only.")
         hero = HERO_BY_CLASS["monk"]
         base = canonical_base_ability_scores("monk")
         background_allowed = ["dexterity", "constitution", "intelligence"]
@@ -48,6 +26,8 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
         values = base.model_dump()
         for increase in background:
             values[increase.ability] += increase.amount
+        if level >= 4:
+            values["dexterity"] += 2
         final = type(base)(**values)
         return CharacterBuildProfile(
             id=f"build-kael-stillwater-2024-l{level}",
@@ -71,9 +51,7 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             background_increases=background,
             final_ability_scores=final,
             class_equipment_option="package",
-            class_equipment=[
-                "Spear", "5 Daggers", "Woodcarver's Tools", "Explorer's Pack", "11 GP",
-            ],
+            class_equipment=["Spear", "5 Daggers", "Woodcarver's Tools", "Explorer's Pack", "11 GP"],
             background_equipment_option="package",
             background_equipment=[
                 "2 Daggers", "Thieves' Tools", "Crowbar", "2 Pouches", "Traveler's Clothes", "16 GP",
@@ -84,100 +62,13 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             ],
             weapon_masteries=[],
             combat_loadout_kind="unarmed",
-            feature_audits=[
-                _feature(
-                    "martial-arts",
-                    "Martial Arts",
-                    "class",
-                    notes="Uses the shared Bonus Action attack grant; no Attack action prerequisite is imposed.",
-                ),
-                _feature("unarmored-defense", "Unarmored Defense", "class"),
-                *(
-                    [
-                        _feature(
-                            "monks-focus",
-                            "Monk's Focus",
-                            "class",
-                            notes="Focus Points fuel Flurry of Blows, Patient Defense, and Step of the Wind through shared resource/action primitives.",
-                        ),
-                        _feature(
-                            "unarmored-movement",
-                            "Unarmored Movement",
-                            "class",
-                            notes="Adds 10 feet to Speed while unarmored and not wielding a Shield.",
-                        ),
-                        _feature(
-                            "uncanny-metabolism",
-                            "Uncanny Metabolism",
-                            "class",
-                            notes="On Initiative, once per Long Rest, restores expended Focus Points and heals Monk level + one Martial Arts die.",
-                        ),
-                    ]
-                    if level >= 2 else []
-                ),
-                *(
-                    [
-                        _feature(
-                            "deflect-attacks",
-                            "Deflect Attacks",
-                            "class",
-                            notes=(
-                                "Uses the universal Reaction damage-reduction primitive for qualifying "
-                                "Bludgeoning, Piercing, or Slashing attack damage."
-                            ),
-                        ),
-                        _feature(
-                            "open-hand-technique",
-                            "Open Hand Technique",
-                            "subclass",
-                            notes=(
-                                "Canonical arena automation selects the Topple option on Flurry hits and "
-                                "reuses the shared Dexterity-save-to-Prone attack rider."
-                            ),
-                        ),
-                    ]
-                    if level >= 3 else []
-                ),
-                _feature(
-                    "alert",
-                    "Alert",
-                    "feat",
-                    notes="Adds Proficiency Bonus to Initiative; the optional ally initiative swap is declined by arena policy.",
-                ),
-                _feature(
-                    "resourceful",
-                    "Resourceful",
-                    "species",
-                    notes="Fresh-rest arena initialization starts Kael with Heroic Inspiration.",
-                ),
-                _feature(
-                    "skillful",
-                    "Skillful",
-                    "species",
-                    combat_relevant=False,
-                    notes="Perception proficiency selected.",
-                ),
-                _feature(
-                    "versatile",
-                    "Versatile",
-                    "species",
-                    combat_relevant=False,
-                    notes="Recommended Skilled Origin feat selected.",
-                ),
-                _feature(
-                    "skilled",
-                    "Skilled",
-                    "feat",
-                    combat_relevant=False,
-                    notes="History, Nature, and Religion proficiencies selected.",
-                ),
-                _feature("unarmed-strike", "Unarmed Strike", "equipment"),
-            ],
+            feature_audits=build_monk_2024_feature_audits(level),
             source_references=[
-                "Basic Rules 2024: Monk — Core Traits, Martial Arts, Monk's Focus, Unarmored Movement, Uncanny Metabolism, Deflect Attacks",
+                "Basic Rules 2024: Monk — Martial Arts, Monk's Focus, Unarmored Movement, Uncanny Metabolism, Deflect Attacks",
+                *(["Basic Rules 2024: Warrior of the Open Hand — Open Hand Technique"] if level >= 3 else []),
                 *(
-                    ["Basic Rules 2024: Warrior of the Open Hand — Open Hand Technique"]
-                    if level >= 3 else []
+                    ["Basic Rules 2024: Monk Level 4 — Ability Score Improvement and Slow Fall; Feats — Ability Score Improvement (+2 Dexterity)"]
+                    if level >= 4 else []
                 ),
                 "Basic Rules 2024: Character Origins — Criminal and Human",
                 "Basic Rules 2024: Feats — Alert and Skilled",
