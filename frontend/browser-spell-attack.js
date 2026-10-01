@@ -24,7 +24,9 @@
   }
 
   function slotResource(caster, spell, turnKey, castSlotLevel = null) {
-    if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
+    if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey, {
+      spellLevel: spell.level, actionCost: spell.actionCost,
+    })) return null;
     const level = castSlotLevel ?? spell.level;
     if (!Number.isInteger(level) || level < spell.level || level > 9) {
       throw new Error(`Illegal slot level ${level} for ${spell.name}.`);
@@ -35,7 +37,11 @@
 
   function resolve(sequence, round, caster, target, spell, setup, turnKey, options = {}) {
     const spendCastCosts = options.spendCastCosts !== false;
+    const recordSpellCast = options.recordSpellCast !== false;
     if (spell.actionCost === "reaction" || (spendCastCosts && !E().available(caster.state, spell.actionCost))) throw new Error(`${spell.name} cannot be cast in this action window.`);
+    if (spendCastCosts && recordSpellCast && !C().spellCastAvailable(
+      caster.state, turnKey, spell.level, spell.actionCost, { expendsSpellSlot: spell.level > 0 },
+    )) throw new Error(`${spell.name} is not legal under the active edition's per-turn casting rule.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
     const rangeModifier = options.rangeModifier || null;
@@ -48,7 +54,10 @@
     }
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) {
-      if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
+      if (spendCastCosts && recordSpellCast) C().markSpellCast(
+        caster.state, turnKey, spell.level, spell.actionCost, { expendsSpellSlot: Boolean(resourceId) },
+      );
+      if (resourceId) caster.state.resources[resourceId] -= 1;
       if (spendCastCosts) E().spend(caster.state, spell.actionCost);
       const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
       if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
@@ -72,7 +81,10 @@
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
     T()?.consumeNextAttackDisadvantage(caster.state);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
-    if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
+    if (spendCastCosts && recordSpellCast) C().markSpellCast(
+      caster.state, turnKey, spell.level, spell.actionCost, { expendsSpellSlot: Boolean(resourceId) },
+    );
+    if (resourceId) caster.state.resources[resourceId] -= 1;
     if (spendCastCosts) E().spend(caster.state, spell.actionCost);
     const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
     if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
