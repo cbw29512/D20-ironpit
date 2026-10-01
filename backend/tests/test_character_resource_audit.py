@@ -3,6 +3,9 @@ from dataclasses import replace
 from app.content.audited_barbarian import build_rokhan_stonefury
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.character_resource_audit import audit_character_resources
+from app.content.monk_2024_resource_rules import monk_focus_points
+from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
+from app.content.monk_open_hand_2024_runtime import build_kael_stillwater_2024
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.domain.models import ResourceDefinition
 
@@ -41,10 +44,25 @@ def test_unknown_limited_runtime_resource_fails_closed() -> None:
 def test_class_without_independent_level_resource_rules_fails_closed() -> None:
     template = build_rokhan_stonefury().model_copy(deep=True)
     build_profile = build_rokhan_stonefury_profile().model_copy(
-        update={"class_id": "monk", "class_name": "Monk"}
+        update={"class_id": "wizard", "class_name": "Wizard"}
     )
     combat_profile = build_pregen_combat_profiles()[template.id]
 
     assert "class-level-resource-rules-not-certified" in audit_character_resources(
         template, build_profile, combat_profile
     )
+
+
+def test_2024_monk_focus_progression_is_zero_at_one_then_equals_level() -> None:
+    assert monk_focus_points(1) == 0
+    assert monk_focus_points(2) == 2
+    assert monk_focus_points(10) == 10
+    assert monk_focus_points(20) == 20
+
+
+def test_2024_monk_level_one_resource_audit_passes_without_focus_pool() -> None:
+    template = build_kael_stillwater_2024()
+    build_profile = build_kael_stillwater_2024_profile()
+    combat_profile = build_pregen_combat_profiles()[template.id]
+
+    assert audit_character_resources(template, build_profile, combat_profile) == []
