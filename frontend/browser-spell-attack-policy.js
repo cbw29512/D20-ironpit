@@ -9,6 +9,7 @@
 
   function slotLevels(member, spell, turnKey) {
     return C().legalSlotLevels(member.state, turnKey, spell.level, {
+      actionCost: spell.actionCost,
       higherSlotScaling: (spell.attacksPerSlotAbove || 0) > 0,
     });
   }
