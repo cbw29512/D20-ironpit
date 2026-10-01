@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-01 for the 2024 Open Hand Monk level 3 tranche after the completed Circle of the Land Druid progression.
+Recorded 2026-10-01 for the 2024 Open Hand Monk level 4 tranche after the completed Circle of the Land Druid progression.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,9 +33,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–3 |
+| 2024 | Monk (Open Hand) | 1–4 |
 
-2024 public-ready hero slots on this exact tranche: **123 / 240**.
+2024 public-ready hero slots on this exact tranche: **124 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 123 / 240 on this exact tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 3.
+**2024 canonical pregens are 124 / 240 on this exact tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 4.
 
-Active implementation lane: **2024 Open Hand Monk. Merge the exact-head level 3 tranche, then advance the same persistent Kael Stillwater build to level 4 using universal mechanics before adding any Monk-named resolver.**
+Active implementation lane: **2024 Open Hand Monk level 4. Certify and merge the exact-head level 4 tranche, then advance the same persistent Kael Stillwater build to level 5 using universal mechanics before adding any Monk-named resolver.**
 
 ### 2024 Monk lane
 
@@ -59,7 +59,9 @@ Active implementation lane: **2024 Open Hand Monk. Merge the exact-head level 3 
 - Level 2 adds Monk's Focus, Unarmored Movement, and Uncanny Metabolism through shared resource, action-economy, movement, initiative-resource, healing, Dodge, Disengage, and Dash mechanics.
 - Level 3 adds Deflect Attacks through the universal attack-damage-reduction Reaction model; 2014 Deflect Missiles now binds the same primitive with its own ranged-only parameters.
 - Level 3 selects Warrior of the Open Hand. Canonical arena automation selects Open Hand Technique's Topple option on Flurry hits and composes the shared Dexterity-save-to-Prone attack rider; no Open-Hand-named resolver is added for 2024.
-- Next exact level is **Monk 4**. Re-audit its ASI/feat choice and Slow Fall against the current arena contract before implementation.
+- Level 4 uses the repeatable **Ability Score Improvement** feat for **+2 Dexterity (17→19)**. Shared derived-stat logic updates AC, Initiative, Unarmed Strike attack/damage, Dexterity save/skills, and Deflect Attacks reduction; Focus Points advance to 4.
+- **Slow Fall** is source-audited but arena-neutral because the standard Iron Pit battlefield has no falling hazard. No Monk-named resolver or ordinary attack-damage reduction is created for it.
+- Next exact level is **Monk 5**. Re-audit Extra Attack and Stunning Strike against the shared attack-action and saving-throw/resource primitives before implementation.
 
 ### Druid spell-selection policy
 
