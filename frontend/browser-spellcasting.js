@@ -3,6 +3,15 @@
 
   const actionCantrip = (spellLevel, actionCost) => spellLevel === 0 && actionCost === "action";
 
+  function spellLevelFromResourceId(resourceId) {
+    if (!resourceId || !resourceId.startsWith("spell-slot-")) return null;
+    const level = Number.parseInt(resourceId.slice("spell-slot-".length), 10);
+    if (!Number.isInteger(level) || level < 1 || level > 9) {
+      throw new Error(`Invalid spell-slot resource id ${resourceId}.`);
+    }
+    return level;
+  }
+
   function spellCastAvailable(state, turnKey, spellLevel, actionCost, options = {}) {
     if (!turnKey) throw new Error("Spell-cast legality requires an active turn key.");
     if (!Number.isInteger(spellLevel) || spellLevel < 0 || spellLevel > 9) {
@@ -143,6 +152,7 @@
 
   window.IRON_PIT_BROWSER_SPELLCASTING = {
     legalSlotLevels, markSlotSpellCast, slotSpellAvailable, markSpellCast, spellCastAvailable,
+    spellLevelFromResourceId,
     safeDamageMaximizer, maximizedRolls, resolveDamageMaximizerAfterCast,
   };
 })();
