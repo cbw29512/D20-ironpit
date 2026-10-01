@@ -9,7 +9,7 @@ from app.content.druid_2024_resource_rules import (
     druid_wild_shape_uses,
     land_natural_recovery_free_cast_uses,
 )
-from app.content.monk_2024_resource_rules import monk_focus_points
+from app.content.monk_2024_resource_rules import monk_focus_points, uncanny_metabolism_uses
 from app.content.level_resources import (
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
@@ -97,7 +97,10 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("boon-of-fate", "Boon of Fate", _boon_of_fate),
         ("nature-magician-conversion", "Nature Magician", druid_nature_magician_uses),
     ),
-    "monk": (("focus-points", "Focus Points", monk_focus_points),),
+    "monk": (
+        ("focus-points", "Focus Points", monk_focus_points),
+        ("uncanny-metabolism", "Uncanny Metabolism", uncanny_metabolism_uses),
+    ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
 }

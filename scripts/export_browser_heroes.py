@@ -616,7 +616,12 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
         row["initiative_resource_refill_grants"] = [
-            {key: value for key, value in item.model_dump().items() if key != "restore_to_minimum" or value is not None} for item in template.initiative_resource_refill_grants
+            {
+                    key: value
+                    for key, value in item.model_dump().items()
+                    if (key != "restore_to_minimum" or value is not None)
+                    and (key != "healing_rider" or value is not None)
+                } for item in template.initiative_resource_refill_grants
         ]
     if template.resource_conversion_actions:
         row["resource_conversion_actions"] = [
@@ -747,6 +752,16 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "priority": item.priority,
             }
             for item in template.bonus_attack_grants
+        ]
+    if template.bonus_tactical_action_grants:
+        row["bonusTacticalActionGrants"] = [
+            {
+                "id": item.id, "name": item.name, "effects": list(item.effects),
+                "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                "priority": item.priority, "usePolicy": item.use_policy,
+                "jumpDistanceMultiplier": item.jump_distance_multiplier,
+            }
+            for item in template.bonus_tactical_action_grants
         ]
     if template.area_weapon_attack_actions:
         row["area_weapon_attack_actions"] = [

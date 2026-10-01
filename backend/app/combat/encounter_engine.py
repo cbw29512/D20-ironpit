@@ -87,7 +87,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
         affected_states = [member.state for member in combatants]
         initiative_events, sequence = build_initiative_events(initiative, sequence)
         events.extend(initiative_events)
-        refill_events, sequence = resolve_initiative_resource_refills(sequence, setup)
+        refill_events, sequence = resolve_initiative_resource_refills(sequence, setup, dice)
         events.extend(refill_events)
 
         for round_number in range(1, MAX_ENCOUNTER_ROUNDS + 1):

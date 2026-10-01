@@ -35,6 +35,16 @@ def dodge_dex_save_advantage_sources(state: CombatantState, ability: str) -> int
         raise RuntimeError("Dodge saving-throw Advantage could not be evaluated.") from exc
 
 
+def apply_dodge_effect(state: CombatantState) -> None:
+    """Apply the standard Dodge condition without deciding how its action cost was paid."""
+    try:
+        if DODGE_EFFECT_ID not in state.active_effect_ids:
+            state.active_effect_ids.append(DODGE_EFFECT_ID)
+    except Exception as exc:
+        logger.exception("Failed to apply Dodge effect for %s.", state.template.name)
+        raise RuntimeError("Dodge effect could not be applied.") from exc
+
+
 def resolve_dodge_action(
     sequence: int,
     round_number: int,
@@ -45,8 +55,7 @@ def resolve_dodge_action(
         if not is_available(actor.state, "action"):
             raise ValueError("Action is not available for Dodge.")
         spend(actor.state, "action")
-        if DODGE_EFFECT_ID not in actor.state.active_effect_ids:
-            actor.state.active_effect_ids.append(DODGE_EFFECT_ID)
+        apply_dodge_effect(actor.state)
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,

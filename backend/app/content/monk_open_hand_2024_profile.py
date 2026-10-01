@@ -37,10 +37,10 @@ def _feature(
 
 
 def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile the legal level-1 2024 Kael foundation for the unarmed-offense build."""
+    """Compile the legal 2024 Kael progression through the currently supported level."""
     try:
-        if level != 1:
-            raise ValueError("The current 2024 Monk profile tranche supports level 1 only.")
+        if level not in {1, 2}:
+            raise ValueError("The current 2024 Monk profile tranche supports levels 1-2 only.")
         hero = HERO_BY_CLASS["monk"]
         base = canonical_base_ability_scores("monk")
         background_allowed = ["dexterity", "constitution", "intelligence"]
@@ -50,12 +50,12 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             values[increase.ability] += increase.amount
         final = type(base)(**values)
         return CharacterBuildProfile(
-            id="build-kael-stillwater-2024-l1",
-            template_id=canonical_template_id("monk", 1),
+            id=f"build-kael-stillwater-2024-l{level}",
+            template_id=canonical_template_id("monk", level),
             character_name=hero.hero_name,
             class_id="monk",
             class_name=hero.class_name,
-            level=1,
+            level=level,
             ruleset="2024",
             build_id="unarmed-offense",
             species_id="human",
@@ -90,6 +90,29 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                     notes="Uses the shared Bonus Action attack grant; no Attack action prerequisite is imposed.",
                 ),
                 _feature("unarmored-defense", "Unarmored Defense", "class"),
+                *(
+                    [
+                        _feature(
+                            "monks-focus",
+                            "Monk's Focus",
+                            "class",
+                            notes="Focus Points fuel Flurry of Blows, Patient Defense, and Step of the Wind through shared resource/action primitives.",
+                        ),
+                        _feature(
+                            "unarmored-movement",
+                            "Unarmored Movement",
+                            "class",
+                            notes="Adds 10 feet to Speed while unarmored and not wielding a Shield.",
+                        ),
+                        _feature(
+                            "uncanny-metabolism",
+                            "Uncanny Metabolism",
+                            "class",
+                            notes="On Initiative, once per Long Rest, restores expended Focus Points and heals Monk level + one Martial Arts die.",
+                        ),
+                    ]
+                    if level >= 2 else []
+                ),
                 _feature(
                     "alert",
                     "Alert",
@@ -126,7 +149,7 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                 _feature("unarmed-strike", "Unarmed Strike", "equipment"),
             ],
             source_references=[
-                "Basic Rules 2024: Monk — Core Traits and Level 1 Martial Arts",
+                "Basic Rules 2024: Monk — Core Traits, Martial Arts, Monk's Focus, Unarmored Movement, Uncanny Metabolism",
                 "Basic Rules 2024: Character Origins — Criminal and Human",
                 "Basic Rules 2024: Feats — Alert and Skilled",
             ],

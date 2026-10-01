@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.cunning_action import use_dash
+from app.combat.tactical_actions import use_offensive_dash
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.grid_pathing import plan_movement_toward
 from app.combat.offensive_ranges import offensive_ranges_for_target
@@ -85,7 +85,7 @@ def move_to_enable_offense(
         if setup.map_definition is None:
             return [], sequence
         events: list[BattleEvent] = []
-        dash = use_dash(sequence, round_number, attacker, setup, turn_key)
+        dash = use_offensive_dash(sequence, round_number, attacker, setup, turn_key)
         if dash is not None:
             events.append(dash); sequence += 1
         intent = choose_offensive_movement_intent(attacker, setup, turn_key)

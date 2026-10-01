@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const H = () => window.IRON_PIT_BROWSER_HEALING;
+
   function resolve(sequence, setup) {
     try {
       const events = [];
@@ -30,13 +32,37 @@
               ? maxima[grant.resource_id]
               : Math.min(maxima[grant.resource_id], before + grant.restore_amount));
           if (after <= before) continue;
+          if (grant.healing_rider && typeof H()?.restore !== "function") {
+            throw new Error(`${grant.source_name} requires browser healing restoration.`);
+          }
           if (grant.usage_resource_id) resources[grant.usage_resource_id] -= usageCost;
           resources[grant.resource_id] = after;
+          const hpBefore = member.state.current_hp;
+          let healingRoll = null, healed = 0;
+          if (grant.healing_rider) {
+            const rolls = Array.from(
+              { length: grant.healing_rider.dice_count || 1 },
+              () => window.IRON_PIT_DICE.roll(grant.healing_rider.dice_size),
+            );
+            const modifier = grant.healing_rider.healing_bonus || 0;
+            const total = rolls.reduce((sum, roll) => sum + roll, 0) + modifier;
+            healed = H().restore(member.state, total);
+            healingRoll = {
+              notation: `${rolls.length}d${grant.healing_rider.dice_size}+${modifier}`,
+              rolls, modifier, total,
+            };
+          }
           events.push({
             sequence: sequence++, round_number: 0, event_type: "feature",
             actor_id: member.combatant_id, actor_name: member.state.template.name,
+            target_id: healingRoll ? member.combatant_id : null,
+            target_name: healingRoll ? member.state.template.name : null,
+            healing_roll: healingRoll,
+            hp_before: healingRoll ? hpBefore : null,
+            hp_after: healingRoll ? member.state.current_hp : null,
             feature_id: grant.source_id, resource_remaining: after, animation: "initiative",
-            description: `${member.state.template.name} regains ${after - before} ${grant.resource_id} from ${grant.source_name}.`,
+            description: `${member.state.template.name} regains ${after - before} ${grant.resource_id} from ${grant.source_name}.`
+              + (healingRoll ? ` ${grant.source_name} also restores ${healed} HP.` : ""),
           });
         }
       }

@@ -24,7 +24,7 @@
       initiative_roll: null, initiative_total: null, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false, exhaustion_level: 0,
       death_save_successes: 0, death_save_failures: 0,
-      action_available: true, bonus_action_available: true, reaction_available: true,
+      action_available: true, bonus_action_available: true, reaction_available: true, disengaged_this_turn: false,
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) },
       heroic_inspiration: Boolean(template.starts_with_heroic_inspiration),
@@ -66,7 +66,7 @@
   }
 
   function beginTurn(state) {
-    state.turn_terminated = false; state.turn_termination_reason = null;
+    state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;

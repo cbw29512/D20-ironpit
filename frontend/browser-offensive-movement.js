@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const C = () => window.IRON_PIT_BROWSER_CUNNING_ACTION;
+  const T = () => window.IRON_PIT_BROWSER_TACTICAL_ACTIONS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const G = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT;
@@ -59,7 +59,7 @@
     try {
       if (!setup.map_definition) return { events: [], sequence };
       const events = [];
-      const dash = C()?.useDash(sequence, round, member, setup, turnKey);
+      const dash = T()?.useOffensiveDash(sequence, round, member, setup, turnKey);
       if (dash) { events.push(dash); sequence += 1; }
       const intent = chooseIntent(member, setup, turnKey);
       if (!intent) return { events, sequence };

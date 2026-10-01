@@ -118,6 +118,7 @@ class CombatantState(BaseModel):
     action_available: bool = True
     bonus_action_available: bool = True
     reaction_available: bool = True
+    disengaged_this_turn: bool = False
     turn_terminated: bool = False
     turn_termination_reason: str | None = None
     heroic_inspiration: bool = False
