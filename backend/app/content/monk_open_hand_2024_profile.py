@@ -9,7 +9,7 @@ from app.content.canonical_combat_build_policy import (
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.monk_open_hand_2024_profile_features import build_monk_2024_feature_audits
-from app.domain.character_builds import CharacterBuildProfile
+from app.domain.character_builds import AbilityIncrease, CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +23,10 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
         base = canonical_base_ability_scores("monk")
         background_allowed = ["dexterity", "constitution", "intelligence"]
         background = canonical_background_increases("monk", background_allowed)
+        advancement = [AbilityIncrease(ability="dexterity", amount=2)] if level >= 4 else []
         values = base.model_dump()
-        for increase in background:
+        for increase in [*background, *advancement]:
             values[increase.ability] += increase.amount
-        if level >= 4:
-            values["dexterity"] += 2
         final = type(base)(**values)
         return CharacterBuildProfile(
             id=f"build-kael-stillwater-2024-l{level}",
@@ -49,6 +48,7 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             base_ability_scores=base,
             background_allowed_abilities=background_allowed,
             background_increases=background,
+            advancement_increases=advancement,
             final_ability_scores=final,
             class_equipment_option="package",
             class_equipment=["Spear", "5 Daggers", "Woodcarver's Tools", "Explorer's Pack", "11 GP"],
