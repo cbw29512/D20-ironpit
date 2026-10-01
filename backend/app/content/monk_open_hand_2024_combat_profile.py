@@ -8,7 +8,7 @@ from app.domain.character_builds import AbilityScores
 logger = logging.getLogger(__name__)
 
 
-def build_kael_2024_combat_profiles(max_level: int = 1) -> list[PregenCombatProfile]:
+def build_kael_2024_combat_profiles(max_level: int = 2) -> list[PregenCombatProfile]:
     """Return the certified 2024 Kael combat fingerprint for implemented levels."""
     try:
         if max_level not in {1, 2}:
