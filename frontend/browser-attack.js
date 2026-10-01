@@ -106,17 +106,12 @@
     const outcome = O().create();
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome;
     let cunningStrikeTrip = null, cunningStrikeObscure = null;
-    let damageReductionReactionUsed = false, damageReductionReactionSourceName = null;
-    let damageReductionReactionReduction = 0;
     const applied = outcome.appliedConditions;
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
           targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates, naturalRoll: natural });
-      damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage;
-      damageReductionReactionUsed = Boolean(damage.damageReductionReactionUsed);
-      damageReductionReactionSourceName = damage.damageReductionReactionSourceName || null;
-      damageReductionReactionReduction = damage.damageReductionReactionReduction || 0;
+      damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage; outcome.damageReductionReaction = damage.damageReductionReactionUsed ? damage : null;
       cunningStrikeTrip = damage.cunningStrikeTrip || null;
       cunningStrikeObscure = damage.cunningStrikeObscure || null;
       if (cunningStrikeTrip?.applied && !applied.includes("prone")) applied.push("prone");
@@ -175,7 +170,7 @@
     if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (d20Bonus?.sourceName) description += ` ${d20Bonus.sourceName} adds its bonus die to the attack roll.`; if (rollPenalty?.restorationName) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.restorationName}.`; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
     if (!hit && damageRoll !== null) description += ` Graze deals ${damageRoll.total} ${attack.damageType} damage.`;
     if (studiedApplied) description += ` Studied Attacks primes the next attack against ${target.state.template.name}.`;
-    if (damageReductionReactionUsed) description += ` ${actualTarget.state.template.name} uses ${damageReductionReactionSourceName || "Reaction"} to reduce the attack's damage by ${damageReductionReactionReduction}.`;
+    if (outcome.damageReductionReaction) description += ` ${actualTarget.state.template.name} uses ${outcome.damageReductionReaction.damageReductionReactionSourceName || "Reaction"} to reduce the attack's damage by ${outcome.damageReductionReaction.damageReductionReactionReduction}.`;
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`; if (outcome.brutalStrikeEffects?.length) description += ` Brutal Strike applies ${outcome.brutalStrikeEffects.map((item) => item.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())).join(", ")}.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
     if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
@@ -202,5 +197,4 @@
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(actualTarget.state) || "") };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
-  }
-  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack }; })();
+  }  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack }; })();
