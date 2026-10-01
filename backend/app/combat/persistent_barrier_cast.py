@@ -7,7 +7,7 @@ from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.concentration import start_concentration
 from app.combat.persistent_barrier_geometry import validate_barrier_layout
 from app.combat.persistent_barrier_lifecycle import cleanup_persistent_barriers
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_spell_cast, spell_cast_available
 from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -47,6 +47,13 @@ def cast_persistent_barrier(
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
 
+        expends_spell_slot = alternate_cast is None and action.level > 0
+        if not spell_cast_available(
+            caster.state, turn_key, action.level, action.action_cost,
+            expends_spell_slot=expends_spell_slot,
+        ):
+            raise ValueError(f"{action.name} is not legal under the active edition's per-turn casting rule.")
+
         remaining = None
         if alternate_cast is not None:
             if alternate_cast.spell_id != action.id or alternate_cast.cast_level != action.level:
@@ -56,10 +63,13 @@ def cast_persistent_barrier(
             resource = _slot_resource(caster, action.level)
             if resource is None or resource.current_uses < 1:
                 raise ValueError(f"No level {action.level} spell slot remains.")
-            mark_slot_spell_cast(caster.state, turn_key)
             resource.current_uses -= 1
             remaining = resource.current_uses
 
+        mark_spell_cast(
+            caster.state, turn_key, action.level, action.action_cost,
+            expends_spell_slot=expends_spell_slot,
+        )
         spend(caster.state, action.action_cost)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         if action.concentration:
