@@ -4,10 +4,10 @@ import pytest
 
 from app.combat.resource_conversion import (
     all_spell_slots_empty,
-    automatic_resource_conversion,
     conversion_available,
     resolve_resource_conversion,
 )
+from app.combat.resource_conversion_automation import automatic_resource_conversion
 from app.content.sorcerer_draconic_2014_runtime import build_nyra_emberveil_2014
 from app.domain.encounters import EncounterCombatant
 from app.domain.resource_conversion import ResourceConversionAction
