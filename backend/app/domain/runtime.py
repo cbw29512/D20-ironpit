@@ -141,7 +141,11 @@ class CombatantState(BaseModel):
     pending_zero_hp_replacement_logs: list[str] = Field(default_factory=list)
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     feature_use_counts: dict[str, int] = Field(default_factory=dict)
+    # Edition-aware per-turn spellcasting state. 2024 tracks slot expenditure;
+    # 2014 tracks the Bonus Action spell restriction independently of slots.
     spell_slot_expended_turn_key: str | None = None
+    bonus_action_spell_cast_turn_key: str | None = None
+    non_action_cantrip_spell_cast_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     active_conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
