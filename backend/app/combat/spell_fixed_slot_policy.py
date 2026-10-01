@@ -129,6 +129,7 @@ def choose_named_spell(
             caster.state,
             turn_key,
             action.level,
+            action_cost=action.action_cost,
             higher_slot_scaling=action.upcast_dice_per_level > 0,
         )
         if not levels:
