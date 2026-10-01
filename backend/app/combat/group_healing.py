@@ -5,7 +5,7 @@ from app.combat.friendly_area import best_friendly_area_placement
 from app.combat.healing_policy import healing_rider_worthwhile, resource_available, slot_heal, target_allowed
 from app.combat.healing_resolution_support import apply_healing_riders, resolve_healing_amount
 from app.combat.hit_points import effective_max_hp
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_slot_spell_cast, spell_level_from_resource_id
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
@@ -95,7 +95,12 @@ def resolve_group_healing(
     if slot_heal(action):
         if turn_key is None:
             raise ValueError("Spell-slot group healing requires an active turn key.")
-        mark_slot_spell_cast(healer.state, turn_key)
+        level = spell_level_from_resource_id(action.resource_id)
+        if level is None:
+            raise ValueError("Spell-slot group healing has no valid spell-slot resource.")
+        mark_slot_spell_cast(
+            healer.state, turn_key, spell_level=level, action_cost=action.action_cost,
+        )
     spend(healer.state, action.action_cost)
     remaining = None
     if action.resource_id is not None:
