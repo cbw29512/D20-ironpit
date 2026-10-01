@@ -33,6 +33,7 @@ from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
+from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import (
@@ -85,6 +86,7 @@ class CombatantTemplate(BaseModel):
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
     bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
+    bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     hp_threshold_condition_actions: list[HpThresholdConditionAction] = Field(default_factory=list)
