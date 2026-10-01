@@ -11,11 +11,11 @@ from app.content.monk_open_hand_2014_attacks import (
 )
 from app.content.monk_open_hand_2014_buffs import build_monk_2014_timed_self_buffs
 from app.content.monk_open_hand_2014_initiative import build_monk_2014_initiative_refills
+from app.content.monk_open_hand_2014_reactions import build_monk_2014_attack_damage_reduction
 from app.content.progression_saves import saving_throw_proficiencies
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
-from app.domain.reactions import AttackDamageReductionReaction
 from app.domain.progression import (
     DeferredSaveEffect,
     FailedSaveRerollGrant,
@@ -185,18 +185,7 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
             condition_immunities=["poisoned"] if level >= 10 else [],
             resources=_resources(level),
             progression_features=progression,
-            attack_damage_reduction_reaction=(
-                AttackDamageReductionReaction(
-                    source_id="deflect-missiles",
-                    source_name="Deflect Missiles",
-                    attack_kinds=["ranged"],
-                    reduction_dice_count=1,
-                    reduction_dice_size=10,
-                    reduction_ability="dexterity",
-                    add_level=True,
-                )
-                if level >= 3 else None
-            ),
+            attack_damage_reduction_reaction=build_monk_2014_attack_damage_reduction(level),
             visual=VisualLoadout(armor="unarmored", main_hand="fists", body_style="humanoid"),
             source=("D&D Basic Rules 2014: Human, Acolyte, Equipment; "
                     "D&D SRD 5.1 (2014): Monk, Way of the Open Hand"),
