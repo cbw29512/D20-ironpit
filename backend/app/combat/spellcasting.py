@@ -18,6 +18,18 @@ def _is_action_cantrip(spell_level: int, action_cost: SpellActionCost) -> bool:
     return spell_level == 0 and action_cost == "action"
 
 
+def spell_level_from_resource_id(resource_id: str | None) -> int | None:
+    if not resource_id or not resource_id.startswith("spell-slot-"):
+        return None
+    try:
+        level = int(resource_id.removeprefix("spell-slot-"))
+    except ValueError as exc:
+        raise ValueError(f"Invalid spell-slot resource id {resource_id!r}.") from exc
+    if not 1 <= level <= 9:
+        raise ValueError(f"Spell-slot resource level must be 1-9, got {level}.")
+    return level
+
+
 def spell_cast_available(
     state: CombatantState,
     turn_key: str,
