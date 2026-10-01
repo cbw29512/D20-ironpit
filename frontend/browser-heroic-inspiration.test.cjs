@@ -82,6 +82,14 @@ window.IRON_PIT_BROWSER_CONDITION_RULES = {
 };
 load("browser-state.js");
 {
+  const resourceful = window.IRON_PIT_BROWSER_STATE.buildState({
+    ...template, armor_class: 13, kind: "character", heroic_warrior: false,
+    starts_with_heroic_inspiration: true,
+  });
+  assert.equal(resourceful.heroic_inspiration, true,
+    "fresh-rest Heroic Inspiration must initialize from source data");
+}
+{
   const downed = window.IRON_PIT_BROWSER_STATE.buildState({ ...template, armor_class: 17, kind: "character" });
   downed.current_hp = 0; downed.is_unconscious = true; downed.reaction_available = false;
   window.IRON_PIT_BROWSER_STATE.refreshStartOfTurn(downed);

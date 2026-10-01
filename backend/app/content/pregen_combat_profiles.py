@@ -185,16 +185,12 @@ def build_seraphine_dawnshield_level12_combat_profile() -> PregenCombatProfile:
 
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
-    from app.content.bard_2024_combat_profile import build_lyra_2024_combat_profiles
-    from app.content.druid_2024_combat_profile import build_thalen_2024_combat_profiles
-    from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profiles
+    from app.content.pregen_combat_profile_registry_2024 import build_2024_pregen_combat_profiles
 
     profiles = [
-        *build_lyra_2024_combat_profiles(),
-        *build_thalen_2024_combat_profiles(),
+        *build_2024_pregen_combat_profiles(),
         *(_karnok_profile(level) for level in range(1, 21)),
         *(_rokhan_profile(level) for level in range(1, 21)),
         *(_seraphine_profile(level) for level in range(1, 21)),
-        *build_mara_quickstep_combat_profiles(20),
     ]
     return {profile.template_id: profile for profile in profiles}

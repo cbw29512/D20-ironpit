@@ -22,6 +22,7 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
             template=template,
             current_hp=template.max_hp,
             movement_remaining_ft=0,
+            heroic_inspiration=template.starts_with_heroic_inspiration,
             resources=[
                 ResourceState(id=r.id, name=r.name, current_uses=r.max_uses, max_uses=r.max_uses)
                 for r in template.resources

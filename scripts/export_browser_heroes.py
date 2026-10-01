@@ -736,6 +736,18 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             }
             for item in template.replacement_form_actions
         ]
+    if template.starts_with_heroic_inspiration:
+        row["starts_with_heroic_inspiration"] = True
+    if template.bonus_attack_grants:
+        row["bonusAttackGrants"] = [
+            {
+                "id": item.id, "name": item.name,
+                "attackIds": list(item.attack_ids), "attackCount": item.attack_count,
+                "resourceId": item.resource_id, "resourceCost": item.resource_cost,
+                "priority": item.priority,
+            }
+            for item in template.bonus_attack_grants
+        ]
     if template.area_weapon_attack_actions:
         row["area_weapon_attack_actions"] = [
             {

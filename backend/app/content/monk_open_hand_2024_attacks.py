@@ -1,0 +1,38 @@
+from __future__ import annotations
+
+import logging
+
+from app.content.character_math import proficiency_bonus
+from app.domain.character_builds import AbilityScores
+from app.domain.models import DamageType, Weapon, WeaponAttack, WeaponAttackKind
+
+logger = logging.getLogger(__name__)
+
+
+def build_kael_unarmed_attack_2024(level: int, scores: AbilityScores) -> WeaponAttack:
+    """Build Kael's 2024 Dexterity-based Unarmed Strike using the current Martial Arts die."""
+    try:
+        if level != 1:
+            raise ValueError("The current 2024 Monk tranche supports level 1 only.")
+        dexterity = scores.modifier("dexterity")
+        weapon = Weapon(
+            id="unarmed-strike",
+            name="Unarmed Strike",
+            attack_kind=WeaponAttackKind.MELEE,
+            dice_count=1,
+            dice_size=6,
+            damage_type=DamageType.BLUDGEONING,
+            animation="strike",
+            reach_ft=5,
+        )
+        return WeaponAttack(
+            id="kael-2024-unarmed",
+            weapon=weapon,
+            attack_bonus=proficiency_bonus(level) + dexterity,
+            damage_bonus=dexterity,
+            attack_ability="dexterity",
+            attack_ability_modifier=dexterity,
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Kael unarmed attack at level %s.", level)
+        raise

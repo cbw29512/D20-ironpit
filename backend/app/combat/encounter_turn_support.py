@@ -6,6 +6,7 @@ from app.combat.resources import resource_available
 
 from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
+from app.combat.bonus_attacks import resolve_bonus_attack_grant
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.effect_removal import choose_effect_removal_action, resolve_effect_removal
@@ -33,6 +34,10 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
                 sequence, round_number, attacker, setup, dice, turn_key,
             )
             events.extend(surge_events)
+        bonus_attack_events, sequence = resolve_bonus_attack_grant(
+            sequence, round_number, attacker, setup, dice, turn_key,
+        )
+        events.extend(bonus_attack_events)
         monk_events, sequence = resolve_monk_bonus_attacks(
             sequence,
             round_number,
