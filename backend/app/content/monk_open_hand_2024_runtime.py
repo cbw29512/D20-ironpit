@@ -8,9 +8,11 @@ from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.monk_open_hand_2024_attacks import build_kael_unarmed_attack_2024
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.content.monk_2024_resource_rules import monk_focus_points
+from app.domain.actions import OnHitConditionSave
 from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.initiative_resources import InitiativeHealingRider, InitiativeResourceRefillGrant
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout
+from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout
+from app.domain.reactions import AttackDamageReductionReaction
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.progression import ProgressionCombatFeatures
 
@@ -20,8 +22,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
     """Build the certified 2024 Open Hand Monk foundation without 2014 Martial Arts leakage."""
     try:
-        if level not in {1, 2}:
-            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-2 only.")
+        if level not in {1, 2, 3}:
+            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-3 only.")
         profile = build_kael_stillwater_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -64,6 +66,14 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                             resource_id="focus-points",
                             resource_cost=1,
                             priority=80,
+                            on_hit_condition_save=(
+                                OnHitConditionSave(
+                                    save_ability="dexterity",
+                                    dc=8 + pb + wisdom,
+                                    condition_id="prone",
+                                )
+                                if level >= 3 else None
+                            ),
                         ),
                     ]
                     if level >= 2 else []
@@ -113,6 +123,23 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                     ),
                 ]
                 if level >= 2 else []
+            ),
+            attack_damage_reduction_reaction=(
+                AttackDamageReductionReaction(
+                    source_id="deflect-attacks",
+                    source_name="Deflect Attacks",
+                    attack_kinds=["melee", "ranged"],
+                    required_damage_types=[
+                        DamageType.BLUDGEONING,
+                        DamageType.PIERCING,
+                        DamageType.SLASHING,
+                    ],
+                    reduction_dice_count=1,
+                    reduction_dice_size=10,
+                    reduction_ability="dexterity",
+                    add_level=True,
+                )
+                if level >= 3 else None
             ),
             resources=(
                 [
