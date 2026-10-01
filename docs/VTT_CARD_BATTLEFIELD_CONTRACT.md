@@ -183,6 +183,7 @@ or animation operation is running, preventing stale callbacks from restoring
 discarded results.
 
 The battlefield and its fight/reset controls come immediately after the site
-header. Purpose-built/custom fight presets follow the battlefield; they must
-not displace the board below the preset list. Both website entry pages use
+header. The Battle Log comes directly below the battlefield, followed by
+purpose-built/custom fight presets (Chris’s 2026-09-30 layout correction).
+Result and Turbo panels follow the presets. Both website entry pages use
 this same section order.
