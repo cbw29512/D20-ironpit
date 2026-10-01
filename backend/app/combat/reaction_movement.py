@@ -90,6 +90,7 @@ def move_toward_with_reactions(
 ) -> tuple[list[BattleEvent], int, BattleEvent | None]:
     """Open departure Reaction windows, then apply the intended move if it can continue."""
     try:
+        disengaged = disengaged or mover.state.disengaged_this_turn
         if setup is not None and setup.map_definition is not None:
             if mover.state.position is None or target.state.position is None:
                 raise ValueError("Grid encounter cannot mix scalar and grid movement authority.")
