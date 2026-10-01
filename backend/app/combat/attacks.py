@@ -160,6 +160,12 @@ def resolve_attack(
             applied_conditions=applied_conditions,
             deferred_effect_armed=deferred_effect_armed,
         )
+        if effects.damage_reduction_reaction_used:
+            source_name = effects.damage_reduction_reaction_source_name or "Reaction"
+            description += (
+                f" {actual_defender.template.name} uses {source_name} to reduce "
+                f"the attack's damage by {effects.damage_reduction_reaction_reduction}."
+            )
         if d20_bonus_source_name:
             description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
         if outcome_adjustment_name:
