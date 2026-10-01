@@ -24,7 +24,7 @@ from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_spell_cast, spell_cast_available
 from app.combat.spell_attack_helpers import cast_slot_resource, roll_spell_attack_damage
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.timed_conditions import apply_timed_condition
@@ -42,12 +42,18 @@ def resolve_spell_attack(
     range_modifier: ResourceBackedSpellRangeModifier | None = None,
     cast_slot_level: int | None = None,
     spend_cast_costs: bool = True,
+    record_spell_cast: bool = True,
 ) -> BattleEvent:
     try:
         if spell.action_cost == "reaction":
             raise ValueError(f"{spell.name} cannot be cast in this action window.")
         if spend_cast_costs and not is_available(caster.state, spell.action_cost):
             raise ValueError(f"{spell.name} cannot be cast in this action window.")
+        if spend_cast_costs and record_spell_cast and not spell_cast_available(
+            caster.state, turn_key, spell.level, spell.action_cost,
+            expends_spell_slot=spell.level > 0,
+        ):
+            raise ValueError(f"{spell.name} is not legal under the active edition's per-turn casting rule.")
         if target.side == caster.side or target.state.is_dead or not target.state.is_alive:
             raise ValueError(f"{spell.name} requires a living enemy target.")
         distance = combatant_distance(caster, target) if distance_override_ft is None else distance_override_ft
@@ -63,8 +69,13 @@ def resolve_spell_attack(
             raise ValueError(f"No level {requested} spell slot remains for {spell.name}.")
         ward = check_targeting_ward(caster, target, dice)
         if ward is not None and not ward.succeeded:
+            if spend_cast_costs and record_spell_cast:
+                mark_spell_cast(
+                    caster.state, turn_key, spell.level, spell.action_cost,
+                    expends_spell_slot=resource is not None,
+                )
             if resource is not None:
-                mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
+                resource.current_uses -= 1
             if spend_cast_costs:
                 spend(caster.state, spell.action_cost)
             range_remaining = (
@@ -108,8 +119,13 @@ def resolve_spell_attack(
         consume_next_attack_against_advantage(caster.state, target.combatant_id)
         consume_next_attack_disadvantage(caster.state)
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
+        if spend_cast_costs and record_spell_cast:
+            mark_spell_cast(
+                caster.state, turn_key, spell.level, spell.action_cost,
+                expends_spell_slot=resource is not None,
+            )
         if resource is not None:
-            mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
+            resource.current_uses -= 1
         if spend_cast_costs:
             spend(caster.state, spell.action_cost)
         range_remaining = (
