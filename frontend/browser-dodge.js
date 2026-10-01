@@ -29,13 +29,20 @@
     }
   }
 
+  function applyEffect(state) {
+    try {
+      if (!state.active_effect_ids.includes(DODGE_EFFECT_ID)) state.active_effect_ids.push(DODGE_EFFECT_ID);
+    } catch (error) {
+      console.error("Failed to apply browser Dodge effect", { name: state?.template?.name, error });
+      throw error;
+    }
+  }
+
   function take(sequence, round, actor) {
     try {
       if (!E()?.available(actor.state, "action")) throw new Error("Action is not available for Dodge.");
       E().spend(actor.state, "action");
-      if (!actor.state.active_effect_ids.includes(DODGE_EFFECT_ID)) {
-        actor.state.active_effect_ids.push(DODGE_EFFECT_ID);
-      }
+      applyEffect(actor.state);
       return {
         sequence,
         round_number: round,
@@ -53,5 +60,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_DODGE = { benefitsActive, dexSaveAdvantageSources, take };
+  window.IRON_PIT_BROWSER_DODGE = { applyEffect, benefitsActive, dexSaveAdvantageSources, take };
 })();
