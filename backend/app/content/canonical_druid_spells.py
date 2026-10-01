@@ -113,6 +113,18 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=9, min_character_level=17,
     ),
     _spell(
+        "barkskin", "Barkskin", "buff", "modifier-stack",
+        spell_level=2, min_character_level=18,
+    ),
+    _spell(
+        "regenerate", "Regenerate", "healing", "arena-out-of-scope",
+        spell_level=7, min_character_level=19,
+    ),
+    _spell(
+        "ice-storm", "Ice Storm", "damage", "arena-out-of-scope",
+        spell_level=4, min_character_level=20,
+    ),
+    _spell(
         "speak-with-animals",
         "Speak with Animals",
         "utility",
