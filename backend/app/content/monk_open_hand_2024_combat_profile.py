@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenCombatProfile:
     try:
         dexterity = abilities.modifier("dexterity")
-        proficiency = 2
+        proficiency = 3 if level >= 5 else 2
         return PregenCombatProfile(
             template_id=f"kael-stillwater-l{level}",
             archetype="Monk",
@@ -33,7 +33,7 @@ def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenComba
                 ("sleight-of-hand", dexterity + proficiency),
                 ("stealth", dexterity + proficiency),
             ),
-            attacks=(AttackExpectation("unarmed-strike", "dexterity", 1, 6, "bludgeoning"),),
+            attacks=(AttackExpectation("unarmed-strike", "dexterity", 1, 8 if level >= 5 else 6, "bludgeoning"),),
             weapon_masteries=(),
             resources=(
                 (("focus-points", focus_points), ("uncanny-metabolism", 1))
@@ -45,11 +45,11 @@ def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenComba
         raise
 
 
-def build_kael_2024_combat_profiles(max_level: int = 4) -> list[PregenCombatProfile]:
+def build_kael_2024_combat_profiles(max_level: int = 5) -> list[PregenCombatProfile]:
     """Return independent combat fingerprints for certified 2024 Kael levels."""
     try:
-        if max_level not in {1, 2, 3, 4}:
-            raise ValueError("The current 2024 Kael combat fingerprint covers levels 1-4 only.")
+        if max_level not in {1, 2, 3, 4, 5}:
+            raise ValueError("The current 2024 Kael combat fingerprint covers levels 1-5 only.")
         base = AbilityScores(
             strength=13,
             dexterity=17,
@@ -66,6 +66,8 @@ def build_kael_2024_combat_profiles(max_level: int = 4) -> list[PregenCombatProf
             rows.append(_row(3, base, 3))
         if max_level >= 4:
             rows.append(_row(4, level_four, 4))
+        if max_level >= 5:
+            rows.append(_row(5, level_four, 5))
         return rows
     except Exception:
         logger.exception("Failed to build 2024 Kael combat fingerprints through level %s.", max_level)
