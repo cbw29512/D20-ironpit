@@ -1,30 +1,83 @@
 (() => {
   "use strict";
 
-  function slotSpellAvailable(state, turnKey) {
-    if (!turnKey) throw new Error("Spell-slot legality requires an active turn key.");
-    return state.spell_slot_expended_turn_key !== turnKey;
+  const actionCantrip = (spellLevel, actionCost) => spellLevel === 0 && actionCost === "action";
+
+  function spellCastAvailable(state, turnKey, spellLevel, actionCost, options = {}) {
+    if (!turnKey) throw new Error("Spell-cast legality requires an active turn key.");
+    if (!Number.isInteger(spellLevel) || spellLevel < 0 || spellLevel > 9) {
+      throw new Error("Spell level must be between 0 and 9.");
+    }
+    const expendsSpellSlot = Boolean(options.expendsSpellSlot);
+    if (state.template.ruleset === "2024") {
+      return !(expendsSpellSlot && state.spell_slot_expended_turn_key === turnKey);
+    }
+    if (state.template.ruleset === "2014") {
+      if (actionCost === "bonus_action") {
+        return state.non_action_cantrip_spell_cast_turn_key !== turnKey;
+      }
+      if (actionCantrip(spellLevel, actionCost)) return true;
+      return state.bonus_action_spell_cast_turn_key !== turnKey;
+    }
+    throw new Error(`Unsupported spellcasting ruleset ${state.template.ruleset}.`);
+  }
+
+  function markSpellCast(state, turnKey, spellLevel, actionCost, options = {}) {
+    const expendsSpellSlot = Boolean(options.expendsSpellSlot);
+    if (!spellCastAvailable(state, turnKey, spellLevel, actionCost, { expendsSpellSlot })) {
+      throw new Error("Spell cannot be cast under the active edition's per-turn casting rule.");
+    }
+    if (state.template.ruleset === "2024") {
+      if (expendsSpellSlot) state.spell_slot_expended_turn_key = turnKey;
+      return;
+    }
+    if (actionCost === "bonus_action") {
+      state.bonus_action_spell_cast_turn_key = turnKey;
+      state.non_action_cantrip_spell_cast_turn_key = turnKey;
+    } else if (!actionCantrip(spellLevel, actionCost)) {
+      state.non_action_cantrip_spell_cast_turn_key = turnKey;
+    }
+  }
+
+  function slotSpellAvailable(state, turnKey, options = {}) {
+    return spellCastAvailable(
+      state,
+      turnKey,
+      options.spellLevel ?? 1,
+      options.actionCost || "action",
+      { expendsSpellSlot: true },
+    );
+  }
+
+  function markSlotSpellCast(state, turnKey, options = {}) {
+    markSpellCast(
+      state,
+      turnKey,
+      options.spellLevel ?? 1,
+      options.actionCost || "action",
+      { expendsSpellSlot: true },
+    );
   }
 
   function legalSlotLevels(state, turnKey, printedLevel, options = {}) {
-    if (printedLevel === 0) return [0];
-    if (!Number.isInteger(printedLevel) || printedLevel < 1 || printedLevel > 9) {
+    if (!Number.isInteger(printedLevel) || printedLevel < 0 || printedLevel > 9) {
       throw new Error("Printed spell level must be between 0 and 9.");
     }
-    if (!slotSpellAvailable(state, turnKey)) return [];
+    const actionCost = options.actionCost || "action";
+    if (printedLevel === 0) {
+      return spellCastAvailable(
+        state, turnKey, 0, actionCost, { expendsSpellSlot: false },
+      ) ? [0] : [];
+    }
+    if (!slotSpellAvailable(
+      state, turnKey, { spellLevel: printedLevel, actionCost },
+    )) return [];
     const maximum = options.higherSlotScaling ? 9 : printedLevel;
     const levels = [];
     for (let level = printedLevel; level <= maximum; level += 1) {
       if ((state.resources?.[`spell-slot-${level}`] || 0) > 0) levels.push(level);
     }
     return levels;
-  }
-
-  function markSlotSpellCast(state, turnKey) {
-    if (!slotSpellAvailable(state, turnKey)) {
-      throw new Error("A spell slot has already been expended to cast a spell on this turn.");
-    }
-    state.spell_slot_expended_turn_key = turnKey;
   }
 
   function safeDamageMaximizer(state, spellId, spellLevel) {
@@ -89,7 +142,7 @@
   }
 
   window.IRON_PIT_BROWSER_SPELLCASTING = {
-    legalSlotLevels, markSlotSpellCast, slotSpellAvailable,
+    legalSlotLevels, markSlotSpellCast, slotSpellAvailable, markSpellCast, spellCastAvailable,
     safeDamageMaximizer, maximizedRolls, resolveDamageMaximizerAfterCast,
   };
 })();
