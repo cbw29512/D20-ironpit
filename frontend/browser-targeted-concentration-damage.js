@@ -34,7 +34,9 @@
   }
 
   function slot(member, action, turnKey) {
-    if (!SC().slotSpellAvailable(member.state, turnKey)) return null;
+    if (!SC().slotSpellAvailable(member.state, turnKey, {
+      spellLevel: action.level, actionCost: action.actionCost,
+    })) return null;
     const candidates = [];
     for (let level = action.level; level <= 9; level += 1) {
       const id = `spell-slot-${level}`;
@@ -63,7 +65,7 @@
         const selected = slot(member, action, turnKey);
         if (!selected) continue;
         const [slotLevel, resourceId] = selected;
-        SC().markSlotSpellCast(member.state, turnKey);
+        SC().markSlotSpellCast(member.state, turnKey, { spellLevel: action.level, actionCost: action.actionCost });
         member.state.resources[resourceId] -= 1;
         resourceRemaining = member.state.resources[resourceId];
         C().start(
