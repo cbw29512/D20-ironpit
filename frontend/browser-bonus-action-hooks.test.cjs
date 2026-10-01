@@ -58,6 +58,7 @@ load("browser-support.js");
 load("browser-steady-aim.js");
 load("browser-frenzy-2014.js");
 load("browser-bonus-attacks.js");
+load("browser-tactical-actions.js");
 load("browser-2014-monk.js");
 load("browser-targeted-concentration-damage.js");
 load("browser-persistent-spell-attacks.js");
