@@ -52,6 +52,17 @@ def move_toward_combatant(
         raise RuntimeError("Encounter movement could not be resolved.") from exc
 
 
+def grant_dash_movement(mover: EncounterCombatant) -> int:
+    """Grant the standard Dash movement without deciding how the action cost was paid."""
+    try:
+        speed = effective_speed(mover.state)
+        mover.state.movement_remaining_ft += speed
+        return speed
+    except Exception as exc:
+        logger.exception("Failed to grant Dash movement for %s.", mover.combatant_id)
+        raise RuntimeError("Dash movement could not be granted.") from exc
+
+
 def take_encounter_dash(
     sequence: int,
     round_number: int,
@@ -62,9 +73,8 @@ def take_encounter_dash(
         if not is_available(mover.state, "action"):
             raise ValueError("Action is not available for Dash.")
         before = combatant_distance(mover, target)
-        speed = effective_speed(mover.state)
         spend(mover.state, "action")
-        mover.state.movement_remaining_ft += speed
+        speed = grant_dash_movement(mover)
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
