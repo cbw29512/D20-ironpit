@@ -674,17 +674,6 @@
       "status": "supported"
     },
     {
-      "demand_count": 1,
-      "id": "boon-dimensional-travel",
-      "kinds": [
-        "base-feature"
-      ],
-      "owners": [
-        "druid/base"
-      ],
-      "status": "planned"
-    },
-    {
       "demand_count": 2,
       "id": "boon-irresistible-offense",
       "kinds": [
@@ -697,14 +686,15 @@
       "status": "supported"
     },
     {
-      "demand_count": 2,
+      "demand_count": 3,
       "id": "boon-of-fate",
       "kinds": [
         "base-feature"
       ],
       "owners": [
         "bard/base",
-        "cleric/base"
+        "cleric/base",
+        "druid/base"
       ],
       "status": "supported"
     },
@@ -4931,7 +4921,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 334,
+    "planned": 333,
     "supported": 80
   }
 }
