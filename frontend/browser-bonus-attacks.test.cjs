@@ -107,6 +107,18 @@ const setup = { heroes: [actor], monsters: [blocked, target] };
 }
 
 {
+  const formation = window.IRON_PIT_BROWSER_FORMATION;
+  window.IRON_PIT_BROWSER_FORMATION = null;
+  actor.state.bonus_action_available = true;
+  assert.throws(
+    () => window.IRON_PIT_BROWSER_BONUS_ATTACKS.resolve(2, 1, actor, setup, "1:monk"),
+    /require browser-formation\.js/,
+    "declared Bonus Action attacks must fail closed when shared legality runtime is missing",
+  );
+  window.IRON_PIT_BROWSER_FORMATION = formation;
+}
+
+{
   actor.state.bonus_action_available = true;
   window.IRON_PIT_BROWSER_BONUS_ATTACKS.installAbilityHooks();
   const H = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
