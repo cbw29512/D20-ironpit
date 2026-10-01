@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-import logging
 
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS
+from app.content.druid_2024_resource_rules import (
+    druid_nature_magician_uses,
+    druid_wild_resurgence_slot_restore_uses,
+    druid_wild_shape_uses,
+    land_natural_recovery_free_cast_uses,
+)
+from app.content.monk_2024_resource_rules import monk_focus_points
 from app.content.level_resources import (
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
@@ -15,8 +21,6 @@ from app.content.level_resources import (
 )
 
 ResourceRule = tuple[str, str, Callable[[int], int]]
-
-logger = logging.getLogger(__name__)
 
 
 def _bardic_inspiration(level: int) -> int:
@@ -52,56 +56,6 @@ def _fighter_combat_prowess(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Boon of Combat Prowess uses for level {level}.") from exc
 
 
-def _druid_wild_shape(level: int) -> int:
-    try:
-        if not 1 <= level <= 20:
-            raise ValueError("2024 Druid Wild Shape progression covers levels 1 through 20.")
-        if level == 1:
-            return 0
-        if level <= 5:
-            return 2
-        if level <= 16:
-            return 3
-        return 4
-    except ValueError:
-        raise
-    except Exception as exc:
-        raise ValueError(f"Failed to resolve 2024 Druid Wild Shape uses for level {level}.") from exc
-
-
-def _druid_wild_resurgence_slot_restore(level: int) -> int:
-    try:
-        return 1 if level >= 5 else 0
-    except Exception as exc:
-        raise ValueError(f"Failed to resolve 2024 Wild Resurgence slot-restore uses for level {level}.") from exc
-
-
-def _druid_nature_magician(level: int) -> int:
-    try:
-        return 1 if level >= 20 else 0
-    except Exception as exc:
-        raise ValueError(f"Failed to resolve 2024 Nature Magician uses for level {level}.") from exc
-
-
-def _land_natural_recovery_free_cast(level: int) -> int:
-    try:
-        return 1 if level >= 6 else 0
-    except Exception as exc:
-        raise ValueError(f"Failed to resolve 2024 Natural Recovery free-cast uses for level {level}.") from exc
-
-
-def _monk_focus_points(level: int) -> int:
-    try:
-        if not 1 <= level <= 20:
-            raise ValueError("2024 Monk Focus progression covers levels 1 through 20.")
-        return level if level >= 2 else 0
-    except ValueError:
-        raise
-    except Exception as exc:
-        logger.exception("Failed to resolve 2024 Monk Focus Points for level %s.", level)
-        raise ValueError(f"Failed to resolve 2024 Monk Focus Points for level {level}.") from exc
-
-
 def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
@@ -134,16 +88,16 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("boon-combat-prowess", "Boon of Combat Prowess", _fighter_combat_prowess),
     ),
     "druid": (
-        ("wild-shape", "Wild Shape", _druid_wild_shape),
+        ("wild-shape", "Wild Shape", druid_wild_shape_uses),
         (
             "wild-resurgence-slot-restore",
             "Wild Resurgence: Regain Spell Slot",
-            _druid_wild_resurgence_slot_restore,
+            druid_wild_resurgence_slot_restore_uses,
         ),
         ("boon-of-fate", "Boon of Fate", _boon_of_fate),
-        ("nature-magician-conversion", "Nature Magician", _druid_nature_magician),
+        ("nature-magician-conversion", "Nature Magician", druid_nature_magician_uses),
     ),
-    "monk": (("focus-points", "Focus Points", _monk_focus_points),),
+    "monk": (("focus-points", "Focus Points", monk_focus_points),),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
 }
@@ -156,7 +110,7 @@ SUBCLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         (
             "natural-recovery-free-cast",
             "Natural Recovery: Free Circle Spell",
-            _land_natural_recovery_free_cast,
+            land_natural_recovery_free_cast_uses,
         ),
     ),
 }
