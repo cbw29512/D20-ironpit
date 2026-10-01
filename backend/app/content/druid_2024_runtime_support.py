@@ -10,11 +10,8 @@ from app.content.druid_2024_land_spells import (
     build_wall_of_stone_2024,
 )
 from app.content.druid_2024_spells import build_barkskin_2024, build_longstrider_2024
-from app.content.druid_2024_endgame import (
-    BEAST_SPELL_ACTION_IDS,
-    druid_endgame_resources,
-    nature_magician_conversions,
-)
+from app.content.druid_2024_endgame import druid_endgame_resources, nature_magician_conversions
+from app.content.druid_2024_form_support import wild_shape_actions
 from app.content.healing_spell_effects import build_cure_wounds, build_heal_2024, build_healing_word, build_mass_cure_wounds
 from app.content.foresight_2024 import build_foresight_2024
 from app.content.shared_movement_spells_2024 import freedom_of_movement_2024
@@ -23,29 +20,8 @@ from app.content.druid_2024_offensive_actions import druid_offensive_actions
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.models import ResourceDefinition
-from app.domain.replacement_form_actions import ReplacementFormAction
 
 logger = logging.getLogger(__name__)
-
-
-def wild_shape_actions(level: int) -> list[ReplacementFormAction]:
-    try:
-        if level < 2:
-            return []
-        form_template_id = "srd-brown-bear" if level >= 8 else "srd-wolf"
-        return [ReplacementFormAction(
-            id="wild-shape", name="Wild Shape", action_cost="bonus_action",
-            form_template_id=form_template_id, resource_id="wild-shape", resource_cost=1,
-            voluntary_revert_action="bonus_action", hp_mode="retain_owner",
-            temporary_hp_on_enter=level, retain_creature_type=True,
-            ends_on_incapacitated=True, replace_existing_form=True,
-            retain_spellcasting=level >= 18,
-            retained_spell_action_ids=(list(BEAST_SPELL_ACTION_IDS) if level >= 18 else []),
-            source="D&D Beyond Basic Rules 2024: Druid — Wild Shape",
-        )]
-    except Exception:
-        logger.exception("Failed to build 2024 Wild Shape at Druid level %s.", level)
-        raise
 
 
 def druid_resources(level: int, spell_slots: tuple[int, ...], wild_shape_uses: int) -> list[ResourceDefinition]:
