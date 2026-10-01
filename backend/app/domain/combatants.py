@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HpThresholdConditionAction, HpThresholdInstantDeathAction, SavingThrowAction
 from app.domain.auto_hit_spells import AutoHitSpellAction
+from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_sources import ConditionalDamageDefense
@@ -82,6 +83,7 @@ class CombatantTemplate(BaseModel):
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
+    bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     hp_threshold_condition_actions: list[HpThresholdConditionAction] = Field(default_factory=list)
