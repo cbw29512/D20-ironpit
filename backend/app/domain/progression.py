@@ -26,6 +26,7 @@ from app.domain.progression_primitives import (
     ResourceBackedD20BonusDie,
     ResourceBackedOnHitExile,
     ResourceBackedOnHitSaveRider,
+    ResourceBackedOnHitSaveRider,
     DelayedResourceRefill,
     SavingThrowMinimum,
     SavingThrowProficiencyGrant,
@@ -100,6 +101,7 @@ class ProgressionCombatFeatures(BaseModel):
     source_damage_temporary_hp: SourceDamageTemporaryHpGrant | None = None
     selectable_damage_resistance: SelectableDamageResistance | None = None
     resource_backed_on_hit_exile: ResourceBackedOnHitExile | None = None
+    resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     delayed_resource_refill: DelayedResourceRefill | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
