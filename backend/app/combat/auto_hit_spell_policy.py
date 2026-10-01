@@ -41,6 +41,7 @@ def choose_auto_hit_spell(
                 caster.state,
                 turn_key,
                 action.level,
+                action_cost=action.action_cost,
                 higher_slot_scaling=action.projectiles_per_slot_above > 0,
             ):
                 projectile_count = action.projectile_count + (
