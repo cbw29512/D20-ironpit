@@ -18,6 +18,7 @@ def _feature(
     feature_name: str,
     category: str,
     *,
+    combat_relevant: bool = True,
     notes: str | None = None,
 ) -> FeatureAudit:
     try:
@@ -26,7 +27,7 @@ def _feature(
             feature_name=feature_name,
             source_reference="D&D Beyond Basic Rules 2024",
             category=category,
-            combat_relevant=True,
+            combat_relevant=combat_relevant,
             automated=True,
             notes=notes,
         )
@@ -57,8 +58,8 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             level=1,
             ruleset="2024",
             build_id="unarmed-offense",
-            species_id="orc",
-            species_name="Orc",
+            species_id="human",
+            species_name="Human",
             background_id="criminal",
             background_name="Criminal",
             origin_feat_id="alert",
@@ -69,13 +70,16 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             final_ability_scores=final,
             class_equipment_option="package",
             class_equipment=[
-                "Spear", "5 Daggers", "Artisan's Tools", "Explorer's Pack", "11 GP",
+                "Spear", "5 Daggers", "Woodcarver's Tools", "Explorer's Pack", "11 GP",
             ],
             background_equipment_option="package",
             background_equipment=[
                 "2 Daggers", "Thieves' Tools", "Crowbar", "2 Pouches", "Traveler's Clothes", "16 GP",
             ],
-            skill_proficiencies=["Sleight of Hand", "Stealth", "Acrobatics", "Insight"],
+            skill_proficiencies=[
+                "Sleight of Hand", "Stealth", "Acrobatics", "Insight",
+                "Perception", "History", "Nature", "Religion",
+            ],
             weapon_masteries=[],
             combat_loadout_kind="unarmed",
             feature_audits=[
@@ -92,14 +96,39 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                     "feat",
                     notes="Adds Proficiency Bonus to Initiative; the optional ally initiative swap is declined by arena policy.",
                 ),
-                _feature("adrenaline-rush", "Adrenaline Rush", "species"),
-                _feature("relentless-endurance", "Relentless Endurance", "species"),
+                _feature(
+                    "resourceful",
+                    "Resourceful",
+                    "species",
+                    notes="Fresh-rest arena initialization starts Kael with Heroic Inspiration.",
+                ),
+                _feature(
+                    "skillful",
+                    "Skillful",
+                    "species",
+                    combat_relevant=False,
+                    notes="Perception proficiency selected.",
+                ),
+                _feature(
+                    "versatile",
+                    "Versatile",
+                    "species",
+                    combat_relevant=False,
+                    notes="Recommended Skilled Origin feat selected.",
+                ),
+                _feature(
+                    "skilled",
+                    "Skilled",
+                    "feat",
+                    combat_relevant=False,
+                    notes="History, Nature, and Religion proficiencies selected.",
+                ),
                 _feature("unarmed-strike", "Unarmed Strike", "equipment"),
             ],
             source_references=[
                 "Basic Rules 2024: Monk — Core Traits and Level 1 Martial Arts",
-                "Basic Rules 2024: Character Origins — Criminal and Orc",
-                "Basic Rules 2024: Feats — Alert",
+                "Basic Rules 2024: Character Origins — Criminal and Human",
+                "Basic Rules 2024: Feats — Alert and Skilled",
             ],
         )
     except Exception:
