@@ -99,6 +99,7 @@ jobs:
           node frontend/browser-outgoing-healing-maximize.test.cjs
           node frontend/browser-once-per-turn-hit-damage.test.cjs
           node frontend/browser-persistent-spell-attacks.test.cjs
+          node frontend/browser-spellcasting-edition-rules.test.cjs
           node frontend/browser-persistent-hazards.test.cjs
           node frontend/browser-2014-monk-entrypoints.test.cjs
           node frontend/browser-2014-paladin.test.cjs
