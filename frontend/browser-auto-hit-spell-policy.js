@@ -12,6 +12,7 @@
     for (const [index, action] of (caster.state.template.auto_hit_spell_actions || []).entries()) {
       if (action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) continue;
       for (const slotLevel of C().legalSlotLevels(caster.state, turnKey, action.level, {
+        actionCost: action.actionCost,
         higherSlotScaling: (action.projectilesPerSlotAbove || 0) > 0,
       })) {
         const projectileCount = action.projectileCount
