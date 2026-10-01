@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
-from app.combat.spellcasting import legal_slot_levels, slot_spell_available
+from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
 from app.domain.size import size_at_most
@@ -26,13 +26,11 @@ def _resource_available(member: EncounterCombatant, resource_id: str | None, cos
         raise
 
 
-def _spell_level_available(member: EncounterCombatant, level: int, turn_key: str) -> bool:
+def _spell_level_available(member: EncounterCombatant, level: int, action_cost: str, turn_key: str) -> bool:
     try:
-        if level == 0:
-            return True
-        if not slot_spell_available(member.state, turn_key):
-            return False
-        return _resource_available(member, f"spell-slot-{level}")
+        return bool(legal_slot_levels(
+            member.state, turn_key, level, action_cost=action_cost,
+        ))
     except Exception:
         logger.exception("Failed spell-level availability probe for %s.", member.combatant_id)
         raise
@@ -78,13 +76,14 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
         for action in attacker.state.template.spell_attack_actions:
             if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
                 continue
-            if _spell_level_available(attacker, action.level, turn_key):
+            if _spell_level_available(attacker, action.level, action.action_cost, turn_key):
                 ranges.append(("spell", action.range_ft))
         for action in attacker.state.template.auto_hit_spell_actions:
             if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
                 continue
             if legal_slot_levels(
                 attacker.state, turn_key, action.level,
+                action_cost=action.action_cost,
                 higher_slot_scaling=action.projectiles_per_slot_above > 0,
             ):
                 ranges.append(("spell", action.range_ft))
@@ -93,6 +92,7 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
                 continue
             if not legal_slot_levels(
                 attacker.state, turn_key, action.level,
+                action_cost=action.action_cost,
                 higher_slot_scaling=action.upcast_dice_per_level > 0,
             ):
                 continue
