@@ -37,8 +37,10 @@ def resolve_auto_hit_spell(
             raise ValueError(f"{action.name} requires a living enemy target.")
         if combatant_distance(caster, target) > action.range_ft:
             raise ValueError(f"{action.name} target is out of range.")
-        if not slot_spell_available(caster.state, turn_key):
-            raise ValueError(f"A spell slot was already expended this turn.")
+        if not slot_spell_available(
+            caster.state, turn_key, spell_level=action.level, action_cost=action.action_cost,
+        ):
+            raise ValueError(f"{action.name} is not legal under the active edition's per-turn casting rule.")
         resource = next(
             (item for item in caster.state.resources
              if item.id == f"spell-slot-{slot_level}" and item.current_uses > 0),
@@ -85,7 +87,9 @@ def resolve_auto_hit_spell(
             dice=dice,
             affected_states=affected_states,
         )
-        mark_slot_spell_cast(caster.state, turn_key)
+        mark_slot_spell_cast(
+            caster.state, turn_key, spell_level=action.level, action_cost=action.action_cost,
+        )
         resource.current_uses -= 1
         spend(caster.state, action.action_cost)
 
