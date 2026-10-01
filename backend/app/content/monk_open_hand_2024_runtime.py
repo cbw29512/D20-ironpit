@@ -15,7 +15,7 @@ from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_p
 from app.content.monk_open_hand_2024_resources import build_monk_initiative_refills, build_monk_resources
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.progression_primitives import ResourceBackedOnHitSaveRider
+from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
 
 logger = logging.getLogger(__name__)
 
