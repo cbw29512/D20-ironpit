@@ -4,7 +4,7 @@ from app.combat.action_economy import is_available
 from app.combat.bloodied import is_bloodied
 from app.combat.defensive_modifier_rules import healing_is_maximized
 from app.combat.hit_points import effective_max_hp
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spellcasting import slot_spell_available, spell_level_from_resource_id
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import HealingAction
 from app.domain.traits import CombatTrait
@@ -32,8 +32,14 @@ def resource_available(
 ) -> bool:
     if action.resource_id is None:
         return True
-    if slot_heal(action) and (turn_key is None or not slot_spell_available(member.state, turn_key)):
-        return False
+    if slot_heal(action):
+        if turn_key is None:
+            return False
+        level = spell_level_from_resource_id(action.resource_id)
+        if level is None or not slot_spell_available(
+            member.state, turn_key, spell_level=level, action_cost=action.action_cost,
+        ):
+            return False
     resource = next((item for item in member.state.resources if item.id == action.resource_id), None)
     return resource is not None and resource.current_uses >= action.resource_cost
 
