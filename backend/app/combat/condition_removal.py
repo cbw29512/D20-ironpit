@@ -10,7 +10,7 @@ from app.combat.condition_removal_policy import (
     resource,
     target_allowed,
 )
-from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available, spell_level_from_resource_id
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, ConditionRemovalAction
 
@@ -39,14 +39,26 @@ def resolve_condition_removal(
             raise ValueError("Reaction condition removal requires a matching trigger, not an on-turn resolution.")
         if not target_allowed(remover, target, action) or not condition_ids:
             raise ValueError("Condition-removal action is not legal for this target.")
-        if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
-            raise ValueError("A spell slot has already been expended to cast a spell on this turn.")
+        slot_level = None
+        if action.expends_spell_slot:
+            slot_ids = [item for item in action.resource_costs if item.startswith("spell-slot-")]
+            if len(slot_ids) != 1:
+                raise ValueError(f"{action.name} must declare exactly one spell-slot resource.")
+            slot_level = spell_level_from_resource_id(slot_ids[0])
+            if slot_level is None or not slot_spell_available(
+                remover.state, turn_key, spell_level=slot_level, action_cost=action.action_cost,
+            ):
+                raise ValueError("Spell is not legal under the active edition's per-turn casting rule.")
         legal = set(affordable_conditions(remover, target, action))
         if any(condition_id not in legal for condition_id in condition_ids):
             raise ValueError("Attempted to remove a condition this action cannot legally remove.")
         spend(remover.state, action.action_cost)
         if action.expends_spell_slot:
-            mark_slot_spell_cast(remover.state, turn_key)
+            if slot_level is None:
+                raise ValueError("Spell-slot condition removal is missing its slot level.")
+            mark_slot_spell_cast(
+                remover.state, turn_key, spell_level=slot_level, action_cost=action.action_cost,
+            )
         for resource_id, cost in costs(action, len(condition_ids)).items():
             item = resource(remover, resource_id)
             if item is None or item.current_uses < cost:
