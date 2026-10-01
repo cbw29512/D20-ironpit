@@ -736,6 +736,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             }
             for item in template.replacement_form_actions
         ]
+    if template.starts_with_heroic_inspiration:
+        row["starts_with_heroic_inspiration"] = True
     if template.bonus_attack_grants:
         row["bonusAttackGrants"] = [
             {
