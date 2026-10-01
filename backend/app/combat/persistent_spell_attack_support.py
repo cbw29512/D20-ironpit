@@ -79,7 +79,10 @@ def cast_slot_level(
     turn_key: str,
 ) -> int | None:
     try:
-        if not slot_spell_available(member.state, turn_key):
+        if not slot_spell_available(
+            member.state, turn_key,
+            spell_level=action.attack.level, action_cost=action.attack.action_cost,
+        ):
             return None
         levels = sorted(
             int(item.id.removeprefix("spell-slot-"))
