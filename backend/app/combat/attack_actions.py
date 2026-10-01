@@ -95,6 +95,7 @@ def resolve_attack_action(
                         dice,
                         turn_key,
                         affected_states=affected_states,
+                        setup=setup,
                     )
                     if rider is not None:
                         events.append(rider.event)
