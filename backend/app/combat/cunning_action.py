@@ -1,45 +1,41 @@
 from __future__ import annotations
 
-from app.combat.action_economy import is_available, spend
-from app.combat.encounter_targeting import combatant_distance, living_opponents
-from app.combat.modifier_stack import effective_speed
-from app.combat.offensive_ranges import offensive_ranges_for_target
+import logging
+
+from app.combat.tactical_actions import (
+    choose_offensive_dash_grant,
+    resolve_bonus_tactical_grant,
+)
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
+logger = logging.getLogger(__name__)
+CUNNING_DASH_ID = "cunning-action-dash"
+
 
 def needs_dash(member: EncounterCombatant, setup: EncounterSetup, turn_key: str) -> bool:
-    """Use Dash only when normal movement cannot reach any certified offensive range."""
-    if not member.state.template.progression_features.cunning_action:
-        return False
-    if not is_available(member.state, "bonus_action"):
-        return False
-    speed = effective_speed(member.state)
-    if speed <= 0:
-        return False
-    normal_move = member.state.movement_remaining_ft
-    dash_would_help = False
-    for target in living_opponents(member, setup):
-        distance = combatant_distance(member, target)
-        for _, desired in offensive_ranges_for_target(member, target, turn_key):
-            if distance <= desired + normal_move:
-                return False
-            if distance <= desired + normal_move + speed:
-                dash_would_help = True
-    return dash_would_help
+    """Compatibility query backed by the universal tactical-action chooser."""
+    try:
+        grant = choose_offensive_dash_grant(member, setup, turn_key)
+        return grant is not None and grant.id == CUNNING_DASH_ID
+    except Exception as exc:
+        logger.exception("Failed Cunning Action Dash query for %s.", member.combatant_id)
+        raise RuntimeError("Cunning Action Dash could not be evaluated.") from exc
 
 
 def use_dash(
-    sequence: int, round_number: int, member: EncounterCombatant, setup: EncounterSetup, turn_key: str,
+    sequence: int,
+    round_number: int,
+    member: EncounterCombatant,
+    setup: EncounterSetup,
+    turn_key: str,
 ) -> BattleEvent | None:
-    """Spend Cunning Action on Dash only when it enables supported offense this turn."""
-    if not needs_dash(member, setup, turn_key):
-        return None
-    spend(member.state, "bonus_action")
-    member.state.movement_remaining_ft += effective_speed(member.state)
-    return BattleEvent(
-        sequence=sequence, round_number=round_number, event_type="feature",
-        actor_id=member.combatant_id, actor_name=member.state.template.name,
-        feature_id="cunning-action-dash", animation="movement",
-        description=f"{member.state.template.name} uses Cunning Action to Dash.",
-    )
+    """Compatibility wrapper for existing Rogue tests and callers."""
+    try:
+        grant = choose_offensive_dash_grant(member, setup, turn_key)
+        if grant is None or grant.id != CUNNING_DASH_ID:
+            return None
+        return resolve_bonus_tactical_grant(sequence, round_number, member, grant)
+    except Exception as exc:
+        logger.exception("Failed Cunning Action Dash for %s.", member.combatant_id)
+        raise RuntimeError("Cunning Action Dash could not be resolved.") from exc
