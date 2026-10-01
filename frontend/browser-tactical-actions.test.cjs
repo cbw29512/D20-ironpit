@@ -73,7 +73,7 @@ function monk() {
           },
         ],
       },
-      resources: { focus: 2 },
+      resources: { "focus-points": 2 },
       action_available: true,
       bonus_action_available: true,
       reaction_available: true,
