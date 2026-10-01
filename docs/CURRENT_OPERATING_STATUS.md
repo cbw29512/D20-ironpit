@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-30 for the completed 2024 Circle of the Land Druid progression through level 20.
+Recorded 2026-10-01 for the 2024 Open Hand Monk level 1 foundation after the completed Circle of the Land Druid progression.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,8 +33,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
+| 2024 | Monk (Open Hand) | 1 |
 
-2024 public-ready hero slots on this exact tranche: **120 / 240**.
+2024 public-ready hero slots on this exact tranche: **121 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -44,9 +45,18 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 120 / 240 on this exact tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20.
+**2024 canonical pregens are 121 / 240 on this exact tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 1.
 
-Active implementation lane: **finish exact-head certification and merge the completed 2024 Circle of the Land Druid 18–20 tranche; then select the next incomplete 2024 class from repository truth**.
+Active implementation lane: **2024 Open Hand Monk. Merge the exact-head level 1 tranche, then advance the same persistent Kael Stillwater build to level 2 using universal mechanics before adding any Monk-named resolver.**
+
+### 2024 Monk lane
+
+- Kael Stillwater remains the persistent canonical Monk and remains Human.
+- Level 1 uses the legal 2024 Criminal background, Alert origin feat, Human Skillful, and Human Versatile selecting Skilled.
+- Martial Arts uses a 1d6 die and the source-agnostic Bonus Attack grant; unlike 2014, the 2024 Bonus Unarmed Strike does not require a prior Attack action.
+- Human Resourceful initializes fresh-rest combat state with Heroic Inspiration through generic combatant state.
+- The separate 2014 Monk bonus-strike prerequisite resolver remains unchanged and edition-isolated.
+- Next exact level is **Monk 2**: Monk's Focus, Unarmored Movement, and Uncanny Metabolism. Reuse the generic bonus-attack, action-economy, movement, initiative-resource, healing, and Dodge/Disengage/Dash mechanics wherever behavior is equivalent.
 
 ### Druid spell-selection policy
 
