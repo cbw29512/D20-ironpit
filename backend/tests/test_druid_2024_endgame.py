@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from app.combat.initiative_resource_refill import resolve_initiative_resource_refills
-from app.combat.resource_conversion import automatic_resource_conversion, resolve_resource_conversion
+from app.combat.resource_conversion import resolve_resource_conversion
+from app.combat.resource_conversion_automation import automatic_resource_conversion
 from app.combat.state import build_combatant_state
 from app.content.audited_druid import build_thalen_greenbough_level
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
