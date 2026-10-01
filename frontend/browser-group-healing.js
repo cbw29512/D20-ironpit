@@ -22,7 +22,9 @@
     }
     if (P().slotHeal(action)) {
       if (!turnKey) throw new Error("Spell-slot group healing requires an active turn key.");
-      C().markSlotSpellCast(healer.state, turnKey);
+      const level = C().spellLevelFromResourceId(action.resourceId);
+      if (level == null) throw new Error("Spell-slot group healing has no valid spell-slot resource.");
+      C().markSlotSpellCast(healer.state, turnKey, { spellLevel: level, actionCost: action.actionCost });
     }
     E().spend(healer.state, action.actionCost);
     healer.state.resources[action.resourceId] -= action.resourceCost || 1;
