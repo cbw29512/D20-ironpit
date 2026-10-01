@@ -57,6 +57,7 @@ def resolve_attack_event_chain(
                 dice,
                 attack_options.get("turn_key") or f"{round_number}:{attacker.combatant_id}",
                 affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
+                setup=setup,
             )
             if rider is not None:
                 prefix.append(rider.event)
