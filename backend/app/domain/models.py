@@ -1,4 +1,5 @@
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
+from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.actions import (
     AttackActionDefinition,
     AttackActionSlot,
@@ -67,6 +68,7 @@ __all__ = [
     "BattlefieldState",
     "BattleMapDefinition",
     "BattleResult",
+    "BonusAttackGrant",
     "CombatTrait",
     "CombatantState",
     "CombatantTemplate",
