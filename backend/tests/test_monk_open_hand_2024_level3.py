@@ -154,6 +154,8 @@ def test_2024_open_hand_topple_is_composed_only_into_flurry_hits() -> None:
             update={"armor_class": 1, "max_hp": 100}
         )
         target = _member(target_template, "target", "monsters", 5)
+        # Isolate Open Hand's save rider from the Human Resourceful reroll on this borrowed target template.
+        target.state.heroic_inspiration = False
         setup = EncounterSetup(
             heroes=[monk],
             monsters=[target],
