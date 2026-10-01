@@ -48,7 +48,9 @@
   function choose(remover, setup, turnKey) {
     for (const action of remover.state.template.effect_removal_actions || []) {
       if (!E().available(remover.state, action.actionCost)) continue;
-      if (action.expendsSpellSlot && !P().slotSpellAvailable(remover.state, turnKey)) continue;
+      if (action.expendsSpellSlot && !P().slotSpellAvailable(remover.state, turnKey, {
+        spellLevel: action.level, actionCost: action.actionCost,
+      })) continue;
       if (action.resourceId && (remover.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) continue;
       const candidates = effects(remover, setup, action);
       if (candidates.length) return { action, effect: candidates[0] };
@@ -65,7 +67,9 @@
     E().spend(remover.state, action.actionCost);
     let remaining = null;
     if (action.resourceId) {
-      if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey);
+      if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey, {
+        spellLevel: action.level, actionCost: action.actionCost,
+      });
       remover.state.resources[action.resourceId] -= action.resourceCost || 1;
       remaining = remover.state.resources[action.resourceId];
     }
