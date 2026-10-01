@@ -13,7 +13,7 @@ from app.combat.spell_policy_targeting import (
     legal_single_spell_targets,
     single_target_spell_choice,
 )
-from app.combat.spellcasting import legal_slot_levels
+from app.combat.spellcasting import legal_slot_levels, spell_cast_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -81,12 +81,17 @@ def choose_spell(
                     caster.state,
                     turn_key,
                     action.level,
+                    action_cost=action.action_cost,
                     higher_slot_scaling=action.upcast_dice_per_level > 0,
                 )
             ]
             cast_options.extend(
                 (grant.cast_level, grant)
                 for grant in available_alternate_casts(caster.state, action.id)
+                if spell_cast_available(
+                    caster.state, turn_key, action.level, action.action_cost,
+                    expends_spell_slot=False,
+                )
             )
             for slot_level, alternate_cast in cast_options:
                 scaled = spell_at_slot(action, slot_level)
