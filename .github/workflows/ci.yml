@@ -151,6 +151,7 @@ jobs:
           grep -q 'browser-attack-outcome-hook-installation.js' index.html
           grep -q 'browser-bonus-attacks.js' index.html
           grep -q 'browser-tactical-actions.js' index.html
+          grep -q 'browser-attack-damage-reduction.js' index.html
           grep -q 'browser-ability-hook-installation.js' index.html
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
@@ -254,6 +255,7 @@ jobs:
           grep -q 'browser-attack-outcome-hook-installation.js' frontend/index.html
           grep -q 'browser-bonus-attacks.js' frontend/index.html
           grep -q 'browser-tactical-actions.js' frontend/index.html
+          grep -q 'browser-attack-damage-reduction.js' frontend/index.html
           grep -q 'browser-ability-hook-installation.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
           grep -q 'browser-reaction-movement.js' frontend/index.html
@@ -347,6 +349,7 @@ jobs:
           node frontend/browser-action-surge-selector.test.cjs
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-bonus-attacks.test.cjs
+          node frontend/browser-attack-damage-reduction.test.cjs
           node frontend/browser-tactical-actions.test.cjs
           node frontend/browser-persistent-rage-2024.test.cjs
           node frontend/browser-turn-start-resource-refill.test.cjs
