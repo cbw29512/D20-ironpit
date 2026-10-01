@@ -32,6 +32,7 @@ def move_toward_on_grid(
 ) -> tuple[list[BattleEvent], int, BattleEvent | None]:
     """Execute a planned grid route one square at a time with RAW reaction windows."""
     try:
+        disengaged = disengaged or mover.state.disengaged_this_turn
         if setup.map_definition is None or mover.state.position is None or target.state.position is None:
             raise ValueError("Grid movement requires an authoritative map and grid positions.")
         members = [*setup.heroes, *setup.monsters]
