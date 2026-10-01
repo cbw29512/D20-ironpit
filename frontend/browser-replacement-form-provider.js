@@ -48,8 +48,8 @@
         if (!source) throw new Error("Replacement-form source became unavailable.");
         if (!RFC() || !RF()) throw new Error("Replacement-form compiler/runtime is not loaded.");
         const active = RFC().compile(
-          owner, source, Boolean(action.retainSpellcasting), Boolean(action.retainCreatureType),
-          (action.hpMode || "form_pool") === "retain_owner"
+          owner, source, Boolean(action.retainSpellcasting), action.retainedSpellActionIds || [],
+          Boolean(action.retainCreatureType), (action.hpMode || "form_pool") === "retain_owner"
         );
         const events = [];
         if (!RES()?.available(member.state, action.resourceId, action.resourceCost || 1)) {
