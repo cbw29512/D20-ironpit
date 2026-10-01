@@ -75,6 +75,7 @@ class CombatantTemplate(BaseModel):
     speed_ft: int = Field(ge=0)
     movement_modes: MovementModes
     initiative_bonus: int
+    starts_with_heroic_inspiration: bool = False
     blindsight_ft: int = Field(default=0, ge=0)
     truesight_ft: int = Field(default=0, ge=0)
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
