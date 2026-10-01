@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.druid_2024_audit_support import druid_feature_audit
+from app.content.druid_2024_final_progression_audits import build_druid_2024_final_progression_audits
 from app.domain.character_builds import FeatureAudit
 
 logger = logging.getLogger(__name__)
@@ -103,6 +104,7 @@ def build_druid_2024_high_progression_audits(level: int) -> list[FeatureAudit]:
                     "buff rule, so the legal level-9 slot remains available after precombat setup."
                 ),
             ))
+        audits.extend(build_druid_2024_final_progression_audits(level))
         return audits
     except Exception:
         logger.exception("Failed to build high-level 2024 Druid progression audits for level %s.", level)
