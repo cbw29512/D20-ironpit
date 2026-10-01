@@ -16,11 +16,9 @@
     }
   }
 
-  function spellLevelAvailable(member, level, turnKey) {
+  function spellLevelAvailable(member, level, actionCost, turnKey) {
     try {
-      if (level === 0) return true;
-      if (!C().slotSpellAvailable(member.state, turnKey)) return false;
-      return resourceAvailable(member, `spell-slot-${level}`);
+      return C().legalSlotLevels(member.state, turnKey, level, { actionCost }).length > 0;
     } catch (error) {
       console.error("Failed browser offensive spell-level probe", { member: member.combatant_id, error });
       throw error;
@@ -63,11 +61,12 @@
       const ranges = [];
       for (const action of member.state.template.spell_attack_actions || []) {
         if (action.actionCost === "reaction" || !E().available(member.state, action.actionCost)) continue;
-        if (spellLevelAvailable(member, action.level, turnKey)) ranges.push({ family: "spell", range: action.range || 0 });
+        if (spellLevelAvailable(member, action.level, action.actionCost, turnKey)) ranges.push({ family: "spell", range: action.range || 0 });
       }
       for (const action of member.state.template.auto_hit_spell_actions || []) {
         if (action.actionCost === "reaction" || !E().available(member.state, action.actionCost)) continue;
         if (!C().legalSlotLevels(member.state, turnKey, action.level, {
+          actionCost: action.actionCost,
           higherSlotScaling: (action.projectilesPerSlotAbove || 0) > 0,
         }).length) continue;
         ranges.push({ family: "spell", range: action.range || 0 });
