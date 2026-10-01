@@ -33,6 +33,7 @@ def build_kael_2024_combat_profiles(max_level: int = 1) -> list[PregenCombatProf
                 speed_ft=30,
                 initiative_bonus=5,
                 skill_bonuses=(
+                    ("athletics", 1),
                     ("acrobatics", 5),
                     ("history", 2),
                     ("insight", 2),
