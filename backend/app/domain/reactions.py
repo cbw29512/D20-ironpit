@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.size import CreatureSize
+from app.domain.weapons_base import DamageType
 
 
 class ParryReaction(BaseModel):
@@ -18,6 +19,21 @@ class RedirectAttackReaction(BaseModel):
 
     ally_range_ft: int = Field(default=5, ge=1, le=30)
     ally_max_size: CreatureSize = CreatureSize.MEDIUM
+
+
+class AttackDamageReductionReaction(BaseModel):
+    """Universal Reaction that reduces damage from one qualifying attack hit."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    attack_kinds: list[Literal["melee", "ranged"]] = Field(min_length=1)
+    required_damage_types: list[DamageType] = Field(default_factory=list)
+    reduction_dice_count: int = Field(default=1, ge=0, le=20)
+    reduction_dice_size: int = Field(default=10, ge=2, le=100)
+    reduction_ability: Literal[
+        "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"
+    ] | None = None
+    add_level: bool = False
 
 
 class DamageReactionAttack(BaseModel):

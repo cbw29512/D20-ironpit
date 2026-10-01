@@ -40,6 +40,9 @@
             if (!nextChoice) break;
             ({ target, attack, distance } = nextChoice);
           }
+          if (grant.onHitConditionSave) {
+            attack = { ...attack, onHitConditionSave: grant.onHitConditionSave };
+          }
           const pack = S().packTactics(member, target, setup);
           const event = A().resolveAttack(sequence, round, member, target, attack, distance, {
             spendAction: false,

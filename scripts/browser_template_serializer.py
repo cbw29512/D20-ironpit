@@ -779,6 +779,18 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         recharge = recharge_rows(template)
         if recharge:
             row["recharge_rules"] = recharge
+        if template.attack_damage_reduction_reaction:
+            rule = template.attack_damage_reduction_reaction
+            row["attackDamageReductionReaction"] = {
+                "sourceId": rule.source_id,
+                "sourceName": rule.source_name,
+                "attackKinds": list(rule.attack_kinds),
+                "requiredDamageTypes": [item.value for item in rule.required_damage_types],
+                "reductionDiceCount": rule.reduction_dice_count,
+                "reductionDiceSize": rule.reduction_dice_size,
+                "reductionAbility": rule.reduction_ability,
+                "addLevel": rule.add_level,
+            }
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
         if template.redirect_attack_reaction:

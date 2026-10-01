@@ -22,6 +22,7 @@ load("browser-failed-save-reroll.js");
 load("browser-saving-throws.js");
 load("browser-saves.js");
 load("browser-timed-conditions.js");
+load("browser-attack-damage-reduction.js");
 load("browser-2014-monk.js");
 
 const heroes = Object.values(window.IRON_PIT_BROWSER_HEROES);

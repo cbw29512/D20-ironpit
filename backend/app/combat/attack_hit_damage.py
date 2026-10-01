@@ -9,7 +9,7 @@ from app.combat.cunning_strike import (
     CunningStrikeObscureResolution, CunningStrikeTripResolution,
     resolve_obscure, resolve_trip,
 )
-from app.combat.deflect_missiles import apply_deflect_missiles
+from app.combat.attack_damage_reduction import apply_attack_damage_reduction
 from app.combat.dice import DiceProvider
 from app.combat.on_hit_save_damage import OnHitSaveDamageResolution, resolve_on_hit_save_damage
 from app.combat.rogue_defenses import apply_uncanny_dodge
@@ -79,6 +79,9 @@ class AttackHitDamageResolution:
     cunning_strike_trip: CunningStrikeTripResolution
     cunning_strike_obscure: CunningStrikeObscureResolution
     uncanny_dodge_used: bool = False
+    damage_reduction_reaction_used: bool = False
+    damage_reduction_reaction_source_id: str | None = None
+    damage_reduction_reaction_reduction: int = 0
     deflect_missiles_used: bool = False
     deflect_missiles_reduction: int = 0
 
@@ -110,12 +113,8 @@ def resolve_attack_hit_damage(
     save_component_present = save_damage.component is not None
     if save_component_present:
         rolled_components.append(save_damage.component)
-    rolled_components, deflect_used, deflect_reduction = apply_deflect_missiles(
-        defender,
-        attack,
-        rolled_components,
-        dice,
-    )
+    reduction = apply_attack_damage_reduction(defender, attack, rolled_components, dice)
+    rolled_components = reduction.components
     rolled_components, uncanny_used = apply_uncanny_dodge(attacker, defender, rolled_components)
     damage_roll = aggregate_damage_components(rolled_components)
     applied_total, components = apply_damage_defenses(
@@ -147,6 +146,11 @@ def resolve_attack_hit_damage(
         cunning_strike_trip=cunning_strike_trip,
         cunning_strike_obscure=cunning_strike_obscure,
         uncanny_dodge_used=uncanny_used,
-        deflect_missiles_used=deflect_used,
-        deflect_missiles_reduction=deflect_reduction,
+        damage_reduction_reaction_used=reduction.used,
+        damage_reduction_reaction_source_id=reduction.source_id,
+        damage_reduction_reaction_reduction=reduction.reduction,
+        deflect_missiles_used=reduction.used and reduction.source_id == "deflect-missiles",
+        deflect_missiles_reduction=(
+            reduction.reduction if reduction.used and reduction.source_id == "deflect-missiles" else 0
+        ),
     )

@@ -38,6 +38,10 @@ class AttackEffectResolution:
     tactical_sap_applied: bool = False
     vex_applied: bool = False
     studied_applied: bool = False
+    damage_reduction_reaction_used: bool = False
+    damage_reduction_reaction_source_id: str | None = None
+    damage_reduction_reaction_source_name: str | None = None
+    damage_reduction_reaction_reduction: int = 0
     deferred_effect_armed: Any = None
     exile_applied: Any = None
 
@@ -87,6 +91,15 @@ def resolve_attack_effects(
         result.damage_components = hit_damage.damage_components
         result.damage_outcome = hit_damage.damage_outcome
         result.save_damage = hit_damage.save_damage
+        result.damage_reduction_reaction_used = hit_damage.damage_reduction_reaction_used
+        result.damage_reduction_reaction_source_id = hit_damage.damage_reduction_reaction_source_id
+        result.damage_reduction_reaction_source_name = (
+            defender.template.attack_damage_reduction_reaction.source_name
+            if hit_damage.damage_reduction_reaction_used
+            and defender.template.attack_damage_reduction_reaction is not None
+            else None
+        )
+        result.damage_reduction_reaction_reduction = hit_damage.damage_reduction_reaction_reduction
         result.cunning_strike = hit_damage.cunning_strike_trip
         result.cunning_strike_obscure = hit_damage.cunning_strike_obscure
         if result.cunning_strike.applied:

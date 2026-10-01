@@ -9,9 +9,7 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { bonusDamage: () => [] };
-  const MK = () => window.IRON_PIT_BROWSER_MONK_2014 || {
-    applyDeflectMissiles: (_defender, _attack, components) => ({ components, used: false, reduction: 0 }),
-  };
+  const ADR = () => window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION;
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || {
     applyUncannyDodge: (_attacker, _defender, components) => ({ components, used: false }),
     evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total,
@@ -149,8 +147,9 @@
     const saveDamage = resolveSaveDamage(defender, attack);
     const saveComponentPresent = Boolean(saveDamage.component);
     if (saveComponentPresent) rolled.push(saveDamage.component);
-    const deflect = MK().applyDeflectMissiles(defender, attack, rolled);
-    const uncanny = RD().applyUncannyDodge(attacker, defender, deflect.components);
+    if (defender.template.attackDamageReductionReaction && typeof ADR()?.apply !== "function") throw new Error("Declared attack damage reduction Reaction requires browser-attack-damage-reduction.js.");
+    const reduction = ADR()?.apply(defender, attack, rolled) || { components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null };
+    const uncanny = RD().applyUncannyDodge(attacker, defender, reduction.components);
     const bypassTypes = resistanceBypassTypes(attacker);
     const damageComponents = uncanny.components.map((part) => ({
       ...part,
@@ -181,8 +180,12 @@
     ) || { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false };
     return {
       damageRoll, damageComponents, damageOutcome, appliedTotal, saveDamage, cunningStrikeTrip, cunningStrikeObscure,
-      uncannyDodgeUsed: uncanny.used, deflectMissilesUsed: deflect.used,
-      deflectMissilesReduction: deflect.reduction,
+      uncannyDodgeUsed: uncanny.used,
+      damageReductionReactionUsed: reduction.used, damageReductionReactionSourceId: reduction.sourceId,
+      damageReductionReactionSourceName: reduction.sourceName, damageReductionReactionReduction: reduction.reduction,
+      deflectMissilesUsed: reduction.used && reduction.sourceId === "deflect-missiles",
+      deflectMissilesReduction: reduction.used && reduction.sourceId === "deflect-missiles"
+        ? reduction.reduction : 0,
     };
   }
 

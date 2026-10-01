@@ -140,3 +140,18 @@ def build_attack_description(
     except Exception as exc:
         logger.exception("Failed to build attack description for %s.", attacker_name)
         raise RuntimeError("Attack description could not be built.") from exc
+
+def attack_damage_reduction_description(effects: Any, defender_name: str) -> str:
+    """Describe an already-resolved source-tagged attack damage reduction Reaction."""
+    try:
+        if not effects.damage_reduction_reaction_used:
+            return ""
+        source_name = effects.damage_reduction_reaction_source_name or "Reaction"
+        return (
+            f" {defender_name} uses {source_name} to reduce the attack's damage by "
+            f"{effects.damage_reduction_reaction_reduction}."
+        )
+    except Exception as exc:
+        logger.exception("Failed to describe attack damage reduction for %s.", defender_name)
+        raise RuntimeError("Attack damage reduction description could not be built.") from exc
+

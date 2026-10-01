@@ -4,6 +4,8 @@ import logging
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.weapons import OnHitConditionSave
+
 logger = logging.getLogger(__name__)
 
 
@@ -17,6 +19,7 @@ class BonusAttackGrant(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     priority: int = Field(default=100, ge=0, le=1000)
+    on_hit_condition_save: OnHitConditionSave | None = None
 
     @model_validator(mode="after")
     def validate_attack_ids(self) -> "BonusAttackGrant":

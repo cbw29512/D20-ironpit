@@ -593,6 +593,21 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             template.progression_features.resource_backed_on_hit_exile.model_dump(mode="json")
             if template.progression_features.resource_backed_on_hit_exile else None
         ),
+        "attackDamageReductionReaction": (
+            {
+                "sourceId": template.attack_damage_reduction_reaction.source_id,
+                "sourceName": template.attack_damage_reduction_reaction.source_name,
+                "attackKinds": list(template.attack_damage_reduction_reaction.attack_kinds),
+                "requiredDamageTypes": [
+                    item.value for item in template.attack_damage_reduction_reaction.required_damage_types
+                ],
+                "reductionDiceCount": template.attack_damage_reduction_reaction.reduction_dice_count,
+                "reductionDiceSize": template.attack_damage_reduction_reaction.reduction_dice_size,
+                "reductionAbility": template.attack_damage_reduction_reaction.reduction_ability,
+                "addLevel": template.attack_damage_reduction_reaction.add_level,
+            }
+            if template.attack_damage_reduction_reaction else None
+        ),
         "conditional_damage_defenses": [
             {
                 "id": item.id, "kind": _value(item.kind),
@@ -750,6 +765,20 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "attackIds": list(item.attack_ids), "attackCount": item.attack_count,
                 "resourceId": item.resource_id, "resourceCost": item.resource_cost,
                 "priority": item.priority,
+                **(
+                    {
+                        "onHitConditionSave": {
+                            "saveAbility": item.on_hit_condition_save.save_ability,
+                            "dc": item.on_hit_condition_save.dc,
+                            "conditionId": item.on_hit_condition_save.condition_id,
+                            "maxTargetSize": (
+                                item.on_hit_condition_save.max_target_size.value
+                                if item.on_hit_condition_save.max_target_size else None
+                            ),
+                        }
+                    }
+                    if item.on_hit_condition_save else {}
+                ),
             }
             for item in template.bonus_attack_grants
         ]

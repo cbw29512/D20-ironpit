@@ -52,6 +52,18 @@ def _mechanics(template: Any) -> list[str]:
     }
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
+    if template.attack_damage_reduction_reaction is not None:
+        mechanics.add(
+            f"attack-damage-reduction:{template.attack_damage_reduction_reaction.source_id}"
+        )
+    mechanics.update(
+        f"bonus-attack:{item.id}" for item in template.bonus_attack_grants
+    )
+    mechanics.update(
+        f"bonus-attack-hit-save:{item.id}"
+        for item in template.bonus_attack_grants
+        if item.on_hit_condition_save is not None
+    )
     mechanics.update(action.id for action in template.area_weapon_attack_actions)
     features = template.progression_features
     if features.critical_hit_minimum < 20:
