@@ -12,7 +12,7 @@ from app.combat.spell_policy import spell_at_slot
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
 from app.combat.spell_damage_maximizers import resolve_maximizer_after_cast
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_spell_cast, spell_cast_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -44,6 +44,12 @@ def resolve_spell(
             raise ValueError("Reaction spells require their own trigger window.")
         if not is_available(caster.state, spell.action_cost):
             raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
+        expends_spell_slot = choice.alternate_cast is None and choice.slot_level > 0
+        if not spell_cast_available(
+            caster.state, turn_key, spell.level, spell.action_cost,
+            expends_spell_slot=expends_spell_slot,
+        ):
+            raise ValueError(f"{spell.name} is not legal under the active edition's per-turn casting rule.")
 
         remaining = None
         if choice.alternate_cast is not None:
@@ -54,10 +60,13 @@ def resolve_spell(
             resource = _resource(caster.state, choice.slot_level)
             if resource is None or resource.current_uses < 1:
                 raise ValueError(f"No level {choice.slot_level} spell slot remains.")
-            mark_slot_spell_cast(caster.state, turn_key)
             resource.current_uses -= 1
             remaining = resource.current_uses
 
+        mark_spell_cast(
+            caster.state, turn_key, spell.level, spell.action_cost,
+            expends_spell_slot=expends_spell_slot,
+        )
         spend(caster.state, spell.action_cost)
         range_remaining = spend_spell_range_modifier(caster.state, choice.range_modifier)
         remove_owner_attack_ending_modifiers(caster.state)
