@@ -59,6 +59,7 @@
 
   function slotLevels(caster, action, turnKey) {
     return C().legalSlotLevels(caster.state, turnKey, action.level, {
+      actionCost: action.actionCost,
       higherSlotScaling: (action.upcastDicePerLevel || 0) > 0,
     });
   }
@@ -80,8 +81,10 @@
   function castOptions(caster, action, turnKey) {
     const normal = slotLevels(caster, action, turnKey)
       .map((castLevel) => ({ castLevel, alternateCast: null }));
-    const alternate = alternateCasts(caster, action)
-      .map((grant) => ({ castLevel: grant.cast_level, alternateCast: grant }));
+    const alternate = C().spellCastAvailable(
+      caster.state, turnKey, action.level, action.actionCost, { expendsSpellSlot: false },
+    ) ? alternateCasts(caster, action)
+      .map((grant) => ({ castLevel: grant.cast_level, alternateCast: grant })) : [];
     return [...normal, ...alternate];
   }
 
