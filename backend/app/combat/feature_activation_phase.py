@@ -6,7 +6,8 @@ from app.combat.activation_movement import resolve_activation_movement
 from app.combat.barbarian import enter_rage
 from app.combat.bonus_save_actions import resolve_bonus_save_action
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
-from app.combat.resource_conversion import automatic_resource_conversion, resolve_resource_conversion
+from app.combat.resource_conversion import resolve_resource_conversion
+from app.combat.resource_conversion_automation import automatic_resource_conversion
 from app.combat.stationary_attack_advantage import use_stationary_attack_advantage
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
