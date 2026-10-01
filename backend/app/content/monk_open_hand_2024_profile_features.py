@@ -98,6 +98,25 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     notes="The standard Iron Pit arena has no falling hazard; source behavior is preserved without a combat resolver.",
                 ),
             ])
+        if level >= 5:
+            audits.extend([
+                _feature(
+                    "extra-attack",
+                    "Extra Attack",
+                    "class",
+                    notes="Uses the shared two-slot Attack action; no Monk-specific attack resolver is added.",
+                ),
+                _feature(
+                    "stunning-strike",
+                    "Stunning Strike",
+                    "class",
+                    notes=(
+                        "Uses the universal resource-backed once-per-turn on-hit save rider. "
+                        "Failure applies Stunned until the start of Kael's next turn; success halves Speed "
+                        "and grants Advantage on the next attack against the target before then."
+                    ),
+                ),
+            ])
         audits.extend([
             _feature(
                 "alert",
