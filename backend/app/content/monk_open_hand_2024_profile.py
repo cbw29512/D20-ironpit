@@ -39,8 +39,8 @@ def _feature(
 def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile the legal 2024 Kael progression through the currently supported level."""
     try:
-        if level not in {1, 2}:
-            raise ValueError("The current 2024 Monk profile tranche supports levels 1-2 only.")
+        if level not in {1, 2, 3}:
+            raise ValueError("The current 2024 Monk profile tranche supports levels 1-3 only.")
         hero = HERO_BY_CLASS["monk"]
         base = canonical_base_ability_scores("monk")
         background_allowed = ["dexterity", "constitution", "intelligence"]
@@ -58,6 +58,8 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             level=level,
             ruleset="2024",
             build_id="unarmed-offense",
+            subclass_id="warrior-of-the-open-hand" if level >= 3 else None,
+            subclass_name="Warrior of the Open Hand" if level >= 3 else None,
             species_id="human",
             species_name="Human",
             background_id="criminal",
@@ -113,6 +115,29 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                     ]
                     if level >= 2 else []
                 ),
+                *(
+                    [
+                        _feature(
+                            "deflect-attacks",
+                            "Deflect Attacks",
+                            "class",
+                            notes=(
+                                "Uses the universal Reaction damage-reduction primitive for qualifying "
+                                "Bludgeoning, Piercing, or Slashing attack damage."
+                            ),
+                        ),
+                        _feature(
+                            "open-hand-technique",
+                            "Open Hand Technique",
+                            "subclass",
+                            notes=(
+                                "Canonical arena automation selects the Topple option on Flurry hits and "
+                                "reuses the shared Dexterity-save-to-Prone attack rider."
+                            ),
+                        ),
+                    ]
+                    if level >= 3 else []
+                ),
                 _feature(
                     "alert",
                     "Alert",
@@ -149,7 +174,11 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                 _feature("unarmed-strike", "Unarmed Strike", "equipment"),
             ],
             source_references=[
-                "Basic Rules 2024: Monk — Core Traits, Martial Arts, Monk's Focus, Unarmored Movement, Uncanny Metabolism",
+                "Basic Rules 2024: Monk — Core Traits, Martial Arts, Monk's Focus, Unarmored Movement, Uncanny Metabolism, Deflect Attacks",
+                *(
+                    ["Basic Rules 2024: Warrior of the Open Hand — Open Hand Technique"]
+                    if level >= 3 else []
+                ),
                 "Basic Rules 2024: Character Origins — Criminal and Human",
                 "Basic Rules 2024: Feats — Alert and Skilled",
             ],
