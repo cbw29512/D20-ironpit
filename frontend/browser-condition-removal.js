@@ -52,7 +52,13 @@
   }
 
   function slotAvailable(remover, action, turnKey) {
-    return !action.expendsSpellSlot || P().slotSpellAvailable(remover.state, turnKey);
+    if (!action.expendsSpellSlot) return true;
+    const slotIds = Object.keys(action.resourceCosts || {}).filter((id) => id.startsWith("spell-slot-"));
+    if (slotIds.length !== 1) throw new Error(`${action.name} must declare exactly one spell-slot resource.`);
+    const level = P().spellLevelFromResourceId(slotIds[0]);
+    return level != null && P().slotSpellAvailable(remover.state, turnKey, {
+      spellLevel: level, actionCost: action.actionCost,
+    });
   }
 
   function chooseAction(remover, setup, turnKey) {
@@ -90,7 +96,12 @@
     const legal = new Set(affordable(remover, target, action));
     if (conditionIds.some((id) => !legal.has(id))) throw new Error("Condition-removal action cannot remove this effect.");
     E().spend(remover.state, action.actionCost);
-    if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey);
+    if (action.expendsSpellSlot) {
+      const slotIds = Object.keys(action.resourceCosts || {}).filter((id) => id.startsWith("spell-slot-"));
+      if (slotIds.length !== 1) throw new Error(`${action.name} must declare exactly one spell-slot resource.`);
+      const level = P().spellLevelFromResourceId(slotIds[0]);
+      P().markSlotSpellCast(remover.state, turnKey, { spellLevel: level, actionCost: action.actionCost });
+    }
     Object.entries(costs(action, conditionIds.length)).forEach(([id, cost]) => {
       if ((remover.state.resources[id] || 0) < cost) throw new Error(`Required resource ${id} is unavailable.`);
       remover.state.resources[id] -= cost;
