@@ -123,8 +123,23 @@ def automatic_resource_conversion(
     try:
         candidates = [
             action for action in state.template.resource_conversion_actions
-            if action.automation == "when-all-spell-slots-empty"
-            and all_spell_slots_empty(state)
+            if (
+                (
+                    action.automation == "when-all-spell-slots-empty"
+                    and all_spell_slots_empty(state)
+                )
+                or (
+                    action.automation == "when-target-empty"
+                    and next(
+                        (
+                            item.current_uses
+                            for item in state.resources
+                            if item.id == action.target_resource_id
+                        ),
+                        -1,
+                    ) == 0
+                )
+            )
             and conversion_available(state, action, turn_key)
         ]
         return sorted(candidates, key=lambda action: (-action.priority, action.id))[0] if candidates else None
