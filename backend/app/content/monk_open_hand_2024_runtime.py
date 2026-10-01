@@ -61,7 +61,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                             name="Flurry of Blows",
                             attack_ids=[unarmed.id],
                             attack_count=2,
-                            resource_id="focus",
+                            resource_id="focus-points",
                             resource_cost=1,
                             priority=80,
                         ),
@@ -96,7 +96,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                         id="patient-defense-focus",
                         name="Patient Defense",
                         effects=["disengage", "dodge"],
-                        resource_id="focus",
+                        resource_id="focus-points",
                         resource_cost=1,
                         priority=90,
                         use_policy="defensive-fallback",
@@ -105,7 +105,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                         id="step-of-the-wind-focus",
                         name="Step of the Wind",
                         effects=["disengage", "dash"],
-                        resource_id="focus",
+                        resource_id="focus-points",
                         resource_cost=1,
                         priority=100,
                         use_policy="manual",
@@ -116,7 +116,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             ),
             resources=(
                 [
-                    ResourceDefinition(id="focus", name="Focus Points", max_uses=monk_focus_points(level)),
+                    ResourceDefinition(id="focus-points", name="Focus Points", max_uses=monk_focus_points(level)),
                     ResourceDefinition(id="uncanny-metabolism", name="Uncanny Metabolism", max_uses=1),
                 ]
                 if level >= 2 else []
@@ -126,7 +126,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                     InitiativeResourceRefillGrant(
                         source_id="uncanny-metabolism",
                         source_name="Uncanny Metabolism",
-                        resource_id="focus",
+                        resource_id="focus-points",
                         when_at_or_below=monk_focus_points(level) - 1,
                         restore_to_max=True,
                         usage_resource_id="uncanny-metabolism",
