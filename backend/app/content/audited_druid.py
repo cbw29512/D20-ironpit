@@ -13,6 +13,10 @@ from app.content.druid_2024_runtime_support import (
     natural_recovery_alternate_casts,
     wild_shape_actions,
 )
+from app.content.druid_2024_endgame import (
+    druid_boon_of_fate,
+    druid_endgame_initiative_refills,
+)
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.content.weapon_catalog import build_weapon
 from app.domain.models import CombatantTemplate, DamageType, VisualLoadout, WeaponAttack
@@ -37,8 +41,8 @@ def _sickle(proficiency_bonus: int, strength_modifier: int) -> WeaponAttack:
 def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
     """Compile the certified 2024 Land-Druid progression."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}:
-            raise ValueError("2024 Thalen runtime currently supports Druid levels 1 through 17.")
+        if level not in range(1, 21):
+            raise ValueError("2024 Thalen runtime supports Druid levels 1 through 20.")
         profile = build_thalen_greenbough_profile(level)
         row = DRUID_COMBAT_LEVELS[level]
         scores = profile.final_ability_scores
@@ -82,6 +86,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                     ),
                 ],
                 alternate_spell_cast_grants=natural_recovery_alternate_casts(level),
+                resource_backed_d20_outcome_adjustments=druid_boon_of_fate(level),
             ),
             saving_throw_bonuses=saving_throw_bonuses(
                 scores, level, ("intelligence", "wisdom"),
@@ -96,6 +101,7 @@ def build_thalen_greenbough_level(level: int) -> CombatantTemplate:
                 "perception": wisdom_modifier + pb,
             },
             resources=druid_resources(level, row.spell_slots, row.wild_shape_uses),
+            initiative_resource_refill_grants=druid_endgame_initiative_refills(level),
             replacement_form_actions=wild_shape_actions(level),
             damage_resistances=[DamageType.FIRE] if level >= 10 else [],
             condition_immunities=["poisoned"] if level >= 10 else [],

@@ -60,6 +60,29 @@ def build_longstrider_2024() -> DefensiveSpellAction:
         raise
 
 
+def build_barkskin_2024() -> DefensiveSpellAction:
+    """Explicit 2024 Barkskin fingerprint using the universal minimum-AC modifier."""
+    try:
+        return DefensiveSpellAction(
+            id="barkskin",
+            name="Barkskin",
+            level=2,
+            action_cost="bonus_action",
+            range_ft=5,
+            duration_minutes=60,
+            target_policy="friendly",
+            target_count=1,
+            modifier_effects=[SpellModifierEffect(kind="armor-class-minimum", minimum_value=17)],
+            concentration=False,
+            priority=80,
+            animation="barkskin",
+            source="D&D Beyond Basic Rules 2024: Barkskin",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Barkskin.")
+        raise
+
+
 def build_faerie_fire_2024(save_dc: int) -> SpellSaveAction:
     """Explicit 2024 Faerie Fire fingerprint using shared area-save modifiers."""
     try:

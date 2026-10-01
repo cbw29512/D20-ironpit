@@ -9,7 +9,9 @@ from app.content.druid_2024_land_spells import (
     build_lands_aid_2024,
     build_wall_of_stone_2024,
 )
-from app.content.druid_2024_spells import build_longstrider_2024
+from app.content.druid_2024_spells import build_barkskin_2024, build_longstrider_2024
+from app.content.druid_2024_endgame import druid_endgame_resources, nature_magician_conversions
+from app.content.druid_2024_form_support import wild_shape_actions
 from app.content.healing_spell_effects import build_cure_wounds, build_heal_2024, build_healing_word, build_mass_cure_wounds
 from app.content.foresight_2024 import build_foresight_2024
 from app.content.shared_movement_spells_2024 import freedom_of_movement_2024
@@ -18,27 +20,8 @@ from app.content.druid_2024_offensive_actions import druid_offensive_actions
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS
 from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.models import ResourceDefinition
-from app.domain.replacement_form_actions import ReplacementFormAction
 
 logger = logging.getLogger(__name__)
-
-
-def wild_shape_actions(level: int) -> list[ReplacementFormAction]:
-    try:
-        if level < 2:
-            return []
-        form_template_id = "srd-brown-bear" if level >= 8 else "srd-wolf"
-        return [ReplacementFormAction(
-            id="wild-shape", name="Wild Shape", action_cost="bonus_action",
-            form_template_id=form_template_id, resource_id="wild-shape", resource_cost=1,
-            voluntary_revert_action="bonus_action", hp_mode="retain_owner",
-            temporary_hp_on_enter=level, retain_creature_type=True,
-            ends_on_incapacitated=True, replace_existing_form=True,
-            retain_spellcasting=False, source="D&D Beyond Basic Rules 2024: Druid — Wild Shape",
-        )]
-    except Exception:
-        logger.exception("Failed to build 2024 Wild Shape at Druid level %s.", level)
-        raise
 
 
 def druid_resources(level: int, spell_slots: tuple[int, ...], wild_shape_uses: int) -> list[ResourceDefinition]:
@@ -68,6 +51,7 @@ def druid_resources(level: int, spell_slots: tuple[int, ...], wild_shape_uses: i
                 name="Natural Recovery: Free Circle Spell",
                 max_uses=1,
             ))
+        resources.extend(druid_endgame_resources(level))
         return resources
     except Exception:
         logger.exception("Failed to compile 2024 Druid resources.")
@@ -92,6 +76,7 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
                 *([AID.model_copy(deep=True)] if level >= 6 else []),
                 *([freedom_of_movement_2024()] if level >= 8 else []),
                 *([build_foresight_2024()] if level >= 17 else []),
+                *([build_barkskin_2024()] if level >= 18 else []),
             ],
             "healing_actions": [
                 build_healing_word(wisdom_modifier),
@@ -103,10 +88,13 @@ def druid_actions(level: int, proficiency_bonus: int, wisdom_modifier: int) -> d
             "effect_removal_actions": [DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],
             "persistent_barrier_actions": [build_wall_of_stone_2024()] if level >= 9 else [],
             "persistent_beneficial_zone_actions": [build_natures_sanctuary_2024()] if level >= 14 else [],
-            "resource_conversion_actions": (
-                build_wild_resurgence_2024(tuple(DRUID_COMBAT_LEVELS[level].spell_slots))
-                if level >= 5 else []
-            ),
+            "resource_conversion_actions": [
+                *(
+                    build_wild_resurgence_2024(tuple(DRUID_COMBAT_LEVELS[level].spell_slots))
+                    if level >= 5 else []
+                ),
+                *nature_magician_conversions(level),
+            ],
         }
     except Exception:
         logger.exception("Failed to compile 2024 Druid actions at level %s.", level)

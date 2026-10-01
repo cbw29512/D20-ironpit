@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-ResourceConversionAutomation = Literal["manual", "when-all-spell-slots-empty"]
+ResourceConversionAutomation = Literal["manual", "when-all-spell-slots-empty", "when-target-empty"]
 
 
 class ResourceConversionAction(BaseModel):

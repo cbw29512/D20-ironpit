@@ -73,6 +73,13 @@ def _druid_wild_resurgence_slot_restore(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Wild Resurgence slot-restore uses for level {level}.") from exc
 
 
+def _druid_nature_magician(level: int) -> int:
+    try:
+        return 1 if level >= 20 else 0
+    except Exception as exc:
+        raise ValueError(f"Failed to resolve 2024 Nature Magician uses for level {level}.") from exc
+
+
 def _land_natural_recovery_free_cast(level: int) -> int:
     try:
         return 1 if level >= 6 else 0
@@ -118,6 +125,8 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
             "Wild Resurgence: Regain Spell Slot",
             _druid_wild_resurgence_slot_restore,
         ),
+        ("boon-of-fate", "Boon of Fate", _boon_of_fate),
+        ("nature-magician-conversion", "Nature Magician", _druid_nature_magician),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),

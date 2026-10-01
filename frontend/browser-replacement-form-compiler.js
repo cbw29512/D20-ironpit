@@ -7,7 +7,10 @@
     return Object.fromEntries([...keys].map((key) => [key, Math.max(left[key] ?? -99, right[key] ?? -99)]));
   };
 
-  function compile(original, form, retainSpellcasting = false, retainCreatureType = false, retainHitPoints = false) {
+  function compile(
+    original, form, retainSpellcasting = false, retainedSpellActionIds = [],
+    retainCreatureType = false, retainHitPoints = false,
+  ) {
     try {
       if (original.kind !== "character") throw new Error("Replacement-form owner must be a character.");
       if (form.kind !== "monster") throw new Error("Replacement-form source must be monster-form data.");
@@ -41,9 +44,21 @@
       active.resources = clone(original.resources || {});
       active.unlimited_resources = clone(original.unlimited_resources || []);
       active.source = `${original.source}; replacement form: ${form.source}`;
-      if (!retainSpellcasting) {
+      const allowed = new Set(retainedSpellActionIds || []);
+      const keep = (actions) => clone((actions || []).filter((action) => allowed.has(action.id)));
+      if (retainSpellcasting) {
+        active.spell_save_actions = keep(original.spell_save_actions);
+        active.spell_attack_actions = keep(original.spell_attack_actions);
+        active.auto_hit_spell_actions = keep(original.auto_hit_spell_actions);
+        active.persistent_spell_attack_actions = keep(original.persistent_spell_attack_actions);
+        active.persistent_barrier_actions = keep(original.persistent_barrier_actions);
+        active.defensive_spell_actions = keep(original.defensive_spell_actions);
+        active.healingActions = keep(original.healingActions);
+        active.condition_removal_actions = keep(original.condition_removal_actions);
+        active.effect_removal_actions = keep(original.effect_removal_actions);
+      } else {
         active.spell_save_actions = []; active.spell_attack_actions = []; active.auto_hit_spell_actions = [];
-        active.persistent_spell_attack_actions = [];
+        active.persistent_spell_attack_actions = []; active.persistent_barrier_actions = [];
         active.defensive_spell_actions = []; active.healingActions = []; active.condition_removal_actions = []; active.effect_removal_actions = [];
       }
       return active;

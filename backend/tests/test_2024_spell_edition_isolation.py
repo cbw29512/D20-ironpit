@@ -47,6 +47,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "fire-bolt",
         "burning-hands",
         "blur",
+        "barkskin",
         "blight",
         "inflict-wounds",
         "inflict-wounds-l5",

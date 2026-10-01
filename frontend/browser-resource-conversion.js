@@ -124,9 +124,16 @@
     try {
       const actions = state.template.resource_conversion_actions || [];
       return actions
-        .filter((action) => action.automation === "when-all-spell-slots-empty")
-        .filter((action) => allSpellSlotsEmpty(state) && available(state, action))
-        .sort((a, b) => (b.priority || 0) - (a.priority || 0))[0] || null;
+        .filter((action) => (
+          (action.automation === "when-all-spell-slots-empty" && allSpellSlotsEmpty(state))
+          || (
+            action.automation === "when-target-empty"
+            && Number.isFinite(state.resources[action.targetResourceId])
+            && state.resources[action.targetResourceId] === 0
+          )
+        ))
+        .filter((action) => available(state, action))
+        .sort((a, b) => (b.priority || 0) - (a.priority || 0) || a.id.localeCompare(b.id))[0] || null;
     } catch (error) {
       console.error("Browser automatic resource conversion selection failed", {
         combatant: state?.template?.name, error,

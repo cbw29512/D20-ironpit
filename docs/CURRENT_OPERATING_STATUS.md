@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-09-30 for the level-16 Circle of the Land Druid tranche; once this tranche is on `main`, level 16 is the certified endpoint and level 17 is next.
+Recorded 2026-09-30 for the completed 2024 Circle of the Land Druid progression through level 20.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -32,9 +32,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Cleric (Life) | 1–20 |
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
-| 2024 | Druid (Land) | 1–16 |
+| 2024 | Druid (Land) | 1–20 |
 
-2024 public-ready hero slots on current `main`: **116 / 240**.
+2024 public-ready hero slots on this exact tranche: **120 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -44,9 +44,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 116 / 240 on current `main`.** Fighter, Barbarian, Rogue, Life Cleric, and Lore Bard are complete at levels 1–20. Circle of the Land Druid is certified through level 16.
+**2024 canonical pregens are 120 / 240 on this exact tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20.
 
-Active implementation lane: **re-anchor after Druid level 16, then advance the same persistent Circle of the Land Druid to level 17**.
+Active implementation lane: **finish exact-head certification and merge the completed 2024 Circle of the Land Druid 18–20 tranche; then select the next incomplete 2024 class from repository truth**.
 
 ### Druid spell-selection policy
 
@@ -166,5 +166,8 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Level 13 advances to PB +5, 68 HP, 17 prepared spells, and a level-7 slot. **Fire Storm** is the damage-first preparation but remains explicitly arena-out-of-scope because its ten freely arranged contiguous cubes require unsupported multi-cube battlefield geometry.
 - Level 14 advances to 73 HP, improves **Land's Aid** to 4d6 damage/healing, and adds **Nature's Sanctuary** through the universal persistent-beneficial-zone engine: a movable 15-foot cube that grants Half Cover and the Arid Fire resistance according to its source rules.
 - Level 15 advances to 78 HP, adds a level-8 slot and the 18th prepared spell **Sunburst**, reusing the certified 2024 area save-damage and timed-Blinded primitives. **Improved Elemental Fury: Potent Spellcasting** increases qualifying Druid cantrip ranges by 300 feet as compiled action data; Poison Spray, Fire Bolt, and Starry Wisp become 330/420/360 feet while Self-range Thunderclap remains unchanged.\n- Level 16 advances to 83 HP and uses the repeatable **Ability Score Improvement** feat for +2 Charisma (18→20). Wisdom, spell slots, prepared spells, and the damage/healing package remain unchanged.
-- Level 17 target: PB +6, 88 HP, 19 ordinary prepared spells, 4 Wild Shape uses, and one level-9 slot. The selected 9th-level spell is **Foresight**. It is the Druid's one arena-entry opening buff, and under the explicit Iron Pit exception in `IRON_PIT_RULES_CONTRACT.md` this opening cast does **not** consume the level-9 spell slot. Foresight must still use universal D20 Advantage and incoming-attack Disadvantage semantics; no Druid/Foresight-named resolver is allowed.
+- Level 17 advances to PB +6, 88 HP, 19 ordinary prepared spells, 4 Wild Shape uses, and one level-9 slot. **Foresight** is the one arena-entry opening buff and uses universal D20 Advantage/incoming-attack Disadvantage; the explicit Iron Pit exception leaves the level-9 slot unspent.
+- Level 18 advances to 93 HP, a third level-5 slot, and 20 prepared spells. **Beast Spells** reuses the replacement-form spell allowlist; the new prepared spell is explicit 2024 **Barkskin** (Bonus Action, Touch, AC minimum 17, no Concentration).
+- Level 19 advances to 98 HP, two level-6 slots, and 21 prepared spells. Thalen legally selects **Boon of Fate** rather than the recommended Boon of Dimensional Travel, raising Intelligence 13→14 and reusing the universal 2d4 D20 outcome-adjustment plus Initiative refill. **Regenerate** is the healing-priority prepared choice; its 1-minute casting time means Arena AI does not select it in a standard match.
+- Level 20 advances to 103 HP, two level-7 slots, and 22 prepared spells. **Archdruid** reuses initiative resource refill for Evergreen Wild Shape and universal resource conversion for Nature Magician's 1–4 Wild Shape → level 2/4/6/8 spell-slot exchanges; Longevity is arena-neutral. **Ice Storm** is the damage-priority prepared choice but remains arena-out-of-scope until temporary area Difficult Terrain can be represented exactly.
 - Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.

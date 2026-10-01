@@ -43,6 +43,9 @@ def druid_profile_source_references(level: int) -> list[str]:
             (15, "D&D Beyond Basic Rules 2024: Druid 15 — level 8 spell slot; Spells — Sunburst"),
             (16, "D&D Beyond Basic Rules 2024: Druid 16 — Ability Score Improvement (+2 Charisma)"),
             (17, "D&D Beyond Basic Rules 2024: Druid 17 — level 9 spell slot; Spells — Foresight"),
+            (18, "D&D Beyond Basic Rules 2024: Druid 18 — Beast Spells; Spells — Barkskin"),
+            (19, "D&D Beyond Basic Rules 2024: Druid 19 — Epic Boon; Epic Boon — Boon of Fate; Spells — Regenerate"),
+            (20, "D&D Beyond Basic Rules 2024: Druid 20 — Archdruid; Spells — Ice Storm"),
         )
         refs.extend(reference for minimum_level, reference in additions if level >= minimum_level)
         return refs
@@ -74,6 +77,9 @@ def druid_runtime_source_reference(level: int) -> str:
             (15, ("Improved Elemental Fury: Potent Spellcasting", "Sunburst")),
             (16, ("Ability Score Improvement",)),
             (17, ("Foresight",)),
+            (18, ("Beast Spells", "Barkskin")),
+            (19, ("Epic Boon: Boon of Fate", "Regenerate")),
+            (20, ("Archdruid: Evergreen Wild Shape, Nature Magician, Longevity", "Ice Storm")),
         )
         for minimum_level, names in additions:
             if level >= minimum_level:
