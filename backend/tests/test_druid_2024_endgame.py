@@ -7,6 +7,7 @@ from app.combat.state import build_combatant_state
 from app.content.audited_druid import build_thalen_greenbough_level
 from app.content.audited_druid_profile import build_thalen_greenbough_profile
 from app.content.canonical_spell_policy import canonical_spell_package
+from app.content.demo import build_goblin_warrior
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.content.replacement_form_compiler import compile_replacement_form_template
@@ -83,8 +84,15 @@ def test_druid_20_archdruid_reuses_initiative_refill_and_resource_conversion() -
         position_ft=0,
         state=build_combatant_state(template),
     )
+    enemy_template = build_goblin_warrior()
+    enemy = EncounterCombatant(
+        combatant_id="goblin",
+        side="monsters",
+        position_ft=5,
+        state=build_combatant_state(enemy_template),
+    )
     setup = EncounterSetup(
-        heroes=[hero], monsters=[], hero_total_levels=20, monster_total_cr="0",
+        heroes=[hero], monsters=[enemy], hero_total_levels=20, monster_total_cr="1/4",
     )
 
     assert template.max_hp == 103
