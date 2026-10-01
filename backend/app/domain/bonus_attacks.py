@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import logging
+
 from pydantic import BaseModel, Field, model_validator
+
+logger = logging.getLogger(__name__)
 
 
 class BonusAttackGrant(BaseModel):
@@ -16,10 +20,17 @@ class BonusAttackGrant(BaseModel):
 
     @model_validator(mode="after")
     def validate_attack_ids(self) -> "BonusAttackGrant":
-        normalized = [attack_id.strip() for attack_id in self.attack_ids]
-        if any(not attack_id for attack_id in normalized):
-            raise ValueError("Bonus attack grant attack IDs must be non-empty.")
-        if len(set(normalized)) != len(normalized):
-            raise ValueError("Bonus attack grant attack IDs must be unique.")
-        self.attack_ids = normalized
-        return self
+        try:
+            normalized = [attack_id.strip() for attack_id in self.attack_ids]
+            if any(not attack_id for attack_id in normalized):
+                raise ValueError("Bonus attack grant attack IDs must be non-empty.")
+            if len(set(normalized)) != len(normalized):
+                raise ValueError("Bonus attack grant attack IDs must be unique.")
+            self.attack_ids = normalized
+            return self
+        except ValueError:
+            logger.exception("Invalid Bonus Attack grant %s.", self.id)
+            raise
+        except Exception as exc:
+            logger.exception("Failed to validate Bonus Attack grant %s.", self.id)
+            raise RuntimeError("Bonus Attack grant validation failed.") from exc
