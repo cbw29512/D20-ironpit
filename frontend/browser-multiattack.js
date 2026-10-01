@@ -7,6 +7,7 @@
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
+  const RHS = () => window.IRON_PIT_BROWSER_RESOURCE_HIT_SAVE;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -98,9 +99,14 @@
           if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
           continue;
         }
-        if (event.hit && MK()?.resolveStunning) {
-          const stun = MK().resolveStunning(sequence, round, member, eventTarget(event, choice.target, setup), choice.attack);
-          if (stun) { events.push(stun); sequence += 1; }
+        if (event.hit) {
+          const actualTarget = eventTarget(event, choice.target, setup);
+          const resourceHitSave = RHS()?.resolve(sequence, round, member, actualTarget, choice.attack, turnKey, setup);
+          if (resourceHitSave) { events.push(resourceHitSave); sequence += 1; }
+          if (MK()?.resolveStunning) {
+            const stun = MK().resolveStunning(sequence, round, member, actualTarget, choice.attack);
+            if (stun) { events.push(stun); sequence += 1; }
+          }
         }
         const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
         events.push(...chain.events); sequence = chain.sequence;
