@@ -18,7 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 def _slot_resource(member: EncounterCombatant, action: TargetedConcentrationDamageAction, turn_key: str):
-    if not slot_spell_available(member.state, turn_key):
+    if not slot_spell_available(
+        member.state, turn_key, spell_level=action.level, action_cost=action.action_cost,
+    ):
         return None
     candidates = []
     for resource in member.state.resources:
@@ -115,7 +117,9 @@ def resolve_targeted_concentration_damage(
                 if selected is None:
                     continue
                 slot_level, resource = selected
-                mark_slot_spell_cast(member.state, turn_key)
+                mark_slot_spell_cast(
+                    member.state, turn_key, spell_level=action.level, action_cost=action.action_cost,
+                )
                 resource.current_uses -= 1
                 resource_remaining = resource.current_uses
                 start_concentration(
