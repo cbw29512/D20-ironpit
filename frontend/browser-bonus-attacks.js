@@ -4,28 +4,9 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const R = () => window.IRON_PIT_BROWSER_RESOURCES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
-
-  function inRange(attack, distance) {
-    try {
-      if (attack.kind === "melee") return distance <= (attack.reach || 5);
-      return Number.isFinite(attack.long) && distance <= attack.long;
-    } catch (error) {
-      console.error("Browser Bonus Action attack range check failed", { attackId: attack?.id, error });
-      throw error;
-    }
-  }
-
-  function attackFor(member, grant) {
-    try {
-      const allowed = new Set(grant.attackIds || []);
-      return (member.state.template.attacks || []).find((attack) => allowed.has(attack.id)) || null;
-    } catch (error) {
-      console.error("Browser Bonus Action attack lookup failed", { combatant: member?.combatant_id, error });
-      throw error;
-    }
-  }
 
   function resolve(sequence, round, member, setup, turnKey) {
     try {
@@ -40,11 +21,9 @@
       for (const grant of grants) {
         const cost = grant.resourceCost || 1;
         if (!R().available(state, grant.resourceId, cost)) continue;
-        let target = S().nearestTarget(member, setup);
-        let attack = attackFor(member, grant);
-        if (!target || !attack) continue;
-        let distance = S().distance(member, target);
-        if (!inRange(attack, distance)) continue;
+        const firstChoice = F()?.chooseAttack?.(member, setup, grant.attackIds || []);
+        if (!firstChoice) continue;
+        let { target, attack, distance } = firstChoice;
 
         E().spend(state, "bonus_action");
         R().spend(state, grant.resourceId, cost);
@@ -53,11 +32,9 @@
         for (let index = 0; index < count; index += 1) {
           if (state.turn_terminated) break;
           if (index > 0) {
-            target = S().nearestTarget(member, setup);
-            attack = attackFor(member, grant);
-            if (!target || !attack) break;
-            distance = S().distance(member, target);
-            if (!inRange(attack, distance)) break;
+            const nextChoice = F()?.chooseAttack?.(member, setup, grant.attackIds || []);
+            if (!nextChoice) break;
+            ({ target, attack, distance } = nextChoice);
           }
           const pack = S().packTactics(member, target, setup);
           const event = A().resolveAttack(sequence, round, member, target, attack, distance, {
@@ -111,5 +88,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_BONUS_ATTACKS = { attackFor, inRange, installAbilityHooks, resolve };
+  window.IRON_PIT_BROWSER_BONUS_ATTACKS = { installAbilityHooks, resolve };
 })();
