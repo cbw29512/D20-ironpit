@@ -8,7 +8,7 @@ from app.combat.resources import resource_available, spend_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterCombatant
-from app.domain.events import BattleEvent, DiceRoll
+from app.domain.events import BattleEvent
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.models import WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
@@ -32,6 +32,7 @@ def resolve_resource_backed_on_hit_save(
     turn_key: str,
     *,
     affected_states=None,
+    setup=None,
 ) -> ResourceBackedOnHitSaveResolution | None:
     """Resolve one declarative optional on-hit save rider after a qualifying hit."""
     try:
@@ -59,6 +60,7 @@ def resolve_resource_backed_on_hit_save(
             SavingThrowContext(condition_id=rider.failed_condition_id),
             round_number=round_number,
             encounter_roller=target,
+            setup=setup,
         )
 
         applied_conditions: list[str] = []
