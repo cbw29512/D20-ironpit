@@ -6,6 +6,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const R = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const RHS = () => window.IRON_PIT_BROWSER_RESOURCE_HIT_SAVE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function resolve(sequence, round, member, setup, turnKey) {
@@ -53,12 +54,22 @@
             allowReckless: true,
           });
           sequence += 1;
+          events.push(event);
+          if (event.hit) {
+            const actualTarget = [...setup.heroes, ...setup.monsters]
+              .find((entry) => entry.combatant_id === event.target_id) || target;
+            const resourceHitSave = RHS()?.resolve(
+              sequence, round, member, actualTarget, attack, turnKey, setup,
+            );
+            if (resourceHitSave) {
+              events.push(resourceHitSave);
+              sequence += 1;
+            }
+          }
           if (DR()) {
             const chained = DR().chain(sequence, round, member, event, setup, turnKey);
-            events.push(...chained.events);
+            events.push(...chained.events.slice(1));
             sequence = chained.sequence;
-          } else {
-            events.push(event);
           }
         }
         return { events, sequence };
