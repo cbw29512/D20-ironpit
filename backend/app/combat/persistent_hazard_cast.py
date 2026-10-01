@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.grid_geometry import footprint_distance_ft, footprints_overlap, position_in_bounds
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 from app.domain.models import BattleEvent
@@ -71,8 +71,14 @@ def cast_persistent_hazard(
         resource = _slot_resource(caster, action.level)
         if action.level > 0 and (resource is None or resource.current_uses < 1):
             raise ValueError(f"No level {action.level} spell slot remains.")
+        if action.level > 0 and not slot_spell_available(
+            caster.state, turn_key, spell_level=action.level, action_cost=action.action_cost,
+        ):
+            raise ValueError(f"{action.name} is not legal under the active edition's per-turn casting rule.")
         if action.level > 0:
-            mark_slot_spell_cast(caster.state, turn_key)
+            mark_slot_spell_cast(
+                caster.state, turn_key, spell_level=action.level, action_cost=action.action_cost,
+            )
             resource.current_uses -= 1
         spend(caster.state, action.action_cost)
 
