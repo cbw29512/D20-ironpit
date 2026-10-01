@@ -14,7 +14,9 @@ def cast_slot_resource(
     turn_key: str,
     cast_slot_level: int | None = None,
 ):
-    if spell.level == 0 or not slot_spell_available(caster.state, turn_key):
+    if spell.level == 0 or not slot_spell_available(
+        caster.state, turn_key, spell_level=spell.level, action_cost=spell.action_cost,
+    ):
         return None
     level = spell.level if cast_slot_level is None else cast_slot_level
     if level < spell.level or level > 9:
