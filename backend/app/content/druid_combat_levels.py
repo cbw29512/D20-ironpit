@@ -57,7 +57,7 @@ DRUID_COMBAT_LEVELS: dict[int, DruidCombatLevel] = {
     16: _r(16, 5, 83, 13, 20, 20, 3, 18, _slots(4, 3, 3, 3, 2, 1, 1, 1), source="D&D Beyond Basic Rules 2024: Druid 16 Ability Score Improvement (+2 Charisma)"),
     17: _r(17, 6, 88, 13, 20, 20, 4, 19, _slots(4, 3, 3, 3, 2, 1, 1, 1, 1), add=("druid-combat-spells-9",), source="D&D Beyond Basic Rules 2024: Druid 17"),
     18: _r(18, 6, 93, 13, 20, 20, 4, 20, _slots(4, 3, 3, 3, 3, 1, 1, 1, 1), add=("beast-spells",), source="D&D Beyond Basic Rules 2024: Druid 18 Beast Spells"),
-    19: _r(19, 6, 98, 14, 20, 20, 4, 21, _slots(4, 3, 3, 3, 3, 2, 1, 1, 1), add=("boon-dimensional-travel",), source="D&D Beyond Basic Rules 2024: Druid 19 Boon of Dimensional Travel (+1 Intelligence)"),
+    19: _r(19, 6, 98, 14, 20, 20, 4, 21, _slots(4, 3, 3, 3, 3, 2, 1, 1, 1), add=("boon-of-fate",), source="D&D Beyond Basic Rules 2024: Druid 19 Epic Boon — Boon of Fate (+1 Intelligence)"),
     20: _r(20, 6, 103, 14, 20, 20, 4, 22, _slots(4, 3, 3, 3, 3, 2, 2, 1, 1), add=("archdruid",), source="D&D Beyond Basic Rules 2024: Druid 20 Archdruid"),
 }
 
