@@ -55,7 +55,9 @@
 
   function castSlotLevel(member, action, turnKey) {
     try {
-      if (!C().slotSpellAvailable(member.state, turnKey)) return null;
+      if (!C().slotSpellAvailable(member.state, turnKey, {
+        spellLevel: action.attack.level, actionCost: action.attack.actionCost,
+      })) return null;
       const levels = Object.entries(member.state.resources || {})
         .filter(([id, uses]) => id.startsWith("spell-slot-") && uses > 0)
         .map(([id]) => Number.parseInt(id.slice("spell-slot-".length), 10))
