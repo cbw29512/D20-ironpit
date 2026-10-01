@@ -9,11 +9,7 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { bonusDamage: () => [] };
-  const ADR = () => window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION || {
-    apply: (_defender, _attack, components) => ({
-      components, used: false, reduction: 0, sourceId: null, sourceName: null,
-    }),
-  };
+  const ADR = () => window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION;
   const RD = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || {
     applyUncannyDodge: (_attacker, _defender, components) => ({ components, used: false }),
     evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total,
@@ -151,7 +147,12 @@
     const saveDamage = resolveSaveDamage(defender, attack);
     const saveComponentPresent = Boolean(saveDamage.component);
     if (saveComponentPresent) rolled.push(saveDamage.component);
-    const reduction = ADR().apply(defender, attack, rolled);
+    if (defender.template.attackDamageReductionReaction && typeof ADR()?.apply !== "function") {
+      throw new Error("Declared attack damage reduction Reaction requires browser-attack-damage-reduction.js.");
+    }
+    const reduction = ADR()?.apply(defender, attack, rolled) || {
+      components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null,
+    };
     const uncanny = RD().applyUncannyDodge(attacker, defender, reduction.components);
     const bypassTypes = resistanceBypassTypes(attacker);
     const damageComponents = uncanny.components.map((part) => ({
