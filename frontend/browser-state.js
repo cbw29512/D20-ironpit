@@ -31,7 +31,9 @@
       grapple_sources: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
       current_round: null, active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
-      feature_last_turn_keys: {}, feature_use_counts: {}, spell_slot_expended_turn_key: null,
+      feature_last_turn_keys: {}, feature_use_counts: {},
+      spell_slot_expended_turn_key: null, bonus_action_spell_cast_turn_key: null,
+      non_action_cantrip_spell_cast_turn_key: null,
       temporary_damage_resistances: [], active_conditional_damage_defenses: [],
       rage_expires_round: null, rage_max_round: null,
     };
