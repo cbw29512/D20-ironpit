@@ -188,6 +188,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.bard_2024_combat_profile import build_lyra_2024_combat_profiles
     from app.content.druid_2024_combat_profile import build_thalen_2024_combat_profiles
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profiles
+    from app.content.monk_open_hand_2024_combat_profile import build_kael_2024_combat_profiles
 
     profiles = [
         *build_lyra_2024_combat_profiles(),
@@ -196,5 +197,6 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         *(_rokhan_profile(level) for level in range(1, 21)),
         *(_seraphine_profile(level) for level in range(1, 21)),
         *build_mara_quickstep_combat_profiles(20),
+        *build_kael_2024_combat_profiles(),
     ]
     return {profile.template_id: profile for profile in profiles}
