@@ -8,11 +8,11 @@ from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.monk_open_hand_2024_attacks import build_kael_unarmed_attack_2024
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.content.monk_2024_resource_rules import monk_focus_points
-from app.domain.actions import OnHitConditionSave
 from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.initiative_resources import InitiativeHealingRider, InitiativeResourceRefillGrant
 from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout
 from app.domain.reactions import AttackDamageReductionReaction
+from app.domain.weapons import OnHitConditionSave
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.progression import ProgressionCombatFeatures
 
