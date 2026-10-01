@@ -117,6 +117,10 @@
   function cast(sequence, round, caster, setup, action, sectionEdges, turnKey, useAlternate = false) {
     validate(action, sectionEdges, caster, setup);
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} unavailable.`);
+    const expendsSpellSlot = !useAlternate && action.level > 0;
+    if (!S().spellCastAvailable(caster.state, turnKey, action.level, action.actionCost, { expendsSpellSlot })) {
+      throw new Error(`${action.name} is not legal under the active edition's per-turn casting rule.`);
+    }
     let resourceRemaining = null;
     if (useAlternate) {
       const grant = alternateGrant(caster, action);
@@ -127,10 +131,10 @@
     } else {
       const resourceId = `spell-slot-${action.level}`;
       if ((caster.state.resources?.[resourceId] || 0) < 1) throw new Error(`No level ${action.level} spell slot remains.`);
-      S().markSlotSpellCast(caster.state, turnKey);
       caster.state.resources[resourceId] -= 1;
       resourceRemaining = caster.state.resources[resourceId];
     }
+    S().markSpellCast(caster.state, turnKey, action.level, action.actionCost, { expendsSpellSlot });
     E().spend(caster.state, action.actionCost);
     const states = [...setup.heroes, ...setup.monsters].map((member) => member.state);
     if (action.concentration) {
