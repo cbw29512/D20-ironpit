@@ -17,6 +17,7 @@ def test_2024_monk_level_four_asi_and_arena_neutral_slow_fall() -> None:
 
         assert profile.final_ability_scores is not None
         assert profile.final_ability_scores.dexterity == 19
+        assert [(item.ability, item.amount) for item in profile.advancement_increases] == [("dexterity", 2)]
         assert audits["ability-score-improvement-l4"].combat_relevant is True
         assert audits["ability-score-improvement-l4"].automated is True
         assert audits["slow-fall"].combat_relevant is False
