@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import proficiency_bonus
+from app.content.monk_2024_resource_rules import monk_martial_arts_die
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import DamageType, Weapon, WeaponAttack, WeaponAttackKind
@@ -13,15 +14,15 @@ logger = logging.getLogger(__name__)
 def build_kael_unarmed_attack_2024(level: int, scores: AbilityScores) -> WeaponAttack:
     """Build Kael's 2024 Dexterity-based Unarmed Strike using the current Martial Arts die."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
-            raise ValueError("The current 2024 Monk attack tranche supports levels 1-10 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
+            raise ValueError("The current 2024 Monk attack tranche supports levels 1-11 only.")
         dexterity = scores.modifier("dexterity")
         weapon = Weapon(
             id="unarmed-strike",
             name="Unarmed Strike",
             attack_kind=WeaponAttackKind.MELEE,
             dice_count=1,
-            dice_size=8 if level >= 5 else 6,
+            dice_size=monk_martial_arts_die(level),
             damage_type=DamageType.BLUDGEONING,
             damage_type_choices=[DamageType.FORCE] if level >= 6 else [],
             animation="strike",
