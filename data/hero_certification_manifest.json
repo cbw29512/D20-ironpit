@@ -7973,6 +7973,7 @@
             "resource:focus-points",
             "resource:uncanny-metabolism",
             "resource:wholeness-of-body",
+            "self-restoration",
             "stunning-strike"
           ],
           "supported_mechanics": [
@@ -7995,6 +7996,7 @@
             "resource:focus-points",
             "resource:uncanny-metabolism",
             "resource:wholeness-of-body",
+            "self-restoration",
             "stunning-strike"
           ],
           "unsupported_mechanics": [],
