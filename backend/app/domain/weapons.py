@@ -66,6 +66,7 @@ class Weapon(BaseModel):
     dice_count: int = Field(ge=0, le=20)
     dice_size: int = Field(ge=2, le=100)
     damage_type: DamageType
+    damage_type_choices: list[DamageType] = Field(default_factory=list)
     animation: str
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
@@ -77,6 +78,14 @@ class Weapon(BaseModel):
     heavy: bool = False
     two_handed: bool = False
     versatile: bool = False
+
+
+    @model_validator(mode="after")
+    def validate_damage_type_choices(self) -> "Weapon":
+        choices = [self.damage_type, *self.damage_type_choices]
+        if len(set(choices)) != len(choices):
+            raise ValueError("Weapon damage type choices must be unique and must not repeat the base type.")
+        return self
 
 
 class WeaponAttack(BaseModel):
