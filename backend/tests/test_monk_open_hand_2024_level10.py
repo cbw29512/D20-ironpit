@@ -58,24 +58,22 @@ def test_heightened_focus_patient_defense_grants_rolled_temporary_hp() -> None:
     assert next(item for item in state.resources if item.id == "focus-points").current_uses == 9
 
 
-def test_level10_self_restoration_remains_explicitly_uncertified_pending_policy() -> None:
+def test_level10_self_restoration_uses_declared_priority() -> None:
+    template = build_kael_stillwater_2024(10)
     profile = build_kael_stillwater_2024_profile(10)
     audits = {item.feature_id: item for item in profile.feature_audits}
 
     assert audits["heightened-focus"].automated is True
-    assert audits["self-restoration"].automated is False
+    assert audits["self-restoration"].automated is True
+    grant = template.progression_features.end_turn_condition_removal
+    assert grant is not None
+    assert grant.source_id == "self-restoration"
+    assert grant.condition_ids == ["charmed", "frightened", "poisoned"]
+    assert grant.max_conditions == 1
 
 
 def test_generic_end_turn_condition_removal_uses_declared_priority() -> None:
     template = build_kael_stillwater_2024(10)
-    features = template.progression_features.model_copy(update={
-        "end_turn_condition_removal": EndTurnConditionRemovalGrant(
-            source_id="test-restoration",
-            source_name="Test Restoration",
-            condition_ids=["charmed", "frightened", "poisoned"],
-        ),
-    })
-    template = template.model_copy(update={"progression_features": features})
     state = build_combatant_state(template)
     member = EncounterCombatant(
         combatant_id="kael",
@@ -96,7 +94,7 @@ def test_generic_end_turn_condition_removal_uses_declared_priority() -> None:
 
     assert sequence == 2
     assert len(events) == 1
-    assert events[0].feature_id == "test-restoration"
+    assert events[0].feature_id == "self-restoration"
     assert events[0].removed_condition_ids == ["charmed"]
     assert "charmed" not in state.active_effect_ids
     assert "poisoned" in state.active_effect_ids
