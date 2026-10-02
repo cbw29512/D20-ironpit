@@ -8,6 +8,7 @@
   const FA = () => window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS;
   const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
+  const BF = () => window.IRON_PIT_BROWSER_BONUS_ACTION_FOLLOW_UP;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
@@ -47,6 +48,12 @@
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
     const bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "postAction", events);
     events.push(...bonus.events); sequence = bonus.sequence;
+    if (bonus.events.length) {
+      const followUp = BF()?.resolve(
+        sequence, round, member, bonus.events[bonus.events.length - 1].feature_id, turnKey,
+      );
+      if (followUp) { events.push(followUp); sequence += 1; }
+    }
     const hooks = AH();
     const cleanup = hooks.runPhase(hooks.PHASES.TURN_FINALIZE, {
       sequence, round, member, setup, turnKey, turnEvents: [...events], events: [],
@@ -98,16 +105,42 @@
         return finalize(events, sequence, round, member, setup, turnKey, false);
       }
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
-      const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
+      const supportBonusBefore = member.state.bonus_action_available;
+      const support = P()?.resolve(sequence, round, member, setup, turnKey);
+      if (support) {
+        events.push(...support.events); sequence = support.sequence;
+        if (supportBonusBefore && !member.state.bonus_action_available && support.events.length) {
+          const followUp = BF()?.resolve(
+            sequence,
+            round,
+            member,
+            support.events[support.events.length - 1].feature_id,
+            turnKey,
+          );
+          if (followUp) { events.push(followUp); sequence += 1; }
+        }
+      }
       // Signature actions resolve before optional Bonus Action spell setup.
       const signature = resolveMainActionOpportunity("signatureThreshold", sequence, round, member, setup, turnKey);
       events.push(...signature.events); sequence = signature.sequence;
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       let bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "beforeEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
+      if (bonus.events.length) {
+        const followUp = BF()?.resolve(
+          sequence, round, member, bonus.events[bonus.events.length - 1].feature_id, turnKey,
+        );
+        if (followUp) { events.push(followUp); sequence += 1; }
+      }
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member, setup)); return finalize(events, sequence, round, member, setup, turnKey); }
       bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "afterEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
+      if (bonus.events.length) {
+        const followUp = BF()?.resolve(
+          sequence, round, member, bonus.events[bonus.events.length - 1].feature_id, turnKey,
+        );
+        if (followUp) { events.push(followUp); sequence += 1; }
+      }
       const preMove = resolveMainActionOpportunity("normalPreMove", sequence, round, member, setup, turnKey);
       events.push(...preMove.events); sequence = preMove.sequence;
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
