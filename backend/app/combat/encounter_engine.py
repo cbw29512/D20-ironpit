@@ -20,6 +20,7 @@ from app.combat.initiative_resource_refill import resolve_initiative_resource_re
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_buffs import prepare_opening_buffs
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
+from app.combat.start_turn_timed_self_buffs import resolve_start_turn_timed_self_buff
 from app.combat.persistent_barrier_lifecycle import cleanup_persistent_barriers
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
@@ -118,6 +119,12 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, setup, dice,
                 )
                 events.extend(emanation_events)
+                start_buff = resolve_start_turn_timed_self_buff(
+                    sequence, round_number, member, setup,
+                )
+                if start_buff is not None:
+                    events.append(start_buff)
+                    sequence += 1
 
                 death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
                 if death_event is not None:
