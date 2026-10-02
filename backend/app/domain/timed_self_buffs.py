@@ -57,6 +57,7 @@ class TimedSelfBuffAction(BaseModel):
     id: str
     name: str
     action_cost: ActionCost = "action"
+    activation_timing: Literal["action", "start_turn"] = "action"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
