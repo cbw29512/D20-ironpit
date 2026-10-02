@@ -27,8 +27,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
     """Build the certified persistent 2024 Open Hand Monk using shared combat primitives."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}:
-            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-12 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}:
+            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-13 only.")
         profile = build_kael_stillwater_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -106,7 +106,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             attack_action=build_kael_extra_attack_2024(level, unarmed.id),
             bonus_attack_grants=build_monk_bonus_attacks(level, unarmed, pb, wisdom),
             bonus_tactical_action_grants=build_monk_tactical_actions(level),
-            attack_damage_reduction_reaction=build_monk_attack_damage_reduction(level),
+            attack_damage_reduction_reaction=build_monk_attack_damage_reduction(level, pb, wisdom),
             healing_actions=(
                 [HealingAction(
                     id="wholeness-of-body",

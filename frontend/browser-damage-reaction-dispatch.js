@@ -2,6 +2,7 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_DAMAGE_TRIGGERED_REACTIONS;
+  const Z = () => window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDIRECT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_SOURCE_DAMAGE_TRIGGERS;
 
@@ -103,6 +104,14 @@
       sequence = damageTrigger.sequence;
       sourceTrigger.events.push(...damageTrigger.events);
       sourceTrigger.sequence = sequence;
+      const redirect = Z()?.resolve(sequence, round, source, triggeringEvent, setup) || null;
+      if (redirect) {
+        sourceTrigger.events.push(redirect);
+        const nested = resolve(sequence + 1, round, memberById(setup, redirect.actor_id), redirect, setup, turnKey);
+        sourceTrigger.events.push(...nested.events);
+        sequence = nested.sequence;
+        sourceTrigger.sequence = sequence;
+      }
       if (appliedDamage <= 0) return sourceTrigger;
       const reactor = memberById(setup, triggeringEvent.target_id);
       if (!reactor || reactor.combatant_id === source.combatant_id) {

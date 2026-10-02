@@ -82,6 +82,7 @@ class AttackHitDamageResolution:
     damage_reduction_reaction_used: bool = False
     damage_reduction_reaction_source_id: str | None = None
     damage_reduction_reaction_reduction: int = 0
+    damage_reduction_zeroed_attack: bool = False
     deflect_missiles_used: bool = False
     deflect_missiles_reduction: int = 0
 
@@ -149,6 +150,7 @@ def resolve_attack_hit_damage(
         damage_reduction_reaction_used=reduction.used,
         damage_reduction_reaction_source_id=reduction.source_id,
         damage_reduction_reaction_reduction=reduction.reduction,
+        damage_reduction_zeroed_attack=reduction.zeroed_attack,
         deflect_missiles_used=reduction.used and reduction.source_id == "deflect-missiles",
         deflect_missiles_reduction=(
             reduction.reduction if reduction.used and reduction.source_id == "deflect-missiles" else 0

@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 def build_kael_unarmed_attack_2024(level: int, scores: AbilityScores) -> WeaponAttack:
     """Build Kael's 2024 Dexterity-based Unarmed Strike using the current Martial Arts die."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}:
-            raise ValueError("The current 2024 Monk attack tranche supports levels 1-12 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}:
+            raise ValueError("The current 2024 Monk attack tranche supports levels 1-13 only.")
         dexterity = scores.modifier("dexterity")
         weapon = Weapon(
             id="unarmed-strike",

@@ -17,6 +17,7 @@ class AttackDamageReductionResolution:
     reduction: int = 0
     source_id: str | None = None
     source_name: str | None = None
+    zeroed_attack: bool = False
 
 
 def _value(item: object) -> str:
@@ -62,6 +63,7 @@ def apply_attack_damage_reduction(
         if rule is None or not can_reduce_attack_damage(defender, attack, components):
             return AttackDamageReductionResolution(components=list(components))
 
+        original_total = sum(max(0, component.total) for component in components)
         reduction = sum(dice.roll(rule.reduction_dice_size) for _ in range(rule.reduction_dice_count))
         if rule.reduction_ability is not None:
             scores = defender.template.ability_scores
@@ -87,6 +89,7 @@ def apply_attack_damage_reduction(
             reduction=reduction,
             source_id=rule.source_id,
             source_name=rule.source_name,
+            zeroed_attack=original_total > 0 and sum(max(0, item.total) for item in reduced) == 0,
         )
     except ValueError:
         raise

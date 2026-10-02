@@ -42,6 +42,7 @@ class AttackEffectResolution:
     damage_reduction_reaction_source_id: str | None = None
     damage_reduction_reaction_source_name: str | None = None
     damage_reduction_reaction_reduction: int = 0
+    damage_reduction_zeroed_attack: bool = False
     deferred_effect_armed: Any = None
     exile_applied: Any = None
 
@@ -100,6 +101,7 @@ def resolve_attack_effects(
             else None
         )
         result.damage_reduction_reaction_reduction = hit_damage.damage_reduction_reaction_reduction
+        result.damage_reduction_zeroed_attack = hit_damage.damage_reduction_zeroed_attack
         result.cunning_strike = hit_damage.cunning_strike_trip
         result.cunning_strike_obscure = hit_damage.cunning_strike_obscure
         if result.cunning_strike.applied:

@@ -121,6 +121,18 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 13:
+            audits.append(
+                _feature(
+                    "deflect-energy",
+                    "Deflect Energy",
+                    "class",
+                    notes=(
+                        "Expands the universal Deflect Attacks damage-reduction Reaction from Bludgeoning, "
+                        "Piercing, and Slashing to attacks dealing any damage type."
+                    ),
+                )
+            )
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)

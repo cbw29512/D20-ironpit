@@ -183,6 +183,7 @@
       uncannyDodgeUsed: uncanny.used,
       damageReductionReactionUsed: reduction.used, damageReductionReactionSourceId: reduction.sourceId,
       damageReductionReactionSourceName: reduction.sourceName, damageReductionReactionReduction: reduction.reduction,
+      damageReductionZeroedAttack: Boolean(reduction.zeroedAttack),
       deflectMissilesUsed: reduction.used && reduction.sourceId === "deflect-missiles",
       deflectMissilesReduction: reduction.used && reduction.sourceId === "deflect-missiles"
         ? reduction.reduction : 0,

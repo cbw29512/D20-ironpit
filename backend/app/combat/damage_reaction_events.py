@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.attack_damage_redirect import resolve_attack_damage_zero_redirect
 from app.combat.damage_event_context import applied_damage_total, _member_by_id
 from app.combat.hit_rider_events import resolve_hit_rider_event
 from app.combat.damage_reaction_dispatch import resolve_damage_reaction_attack
@@ -40,6 +41,21 @@ def resolve_damage_event_reactions(
             sequence, round_number, source, triggering_event, applied_damage,
         )
         source_events.extend(damage_events)
+        redirect = resolve_attack_damage_zero_redirect(
+            sequence, round_number, source, triggering_event, setup, dice,
+        )
+        if redirect is not None:
+            source_events.append(redirect)
+            nested, sequence = resolve_damage_event_reactions(
+                sequence + 1,
+                round_number,
+                _member_by_id(setup, redirect.actor_id),
+                redirect,
+                setup,
+                dice,
+                turn_key=turn_key,
+            )
+            source_events.extend(nested)
         if applied_damage <= 0:
             return source_events, sequence
 

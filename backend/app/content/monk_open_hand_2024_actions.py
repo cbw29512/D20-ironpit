@@ -5,7 +5,7 @@ import logging
 from app.content.monk_2024_resource_rules import monk_martial_arts_die
 from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.models import DamageType, WeaponAttack
-from app.domain.reactions import AttackDamageReductionReaction
+from app.domain.reactions import AttackDamageReductionReaction, ZeroDamageSaveRedirect
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.weapons import OnHitConditionSave
 
@@ -97,7 +97,11 @@ def build_monk_tactical_actions(level: int) -> list[BonusActionTacticalGrant]:
         raise
 
 
-def build_monk_attack_damage_reduction(level: int) -> AttackDamageReductionReaction | None:
+def build_monk_attack_damage_reduction(
+    level: int,
+    proficiency_bonus: int,
+    wisdom_modifier: int,
+) -> AttackDamageReductionReaction | None:
     try:
         if level < 3:
             return None
@@ -105,11 +109,27 @@ def build_monk_attack_damage_reduction(level: int) -> AttackDamageReductionReact
             source_id="deflect-attacks",
             source_name="Deflect Attacks",
             attack_kinds=["melee", "ranged"],
-            required_damage_types=[DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING],
+            required_damage_types=(
+                [] if level >= 13
+                else [DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING]
+            ),
             reduction_dice_count=1,
             reduction_dice_size=10,
             reduction_ability="dexterity",
             add_level=True,
+            zero_damage_redirect=ZeroDamageSaveRedirect(
+                source_id="deflect-attacks-redirect",
+                source_name="Deflect Attacks",
+                resource_id="focus-points",
+                resource_cost=1,
+                melee_range_ft=5,
+                ranged_range_ft=60,
+                save_ability="dexterity",
+                save_dc=8 + proficiency_bonus + wisdom_modifier,
+                damage_dice_count=2,
+                damage_dice_size=monk_martial_arts_die(level),
+                damage_bonus_ability="dexterity",
+            ),
         )
     except Exception:
         logger.exception("Failed to build 2024 Deflect Attacks binding at level %s.", level)

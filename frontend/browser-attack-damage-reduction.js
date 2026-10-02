@@ -28,8 +28,9 @@
     try {
       const rule = defender?.template?.attackDamageReductionReaction;
       if (!rule || !eligible(defender, attack, components)) {
-        return { components, used: false, reduction: 0, sourceId: null, sourceName: null };
+        return { components, used: false, reduction: 0, sourceId: null, sourceName: null, zeroedAttack: false };
       }
+      const originalTotal = components.reduce((sum, part) => sum + Math.max(0, part.total || 0), 0);
       let reduction = 0;
       const count = rule.reductionDiceCount || 0;
       for (let index = 0; index < count; index += 1) {
@@ -59,6 +60,8 @@
         reduction,
         sourceId: rule.sourceId,
         sourceName: rule.sourceName,
+        zeroedAttack: originalTotal > 0
+          && reduced.reduce((sum, part) => sum + Math.max(0, part.total || 0), 0) === 0,
       };
     } catch (error) {
       console.error("Browser attack damage reduction failed", {
