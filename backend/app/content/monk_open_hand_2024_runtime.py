@@ -106,7 +106,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             attack_action=build_kael_extra_attack_2024(level, unarmed.id),
             bonus_attack_grants=build_monk_bonus_attacks(level, unarmed, pb, wisdom),
             bonus_tactical_action_grants=build_monk_tactical_actions(level),
-            attack_damage_reduction_reaction=build_monk_attack_damage_reduction(level),
+            attack_damage_reduction_reaction=build_monk_attack_damage_reduction(level, pb, wisdom),
             healing_actions=(
                 [HealingAction(
                     id="wholeness-of-body",
