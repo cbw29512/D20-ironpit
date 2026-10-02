@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile the legal persistent 2024 Kael progression through the current level."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}:
-            raise ValueError("The current 2024 Monk profile tranche supports levels 1-15 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}:
+            raise ValueError("The current 2024 Monk profile tranche supports levels 1-16 only.")
         hero = HERO_BY_CLASS["monk"]
         base = canonical_base_ability_scores("monk")
         background_allowed = ["dexterity", "constitution", "intelligence"]
@@ -32,6 +32,8 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                 AbilityIncrease(ability="constitution", amount=1),
             ])
         if level >= 12:
+            advancement.append(AbilityIncrease(ability="wisdom", amount=2))
+        if level >= 16:
             advancement.append(AbilityIncrease(ability="wisdom", amount=2))
         values = base.model_dump()
         for increase in [*background, *advancement]:
@@ -88,6 +90,10 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                 *(
                     ["Basic Rules 2024: Monk Level 12 — Ability Score Improvement; Feats — Ability Score Improvement (+2 Wisdom)"]
                     if level >= 12 else []
+                ),
+                *(
+                    ["Basic Rules 2024: Monk Level 16 — Ability Score Improvement; Feats — Ability Score Improvement (+2 Wisdom)"]
+                    if level >= 16 else []
                 ),
                 "Basic Rules 2024: Character Origins — Criminal and Human",
                 "Basic Rules 2024: Feats — Alert and Skilled",
