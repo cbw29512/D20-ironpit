@@ -35,7 +35,7 @@ assert.deepEqual(
 assert.deepEqual(l13.attackDamageReductionReaction.requiredDamageTypes, []);
 assert.equal(l13.resources["focus-points"], 13);
 assert.equal(l13.initiative_bonus, 10);
-assert.equal(l13.attacks[0].attackBonus, 10);
+assert.equal(l13.attacks[0].bonus, 10);
 assert.equal(l13.attackDamageReductionReaction.zeroDamageRedirect.saveDc, 14);
 assert.equal(l13.attackDamageReductionReaction.zeroDamageRedirect.damageDiceSize, 10);
 
