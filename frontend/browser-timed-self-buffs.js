@@ -50,10 +50,11 @@
       && stateRuntime.distance(member, target) <= aura.radius_ft);
   }
 
-  function choose(member, setup = null) {
+  function choose(member, setup = null, activationTiming = "action") {
     try {
       const choices = (member.state.template.timed_self_buff_actions || []).filter((action) =>
-        E().available(member.state, action.actionCost)
+        (action.activationTiming || "action") === activationTiming
+        && (activationTiming === "start_turn" || E().available(member.state, action.actionCost))
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
         && !active(member, action)
         && (!action.concentration || !member.state.concentration)
@@ -172,5 +173,35 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS = { active, choose, resolve };
+  function installAbilityHooks() {
+    try {
+      const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+      if (!hooks) throw new Error("Timed self-buff hooks require browser-ability-hooks.js.");
+      const phase = hooks.PHASES.TURN_START;
+      if (hooks.abilitiesFor(phase).some((item) => item.id === "start-turn-timed-self-buff")) return;
+      hooks.registerAbility(phase, {
+        id: "start-turn-timed-self-buff",
+        priority: 70,
+        rulesets: ["2014", "2024"],
+        appliesTo: (member) =>
+          !E().isIncapacitated(member.state)
+          && (member.state.template.timed_self_buff_actions || [])
+            .some((action) => (action.activationTiming || "action") === "start_turn"),
+        resolve: ({ sequence, round, member, setup }) => {
+          const action = choose(member, setup, "start_turn");
+          if (!action) return null;
+          const event = resolve(sequence, round, member, action, {
+            spendActionCost: false,
+            affectedStates: [...setup.heroes, ...setup.monsters].map((entry) => entry.state),
+          });
+          return { events: [event], sequence: sequence + 1, claimed: false };
+        },
+      });
+    } catch (error) {
+      console.error("Timed self-buff hook installation failed.", { error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS = { active, choose, installAbilityHooks, resolve };
 })();
