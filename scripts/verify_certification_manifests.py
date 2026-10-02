@@ -104,6 +104,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.resource_backed_on_hit_exile.source_id)
     if features.resource_backed_on_hit_save_rider:
         mechanics.add(features.resource_backed_on_hit_save_rider.source_id)
+    if features.resource_backed_post_hit_damage:
+        mechanics.add(features.resource_backed_post_hit_damage.source_id)
     if features.delayed_resource_refill:
         mechanics.add(features.delayed_resource_refill.source_id)
     if features.end_turn_condition_removal:
