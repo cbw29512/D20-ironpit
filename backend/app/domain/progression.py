@@ -144,6 +144,7 @@ class ProgressionCombatFeatures(BaseModel):
     cunning_strike_max_effects: int = Field(default=0, ge=0, le=2)
     uncanny_dodge: bool = False
     evasion: bool = False
+    evasion_disabled_while_incapacitated: bool = False
     martial_arts_bonus_attack: bool = False
     martial_arts_die_size: int = Field(default=0, ge=0, le=12)
     flurry_of_blows: bool = False
