@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 138
+    "public_ready": 139
   },
   "heroes": [
     {
@@ -8556,24 +8556,74 @@
             "id": "warrior-open-hand",
             "name": "Warrior of the Open Hand"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "kael-stillwater-l19",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Monk 19, Human, Criminal, Alert, Skilled"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack-damage-reduction:deflect-attacks",
+            "attack:kael-2024-unarmed",
+            "bonus-attack-hit-save:flurry-of-blows",
+            "bonus-attack:flurry-of-blows",
+            "bonus-attack:martial-arts",
+            "bonus-tactical-action:patient-defense-disengage",
+            "bonus-tactical-action:patient-defense-focus",
+            "bonus-tactical-action:step-of-the-wind-dash",
+            "bonus-tactical-action:step-of-the-wind-focus",
+            "boon-irresistible-offense",
+            "disciplined-survivor",
+            "evasion",
+            "evasion-disabled-while-incapacitated",
+            "fleet-step",
+            "healing-action:wholeness-of-body",
+            "initiative-resource-refill:perfect-focus",
+            "initiative-resource-refill:uncanny-metabolism",
+            "martial-arts-bonus-attack",
+            "martial-arts-die",
+            "multiattack-or-extra-attack",
+            "quivering-palm",
+            "resource:focus-points",
+            "resource:uncanny-metabolism",
+            "resource:wholeness-of-body",
+            "self-restoration",
+            "stunning-strike",
+            "timed-self-buff:superior-defense"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack-damage-reduction:deflect-attacks",
+            "attack:kael-2024-unarmed",
+            "bonus-attack-hit-save:flurry-of-blows",
+            "bonus-attack:flurry-of-blows",
+            "bonus-attack:martial-arts",
+            "bonus-tactical-action:patient-defense-disengage",
+            "bonus-tactical-action:patient-defense-focus",
+            "bonus-tactical-action:step-of-the-wind-dash",
+            "bonus-tactical-action:step-of-the-wind-focus",
+            "boon-irresistible-offense",
+            "disciplined-survivor",
+            "evasion",
+            "evasion-disabled-while-incapacitated",
+            "fleet-step",
+            "healing-action:wholeness-of-body",
+            "initiative-resource-refill:perfect-focus",
+            "initiative-resource-refill:uncanny-metabolism",
+            "martial-arts-bonus-attack",
+            "martial-arts-die",
+            "multiattack-or-extra-attack",
+            "quivering-palm",
+            "resource:focus-points",
+            "resource:uncanny-metabolism",
+            "resource:wholeness-of-body",
+            "self-restoration",
+            "stunning-strike",
+            "timed-self-buff:superior-defense"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 20,

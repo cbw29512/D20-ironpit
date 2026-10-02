@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 18 tranche. Main baseline: `ae7422787209e4ea970c2869a60ec79620a9f658`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 19 tranche. Main baseline: `40477cf6179ee5235ce11349cf8e764ba6c90276`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -35,7 +35,7 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–18 |
 
-2024 public-ready hero slots on current main: **137 / 240**.
+2024 public-ready hero slots on current main: **138 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 137 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 17 on main; this tranche advances level 18.
+**2024 canonical pregens are 138 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 18 on main; this tranche advances level 19.
 
-Active implementation lane: **2024 Open Hand Monk level 18.** Superior Defense uses the universal start-turn timed self-buff path: spend 3 Focus Points at the start of the Monk's turn for 10 rounds of resistance to every damage type except Force, ending early on Incapacitation. No Monk-named resolver is added.
+Active implementation lane: **2024 Open Hand Monk level 19.** Canonical Epic Boon is **Boon of Irresistible Offense** with +1 Dexterity (20→21, cap 30), universal B/P/S Resistance bypass, and natural-20 extra damage equal to Dexterity score using the attack's damage type. No new engine mechanic is required.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -78,7 +78,9 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 17 adds **Quivering Palm** through the universal deferred-save effect engine. An Unarmed Strike hit may spend 4 Focus Points to arm one target; an existing mark can end harmlessly before a different target is armed. Detonation uses the Monk Constitution-save DC and deals 10d12 Force damage on failure or half on success. Arena selection prefers replacing one legal Attack-action attack over spending the entire Action, while retaining the full-Action fallback when no Attack slot is legal. The Martial Arts die advances to d12, Proficiency Bonus to +6, Focus Points to 17, HP to 139, Initiative/attack bonus to +11, and Monk save DC to 16.
 - The same tranche closes the pre-existing 2014 Quivering Palm harmless-end gap through the same universal mark-replacement parameter; 2014 remains Action-only for detonation.
 - Level 18 adds **Superior Defense** through the universal start-turn timed self-buff path. It spends 3 Focus Points at the start of the Monk's turn, grants resistance to every damage type except Force for 10 rounds, and ends early if the Monk is Incapacitated. Unarmored Movement rises to +30 feet (60-foot Speed), Focus Points advance to 18, and HP to 147. Start-turn activation is explicitly excluded from the free opening-buff path and does not spend an Action or Bonus Action.
-- Next exact level after level 18 certification is **Monk 19**; select and audit the canonical Epic Boon only after level 18 is merged.
+- Level 19 selects **Boon of Irresistible Offense**, the recommended Monk Epic Boon. Dexterity rises **20→21** with a maximum of 30; B/P/S damage ignores Resistance through the existing universal bypass grant; a natural-20 attack adds **21** damage of the attack's type through the existing universal natural-20 rider. Focus Points advance to 19 and HP to 155.
+- This tranche raises the 2024 public-ready target to **139 / 240**.
+- Next exact level after level 19 certification is **Monk 20**; audit Body and Mind only after level 19 is merged.
 
 ### Druid spell-selection policy
 

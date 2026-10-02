@@ -50,6 +50,16 @@ def build_monk_2024_endgame_feature_audits(level: int) -> list[FeatureAudit]:
                     "The shared source-bound lifecycle ends the effect early if the Monk is Incapacitated."
                 ),
             ))
+        if level >= 19:
+            audits.append(_feature(
+                "boon-irresistible-offense",
+                "Boon of Irresistible Offense",
+                "feat",
+                (
+                    "Raises Dexterity 20 to 21 with a maximum of 30, reuses the universal B/P/S Resistance-bypass "
+                    "grant, and adds Dexterity-score damage using the attack's damage type on a natural 20."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile endgame 2024 Monk feature audits at level %s.", level)
