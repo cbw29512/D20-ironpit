@@ -35,6 +35,8 @@ assert.equal(rogue2.ruleset, "2014");
 assert.equal(rogue2.cunning_action, true);
 assert.equal(rogue5.uncanny_dodge, true);
 assert.equal(rogue7.evasion, true);
+assert.equal(Boolean(rogue7.evasion_disabled_while_incapacitated), false);
+assert.equal(rogue2024_17.evasion_disabled_while_incapacitated, true);
 assert.equal(rogue10.sneak_attack_d6, 5);
 assert.equal(rogue11.ruleset, "2014");
 assert.equal(rogue11.sneak_attack_d6, 6);
@@ -158,6 +160,14 @@ const evader = state(rogue7);
 assert.equal(window.IRON_PIT_BROWSER_ROGUE_DEFENSES.evasionDamage(evader, "dexterity", true, "half", 21), 0);
 assert.equal(window.IRON_PIT_BROWSER_ROGUE_DEFENSES.evasionDamage(evader, "dexterity", false, "half", 21), 10);
 assert.equal(window.IRON_PIT_BROWSER_ROGUE_DEFENSES.evasionDamage(evader, "constitution", true, "half", 21), 10);
+evader.active_effect_ids.push("incapacitated");
+assert.equal(window.IRON_PIT_BROWSER_ROGUE_DEFENSES.evasionDamage(evader, "dexterity", false, "half", 21), 10);
+
+const evader2024 = state(rogue2024_17);
+assert.equal(window.IRON_PIT_BROWSER_ROGUE_DEFENSES.evasionDamage(evader2024, "dexterity", true, "half", 21), 0);
+evader2024.active_effect_ids.push("incapacitated");
+assert.equal(window.IRON_PIT_BROWSER_ROGUE_DEFENSES.evasionDamage(evader2024, "dexterity", true, "half", 21), 10);
+assert.equal(window.IRON_PIT_BROWSER_ROGUE_DEFENSES.evasionDamage(evader2024, "dexterity", false, "half", 21), 21);
 
 window.IRON_PIT_BROWSER_FORMATION = {
   targetOrder: (_member, setup) => setup.monsters,

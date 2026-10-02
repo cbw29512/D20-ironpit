@@ -67,6 +67,8 @@ def _apply_level_delta(data: dict[str, object], level: int, scores: AbilityScore
     intelligence_mod = scores.modifier("intelligence")
     attack_bonus = row.proficiency_bonus + dexterity_mod
     progression_fields = compile_progression_feature_fields(mara_rogue_features(level), level)
+    if progression_fields.get("evasion"):
+        progression_fields["evasion_disabled_while_incapacitated"] = True
     progression = ProgressionCombatFeatures.model_validate(progression_fields)
     save_proficiencies = saving_throw_proficiencies(("dexterity", "intelligence"), progression)
 

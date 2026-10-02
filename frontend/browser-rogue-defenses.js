@@ -25,7 +25,11 @@
 
   function evasionDamage(state, ability, succeeded, successDamage, total) {
     const enabled = Boolean(state?.template?.evasion);
-    if (!enabled || ability !== "dexterity" || successDamage !== "half") {
+    const disabled = Boolean(
+      state?.template?.evasion_disabled_while_incapacitated
+      && Q().incapacitated(state)
+    );
+    if (!enabled || disabled || ability !== "dexterity" || successDamage !== "half") {
       return succeeded && successDamage === "half" ? Math.floor(total / 2) : total;
     }
     return succeeded ? 0 : Math.floor(total / 2);
